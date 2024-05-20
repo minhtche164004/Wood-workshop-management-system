@@ -1,0 +1,37 @@
+spring:
+  datasource:
+    url: jdbc:mysql://localhost:3306/SEP490_G58_TEST?useSSL=false
+    username: root
+    password: 12012002
+
+  jpa:
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQLDialect
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+
+  logging:
+    level:
+      org.hibernate.SQL: DEBUG
+      org.hibernate.type: trace
+
+  main:
+    allow-circular-references: true
+
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: Avicii1212002@gmail.com
+    password: pgoh noga okam okkx
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+
+jwt:
+  key: 413F4428472B4B6250655368566D597033733676397924426452948404D6351
+  time: 3600000  # 1000*60*60 milliseconds

@@ -46,29 +46,70 @@ public class UserServiceImpl implements UserService {
     @Autowired
     private UserDetailsServiceImpl userDetailsService;
 
+//    @Override
+//    public User signup(UserDTO userDTO){
+//        // Lấy thời gian hiện tại
+//        LocalDateTime currentDateTime = LocalDateTime.now();
+//        // Chuyển đổi từ LocalDateTime sang java.util.Date
+//        Date hireDate = Date.from(currentDateTime.atZone(ZoneId.systemDefault()).toInstant());
+//        String pass=passwordEncoder.encode(userDTO.getPassword());
+//        if(checkEmail(userDTO.getEmail())==false) {
+//            throw new AppException(ErrorCode.WRONG_FORMAT_EMAIL);
+//            //hoacj tra ve RuntimeException , deu dc , vd:  throw new RuntimeException("Mail existed");
+//        }
+//        if(checkName(userDTO.getUsername())==false){
+//            throw  new AppException(ErrorCode.INVALID_NAME_FORMAT);
+//        }
+//        if (!userDTO.getPassword().equals(userDTO.getCheckPass())) {
+//            //   return ResponseEntity.badRequest().body("Passwords do not match");
+//            throw new AppException(ErrorCode.NOT_MATCH_PASS);
+//        }
+//        if(checkUserbyEmail(userDTO.getEmail())==false){
+//            throw new AppException(ErrorCode.USER_EXISTED);
+//        }
+//        Role userRole=roleRepository.findByName("USER");
+//
+//        User user = new User(
+//                userDTO.getUsername(),
+//                pass,
+//                userDTO.getEmail(),
+//                userDTO.getPhoneNumber(),
+//                userDTO.getAddress(),
+//                userDTO.getFullname(),
+//                true,
+//                userDTO.getPosition(),
+//                hireDate,
+//                userRole
+//        );
+//        return  userRepository.save(user);
+//    }
+@Override
+    public void checkConditions(UserDTO userDTO) { //check các điều kiện cho form Register
+        if (!checkEmail(userDTO.getEmail())) {
+            throw new AppException(ErrorCode.WRONG_FORMAT_EMAIL);
+        }
+        if (!checkName(userDTO.getUsername())) {
+            throw new AppException(ErrorCode.INVALID_NAME_FORMAT);
+        }
+        if (!userDTO.getPassword().equals(userDTO.getCheckPass())) {
+            throw new AppException(ErrorCode.NOT_MATCH_PASS);
+        }
+        if (!checkUserbyEmail(userDTO.getEmail())) {
+            throw new AppException(ErrorCode.USER_EXISTED);
+        }
+    }
+
     @Override
     public User signup(UserDTO userDTO){
+
         // Lấy thời gian hiện tại
         LocalDateTime currentDateTime = LocalDateTime.now();
         // Chuyển đổi từ LocalDateTime sang java.util.Date
         Date hireDate = Date.from(currentDateTime.atZone(ZoneId.systemDefault()).toInstant());
-        String pass=passwordEncoder.encode(userDTO.getPassword());
-        if(checkEmail(userDTO.getEmail())==false) {
-            throw new AppException(ErrorCode.WRONG_FORMAT_EMAIL);
-            //hoacj tra ve RuntimeException , deu dc , vd:  throw new RuntimeException("Mail existed");
-        }
-        if(checkName(userDTO.getUsername())==false){
-            throw  new AppException(ErrorCode.INVALID_NAME_FORMAT);
-        }
-        if (!userDTO.getPassword().equals(userDTO.getCheckPass())) {
-            //   return ResponseEntity.badRequest().body("Passwords do not match");
-            throw new AppException(ErrorCode.NOT_MATCH_PASS);
-        }
-        if(checkUserbyEmail(userDTO.getEmail())==false){
-            throw new AppException(ErrorCode.USER_EXISTED);
-        }
-        Role userRole=roleRepository.findByName("USER");
-
+        String pass = passwordEncoder.encode(userDTO.getPassword());
+        // Tạo vai trò người dùng mặc định
+        Role userRole = roleRepository.findByName("USER");
+        // Tạo đối tượng User mới
         User user = new User(
                 userDTO.getUsername(),
                 pass,
@@ -81,7 +122,8 @@ public class UserServiceImpl implements UserService {
                 hireDate,
                 userRole
         );
-        return  userRepository.save(user);
+        // Lưu người dùng vào cơ sở dữ liệu và trả về người dùng mới
+        return userRepository.save(user);
     }
 
     @Override
@@ -182,6 +224,8 @@ public class UserServiceImpl implements UserService {
     public User getUserbyEmail(String email) {
         return userRepository.getUserByEmail(email);
     }
+
+
 
     @Override
     public List<UserUpdateDTO> GetAllUser(){

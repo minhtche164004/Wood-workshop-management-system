@@ -19,6 +19,9 @@ public interface UserService {
     void save(UserDTO userDTO);
 
     User getUserbyEmail(String email);
+
+   void checkConditions(UserDTO userDTO);
+
   //  UserDetailsService userDetailsService();
     User signup(UserDTO userDTO);
     JwtAuthenticationResponse signin(LoginRequest loginRequest);

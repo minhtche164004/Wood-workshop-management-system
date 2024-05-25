@@ -41,6 +41,18 @@ public class RegisterController {
     private ForgotPasswordRepository forgotPasswordRepository;
     @Autowired
     private PasswordEncoder passwordEncoder;
+//    @PostMapping("/registration")
+//    ApiResponse<User> registerUserAccount(@RequestBody @Valid UserDTO userDto) {
+//        ApiResponse<User> apiResponse= new ApiResponse<>();
+//
+//        apiResponse.setResult( userService.signup(userDto));
+//        return apiResponse;
+//     /*   userService.signup(userDto);
+//        return ResponseEntity.ok("Registration successful");*/
+//    }
+//}
+
+
     //thêm cái @Valid vi toi bo cai validation vao trong UserDto
     //trả về object ApiResponse chứ ko phải uSER NỮA
     @PostMapping("/registration")

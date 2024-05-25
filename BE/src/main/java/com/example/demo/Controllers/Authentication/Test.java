@@ -29,7 +29,8 @@ public class Test {
 //        return apiResponse;
         return ResponseEntity.ok("trang danh cho user");
     }
-    @PreAuthorize("hasAuthority('ADMIN')")
+   // @PreAuthorize("hasAnyAuthority('ADMIN','USER')")
+   @PreAuthorize("hasAnyAuthority('ADMIN')")
     @GetMapping("admin")
     public ResponseEntity<String> Testadmin(){
         return ResponseEntity.ok("trang danh cho admin");

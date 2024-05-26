@@ -24,10 +24,10 @@ public class User  {
 
     @Column(name = "email", nullable = false, length = 255)
     private String email;
-    @Column(name = "status")
-    private Boolean status;
-    @Column(name = "position", length = 255)
-    private String position;
+    @Column(name = "status_id")
+    private Integer status;
+//    @Column(name = "position_id", length = 255)
+//    private Integer position;
 
     @Column(name = "hire_date")
     @Temporal(TemporalType.DATE)
@@ -43,12 +43,17 @@ public class User  {
     @JoinColumn(name = "infor_id")
     @JsonBackReference
     private UserInfor userInfor;
+
+    @OneToOne(cascade = CascadeType.ALL)// tức là khi tạo User thì infor cũng đc tạo
+    @JoinColumn(name = "position_id")
+    @JsonBackReference
+    private Position position;
 //
 //    public User(){
 //
 //    }
 
-        public User(String username, String password, String email, Boolean status, String position, Date hireDate, Role role,UserInfor userInfor) {
+        public User(String username, String password, String email, Integer status, Position position, Date hireDate, Role role,UserInfor userInfor) {
         this.username = username;
         this.password = password;
         this.email = email;

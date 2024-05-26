@@ -1,6 +1,7 @@
 package com.example.demo.Service.Impl;
 
 import com.example.demo.Dto.UserDTO;
+import com.example.demo.Entity.Position;
 import com.example.demo.Entity.UserInfor;
 import com.example.demo.Jwt.UserDetailsServiceImpl;
 import com.example.demo.Dto.UserUpdateDTO;
@@ -119,18 +120,20 @@ public class UserServiceImpl implements UserService {
                 userDTO.getPhoneNumber(),
                 userDTO.getAddress()
         );
+        Position position = null; // Mặc định vị trí là null
+
         informationUserRepository.save(userInfor);
         User user = new User(
-                0,
-                userDTO.getUsername(),
-                pass,
-                userDTO.getEmail(),
-                true,
-                userDTO.getPosition(),
+                        0,
+                        userDTO.getUsername(),
+                        pass,
+                        userDTO.getEmail(),
+                        1,
                 hireDate,
                 userRole,
-                userInfor
-        );
+                userInfor,
+                position
+                );
    //     user.setUserInfor(userInfor);
         // Lưu người dùng vào cơ sở dữ liệu và trả về người dùng mới
         return userRepository.save(user);
@@ -146,7 +149,7 @@ public class UserServiceImpl implements UserService {
             throw new AppException(ErrorCode.WRONG_PASS_OR_EMAIL);
         }
         User a = userRepository.getUserByEmail(user.getUsername());
-      if(a.getStatus()==false){
+      if(a.getStatus()==0){
          throw new AppException(ErrorCode.UN_ACTIVE_ACCOUNT);
 }
         // Kiểm tra xem mật khẩu nhập vào có khớp với mật khẩu lưu trong cơ sở dữ liệu không
@@ -254,9 +257,9 @@ public class UserServiceImpl implements UserService {
             userDTO.setFullname(user.getUserInfor().getFullname());
             userDTO.setEmail(user.getEmail());
             userDTO.setAddress(user.getUserInfor().getAddress());
-            userDTO.setPosition(user.getPosition());
+            //userDTO.setPosition(user.getPosition());
             userDTO.setRole(user.getRole().getRoleName());
-            userDTO.setStatus(user.getStatus());
+         //   userDTO.setStatus(user.getStatus());
             userDTO.setPhoneNumber(user.getUserInfor().getPhoneNumber());
             userDTO.setUsername(user.getUsername());
             // Gán các giá trị khác tương ứng từ user sang userDTO

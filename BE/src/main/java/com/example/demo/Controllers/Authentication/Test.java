@@ -20,14 +20,14 @@ import org.springframework.web.bind.annotation.RestController;
 public class Test {
     @Autowired
     private UserRepository userRepository;
-    @PreAuthorize("hasAuthority('USER')")
+    @PreAuthorize("hasAuthority('CUSTOMER')")
     @GetMapping("user")
     public ResponseEntity<String> Testuser() {
 //        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 //        ApiResponse<User> apiResponse = new ApiResponse<>();
 //        apiResponse.setResult(userRepository.findByEmail(authentication.getName()).get());
 //        return apiResponse;
-        return ResponseEntity.ok("trang danh cho user");
+        return ResponseEntity.ok("trang danh cho C");
     }
    // @PreAuthorize("hasAnyAuthority('ADMIN','USER')")
    @PreAuthorize("hasAnyAuthority('ADMIN')")

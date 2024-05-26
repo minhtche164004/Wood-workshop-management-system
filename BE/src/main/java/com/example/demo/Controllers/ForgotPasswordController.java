@@ -72,8 +72,8 @@ public ResponseEntity<String> verifyOtp(@PathVariable Integer otp, @PathVariable
     User user = userRepository.findByEmail(email).orElseThrow(() -> new AppException(ErrorCode.WRONG_PASS_OR_EMAIL));
     ForgotPassword fp = forgotPasswordRepository.findByOtpAndUser(otp, user).orElseThrow(() -> new AppException(ErrorCode.INVALID_OTP));
 
-    if (fp.getExpirationTime().before(Date.from(Instant.now()))) {
-        // Xóa bản ghi OTP đã hết hạn
+    if (fp.getExpirationTime().before(Date.from(Instant.now()))) { //check time xem otp đã hết hạn hay chưa
+        // Xóa bản ghi OTP  nếu đã hết hạn
       forgotPasswordRepository.deleteById(fp.getFpid());
 
         // Tạo mã OTP mới

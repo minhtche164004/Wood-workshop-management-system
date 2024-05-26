@@ -1,5 +1,6 @@
 package com.example.demo.Dto;
 
+import com.example.demo.Entity.UserInfor;
 import jakarta.validation.constraints.Size;
 import jdk.jfr.Name;
 import lombok.AllArgsConstructor;
@@ -21,10 +22,10 @@ public class UserDTO implements Serializable {
     private String phoneNumber;
     private String address;
     private String fullname;
+ //   private UserInfor userInfor;
     private Boolean status;
     private String position;
     private String role;
-
 }
-
+//test//////
 

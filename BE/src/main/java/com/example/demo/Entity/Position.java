@@ -8,18 +8,18 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Entity
-@Table(name = "Potitions")
+@Table(name = "positions")
 @Data
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
 public class Position {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "position_id")
     private Integer position_id;
 
-    @Column(name = "potition_name")
+    @Column(name = "position_name")
     private String position_name;
 
 

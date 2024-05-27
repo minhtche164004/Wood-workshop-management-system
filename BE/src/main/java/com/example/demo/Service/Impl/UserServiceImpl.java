@@ -219,8 +219,6 @@ public class UserServiceImpl implements UserService {
 //    }
 
 
-
-
     public Boolean checkPasswordUser(String email, String password) {
    User user = userRepository.findByEmail(email).orElse(null);
         if (user == null || !passwordEncoder.matches(password, user.getPassword())) {

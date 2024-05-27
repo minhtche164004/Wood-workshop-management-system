@@ -27,7 +27,7 @@ public class Test {
 //        ApiResponse<User> apiResponse = new ApiResponse<>();
 //        apiResponse.setResult(userRepository.findByEmail(authentication.getName()).get());
 //        return apiResponse;
-        return ResponseEntity.ok("trang danh cho C");
+        return ResponseEntity.ok("trang danh cho Customer");
     }
    // @PreAuthorize("hasAnyAuthority('ADMIN','USER')")
    @PreAuthorize("hasAnyAuthority('ADMIN')")

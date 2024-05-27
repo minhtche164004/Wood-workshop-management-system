@@ -1,8 +1,12 @@
 spring:
   datasource:
-    url: jdbc:mysql://localhost:3306/sep490?useSSL=false
-    username: root
-    password: 12012002
+#    url: jdbc:mysql://localhost:3306/sep490?useSSL=false
+#    username: root
+#    password: 12012002
+
+        url: jdbc:mysql://sep490g58db.mysql.database.azure.com:3306/sep490?useSSL=false
+        username: sep490_g58
+        password: Leaddeptrai@
 
   jpa:
     properties:

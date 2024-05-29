@@ -1,6 +1,7 @@
 package com.example.demo.Entity;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.*;
@@ -13,7 +14,7 @@ import lombok.*;
 @NoArgsConstructor
 public class UserInfor {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "infor_id")
     private Integer inforId;
 
@@ -25,9 +26,9 @@ public class UserInfor {
 
     @Column(name = "address")
     private String address;
-
+    @JsonIgnore
     @OneToOne(mappedBy = "userInfor")
-    @JsonBackReference
+//    @JsonBackReference
     private User user;
 
 

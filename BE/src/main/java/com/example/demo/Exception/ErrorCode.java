@@ -25,6 +25,7 @@ public enum ErrorCode {
     WRONG_FORMAT_EMAIL(1012,"Wrong Format Email",HttpStatus.BAD_REQUEST),
     OTP_EXPIRED(1013,"OTP has expired! A new OTP has been sent to your email",HttpStatus.EXPECTATION_FAILED),
     UN_ACTIVE_ACCOUNT(1014,"Account Not Active or Block",HttpStatus.EXPECTATION_FAILED),
+    NOT_FOUND(1015,"Not Found",HttpStatus.NOT_FOUND)
    // OTP_EXPIRED(1013,"OTP has expired! A new OTP has been sent to your email",HttpStatus.EXPECTATION_FAILED),
     ;
 

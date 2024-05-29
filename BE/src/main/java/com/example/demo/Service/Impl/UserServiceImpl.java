@@ -1,37 +1,31 @@
 package com.example.demo.Service.Impl;
 
+import com.example.demo.Dto.TestDTO1;
 import com.example.demo.Dto.UserDTO;
-import com.example.demo.Entity.Position;
-import com.example.demo.Entity.UserInfor;
+import com.example.demo.Entity.*;
 import com.example.demo.Jwt.UserDetailsServiceImpl;
 import com.example.demo.Dto.UserUpdateDTO;
-import com.example.demo.Entity.Role;
-import com.example.demo.Entity.User;
 import com.example.demo.Exception.AppException;
 import com.example.demo.Exception.ErrorCode;
 import com.example.demo.Jwt.JwtAuthenticationResponse;
 import com.example.demo.Jwt.RefreshTokenRequest;
-import com.example.demo.Repository.InformationUserRepository;
-import com.example.demo.Repository.RoleRepository;
-import com.example.demo.Repository.UserRepository;
+import com.example.demo.Repository.*;
 import com.example.demo.Request.LoginRequest;
 import com.example.demo.Service.JWTService;
 import com.example.demo.Service.UserService;
 import lombok.RequiredArgsConstructor;
+//import org.modelmapper.ModelMapper;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.time.ZoneId;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
 import java.util.regex.Pattern;
 
 @Service
@@ -48,47 +42,16 @@ public class UserServiceImpl implements UserService {
     @Autowired
     private RoleRepository roleRepository;
     @Autowired
+    private StatusRepository statusRepository;
+    @Autowired
     private UserDetailsServiceImpl userDetailsService;
     @Autowired
     private InformationUserRepository informationUserRepository;
+    @Autowired
+    private PositionRepository positionRepository;
+    @Autowired
+    private ModelMapper modelMapper;
 
-//    @Override
-//    public User signup(UserDTO userDTO){
-//        // Lấy thời gian hiện tại
-//        LocalDateTime currentDateTime = LocalDateTime.now();
-//        // Chuyển đổi từ LocalDateTime sang java.util.Date
-//        Date hireDate = Date.from(currentDateTime.atZone(ZoneId.systemDefault()).toInstant());
-//        String pass=passwordEncoder.encode(userDTO.getPassword());
-//        if(checkEmail(userDTO.getEmail())==false) {
-//            throw new AppException(ErrorCode.WRONG_FORMAT_EMAIL);
-//            //hoacj tra ve RuntimeException , deu dc , vd:  throw new RuntimeException("Mail existed");
-//        }
-//        if(checkName(userDTO.getUsername())==false){
-//            throw  new AppException(ErrorCode.INVALID_NAME_FORMAT);
-//        }
-//        if (!userDTO.getPassword().equals(userDTO.getCheckPass())) {
-//            //   return ResponseEntity.badRequest().body("Passwords do not match");
-//            throw new AppException(ErrorCode.NOT_MATCH_PASS);
-//        }
-//        if(checkUserbyEmail(userDTO.getEmail())==false){
-//            throw new AppException(ErrorCode.USER_EXISTED);
-//        }
-//        Role userRole=roleRepository.findByName("USER");
-//
-//        User user = new User(
-//                userDTO.getUsername(),
-//                pass,
-//                userDTO.getEmail(),
-//                userDTO.getPhoneNumber(),
-//                userDTO.getAddress(),
-//                userDTO.getFullname(),
-//                true,
-//                userDTO.getPosition(),
-//                hireDate,
-//                userRole
-//        );
-//        return  userRepository.save(user);
-//    }
 @Override
     public void checkConditions(UserDTO userDTO) { //check các điều kiện cho form Register
         if (!checkEmail(userDTO.getEmail())) {
@@ -114,31 +77,29 @@ public class UserServiceImpl implements UserService {
         String pass = passwordEncoder.encode(userDTO.getPassword());
         // Tạo vai trò người dùng mặc định
         Role userRole = roleRepository.findByName("CUSTOMER");
-
+        Status status= statusRepository.findByName("Active");
+Position position = positionRepository.findByName("Not a worker");
         UserInfor userInfor = new UserInfor(
                 userDTO.getFullname(),
                 userDTO.getPhoneNumber(),
                 userDTO.getAddress()
         );
-        Position position = null; // Mặc định vị trí là null
-
         informationUserRepository.save(userInfor);
         User user = new User(
-                        0,
-                        userDTO.getUsername(),
-                        pass,
-                        userDTO.getEmail(),
-                        1,
+                                0,
+                                userDTO.getUsername(),
+                                pass,
+                                userDTO.getEmail(),
+                                status,
+                position,
                 hireDate,
                 userRole,
-                userInfor,
-                position
-                );
+                userInfor
+                        );
    //     user.setUserInfor(userInfor);
         // Lưu người dùng vào cơ sở dữ liệu và trả về người dùng mới
         return userRepository.save(user);
     }
-
 
     @Override
     public JwtAuthenticationResponse signin(LoginRequest loginRequest){
@@ -149,7 +110,7 @@ public class UserServiceImpl implements UserService {
             throw new AppException(ErrorCode.WRONG_PASS_OR_EMAIL);
         }
         User a = userRepository.getUserByEmail(user.getUsername());
-      if(a.getStatus()==0){
+      if(a.getStatus().getStatus_id()==1){
          throw new AppException(ErrorCode.UN_ACTIVE_ACCOUNT);
 }
         // Kiểm tra xem mật khẩu nhập vào có khớp với mật khẩu lưu trong cơ sở dữ liệu không
@@ -165,6 +126,7 @@ public class UserServiceImpl implements UserService {
         jwtAuthenticationResponse.setUser(user);
         return jwtAuthenticationResponse;
     }
+
 
     @Override
     public JwtAuthenticationResponse refreshToken(RefreshTokenRequest refreshTokenRequest) {
@@ -186,39 +148,6 @@ public class UserServiceImpl implements UserService {
         }
         return null;
     }
-
-
-//    @Override
-//    public void save(UserDTO userDTO) {
-//
-//        // Lấy thời gian hiện tại
-//        LocalDateTime currentDateTime = LocalDateTime.now();
-//        // Chuyển đổi từ LocalDateTime sang java.util.Date
-//        Date hireDate = Date.from(currentDateTime.atZone(ZoneId.systemDefault()).toInstant());
-//        String pass=passwordEncoder.encode(userDTO.getPassword());
-//        Role userRole=roleRepository.findByName("USER");
-//        // Tạo đối tượng UserInfor từ thông tin trong UserDTO
-//        UserInfor userInfor = new UserInfor();
-//        userInfor.setPhoneNumber(userDTO.getPhoneNumber());
-//        userInfor.setFullname(userDTO.getFullname());
-//        userInfor.setAddress(userDTO.getAddress());
-//        // Lưu thông tin của UserInfor vào cơ sở dữ liệu
-//        informationUserRepository.save(userInfor);
-//        User user = new User(
-//                userDTO.getUsername(),
-//                pass,
-//                userDTO.getEmail(),
-//                true,
-//                userDTO.getPosition(),
-//                hireDate,
-//                userRole,
-//                userInfor
-//
-//        );
-//        userRepository.save(user);
-//    }
-
-
     public Boolean checkPasswordUser(String email, String password) {
    User user = userRepository.findByEmail(email).orElse(null);
         if (user == null || !passwordEncoder.matches(password, user.getPassword())) {
@@ -249,25 +178,37 @@ public class UserServiceImpl implements UserService {
     public List<UserUpdateDTO> GetAllUser(){
         List<User> userList = userRepository.findAll();
         List<UserUpdateDTO> userUpdateDTOS = new ArrayList<>();
-
         for(User user : userList){
-            UserUpdateDTO userDTO = new UserUpdateDTO();
-            userDTO.setFullname(user.getUserInfor().getFullname());
-            userDTO.setEmail(user.getEmail());
-            userDTO.setAddress(user.getUserInfor().getAddress());
-            //userDTO.setPosition(user.getPosition());
-            userDTO.setRole(user.getRole().getRoleName());
-         //   userDTO.setStatus(user.getStatus());
-            userDTO.setPhoneNumber(user.getUserInfor().getPhoneNumber());
-            userDTO.setUsername(user.getUsername());
-            // Gán các giá trị khác tương ứng từ user sang userDTO
-
-            userUpdateDTOS.add(userDTO);
+            UserUpdateDTO userUpdateDTO = new UserUpdateDTO();
+            userUpdateDTO.setEmail(user.getEmail().toString());
+            userUpdateDTO.setAddress(user.getUserInfor().getAddress().toString());
+                userUpdateDTO.setPosition(user.getPosition().getPosition_name());
+            userUpdateDTO.setRole(user.getRole().getRoleName().toString());
+            userUpdateDTO.setStatus(user.getStatus().getStatus_name().toString());
+            userUpdateDTOS.add(userUpdateDTO);
         }
-
         return userUpdateDTOS;
     }
 
+    @Override
+    public UserUpdateDTO GetUserById(int user_id) {
+        Optional<UserUpdateDTO> userOptional = userRepository.findByIdTest1(user_id);
+        return userOptional
+                .orElseThrow(() ->  new AppException(ErrorCode.NOT_FOUND));
+    }
+    @Override
+    public TestDTO1 FindbyId(int user_id) {
+        Optional<User> userOptional = userRepository.findById(user_id);
+        User user = userOptional.orElseThrow(() -> new AppException(ErrorCode.NOT_FOUND));
+        return modelMapper.map(user, TestDTO1.class); // Ánh xạ User sang TestDTO1
+    }
+
+    @Override
+    public User FindbyId1(int user_id) {
+        Optional<User> userOptional = userRepository.findById(user_id); // Lấy Optional<User> từ repository
+        return userOptional
+                .orElseThrow(() ->  new AppException(ErrorCode.NOT_FOUND));
+    }
 
 }
 

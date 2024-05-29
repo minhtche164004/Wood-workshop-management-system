@@ -1,13 +1,13 @@
 package com.example.demo.Controllers.Admin;
 
+import com.example.demo.Dto.TestDTO1;
+import com.example.demo.Dto.UserUpdateDTO;
 import com.example.demo.Entity.User;
-import com.example.demo.Jwt.JwtAuthenticationResponse;
 import com.example.demo.Repository.UserRepository;
 import com.example.demo.Response.ApiResponse;
 import com.example.demo.Service.UserService;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -36,17 +36,23 @@ public class AdminController {
         return  apiResponse;
     }
 
-    @GetMapping("GetById/{ID}")
-    public ApiResponse<?>  GetUserByIdUsingPathVariable(@PathVariable int ID) {
-        ApiResponse<List> apiResponse = new ApiResponse<>();
-        apiResponse.setResult(userRepository.filterById(ID));
+    @GetMapping("GetById1")
+    public  ApiResponse<?> getUserById1(@RequestParam(value = "user_id", required = false) int user_id) {
+        ApiResponse<TestDTO1> apiResponse = new ApiResponse<>();
+        apiResponse.setResult(userService.FindbyId(user_id));
         return apiResponse;
     }
-
-//    @GetMapping("/GetById")
-//    public ResponseEntity<User> GetUserByIdUsingParam(@RequestParam(value = "ID", required = true) int ID) {
-//        return ResponseEntity.ok(userReponsitory.findById(ID));
-//    }
-
+    @GetMapping("GetById2")
+    public  ApiResponse<?> getUserById2(@RequestParam(value = "user_id", required = false) int user_id) {
+        ApiResponse<UserUpdateDTO> apiResponse = new ApiResponse<>();
+        apiResponse.setResult(userService.GetUserById(user_id));
+        return apiResponse;
+    }
+    @GetMapping("GetById3")
+    public  ApiResponse<?> getUserById3(@RequestParam(value = "user_id", required = false) int user_id) {
+        ApiResponse<User> apiResponse = new ApiResponse<>();
+        apiResponse.setResult(userService.FindbyId1(user_id));
+        return apiResponse;
+    }
 
 }

@@ -1,5 +1,6 @@
 package com.example.demo.Entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -22,10 +23,8 @@ public class Role {
 
     @Column(name = "role_name", nullable = false, length = 255)
     private String roleName;
-
+    @JsonIgnore
     @OneToMany(mappedBy = "role", cascade = CascadeType.ALL)
-    @JsonManagedReference  // Tránh vòng lặp vô hạn
-    @ToString.Exclude  // Loại trừ thuộc tính users khỏi toString
-    private List<User> users;
+    private List<User> user;
 
 }

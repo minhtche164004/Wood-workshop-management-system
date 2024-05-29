@@ -1,5 +1,6 @@
 package com.example.demo.Repository;
 
+import com.example.demo.Dto.UserDTO;
 import com.example.demo.Dto.UserUpdateDTO;
 import com.example.demo.Entity.User;
 import jakarta.transaction.Transactional;
@@ -18,10 +19,17 @@ public interface UserRepository extends JpaRepository<User,Integer> {
     User getUserByEmail(String email);
     Optional<User> findByEmail(String email);
     List<User> findAll();
+
     @Transactional
     @Modifying
     @Query("update User u set u.password = ?2 where u.email = ?1")
     void updatePassword(String email, String password);
+
+    @Transactional
+    @Modifying
+    @Query("update User u set u.email = ?2 , u.userInfor.address =?3,u.userInfor.fullname=?4,u.userInfor.phoneNumber=?5 where u.userId = ?1")
+    void updateUser(String userId, String email,String address,String fullname,String phoneNumber);
+
 
     @Query("SELECT u FROM User u WHERE u.username LIKE %:username%" )
     List<User> findByUsername(@Param("username") String username);
@@ -39,6 +47,7 @@ public interface UserRepository extends JpaRepository<User,Integer> {
                  " WHERE u.userId = :userId")
  Optional<UserUpdateDTO> findByIdTest1(@Param("userId") int userId);
 
+
 //    @Query("SELECT new com.example.demo.Dto.TestDTO(u.username, ui.address) " +
 //           "FROM User u INNER JOIN u.userInfor ui " +
 //           "WHERE u.userId = :userId")
@@ -47,5 +56,8 @@ public interface UserRepository extends JpaRepository<User,Integer> {
 
     @Query(value="SELECT u FROM User u WHERE u.userId = :userId")
     Optional<User> findById(@Param("userId") int userId);
+
+    @Query(value="SELECT u FROM User u WHERE u.userId = :userId")
+    Optional<UserDTO> findById1(@Param("userId") int userId);
 
 }

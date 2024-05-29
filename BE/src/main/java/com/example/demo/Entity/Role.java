@@ -1,5 +1,6 @@
 package com.example.demo.Entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
@@ -25,6 +26,7 @@ public class Role {
     private String roleName;
     @JsonIgnore
     @OneToMany(mappedBy = "role", cascade = CascadeType.ALL)
+    @JsonBackReference
     private List<User> user;
 
 }

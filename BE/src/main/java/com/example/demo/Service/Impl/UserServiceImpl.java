@@ -1,6 +1,7 @@
 package com.example.demo.Service.Impl;
 
-import com.example.demo.Dto.TestDTO1;
+import com.example.demo.Dto.RegisterDTO;
+import com.example.demo.Dto.UpdateProfileDTO;
 import com.example.demo.Dto.UserDTO;
 import com.example.demo.Entity.*;
 import com.example.demo.Jwt.UserDetailsServiceImpl;
@@ -27,6 +28,7 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.*;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -53,7 +55,7 @@ public class UserServiceImpl implements UserService {
     private ModelMapper modelMapper;
 
 @Override
-    public void checkConditions(UserDTO userDTO) { //check các điều kiện cho form Register
+    public void checkConditions(RegisterDTO userDTO) { //check các điều kiện cho form Register
         if (!checkEmail(userDTO.getEmail())) {
             throw new AppException(ErrorCode.WRONG_FORMAT_EMAIL);
         }
@@ -69,7 +71,7 @@ public class UserServiceImpl implements UserService {
     }
    // @Transactional
     @Override
-    public User signup(UserDTO userDTO){
+    public User signup(RegisterDTO userDTO){
         // Lấy thời gian hiện tại
         LocalDateTime currentDateTime = LocalDateTime.now();
         // Chuyển đổi từ LocalDateTime sang java.util.Date
@@ -172,22 +174,32 @@ Position position = positionRepository.findByName("Not a worker");
         return userRepository.getUserByEmail(email);
     }
 
-
+    @Override
+    public List<UserDTO> GetAllUser() {
+        List<User> userList = userRepository.findAll();
+        if (userList.isEmpty()) {
+            throw new AppException(ErrorCode.NOT_FOUND);
+        }
+        return userList.stream()
+                .map(user -> modelMapper.map(user, UserDTO.class))
+                .collect(Collectors.toList());
+    }
+    @Override
+    public UserDTO FindbyId(int user_id) {
+        Optional<User> userOptional = userRepository.findById(user_id);
+        User user = userOptional.orElseThrow(() -> new AppException(ErrorCode.NOT_FOUND));
+        return modelMapper.map(user, UserDTO.class); // Ánh xạ User sang TestDTO1
+    }
 
     @Override
-    public List<UserUpdateDTO> GetAllUser(){
-        List<User> userList = userRepository.findAll();
-        List<UserUpdateDTO> userUpdateDTOS = new ArrayList<>();
-        for(User user : userList){
-            UserUpdateDTO userUpdateDTO = new UserUpdateDTO();
-            userUpdateDTO.setEmail(user.getEmail().toString());
-            userUpdateDTO.setAddress(user.getUserInfor().getAddress().toString());
-                userUpdateDTO.setPosition(user.getPosition().getPosition_name());
-            userUpdateDTO.setRole(user.getRole().getRoleName().toString());
-            userUpdateDTO.setStatus(user.getStatus().getStatus_name().toString());
-            userUpdateDTOS.add(userUpdateDTO);
+    public List<UserDTO> FindByUsernameOrAddress(String key) {
+        List<User> userList = userRepository.findByUsernameOrAddress(key);
+        if (userList.isEmpty()) {
+            throw new AppException(ErrorCode.NOT_FOUND);
         }
-        return userUpdateDTOS;
+        return userList.stream()
+                .map(user -> modelMapper.map(user, UserDTO.class))
+                .collect(Collectors.toList());
     }
 
     @Override
@@ -196,18 +208,28 @@ Position position = positionRepository.findByName("Not a worker");
         return userOptional
                 .orElseThrow(() ->  new AppException(ErrorCode.NOT_FOUND));
     }
-    @Override
-    public TestDTO1 FindbyId(int user_id) {
-        Optional<User> userOptional = userRepository.findById(user_id);
-        User user = userOptional.orElseThrow(() -> new AppException(ErrorCode.NOT_FOUND));
-        return modelMapper.map(user, TestDTO1.class); // Ánh xạ User sang TestDTO1
-    }
+
+
 
     @Override
     public User FindbyId1(int user_id) {
         Optional<User> userOptional = userRepository.findById(user_id); // Lấy Optional<User> từ repository
         return userOptional
                 .orElseThrow(() ->  new AppException(ErrorCode.NOT_FOUND));
+    }
+
+
+    @Override
+    public UserDTO EditUser(int userId,UpdateProfileDTO updateProfileDTO){
+        Optional<User> userOptional = userRepository.findById(userId);
+        User user = userOptional.orElseThrow(() -> new AppException(ErrorCode.NOT_FOUND));
+        user.getUserInfor().setAddress(updateProfileDTO.getAddress());
+        user.getUserInfor().setFullname(updateProfileDTO.getFullname());
+        user.setUsername(updateProfileDTO.getUsername());
+        user.getUserInfor().setPhoneNumber(updateProfileDTO.getPhoneNumber());
+        user.setEmail(updateProfileDTO.getEmail());
+        userRepository.save(user);
+        return modelMapper.map(user, UserDTO.class);
     }
 
 }

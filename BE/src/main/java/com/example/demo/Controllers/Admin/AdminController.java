@@ -1,6 +1,6 @@
 package com.example.demo.Controllers.Admin;
 
-import com.example.demo.Dto.TestDTO1;
+import com.example.demo.Dto.UserDTO;
 import com.example.demo.Dto.UserUpdateDTO;
 import com.example.demo.Entity.User;
 import com.example.demo.Repository.UserRepository;
@@ -28,17 +28,16 @@ public class AdminController {
         return apiResponse;
 
     }
-    @GetMapping("/SearchUser")
-    public ApiResponse<?> SearchUserByName(@RequestParam(value = "query", required = true) String query){
+    @GetMapping("/SearchUserByNameorAddress")
+    public ApiResponse<?> SearchUserByName(@RequestParam(value = "query", required = false) String query){
         ApiResponse<List> apiResponse = new ApiResponse<>();
-       // apiResponse.setResult(userRepository.findByUsername(query));
-        apiResponse.setResult(userRepository.findByUsernameOrAddress(query));
+        apiResponse.setResult(userService.FindByUsernameOrAddress(query));
         return  apiResponse;
     }
 
     @GetMapping("GetById1")
     public  ApiResponse<?> getUserById1(@RequestParam(value = "user_id", required = false) int user_id) {
-        ApiResponse<TestDTO1> apiResponse = new ApiResponse<>();
+        ApiResponse<UserDTO> apiResponse = new ApiResponse<>();
         apiResponse.setResult(userService.FindbyId(user_id));
         return apiResponse;
     }

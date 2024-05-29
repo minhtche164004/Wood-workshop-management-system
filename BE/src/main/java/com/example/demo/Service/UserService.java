@@ -1,6 +1,7 @@
 package com.example.demo.Service;
 
 import com.example.demo.Dto.TestDTO;
+import com.example.demo.Dto.TestDTO1;
 import com.example.demo.Dto.UserDTO;
 import com.example.demo.Dto.UserUpdateDTO;
 import com.example.demo.Entity.User;
@@ -29,6 +30,6 @@ public interface UserService {
     JwtAuthenticationResponse refreshToken(RefreshTokenRequest refreshTokenRequest);
 List<UserUpdateDTO> GetAllUser();
 
-    TestDTO GetUserById(int user_id);
-
+    UserUpdateDTO GetUserById(int user_id);
+    TestDTO1 FindbyId(int user_id);
 }

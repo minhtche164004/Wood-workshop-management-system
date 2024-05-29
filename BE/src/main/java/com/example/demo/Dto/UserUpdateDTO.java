@@ -12,11 +12,9 @@ public class UserUpdateDTO {
     @Size(min=4,message = "USERNAME_INVALID")
     private String username;
     private String address;
-  //  private String fullname;
     private String status;
     private String position;
     private String role;
-//    private String phoneNumber;
     private String email;
 
 }

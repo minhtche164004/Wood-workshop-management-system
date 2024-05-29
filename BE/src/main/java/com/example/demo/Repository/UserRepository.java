@@ -31,31 +31,22 @@ public interface UserRepository extends JpaRepository<User,Integer> {
     @Query("SELECT u FROM User u WHERE u.username LIKE %:keyword% OR u.userInfor.address LIKE %:keyword%")
     List<User> findByUsernameOrAddress(@Param("keyword") String keyword);
 
-
  @Query(value =
-         "SELECT " +
-                 "u.username AS username, " +
-                 "ui.address AS address, " +
-                 "s.status_name AS status, " +
-                 "p.position_name AS position, " +
-                 "r.role_name AS role, " +
-                 "u.email AS email " +
-                 "FROM users u " +
-                 "INNER JOIN information_user ui ON u.infor_id = ui.infor_id " +
-                 "INNER JOIN positions p ON u.position_id = p.position_id " +
-                 "INNER JOIN roles r ON u.role_id = r.role_id " +
-                 "INNER JOIN status s ON u.status_id = s.status_id " +
-                 "WHERE u.user_id = :userId",
-         nativeQuery = true)
- UserUpdateDTO findUserById(int userId);
+         "SELECT new com.example.demo.Dto.UserUpdateDTO(u.username,ui.address,s.status_name,p.position_name,r.roleName,u.email)" +
+                 "FROM User u " +
+                 "INNER JOIN u.userInfor ui " +
+                 "INNER JOIN u.position p  " +
+                 "INNER JOIN u.role r " +
+                 "INNER JOIN u.status s" +
+                 " WHERE u.userId = :userId")
+ Optional<UserUpdateDTO> findByIdTest1(@Param("userId") int userId);
 
-@Transactional
-@Query(value = """
-    SELECT u.username AS username, ui.address AS address
-    FROM users u 
-    INNER JOIN information_user ui ON u.infor_id = ui.infor_id 
-    WHERE u.user_id = :user_id
-    """, nativeQuery = true)
-Optional<TestDTO> findByIdTest(@Param("user_id") int user_id);
+    @Query("SELECT new com.example.demo.Dto.TestDTO(u.username, ui.address) " +
+           "FROM User u INNER JOIN u.userInfor ui " +
+           "WHERE u.userId = :userId")
+    Optional<TestDTO> findByIdTest(@Param("userId") int userId);
+
+    @Query("SELECT u FROM User u WHERE u.userId = :user_id" )
+    Optional<User> findById(@Param("user_id") int user_id);
 
 }

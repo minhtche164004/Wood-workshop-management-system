@@ -33,11 +33,9 @@ public class User  {
     @JoinColumn(name = "status_id")
     private Status status;
 
-
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "position_id")
     private Position position;
-
 
     @Column(name = "hire_date")
     @Temporal(TemporalType.DATE)
@@ -46,12 +44,6 @@ public class User  {
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "role_id")
     private Role role;
-
-
-//   // @JsonIgnore  // Tránh vòng lặp vô hạn
-//    @JsonBackReference
-//    @ToString.Exclude  // Loại trừ thuộc tính users khỏi toString
-
 
     @OneToOne(cascade = CascadeType.ALL)// tức là khi tạo User thì infor cũng đc tạo
     @JoinColumn(name = "infor_id")

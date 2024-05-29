@@ -1,6 +1,7 @@
 package com.example.demo.Controllers.Admin;
 
 import com.example.demo.Dto.TestDTO;
+import com.example.demo.Dto.TestDTO1;
 import com.example.demo.Dto.UserUpdateDTO;
 import com.example.demo.Entity.User;
 import com.example.demo.Jwt.JwtAuthenticationResponse;
@@ -39,23 +40,17 @@ public class AdminController {
 
     }
 
-//    @GetMapping("GetById")
-//    public ApiResponse<?>  GetUserByIdUsingPathVariable(@RequestParam(value = "userId", required = true) int userId) {
-//        ApiResponse<TestDTO> apiResponse = new ApiResponse<>();
-//        apiResponse.setResult(userService.GetUserById(userId));
-//        return apiResponse;
-//    }
-    @GetMapping("GetById")
-    public  ApiResponse<?> getUserById(@RequestParam(value = "user_id", required = true) int user_id) {
-        ApiResponse<TestDTO> apiResponse = new ApiResponse<>();
+    @GetMapping("GetByIdUSER")
+    public  ApiResponse<?> getUserById(@RequestParam(value = "user_id", required = false) int user_id) {
+        ApiResponse<TestDTO1> apiResponse = new ApiResponse<>();
+        apiResponse.setResult(userService.FindbyId(user_id));
+        return apiResponse;
+    }
+    @GetMapping("GetByIdTESTDTO")
+    public  ApiResponse<?> getUserById1(@RequestParam(value = "user_id", required = false) int user_id) {
+        ApiResponse<UserUpdateDTO> apiResponse = new ApiResponse<>();
         apiResponse.setResult(userService.GetUserById(user_id));
         return apiResponse;
     }
-
-//    @GetMapping("/GetById")
-//    public ResponseEntity<User> GetUserByIdUsingParam(@RequestParam(value = "ID", required = true) int ID) {
-//        return ResponseEntity.ok(userReponsitory.findById(ID));
-//    }
-
 
 }

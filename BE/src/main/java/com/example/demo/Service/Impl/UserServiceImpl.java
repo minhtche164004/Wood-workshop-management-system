@@ -1,6 +1,7 @@
 package com.example.demo.Service.Impl;
 
 import com.example.demo.Dto.TestDTO;
+import com.example.demo.Dto.TestDTO1;
 import com.example.demo.Dto.UserDTO;
 import com.example.demo.Entity.*;
 import com.example.demo.Jwt.UserDetailsServiceImpl;
@@ -15,6 +16,7 @@ import com.example.demo.Service.JWTService;
 import com.example.demo.Service.UserService;
 import lombok.RequiredArgsConstructor;
 //import org.modelmapper.ModelMapper;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -49,6 +51,8 @@ public class UserServiceImpl implements UserService {
     private InformationUserRepository informationUserRepository;
     @Autowired
     private PositionRepository positionRepository;
+    @Autowired
+    private ModelMapper modelMapper;
 
 @Override
     public void checkConditions(UserDTO userDTO) { //check các điều kiện cho form Register
@@ -198,13 +202,17 @@ Position position = positionRepository.findByName("Not a worker");
     }
 
     @Override
-    public TestDTO GetUserById(int user_id) {
-        Optional<TestDTO> userOptional = userRepository.findByIdTest(user_id);
-        System.out.println(userOptional); // In ra Optional để kiểm tra
+    public UserUpdateDTO GetUserById(int user_id) {
+        Optional<UserUpdateDTO> userOptional = userRepository.findByIdTest1(user_id);
         return userOptional
-                .orElseThrow(() -> new UsernameNotFoundException("Không tìm thấy người dùng có ID: " + user_id));
+                .orElseThrow(() ->  new AppException(ErrorCode.NOT_FOUND));
     }
-
+    @Override
+    public TestDTO1 FindbyId(int user_id) {
+        Optional<User> userOptional = userRepository.findById(user_id); // Lấy Optional<User> từ repository
+        return userOptional.map(user -> modelMapper.map(user, TestDTO1.class))
+                .orElseThrow(() ->  new AppException(ErrorCode.NOT_FOUND));
+    }
 
 }
 

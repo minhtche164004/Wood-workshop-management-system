@@ -1,11 +1,18 @@
 package com.example.demo.Dto;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
+import lombok.*;
+
+import java.io.Serializable;
 
 @Data
+@Getter
 @AllArgsConstructor
-public class TestDTO1 {
+@NoArgsConstructor
+@Setter
+public class TestDTO1 implements Serializable {
     private String username;
-    private String password;
+    private String email;
+    private String role_name;
+
+    //public TestDTO1() {}
 }

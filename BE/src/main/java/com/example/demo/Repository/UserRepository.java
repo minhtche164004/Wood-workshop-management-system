@@ -1,13 +1,11 @@
 package com.example.demo.Repository;
 
-import com.example.demo.Dto.TestDTO;
 import com.example.demo.Dto.UserUpdateDTO;
 import com.example.demo.Entity.User;
 import jakarta.transaction.Transactional;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
@@ -41,12 +39,13 @@ public interface UserRepository extends JpaRepository<User,Integer> {
                  " WHERE u.userId = :userId")
  Optional<UserUpdateDTO> findByIdTest1(@Param("userId") int userId);
 
-    @Query("SELECT new com.example.demo.Dto.TestDTO(u.username, ui.address) " +
-           "FROM User u INNER JOIN u.userInfor ui " +
-           "WHERE u.userId = :userId")
-    Optional<TestDTO> findByIdTest(@Param("userId") int userId);
+//    @Query("SELECT new com.example.demo.Dto.TestDTO(u.username, ui.address) " +
+//           "FROM User u INNER JOIN u.userInfor ui " +
+//           "WHERE u.userId = :userId")
+//    Optional<TestDTO> findByIdTest(@Param("userId") int userId);
 
-    @Query("SELECT u FROM User u WHERE u.userId = :user_id" )
-    Optional<User> findById(@Param("user_id") int user_id);
+
+    @Query(value="SELECT u FROM User u WHERE u.userId = :userId")
+    Optional<User> findById(@Param("userId") int userId);
 
 }

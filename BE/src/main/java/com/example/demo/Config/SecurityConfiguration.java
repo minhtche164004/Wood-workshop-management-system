@@ -5,6 +5,7 @@ import com.example.demo.Jwt.JwtAuthenticationEntryPoint;
 import com.example.demo.Jwt.JwtAuthenticationFilter;
 import com.example.demo.Service.UserService;
 import lombok.RequiredArgsConstructor;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -82,4 +83,9 @@ public class SecurityConfiguration {
         source.registerCorsConfiguration("/**", configuration);
         return source;
     }
+//    @Bean
+//    public ModelMapper modelMapper() {
+//        ModelMapper modelMapper = new ModelMapper();
+//        return modelMapper;
+//    }
 }

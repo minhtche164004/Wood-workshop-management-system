@@ -1,6 +1,5 @@
 package com.example.demo.Service.Impl;
 
-import com.example.demo.Dto.TestDTO;
 import com.example.demo.Dto.TestDTO1;
 import com.example.demo.Dto.UserDTO;
 import com.example.demo.Entity.*;
@@ -18,7 +17,6 @@ import lombok.RequiredArgsConstructor;
 //import org.modelmapper.ModelMapper;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.jpa.repository.Query;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -86,8 +84,6 @@ Position position = positionRepository.findByName("Not a worker");
                 userDTO.getPhoneNumber(),
                 userDTO.getAddress()
         );
-
-
         informationUserRepository.save(userInfor);
         User user = new User(
                                 0,
@@ -99,7 +95,6 @@ Position position = positionRepository.findByName("Not a worker");
                 hireDate,
                 userRole,
                 userInfor
-
                         );
    //     user.setUserInfor(userInfor);
         // Lưu người dùng vào cơ sở dữ liệu và trả về người dùng mới
@@ -185,19 +180,13 @@ Position position = positionRepository.findByName("Not a worker");
         List<UserUpdateDTO> userUpdateDTOS = new ArrayList<>();
         for(User user : userList){
             UserUpdateDTO userUpdateDTO = new UserUpdateDTO();
-      //      userUpdateDTO.setFullname(user.getUserInfor().getFullname().toString());
             userUpdateDTO.setEmail(user.getEmail().toString());
             userUpdateDTO.setAddress(user.getUserInfor().getAddress().toString());
-         //   userDTO.setPosition(user.getPosition().getPosition_name().toString());
                 userUpdateDTO.setPosition(user.getPosition().getPosition_name());
             userUpdateDTO.setRole(user.getRole().getRoleName().toString());
             userUpdateDTO.setStatus(user.getStatus().getStatus_name().toString());
-          //  userUpdateDTO.setPhoneNumber(user.getUserInfor().getPhoneNumber().toString());
-            userUpdateDTO.setUsername(user.getUsername().toString());
-            // Gán các giá trị khác tương ứng từ user sang userDTO
             userUpdateDTOS.add(userUpdateDTO);
         }
-
         return userUpdateDTOS;
     }
 
@@ -209,8 +198,15 @@ Position position = positionRepository.findByName("Not a worker");
     }
     @Override
     public TestDTO1 FindbyId(int user_id) {
+        Optional<User> userOptional = userRepository.findById(user_id);
+        User user = userOptional.orElseThrow(() -> new AppException(ErrorCode.NOT_FOUND));
+        return modelMapper.map(user, TestDTO1.class); // Ánh xạ User sang TestDTO1
+    }
+
+    @Override
+    public User FindbyId1(int user_id) {
         Optional<User> userOptional = userRepository.findById(user_id); // Lấy Optional<User> từ repository
-        return userOptional.map(user -> modelMapper.map(user, TestDTO1.class))
+        return userOptional
                 .orElseThrow(() ->  new AppException(ErrorCode.NOT_FOUND));
     }
 

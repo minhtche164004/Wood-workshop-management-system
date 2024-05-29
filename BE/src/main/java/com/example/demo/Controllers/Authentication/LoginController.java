@@ -5,6 +5,7 @@ import com.example.demo.Jwt.RefreshTokenRequest;
 import com.example.demo.Request.LoginRequest;
 import com.example.demo.Response.ApiResponse;
 import com.example.demo.Service.UserService;
+import jakarta.servlet.http.HttpSession;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -21,9 +22,11 @@ public class LoginController {
     private UserService userService;
 
     @PostMapping("/login")
-    public ApiResponse<?> login(@RequestBody LoginRequest loginRequest){
+    public ApiResponse<?> login(@RequestBody LoginRequest loginRequest, HttpSession session){
         ApiResponse<JwtAuthenticationResponse> apiResponse= new ApiResponse<>();
         apiResponse.setResult(userService.signin(loginRequest));
+        String a = apiResponse.getResult().getToken();
+        session.setAttribute("token", a);
         return apiResponse;
     }
 

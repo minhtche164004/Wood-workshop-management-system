@@ -34,7 +34,6 @@ public class AdminController {
        // apiResponse.setResult(userRepository.findByUsername(query));
         apiResponse.setResult(userRepository.findByUsernameOrAddress(query));
         return  apiResponse;
-
     }
 
     @GetMapping("GetById1")

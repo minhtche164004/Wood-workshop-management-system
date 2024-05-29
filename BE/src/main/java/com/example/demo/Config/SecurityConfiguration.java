@@ -50,7 +50,6 @@ public class SecurityConfiguration {
                 authorizeHttpRequests(request -> request.requestMatchers("/api/auth/**","api/forgotPassword/**")
                 .permitAll()
                 .anyRequest().permitAll())
-
                 .sessionManagement(manager ->manager.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .httpBasic(basic -> basic.authenticationEntryPoint(new JwtAuthenticationEntryPoint()))
                 .exceptionHandling(Customizer.withDefaults())

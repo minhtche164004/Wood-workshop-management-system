@@ -7,7 +7,9 @@ spring:
         url: jdbc:mysql://sep490g58db.mysql.database.azure.com:3306/test1?useSSL=false
         username: sep490_g58
         password: Leaddeptrai@
-
+  mvc:
+    pathmatch:
+      matching-strategy: ant_path_matcher
   jpa:
     properties:
       hibernate:
@@ -40,3 +42,4 @@ jwt:
   key: 413F4428472B4B6250655368566D597033733676397924426452948404D6351
   time: 3600000  # 1000*60*60 milliseconds
 
+#http://localhost:8080/swagger-ui/index.html

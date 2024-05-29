@@ -24,3 +24,4 @@ public class Status {
     @OneToMany(mappedBy = "status",  cascade = CascadeType.ALL)
     private List<User> user;
 }
+//

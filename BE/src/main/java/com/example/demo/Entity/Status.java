@@ -1,6 +1,5 @@
 package com.example.demo.Entity;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
@@ -9,26 +8,19 @@ import lombok.*;
 import java.util.List;
 
 @Entity
-@Table(name = "positions")
+@Table(name = "status")
 @Data
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
-public class Position {
+public class Status {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "position_id")
-    private Integer position_id;
-
-    @Column(name = "position_name")
-    private String position_name;
-
-@JsonIgnore
-    @OneToMany(mappedBy = "position",  cascade = CascadeType.ALL)
+    @Column(name = "status_id")
+    private Integer status_id;
+    @Column(name = "status_name", nullable = false)
+    private String status_name;
+    @JsonIgnore
+    @OneToMany(mappedBy = "status",  cascade = CascadeType.ALL)
     private List<User> user;
-
-
-
-
-
 }

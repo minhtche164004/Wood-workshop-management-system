@@ -1,9 +1,13 @@
 package com.example.demo.Entity;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
+
 import java.util.Date;
 
 @Entity
@@ -24,36 +28,36 @@ public class User  {
 
     @Column(name = "email", nullable = false, length = 255)
     private String email;
-    @Column(name = "status_id")
-    private Integer status;
-//    @Column(name = "position_id", length = 255)
-//    private Integer position;
+
+    @ManyToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "status_id")
+    private Status status;
+
+
+    @ManyToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "position_id")
+    private Position position;
+
 
     @Column(name = "hire_date")
     @Temporal(TemporalType.DATE)
     private Date hireDate;
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "role_id")
-    @JsonBackReference  // Tránh vòng lặp vô hạn
-    @ToString.Exclude  // Loại trừ thuộc tính users khỏi toString
     private Role role;
+
+
+//   // @JsonIgnore  // Tránh vòng lặp vô hạn
+//    @JsonBackReference
+//    @ToString.Exclude  // Loại trừ thuộc tính users khỏi toString
+
 
     @OneToOne(cascade = CascadeType.ALL)// tức là khi tạo User thì infor cũng đc tạo
     @JoinColumn(name = "infor_id")
-    @JsonBackReference
+
     private UserInfor userInfor;
-
-    @OneToOne(cascade = CascadeType.ALL)// tức là khi tạo User thì infor cũng đc tạo
-    @JoinColumn(name = "position_id")
-    @JsonBackReference
-    private Position position;
-//
-//    public User(){
-//
-//    }
-
-        public User(String username, String password, String email, Integer status, Position position, Date hireDate, Role role,UserInfor userInfor) {
+        public User(String username, String password, String email, Status status, Position position, Date hireDate, Role role,UserInfor userInfor) {
         this.username = username;
         this.password = password;
         this.email = email;
@@ -63,16 +67,4 @@ public class User  {
         this.role = role;
         this.userInfor=userInfor;
     }
-
-
-//    @Column(name = "phone_number", length = 20)
-//    private String phoneNumber;
-
-
-//    @Column(name = "address", length = 255)
-//    private String address;
-
-//    @Column(name = "fullname", length = 255)
-//    private String fullname;
-
 }

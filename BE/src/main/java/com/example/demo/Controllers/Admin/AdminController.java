@@ -1,5 +1,7 @@
 package com.example.demo.Controllers.Admin;
 
+import com.example.demo.Dto.TestDTO;
+import com.example.demo.Dto.UserUpdateDTO;
 import com.example.demo.Entity.User;
 import com.example.demo.Jwt.JwtAuthenticationResponse;
 import com.example.demo.Repository.UserRepository;
@@ -37,10 +39,16 @@ public class AdminController {
 
     }
 
-    @GetMapping("GetById/{ID}")
-    public ApiResponse<?>  GetUserByIdUsingPathVariable(@PathVariable int ID) {
-        ApiResponse<List> apiResponse = new ApiResponse<>();
-        apiResponse.setResult(userRepository.filterById(ID));
+//    @GetMapping("GetById")
+//    public ApiResponse<?>  GetUserByIdUsingPathVariable(@RequestParam(value = "userId", required = true) int userId) {
+//        ApiResponse<TestDTO> apiResponse = new ApiResponse<>();
+//        apiResponse.setResult(userService.GetUserById(userId));
+//        return apiResponse;
+//    }
+    @GetMapping("GetById")
+    public  ApiResponse<?> getUserById(@RequestParam(value = "user_id", required = true) int user_id) {
+        ApiResponse<TestDTO> apiResponse = new ApiResponse<>();
+        apiResponse.setResult(userService.GetUserById(user_id));
         return apiResponse;
     }
 

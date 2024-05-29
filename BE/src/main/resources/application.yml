@@ -7,7 +7,9 @@ spring:
         url: jdbc:mysql://sep490g58db.mysql.database.azure.com:3306/sep490?useSSL=false
         username: sep490_g58
         password: Leaddeptrai@
-
+  mvc:
+    pathmatch:
+      matching-strategy: ant_path_matcher
   jpa:
     properties:
       hibernate:

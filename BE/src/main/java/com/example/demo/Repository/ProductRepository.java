@@ -13,9 +13,8 @@ import java.util.List;
 
 @Repository
 @EnableJpaRepositories
-public interface ProductRepository extends JpaRepository<Products, Integer>  {
+public interface ProductRepository extends JpaRepository<Products, Integer> {
     List<Products> findAll();
-
-    @Query("SELECT p FROM Products p WHERE p.code LIKE :prefix% ORDER BY p.code DESC")
+    @Query(value = "SELECT p.* FROM products p WHERE p.code LIKE :prefix% ORDER BY p.code DESC LIMIT 1", nativeQuery = true)
     Products findProductTop(@Param("prefix") String prefix);
 }

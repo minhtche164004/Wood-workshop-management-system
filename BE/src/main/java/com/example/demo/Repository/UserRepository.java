@@ -17,6 +17,7 @@ import java.util.Optional;
 //@EnableJpaRepositories
 public interface UserRepository extends JpaRepository<User,Integer> {
     User getUserByEmail(String email);
+    int countByEmail(String email);
     Optional<User> findByEmail(String email);
     List<User> findAll();
 
@@ -52,7 +53,6 @@ public interface UserRepository extends JpaRepository<User,Integer> {
 //           "FROM User u INNER JOIN u.userInfor ui " +
 //           "WHERE u.userId = :userId")
 //    Optional<TestDTO> findByIdTest(@Param("userId") int userId);
-
 
     @Query(value="SELECT u FROM User u WHERE u.userId = :userId")
     Optional<User> findById(@Param("userId") int userId);

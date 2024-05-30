@@ -54,21 +54,7 @@ public class UserServiceImpl implements UserService {
     @Autowired
     private ModelMapper modelMapper;
 
-@Override
-    public void checkConditions(RegisterDTO userDTO) { //check các điều kiện cho form Register
-        if (!checkEmail(userDTO.getEmail())) {
-            throw new AppException(ErrorCode.WRONG_FORMAT_EMAIL);
-        }
-        if (!checkName(userDTO.getUsername())) {
-            throw new AppException(ErrorCode.INVALID_NAME_FORMAT);
-        }
-        if (!userDTO.getPassword().equals(userDTO.getCheckPass())) {
-            throw new AppException(ErrorCode.NOT_MATCH_PASS);
-        }
-        if (!checkUserbyEmail(userDTO.getEmail())) {
-            throw new AppException(ErrorCode.USER_EXISTED);
-        }
-    }
+
    // @Transactional
     @Override
     public User signup(RegisterDTO userDTO){
@@ -158,7 +144,6 @@ Position position = positionRepository.findByName("Not a worker");
         return true;
     }
     public Boolean checkUserbyEmail(String email) {
-
         return !userRepository.findByEmail(email).isPresent();
     }
     public Boolean checkEmail(String email) {
@@ -169,6 +154,36 @@ Position position = positionRepository.findByName("Not a worker");
         Pattern p = Pattern.compile("^[a-zA-Z0-9 ]+$");
         return p.matcher(name).find();
     }
+    public Boolean checkAddress(String name) {
+        Pattern p = Pattern.compile("^[a-zA-Z0-9 ]+$");
+        return p.matcher(name).find();
+    }
+    public Boolean checkPhoneNumber(String name) {
+        Pattern p = Pattern.compile("^[0-9]+$");
+        return p.matcher(name).find();
+    }
+    public Boolean checkFullName(String name) {
+        Pattern p = Pattern.compile("^[a-zA-Z ]+$");
+        return p.matcher(name).find();
+    }
+    @Override
+    public void checkConditions(RegisterDTO userDTO) { //check các điều kiện cho form Register
+        if (!checkEmail(userDTO.getEmail())) {
+            throw new AppException(ErrorCode.WRONG_FORMAT_EMAIL);
+        }
+        if (!checkName(userDTO.getUsername())) {
+            throw new AppException(ErrorCode.INVALID_NAME_FORMAT);
+        }
+        if (!userDTO.getPassword().equals(userDTO.getCheckPass())) {
+            throw new AppException(ErrorCode.NOT_MATCH_PASS);
+        }
+        if (!checkUserbyEmail(userDTO.getEmail())) {
+            throw new AppException(ErrorCode.USER_EXISTED);
+        }
+
+    }
+
+
     @Override
     public User getUserbyEmail(String email) {
         return userRepository.getUserByEmail(email);
@@ -201,15 +216,12 @@ Position position = positionRepository.findByName("Not a worker");
                 .map(user -> modelMapper.map(user, UserDTO.class))
                 .collect(Collectors.toList());
     }
-
     @Override
     public UserUpdateDTO GetUserById(int user_id) {
         Optional<UserUpdateDTO> userOptional = userRepository.findByIdTest1(user_id);
         return userOptional
                 .orElseThrow(() ->  new AppException(ErrorCode.NOT_FOUND));
     }
-
-
 
     @Override
     public User FindbyId1(int user_id) {
@@ -223,6 +235,18 @@ Position position = positionRepository.findByName("Not a worker");
     public UserDTO EditUser(int userId,UpdateProfileDTO updateProfileDTO){
         Optional<User> userOptional = userRepository.findById(userId);
         User user = userOptional.orElseThrow(() -> new AppException(ErrorCode.NOT_FOUND));
+        if (!checkAddress(updateProfileDTO.getAddress())) {
+            throw new AppException(ErrorCode.INVALID_FORMAT_ADDRESS);
+        }
+        if (!checkPhoneNumber(updateProfileDTO.getPhoneNumber())) {
+            throw new AppException(ErrorCode.INVALID_FORMAT_PHONE_NUMBER);
+        }
+        if (!checkFullName(updateProfileDTO.getFullname())) {
+            throw new AppException(ErrorCode.INVALID_FORMAT_FULL_NAME);
+        }
+        if (userRepository.countByEmail(updateProfileDTO.getEmail()) > 0) {
+            throw new AppException(ErrorCode.USER_EXISTED);
+        }
         user.getUserInfor().setAddress(updateProfileDTO.getAddress());
         user.getUserInfor().setFullname(updateProfileDTO.getFullname());
         user.setUsername(updateProfileDTO.getUsername());

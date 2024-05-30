@@ -25,7 +25,6 @@ public class UserController {
         ApiResponse<UserDTO> apiResponse= new ApiResponse<>();
         apiResponse.setResult(userService.EditUser(user_id,updateProfileDTO));
         return apiResponse;
-
     }
 
 }

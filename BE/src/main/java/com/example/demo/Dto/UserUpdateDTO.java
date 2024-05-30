@@ -17,6 +17,4 @@ public class UserUpdateDTO {
     private String role;
     private String email;
 
-
-
 }

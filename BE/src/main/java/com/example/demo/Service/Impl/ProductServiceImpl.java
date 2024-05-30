@@ -38,7 +38,7 @@ private ProductRepository productRepository;
         products.setCompletionTime(sqlCompletionTime);
 
         // Tính toán EndDateWarranty (3 năm sau thời điểm hiện tại)
-        LocalDate endDateWarranty = currentDate.plusYears(3);
+        LocalDate endDateWarranty = currentDate.plusYears(2);
         java.sql.Date sqlEndDateWarranty = java.sql.Date.valueOf(endDateWarranty);
         products.setEnddateWarranty(sqlEndDateWarranty);
 
@@ -53,16 +53,17 @@ private ProductRepository productRepository;
         products.setType(productDTO.getType());
         products.setImage(productDTO.getImage());
         products.setQuantity(productDTO.getQuantity());
-
-
-        String formattedDate = currentDate.format(DateTimeFormatter.ofPattern("yyyyMMdd")); // Định dạng ngày tháng
-        int orderNumber = productRepository.countByCreatedAtDate(currentDate) + 1; // Đếm số lượng sản phẩm đã tạo trong ngày + 1
-        String code = formattedDate + "PD" + String.format("%02d", orderNumber); // Định dạng mã sản phẩm
-        products.setCode(code);
+        products.setCode(generatorcode());
 
 
         productRepository.save(products);
         return products;
+    }
+    private String generatorcode(){
+        LocalDate currentDate = LocalDate.now();
+        String formattedDate = currentDate.format(DateTimeFormatter.ofPattern("yyyyMMdd")); // Định dạng ngày tháng
+        int orderNumber = productRepository.countByCreatedAtDate(currentDate) + 1; // Đếm số lượng sản phẩm đã tạo trong ngày + 1
+        return formattedDate + "PD" + String.format("%02d", orderNumber); // Định dạng mã sản phẩm
     }
 
 }

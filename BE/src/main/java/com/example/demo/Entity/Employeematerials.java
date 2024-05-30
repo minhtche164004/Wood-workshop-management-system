@@ -20,8 +20,8 @@ public class Employeematerials {
     @Column(name = "material_id")
     private Integer materialId;
 
-    @Column(name = "quantity")
-    private Integer quantity;
+    @Column(name="product_sub_material_id")
+    private Integer product_sub_material_id;
 
 
 

@@ -55,10 +55,21 @@ private ProductRepository productRepository;
         products.setQuantity(productDTO.getQuantity());
 
 
-        String formattedDate = currentDate.format(DateTimeFormatter.ofPattern("yyyyMMdd")); // Định dạng ngày tháng
-        int orderNumber = productRepository.countByCreatedAtDate(currentDate) + 1; // Đếm số lượng sản phẩm đã tạo trong ngày + 1
-        String code = formattedDate + "PD" + String.format("%02d", orderNumber); // Định dạng mã sản phẩm
+//        String formattedDate = currentDate.format(DateTimeFormatter.ofPattern("yyyyMMdd")); // Định dạng ngày tháng
+//        int orderNumber = productRepository.findTopByCodeStartingWithOrderByCodeDesc(currentDate) + 1; // Đếm số lượng sản phẩm đã tạo trong ngày + 1
+//        String code = formattedDate + "PD" + String.format("%02d", orderNumber); // Định dạng mã sản phẩm
+//        products.setCode(code);
+
+        LocalDate today = LocalDate.now();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("ddMMyy");
+        String dateString = today.format(formatter);
+
+        Products lastProduct = productRepository.findProductTop(dateString + "PD");
+        int count = lastProduct != null ? Integer.parseInt(lastProduct.getCode().substring(8)) + 1 : 1;
+        String code = dateString + "PD" + String.format("%03d", count);
+
         products.setCode(code);
+
 
 
         productRepository.save(products);

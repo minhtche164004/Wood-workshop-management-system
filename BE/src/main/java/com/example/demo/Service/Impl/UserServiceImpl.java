@@ -96,11 +96,11 @@ Position position = positionRepository.findByName("Not a worker");
     public JwtAuthenticationResponse signin(LoginRequest loginRequest){
         UserDetails user;
         try {
-            user = userDetailsService.loadUserByUsername(loginRequest.getEmail());
+            user = userDetailsService.loadUserByUsername(loginRequest.getUsername());
         } catch (UsernameNotFoundException e) {
             throw new AppException(ErrorCode.WRONG_PASS_OR_EMAIL);
         }
-        User a = userRepository.getUserByEmail(user.getUsername());
+        User a = userRepository.getUserByUsername(user.getUsername());
       if(a.getStatus().getStatus_id()==1){
          throw new AppException(ErrorCode.UN_ACTIVE_ACCOUNT);
 }
@@ -146,6 +146,9 @@ Position position = positionRepository.findByName("Not a worker");
         }
         return true;
     }
+    public Boolean checkUserbyUsername(String username) {
+        return !userRepository.findByUsername(username).isPresent();
+    }
     public Boolean checkUserbyEmail(String email) {
         return !userRepository.findByEmail(email).isPresent();
     }
@@ -181,15 +184,18 @@ Position position = positionRepository.findByName("Not a worker");
             throw new AppException(ErrorCode.NOT_MATCH_PASS);
         }
         if (!checkUserbyEmail(userDTO.getEmail())) {
-            throw new AppException(ErrorCode.USER_EXISTED);
+            throw new AppException(ErrorCode.GMAIL_EXISTED);
+        }
+        if(!checkUserbyUsername(userDTO.getUsername())){
+            throw new AppException(ErrorCode.USERNAME_EXISTED);
         }
 
     }
 
-    @Override
-    public User getUserbyEmail(String email) {
-        return userRepository.getUserByEmail(email);
-    }
+//    @Override
+//    public User getUserbyEmail(String email) {
+//        return userRepository.getUserByEmail(email);
+//    }
 
     @Override
     public List<UserDTO> GetAllUser() {
@@ -247,8 +253,12 @@ Position position = positionRepository.findByName("Not a worker");
             throw new AppException(ErrorCode.INVALID_FORMAT_FULL_NAME);
         }
         if (userRepository.countByEmail(updateProfileDTO.getEmail()) > 0) {
-            throw new AppException(ErrorCode.USER_EXISTED);
+            throw new AppException(ErrorCode.GMAIL_EXISTED);
         }
+        if(userRepository.countByUsername(updateProfileDTO.getUsername()) > 0){
+            throw new AppException(ErrorCode.USERNAME_EXISTED);
+        }
+
         user.getUserInfor().setAddress(updateProfileDTO.getAddress());
         user.getUserInfor().setFullname(updateProfileDTO.getFullname());
         user.setUsername(updateProfileDTO.getUsername());

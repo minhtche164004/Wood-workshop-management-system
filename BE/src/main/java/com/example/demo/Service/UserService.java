@@ -17,7 +17,7 @@ import java.util.List;
 public interface UserService {
    // void save(UserDTO userDTO);
 
-    User getUserbyEmail(String email);
+   // User getUserbyEmail(String email);
 
    void checkConditions(RegisterDTO userDTO);
     List<UserDTO> FindByUsernameOrAddress(String key);

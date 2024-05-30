@@ -8,7 +8,7 @@ import org.springframework.http.HttpStatusCode;
 @Getter
 public enum ErrorCode {
     UNCATEGORIZED_EXCEPTION(9999,"Lỗi Hệ Thống", HttpStatus.INTERNAL_SERVER_ERROR), //day la loai exception khong ngo toi
-    USER_EXISTED(1001,"Tên Tài Khoản Đã Tồn Tại",HttpStatus.BAD_REQUEST),
+    GMAIL_EXISTED(1001,"Gmail Đã Tồn Tại",HttpStatus.BAD_REQUEST),
     INVALID_NAME_FORMAT(1002,"Sai Format Của Tên ",HttpStatus.BAD_REQUEST),
     NOT_MATCH_PASS(1003,"Mật Khẩu Không Khớp,Vui Lòng Nhập Lại",HttpStatus.BAD_REQUEST),
     UNAUTHENTICATED(1004,"Bạn Chưa Được Xác Thực , Vui Lòng Đăng Nhập",HttpStatus.UNAUTHORIZED), //lỗi chưa xác thực , họặc token hết hạn thì đều bắt người dùng phải login để tạo lại token
@@ -28,7 +28,8 @@ public enum ErrorCode {
     NOT_FOUND(1015,"Không tìm thấy kết quả tìm kiếm ",HttpStatus.NOT_FOUND),
     INVALID_FORMAT_ADDRESS(1016,"Sai Format của địa chỉ",HttpStatus.BAD_REQUEST),
     INVALID_FORMAT_PHONE_NUMBER(1017,"Sai Format số điện thoại",HttpStatus.BAD_REQUEST),
-    INVALID_FORMAT_FULL_NAME(1018,"Sai Format của tên",HttpStatus.BAD_REQUEST)
+    INVALID_FORMAT_FULL_NAME(1018,"Sai Format của tên",HttpStatus.BAD_REQUEST),
+    USERNAME_EXISTED(1019,"Username Đã Tồn Tại",HttpStatus.BAD_REQUEST)
 
 
 

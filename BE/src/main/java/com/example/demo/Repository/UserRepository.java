@@ -17,8 +17,10 @@ import java.util.Optional;
 @Repository
 @EnableJpaRepositories
 public interface UserRepository extends JpaRepository<User,Integer> {
-    User getUserByEmail(String email);
+    User getUserByUsername(String username);
     int countByEmail(String email);
+    int countByUsername(String username);
+    Optional<User> findByUsername(String username);
     Optional<User> findByEmail(String email);
     List<User> findAll();
     @Modifying
@@ -36,8 +38,8 @@ public interface UserRepository extends JpaRepository<User,Integer> {
     void updateUser(String userId, String email,String address,String fullname,String phoneNumber);
 
 
-    @Query("SELECT u FROM User u WHERE u.username LIKE %:username%" )
-    List<User> findByUsername(@Param("username") String username);
+//    @Query("SELECT u FROM User u WHERE u.username LIKE %:username%" )
+//    List<User> findByUsername(@Param("username") String username);
 
     @Query("SELECT u FROM User u WHERE u.username LIKE %:keyword% OR u.userInfor.address LIKE %:keyword%")
     List<User> findByUsernameOrAddress(@Param("keyword") String keyword);

@@ -14,13 +14,13 @@ public class GlobalExceptionHandler {
 
     //define các exception , value này là cái class muốn bắt
     // ngoai nhung cai exception da bat ow duoi thi neu cos exception khac ngoai nhung loaij o duoi thi dinh nghiax nhu nayf
-    @ExceptionHandler(value = Exception.class)
-    ResponseEntity<ApiResponse> handlingRuntimeException(RuntimeException exception){
-        ApiResponse apiResponse= new ApiResponse();
-        apiResponse.setCode(ErrorCode.UNCATEGORIZED_EXCEPTION.getCode());
-        apiResponse.setMessage(ErrorCode.UNCATEGORIZED_EXCEPTION.getMessage());
-        return  ResponseEntity.badRequest().body(apiResponse);
-    }
+//    @ExceptionHandler(value = Exception.class)
+//    ResponseEntity<ApiResponse> handlingRuntimeException(RuntimeException exception){
+//        ApiResponse apiResponse= new ApiResponse();
+//        apiResponse.setCode(ErrorCode.UNCATEGORIZED_EXCEPTION.getCode());
+//        apiResponse.setMessage(ErrorCode.UNCATEGORIZED_EXCEPTION.getMessage());
+//        return  ResponseEntity.badRequest().body(apiResponse);
+//    }
 
     //dinh nghia loai Exception , o day la loai AppException
     @ExceptionHandler(value = AppException.class)

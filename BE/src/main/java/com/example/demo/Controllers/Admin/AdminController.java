@@ -54,4 +54,12 @@ public class AdminController {
         return apiResponse;
     }
 
+    @DeleteMapping("DeleteUserById")
+    public  ApiResponse<?> DeleteUserById(@RequestParam(value = "user_id", required = false) int user_id) {
+        ApiResponse<String> apiResponse = new ApiResponse<>();
+        userService.DeleteUserById(user_id);
+        apiResponse.setResult("Xoa User thanh cong");
+        return apiResponse;
+    }
+    
 }

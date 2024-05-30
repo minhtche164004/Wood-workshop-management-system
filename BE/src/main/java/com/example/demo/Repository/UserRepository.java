@@ -7,6 +7,7 @@ import jakarta.transaction.Transactional;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
@@ -14,13 +15,16 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
-//@EnableJpaRepositories
+@EnableJpaRepositories
 public interface UserRepository extends JpaRepository<User,Integer> {
     User getUserByEmail(String email);
     int countByEmail(String email);
     Optional<User> findByEmail(String email);
     List<User> findAll();
-
+    @Modifying
+    @Query("DELETE FROM User u WHERE u.userId = ?1") // Assuming 'userId' is the name of your ID field
+    void DeleteById(@Param("userId") int userId);
+  //  User getUserById(int userId);
     @Transactional
     @Modifying
     @Query("update User u set u.password = ?2 where u.email = ?1")

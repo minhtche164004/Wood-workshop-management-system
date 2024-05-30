@@ -14,6 +14,7 @@ import com.example.demo.Repository.*;
 import com.example.demo.Request.LoginRequest;
 import com.example.demo.Service.JWTService;
 import com.example.demo.Service.UserService;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 //import org.modelmapper.ModelMapper;
 import org.modelmapper.ModelMapper;
@@ -53,6 +54,8 @@ public class UserServiceImpl implements UserService {
     private PositionRepository positionRepository;
     @Autowired
     private ModelMapper modelMapper;
+    @Autowired
+    private UserInforRepository userInforRepository;
 
 
    // @Transactional
@@ -183,7 +186,6 @@ Position position = positionRepository.findByName("Not a worker");
 
     }
 
-
     @Override
     public User getUserbyEmail(String email) {
         return userRepository.getUserByEmail(email);
@@ -254,6 +256,15 @@ Position position = positionRepository.findByName("Not a worker");
         user.setEmail(updateProfileDTO.getEmail());
         userRepository.save(user);
         return modelMapper.map(user, UserDTO.class);
+    }
+    @Transactional
+    //Đảm bảo tính toàn vẹn dữ liệu, nếu có lỗi thì tất cả các thao tác sẽ được rollback (hoàn tác)
+    @Override
+    public void DeleteUserById(int UserId){
+        User user= userRepository.findById(UserId).get();
+        int info_id = user.getUserInfor().getInforId();
+       userInforRepository.deleteById(info_id);
+       userRepository.DeleteById(UserId);
     }
 
 }

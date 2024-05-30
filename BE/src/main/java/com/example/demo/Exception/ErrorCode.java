@@ -19,7 +19,7 @@ public enum ErrorCode {
 
     INVALID_KEY(1007,"Invalid Message Key",HttpStatus.BAD_REQUEST), //dinh nghĩa 1 số cái nhập sai ở dto, ví dụ như PAS_INVALID mà thiếu chữ S
     USERNAME_INVALID(1008,"Tên Đăng Nhập Phải Có ít nhất 5 kí tự",HttpStatus.BAD_REQUEST),
-    PASS_INVALID(1009,"mâtk khẩu phải có ít nhất 4 kí tự",HttpStatus.BAD_REQUEST), //bỏ vào userdto thay cho lúc trước
+    PASS_INVALID(1009,"Mật Khẩu Phải có ít Nhất 4 kí tự",HttpStatus.BAD_REQUEST), //bỏ vào userdto thay cho lúc trước
     INVALID_OTP(1010,"Sai OTP, vui lòng nhập lại",HttpStatus.BAD_REQUEST),
     TOKEN_EXPIRED(1011,"Token hết hạn , vui lòng đăng nhập lại",HttpStatus.UNAUTHORIZED),
     WRONG_FORMAT_EMAIL(1012,"Sai Format Email",HttpStatus.BAD_REQUEST),

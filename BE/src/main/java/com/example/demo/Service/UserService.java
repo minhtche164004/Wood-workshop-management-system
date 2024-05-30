@@ -32,4 +32,6 @@ List<UserDTO> GetAllUser();
     User FindbyId1(int user_id);
 
     UserDTO EditUser(int userId,UpdateProfileDTO updateProfileDTO);
+
+    void DeleteUserById(int userId);
 }

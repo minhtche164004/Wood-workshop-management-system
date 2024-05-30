@@ -6,7 +6,6 @@ import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
-import java.util.Date;
 
 @Data
 @AllArgsConstructor
@@ -18,7 +17,7 @@ public class ProductDTO implements Serializable {
     private BigDecimal price;
     private int status_id;
     private String image;
-    private int caregoty_id;
+    private int category_id;
     private int type;
 
 }

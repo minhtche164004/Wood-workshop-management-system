@@ -12,11 +12,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.math.BigDecimal;
-import java.sql.Date;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 
 @Service
@@ -43,12 +39,12 @@ private ProductRepository productRepository;
         products.setEnddateWarranty(sqlEndDateWarranty);
 
         products.setProductName(productDTO.getProduct_name());
-        products.setDescription(productDTO.getProduct_name());
+        products.setDescription(productDTO.getDescription());
         products.setPrice(productDTO.getPrice());
 
         Status status = statusRepository.findById(productDTO.getStatus_id());
         products.setStatus(status);
-        Categories categories = categoryRepository.findById(productDTO.getCaregoty_id());
+        Categories categories = categoryRepository.findById(productDTO.getCategory_id());
         products.setCategories(categories);
         products.setType(productDTO.getType());
         products.setImage(productDTO.getImage());

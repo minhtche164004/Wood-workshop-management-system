@@ -11,22 +11,9 @@ public class Materials {
     @Id
     @Column(name = "material_id")
     private int materialId;
-    @Basic
+
     @Column(name = "material_name")
     private String materialName;
 
 
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Materials that = (Materials) o;
-        return materialId == that.materialId && Objects.equals(materialName, that.materialName);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(materialId, materialName);
-    }
 }

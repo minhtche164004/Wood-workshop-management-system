@@ -34,7 +34,7 @@ public class ModelMapperConfig {
                 .addMapping(src -> src.getStatus().getStatus_id(), ProductDTO::setStatus_id)
                 .addMapping(Products::getImage, ProductDTO::setImage)
                 .addMapping(Products::getType, ProductDTO::setType)
-                .addMapping(src -> src.getCategories().getCategoryId(), ProductDTO::setCaregoty_id);
+                .addMapping(src -> src.getCategories().getCategoryId(), ProductDTO::setCategory_id);
 
 //        modelMapper.typeMap(User.class, TestDTO1.class)
 //                .addMapping(User::getUsername, TestDTO1::setUsername)

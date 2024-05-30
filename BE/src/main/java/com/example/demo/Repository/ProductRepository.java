@@ -13,9 +13,9 @@ import java.util.List;
 
 @Repository
 @EnableJpaRepositories
-public interface ProductRepository extends JpaRepository<Products, Integer>  {
+public interface ProductRepository extends JpaRepository<Products, Integer> {
     List<Products> findAll();
-
-    @Query("SELECT COUNT(p) FROM Products p WHERE p.completionTime = :date") // đếm số product trong ngày
-    int countByCreatedAtDate(@Param("date") LocalDate date);
+    @Query(value = "SELECT p.* FROM products p WHERE p.code LIKE :prefix% ORDER BY p.code DESC LIMIT 1", nativeQuery = true)
+    Products findProductTop(@Param("prefix") String prefix);
 }
+

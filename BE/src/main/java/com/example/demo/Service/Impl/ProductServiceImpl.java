@@ -12,11 +12,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.math.BigDecimal;
-import java.sql.Date;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 
 @Service
@@ -43,27 +39,33 @@ private ProductRepository productRepository;
         products.setEnddateWarranty(sqlEndDateWarranty);
 
         products.setProductName(productDTO.getProduct_name());
-        products.setDescription(productDTO.getProduct_name());
+        products.setDescription(productDTO.getDescription());
         products.setPrice(productDTO.getPrice());
 
         Status status = statusRepository.findById(productDTO.getStatus_id());
         products.setStatus(status);
-        Categories categories = categoryRepository.findById(productDTO.getCaregoty_id());
+        Categories categories = categoryRepository.findById(productDTO.getCategory_id());
         products.setCategories(categories);
         products.setType(productDTO.getType());
         products.setImage(productDTO.getImage());
         products.setQuantity(productDTO.getQuantity());
-        products.setCode(generatorcode());
+
+        LocalDate today = LocalDate.now();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("ddMMyy");
+        String dateString = today.format(formatter);
+
+        Products lastProduct = productRepository.findProductTop(dateString + "PD");
+        int count = lastProduct != null ? Integer.parseInt(lastProduct.getCode().substring(8)) + 1 : 1;
+        String code = dateString + "PD" + String.format("%03d", count);
+
+        products.setCode(code);
+
+
 
 
         productRepository.save(products);
         return products;
     }
-    private String generatorcode(){
-        LocalDate currentDate = LocalDate.now();
-        String formattedDate = currentDate.format(DateTimeFormatter.ofPattern("yyyyMMdd")); // Định dạng ngày tháng
-        int orderNumber = productRepository.countByCreatedAtDate(currentDate) + 1; // Đếm số lượng sản phẩm đã tạo trong ngày + 1
-        return formattedDate + "PD" + String.format("%02d", orderNumber); // Định dạng mã sản phẩm
-    }
+
 
 }

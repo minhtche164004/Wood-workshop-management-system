@@ -7,7 +7,7 @@ import java.util.Objects;
 
 @Entity
 @Table(name = "requests", schema = "test1", catalog = "")
-public class RequestsEntity {
+public class Requests {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
     @Column(name = "request_id")
@@ -31,67 +31,13 @@ public class RequestsEntity {
     @Column(name = "code")
     private String code;
 
-    public int getRequestId() {
-        return requestId;
-    }
 
-    public void setRequestId(int requestId) {
-        this.requestId = requestId;
-    }
-
-    public Integer getUserId() {
-        return userId;
-    }
-
-    public void setUserId(Integer userId) {
-        this.userId = userId;
-    }
-
-    public Timestamp getRequestDate() {
-        return requestDate;
-    }
-
-    public void setRequestDate(Timestamp requestDate) {
-        this.requestDate = requestDate;
-    }
-
-    public Integer getStatusId() {
-        return statusId;
-    }
-
-    public void setStatusId(Integer statusId) {
-        this.statusId = statusId;
-    }
-
-    public String getResponse() {
-        return response;
-    }
-
-    public void setResponse(String response) {
-        this.response = response;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public String getCode() {
-        return code;
-    }
-
-    public void setCode(String code) {
-        this.code = code;
-    }
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        RequestsEntity that = (RequestsEntity) o;
+        Requests that = (Requests) o;
         return requestId == that.requestId && Objects.equals(userId, that.userId) && Objects.equals(requestDate, that.requestDate) && Objects.equals(statusId, that.statusId) && Objects.equals(response, that.response) && Objects.equals(description, that.description) && Objects.equals(code, that.code);
     }
 

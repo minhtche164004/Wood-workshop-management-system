@@ -1,5 +1,6 @@
 package com.example.demo.Entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
@@ -22,5 +23,11 @@ public class Status {
     private String status_name;
     @JsonIgnore
     @OneToMany(mappedBy = "status",  cascade = CascadeType.ALL)
+    @JsonBackReference
     private List<User> user;
+
+    @OneToMany(mappedBy = "status",cascade = CascadeType.ALL)
+    @JsonBackReference
+    private List<Products> products;
 }
+//

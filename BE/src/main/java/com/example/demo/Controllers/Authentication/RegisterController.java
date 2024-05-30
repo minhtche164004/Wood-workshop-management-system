@@ -1,6 +1,7 @@
 package com.example.demo.Controllers.Authentication;
 
 
+import com.example.demo.Dto.RegisterDTO;
 import com.example.demo.Dto.UserDTO;
 import com.example.demo.Entity.ChangePassword;
 import com.example.demo.Entity.ForgotPassword;
@@ -56,7 +57,7 @@ public class RegisterController {
     //thêm cái @Valid vi toi bo cai validation vao trong UserDto
     //trả về object ApiResponse chứ ko phải uSER NỮA
     @PostMapping("/registration")
-    public ApiResponse<String> registerUserAccount(@RequestBody @Valid UserDTO userDto, HttpSession session) {
+    public ApiResponse<String> registerUserAccount(@RequestBody @Valid RegisterDTO userDto, HttpSession session) {
         ApiResponse<String> apiResponse = new ApiResponse<>();
             userService.checkConditions(userDto);
                 // Lưu thông tin người dùng vào session (nếu cần)
@@ -84,7 +85,7 @@ public class RegisterController {
         ApiResponse<String> apiResponse = new ApiResponse<>();
         String email = (String) session.getAttribute("gmailregister");
       int otp=(int) session.getAttribute("otp");
-      UserDTO b = (UserDTO) session.getAttribute("userDto");
+        RegisterDTO b = (RegisterDTO) session.getAttribute("userDto");
         if(otpverify == otp){
             // Xác thực OTP thành công
             // Xóa OTP từ session sau khi sử dụng nó

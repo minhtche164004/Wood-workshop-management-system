@@ -28,7 +28,7 @@ public class UserInfor {
     private String address;
     @JsonIgnore
     @OneToOne(mappedBy = "userInfor")
-//    @JsonBackReference
+    @JsonBackReference
     private User user;
 
 

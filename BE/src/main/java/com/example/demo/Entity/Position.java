@@ -25,10 +25,8 @@ public class Position {
 
 @JsonIgnore
     @OneToMany(mappedBy = "position",  cascade = CascadeType.ALL)
+@JsonBackReference
     private List<User> user;
-
-
-
 
 
 }

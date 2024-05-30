@@ -1,6 +1,7 @@
 package com.example.demo.Service;
 
-import com.example.demo.Dto.TestDTO1;
+import com.example.demo.Dto.RegisterDTO;
+import com.example.demo.Dto.UpdateProfileDTO;
 import com.example.demo.Dto.UserDTO;
 import com.example.demo.Dto.UserUpdateDTO;
 import com.example.demo.Entity.User;
@@ -16,17 +17,21 @@ import java.util.List;
 public interface UserService {
    // void save(UserDTO userDTO);
 
-    User getUserbyEmail(String email);
+   // User getUserbyEmail(String email);
 
-   void checkConditions(UserDTO userDTO);
-
+   void checkConditions(RegisterDTO userDTO);
+    List<UserDTO> FindByUsernameOrAddress(String key);
   //  UserDetailsService userDetailsService();
-    User signup(UserDTO userDTO);
+    User signup(RegisterDTO userDTO);
     JwtAuthenticationResponse signin(LoginRequest loginRequest);
     JwtAuthenticationResponse refreshToken(RefreshTokenRequest refreshTokenRequest);
-List<UserUpdateDTO> GetAllUser();
+List<UserDTO> GetAllUser();
 
     UserUpdateDTO GetUserById(int user_id);
-    TestDTO1 FindbyId(int user_id);
+    UserDTO FindbyId(int user_id);
     User FindbyId1(int user_id);
+
+    UserDTO EditUser(int userId,UpdateProfileDTO updateProfileDTO);
+
+    void DeleteUserById(int userId);
 }

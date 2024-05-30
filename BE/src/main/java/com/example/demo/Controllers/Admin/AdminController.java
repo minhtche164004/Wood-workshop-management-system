@@ -1,6 +1,6 @@
 package com.example.demo.Controllers.Admin;
 
-import com.example.demo.Dto.TestDTO1;
+import com.example.demo.Dto.UserDTO;
 import com.example.demo.Dto.UserUpdateDTO;
 import com.example.demo.Entity.User;
 import com.example.demo.Repository.UserRepository;
@@ -28,17 +28,16 @@ public class AdminController {
         return apiResponse;
 
     }
-    @GetMapping("/SearchUser")
-    public ApiResponse<?> SearchUserByName(@RequestParam(value = "query", required = true) String query){
+    @GetMapping("/SearchUserByNameorAddress")
+    public ApiResponse<?> SearchUserByName(@RequestParam(value = "query", required = false) String query){
         ApiResponse<List> apiResponse = new ApiResponse<>();
-       // apiResponse.setResult(userRepository.findByUsername(query));
-        apiResponse.setResult(userRepository.findByUsernameOrAddress(query));
+        apiResponse.setResult(userService.FindByUsernameOrAddress(query));
         return  apiResponse;
     }
 
     @GetMapping("GetById1")
     public  ApiResponse<?> getUserById1(@RequestParam(value = "user_id", required = false) int user_id) {
-        ApiResponse<TestDTO1> apiResponse = new ApiResponse<>();
+        ApiResponse<UserDTO> apiResponse = new ApiResponse<>();
         apiResponse.setResult(userService.FindbyId(user_id));
         return apiResponse;
     }
@@ -52,6 +51,14 @@ public class AdminController {
     public  ApiResponse<?> getUserById3(@RequestParam(value = "user_id", required = false) int user_id) {
         ApiResponse<User> apiResponse = new ApiResponse<>();
         apiResponse.setResult(userService.FindbyId1(user_id));
+        return apiResponse;
+    }
+
+    @DeleteMapping("DeleteUserById")
+    public  ApiResponse<?> DeleteUserById(@RequestParam(value = "user_id", required = false) int user_id) {
+        ApiResponse<String> apiResponse = new ApiResponse<>();
+        userService.DeleteUserById(user_id);
+        apiResponse.setResult("Xoa User thanh cong");
         return apiResponse;
     }
 

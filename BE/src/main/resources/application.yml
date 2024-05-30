@@ -41,4 +41,5 @@ spring:
 jwt:
   key: 413F4428472B4B6250655368566D597033733676397924426452948404D6351
   time: 3600000  # 1000*60*60 milliseconds
+#http://localhost:8080/swagger-ui/index.html
 

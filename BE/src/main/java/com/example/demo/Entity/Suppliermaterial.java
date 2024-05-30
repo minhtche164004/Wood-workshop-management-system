@@ -6,7 +6,7 @@ import java.util.Objects;
 
 @Entity
 @Table(name = "suppliermaterial", schema = "test1", catalog = "")
-public class SuppliermaterialEntity {
+public class Suppliermaterial {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
     @Column(name = "supplier_material")
@@ -21,43 +21,13 @@ public class SuppliermaterialEntity {
     @Column(name = "sub_material_id")
     private Integer subMaterialId;
 
-    public int getSupplierMaterial() {
-        return supplierMaterial;
-    }
 
-    public void setSupplierMaterial(int supplierMaterial) {
-        this.supplierMaterial = supplierMaterial;
-    }
-
-    public String getSupplierName() {
-        return supplierName;
-    }
-
-    public void setSupplierName(String supplierName) {
-        this.supplierName = supplierName;
-    }
-
-    public String getPhoneNumber() {
-        return phoneNumber;
-    }
-
-    public void setPhoneNumber(String phoneNumber) {
-        this.phoneNumber = phoneNumber;
-    }
-
-    public Integer getSubMaterialId() {
-        return subMaterialId;
-    }
-
-    public void setSubMaterialId(Integer subMaterialId) {
-        this.subMaterialId = subMaterialId;
-    }
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        SuppliermaterialEntity that = (SuppliermaterialEntity) o;
+        Suppliermaterial that = (Suppliermaterial) o;
         return supplierMaterial == that.supplierMaterial && Objects.equals(supplierName, that.supplierName) && Objects.equals(phoneNumber, that.phoneNumber) && Objects.equals(subMaterialId, that.subMaterialId);
     }
 

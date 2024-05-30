@@ -39,77 +39,7 @@ public class JobsEntity {
     @Column(name = "code")
     private String code;
 
-    public int getJobId() {
-        return jobId;
-    }
 
-    public void setJobId(int jobId) {
-        this.jobId = jobId;
-    }
-
-    public Integer getUserId() {
-        return userId;
-    }
-
-    public void setUserId(Integer userId) {
-        this.userId = userId;
-    }
-
-    public Integer getProductId() {
-        return productId;
-    }
-
-    public void setProductId(Integer productId) {
-        this.productId = productId;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public Timestamp getTimeFinish() {
-        return timeFinish;
-    }
-
-    public void setTimeFinish(Timestamp timeFinish) {
-        this.timeFinish = timeFinish;
-    }
-
-    public Integer getQuantityProduct() {
-        return quantityProduct;
-    }
-
-    public void setQuantityProduct(Integer quantityProduct) {
-        this.quantityProduct = quantityProduct;
-    }
-
-    public BigDecimal getCost() {
-        return cost;
-    }
-
-    public void setCost(BigDecimal cost) {
-        this.cost = cost;
-    }
-
-    public Date getTimeStart() {
-        return timeStart;
-    }
-
-    public void setTimeStart(Date timeStart) {
-        this.timeStart = timeStart;
-    }
-
-    public String getCode() {
-        return code;
-    }
-
-    public void setCode(String code) {
-        this.code = code;
-    }
 
     @Override
     public boolean equals(Object o) {

@@ -25,7 +25,9 @@ public class LoginController {
     public ApiResponse<?> login(@RequestBody LoginRequest loginRequest, HttpSession session){
         ApiResponse<JwtAuthenticationResponse> apiResponse= new ApiResponse<>();
         apiResponse.setResult(userService.signin(loginRequest));
+
         String a = apiResponse.getResult().getToken();
+
         session.setAttribute("token", a);
         return apiResponse;
     }

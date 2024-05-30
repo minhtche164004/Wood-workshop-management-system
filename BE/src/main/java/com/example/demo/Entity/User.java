@@ -1,4 +1,5 @@
 package com.example.demo.Entity;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 import java.util.Date;
@@ -24,9 +25,11 @@ public class User  {
 
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "status_id")
+    @JsonIgnore
     private Status status;
 
     @ManyToOne(cascade = CascadeType.ALL)
+    @JsonIgnore
     @JoinColumn(name = "position_id")
     private Position position;
 
@@ -35,10 +38,12 @@ public class User  {
     private Date hireDate;
 
     @ManyToOne(cascade = CascadeType.ALL)
+    @JsonIgnore
     @JoinColumn(name = "role_id")
     private Role role;
 
     @OneToOne(cascade = CascadeType.ALL)// tức là khi tạo User thì infor cũng đc tạo
+    @JsonIgnore
     @JoinColumn(name = "infor_id")
 
     private UserInfor userInfor;

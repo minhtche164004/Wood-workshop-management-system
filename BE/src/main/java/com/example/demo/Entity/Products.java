@@ -33,16 +33,20 @@ public class Products {
     private BigDecimal price;
 
     @Column(name = "completion_time")
-    private String completionTime;
+    @Temporal(TemporalType.DATE)
+    private Date completionTime;
 
     @Column(name = "image")
     private String image;
 
     @Column(name = "enddate_warranty")
+    @Temporal(TemporalType.DATE)
     private Date enddateWarranty;
 
     @Column(name = "code")
     private String code;
+    @Column(name = "type")
+    private int type;
 
     @ManyToOne(cascade = CascadeType.ALL)
     @JsonIgnore
@@ -54,5 +58,17 @@ public class Products {
     @JoinColumn(name = "category_id")
     private Categories categories;
 
-
+    public Products(String productName, String description, Integer quantity, BigDecimal price, Date completionTime, String image, Date enddateWarranty, String code, Status status, Categories categories,Integer type) {
+        this.productName = productName;
+        this.description = description;
+        this.quantity = quantity;
+        this.price = price;
+        this.completionTime = completionTime;
+        this.image = image;
+        this.enddateWarranty = enddateWarranty;
+        this.code = code;
+        this.status = status;
+        this.categories = categories;
+        this.type=type;
+    }
 }

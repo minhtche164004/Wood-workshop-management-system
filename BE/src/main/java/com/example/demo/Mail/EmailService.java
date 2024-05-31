@@ -12,10 +12,11 @@ public class EmailService {
     @Autowired
     private JavaMailSender javaMailSender;
 
-    @Value("$(spring.mail.username)")
+    @Value("${spring.mail.username}")
     private String emailSentTo;
     public void sendSimpleMessage(MailBody mailBody){
         SimpleMailMessage message = new SimpleMailMessage();
+        message.setSubject("[Thông Báo Xưởng Gỗ]");
         message.setTo(mailBody.to());
         message.setFrom(emailSentTo);
         message.setText(mailBody.text());

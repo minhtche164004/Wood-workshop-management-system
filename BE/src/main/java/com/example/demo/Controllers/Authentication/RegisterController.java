@@ -70,11 +70,11 @@ public class RegisterController {
                 session.setAttribute("otp", otp);
                 MailBody mailBody = MailBody.builder()
                         .to(userDto.getEmail())
-                        .text("This is OTP for your registration: " + otp)
-                        .subject("OTP for Registration")
+                        .text("Đây là OTP cho xác thực đăng kí: " + otp)
+                        .subject("[OTP cho Đăng Kí]")
                         .build();
                 emailService.sendSimpleMessage(mailBody);
-                apiResponse.setResult("Registration successful, check your email for OTP");
+                apiResponse.setResult("Check Mail để kiểm tra OTP");
                 return apiResponse;
           //   return ResponseEntity.ok("Registration successful, check your email for OTP");
     }
@@ -91,7 +91,7 @@ public class RegisterController {
             // Xóa OTP từ session sau khi sử dụng nó
             session.removeAttribute("otp");
             userService.signup(b);
-            apiResponse.setResult("Verify otp success, Register success, Please Login");
+            apiResponse.setResult("Xác Thực OTP thành công , Vui Lòng quay lại Đăng Nhập");
             return apiResponse;
            // return ResponseEntity.ok("Verify otp success, Register success, please lOGIN");
         }

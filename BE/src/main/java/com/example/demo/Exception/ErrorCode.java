@@ -8,32 +8,46 @@ import org.springframework.http.HttpStatusCode;
 @Getter
 public enum ErrorCode {
     UNCATEGORIZED_EXCEPTION(9999,"Lỗi Hệ Thống", HttpStatus.INTERNAL_SERVER_ERROR), //day la loai exception khong ngo toi
+
+    //---------Exception của đăng kí người dùng-----------------------
     GMAIL_EXISTED(1001,"Gmail Đã Tồn Tại",HttpStatus.BAD_REQUEST),
     INVALID_NAME_FORMAT(1002,"Sai Format Của Tên ",HttpStatus.BAD_REQUEST),
     NOT_MATCH_PASS(1003,"Mật Khẩu Không Khớp,Vui Lòng Nhập Lại",HttpStatus.BAD_REQUEST),
-    UNAUTHENTICATED(1004,"Bạn Chưa Được Xác Thực , Vui Lòng Đăng Nhập",HttpStatus.UNAUTHORIZED), //lỗi chưa xác thực , họặc token hết hạn thì đều bắt người dùng phải login để tạo lại token
-    UNAUTHORIZED(1005,"Bạn Không Có Role Để Truy Cập",HttpStatus.FORBIDDEN),
-    WRONG_PASS_OR_EMAIL(1006,"Sai Tên Đăng Nhập Hoặc Mật Khẩu",HttpStatus.BAD_REQUEST),
-    //404 la NOTFOUND , vi du nhu tim user nhung ko ton tai
-
-
-    INVALID_KEY(1007,"Invalid Message Key",HttpStatus.BAD_REQUEST), //dinh nghĩa 1 số cái nhập sai ở dto, ví dụ như PAS_INVALID mà thiếu chữ S
     USERNAME_INVALID(1008,"Tên Đăng Nhập Phải Có ít nhất 5 kí tự",HttpStatus.BAD_REQUEST),
     PASS_INVALID(1009,"Mật Khẩu Phải có ít Nhất 4 kí tự",HttpStatus.BAD_REQUEST), //bỏ vào userdto thay cho lúc trước
     INVALID_OTP(1010,"Sai OTP, vui lòng nhập lại",HttpStatus.BAD_REQUEST),
-    TOKEN_EXPIRED(1011,"Token hết hạn , vui lòng đăng nhập lại",HttpStatus.UNAUTHORIZED),
     WRONG_FORMAT_EMAIL(1012,"Sai Format Email",HttpStatus.BAD_REQUEST),
-    OTP_EXPIRED(1013,"OTP đã hết hạn , OTP mới đã được gửi, vui lòng check mail",HttpStatus.EXPECTATION_FAILED),
-    UN_ACTIVE_ACCOUNT(1014,"Account đã bị ban hoặc chưa Active",HttpStatus.EXPECTATION_FAILED),
-    NOT_FOUND(1015,"Không tìm thấy kết quả tìm kiếm ",HttpStatus.NOT_FOUND),
     INVALID_FORMAT_ADDRESS(1016,"Sai Format của địa chỉ",HttpStatus.BAD_REQUEST),
     INVALID_FORMAT_PHONE_NUMBER(1017,"Sai Format số điện thoại",HttpStatus.BAD_REQUEST),
     INVALID_FORMAT_FULL_NAME(1018,"Sai Format của tên",HttpStatus.BAD_REQUEST),
-    USERNAME_EXISTED(1019,"Username Đã Tồn Tại",HttpStatus.BAD_REQUEST)
+    USERNAME_EXISTED(1019,"Username Đã Tồn Tại",HttpStatus.BAD_REQUEST),
+    //-----------------------------------
+
+    //------------------Exception của Xác thực , Phân quyền )----------
+    UNAUTHENTICATED(1004,"Bạn Chưa Được Xác Thực , Vui Lòng Đăng Nhập",HttpStatus.UNAUTHORIZED), //lỗi chưa xác thực , họặc token hết hạn thì đều bắt người dùng phải login để tạo lại token
+    UNAUTHORIZED(1005,"Bạn Không Có Role Để Truy Cập",HttpStatus.FORBIDDEN),
+    TOKEN_EXPIRED(1011,"Token hết hạn , vui lòng đăng nhập lại",HttpStatus.UNAUTHORIZED),
+    //-----------------------------------
+
+    //--------------Exception của Login----------------
+    WRONG_PASS_OR_EMAIL(1006,"Sai Tên Đăng Nhập Hoặc Mật Khẩu",HttpStatus.BAD_REQUEST),
+    //404 la NOTFOUND , vi du nhu tim user nhung ko ton tai
+    //-----------------------------------
+
+    INVALID_KEY(1007,"Invalid Message Key",HttpStatus.BAD_REQUEST), //dinh nghĩa 1 số cái nhập sai ở dto, ví dụ như PAS_INVALID mà thiếu chữ S
+
+
+    //-------------Exception SendMail, Verify OTP-------------
+    OTP_EXPIRED(1013,"OTP đã hết hạn , OTP mới đã được gửi, vui lòng check mail",HttpStatus.EXPECTATION_FAILED),
+    UN_ACTIVE_ACCOUNT(1014,"Account đã bị ban hoặc chưa Active",HttpStatus.EXPECTATION_FAILED),
+    NOT_FOUND_EMAIL(1020,"Không tìm thấy Email",HttpStatus.BAD_REQUEST),
+    //-----------------------------------
+
+    NOT_FOUND(1015,"Không tìm thấy kết quả tìm kiếm ",HttpStatus.NOT_FOUND),
 
 
 
-   // OTP_EXPIRED(1013,"OTP has expired! A new OTP has been sent to your email",HttpStatus.EXPECTATION_FAILED),
+    // OTP_EXPIRED(1013,"OTP has expired! A new OTP has been sent to your email",HttpStatus.EXPECTATION_FAILED),
     ;
 
     ErrorCode(int code, String message, HttpStatusCode statusCode) {

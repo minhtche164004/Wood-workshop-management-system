@@ -250,7 +250,7 @@ Position position = positionRepository.findByName("Not a worker");
             throw new AppException(ErrorCode.INVALID_FORMAT_PHONE_NUMBER);
         }
         if (!checkFullName(updateProfileDTO.getFullname())) {
-            throw new AppException(ErrorCode.INVALID_FORMAT_FULL_NAME);
+            throw new AppException(ErrorCode.INVALID_FORMAT_NAME);
         }
         if (userRepository.countByEmail(updateProfileDTO.getEmail()) > 0) {
             throw new AppException(ErrorCode.GMAIL_EXISTED);

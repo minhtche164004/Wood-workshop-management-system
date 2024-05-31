@@ -19,7 +19,7 @@ public enum ErrorCode {
     WRONG_FORMAT_EMAIL(1012,"Sai Format Email",HttpStatus.BAD_REQUEST),
     INVALID_FORMAT_ADDRESS(1016,"Sai Format của địa chỉ",HttpStatus.BAD_REQUEST),
     INVALID_FORMAT_PHONE_NUMBER(1017,"Sai Format số điện thoại",HttpStatus.BAD_REQUEST),
-    INVALID_FORMAT_FULL_NAME(1018,"Sai Format của tên",HttpStatus.BAD_REQUEST),
+    INVALID_FORMAT_NAME(1018,"Sai Format của Đặt Tên",HttpStatus.BAD_REQUEST),
     USERNAME_EXISTED(1019,"Username Đã Tồn Tại",HttpStatus.BAD_REQUEST),
     //-----------------------------------
 
@@ -44,6 +44,11 @@ public enum ErrorCode {
     //-----------------------------------
 
     NOT_FOUND(1015,"Không tìm thấy kết quả tìm kiếm ",HttpStatus.NOT_FOUND),
+
+
+    //Exception của Materials
+    NAME_EXIST(1021,"Tên đã tồn tại , vui lòng nhập tên khác",HttpStatus.BAD_REQUEST),
+
 
 
 

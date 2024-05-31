@@ -1,7 +1,7 @@
 package com.example.demo.Repository;
 
-import com.example.demo.Dto.UserDTO;
-import com.example.demo.Dto.UserUpdateDTO;
+import com.example.demo.Dto.UserDTO.UserDTO;
+import com.example.demo.Dto.UserDTO.UserUpdateDTO;
 import com.example.demo.Entity.User;
 import jakarta.transaction.Transactional;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -45,7 +45,7 @@ public interface UserRepository extends JpaRepository<User,Integer> {
     List<User> findByUsernameOrAddress(@Param("keyword") String keyword);
 
  @Query(value =
-         "SELECT new com.example.demo.Dto.UserUpdateDTO(u.username,ui.address,s.status_name,p.position_name,r.roleName,u.email)" +
+         "SELECT new com.example.demo.Dto.UserDTO.UserUpdateDTO(u.username,ui.address,s.status_name,p.position_name,r.roleName,u.email)" +
                  "FROM User u " +
                  "INNER JOIN u.userInfor ui " +
                  "INNER JOIN u.position p  " +

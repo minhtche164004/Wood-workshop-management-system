@@ -1,15 +1,19 @@
-package com.example.demo.Controllers.Admin;
+package com.example.demo.Controllers.Product;
 
-import com.example.demo.Dto.ProductDTO;
+import com.example.demo.Dto.ProductDTO.ProductDTO;
+import com.example.demo.Dto.SubMaterialDTO.SubMaterialDTO;
 import com.example.demo.Entity.Products;
+import com.example.demo.Entity.SubMaterials;
 import com.example.demo.Repository.CategoryRepository;
 import com.example.demo.Repository.ProductRepository;
-import com.example.demo.Repository.UserRepository;
 import com.example.demo.Response.ApiResponse;
 import com.example.demo.Service.ProductService;
+import com.example.demo.Service.SubMaterialService;
 import com.example.demo.Service.UserService;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -26,6 +30,8 @@ public class ProductController {
     private CategoryRepository categoryRepository;
     @Autowired
     private ProductService productService;
+
+
 
     @GetMapping("/GetAllProduct")
     public ApiResponse<?> getAllProduct(){

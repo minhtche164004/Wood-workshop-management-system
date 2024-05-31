@@ -1,7 +1,7 @@
 package com.example.demo.Config;
 
-import com.example.demo.Dto.ProductDTO;
-import com.example.demo.Dto.UserDTO;
+import com.example.demo.Dto.ProductDTO.ProductDTO;
+import com.example.demo.Dto.UserDTO.UserDTO;
 import com.example.demo.Entity.Products;
 import com.example.demo.Entity.User;
 import org.modelmapper.ModelMapper;

@@ -25,7 +25,7 @@ public class Role {
     @Column(name = "role_name", nullable = false, length = 255)
     private String roleName;
     @JsonIgnore
-    @OneToMany(mappedBy = "role", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "role", fetch = FetchType.LAZY)
     @JsonBackReference
     private List<User> user;
 

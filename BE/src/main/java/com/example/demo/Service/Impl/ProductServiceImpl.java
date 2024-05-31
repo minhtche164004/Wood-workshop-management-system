@@ -1,6 +1,6 @@
 package com.example.demo.Service.Impl;
 
-import com.example.demo.Dto.ProductDTO;
+import com.example.demo.Dto.ProductDTO.ProductDTO;
 import com.example.demo.Entity.Categories;
 import com.example.demo.Entity.Products;
 import com.example.demo.Entity.Status;

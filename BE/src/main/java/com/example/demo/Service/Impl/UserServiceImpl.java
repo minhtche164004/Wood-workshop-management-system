@@ -1,11 +1,11 @@
 package com.example.demo.Service.Impl;
 
-import com.example.demo.Dto.RegisterDTO;
-import com.example.demo.Dto.UpdateProfileDTO;
-import com.example.demo.Dto.UserDTO;
+import com.example.demo.Dto.UserDTO.RegisterDTO;
+import com.example.demo.Dto.UserDTO.UpdateProfileDTO;
+import com.example.demo.Dto.UserDTO.UserDTO;
 import com.example.demo.Entity.*;
 import com.example.demo.Jwt.UserDetailsServiceImpl;
-import com.example.demo.Dto.UserUpdateDTO;
+import com.example.demo.Dto.UserDTO.UserUpdateDTO;
 import com.example.demo.Exception.AppException;
 import com.example.demo.Exception.ErrorCode;
 import com.example.demo.Jwt.JwtAuthenticationResponse;

@@ -1,9 +1,17 @@
 package com.example.demo.Entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
+import java.util.List;
 import java.util.Objects;
-
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
 @Entity
 @Table(name = "product_sub_materials", schema = "test1", catalog = "")
 public class ProductSubMaterials {
@@ -11,25 +19,24 @@ public class ProductSubMaterials {
     @Id
     @Column(name = "product_sub_material_id")
     private int productSubMaterialId;
-    @Basic
-    @Column(name = "sub_material_id")
-    private Integer subMaterialId;
-    @Basic
-    @Column(name = "product_id")
-    private Integer productId;
+
+//    @Column(name = "sub_material_id")
+//    private Integer subMaterialId;
+
+//    @Column(name = "product_id")
+//    private Integer productId;
 
 
+    @ManyToOne(fetch = FetchType.LAZY) // Sử dụng FetchType.LAZY để tối ưu việc truy vấn
+    @JsonIgnore
+    @JoinColumn(name = "sub_material_id") // Chỉ định cột khóa ngoại
+    private SubMaterials subMaterial;
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        ProductSubMaterials that = (ProductSubMaterials) o;
-        return productSubMaterialId == that.productSubMaterialId && Objects.equals(subMaterialId, that.subMaterialId) && Objects.equals(productId, that.productId);
-    }
 
-    @Override
-    public int hashCode() {
-        return Objects.hash(productSubMaterialId, subMaterialId, productId);
-    }
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JsonIgnore
+    @JoinColumn(name = "product_id") // Chỉ định cột khóa ngoại
+    private Products product; // Thêm thuộc tính Products để liên kết với bảng products
 }
+
+

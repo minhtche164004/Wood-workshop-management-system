@@ -1,5 +1,6 @@
 package com.example.demo.Entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -8,6 +9,7 @@ import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
 import java.sql.Date;
+import java.util.List;
 import java.util.Objects;
 @Data
 @AllArgsConstructor
@@ -57,6 +59,11 @@ public class Products {
     @JsonIgnore
     @JoinColumn(name = "category_id")
     private Categories categories;
+
+
+    @OneToMany(mappedBy = "product",fetch = FetchType.LAZY)
+    @JsonBackReference
+    private List<ProductSubMaterials> productSubMaterials;
 
     public Products(String productName, String description, Integer quantity, BigDecimal price, Date completionTime, String image, Date enddateWarranty, String code, Status status, Categories categories,Integer type) {
         this.productName = productName;

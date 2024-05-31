@@ -1,15 +1,13 @@
 package com.example.demo.Controllers.User;
 
-import com.example.demo.Dto.UpdateProfileDTO;
-import com.example.demo.Dto.UserDTO;
+import com.example.demo.Dto.UserDTO.UpdateProfileDTO;
+import com.example.demo.Dto.UserDTO.UserDTO;
 import com.example.demo.Repository.UserRepository;
 import com.example.demo.Response.ApiResponse;
 import com.example.demo.Service.UserService;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("/api/auth/user/")

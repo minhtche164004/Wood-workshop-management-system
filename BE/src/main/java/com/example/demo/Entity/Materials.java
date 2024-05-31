@@ -25,12 +25,16 @@ public class Materials {
     private String materialName;
 
     @JsonIgnore
-    @OneToMany(mappedBy = "materials", cascade = CascadeType.ALL)
-    @JsonBackReference
+    @OneToMany(mappedBy = "materials", fetch = FetchType.LAZY)
     private List<SubMaterials> subMaterials;
+
+
+//    @JsonIgnore
+//    @OneToMany(mappedBy = "role", cascade = CascadeType.ALL)
+//    @JsonBackReference
+//    private List<User> user;
 
     public Materials(String materialName) {
         this.materialName = materialName;
-
     }
 }

@@ -1,9 +1,9 @@
 package com.example.demo.Service;
 
-import com.example.demo.Dto.RegisterDTO;
-import com.example.demo.Dto.UpdateProfileDTO;
-import com.example.demo.Dto.UserDTO;
-import com.example.demo.Dto.UserUpdateDTO;
+import com.example.demo.Dto.UserDTO.RegisterDTO;
+import com.example.demo.Dto.UserDTO.UpdateProfileDTO;
+import com.example.demo.Dto.UserDTO.UserDTO;
+import com.example.demo.Dto.UserDTO.UserUpdateDTO;
 import com.example.demo.Entity.User;
 import com.example.demo.Jwt.JwtAuthenticationResponse;
 import com.example.demo.Jwt.RefreshTokenRequest;

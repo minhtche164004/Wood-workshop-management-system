@@ -1,11 +1,7 @@
 package com.example.demo.Controllers.Authentication;
 
 
-import com.example.demo.Dto.RegisterDTO;
-import com.example.demo.Dto.UserDTO;
-import com.example.demo.Entity.ChangePassword;
-import com.example.demo.Entity.ForgotPassword;
-import com.example.demo.Entity.User;
+import com.example.demo.Dto.UserDTO.RegisterDTO;
 import com.example.demo.Exception.AppException;
 import com.example.demo.Exception.ErrorCode;
 import com.example.demo.Mail.EmailService;
@@ -18,13 +14,9 @@ import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.Instant;
-import java.util.Date;
-import java.util.Objects;
 import java.util.Random;
 
 @RestController

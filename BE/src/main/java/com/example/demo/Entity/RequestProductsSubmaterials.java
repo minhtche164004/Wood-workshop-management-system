@@ -1,9 +1,15 @@
 package com.example.demo.Entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.util.Objects;
-
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
 @Entity
 @Table(name = "request_products_submaterials", schema = "test1", catalog = "")
 public class RequestProductsSubmaterials {
@@ -11,24 +17,19 @@ public class RequestProductsSubmaterials {
     @Id
     @Column(name = "request_products_submaterials_id")
     private int requestProductsSubmaterialsId;
-    @Basic
+
     @Column(name = "request_product_id")
     private Integer requestProductId;
-    @Basic
-    @Column(name = "sub_material_id")
-    private Integer subMaterialId;
+
+//    @Column(name = "sub_material_id")
+//    private Integer subMaterialId;
+
+    @ManyToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "sub_material_id")
+    private SubMaterials subMaterial;
 
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        RequestProductsSubmaterials that = (RequestProductsSubmaterials) o;
-        return requestProductsSubmaterialsId == that.requestProductsSubmaterialsId && Objects.equals(requestProductId, that.requestProductId) && Objects.equals(subMaterialId, that.subMaterialId);
-    }
 
-    @Override
-    public int hashCode() {
-        return Objects.hash(requestProductsSubmaterialsId, requestProductId, subMaterialId);
-    }
+
+
 }

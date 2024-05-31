@@ -7,6 +7,7 @@ import org.springframework.http.HttpStatusCode;
 
 @Getter
 public enum ErrorCode {
+
     UNCATEGORIZED_EXCEPTION(9999,"Lỗi Hệ Thống", HttpStatus.INTERNAL_SERVER_ERROR), //day la loai exception khong ngo toi
 
     //---------Exception của đăng kí người dùng-----------------------
@@ -25,12 +26,12 @@ public enum ErrorCode {
 
     //------------------Exception của Xác thực , Phân quyền )----------
     UNAUTHENTICATED(1004,"Bạn Chưa Được Xác Thực , Vui Lòng Đăng Nhập",HttpStatus.UNAUTHORIZED), //lỗi chưa xác thực , họặc token hết hạn thì đều bắt người dùng phải login để tạo lại token
-    UNAUTHORIZED(1005,"Bạn Không Có Role Để Truy Cập",HttpStatus.FORBIDDEN),
+    UNAUTHORIZED(1005,"Bạn không có quyền truy cập thao tác này ",HttpStatus.FORBIDDEN),
     TOKEN_EXPIRED(1011,"Token hết hạn , vui lòng đăng nhập lại",HttpStatus.UNAUTHORIZED),
     //-----------------------------------
 
     //--------------Exception của Login----------------
-    WRONG_PASS_OR_EMAIL(1006,"Sai Tên Đăng Nhập Hoặc Mật Khẩu",HttpStatus.BAD_REQUEST),
+    WRONG_PASS_OR_EMAIL(1006,"Sai Tên đăng nhập hoặc mật khẩu",HttpStatus.BAD_REQUEST),
     //404 la NOTFOUND , vi du nhu tim user nhung ko ton tai
     //-----------------------------------
 
@@ -47,7 +48,7 @@ public enum ErrorCode {
 
 
     //Exception của Materials
-    NAME_EXIST(1021,"Tên đã tồn tại , vui lòng nhập tên khác",HttpStatus.BAD_REQUEST),
+    NAME_EXIST(1021,"Tên đã tồn tại , vui lòng nhập tên khác",HttpStatus.BAD_REQUEST)
 
 
 

@@ -1,6 +1,6 @@
 package com.example.demo.Controllers.Material;
 
-import com.example.demo.Dto.MaterialDTO;
+import com.example.demo.Dto.MaterialDTO.MaterialDTO;
 import com.example.demo.Entity.Materials;
 import com.example.demo.Response.ApiResponse;
 import com.example.demo.Service.MaterialService;

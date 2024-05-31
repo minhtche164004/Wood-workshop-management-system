@@ -1,6 +1,6 @@
 package com.example.demo.Service;
 
-import com.example.demo.Dto.MaterialDTO;
+import com.example.demo.Dto.MaterialDTO.MaterialDTO;
 import com.example.demo.Entity.Materials;
 import org.springframework.stereotype.Service;
 

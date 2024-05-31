@@ -1,7 +1,7 @@
 package com.example.demo.Controllers.Admin;
 
-import com.example.demo.Dto.UserDTO;
-import com.example.demo.Dto.UserUpdateDTO;
+import com.example.demo.Dto.UserDTO.UserDTO;
+import com.example.demo.Dto.UserDTO.UserUpdateDTO;
 import com.example.demo.Entity.User;
 import com.example.demo.Repository.UserRepository;
 import com.example.demo.Response.ApiResponse;

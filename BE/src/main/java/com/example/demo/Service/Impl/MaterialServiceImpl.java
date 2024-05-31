@@ -1,6 +1,6 @@
 package com.example.demo.Service.Impl;
 
-import com.example.demo.Dto.MaterialDTO;
+import com.example.demo.Dto.MaterialDTO.MaterialDTO;
 import com.example.demo.Entity.Materials;
 import com.example.demo.Exception.AppException;
 import com.example.demo.Exception.ErrorCode;

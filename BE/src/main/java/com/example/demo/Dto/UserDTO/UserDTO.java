@@ -1,8 +1,5 @@
-package com.example.demo.Dto;
+package com.example.demo.Dto.UserDTO;
 
-import com.example.demo.Entity.UserInfor;
-import jakarta.validation.constraints.Size;
-import jdk.jfr.Name;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;

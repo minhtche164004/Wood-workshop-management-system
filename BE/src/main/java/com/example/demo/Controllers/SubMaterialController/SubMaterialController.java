@@ -35,5 +35,11 @@ public class SubMaterialController {
        apiResponse.setResult(subMaterialService.addNew(subMaterialDTO));
        return apiResponse;
     }
+    @GetMapping("/getAllName")
+    public ApiResponse<?> getAllSubMaterialsName(){
+        ApiResponse<List> apiResponse = new ApiResponse<>();
+        apiResponse.setResult(subMaterialService.GetListName());
+        return apiResponse;
+    }
 
 }

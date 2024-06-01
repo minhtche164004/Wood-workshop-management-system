@@ -12,8 +12,10 @@ import java.math.BigDecimal;
 @AllArgsConstructor
 @NoArgsConstructor
 public class SubMaterialDTO implements Serializable {
+    @NotNull(message = "MUST_REQUIRED")
     private String sub_material_name;
     private Integer material_id;
+    @NotNull(message = "MUST_REQUIRED")
     private String description;
     @NotNull(message = "MUST_REQUIRED") // Không được để trống
     @Min(value = 0, message = "QUANTITY_INVALID") // Giá trị tối thiểu là 0

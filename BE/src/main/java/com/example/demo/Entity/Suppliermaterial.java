@@ -1,14 +1,11 @@
 package com.example.demo.Entity;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.List;
-import java.util.Objects;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -23,15 +20,11 @@ public class Suppliermaterial {
     private String supplierName;
     @Column(name = "phone_number")
     private String phoneNumber;
-//    @Column(name = "sub_material_id")
-//    private Integer subMaterialId;
-
 
     @ManyToOne // Một nhà cung cấp có thể cung cấp nhiều nguyên liệu phụ
     @JsonIgnore
     @JoinColumn(name = "sub_material_id") // Khóa ngoại liên kết với bảng sub_materials
     private SubMaterials subMaterial;
-
-
+ //vd : nhiều nhà cung cấp có thể cung cấp 1 loại đồ
 
 }

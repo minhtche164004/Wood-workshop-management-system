@@ -7,6 +7,7 @@ import com.example.demo.Entity.SubMaterials;
 import com.example.demo.Repository.CategoryRepository;
 import com.example.demo.Repository.ProductRepository;
 import com.example.demo.Response.ApiResponse;
+import com.example.demo.Service.CategorySevice;
 import com.example.demo.Service.ProductService;
 import com.example.demo.Service.SubMaterialService;
 import com.example.demo.Service.UserService;
@@ -23,14 +24,15 @@ import java.util.List;
 @RequestMapping("/api/auth/product/")
 @AllArgsConstructor
 public class ProductController {
-    @Autowired
-    private UserService userService;
+
     @Autowired
     private ProductRepository productRepository;
     @Autowired
     private CategoryRepository categoryRepository;
     @Autowired
     private ProductService productService;
+    @Autowired
+    private CategorySevice categorySevice;
 
 
 
@@ -47,6 +49,12 @@ public class ProductController {
         apiResponse.setResult(categoryRepository.findAll());
         return apiResponse;
 
+    }
+    @GetMapping("/getAllCategoryName")
+    public ApiResponse<?> getAllCategoryName(){
+        ApiResponse<List> apiResponse = new ApiResponse<>();
+        apiResponse.setResult(categorySevice.GetListName());
+        return apiResponse;
     }
     @PostMapping("/AddNewProduct")
     public ApiResponse<?> AddNewProduct(@RequestBody @Valid ProductDTO productDTO){

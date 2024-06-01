@@ -1,6 +1,8 @@
 package com.example.demo.Service.Impl;
 
+import com.example.demo.Dto.MaterialDTO.MaterialDTO;
 import com.example.demo.Dto.SubMaterialDTO.SubMaterialDTO;
+import com.example.demo.Dto.SubMaterialDTO.SubMaterialNameDTO;
 import com.example.demo.Entity.Materials;
 import com.example.demo.Entity.Products;
 import com.example.demo.Entity.SubMaterials;
@@ -9,6 +11,7 @@ import com.example.demo.Exception.ErrorCode;
 import com.example.demo.Repository.MaterialRepository;
 import com.example.demo.Repository.SubMaterialsRepository;
 import com.example.demo.Service.SubMaterialService;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -17,11 +20,14 @@ import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Optional;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 @Service
 public class SubMaterialServiceImpl implements SubMaterialService {
 @Autowired
 private SubMaterialsRepository subMaterialsRepository;
+@Autowired
+private ModelMapper modelMapper;
 
     @Autowired
     private MaterialRepository materialRepository;
@@ -57,6 +63,13 @@ private SubMaterialsRepository subMaterialsRepository;
         subMaterials.setCode(code);
         subMaterialsRepository.save(subMaterials);
         return subMaterials;
+    }
+
+    @Override
+    public List<SubMaterialNameDTO> GetListName() {
+        return subMaterialsRepository.findAll().stream()
+                .map(sub -> modelMapper.map(sub, SubMaterialNameDTO.class))
+                .collect(Collectors.toList());
     }
 
     public Boolean checkSubMaterialName(String name) {

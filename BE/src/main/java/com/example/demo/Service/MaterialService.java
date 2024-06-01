@@ -10,4 +10,5 @@ import java.util.List;
 public interface MaterialService {
     List<Materials> getAllMaterials();
 Materials AddNewMaterial(MaterialDTO materialDTO);
+List<MaterialDTO> GetListName();
 }

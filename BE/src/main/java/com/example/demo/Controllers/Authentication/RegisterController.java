@@ -21,6 +21,7 @@ import java.util.Random;
 
 @RestController
 @RequestMapping("/api/auth/")
+@CrossOrigin(origins="http://localhost:5173")
 @AllArgsConstructor
 public class RegisterController {
 
@@ -44,7 +45,6 @@ public class RegisterController {
 //        return ResponseEntity.ok("Registration successful");*/
 //    }
 //}
-
 
     //thêm cái @Valid vi toi bo cai validation vao trong UserDto
     //trả về object ApiResponse chứ ko phải uSER NỮA

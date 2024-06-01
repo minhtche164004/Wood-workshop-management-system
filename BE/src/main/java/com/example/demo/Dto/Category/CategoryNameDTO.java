@@ -1,4 +1,4 @@
-package com.example.demo.Dto.MaterialDTO;
+package com.example.demo.Dto.Category;
 
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
@@ -10,7 +10,7 @@ import java.io.Serializable;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class MaterialDTO implements Serializable {
+public class CategoryNameDTO implements Serializable {
     @NotNull(message = "MUST_REQUIRED")
-    private String materialName;
+    private String categoryName;
 }

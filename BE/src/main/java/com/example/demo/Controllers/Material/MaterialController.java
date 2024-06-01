@@ -29,4 +29,10 @@ public class MaterialController {
         apiResponse.setResult(materialService.AddNewMaterial(materialDTO));
         return apiResponse;
     }
+    @GetMapping("/getAllName")
+    public ApiResponse<?> getAllMaterialsName(){
+        ApiResponse<List> apiResponse = new ApiResponse<>();
+        apiResponse.setResult(materialService.GetListName());
+        return apiResponse;
+    }
 }

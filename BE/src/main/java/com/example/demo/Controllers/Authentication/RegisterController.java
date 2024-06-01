@@ -1,11 +1,7 @@
 package com.example.demo.Controllers.Authentication;
 
 
-import com.example.demo.Dto.RegisterDTO;
-import com.example.demo.Dto.UserDTO;
-import com.example.demo.Entity.ChangePassword;
-import com.example.demo.Entity.ForgotPassword;
-import com.example.demo.Entity.User;
+import com.example.demo.Dto.UserDTO.RegisterDTO;
 import com.example.demo.Exception.AppException;
 import com.example.demo.Exception.ErrorCode;
 import com.example.demo.Mail.EmailService;
@@ -18,17 +14,14 @@ import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.Instant;
-import java.util.Date;
-import java.util.Objects;
 import java.util.Random;
 
 @RestController
 @RequestMapping("/api/auth/")
+@CrossOrigin(origins="http://localhost:5173")
 @AllArgsConstructor
 public class RegisterController {
 
@@ -53,7 +46,6 @@ public class RegisterController {
 //    }
 //}
 
-
     //thêm cái @Valid vi toi bo cai validation vao trong UserDto
     //trả về object ApiResponse chứ ko phải uSER NỮA
     @PostMapping("/registration")
@@ -70,11 +62,11 @@ public class RegisterController {
                 session.setAttribute("otp", otp);
                 MailBody mailBody = MailBody.builder()
                         .to(userDto.getEmail())
-                        .text("This is OTP for your registration: " + otp)
-                        .subject("OTP for Registration")
+                        .text("Đây là OTP cho xác thực đăng kí: " + otp)
+                        .subject("[OTP cho Đăng Kí]")
                         .build();
                 emailService.sendSimpleMessage(mailBody);
-                apiResponse.setResult("Registration successful, check your email for OTP");
+                apiResponse.setResult("Check Mail để kiểm tra OTP");
                 return apiResponse;
           //   return ResponseEntity.ok("Registration successful, check your email for OTP");
     }
@@ -91,7 +83,7 @@ public class RegisterController {
             // Xóa OTP từ session sau khi sử dụng nó
             session.removeAttribute("otp");
             userService.signup(b);
-            apiResponse.setResult("Verify otp success, Register success, Please Login");
+            apiResponse.setResult("Xác Thực OTP thành công , Vui Lòng quay lại Đăng Nhập");
             return apiResponse;
            // return ResponseEntity.ok("Verify otp success, Register success, please lOGIN");
         }

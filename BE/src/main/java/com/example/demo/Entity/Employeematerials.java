@@ -17,13 +17,8 @@ public class Employeematerials {
     @Column(name = "employee_id")
     private Integer employeeId;
 
-    @Column(name = "material_id")
-    private Integer materialId;
-
     @Column(name="product_sub_material_id")
     private Integer product_sub_material_id;
-
-
 
 
 }

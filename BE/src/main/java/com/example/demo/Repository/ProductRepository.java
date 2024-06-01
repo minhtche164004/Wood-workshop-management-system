@@ -18,3 +18,4 @@ public interface ProductRepository extends JpaRepository<Products, Integer> {
     @Query(value = "SELECT p.* FROM products p WHERE p.code LIKE :prefix% ORDER BY p.code DESC LIMIT 1", nativeQuery = true)
     Products findProductTop(@Param("prefix") String prefix);
 }
+

@@ -37,12 +37,12 @@ public class ForgotPasswordController {
     //send mail for email verification
     @PostMapping("/verifyMail/{email}")
     public ResponseEntity<String> verifyEmail(@PathVariable String email){
-        User user = userRepository.findByEmail(email).orElseThrow(()->new AppException(ErrorCode.WRONG_PASS_OR_EMAIL));
+        User user = userRepository.findByEmail(email).orElseThrow(()->new AppException(ErrorCode.NOT_FOUND_EMAIL));
         int otp= otpGenerator();
         MailBody mailBody= MailBody.builder()
                 .to(email)
-                .text("This is OTP for your ForgotPass request:" +otp)
-                .subject("OTP for ForgotPass request")
+                .text("Đây là OTP dành cho yêu cầu quên mật khẩu:" +otp)
+                .subject("[OTP để xác thực quên mật khẩu]")
                 .build();
 
         ForgotPassword fp= ForgotPassword.builder()
@@ -54,7 +54,7 @@ public class ForgotPasswordController {
         emailService.sendSimpleMessage(mailBody);
         forgotPasswordRepository.save(fp);
 
-        return ResponseEntity.ok("Email sent for verification!");
+        return ResponseEntity.ok("Check OTP đã được gửi đến gmail!");
 
     }
 //    @PostMapping("/verifyOtp/{otp}/{email}")
@@ -69,7 +69,7 @@ public class ForgotPasswordController {
 //    }
 @PostMapping("/verifyOtp/{otp}/{email}")
 public ResponseEntity<String> verifyOtp(@PathVariable Integer otp, @PathVariable String email){
-    User user = userRepository.findByEmail(email).orElseThrow(() -> new AppException(ErrorCode.WRONG_PASS_OR_EMAIL));
+    User user = userRepository.findByEmail(email).orElseThrow(() -> new AppException(ErrorCode.NOT_FOUND_EMAIL));
     ForgotPassword fp = forgotPasswordRepository.findByOtpAndUser(otp, user).orElseThrow(() -> new AppException(ErrorCode.INVALID_OTP));
 
     if (fp.getExpirationTime().before(Date.from(Instant.now()))) { //check time xem otp đã hết hạn hay chưa
@@ -80,8 +80,8 @@ public ResponseEntity<String> verifyOtp(@PathVariable Integer otp, @PathVariable
         int newOtp = otpGenerator();
         MailBody mailBody = MailBody.builder()
                 .to(email)
-                .text("This is your new OTP for ForgotPass request: " + newOtp)
-                .subject("New OTP for ForgotPass request")
+                .text("Đây là OTP dành cho quên mật khẩu: " + newOtp)
+                .subject("[OTP dành cho quên mật khẩu]")
                 .build();
 //thời gian hết hạn là 40 giây
         ForgotPassword newFp = ForgotPassword.builder()

@@ -10,6 +10,7 @@ import com.example.demo.Response.ApiResponse;
 import com.example.demo.Service.ProductService;
 import com.example.demo.Service.SubMaterialService;
 import com.example.demo.Service.UserService;
+import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -19,7 +20,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/auth/admin/")
+@RequestMapping("/api/auth/product/")
 @AllArgsConstructor
 public class ProductController {
     @Autowired
@@ -48,7 +49,7 @@ public class ProductController {
 
     }
     @PostMapping("/AddNewProduct")
-    public ApiResponse<?> AddNewProduct(@RequestBody ProductDTO productDTO){
+    public ApiResponse<?> AddNewProduct(@RequestBody @Valid ProductDTO productDTO){
         ApiResponse<Products> apiResponse= new ApiResponse<>();
         apiResponse.setResult(productService.AddNewProduct(productDTO));
         return apiResponse;

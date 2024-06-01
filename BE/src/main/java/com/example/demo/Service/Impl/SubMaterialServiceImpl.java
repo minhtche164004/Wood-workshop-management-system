@@ -46,23 +46,15 @@ private SubMaterialsRepository subMaterialsRepository;
         if (subMaterialsRepository.countBySubMaterialName(subMaterialDTO.getSub_material_name())>0) {
             throw new AppException(ErrorCode.NAME_EXIST);
         }
-
-
         LocalDate today = LocalDate.now();
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("ddMMyy");
         String dateString = today.format(formatter);
 
-        String prefix = dateString + "SMR";
-        Optional<SubMaterials> lastSubMaterialsOptional = subMaterialsRepository.findSubMaterialsTop(prefix); // Lấy Optional
+        SubMaterials lastsubMaterials = subMaterialsRepository.findSubMaterialsTop(dateString + "SMR");
+        int count = lastsubMaterials != null ? Integer.parseInt(lastsubMaterials.getCode().substring(9)) + 1 : 1;
+        String code = dateString + "SMR" + String.format("%03d", count);
 
-        int count = lastSubMaterialsOptional
-                .map(SubMaterials::getCode) // Lấy giá trị code nếu Optional không rỗng
-                .map(code -> Integer.parseInt(code.substring(8)) + 1) // Tính toán count mới
-                .orElse(1); // Nếu Optional rỗng, count = 1
-
-        String code = prefix + String.format("%03d", count);
         subMaterials.setCode(code);
-
         subMaterialsRepository.save(subMaterials);
         return subMaterials;
     }

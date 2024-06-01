@@ -48,7 +48,10 @@ public enum ErrorCode {
 
 
     //Exception của Materials
-    NAME_EXIST(1021,"Tên đã tồn tại , vui lòng nhập tên khác",HttpStatus.BAD_REQUEST)
+    NAME_EXIST(1021,"Tên đã tồn tại , vui lòng nhập tên khác",HttpStatus.BAD_REQUEST),
+    MUST_REQUIRED(1022,"Không được bỏ trống trường thông tin ",HttpStatus.BAD_REQUEST),
+    PRICE_INVALID(1023,"Giá tiền phải lớn hơn 0 , nhập sai định dạng ",HttpStatus.BAD_REQUEST),
+    QUANTITY_INVALID(1024,"Số lượng phải là số nguyên và lớn hơn 0 , nhập sai định dạng ",HttpStatus.BAD_REQUEST)
 
 
 

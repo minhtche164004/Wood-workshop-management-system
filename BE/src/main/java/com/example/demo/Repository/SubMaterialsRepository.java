@@ -18,8 +18,6 @@ public interface SubMaterialsRepository extends JpaRepository<SubMaterials,Integ
     List<SubMaterials> findAll();
     int countBySubMaterialName(String SubMaterialName);
 
-    @Query(value = "SELECT p.* FROM sub_materials p WHERE p.code LIKE :prefix ORDER BY p.code DESC LIMIT 1", nativeQuery = true)
-    Optional<SubMaterials> findSubMaterialsTop(@Param("prefix") String prefix);
-
-
+    @Query(value = "SELECT p.* FROM sub_materials p WHERE p.code LIKE :prefix% ORDER BY p.code DESC LIMIT 1", nativeQuery = true)
+    SubMaterials findSubMaterialsTop(@Param("prefix") String prefix);
 }

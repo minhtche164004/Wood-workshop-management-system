@@ -76,19 +76,18 @@ public class GlobalExceptionHandler {
         return  ResponseEntity.badRequest().body(apiResponse);
     }
 
-    //bat Exception AccessDeniedException
-    @ExceptionHandler(value = IllegalArgumentException.class)
-    ResponseEntity<ApiResponse> handlingIllegalArgumentException(IllegalArgumentException exception){
-        ErrorCode errorCode= ErrorCode.WRONG_PASS_OR_EMAIL;
-        ApiResponse apiResponse= new ApiResponse();
-        apiResponse.setCode(errorCode.getCode());
-        apiResponse.setMessage(errorCode.getMessage());
-
-        return  ResponseEntity
-                .status(errorCode.getStatusCode())
-                .body(apiResponse);
-
-    }
+//    @ExceptionHandler(value = IllegalArgumentException.class)
+//    ResponseEntity<ApiResponse> handlingIllegalArgumentException(IllegalArgumentException exception){
+//        ErrorCode errorCode= ErrorCode.WRONG_PASS_OR_EMAIL;
+//        ApiResponse apiResponse= new ApiResponse();
+//        apiResponse.setCode(errorCode.getCode());
+//        apiResponse.setMessage(errorCode.getMessage());
+//
+//        return  ResponseEntity
+//                .status(errorCode.getStatusCode())
+//                .body(apiResponse);
+//
+//    }
 
 //    //bat Exception AccessDeniedException
 //    @ExceptionHandler(value = ExpiredJwtException.class)

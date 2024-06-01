@@ -7,6 +7,7 @@ import com.example.demo.Entity.SubMaterials;
 import com.example.demo.Response.ApiResponse;
 import com.example.demo.Service.SubMaterialService;
 import jakarta.persistence.EntityNotFoundException;
+import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -16,7 +17,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/auth/admin/")
+@RequestMapping("/api/auth/submaterial/")
 @AllArgsConstructor
 public class SubMaterialController {
     @Autowired
@@ -29,7 +30,7 @@ public class SubMaterialController {
     }
 
     @PostMapping("/AddNewSubMaterial")
-    public ApiResponse<?> addNewSubMaterial(@RequestBody SubMaterialDTO subMaterialDTO) {
+    public ApiResponse<?> addNewSubMaterial(@RequestBody @Valid SubMaterialDTO subMaterialDTO) {
        ApiResponse<SubMaterials>  apiResponse = new ApiResponse<>();
        apiResponse.setResult(subMaterialService.addNew(subMaterialDTO));
        return apiResponse;

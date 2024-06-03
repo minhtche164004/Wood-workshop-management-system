@@ -10,6 +10,7 @@ import com.example.demo.Exception.AppException;
 import com.example.demo.Exception.ErrorCode;
 import com.example.demo.Repository.MaterialRepository;
 import com.example.demo.Repository.SubMaterialsRepository;
+import com.example.demo.Service.CheckConditionService;
 import com.example.demo.Service.SubMaterialService;
 import jakarta.persistence.LockModeType;
 import jakarta.transaction.Transactional;
@@ -37,6 +38,8 @@ private ModelMapper modelMapper;
 
     @Autowired
     private MaterialRepository materialRepository;
+    @Autowired
+    private CheckConditionService checkConditionService;
     @Override
     public List<SubMaterials> getAll() {
         return subMaterialsRepository.findAll();
@@ -52,28 +55,20 @@ private ModelMapper modelMapper;
         subMaterials.setUnitPrice(subMaterialDTO.getUnit_price());
         subMaterials.setDescription(subMaterialDTO.getDescription());
 
-        if (!checkSubMaterialName(subMaterialDTO.getSub_material_name())) {
+        if (!checkConditionService.checkInputName(subMaterialDTO.getSub_material_name())) {
             throw new AppException(ErrorCode.INVALID_FORMAT_NAME);
         }
         if (subMaterialsRepository.countBySubMaterialName(subMaterialDTO.getSub_material_name())>0) {
             throw new AppException(ErrorCode.NAME_EXIST);
         }
-        if (!checkInputQuantity(subMaterialDTO.getQuantity())) {
+        if (!checkConditionService.checkInputQuantity(subMaterialDTO.getQuantity())) {
             throw new AppException(ErrorCode.QUANTITY_INVALID);
         }
-        if (!checkInputPrice(subMaterialDTO.getUnit_price())) {
+        if (!checkConditionService.checkInputPrice(subMaterialDTO.getUnit_price())) {
             throw new AppException(ErrorCode.PRICE_INVALID);
         }
 
-        LocalDate today = LocalDate.now();
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("ddMMyy");
-        String dateString = today.format(formatter);
-
-        SubMaterials lastsubMaterials = subMaterialsRepository.findSubMaterialsTop(dateString + "SMR");
-        int count = lastsubMaterials != null ? Integer.parseInt(lastsubMaterials.getCode().substring(9)) + 1 : 1;
-        String code = dateString + "SMR" + String.format("%03d", count);
-
-        subMaterials.setCode(code);
+        subMaterials.setCode(generateCode());
         subMaterialsRepository.save(subMaterials);
         return subMaterials;
     }
@@ -85,16 +80,16 @@ private ModelMapper modelMapper;
                 List<SubMaterials> subMaterialsList = new ArrayList<>();
 
                 for (SubMaterialDTO dto : subMaterialDTOs) {
-                    if (!checkSubMaterialName(dto.getSub_material_name())) {
+                    if (!checkConditionService.checkInputName(dto.getSub_material_name())) {
                         throw new AppException(ErrorCode.INVALID_FORMAT_NAME);
                     }
                     if (subMaterialsRepository.countBySubMaterialName(dto.getSub_material_name()) > 0) {
                         throw new AppException(ErrorCode.NAME_EXIST);
                     }
-                    if (!checkInputQuantity(dto.getQuantity())) {
+                    if (!checkConditionService.checkInputQuantity(dto.getQuantity())) {
                         throw new AppException(ErrorCode.QUANTITY_INVALID);
                     }
-                    if (!checkInputPrice(dto.getUnit_price())) {
+                    if (!checkConditionService.checkInputPrice(dto.getUnit_price())) {
                         throw new AppException(ErrorCode.PRICE_INVALID);
                     }
                     SubMaterials subMaterials = new SubMaterials();
@@ -135,15 +130,6 @@ private ModelMapper modelMapper;
                 .collect(Collectors.toList());
     }
 
-    public Boolean checkSubMaterialName(String name) {
-        Pattern p = Pattern.compile("^[a-zA-ZÀ-ỹ\\s]+$"); // Chấp nhận cả dấu tiếng Việt và khoảng trắng
-        return p.matcher(name).find();
-    }
-    public boolean checkInputQuantity(int number) {
-        return number > 0; // Kiểm tra trực tiếp xem số có lớn hơn 0 hay không
-    }
-    public boolean checkInputPrice(BigDecimal number) {
-        return number.compareTo(BigDecimal.ZERO) > 0;
-    }
+
 
 }

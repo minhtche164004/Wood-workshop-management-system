@@ -4,6 +4,7 @@ import com.example.demo.Dto.Category.CategoryNameDTO;
 import com.example.demo.Dto.SupplierDTO.SupplierNameDTO;
 import com.example.demo.Repository.CategoryRepository;
 import com.example.demo.Service.CategorySevice;
+import com.example.demo.Service.CheckConditionService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -15,6 +16,8 @@ import java.util.stream.Collectors;
 public class CategoryServiceImpl implements CategorySevice {
     @Autowired
     private CategoryRepository categoryRepository;
+    @Autowired
+    private CheckConditionService checkConditionService;
     @Autowired
     private ModelMapper modelMapper;
     @Override

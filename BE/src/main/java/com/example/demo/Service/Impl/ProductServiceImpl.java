@@ -7,6 +7,7 @@ import com.example.demo.Entity.Status;
 import com.example.demo.Repository.CategoryRepository;
 import com.example.demo.Repository.ProductRepository;
 import com.example.demo.Repository.StatusRepository;
+import com.example.demo.Service.CheckConditionService;
 import com.example.demo.Service.ProductService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,6 +25,8 @@ private StatusRepository statusRepository;
 private CategoryRepository categoryRepository;
 @Autowired
 private ProductRepository productRepository;
+    @Autowired
+    private CheckConditionService checkConditionService;
 
     @Override
     public Products AddNewProduct(ProductDTO productDTO) {

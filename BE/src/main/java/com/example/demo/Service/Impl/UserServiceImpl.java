@@ -57,8 +57,6 @@ public class UserServiceImpl implements UserService {
     @Autowired
     private UserInforRepository userInforRepository;
 
-
-   // @Transactional
     @Override
     public User signup(RegisterDTO userDTO){
         // Lấy thời gian hiện tại
@@ -66,10 +64,9 @@ public class UserServiceImpl implements UserService {
         // Chuyển đổi từ LocalDateTime sang java.util.Date
         Date hireDate = Date.from(currentDateTime.atZone(ZoneId.systemDefault()).toInstant());
         String pass = passwordEncoder.encode(userDTO.getPassword());
-        // Tạo vai trò người dùng mặc định
-        Role userRole = roleRepository.findByName("CUSTOMER");
-        Status status= statusRepository.findByName("Active");
-Position position = positionRepository.findByName("Not a worker");
+        Role userRole = roleRepository.findById(2); //Default la CUSTOMER
+        Status status= statusRepository.findById(2); //Default la KICHHOAT
+Position position = positionRepository.findById(1);//Default la khong phai employee
         UserInfor userInfor = new UserInfor(
                 userDTO.getFullname(),
                 userDTO.getPhoneNumber(),
@@ -87,8 +84,36 @@ Position position = positionRepository.findByName("Not a worker");
                 userRole,
                 userInfor
                         );
-   //     user.setUserInfor(userInfor);
-        // Lưu người dùng vào cơ sở dữ liệu và trả về người dùng mới
+        return userRepository.save(user);
+    }
+
+    @Override
+    public User CreateAccountForAdmin(RegisterDTO userDTO) {
+        // Lấy thời gian hiện tại
+        LocalDateTime currentDateTime = LocalDateTime.now();
+        // Chuyển đổi từ LocalDateTime sang java.util.Date
+        Date hireDate = Date.from(currentDateTime.atZone(ZoneId.systemDefault()).toInstant());
+        String pass = passwordEncoder.encode(userDTO.getPassword());
+        Role userRole = roleRepository.findById(userDTO.getRole());
+        Status status= statusRepository.findById(2);
+        Position position = positionRepository.findById(userDTO.getPosition());
+        UserInfor userInfor = new UserInfor(
+                userDTO.getFullname(),
+                userDTO.getPhoneNumber(),
+                userDTO.getAddress()
+        );
+        informationUserRepository.save(userInfor);
+        User user = new User(
+                0,
+                userDTO.getUsername(),
+                pass,
+                userDTO.getEmail(),
+                status,
+                position,
+                hireDate,
+                userRole,
+                userInfor
+        );
         return userRepository.save(user);
     }
 
@@ -276,6 +301,8 @@ Position position = positionRepository.findByName("Not a worker");
        userInforRepository.deleteById(info_id);
        userRepository.DeleteById(UserId);
     }
+
+
 
 }
 

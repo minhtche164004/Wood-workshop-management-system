@@ -34,4 +34,6 @@ List<UserDTO> GetAllUser();
     UserDTO EditUser(int userId,UpdateProfileDTO updateProfileDTO);
 
     void DeleteUserById(int userId);
+
+    User CreateAccountForAdmin(RegisterDTO userDTO);
 }

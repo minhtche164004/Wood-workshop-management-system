@@ -50,7 +50,7 @@ public class SecurityConfiguration {
                 cors(Customizer.withDefaults()).// by default uses a Bean by the name of corsConfigurationSource
                 authorizeHttpRequests(request -> request.requestMatchers("/api/auth/**","api/forgotPassword/**","/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html")
                 .permitAll()
-                .anyRequest().authenticated())
+                .anyRequest().permitAll())
                 .sessionManagement(manager ->manager.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .httpBasic(basic -> basic.authenticationEntryPoint(new JwtAuthenticationEntryPoint()))
                 .exceptionHandling(Customizer.withDefaults())

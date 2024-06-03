@@ -13,8 +13,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/auth/submaterial/")
@@ -39,6 +41,13 @@ public class SubMaterialController {
     public ApiResponse<?> getAllSubMaterialsName(){
         ApiResponse<List> apiResponse = new ApiResponse<>();
         apiResponse.setResult(subMaterialService.GetListName());
+        return apiResponse;
+    }
+    @PostMapping("/upload-submaterial-data")
+    public ApiResponse<?> uploadCustomersData(@RequestParam("file")MultipartFile file){
+        ApiResponse<String> apiResponse = new ApiResponse<>();
+       subMaterialService.saveSubMaterialToDatabase(file);
+        apiResponse.setResult("Đọc file thành công , dữ liệu đã đưọc thêm vào ");
         return apiResponse;
     }
 

@@ -52,7 +52,11 @@ public enum ErrorCode {
     MUST_REQUIRED(1022,"Không được bỏ trống trường thông tin ",HttpStatus.BAD_REQUEST),
     PRICE_INVALID(1023,"Giá tiền phải lớn hơn 0 , nhập sai định dạng ",HttpStatus.BAD_REQUEST),
     QUANTITY_INVALID(1024,"Số lượng phải là số nguyên và lớn hơn 0 , nhập sai định dạng ",HttpStatus.BAD_REQUEST),
-    PHONE_INVALID(1025," nhập sai định dạng số điện thoại ",HttpStatus.BAD_REQUEST)
+    PHONE_INVALID(1025," nhập sai định dạng số điện thoại ",HttpStatus.BAD_REQUEST),
+
+
+
+    FILE_EXCEL_INVALID(1025,"Sai định dạng file",HttpStatus.BAD_REQUEST)
 
 
 

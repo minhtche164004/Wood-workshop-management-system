@@ -1,4 +1,10 @@
 spring:
+  servlet:
+    multipart:
+      enabled: true
+      file-size-threshold: 10KB
+      max-file-size: 20MB
+      max-request-size: 20MB
   datasource:
 #    url: jdbc:mysql://localhost:3306/sep490?useSSL=false
 #    username: root
@@ -42,4 +48,6 @@ jwt:
   key: 413F4428472B4B6250655368566D597033733676397924426452948404D6351
   time: 3600000  # 1000*60*60 milliseconds
 #http://localhost:8080/swagger-ui/index.html
+
+
 

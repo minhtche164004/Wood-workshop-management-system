@@ -1,5 +1,6 @@
 package com.example.demo.Controllers.Admin;
 
+import com.example.demo.Dto.UserDTO.RegisterDTO;
 import com.example.demo.Dto.UserDTO.UserDTO;
 import com.example.demo.Dto.UserDTO.UserUpdateDTO;
 import com.example.demo.Entity.User;
@@ -59,6 +60,13 @@ public class AdminController {
         ApiResponse<String> apiResponse = new ApiResponse<>();
         userService.DeleteUserById(user_id);
         apiResponse.setResult("Xoa User thanh cong");
+        return apiResponse;
+    }
+
+    @PostMapping("AddNewAccount")
+    public ApiResponse<?> AddNewAccount(@RequestBody RegisterDTO registerDTO){
+        ApiResponse<User> apiResponse = new ApiResponse<>();
+        apiResponse.setResult(userService.CreateAccountForAdmin(registerDTO));
         return apiResponse;
     }
 

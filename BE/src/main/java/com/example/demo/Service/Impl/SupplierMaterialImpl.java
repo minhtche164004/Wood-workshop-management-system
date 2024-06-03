@@ -9,6 +9,7 @@ import com.example.demo.Exception.AppException;
 import com.example.demo.Exception.ErrorCode;
 import com.example.demo.Repository.SubMaterialsRepository;
 import com.example.demo.Repository.SuppliermaterialRepository;
+import com.example.demo.Service.CheckConditionService;
 import com.example.demo.Service.SubMaterialService;
 import com.example.demo.Service.SupplierMaterialService;
 import org.modelmapper.ModelMapper;
@@ -27,6 +28,8 @@ private SuppliermaterialRepository suppliermaterialRepository;
 private SubMaterialsRepository subMaterialsRepository;
 @Autowired
 private ModelMapper modelMapper;
+    @Autowired
+    private CheckConditionService checkConditionService;
 
     @Override
     public List<Suppliermaterial> GetAllSupplier() {
@@ -38,7 +41,7 @@ private ModelMapper modelMapper;
         Suppliermaterial suppliermaterial = new Suppliermaterial();
         suppliermaterial.setSupplierName(supplierMaterialDTO.getSupplierName());
         suppliermaterial.setPhoneNumber(supplierMaterialDTO.getPhoneNumber());
-        if (!checkSupplierMaterialName(supplierMaterialDTO.getSupplierName())) {
+        if (!checkConditionService.checkInputName(supplierMaterialDTO.getSupplierName())) {
             throw new AppException(ErrorCode.INVALID_FORMAT_NAME);
         }
         if (suppliermaterialRepository.countSuppliermaterialBySupplierName(supplierMaterialDTO.getSupplierName())>0) {
@@ -57,10 +60,7 @@ suppliermaterialRepository.save(suppliermaterial);
                 .collect(Collectors.toList());
     }
 
-    public Boolean checkSupplierMaterialName(String name) {
-        Pattern p = Pattern.compile("^[a-zA-ZÀ-ỹ\\s]+$"); // Chấp nhận cả dấu tiếng Việt và khoảng trắng
-        return p.matcher(name).find();
-    }
+
 
 
 

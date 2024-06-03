@@ -12,6 +12,7 @@ import com.example.demo.Jwt.JwtAuthenticationResponse;
 import com.example.demo.Jwt.RefreshTokenRequest;
 import com.example.demo.Repository.*;
 import com.example.demo.Request.LoginRequest;
+import com.example.demo.Service.CheckConditionService;
 import com.example.demo.Service.JWTService;
 import com.example.demo.Service.UserService;
 import jakarta.transaction.Transactional;
@@ -56,6 +57,9 @@ public class UserServiceImpl implements UserService {
     private ModelMapper modelMapper;
     @Autowired
     private UserInforRepository userInforRepository;
+    @Autowired
+    private CheckConditionService checkConditionService;
+
 
     @Override
     public User signup(RegisterDTO userDTO){
@@ -164,54 +168,22 @@ Position position = positionRepository.findById(1);//Default la khong phai emplo
         }
         return null;
     }
-    public Boolean checkPasswordUser(String email, String password) {
-   User user = userRepository.findByEmail(email).orElse(null);
-        if (user == null || !passwordEncoder.matches(password, user.getPassword())) {
-            return false;
-        }
-        return true;
-    }
-    public Boolean checkUserbyUsername(String username) {
-        return !userRepository.findByUsername(username).isPresent();
-    }
-    public Boolean checkUserbyEmail(String email) {
-        return !userRepository.findByEmail(email).isPresent();
-    }
-    public Boolean checkEmail(String email) {
-        Pattern p = Pattern.compile("^[a-zA-Z][a-zA-Z0-9]+@[a-zA-Z]+(\\.[a-zA-Z]+)+$");
-        return p.matcher(email).find();
-    }
-    public Boolean checkName(String name) {
-        Pattern p = Pattern.compile("^[a-zA-Z0-9 ]+$");
-        return p.matcher(name).find();
-    }
-    public Boolean checkAddress(String name) {
-        Pattern p = Pattern.compile("^[a-zA-Z0-9 ]+$");
-        return p.matcher(name).find();
-    }
-    public Boolean checkPhoneNumber(String name) {
-        Pattern p = Pattern.compile("^[0-9]+$");
-        return p.matcher(name).find();
-    }
-    public Boolean checkFullName(String name) {
-        Pattern p = Pattern.compile("^[a-zA-Z ]+$");
-        return p.matcher(name).find();
-    }
+
     @Override
     public void checkConditions(RegisterDTO userDTO) { //check các điều kiện cho form Register
-        if (!checkEmail(userDTO.getEmail())) {
+        if (!checkConditionService.checkEmail(userDTO.getEmail())) {
             throw new AppException(ErrorCode.WRONG_FORMAT_EMAIL);
         }
-        if (!checkName(userDTO.getUsername())) {
+        if (!checkConditionService.checkName(userDTO.getUsername())) {
             throw new AppException(ErrorCode.INVALID_NAME_FORMAT);
         }
         if (!userDTO.getPassword().equals(userDTO.getCheckPass())) {
             throw new AppException(ErrorCode.NOT_MATCH_PASS);
         }
-        if (!checkUserbyEmail(userDTO.getEmail())) {
+        if (!checkConditionService.checkUserbyEmail(userDTO.getEmail())) {
             throw new AppException(ErrorCode.GMAIL_EXISTED);
         }
-        if(!checkUserbyUsername(userDTO.getUsername())){
+        if(!checkConditionService.checkUserbyUsername(userDTO.getUsername())){
             throw new AppException(ErrorCode.USERNAME_EXISTED);
         }
 
@@ -268,13 +240,13 @@ Position position = positionRepository.findById(1);//Default la khong phai emplo
     public UserDTO EditUser(int userId,UpdateProfileDTO updateProfileDTO){
         Optional<User> userOptional = userRepository.findById(userId);
         User user = userOptional.orElseThrow(() -> new AppException(ErrorCode.NOT_FOUND));
-        if (!checkAddress(updateProfileDTO.getAddress())) {
+        if (!checkConditionService.checkAddress(updateProfileDTO.getAddress())) {
             throw new AppException(ErrorCode.INVALID_FORMAT_ADDRESS);
         }
-        if (!checkPhoneNumber(updateProfileDTO.getPhoneNumber())) {
+        if (!checkConditionService.checkPhoneNumber(updateProfileDTO.getPhoneNumber())) {
             throw new AppException(ErrorCode.INVALID_FORMAT_PHONE_NUMBER);
         }
-        if (!checkFullName(updateProfileDTO.getFullname())) {
+        if (!checkConditionService.checkFullName(updateProfileDTO.getFullname())) {
             throw new AppException(ErrorCode.INVALID_FORMAT_NAME);
         }
         if (userRepository.countByEmail(updateProfileDTO.getEmail()) > 0) {

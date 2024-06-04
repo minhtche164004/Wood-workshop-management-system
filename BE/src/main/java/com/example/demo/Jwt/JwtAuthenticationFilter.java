@@ -74,6 +74,4 @@ Cuối cùng, filter chuyển tiếp yêu cầu đến filter tiếp theo trong 
         }
         filterChain.doFilter(request,response);
     }
-
-
 }

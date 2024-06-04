@@ -19,6 +19,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -72,44 +73,23 @@ private ProductRepository productRepository;
         // Lưu sản phẩm trước để có productId
         products = productRepository.save(products);
 
-//        List<Productimages> productImages = new ArrayList<>();
-//        if (productDTO.getImages() != null && !productDTO.getImages().isEmpty()) {
-//            for (MultipartFile imageFile : productDTO.getImages()) {
-//                // Nén ảnh trước khi upload
-//                byte[] compressedImageBytes = ImageUtils.compressImage(imageFile.getBytes());
-//
-//                // Tạo đối tượng ProductImages với dữ liệu ảnh đã nén
-//                Productimages productImage = new Productimages();
-//                productImage.setImage_name(imageFile.getOriginalFilename()); // Lưu tên file gốc
-//                productImage.setType(imageFile.getContentType());
-//                productImage.setImageData(compressedImageBytes);
-//                productImage.setProduct(products);
-//
-//                productImages.add(productImage);
-//            }
-//
-//            productImageRepository.saveAll(productImages); // Lưu tất cả hình ảnh vào CSDL
-//        }
-
-     //   products = productRepository.save(products); // Lưu lại product sau khi đã có hình ảnh
-
         return products;
     }
-//upload theo từng cái một
-@Override
-    public String uploadImage(MultipartFile file, int id) throws IOException {
-        Products product = productRepository.findById(id);
-     Productimages productimages =productImageRepository.save(Productimages.builder()
-                        .image_name(file.getOriginalFilename())
-                                .type(file.getContentType())
-                     .product(product)
-                                        .imageData(ImageUtils.compressImage(file.getBytes())).
-                build());
-        if(productimages!=null){
-            return "file uploaded success" +file.getOriginalFilename();
-        }
-        return null;
-    }
+////upload theo từng cái một
+//@Override
+//    public String uploadImage(MultipartFile file, int id) throws IOException {
+//        Products product = productRepository.findById(id);
+//     Productimages productimages =productImageRepository.save(Productimages.builder()
+//                        .image_name(file.getOriginalFilename())
+//                                .type(file.getContentType())
+//                     .product(product)
+//                                        .imageData(ImageUtils.compressImage(file.getBytes())).
+//                build());
+//        if(productimages!=null){
+//            return "file uploaded success" +file.getOriginalFilename();
+//        }
+//        return null;
+//    }
 
 //Upload ảnh theo 1 list nhiều cái
     @Override
@@ -137,6 +117,8 @@ private ProductRepository productRepository;
 
         return uploadedImagePaths; // Trả về danh sách đường dẫn ảnh
     }
+
+
     @Override
     //load hình ảnh
     public byte[] dowloadImage(String fileName){
@@ -144,19 +126,18 @@ private ProductRepository productRepository;
        byte[] images = ImageUtils.decompressImage(dbproductimages.get().getImageData());
        return images;
     }
-//load 1 list image
-    @Override
-    public List<byte[]> downloadImagesByProductList(int productId) {
-        Products products=productRepository.findById(productId);
-        List<Productimages> productImages = productImageRepository.findByImage_Id(products.getProductId());
 
-        List<byte[]> imageDataList = new ArrayList<>();
-        for (Productimages productImage : productImages) {
-            byte[] imageData = ImageUtils.decompressImage(productImage.getImageData());
-            imageDataList.add(imageData);
-        }
-        return imageDataList;
-    }
+
+//load 1 list image
+@Override
+public List<byte[]> downloadImagesByProductList(int productId) {
+    Products products=productRepository.findById(productId);
+    List<Productimages> productImages = productImageRepository.findByImage_Id(products.getProductId());
+    return productImages.stream()
+            .map(Productimages::getImageData)
+            .map(ImageUtils::decompressImage) // Giải nén từng ảnh
+            .collect(Collectors.toList()); // Trả về danh sách ảnh đã giải nén
+}
 
 }
 

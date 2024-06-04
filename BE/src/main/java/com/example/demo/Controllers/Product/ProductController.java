@@ -5,6 +5,8 @@ import com.example.demo.Dto.SubMaterialDTO.SubMaterialDTO;
 import com.example.demo.Entity.Productimages;
 import com.example.demo.Entity.Products;
 import com.example.demo.Entity.SubMaterials;
+import com.example.demo.Exception.AppException;
+import com.example.demo.Exception.ErrorCode;
 import com.example.demo.Repository.CategoryRepository;
 import com.example.demo.Repository.ProductImageRepository;
 import com.example.demo.Repository.ProductRepository;
@@ -76,25 +78,34 @@ public class ProductController {
         return ResponseEntity.status(HttpStatus.OK)
                 .body(uploadImage);
     }
-    //đọc theo từng ảnh
-    @GetMapping("/{fileName}")
-    public ResponseEntity<?> downloadImage(@PathVariable String fileName){
-        byte[] imageData=productService.dowloadImage(fileName);
-        return ResponseEntity.status(HttpStatus.OK)
-                .contentType(MediaType.valueOf("image/png"))
-                .body(imageData);
-    }
-
-    //trả về 1 chuôĩ ảnh đẻ bên FE đọc
-@GetMapping("/ListImage")
-public ApiResponse<?> downloadImage(@RequestParam(value = "productId", required = false) int productId) {
-  ApiResponse<List<String>> apiResponse= new ApiResponse<>();
+//    //đọc theo từng ảnh
+//    @GetMapping("/{fileName}")
+//    public ResponseEntity<?> downloadImage(@PathVariable String fileName){
+//        byte[] imageData=productService.dowloadImage(fileName);
+//        return ResponseEntity.status(HttpStatus.OK)
+//                .contentType(MediaType.valueOf("image/png"))
+//                .body(imageData);
+//    }
+//đọc theo từng ảnh để trả về hình ảnh của từng ảnh
+@GetMapping("/{productId}/images/{imageIndex}")
+public ResponseEntity<byte[]> downloadImage(
+        @PathVariable int productId,
+        @PathVariable int imageIndex
+) {
+    try {
         List<byte[]> imageDataList = productService.downloadImagesByProductList(productId);
-        List<String> base64Images = imageDataList.stream()
-                .map(imageData -> "data:image/png;base64," + Base64.getEncoder().encodeToString(imageData))
-                .collect(Collectors.toList());
-apiResponse.setResult(base64Images);
-        return apiResponse;
+
+        if (imageDataList == null || imageDataList.isEmpty() || imageIndex < 0 || imageIndex >= imageDataList.size()) {
+            throw new AppException(ErrorCode.NOT_FOUND); // Không tìm thấy ảnh
+        }
+
+        byte[] imageData = imageDataList.get(imageIndex); // Lấy ảnh theo chỉ số
+        return ResponseEntity.ok()
+                .contentType(MediaType.IMAGE_PNG) // hoặc MediaType.IMAGE_JPEG nếu ảnh của bạn là JPEG
+                .body(imageData);
+    } catch (AppException e) {
+        throw new AppException(ErrorCode.IMAGE_INVALID);
+    }
 }
 
 }

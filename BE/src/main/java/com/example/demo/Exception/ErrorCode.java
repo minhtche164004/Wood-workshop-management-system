@@ -56,7 +56,9 @@ public enum ErrorCode {
 
 
 
-    FILE_EXCEL_INVALID(1025,"Sai định dạng file",HttpStatus.BAD_REQUEST)
+
+    FILE_EXCEL_INVALID(1025,"Sai định dạng file",HttpStatus.BAD_REQUEST),
+    IMAGE_INVALID(1026, "Lỗi ảnh truyền vào , hãy thử lại",HttpStatus.BAD_REQUEST)
 
 
 

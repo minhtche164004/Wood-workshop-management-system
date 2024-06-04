@@ -6,6 +6,7 @@ import com.example.demo.Entity.Materials;
 import com.example.demo.Exception.AppException;
 import com.example.demo.Exception.ErrorCode;
 import com.example.demo.Repository.MaterialRepository;
+import com.example.demo.Service.CheckConditionService;
 import com.example.demo.Service.MaterialService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +22,8 @@ public class MaterialServiceImpl implements MaterialService {
     private MaterialRepository materialRepository;
     @Autowired
     private ModelMapper modelMapper;
+    @Autowired
+    private CheckConditionService checkConditionService;
     @Override
     public List<Materials> getAllMaterials() {
         return materialRepository.findAll();
@@ -31,7 +34,7 @@ public class MaterialServiceImpl implements MaterialService {
         Materials materials = new Materials(
              materialDTO.getMaterialName()
         );
-        if (!checkMaterialName(materialDTO.getMaterialName())) {
+        if (!checkConditionService.checkInputName(materialDTO.getMaterialName())) {
             throw new AppException(ErrorCode.INVALID_FORMAT_NAME);
         }
         if (materialRepository.countByMaterialName(materialDTO.getMaterialName())>0) {
@@ -48,10 +51,6 @@ public class MaterialServiceImpl implements MaterialService {
                 .collect(Collectors.toList());
     }
 
-    public Boolean checkMaterialName(String name) {
-        Pattern p = Pattern.compile("^[a-zA-ZÀ-ỹ\\s]+$"); // Chấp nhận cả dấu tiếng Việt và khoảng trắng
-        return p.matcher(name).find();
-    }
 
 
 }

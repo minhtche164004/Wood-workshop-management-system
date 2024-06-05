@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class RegisterDTO {
+public class User_Admin_DTO {
     @Size(min=5,message = "USERNAME_INVALID")
     private String username;
     @Size(min=4,message = "PASS_INVALID")
@@ -28,8 +28,8 @@ public class RegisterDTO {
     private String fullname;
     @NotNull(message = "MUST_REQUIRED")
     private int status;
-//    @NotNull(message = "MUST_REQUIRED")
-//    private int position;
+        @NotNull(message = "MUST_REQUIRED")
+    private int position;
     @NotNull(message = "MUST_REQUIRED")
     private int role;
 }

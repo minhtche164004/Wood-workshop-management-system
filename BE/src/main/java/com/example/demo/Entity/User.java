@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.*;
 import java.util.Date;
+import java.util.List;
 
 @Entity
 @Table(name = "users")
@@ -47,16 +48,32 @@ public class User  {
     @OneToOne(cascade = CascadeType.ALL)// tức là khi tạo User thì infor cũng đc tạo
     @JsonIgnore
     @JoinColumn(name = "infor_id")
-
     private UserInfor userInfor;
+
+
+
         public User(String username, String password, String email, Status status, Position position, Date hireDate, Role role,UserInfor userInfor) {
         this.username = username;
         this.password = password;
         this.email = email;
         this.status = status;
-        this.position = position;
+        this.position = null;//khởi tạo position là null
         this.hireDate = hireDate;
         this.role = role;
         this.userInfor=userInfor;
+
     }
 }
+
+
+/*
+User - Status: Nhiều-Một (@ManyToOne). Một user có một trạng thái (status), một trạng thái có thể áp dụng cho nhiều user.
+User - Position: Nhiều-Một (@ManyToOne). Một user có một chức vụ (position), một chức vụ có thể áp dụng cho nhiều user.
+User - Role: Nhiều-Một (@ManyToOne). Một user có một vai trò (role), một vai trò có thể áp dụng cho nhiều user.
+User - UserInfor: Một-Một (@OneToOne). Một user có một thông tin cá nhân (user information), và thông tin đó chỉ thuộc về user đó.
+User - Materials: Nhiều-Nhiều (@ManyToMany). Một user có thể có nhiều vật liệu (materials) và một vật liệu có thể thuộc về nhiều user.
+
+
+
+@OneToMany(mappedBy = "user", cascade = CascadeType.ALL) private List<Jobs> jobs;: Thể hiện mối quan hệ một-nhiều với Jobs. Một user có thể thực hiện nhiều job.
+*/

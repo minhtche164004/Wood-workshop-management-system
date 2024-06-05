@@ -21,13 +21,13 @@ public class Status {
     private Integer status_id;
     @Column(name = "status_name", nullable = false)
     private String status_name;
-    @JsonIgnore
-    @OneToMany(mappedBy = "status",  cascade = CascadeType.ALL)
-    @JsonBackReference
-    private List<User> user;
-
-    @OneToMany(mappedBy = "status",cascade = CascadeType.ALL)
-    @JsonBackReference
-    private List<Products> products;
+//    @JsonIgnore
+//    @OneToMany(mappedBy = "status",  cascade = CascadeType.ALL)
+//    @JsonBackReference
+//    private List<User> user;
+//
+//    @OneToMany(mappedBy = "status",cascade = CascadeType.ALL)
+//    @JsonBackReference
+//    private List<Products> products;
 }
 //

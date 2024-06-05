@@ -3,6 +3,7 @@ package com.example.demo.Controllers.Admin;
 import com.example.demo.Dto.UserDTO.RegisterDTO;
 import com.example.demo.Dto.UserDTO.UserDTO;
 import com.example.demo.Dto.UserDTO.UserUpdateDTO;
+import com.example.demo.Dto.UserDTO.User_Admin_DTO;
 import com.example.demo.Entity.User;
 import com.example.demo.Repository.UserRepository;
 import com.example.demo.Response.ApiResponse;
@@ -64,8 +65,9 @@ public class AdminController {
     }
 
     @PostMapping("AddNewAccount")
-    public ApiResponse<?> AddNewAccount(@RequestBody RegisterDTO registerDTO){
+    public ApiResponse<?> AddNewAccount(@RequestBody User_Admin_DTO registerDTO){
         ApiResponse<User> apiResponse = new ApiResponse<>();
+        userService.checkConditionsForAdmin(registerDTO);
         apiResponse.setResult(userService.CreateAccountForAdmin(registerDTO));
         return apiResponse;
     }

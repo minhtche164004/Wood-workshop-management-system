@@ -1,56 +1,62 @@
 package com.example.demo.Entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
 import java.sql.Date;
 import java.sql.Timestamp;
+import java.util.List;
 import java.util.Objects;
 
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
 @Entity
 @Table(name = "jobs", schema = "test1", catalog = "")
 public class Jobs {
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "job_id")
     private int jobId;
-    @Basic
-    @Column(name = "user_id")
-    private Integer userId;
-    @Basic
-    @Column(name = "product_id")
-    private Integer productId;
-    @Basic
+
+    @ManyToOne
+    @JsonIgnore
+    @JoinColumn(name = "user_id")
+    private User user;  // Liên kết với entity User
+
+    @ManyToOne
+    @JoinColumn(name = "product_id")
+    @JsonIgnore
+    private Products product;  // Liên kết với entity Products
+
     @Column(name = "description")
     private String description;
-    @Basic
+
     @Column(name = "time_finish")
     private Timestamp timeFinish;
-    @Basic
+
     @Column(name = "quantity_product")
     private Integer quantityProduct;
-    @Basic
+
     @Column(name = "cost")
     private BigDecimal cost;
-    @Basic
+
     @Column(name = "time_start")
     private Date timeStart;
-    @Basic
+
     @Column(name = "code")
     private String code;
 
+//    @OneToMany(mappedBy = "job") // Thêm mối quan hệ với Processproducterror
+//    @JsonIgnore // Tùy chọn: bỏ qua trường này khi serialize thành JSON
+//    private List<Processproducterror> processProductErrors;
 
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Jobs that = (Jobs) o;
-        return jobId == that.jobId && Objects.equals(userId, that.userId) && Objects.equals(productId, that.productId) && Objects.equals(description, that.description) && Objects.equals(timeFinish, that.timeFinish) && Objects.equals(quantityProduct, that.quantityProduct) && Objects.equals(cost, that.cost) && Objects.equals(timeStart, that.timeStart) && Objects.equals(code, that.code);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(jobId, userId, productId, description, timeFinish, quantityProduct, cost, timeStart, code);
-    }
 }
+
+
+/*@ManyToOne @JoinColumn(name = "user_id") private User user;: Thể hiện mối quan hệ nhiều-một với User. Một job được thực hiện bởi một user.
+@ManyToOne @JoinColumn(name = "product_id") private Products product;: Thể hiện mối quan hệ nhiều-một với Products. Một job tạo ra một sản phẩm.*/

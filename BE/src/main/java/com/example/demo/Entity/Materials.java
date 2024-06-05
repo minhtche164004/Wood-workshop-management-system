@@ -16,23 +16,21 @@ import java.util.Objects;
 @AllArgsConstructor
 @NoArgsConstructor
 public class Materials {
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "material_id")
     private int materialId;
 
     @Column(name = "material_name")
     private String materialName;
 
-    @JsonIgnore
-    @OneToMany(mappedBy = "materials", fetch = FetchType.LAZY)
-    private List<SubMaterials> subMaterials;
-
-
+//    @OneToMany(mappedBy = "material", cascade = CascadeType.ALL)
 //    @JsonIgnore
-//    @OneToMany(mappedBy = "role", cascade = CascadeType.ALL)
-//    @JsonBackReference
-//    private List<User> user;
+//    private List<SubMaterials> subMaterials;
+
+//    @ManyToMany(mappedBy = "materials")
+//    @JsonIgnore
+//    private List<User> employees;
 
     public Materials(String materialName) {
         this.materialName = materialName;

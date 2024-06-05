@@ -1,11 +1,8 @@
 package com.example.demo.Service.Impl;
 
-import com.example.demo.Dto.UserDTO.RegisterDTO;
-import com.example.demo.Dto.UserDTO.UpdateProfileDTO;
-import com.example.demo.Dto.UserDTO.UserDTO;
+import com.example.demo.Dto.UserDTO.*;
 import com.example.demo.Entity.*;
 import com.example.demo.Jwt.UserDetailsServiceImpl;
-import com.example.demo.Dto.UserDTO.UserUpdateDTO;
 import com.example.demo.Exception.AppException;
 import com.example.demo.Exception.ErrorCode;
 import com.example.demo.Jwt.JwtAuthenticationResponse;
@@ -70,7 +67,7 @@ public class UserServiceImpl implements UserService {
         String pass = passwordEncoder.encode(userDTO.getPassword());
         Role userRole = roleRepository.findById(2); //Default la CUSTOMER
         Status status= statusRepository.findById(2); //Default la KICHHOAT
-Position position = positionRepository.findById(1);//Default la khong phai employee
+//Position position = positionRepository.findById(1);//Default la khong phai employee
         UserInfor userInfor = new UserInfor(
                 userDTO.getFullname(),
                 userDTO.getPhoneNumber(),
@@ -83,16 +80,17 @@ Position position = positionRepository.findById(1);//Default la khong phai emplo
                                 pass,
                                 userDTO.getEmail(),
                                 status,
-                position,
+                null,
                 hireDate,
                 userRole,
                 userInfor
+
                         );
         return userRepository.save(user);
     }
 
     @Override
-    public User CreateAccountForAdmin(RegisterDTO userDTO) {
+    public User CreateAccountForAdmin(User_Admin_DTO userDTO) {
         // Lấy thời gian hiện tại
         LocalDateTime currentDateTime = LocalDateTime.now();
         // Chuyển đổi từ LocalDateTime sang java.util.Date
@@ -117,15 +115,10 @@ Position position = positionRepository.findById(1);//Default la khong phai emplo
                 hireDate,
                 userRole,
                 userInfor
+
         );
         return userRepository.save(user);
     }
-
-
-//    @Override
-//    public User EditStatus(int userId) {
-//
-//    }
 
     @Override
     public JwtAuthenticationResponse signin(LoginRequest loginRequest){
@@ -194,6 +187,26 @@ Position position = positionRepository.findById(1);//Default la khong phai emplo
         }
 
     }
+    @Override
+   public void checkConditionsForAdmin(User_Admin_DTO userDTO){
+        if (!checkConditionService.checkEmail(userDTO.getEmail())) {
+            throw new AppException(ErrorCode.WRONG_FORMAT_EMAIL);
+        }
+        if (!checkConditionService.checkName(userDTO.getUsername())) {
+            throw new AppException(ErrorCode.INVALID_NAME_FORMAT);
+        }
+        if (!userDTO.getPassword().equals(userDTO.getCheckPass())) {
+            throw new AppException(ErrorCode.NOT_MATCH_PASS);
+        }
+        if (!checkConditionService.checkUserbyEmail(userDTO.getEmail())) {
+            throw new AppException(ErrorCode.GMAIL_EXISTED);
+        }
+        if(!checkConditionService.checkUserbyUsername(userDTO.getUsername())){
+            throw new AppException(ErrorCode.USERNAME_EXISTED);
+        }
+    }
+
+
 
 //    @Override
 //    public User getUserbyEmail(String email) {

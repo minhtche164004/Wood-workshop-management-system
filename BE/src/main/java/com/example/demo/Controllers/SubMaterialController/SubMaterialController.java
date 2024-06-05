@@ -35,33 +35,35 @@ public class SubMaterialController {
     private SubMaterialService subMaterialService;
     @Autowired
     private ResourceLoader resourceLoader;
+
     @GetMapping("/getall")
     public ApiResponse<?> getAllSubMaterials() {
         ApiResponse<List> apiResponse = new ApiResponse<>();
         apiResponse.setResult(subMaterialService.getAll());
-     return apiResponse;
+        return apiResponse;
     }
 
     @PostMapping("/AddNewSubMaterial")
     public ApiResponse<?> addNewSubMaterial(@RequestBody @Valid SubMaterialDTO subMaterialDTO) {
-       ApiResponse<SubMaterials>  apiResponse = new ApiResponse<>();
-       apiResponse.setResult(subMaterialService.addNew(subMaterialDTO));
-       return apiResponse;
+        ApiResponse<SubMaterials> apiResponse = new ApiResponse<>();
+        apiResponse.setResult(subMaterialService.addNew(subMaterialDTO));
+        return apiResponse;
     }
+
     @GetMapping("/getAllName")
-    public ApiResponse<?> getAllSubMaterialsName(){
+    public ApiResponse<?> getAllSubMaterialsName() {
         ApiResponse<List> apiResponse = new ApiResponse<>();
         apiResponse.setResult(subMaterialService.GetListName());
         return apiResponse;
     }
+
     @PostMapping("/upload-submaterial-data")
-    public ApiResponse<?> uploadCustomersData(@RequestParam("file")MultipartFile file){
+    public ApiResponse<?> uploadCustomersData(@RequestParam("file") MultipartFile file) {
         ApiResponse<String> apiResponse = new ApiResponse<>();
-       subMaterialService.saveSubMaterialToDatabase(file);
+        subMaterialService.saveSubMaterialToDatabase(file);
         apiResponse.setResult("Đọc file thành công , dữ liệu đã đưọc thêm vào ");
         return apiResponse;
     }
-
     @GetMapping("/download-form-submaterial-data-excel")
     public ResponseEntity<Resource> downloadFile() {
         try {
@@ -87,6 +89,4 @@ public class SubMaterialController {
             throw new RuntimeException("Error: " + ex.getMessage());
         }
     }
-
-
 }

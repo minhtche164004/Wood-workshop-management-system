@@ -35,10 +35,12 @@ public class Products {
     @Column(name = "price")
     private BigDecimal price;
 
+    @Column(name = "image")
+    private String image;
+
     @Column(name = "completion_time")
     @Temporal(TemporalType.DATE)
     private Date completionTime;
-
 
     @Column(name = "enddate_warranty")
     @Temporal(TemporalType.DATE)
@@ -68,6 +70,7 @@ public class Products {
     @OneToMany(mappedBy = "product",fetch = FetchType.LAZY)
     @JsonBackReference
     private List<ProductSubMaterials> productSubMaterials;
+
 
 
 //

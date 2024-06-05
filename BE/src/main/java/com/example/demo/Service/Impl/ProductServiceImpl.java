@@ -2,6 +2,8 @@ package com.example.demo.Service.Impl;
 
 import com.example.demo.Dto.ProductDTO.ProductDTO;
 import com.example.demo.Entity.*;
+import com.example.demo.Exception.AppException;
+import com.example.demo.Exception.ErrorCode;
 import com.example.demo.Repository.CategoryRepository;
 import com.example.demo.Repository.ProductImageRepository;
 import com.example.demo.Repository.ProductRepository;
@@ -60,6 +62,20 @@ private ProductRepository productRepository;
     //    products.setImage(productDTO.getImage());
         products.setQuantity(productDTO.getQuantity());
 
+        if (!checkConditionService.checkInputName(productDTO.getProduct_name())) {
+            throw new AppException(ErrorCode.INVALID_FORMAT_NAME);
+        }
+        if (productRepository.countByProductName(productDTO.getProduct_name()) > 0) {
+            throw new AppException(ErrorCode.NAME_EXIST);
+        }
+        if (!checkConditionService.checkInputQuantity(productDTO.getQuantity())) {
+            throw new AppException(ErrorCode.QUANTITY_INVALID);
+        }
+        if (!checkConditionService.checkInputPrice(productDTO.getPrice())) {
+            throw new AppException(ErrorCode.PRICE_INVALID);
+        }
+
+
         LocalDate today = LocalDate.now();
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("ddMMyy");
         String dateString = today.format(formatter);
@@ -92,52 +108,57 @@ private ProductRepository productRepository;
 //    }
 
 //Upload ảnh theo 1 list nhiều cái
-    @Override
-    public List<String> uploadImagesList(List<MultipartFile> files, int id) throws IOException {
-        Products product = productRepository.findById(id); // Lấy thông tin sản phẩm
-        List<String> uploadedImagePaths = new ArrayList<>();
-        for (MultipartFile file : files) {
-            // Kiểm tra xem file có rỗng không
-            if (file.isEmpty()) {
-                continue; // Bỏ qua file rỗng
-            }
-
-            // Tạo đối tượng ProductImages
-            Productimages productImage = Productimages.builder()
-                    .image_name(file.getOriginalFilename())
-                    .type(file.getContentType())
-                    .product(product)
-                    .imageData(ImageUtils.compressImage(file.getBytes()))
-                    .build();
-            productImageRepository.save(productImage);
-
-            // Lưu đường dẫn ảnh (nếu cần)
-            uploadedImagePaths.add(file.getOriginalFilename());
-        }
-
-        return uploadedImagePaths; // Trả về danh sách đường dẫn ảnh
-    }
-
-
-    @Override
-    //load hình ảnh
-    public byte[] dowloadImage(String fileName){
-        Optional<Productimages> dbproductimages=productImageRepository.findByImage_name(fileName);
-       byte[] images = ImageUtils.decompressImage(dbproductimages.get().getImageData());
-       return images;
-    }
-
-
-//load 1 list image
-@Override
-public List<byte[]> downloadImagesByProductList(int productId) {
-    Products products=productRepository.findById(productId);
-    List<Productimages> productImages = productImageRepository.findByImage_Id(products.getProductId());
-    return productImages.stream()
-            .map(Productimages::getImageData)
-            .map(ImageUtils::decompressImage) // Giải nén từng ảnh
-            .collect(Collectors.toList()); // Trả về danh sách ảnh đã giải nén
-}
+//    @Override
+//    public List<String> uploadImagesList(List<MultipartFile> files, int id) throws IOException {
+//        Products product = productRepository.findById(id); // Lấy thông tin sản phẩm
+//        List<String> uploadedImagePaths = new ArrayList<>();
+//        for (MultipartFile file : files) {
+//            // Kiểm tra xem file có rỗng không
+//            if (file.isEmpty()) {
+//                continue; // Bỏ qua file rỗng
+//            }
+//            // Kiểm tra định dạng file
+//            String contentType = file.getContentType();
+//            if (!contentType.startsWith("image/")) {
+//                throw new AppException(ErrorCode.IMAGE_INVALID);
+//            }
+//
+//            // Tạo đối tượng ProductImages
+//            Productimages productImage = Productimages.builder()
+//                    .image_name(file.getOriginalFilename())
+//                    .type(file.getContentType())
+//                    .product(product)
+//                    .imageData(ImageUtils.compressImage(file.getBytes()))
+//                    .build();
+//            productImageRepository.save(productImage);
+//
+//            // Lưu đường dẫn ảnh (nếu cần)
+//            uploadedImagePaths.add(file.getOriginalFilename());
+//        }
+//
+//        return uploadedImagePaths; // Trả về danh sách đường dẫn ảnh
+//    }
+//
+//
+////    @Override
+////    //load hình ảnh
+////    public byte[] dowloadImage(String fileName){
+////        Optional<Productimages> dbproductimages=productImageRepository.findByImage_name(fileName);
+////       byte[] images = ImageUtils.decompressImage(dbproductimages.get().getImageData());
+////       return images;
+////    }
+//
+//
+////load 1 list image
+//@Override
+//public List<byte[]> downloadImagesByProductList(int productId) {
+//    Products products=productRepository.findById(productId);
+//    List<Productimages> productImages = productImageRepository.findByImage_Id(products.getProductId());
+//    return productImages.stream()
+//            .map(Productimages::getImageData)
+//            .map(ImageUtils::decompressImage) // Giải nén từng ảnh
+//            .collect(Collectors.toList()); // Trả về danh sách ảnh đã giải nén
+//}
 
 }
 

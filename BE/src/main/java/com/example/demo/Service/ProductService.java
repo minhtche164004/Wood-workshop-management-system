@@ -12,7 +12,7 @@ import java.util.List;
 public interface ProductService {
     Products AddNewProduct(ProductDTO productDTO) ;
   //  String uploadImage(MultipartFile file, int id) throws IOException;
-    byte[] dowloadImage(String fileName);
-    List<String> uploadImagesList(List<MultipartFile> files, int id) throws IOException;
-    List<byte[]> downloadImagesByProductList(int productId);
+//    byte[] dowloadImage(String fileName);
+//    List<String> uploadImagesList(List<MultipartFile> files, int id) throws IOException;
+//    List<byte[]> downloadImagesByProductList(int productId);
 }

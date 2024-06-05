@@ -6,11 +6,13 @@ import com.example.demo.Entity.Products;
 import com.example.demo.Entity.SubMaterials;
 import com.example.demo.Response.ApiResponse;
 import com.example.demo.Service.SubMaterialService;
+import io.jsonwebtoken.io.IOException;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
+import org.springframework.core.io.ResourceLoader;
 import org.springframework.core.io.UrlResource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -31,6 +33,8 @@ import java.util.Map;
 public class SubMaterialController {
     @Autowired
     private SubMaterialService subMaterialService;
+    @Autowired
+    private ResourceLoader resourceLoader;
     @GetMapping("/getall")
     public ApiResponse<?> getAllSubMaterials() {
         ApiResponse<List> apiResponse = new ApiResponse<>();
@@ -61,17 +65,25 @@ public class SubMaterialController {
     @GetMapping("/download-form-submaterial-data-excel")
     public ResponseEntity<Resource> downloadFile() {
         try {
-            Path filePath = Paths.get("BE/src/main/resources/templates/submate.xlsx").normalize().toAbsolutePath();
-            String filePathString = filePath.toString().replace("/", "\\");
-            Resource resource = new UrlResource(Paths.get(filePathString).toUri());
+            // 1. Sử dụng ResourceLoader để lấy resource từ classpath
+            Resource resource = resourceLoader.getResource("classpath:templates/submate.xlsx");
+
+            // 2. Kiểm tra xem resource có tồn tại không
+            if (!resource.exists()) {
+                throw new RuntimeException("File not found");
+            }
+
+            // 3. Tạo header
             HttpHeaders headers = new HttpHeaders();
             headers.add(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + resource.getFilename() + "\"");
 
+            // 4. Trả về ResponseEntity
             return ResponseEntity.ok()
                     .contentType(MediaType.parseMediaType("application/octet-stream"))
                     .headers(headers)
                     .body(resource);
-        } catch (MalformedURLException ex) {
+
+        } catch (IOException ex) {
             throw new RuntimeException("Error: " + ex.getMessage());
         }
     }

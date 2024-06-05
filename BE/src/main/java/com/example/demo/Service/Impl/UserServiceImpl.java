@@ -121,6 +121,12 @@ Position position = positionRepository.findById(1);//Default la khong phai emplo
         return userRepository.save(user);
     }
 
+
+//    @Override
+//    public User EditStatus(int userId) {
+//
+//    }
+
     @Override
     public JwtAuthenticationResponse signin(LoginRequest loginRequest){
         UserDetails user;
@@ -273,8 +279,6 @@ Position position = positionRepository.findById(1);//Default la khong phai emplo
        userInforRepository.deleteById(info_id);
        userRepository.DeleteById(UserId);
     }
-
-
 
 }
 

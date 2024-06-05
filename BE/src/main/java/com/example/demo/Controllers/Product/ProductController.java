@@ -72,40 +72,43 @@ public class ProductController {
         apiResponse.setResult(productService.AddNewProduct(productDTO));
         return apiResponse;
     }
-    @PostMapping("/image")
-    public ResponseEntity<?> uploadImage(@RequestParam(value = "productId", required = false) int productId,@RequestParam("image") List<MultipartFile> file ) throws IOException {
-        List<String> uploadImage = productService.uploadImagesList(file,productId);
-        return ResponseEntity.status(HttpStatus.OK)
-                .body(uploadImage);
-    }
-//    //đọc theo từng ảnh
-//    @GetMapping("/{fileName}")
-//    public ResponseEntity<?> downloadImage(@PathVariable String fileName){
-//        byte[] imageData=productService.dowloadImage(fileName);
+
+
+
+
+//    @PostMapping("/image")
+//    public ResponseEntity<?> uploadImage(@RequestParam(value = "productId", required = false) int productId,@RequestParam("image") List<MultipartFile> file ) throws IOException {
+//        List<String> uploadImage = productService.uploadImagesList(file,productId);
 //        return ResponseEntity.status(HttpStatus.OK)
-//                .contentType(MediaType.valueOf("image/png"))
-//                .body(imageData);
+//                .body(uploadImage);
 //    }
-//đọc theo từng ảnh để trả về hình ảnh của từng ảnh
-@GetMapping("/{productId}/images/{imageIndex}")
-public ResponseEntity<byte[]> downloadImage(
-        @PathVariable int productId,
-        @PathVariable int imageIndex
-) {
-    try {
-        List<byte[]> imageDataList = productService.downloadImagesByProductList(productId);
-
-        if (imageDataList == null || imageDataList.isEmpty() || imageIndex < 0 || imageIndex >= imageDataList.size()) {
-            throw new AppException(ErrorCode.NOT_FOUND); // Không tìm thấy ảnh
-        }
-
-        byte[] imageData = imageDataList.get(imageIndex); // Lấy ảnh theo chỉ số
-        return ResponseEntity.ok()
-                .contentType(MediaType.IMAGE_PNG) // hoặc MediaType.IMAGE_JPEG nếu ảnh của bạn là JPEG
-                .body(imageData);
-    } catch (AppException e) {
-        throw new AppException(ErrorCode.IMAGE_INVALID);
-    }
-}
-
+////    //đọc theo từng ảnh
+////    @GetMapping("/{fileName}")
+////    public ResponseEntity<?> downloadImage(@PathVariable String fileName){
+////        byte[] imageData=productService.dowloadImage(fileName);
+////        return ResponseEntity.status(HttpStatus.OK)
+////                .contentType(MediaType.valueOf("image/png"))
+////                .body(imageData);
+////    }
+////đọc theo từng ảnh để trả về hình ảnh của từng ảnh
+//@GetMapping("/{productId}/images/{imageIndex}")
+//public ResponseEntity<byte[]> downloadImage(
+//        @PathVariable int productId,
+//        @PathVariable int imageIndex
+//) {
+//    try {
+//        List<byte[]> imageDataList = productService.downloadImagesByProductList(productId);
+//
+//        if (imageDataList == null || imageDataList.isEmpty() || imageIndex < 0 || imageIndex >= imageDataList.size()) {
+//            throw new AppException(ErrorCode.NOT_FOUND); // Không tìm thấy ảnh
+//        }
+//
+//        byte[] imageData = imageDataList.get(imageIndex); // Lấy ảnh theo chỉ số
+//        return ResponseEntity.ok()
+//                .contentType(MediaType.IMAGE_PNG) // hoặc MediaType.IMAGE_JPEG nếu ảnh của bạn là JPEG
+//                .body(imageData);
+//    } catch (AppException e) {
+//        throw new AppException(ErrorCode.IMAGE_INVALID);
+//    }
+//}
 }

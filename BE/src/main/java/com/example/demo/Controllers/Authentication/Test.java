@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class Test {
     @Autowired
     private UserRepository userRepository;
+
     @PreAuthorize("hasAuthority('CUSTOMER')")
     @GetMapping("user")
     public ResponseEntity<String> Testuser() {

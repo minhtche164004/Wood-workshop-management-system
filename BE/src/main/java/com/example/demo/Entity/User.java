@@ -1,5 +1,6 @@
 package com.example.demo.Entity;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.*;
 import java.util.Date;
@@ -38,7 +39,8 @@ public class User  {
     private Date hireDate;
 
     @ManyToOne(cascade = CascadeType.ALL)
-    @JsonIgnore
+//    @JsonIgnore
+    @JsonManagedReference
     @JoinColumn(name = "role_id")
     private Role role;
 

@@ -14,6 +14,7 @@ import java.math.BigDecimal;
 public class SubMaterialDTO implements Serializable {
     @NotNull(message = "MUST_REQUIRED")
     private String sub_material_name;
+    @NotNull(message = "MUST_REQUIRED")
     private Integer material_id;
     @NotNull(message = "MUST_REQUIRED")
     private String description;

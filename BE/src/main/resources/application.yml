@@ -21,7 +21,7 @@ spring:
       hibernate:
         dialect: org.hibernate.dialect.MySQLDialect
     hibernate:
-      ddl-auto: none
+      ddl-auto: update
     show-sql: true
 
   logging:
@@ -48,6 +48,12 @@ jwt:
   key: 413F4428472B4B6250655368566D597033733676397924426452948404D6351
   time: 3600000  # 1000*60*60 milliseconds
 #http://localhost:8080/swagger-ui/index.html
+
+
+upload:
+  file:  # Thay đổi từ "files" thành "file"
+    path: /Users/nguyenhoanganh/Documents/SEP490/BE/src/main/resources/images/
+    extension: jpg,png,jpeg,gif
 
 
 

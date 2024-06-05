@@ -1,35 +1,42 @@
 package com.example.demo.Entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
+import java.io.Serializable;
 import java.util.Objects;
-
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
 @Entity
 @Table(name = "productimages", schema = "test1", catalog = "")
-public class Productimages {
+@Builder
+public class Productimages implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
     @Column(name = "product_image_id")
     private int productImageId;
-    @Basic
-    @Column(name = "product_id")
-    private Integer productId;
-    @Basic
+
     @Column(name = "image")
-    private String image;
+    private String image_name;
 
 
+    @Column(name="file_original_name")
+    private String fileOriginalName;
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Productimages that = (Productimages) o;
-        return productImageId == that.productImageId && Objects.equals(productId, that.productId) && Objects.equals(image, that.image);
-    }
+    @Column(name="extension_name")
+    private String extension_name;
 
-    @Override
-    public int hashCode() {
-        return Objects.hash(productImageId, productId, image);
-    }
+    @Column(name="full_path")
+    private String fullPath;
+
+    @ManyToOne
+    @JsonIgnore
+    @JoinColumn(name = "product_id")
+    private Products product;
+
 }

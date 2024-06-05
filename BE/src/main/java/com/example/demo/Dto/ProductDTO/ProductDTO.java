@@ -4,9 +4,11 @@ import jakarta.validation.constraints.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.util.List;
 
 @Data
 @AllArgsConstructor
@@ -24,9 +26,11 @@ public class ProductDTO implements Serializable {
     @DecimalMin(value = "0.0", inclusive = false, message = "PRICE_INVALID") // Giá trị tối thiểu lớn hơn 0
     private BigDecimal price;
     private int status_id;
-
-    private String image;
+   @NotNull(message = "MUST_REQUIRED")
+   private String images;
+    @NotNull(message = "MUST_REQUIRED")
     private int category_id;
+    @NotNull(message = "MUST_REQUIRED")
     private int type;
 
 }

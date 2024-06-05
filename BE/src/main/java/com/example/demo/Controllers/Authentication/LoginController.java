@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/auth/")
-@CrossOrigin(origins="http://localhost:5173")
+//@CrossOrigin(origins="http://localhost:5173")
 @AllArgsConstructor
 public class LoginController {
     @Autowired
@@ -29,7 +29,6 @@ public class LoginController {
         session.setAttribute("token", a);
         return apiResponse;
     }
-
 
 
 ////đang lỗi , nếu cần thiết thì ko cần refresh token mà sẽ trả về trang login để bắt login lại khi token hết hạn

@@ -25,7 +25,7 @@ public enum ErrorCode {
     //-----------------------------------
 
     //------------------Exception của Xác thực , Phân quyền )----------
-    UNAUTHENTICATED(1004,"Bạn Chưa Được Xác Thực , Vui Lòng Đăng Nhập",HttpStatus.UNAUTHORIZED), //lỗi chưa xác thực , họặc token hết hạn thì đều bắt người dùng phải login để tạo lại token
+    UNAUTHENTICATED(1004,"Please Login ,Token Expired or Unauthorized",HttpStatus.UNAUTHORIZED), //lỗi chưa xác thực , họặc token hết hạn thì đều bắt người dùng phải login để tạo lại token
     UNAUTHORIZED(1005,"Bạn không có quyền truy cập thao tác này ",HttpStatus.FORBIDDEN),
     TOKEN_EXPIRED(1011,"Token hết hạn , vui lòng đăng nhập lại",HttpStatus.UNAUTHORIZED),
     //-----------------------------------
@@ -56,7 +56,9 @@ public enum ErrorCode {
 
 
 
-    FILE_EXCEL_INVALID(1025,"Sai định dạng file",HttpStatus.BAD_REQUEST)
+
+    FILE_EXCEL_INVALID(1025,"Sai định dạng file",HttpStatus.BAD_REQUEST),
+    IMAGE_INVALID(1026, "Lỗi ảnh truyền vào , hãy thử lại",HttpStatus.BAD_REQUEST)
 
 
 

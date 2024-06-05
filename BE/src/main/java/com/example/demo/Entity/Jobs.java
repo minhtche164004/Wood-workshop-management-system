@@ -9,7 +9,7 @@ import java.util.Objects;
 
 @Entity
 @Table(name = "jobs", schema = "test1", catalog = "")
-public class JobsEntity {
+public class Jobs {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
     @Column(name = "job_id")
@@ -45,7 +45,7 @@ public class JobsEntity {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        JobsEntity that = (JobsEntity) o;
+        Jobs that = (Jobs) o;
         return jobId == that.jobId && Objects.equals(userId, that.userId) && Objects.equals(productId, that.productId) && Objects.equals(description, that.description) && Objects.equals(timeFinish, that.timeFinish) && Objects.equals(quantityProduct, that.quantityProduct) && Objects.equals(cost, that.cost) && Objects.equals(timeStart, that.timeStart) && Objects.equals(code, that.code);
     }
 

@@ -26,9 +26,9 @@ public class Productimages {
     @Column(name = "type")
     private String type;
 
-
-    @Column(name = "imagedata",length = 1000)
-    private byte[] imageData;
+//
+//    @Column(name = "imagedata",length = 1000)
+//    private byte[] imageData;
 
     @ManyToOne
     @JsonIgnore

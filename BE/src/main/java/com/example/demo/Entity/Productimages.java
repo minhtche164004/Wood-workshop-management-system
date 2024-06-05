@@ -7,6 +7,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.io.Serializable;
 import java.util.Objects;
 @Data
 @AllArgsConstructor
@@ -14,21 +15,24 @@ import java.util.Objects;
 @Entity
 @Table(name = "productimages", schema = "test1", catalog = "")
 @Builder
-public class Productimages {
+public class Productimages implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
     @Column(name = "product_image_id")
     private int productImageId;
 
-
     @Column(name = "image")
     private String image_name;
-    @Column(name = "type")
-    private String type;
 
-//
-//    @Column(name = "imagedata",length = 1000)
-//    private byte[] imageData;
+
+    @Column(name="file_original_name")
+    private String fileOriginalName;
+
+    @Column(name="extension_name")
+    private String extension_name;
+
+    @Column(name="full_path")
+    private String fullPath;
 
     @ManyToOne
     @JsonIgnore

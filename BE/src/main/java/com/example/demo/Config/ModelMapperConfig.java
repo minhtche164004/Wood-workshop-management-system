@@ -38,17 +38,6 @@ public class ModelMapperConfig {
 //                .addMapping(Products::getImage, ProductDTO::setImage)
 //                .addMapping(Products::getType, ProductDTO::setType)
 //                .addMapping(src -> src.getCategories().getCategoryId(), ProductDTO::setCategory_id);
-
-
-        modelMapper.typeMap(SubMaterials.class, SubMaterialNameDTO.class)
-                .addMapping(SubMaterials::getSubMaterialName, SubMaterialNameDTO::setSub_material_name);
-        modelMapper.typeMap(Materials.class, MaterialDTO.class)
-                .addMapping(Materials::getMaterialName, MaterialDTO::setMaterialName);
-        modelMapper.typeMap(Suppliermaterial.class, SupplierNameDTO.class)
-                .addMapping(Suppliermaterial::getSupplierName, SupplierNameDTO::setSupplierName);
-        modelMapper.typeMap(Categories.class, CategoryNameDTO.class)
-                .addMapping(Categories::getCategoryName, CategoryNameDTO::setCategoryName);
-
         return modelMapper;
     }
 

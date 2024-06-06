@@ -138,7 +138,7 @@ password_login: any;
     
     // Xóa token khỏi session storage hoặc local storage
     sessionStorage.removeItem('token');
-    localStorage.removeItem('token');
+    localStorage.removeItem('loginToken');
     
     const registrationRequest: RegistrationRequest = {
       username: this.username,

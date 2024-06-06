@@ -12,9 +12,9 @@ import java.util.Map;
 
 @Service
 public interface ProductService {
-    Products AddNewProduct(ProductDTO productDTO) ;
+    Products AddNewProduct(ProductDTO productDTO,MultipartFile[] multipartFiles,MultipartFile multipartFiles_thumbnal) ;
 
-    List<ProductImageDTO> uploadFile(MultipartFile[] multipartFiles, int product_id);
+
 
 
 

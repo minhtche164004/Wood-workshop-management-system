@@ -11,10 +11,9 @@ import com.example.demo.Repository.CategoryRepository;
 import com.example.demo.Repository.ProductImageRepository;
 import com.example.demo.Repository.ProductRepository;
 import com.example.demo.Response.ApiResponse;
-import com.example.demo.Service.CategorySevice;
-import com.example.demo.Service.ProductService;
-import com.example.demo.Service.SubMaterialService;
-import com.example.demo.Service.UserService;
+import com.example.demo.Service.*;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -46,6 +45,8 @@ public class ProductController {
     private CategorySevice categorySevice;
     @Autowired
     private ProductImageRepository productImageRepository;
+    @Autowired
+    private UploadImageService uploadImageService;
 
     @GetMapping("/GetAllProduct")
     public ApiResponse<?> getAllProduct(){
@@ -67,16 +68,22 @@ public class ProductController {
         apiResponse.setResult(categorySevice.GetListName());
         return apiResponse;
     }
-    @PostMapping("/AddNewProduct")
-    public ApiResponse<?> AddNewProduct(@RequestBody @Valid ProductDTO productDTO){
-        ApiResponse<Products> apiResponse= new ApiResponse<>();
-        apiResponse.setResult(productService.AddNewProduct(productDTO));
+
+    @PostMapping(value = "/AddNewProduct", consumes = MediaType.MULTIPART_FORM_DATA_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ApiResponse<?> AddNewProduct(
+            @RequestPart("productDTO") ProductDTO productDTO,
+            @RequestPart("files") MultipartFile[] files,
+            @RequestPart("file_thumbnail") MultipartFile file_thumbnail
+    ) {
+        ApiResponse<Products> apiResponse = new ApiResponse<>();
+        apiResponse.setResult(productService.AddNewProduct(productDTO, files,file_thumbnail));
         return apiResponse;
     }
+
     @PostMapping("/upload")
     public ResponseEntity<Object> uploadImage(@RequestParam("files")MultipartFile[] files,@RequestParam("product_id") int product_id){
         try{
-            return ResponseEntity.ok().body(productService.uploadFile(files,product_id));
+            return ResponseEntity.ok().body(uploadImageService.uploadFile(files,product_id));
         }catch(Exception e){
             return  ResponseEntity.badRequest().body(e.getLocalizedMessage());
         }

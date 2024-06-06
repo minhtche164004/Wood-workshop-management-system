@@ -24,3 +24,41 @@ hs_err_pid*
 replay_pid*
 
 .idea
+
+# See http://help.github.com/ignore-files/ for more about ignoring files.
+
+# Compiled output
+/FE/SEP490/dist
+/FE/SEP490/tmp
+/FE/SEP490/out-tsc
+/FE/SEP490/bazel-out
+
+# Node
+/FE/SEP490/node_modules
+/FE/SEP490/npm-debug.log
+/FE/SEP490/yarn-error.log
+
+# IDEs and editors
+/FE/SEP490/.idea/
+/FE/SEP490/.project
+/FE/SEP490/.classpath
+/FE/SEP490/.c9/
+/FE/SEP490/*.launch
+/FE/SEP490/.settings/
+/FE/SEP490/*.sublime-workspace
+
+# Visual Studio Code
+/FE/SEP490/.vscode/*
+/FE/SEP490/!.vscode/settings.json
+/FE/SEP490/!.vscode/tasks.json
+/FE/SEP490/!.vscode/launch.json
+/FE/SEP490/!.vscode/extensions.json
+/FE/SEP490/.history/*
+
+# Miscellaneous
+/FE/SEP490/.angular/cache
+/FE/SEP490/.sass-cache/
+/FE/SEP490/connect.lock
+/FE/SEP490/coverage
+/FE/SEP490/libpeerconnection.log
+/FE/SEP490/testem.l

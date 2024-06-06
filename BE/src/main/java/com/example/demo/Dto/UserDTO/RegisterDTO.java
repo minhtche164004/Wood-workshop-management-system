@@ -28,8 +28,8 @@ public class RegisterDTO {
     private String fullname;
     @NotNull(message = "MUST_REQUIRED")
     private int status;
-    @NotNull(message = "MUST_REQUIRED")
-    private int position;
+//    @NotNull(message = "MUST_REQUIRED")
+//    private int position;
     @NotNull(message = "MUST_REQUIRED")
     private int role;
 }

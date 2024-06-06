@@ -23,10 +23,10 @@ public class Position {
     @Column(name = "position_name")
     private String position_name;
 
-@JsonIgnore
-    @OneToMany(mappedBy = "position",  cascade = CascadeType.ALL)
-@JsonBackReference
-    private List<User> user;
+//@JsonIgnore
+//    @OneToMany(mappedBy = "position",  cascade = CascadeType.ALL)
+//@JsonBackReference
+//    private List<User> user;
 
 
 }

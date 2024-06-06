@@ -53,7 +53,7 @@ public class SubMaterialServiceImpl implements SubMaterialService {
         SubMaterials subMaterials = new SubMaterials();
         subMaterials.setSubMaterialName(subMaterialDTO.getSub_material_name());
         Materials materials = materialRepository.findById1(subMaterialDTO.getMaterial_id());
-        subMaterials.setMaterials(materials);
+        subMaterials.setMaterial(materials);
         subMaterials.setQuantity(subMaterialDTO.getQuantity());
         subMaterials.setUnitPrice(subMaterialDTO.getUnit_price());
         subMaterials.setDescription(subMaterialDTO.getDescription());
@@ -102,7 +102,7 @@ public class SubMaterialServiceImpl implements SubMaterialService {
                     SubMaterials subMaterials = new SubMaterials();
                     subMaterials.setSubMaterialName(dto.getSub_material_name());
                     Materials materials = materialRepository.findById1(dto.getMaterial_id());
-                    subMaterials.setMaterials(materials);
+                    subMaterials.setMaterial(materials);
                     subMaterials.setQuantity(dto.getQuantity());
                     subMaterials.setUnitPrice(dto.getUnit_price());
                     subMaterials.setDescription(dto.getDescription());

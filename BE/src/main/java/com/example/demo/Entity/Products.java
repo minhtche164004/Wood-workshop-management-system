@@ -62,29 +62,22 @@ public class Products {
     private Categories categories;
 
 
-    @OneToMany(mappedBy = "product",fetch = FetchType.LAZY)
-    @JsonBackReference
-    private List<Productimages> productimages;
-
-
-    @OneToMany(mappedBy = "product",fetch = FetchType.LAZY)
-    @JsonBackReference
-    private List<ProductSubMaterials> productSubMaterials;
-
-
-
-//
-//    public Products(String productName, String description, Integer quantity, BigDecimal price, Date completionTime, Productimages productimages, Date enddateWarranty, String code, Status status, Categories categories, Integer type) {
-//        this.productName = productName;
-//        this.description = description;
-//        this.quantity = quantity;
-//        this.price = price;
-//        this.completionTime = completionTime;
-//        this.productimages = productimages;
-//        this.enddateWarranty = enddateWarranty;
-//        this.code = code;
-//        this.status = status;
-//        this.categories = categories;
-//        this.type=type;
-//    }
+    public Products(String productName, String description, Integer quantity, BigDecimal price, String image, Date completionTime, Date enddateWarranty, String code, int type, Status status, Categories categories) {
+        this.productName = productName;
+        this.description = description;
+        this.quantity = quantity;
+        this.price = price;
+        this.image = image;
+        this.completionTime = completionTime;
+        this.enddateWarranty = enddateWarranty;
+        this.code = code;
+        this.type = type;
+        this.status = status;
+        this.categories = categories;
+    }
 }
+
+
+/*
+@OneToMany(mappedBy = "product", cascade = CascadeType.ALL) private List<Jobs> jobs;:
+Thể hiện mối quan hệ một-nhiều với Jobs. Một products có thể được tạo ra từ nhiều job.*/

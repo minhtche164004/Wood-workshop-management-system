@@ -1,9 +1,6 @@
 package com.example.demo.Service;
 
-import com.example.demo.Dto.UserDTO.RegisterDTO;
-import com.example.demo.Dto.UserDTO.UpdateProfileDTO;
-import com.example.demo.Dto.UserDTO.UserDTO;
-import com.example.demo.Dto.UserDTO.UserUpdateDTO;
+import com.example.demo.Dto.UserDTO.*;
 import com.example.demo.Entity.User;
 import com.example.demo.Jwt.JwtAuthenticationResponse;
 import com.example.demo.Jwt.RefreshTokenRequest;
@@ -35,7 +32,9 @@ List<UserDTO> GetAllUser();
 
     void DeleteUserById(int userId);
 
-    User CreateAccountForAdmin(RegisterDTO userDTO);
+    User CreateAccountForAdmin(User_Admin_DTO userDTO);
+
+    void checkConditionsForAdmin(User_Admin_DTO userDTO);
 
 
 

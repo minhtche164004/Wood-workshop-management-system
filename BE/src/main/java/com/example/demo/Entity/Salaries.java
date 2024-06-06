@@ -25,16 +25,4 @@ public class Salaries {
 
 
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Salaries that = (Salaries) o;
-        return salaryId == that.salaryId && Objects.equals(userId, that.userId) && Objects.equals(amount, that.amount) && Objects.equals(date, that.date);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(salaryId, userId, amount, date);
-    }
 }

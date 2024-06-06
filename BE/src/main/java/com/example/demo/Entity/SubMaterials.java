@@ -37,38 +37,12 @@ public class SubMaterials {
     private String code;
 
 
-    @ManyToOne(cascade = CascadeType.ALL)
-    @JsonIgnore
-    @JoinColumn(name = "material_id")
-    private Materials materials;
+    @ManyToOne
+    @JoinColumn(name = "material_id") // Khóa ngoại tới bảng materials
+    @JsonIgnore // Không đưa vào JSON để tránh vòng lặp
+    private Materials material; // Đổi tên thuộc tính thành "material"
 
-
-//    @JsonIgnore
-//    @OneToMany(mappedBy = "materials", cascade = CascadeType.ALL)
-//    @JsonBackReference
-//    private List<SubMaterials> subMaterials;
-
-    @OneToMany(mappedBy = "subMaterial", fetch = FetchType.LAZY)
-    @JsonIgnore
-    private List<ProductSubMaterials> productSubMaterials ;
-
-    @OneToMany(mappedBy = "subMaterial",fetch = FetchType.LAZY)
-    @JsonIgnore
-    private List<RequestProductsSubmaterials> requestProductsSubmaterials ;
-
-    @OneToMany(mappedBy = "subMaterial",fetch = FetchType.LAZY) // Một nguyên liệu phụ có thể được cung cấp bởi nhiều nhà cung cấp
-    @JsonIgnore // Tránh vòng lặp vô hạn khi chuyển đổi sang JSON
-    private List<Suppliermaterial> suppliers;
-
-    public SubMaterials(String subMaterialName, String description, Integer quantity, BigDecimal unitPrice, String code, Materials materials, List<ProductSubMaterials> productSubMaterials, List<RequestProductsSubmaterials> requestProductsSubmaterials, List<Suppliermaterial> suppliers) {
-        this.subMaterialName = subMaterialName;
-        this.description = description;
-        this.quantity = quantity;
-        this.unitPrice = unitPrice;
-        this.code = code;
-        this.materials = materials;
-        this.productSubMaterials = productSubMaterials;
-        this.requestProductsSubmaterials = requestProductsSubmaterials;
-        this.suppliers = suppliers;
-    }
 }
+
+//@ManyToOne: Mỗi sub-material thuộc về một material.
+//@JoinColumn(name = "material_id") chỉ ra rằng mối quan hệ này được xác định bởi khóa ngoại material_id trong bảng sub_materials.

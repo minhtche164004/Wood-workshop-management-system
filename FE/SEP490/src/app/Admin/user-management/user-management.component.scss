@@ -1,0 +1,107 @@
+.container {
+    display: flex;
+  }
+  
+  .sidebar {
+    width: 250px;
+    background: #343a40;
+    color: #fff;
+    height: 100vh;
+    padding: 20px;
+  
+  }
+  a{
+    text-decoration: none;
+  }
+  .profile {
+    text-align: center;
+    padding: 10px;
+  }
+  
+  .profile img {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+  }
+  
+  .profile h4, .profile p {
+    margin: 10px 0;
+  }
+  
+  .sidebar nav ul {
+    list-style: none;
+    padding: 0;
+  }
+  
+  .sidebar nav ul li {
+    margin: 20px 0;
+  }
+  
+  .sidebar nav ul li a {
+    color: #fff;
+    text-decoration: none;
+  }
+  
+  .upgrade-btn {
+    background: #ff4d4d;
+    color: #fff;
+    padding: 10px 20px;
+    border: none;
+    cursor: pointer;
+  }
+  
+  .main-content {
+    flex: 1;
+    padding: 20px;
+  }
+  
+  .header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  .sales-summary, .feeds, .top-selling-products {
+    margin: 20px 0;
+  }
+  .side-menu li a.active {
+    animation: pulse 0.5s ease-in-out infinite;
+  }
+  
+  @keyframes pulse {
+    0% {
+      transform: scale(1);
+    }
+    50% {
+      transform: scale(1.1);
+    }
+    100% {
+      transform: scale(1);
+    }
+  }
+  .feeds ul {
+    list-style: none;
+    padding: 0;
+  }
+  
+  .feeds ul li {
+    margin: 10px 0;
+  }
+  
+  .top-selling-products table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+  
+  .top-selling-products th, .top-selling-products td {
+    border: 1px solid #ddd;
+    padding: 8px;
+  }
+  
+  .tech-label {
+    background: #ff4d4d;
+    color: #fff;
+    padding: 2px 5px;
+    border-radius: 3px;
+  }
+  

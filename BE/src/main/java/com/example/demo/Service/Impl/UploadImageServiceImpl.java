@@ -74,8 +74,12 @@ public class UploadImageServiceImpl implements UploadImageService {
                 var fileNameUpload = FilenameUtils.removeExtension(filename) + "_" + Calendar.getInstance().getTimeInMillis() + "." + fileExtension;
 
                 // Ghi tệp tin vào thư mục upload với tên tệp mới
-                Files.write(Paths.get(uploadPath + fileNameUpload), bytes);
 
+//                Files.write(Paths.get(uploadPath + fileNameUpload), bytes);
+                String projectDir = Paths.get("").toAbsolutePath().toString().replace("\\", "/");
+                String absoluteUploadPath = projectDir + uploadPath;
+                Path filePath = Paths.get(absoluteUploadPath, fileNameUpload);
+                Files.write(filePath, bytes);
                 // Tạo đối tượng Productimages để lưu thông tin ảnh vào cơ sở dữ liệu
                 Productimages fileUpload = new Productimages();
                 fileUpload.setImage_name(fileNameUpload); // Tên tệp mới
@@ -131,12 +135,16 @@ public class UploadImageServiceImpl implements UploadImageService {
             String fileNameUpload = "thumbnail_" + FilenameUtils.removeExtension(filename) + "_" + Calendar.getInstance().getTimeInMillis() + "." + fileExtension;
 
             // Ghi tệp vào thư mục upload
-            Path filePath = Paths.get(uploadPath + fileNameUpload);
+//            Path filePath = Paths.get(uploadPath + fileNameUpload);
+//            Files.write(filePath, bytes);
+            String projectDir = Paths.get("").toAbsolutePath().toString().replace("\\", "/");
+            String absoluteUploadPath = projectDir + uploadPath;
+            Path filePath = Paths.get(absoluteUploadPath, fileNameUpload);
             Files.write(filePath, bytes);
-
             // Tạo và trả về đối tượng Product_Thumbnail
             Product_Thumbnail thumbnail = new Product_Thumbnail();
-            thumbnail.setFullPath(filePath.toString()); // Đường dẫn đầy đủ của ảnh thumbnail
+            thumbnail.setFullPath(uploadPath + fileNameUpload); // Đường dẫn đầy đủ đến tệp tin đã upload
+//            thumbnail.setFullPath(filePath.toString()); // Đường dẫn đầy đủ của ảnh thumbnail
             return thumbnail;
 
         } catch (IOException ex) {

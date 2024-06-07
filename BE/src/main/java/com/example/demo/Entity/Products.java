@@ -48,8 +48,7 @@ public class Products {
 
     @Column(name = "code")
     private String code;
-
-    @Column(name = "type") //type này là kiểu có sẵn hoặc không có sẵn( o là không có sẵn,1 là hàng có sẵn )
+    @Column(name = "type")
     private int type;
 
     @ManyToOne(cascade = CascadeType.ALL)

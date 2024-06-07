@@ -11,23 +11,17 @@ export class HeaderComponent {
 
   constructor(private router: Router, private http: HttpClient) { } 
 
-  onLogout() {
-    this.http.post('http://localhost:8080/api/auth/logout', {}).subscribe(
-      () => {
-        console.log('Đăng xuất thành công');
-        localStorage.removeItem('loginToken');
-        this.router.navigateByUrl('/register');
-      },
-      (error: HttpErrorResponse) => {
-        if (error.status === 200 && error.statusText === 'OK' && error.error === 'Logout successfully') {
-          console.log('Đăng xuất thành công');
-          localStorage.removeItem('loginToken');
-          this.router.navigateByUrl('/register');
-        } else {
-          console.error('Đăng xuất thất bại', error);
-        }
-      }
-    );
+  onLogout(): void {
+    // Lấy giá trị của token từ local storage
+    const token = localStorage.getItem('loginToken');
+    console.log('Token trước khi logout:', token);
+
+    console.log('remove loginToken');
+    // Xóa token đăng nhập khỏi local storage
+    localStorage.removeItem('loginToken');
+    console.log('Token sau khi logout:', localStorage.getItem('loginToken'));
+    this.router.navigateByUrl('/register');
+    
   }
   
 }

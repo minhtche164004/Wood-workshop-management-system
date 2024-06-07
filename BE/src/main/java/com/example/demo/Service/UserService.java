@@ -28,15 +28,13 @@ List<UserDTO> GetAllUser();
     UserDTO FindbyId(int user_id);
     User FindbyId1(int user_id);
 
-    UserDTO UpdateProfile(UpdateProfileDTO updateProfileDTO);
+    UserDTO EditUser(int userId,UpdateProfileDTO updateProfileDTO);
 
     void DeleteUserById(int userId);
 
     User CreateAccountForAdmin(User_Admin_DTO userDTO);
 
     void checkConditionsForAdmin(User_Admin_DTO userDTO);
-
-
 
 
 

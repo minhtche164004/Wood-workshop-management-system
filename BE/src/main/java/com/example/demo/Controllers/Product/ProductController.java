@@ -11,9 +11,10 @@ import com.example.demo.Repository.CategoryRepository;
 import com.example.demo.Repository.ProductImageRepository;
 import com.example.demo.Repository.ProductRepository;
 import com.example.demo.Response.ApiResponse;
-import com.example.demo.Service.*;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import com.example.demo.Service.CategorySevice;
+import com.example.demo.Service.ProductService;
+import com.example.demo.Service.SubMaterialService;
+import com.example.demo.Service.UserService;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,9 +25,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Base64;
 import java.util.List;
@@ -38,8 +36,8 @@ import java.util.stream.Collectors;
 @AllArgsConstructor
 public class ProductController {
 
-//    @Autowired
-//    private ProductRepository productRepository;
+    @Autowired
+    private ProductRepository productRepository;
     @Autowired
     private CategoryRepository categoryRepository;
     @Autowired
@@ -48,67 +46,40 @@ public class ProductController {
     private CategorySevice categorySevice;
     @Autowired
     private ProductImageRepository productImageRepository;
-    @Autowired
-    private UploadImageService uploadImageService;
 
     @GetMapping("/GetAllProduct")
-
-
-    public ApiResponse<?> getAllProduct() {
-        ApiResponse<List> apiResponse = new ApiResponse<>();
-        apiResponse.setResult(productService.GetAllProduct());
+    public ApiResponse<?> getAllProduct(){
+        ApiResponse<List> apiResponse= new ApiResponse<>();
+        apiResponse.setResult(productRepository.findAll());
         return apiResponse;
 
     }
-
     @GetMapping("/GetAllCategory")
-    public ApiResponse<?> getAllCategory() {
-        ApiResponse<List> apiResponse = new ApiResponse<>();
+    public ApiResponse<?> getAllCategory(){
+        ApiResponse<List> apiResponse= new ApiResponse<>();
         apiResponse.setResult(categoryRepository.findAll());
         return apiResponse;
 
     }
-
     @GetMapping("/getAllCategoryName")
-    public ApiResponse<?> getAllCategoryName() {
+    public ApiResponse<?> getAllCategoryName(){
         ApiResponse<List> apiResponse = new ApiResponse<>();
         apiResponse.setResult(categorySevice.GetListName());
         return apiResponse;
     }
-
-    @PostMapping(value = "/AddNewProduct", consumes = MediaType.MULTIPART_FORM_DATA_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ApiResponse<?> AddNewProduct(
-            @RequestPart("productDTO") ProductDTO productDTO,
-            @RequestPart("files") MultipartFile[] files,
-            @RequestPart("file_thumbnail") MultipartFile file_thumbnail
-    ) {
-        ApiResponse<Products> apiResponse = new ApiResponse<>();
-        apiResponse.setResult(productService.AddNewProduct(productDTO, files, file_thumbnail));
+    @PostMapping("/AddNewProduct")
+    public ApiResponse<?> AddNewProduct(@RequestBody @Valid ProductDTO productDTO){
+        ApiResponse<Products> apiResponse= new ApiResponse<>();
+        apiResponse.setResult(productService.AddNewProduct(productDTO));
         return apiResponse;
     }
-
     @PostMapping("/upload")
-    public ResponseEntity<Object> uploadImage(@RequestParam("files") MultipartFile[] files, @RequestParam("product_id") int product_id) {
-        try {
-            return ResponseEntity.ok().body(uploadImageService.uploadFile(files, product_id));
-        } catch (Exception e) {
-            return ResponseEntity.badRequest().body(e.getLocalizedMessage());
+    public ResponseEntity<Object> uploadImage(@RequestParam("files")MultipartFile[] files,@RequestParam("product_id") int product_id){
+        try{
+            return ResponseEntity.ok().body(productService.uploadFile(files,product_id));
+        }catch(Exception e){
+            return  ResponseEntity.badRequest().body(e.getLocalizedMessage());
         }
-    }
-
-    @GetMapping("/upload")
-    public String uploadFile() {
-            // Lấy tên tệp tin gốc
-
-            // Tạo đường dẫn tuyệt đối đến thư mục Images
-        String projectDir = Paths.get("").toAbsolutePath().toString().replace("\\", "/");
-            String absoluteUploadPath = projectDir + "/src/main/java/com/example/demo/Images/";
-
-            // Tạo đường dẫn tuyệt đối đến tệp tin sẽ được lưu
-
-
-            return absoluteUploadPath;
-
-    }
+}
 
 }

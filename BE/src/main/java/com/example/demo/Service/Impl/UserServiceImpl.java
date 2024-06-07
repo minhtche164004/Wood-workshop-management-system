@@ -18,8 +18,6 @@ import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -93,7 +91,6 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User CreateAccountForAdmin(User_Admin_DTO userDTO) {
-        //admin có thể set đc position , role,
         // Lấy thời gian hiện tại
         LocalDateTime currentDateTime = LocalDateTime.now();
         // Chuyển đổi từ LocalDateTime sang java.util.Date
@@ -259,10 +256,8 @@ public class UserServiceImpl implements UserService {
 
 
     @Override
-    public UserDTO UpdateProfile(UpdateProfileDTO updateProfileDTO){
-       UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-      String username = userDetails.getUsername();
-        Optional<User> userOptional = userRepository.findByUsername(username);
+    public UserDTO EditUser(int userId,UpdateProfileDTO updateProfileDTO){
+        Optional<User> userOptional = userRepository.findById(userId);
         User user = userOptional.orElseThrow(() -> new AppException(ErrorCode.NOT_FOUND));
         if (!checkConditionService.checkAddress(updateProfileDTO.getAddress())) {
             throw new AppException(ErrorCode.INVALID_FORMAT_ADDRESS);
@@ -285,7 +280,7 @@ public class UserServiceImpl implements UserService {
         user.setUsername(updateProfileDTO.getUsername());
         user.getUserInfor().setPhoneNumber(updateProfileDTO.getPhoneNumber());
         user.setEmail(updateProfileDTO.getEmail());
-       userRepository.save(user);
+        userRepository.save(user);
         return modelMapper.map(user, UserDTO.class);
     }
     @Transactional
@@ -297,7 +292,6 @@ public class UserServiceImpl implements UserService {
        userInforRepository.deleteById(info_id);
        userRepository.DeleteById(UserId);
     }
-
 
 }
 

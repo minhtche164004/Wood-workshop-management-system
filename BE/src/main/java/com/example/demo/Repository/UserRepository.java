@@ -32,11 +32,10 @@ public interface UserRepository extends JpaRepository<User,Integer> {
     @Query("update User u set u.password = ?2 where u.email = ?1")
     void updatePassword(String email, String password);
 
-
-//    @Transactional
-//    @Modifying
-//    @Query("update User u set u.email = ?2 , u.userInfor.address =?3,u.userInfor.fullname=?4,u.userInfor.phoneNumber=?5 ,u.username=?6 where u.userId = ?1")
-//    void updateUser(int userId, String email,String address,String fullname,String phoneNumber,String username);
+    @Transactional
+    @Modifying
+    @Query("update User u set u.email = ?2 , u.userInfor.address =?3,u.userInfor.fullname=?4,u.userInfor.phoneNumber=?5 where u.userId = ?1")
+    void updateUser(String userId, String email,String address,String fullname,String phoneNumber);
 
 
 //    @Query("SELECT u FROM User u WHERE u.username LIKE %:username%" )

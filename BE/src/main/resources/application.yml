@@ -52,7 +52,7 @@ jwt:
 
 upload:
   file:  # Thay đổi từ "files" thành "file"
-    path: /BE/src/main/java/com/example/demo/Images/
+    path: /Users/nguyenhoanganh/Documents/SEP490/BE/src/main/resources/images/
     extension: jpg,png,jpeg,gif
 
 

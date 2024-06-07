@@ -52,7 +52,7 @@ jwt:
 
 upload:
   file:  # Thay đổi từ "files" thành "file"
-    path: C:/Users/lenam/OneDrive/Desktop/Wood-workshop-management-system/BE/src/main/resources/images/
+    path: /BE/src/main/java/com/example/demo/Images/
     extension: jpg,png,jpeg,gif
 
 

@@ -18,7 +18,7 @@ interface RegistrationRequest {
   address: string;
   fullname: string;
   status: number;
-  position: number;
+ 
   role: number;
 }
 
@@ -40,13 +40,12 @@ export class RegisterComponent implements OnInit {
   phoneNumber: string = '';
   address: string = '';
   fullname: string = '';
-  status: number = 1; // Default value for status
-  position: number = 1; // Default value for position
-  role: number = 2; // Default value for role
+  status: number = 0; // Default value for status
+  role: number = 0; // Default value for role
   errorMessage: string = '';
   successMessage: string = '';
   private apiUrl_registration = 'http://localhost:8080/api/auth/registration'; // URL của backend
-password_login: any;
+
 
   constructor(private elementRef: ElementRef, private http: HttpClient, private router: Router) {}
 
@@ -125,21 +124,6 @@ password_login: any;
   }
 
   registerUser() {
-    console.log('Username:', this.username);
-    console.log('Password:', this.password);
-    console.log('Confirm Password:', this.checkPass);
-    console.log('Email:', this.email);
-    console.log('Phone Number:', this.phoneNumber);
-    console.log('Address:', this.address);
-    console.log('Fullname:', this.fullname);
-    console.log('Status:', this.status);
-    console.log('Position:', this.position);
-    console.log('Role:', this.role);
-    
-    // Xóa token khỏi session storage hoặc local storage
-    sessionStorage.removeItem('token');
-    localStorage.removeItem('token');
-    
     const registrationRequest: RegistrationRequest = {
       username: this.username,
       password: this.password,
@@ -148,14 +132,24 @@ password_login: any;
       phoneNumber: this.phoneNumber,
       address: this.address,
       fullname: this.fullname,
-      status: this.status,
-      position: this.position,
-      role: this.role
+      status: 0,
+      role: 0
     };
+    console.log('Username:', this.username);
+    console.log('Password:', this.password);
+    console.log('Confirm Password:', this.checkPass);
+    console.log('Email:', this.email);
+    console.log('Phone Number:', this.phoneNumber);
+    console.log('Address:', this.address);
+    console.log('Fullname:', this.fullname);
+    console.log('Status:', registrationRequest.status); // Log status
+    console.log('Role:', registrationRequest.role); // Log role
+    
+ 
   
     this.http.post<any>(this.apiUrl_registration, registrationRequest)
       .subscribe(() => {
-        console.log('Đăng ký thành công'); // Display success message
+        console.log('Check Mail để kiểm tra OTP'); // Display success message
         this.router.navigate(['/otp']);
       }, (error: any) => {
         console.error('Đăng ký thất bại', error);

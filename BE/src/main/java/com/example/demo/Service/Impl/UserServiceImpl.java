@@ -298,7 +298,7 @@ public class UserServiceImpl implements UserService {
        userRepository.DeleteById(UserId);
     }
 
-    
+
 }
 
 

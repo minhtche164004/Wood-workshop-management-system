@@ -61,15 +61,15 @@ public class UserServiceImpl implements UserService {
 
 
     @Override
-    public User signup(RegisterDTO userDTO){
+    public User signup(RegisterDTO userDTO) {
         // Lấy thời gian hiện tại
         LocalDateTime currentDateTime = LocalDateTime.now();
         // Chuyển đổi từ LocalDateTime sang java.util.Date
         Date hireDate = Date.from(currentDateTime.atZone(ZoneId.systemDefault()).toInstant());
         String pass = passwordEncoder.encode(userDTO.getPassword());
         Role userRole = roleRepository.findById(2); //Default la CUSTOMER
-        Status status= statusRepository.findById(2); //Default la KICHHOAT
-//Position position = positionRepository.findById(1);//Default la khong phai employee
+        Status status = statusRepository.findById(2); //Default la KICHHOAT
+        //Position position = positionRepository.findById(1);//Default la khong phai employee
         UserInfor userInfor = new UserInfor(
                 userDTO.getFullname(),
                 userDTO.getPhoneNumber(),
@@ -77,17 +77,17 @@ public class UserServiceImpl implements UserService {
         );
         informationUserRepository.save(userInfor);
         User user = new User(
-                                0,
-                                userDTO.getUsername(),
-                                pass,
-                                userDTO.getEmail(),
-                                status,
+                0,
+                userDTO.getUsername(),
+                pass,
+                userDTO.getEmail(),
+                status,
                 null,
                 hireDate,
                 userRole,
                 userInfor
 
-                        );
+        );
         return userRepository.save(user);
     }
 
@@ -100,7 +100,7 @@ public class UserServiceImpl implements UserService {
         Date hireDate = Date.from(currentDateTime.atZone(ZoneId.systemDefault()).toInstant());
         String pass = passwordEncoder.encode(userDTO.getPassword());
         Role userRole = roleRepository.findById(userDTO.getRole());
-        Status status= statusRepository.findById(2);
+        Status status = statusRepository.findById(2);
         Position position = positionRepository.findById(userDTO.getPosition());
         UserInfor userInfor = new UserInfor(
                 userDTO.getFullname(),
@@ -124,7 +124,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public JwtAuthenticationResponse signin(LoginRequest loginRequest){
+    public JwtAuthenticationResponse signin(LoginRequest loginRequest) {
         UserDetails user;
         try {
             user = userDetailsService.loadUserByUsername(loginRequest.getUsername());
@@ -132,16 +132,16 @@ public class UserServiceImpl implements UserService {
             throw new AppException(ErrorCode.WRONG_PASS_OR_EMAIL);
         }
         User a = userRepository.getUserByUsername(user.getUsername());
-      if(a.getStatus().getStatus_id()==1){
-         throw new AppException(ErrorCode.UN_ACTIVE_ACCOUNT);
-}
+        if (a.getStatus().getStatus_id() == 1) {
+            throw new AppException(ErrorCode.UN_ACTIVE_ACCOUNT);
+        }
         // Kiểm tra xem mật khẩu nhập vào có khớp với mật khẩu lưu trong cơ sở dữ liệu không
         if (!passwordEncoder.matches(loginRequest.getPassword(), user.getPassword())) {
             throw new AppException(ErrorCode.WRONG_PASS_OR_EMAIL);
         }
         // Nếu mọi thứ đều đúng, tạo JWT token và trả về
         var jwt = jwtService.generateToken(new HashMap<>(), user);
-       // var refreshToken = jwtService.generateRefreshToken(new HashMap<>(), user);
+        // var refreshToken = jwtService.generateRefreshToken(new HashMap<>(), user);
         JwtAuthenticationResponse jwtAuthenticationResponse = new JwtAuthenticationResponse();
         jwtAuthenticationResponse.setToken(jwt);
         jwtAuthenticationResponse.setRefreshToken("");
@@ -153,7 +153,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public JwtAuthenticationResponse refreshToken(RefreshTokenRequest refreshTokenRequest) {
         String userEmail = jwtService.extractUserName(refreshTokenRequest.getToken());
-     //   User user = userRepository.findByEmail(userEmail).orElseThrow();
+        //   User user = userRepository.findByEmail(userEmail).orElseThrow();
         UserDetails user;
         try {
             user = userDetailsService.loadUserByUsername(userEmail);
@@ -162,7 +162,7 @@ public class UserServiceImpl implements UserService {
         }
 
         if (jwtService.isTokenValid(refreshTokenRequest.getToken(), user)) {
-            var jwt = jwtService.generateToken(new HashMap<>(),user);
+            var jwt = jwtService.generateToken(new HashMap<>(), user);
             JwtAuthenticationResponse jwtAuthenticationResponse = new JwtAuthenticationResponse();
             jwtAuthenticationResponse.setToken(refreshTokenRequest.getToken());
             jwtAuthenticationResponse.setRefreshToken("");
@@ -185,13 +185,14 @@ public class UserServiceImpl implements UserService {
         if (!checkConditionService.checkUserbyEmail(userDTO.getEmail())) {
             throw new AppException(ErrorCode.GMAIL_EXISTED);
         }
-        if(!checkConditionService.checkUserbyUsername(userDTO.getUsername())){
+        if (!checkConditionService.checkUserbyUsername(userDTO.getUsername())) {
             throw new AppException(ErrorCode.USERNAME_EXISTED);
         }
 
     }
+
     @Override
-   public void checkConditionsForAdmin(User_Admin_DTO userDTO){
+    public void checkConditionsForAdmin(User_Admin_DTO userDTO) {
         if (!checkConditionService.checkEmail(userDTO.getEmail())) {
             throw new AppException(ErrorCode.WRONG_FORMAT_EMAIL);
         }
@@ -204,11 +205,10 @@ public class UserServiceImpl implements UserService {
         if (!checkConditionService.checkUserbyEmail(userDTO.getEmail())) {
             throw new AppException(ErrorCode.GMAIL_EXISTED);
         }
-        if(!checkConditionService.checkUserbyUsername(userDTO.getUsername())){
+        if (!checkConditionService.checkUserbyUsername(userDTO.getUsername())) {
             throw new AppException(ErrorCode.USERNAME_EXISTED);
         }
     }
-
 
 
 //    @Override
@@ -226,6 +226,7 @@ public class UserServiceImpl implements UserService {
                 .map(user -> modelMapper.map(user, UserDTO.class))
                 .collect(Collectors.toList());
     }
+
     @Override
     public UserDTO FindbyId(int user_id) {
         Optional<User> userOptional = userRepository.findById(user_id);
@@ -243,18 +244,19 @@ public class UserServiceImpl implements UserService {
                 .map(user -> modelMapper.map(user, UserDTO.class))
                 .collect(Collectors.toList());
     }
+
     @Override
     public UserUpdateDTO GetUserById(int user_id) {
         Optional<UserUpdateDTO> userOptional = userRepository.findByIdTest1(user_id);
         return userOptional
-                .orElseThrow(() ->  new AppException(ErrorCode.NOT_FOUND));
+                .orElseThrow(() -> new AppException(ErrorCode.NOT_FOUND));
     }
 
     @Override
     public User FindbyId1(int user_id) {
         Optional<User> userOptional = userRepository.findById(user_id); // Lấy Optional<User> từ repository
         return userOptional
-                .orElseThrow(() ->  new AppException(ErrorCode.NOT_FOUND));
+                .orElseThrow(() -> new AppException(ErrorCode.NOT_FOUND));
     }
 
 
@@ -276,7 +278,7 @@ public class UserServiceImpl implements UserService {
         if (userRepository.countByEmail(updateProfileDTO.getEmail()) > 0) {
             throw new AppException(ErrorCode.GMAIL_EXISTED);
         }
-        if(userRepository.countByUsername(updateProfileDTO.getUsername()) > 0){
+        if (userRepository.countByUsername(updateProfileDTO.getUsername()) > 0) {
             throw new AppException(ErrorCode.USERNAME_EXISTED);
         }
 
@@ -288,14 +290,15 @@ public class UserServiceImpl implements UserService {
        userRepository.save(user);
         return modelMapper.map(user, UserDTO.class);
     }
+
     @Transactional
     //Đảm bảo tính toàn vẹn dữ liệu, nếu có lỗi thì tất cả các thao tác sẽ được rollback (hoàn tác)
     @Override
-    public void DeleteUserById(int UserId){
-        User user= userRepository.findById(UserId).get();
+    public void DeleteUserById(int UserId) {
+        User user = userRepository.findById(UserId).get();
         int info_id = user.getUserInfor().getInforId();
-       userInforRepository.deleteById(info_id);
-       userRepository.DeleteById(UserId);
+        userInforRepository.deleteById(info_id);
+        userRepository.DeleteById(UserId);
     }
 
 

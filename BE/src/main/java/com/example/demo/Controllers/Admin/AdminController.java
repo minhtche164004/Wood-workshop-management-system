@@ -23,6 +23,7 @@ public class AdminController {
     @Autowired
     private UserRepository userRepository;
 
+
     @GetMapping("/GetAllUser")
     public ApiResponse<?> getAllUser(){
         ApiResponse<List> apiResponse= new ApiResponse<>();

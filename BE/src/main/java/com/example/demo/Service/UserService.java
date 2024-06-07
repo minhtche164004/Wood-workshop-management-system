@@ -36,13 +36,11 @@ public interface UserService {
 
     User FindbyId1(int user_id);
 
-    UserDTO EditUser(int userId, UpdateProfileDTO updateProfileDTO);
+    UserDTO UpdateProfile(UpdateProfileDTO updateProfileDTO);
 
     void DeleteUserById(int userId);
 
     User CreateAccountForAdmin(User_Admin_DTO userDTO);
 
     void checkConditionsForAdmin(User_Admin_DTO userDTO);
-
-
 }

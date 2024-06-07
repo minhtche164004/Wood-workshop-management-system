@@ -57,7 +57,7 @@ public class RegisterController {
                 // Lưu email vừa nhập ở form đăng ký vào session
                 session.setAttribute("gmailregister", userDto.getEmail());
                 // Gửi email xác thực
-                int otp = otpGenerator();
+                String otp = otpGenerator();
                 // Lưu OTP vào session
                 session.setAttribute("otp", otp);
                 MailBody mailBody = MailBody.builder()
@@ -73,28 +73,27 @@ public class RegisterController {
 
     //send mail for email verification
     @PostMapping("/verifyMail1/{otpverify}")
-    public ApiResponse<String> verifyEmail(@PathVariable Integer otpverify ,HttpSession session){
+    public ApiResponse<String> verifyEmail(@PathVariable String otpverify ,HttpSession session){
         ApiResponse<String> apiResponse = new ApiResponse<>();
         String email = (String) session.getAttribute("gmailregister");
-      int otp=(int) session.getAttribute("otp");
-        RegisterDTO b = (RegisterDTO) session.getAttribute("userDto");
-        if(otpverify == otp){
+      String otp= (String) session.getAttribute("otp");
+      RegisterDTO b = (RegisterDTO) session.getAttribute("userDto");
+        if(otpverify.equals(otp)){
             // Xác thực OTP thành công
             // Xóa OTP từ session sau khi sử dụng nó
             session.removeAttribute("otp");
             userService.signup(b);
             apiResponse.setResult("Xác Thực OTP thành công , Vui Lòng quay lại Đăng Nhập");
             return apiResponse;
-           // return ResponseEntity.ok("Verify otp success, Register success, please lOGIN");
         }
         else{
             throw new AppException(ErrorCode.INVALID_OTP);
         }
     }
 
-    private Integer otpGenerator(){
+    private String otpGenerator(){
         Random random= new Random();
-        return random.nextInt(100_000,999_999);
-
+        int otp = random.nextInt(100_000,999_999);
+        return String.valueOf(otp);
     }
 }

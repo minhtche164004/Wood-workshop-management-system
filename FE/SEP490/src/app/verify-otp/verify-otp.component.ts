@@ -14,7 +14,7 @@ export class VerifyOtpComponent {
 
   verifyOtp() {
     const otp = this.otpverify; // Gán giá trị cho biến otp từ otpverify
-    this.http.post(`http://localhost:8080/api/auth/verifyMail1/${otp}`, {}).subscribe(
+    this.http.post(`http://localhost:8080/api/auth/verifyMail1/${otp}`, {}, { withCredentials: true }).subscribe(
       (response: any) => {
         console.log('OTP verified successfully', response);
         this.router.navigate(['/register']);

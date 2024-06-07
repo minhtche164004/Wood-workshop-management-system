@@ -1,8 +1,10 @@
 package com.example.demo.Service.Impl;
 
 import com.example.demo.Dto.ProductDTO.ProductDTO;
+import com.example.demo.Dto.ProductDTO.ProductDTO_Show;
 import com.example.demo.Dto.ProductDTO.ProductImageDTO;
 import com.example.demo.Dto.ProductDTO.Product_Thumbnail;
+import com.example.demo.Dto.UserDTO.UserDTO;
 import com.example.demo.Entity.*;
 import com.example.demo.Exception.AppException;
 import com.example.demo.Exception.ErrorCode;
@@ -14,12 +16,15 @@ import com.example.demo.Service.CheckConditionService;
 import com.example.demo.Service.ProductService;
 import com.example.demo.Service.UploadImageService;
 import lombok.RequiredArgsConstructor;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.ResourceLoader;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -36,6 +41,9 @@ public class ProductServiceImpl implements ProductService {
     private ProductImageRepository productImageRepository;
     @Autowired
     private UploadImageService uploadImageService;
+    @Autowired
+    private ModelMapper modelMapper;
+
 
     @Override
     public Products AddNewProduct(ProductDTO productDTO,MultipartFile[] multipartFiles,MultipartFile multipartFiles_thumbnal) {
@@ -90,5 +98,17 @@ public class ProductServiceImpl implements ProductService {
         Products product =productRepository.findByName(productDTO.getProduct_name());
         uploadImageService.uploadFile(multipartFiles, product.getProductId());
         return products;
+    }
+
+
+    @Override
+    public List<ProductDTO_Show> GetAllProduct(){
+        List<Products> product_list = productRepository.findAll();
+        if (product_list.isEmpty()) {
+            throw new AppException(ErrorCode.NOT_FOUND);
+        }
+        return product_list.stream()
+                .map(product -> modelMapper.map(product, ProductDTO_Show.class))
+                .collect(Collectors.toList());
     }
 }

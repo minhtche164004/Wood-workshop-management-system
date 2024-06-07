@@ -35,8 +35,8 @@ import java.util.stream.Collectors;
 @AllArgsConstructor
 public class ProductController {
 
-    @Autowired
-    private ProductRepository productRepository;
+//    @Autowired
+//    private ProductRepository productRepository;
     @Autowired
     private CategoryRepository categoryRepository;
     @Autowired
@@ -51,7 +51,7 @@ public class ProductController {
     @GetMapping("/GetAllProduct")
     public ApiResponse<?> getAllProduct(){
         ApiResponse<List> apiResponse= new ApiResponse<>();
-        apiResponse.setResult(productRepository.findAll());
+        apiResponse.setResult(productService.GetAllProduct());
         return apiResponse;
 
     }

@@ -3,6 +3,7 @@ package com.example.demo.Config;
 import com.example.demo.Dto.Category.CategoryNameDTO;
 import com.example.demo.Dto.MaterialDTO.MaterialDTO;
 import com.example.demo.Dto.ProductDTO.ProductDTO;
+import com.example.demo.Dto.ProductDTO.ProductDTO_Show;
 import com.example.demo.Dto.SubMaterialDTO.SubMaterialNameDTO;
 import com.example.demo.Dto.SupplierDTO.SupplierNameDTO;
 import com.example.demo.Dto.UserDTO.UserDTO;
@@ -29,15 +30,15 @@ public class ModelMapperConfig {
                 .addMapping(src -> src.getStatus().getStatus_name(), UserDTO::setStatus_name)
                 .addMapping(src -> src.getRole().getRoleName(), UserDTO::setRole_name);// Ánh xạ roleName
 
-//        modelMapper.typeMap(Products.class, ProductDTO.class)
-//                .addMapping(Products::getProductName, ProductDTO::setProduct_name)
-//                .addMapping(Products::getDescription, ProductDTO::setDescription)
-//                .addMapping(Products::getQuantity, ProductDTO::setQuantity)
-//                .addMapping(Products::getPrice, ProductDTO::setPrice)
-//                .addMapping(src -> src.getStatus().getStatus_id(), ProductDTO::setStatus_id)
-//                .addMapping(Products::getImage, ProductDTO::setImage)
-//                .addMapping(Products::getType, ProductDTO::setType)
-//                .addMapping(src -> src.getCategories().getCategoryId(), ProductDTO::setCategory_id);
+        modelMapper.typeMap(Products.class, ProductDTO_Show.class)
+                .addMapping(Products::getProductName, ProductDTO_Show::setProduct_name)
+                .addMapping(Products::getDescription, ProductDTO_Show::setDescription)
+                .addMapping(Products::getQuantity, ProductDTO_Show::setQuantity)
+                .addMapping(Products::getPrice, ProductDTO_Show::setPrice)
+                .addMapping(src -> src.getStatus().getStatus_id(), ProductDTO_Show::setStatus_id)
+                .addMapping(Products::getImage, ProductDTO_Show::setImages)
+                .addMapping(Products::getType, ProductDTO_Show::setType)
+                .addMapping(src -> src.getCategories().getCategoryId(), ProductDTO_Show::setCategory_id);
         return modelMapper;
     }
 

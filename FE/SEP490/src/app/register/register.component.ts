@@ -147,7 +147,9 @@ export class RegisterComponent implements OnInit {
     
  
   
-    this.http.post<any>(this.apiUrl_registration, registrationRequest,{ withCredentials: true })
+
+    this.http.post<any>(this.apiUrl_registration, registrationRequest, { withCredentials: true })
+
       .subscribe(() => {
         console.log('Check Mail để kiểm tra OTP'); // Display success message
         this.router.navigate(['/otp']);

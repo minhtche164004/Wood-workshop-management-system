@@ -1,9 +1,14 @@
 package com.example.demo.Controllers;
 
 import com.example.demo.Config.VNPayService;
+import com.example.demo.Service.Impl.PaymentServiceImpl;
+import com.example.demo.Service.PaymentService;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.AllArgsConstructor;
+import net.minidev.json.JSONArray;
+import net.minidev.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
@@ -15,6 +20,8 @@ import org.springframework.web.bind.annotation.*;
 public class PaymentController {
     @Autowired
     private VNPayService vnPayService;
+    @Autowired
+    private PaymentService paymentService;
 
 
     @GetMapping("")
@@ -46,5 +53,20 @@ public class PaymentController {
         model.addAttribute("transactionId", transactionId);
 
         return paymentStatus == 1 ? "ordersuccess" : "orderfail";
+    }
+
+//    @GetMapping("/getToken")
+//    public ResponseEntity<String> getToken() {
+//
+//        String token = String.valueOf(paymentService.login());
+//
+//        return ResponseEntity.ok(token);
+//    }
+
+    @GetMapping("/getTransaction")
+    public ResponseEntity<String> getTransactions() {
+
+        String info = String.valueOf(paymentService.getHistoriesTransactions());
+        return ResponseEntity.ok(info);
     }
 }

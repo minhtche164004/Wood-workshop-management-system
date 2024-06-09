@@ -2,23 +2,17 @@ package com.example.demo.Service.Impl;
 
 import com.example.demo.Dto.ProductDTO.ProductDTO;
 import com.example.demo.Dto.ProductDTO.ProductDTO_Show;
-import com.example.demo.Dto.ProductDTO.ProductImageDTO;
 import com.example.demo.Dto.ProductDTO.Product_Thumbnail;
-import com.example.demo.Dto.UserDTO.UserDTO;
 import com.example.demo.Entity.*;
 import com.example.demo.Exception.AppException;
 import com.example.demo.Exception.ErrorCode;
-import com.example.demo.Repository.CategoryRepository;
-import com.example.demo.Repository.ProductImageRepository;
-import com.example.demo.Repository.ProductRepository;
-import com.example.demo.Repository.StatusRepository;
+import com.example.demo.Repository.*;
 import com.example.demo.Service.CheckConditionService;
 import com.example.demo.Service.ProductService;
 import com.example.demo.Service.UploadImageService;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.io.ResourceLoader;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import java.time.LocalDate;
@@ -30,7 +24,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class ProductServiceImpl implements ProductService {
     @Autowired
-    private StatusRepository statusRepository;
+    private Status_Product_Repository statusRepository;
     @Autowired
     private CategoryRepository categoryRepository;
     @Autowired
@@ -62,7 +56,7 @@ public class ProductServiceImpl implements ProductService {
         products.setDescription(productDTO.getDescription());
         products.setPrice(productDTO.getPrice());
 
-        Status status = statusRepository.findById(productDTO.getStatus_id());
+        Status_Product status = statusRepository.findById(productDTO.getStatus_id());
         products.setStatus(status);
         Categories categories = categoryRepository.findById(productDTO.getCategory_id());
         products.setCategories(categories);

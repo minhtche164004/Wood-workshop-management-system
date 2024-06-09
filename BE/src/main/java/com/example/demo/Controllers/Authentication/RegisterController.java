@@ -35,16 +35,8 @@ public class RegisterController {
     private ForgotPasswordRepository forgotPasswordRepository;
     @Autowired
     private PasswordEncoder passwordEncoder;
-//    @PostMapping("/registration")
-//    ApiResponse<User> registerUserAccount(@RequestBody @Valid UserDTO userDto) {
-//        ApiResponse<User> apiResponse= new ApiResponse<>();
-//
-//        apiResponse.setResult( userService.signup(userDto));
-//        return apiResponse;
-//     /*   userService.signup(userDto);
-//        return ResponseEntity.ok("Registration successful");*/
-//    }
-//}
+
+    private static final int MAX_ATTEMPTS = 3; //set cho việc nhập otp giới hạn là 3 lần
 
     //thêm cái @Valid vi toi bo cai validation vao trong UserDto
     //trả về object ApiResponse chứ ko phải uSER NỮA
@@ -73,23 +65,48 @@ public class RegisterController {
 
     //send mail for email verification
     @PostMapping("/verifyMail1/{otpverify}")
-    public ApiResponse<String> verifyEmail(@PathVariable String otpverify ,HttpSession session){
+    public ApiResponse<String> verifyEmail(@PathVariable String otpverify, HttpSession session) {
         ApiResponse<String> apiResponse = new ApiResponse<>();
         String email = (String) session.getAttribute("gmailregister");
-      String otp= (String) session.getAttribute("otp");
-      RegisterDTO b = (RegisterDTO) session.getAttribute("userDto");
-        if(otpverify.equals(otp)){
-            // Xác thực OTP thành công
-            // Xóa OTP từ session sau khi sử dụng nó
-            session.removeAttribute("otp");
-            userService.signup(b);
-            apiResponse.setResult("Xác Thực OTP thành công , Vui Lòng quay lại Đăng Nhập");
-            return apiResponse;
+        String otp = (String) session.getAttribute("otp");
+        RegisterDTO userDto = (RegisterDTO) session.getAttribute("userDto");
+
+        Integer attempts = (Integer) session.getAttribute("attempts");
+        if (attempts == null) {
+            attempts = 0;
         }
-        else{
-            throw new AppException(ErrorCode.INVALID_OTP);
+
+        if (otpverify.equals(otp)) {
+            // Xác thực OTP thành công
+            session.removeAttribute("otp");
+            session.removeAttribute("attempts"); // Reset số lần thử sau khi thành công
+            userService.signup(userDto);
+            apiResponse.setResult("Xác Thực OTP thành công, Vui Lòng quay lại Đăng Nhập");
+            return apiResponse;
+        } else {
+            attempts++;
+            session.setAttribute("attempts", attempts);
+            if (attempts >= MAX_ATTEMPTS) {
+                // Gửi lại email sau khi nhập sai quá số lần cho phép
+                String newOtp = otpGenerator();
+                session.setAttribute("otp", newOtp);
+
+                MailBody mailBody = MailBody.builder()
+                        .to(email)
+                        .text("Đây là OTP mới cho xác thực đăng kí: " + newOtp)
+                        .subject("[OTP Mới cho Đăng Kí]")
+                        .build();
+                emailService.sendSimpleMessage(mailBody);
+                session.setAttribute("attempts", 0); // Reset số lần thử
+
+               throw new AppException(ErrorCode.TOO_MANY_ATTEMPTS);
+
+            } else {
+                throw new AppException(ErrorCode.INVALID_OTP);
+            }
         }
     }
+
 
     private String otpGenerator(){
         Random random= new Random();

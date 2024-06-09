@@ -4,7 +4,6 @@ import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.*;
 import java.util.Date;
-import java.util.List;
 
 @Entity
 @Table(name = "users")
@@ -28,7 +27,7 @@ public class User  {
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "status_id")
     @JsonIgnore
-    private Status status;
+    private Status_User status;
 
     @ManyToOne(cascade = CascadeType.ALL)
     @JsonIgnore
@@ -52,7 +51,7 @@ public class User  {
 
 
 
-        public User(String username, String password, String email, Status status, Position position, Date hireDate, Role role,UserInfor userInfor) {
+        public User(String username, String password, String email, Status_User status, Position position, Date hireDate, Role role, UserInfor userInfor) {
         this.username = username;
         this.password = password;
         this.email = email;

@@ -18,7 +18,6 @@ import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -28,7 +27,6 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.*;
-import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 @Service
@@ -45,7 +43,7 @@ public class UserServiceImpl implements UserService {
     @Autowired
     private RoleRepository roleRepository;
     @Autowired
-    private StatusRepository statusRepository;
+    private Status_User_Repository statusRepository;
     @Autowired
     private UserDetailsServiceImpl userDetailsService;
     @Autowired
@@ -68,12 +66,17 @@ public class UserServiceImpl implements UserService {
         Date hireDate = Date.from(currentDateTime.atZone(ZoneId.systemDefault()).toInstant());
         String pass = passwordEncoder.encode(userDTO.getPassword());
         Role userRole = roleRepository.findById(2); //Default la CUSTOMER
-        Status status = statusRepository.findById(2); //Default la KICHHOAT
+        Status_User status = statusRepository.findById(2); //Default la KICHHOAT
         //Position position = positionRepository.findById(1);//Default la khong phai employee
         UserInfor userInfor = new UserInfor(
                 userDTO.getFullname(),
                 userDTO.getPhoneNumber(),
-                userDTO.getAddress()
+                userDTO.getAddress(),
+                userDTO.getBank_name(),
+                userDTO.getBank_number(),
+                userDTO.getCity(),
+                userDTO.getDistrict(),
+                userDTO.getWards()
         );
         informationUserRepository.save(userInfor);
         User user = new User(
@@ -100,12 +103,18 @@ public class UserServiceImpl implements UserService {
         Date hireDate = Date.from(currentDateTime.atZone(ZoneId.systemDefault()).toInstant());
         String pass = passwordEncoder.encode(userDTO.getPassword());
         Role userRole = roleRepository.findById(userDTO.getRole());
-        Status status = statusRepository.findById(2);
+        Status_User status = statusRepository.findById(2);
         Position position = positionRepository.findById(userDTO.getPosition());
         UserInfor userInfor = new UserInfor(
                 userDTO.getFullname(),
                 userDTO.getPhoneNumber(),
-                userDTO.getAddress()
+                userDTO.getAddress(),
+                userDTO.getBank_name(),
+                userDTO.getBank_number(),
+                userDTO.getCity(),
+                userDTO.getDistrict(),
+                userDTO.getWards()
+
         );
         informationUserRepository.save(userInfor);
         User user = new User(
@@ -286,7 +295,11 @@ public class UserServiceImpl implements UserService {
         user.getUserInfor().setFullname(updateProfileDTO.getFullname());
         user.setUsername(updateProfileDTO.getUsername());
         user.getUserInfor().setPhoneNumber(updateProfileDTO.getPhoneNumber());
-        user.setEmail(updateProfileDTO.getEmail());
+        user.getUserInfor().setBank_name(updateProfileDTO.getBank_name());
+        user.getUserInfor().setBank_number(updateProfileDTO.getBank_number());
+        user.getUserInfor().setCity_province(updateProfileDTO.getCity());
+        user.getUserInfor().setDistrict(updateProfileDTO.getDistrict());
+        user.getUserInfor().setWards(updateProfileDTO.getWards());
        userRepository.save(user);
         return modelMapper.map(user, UserDTO.class);
     }

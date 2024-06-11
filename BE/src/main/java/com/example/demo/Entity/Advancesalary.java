@@ -27,9 +27,6 @@ public class Advancesalary {
     @Column(name = "amount")
     private Long amount;
 
-//    @Column(name = "user_id")
-//    private Integer userId;
-
     @Column(name = "is_advance_success")
     private Byte isAdvanceSuccess;
 

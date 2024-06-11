@@ -52,8 +52,8 @@ public class UserServiceImpl implements UserService {
     private PositionRepository positionRepository;
     @Autowired
     private ModelMapper modelMapper;
-    @Autowired
-    private UserInforRepository userInforRepository;
+//    @Autowired
+//    private UserInforRepository userInforRepository;
     @Autowired
     private CheckConditionService checkConditionService;
 
@@ -306,7 +306,7 @@ public class UserServiceImpl implements UserService {
     public void DeleteUserById(int UserId) {
         User user = userRepository.findById(UserId).get();
         int info_id = user.getUserInfor().getInforId();
-        userInforRepository.deleteById(info_id);
+        informationUserRepository.deleteById(info_id);
         userRepository.DeleteById(UserId);
     }
 

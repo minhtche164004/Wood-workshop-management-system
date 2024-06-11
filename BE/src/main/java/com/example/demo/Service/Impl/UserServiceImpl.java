@@ -95,6 +95,20 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public JwtAuthenticationResponse refreshToken(RefreshTokenRequest refreshTokenRequest) {
+        String userEmail = jwtService.extractUserName(refreshTokenRequest.getToken());
+        UserDetails user =userDetailsService.loadUserByUsername(userEmail);
+        if (jwtService.isTokenValid(refreshTokenRequest.getToken(), user)) {
+            var jwt = jwtService.generateToken(new HashMap<>(),user);
+            JwtAuthenticationResponse jwtAuthenticationResponse = new JwtAuthenticationResponse();
+            jwtAuthenticationResponse.setToken(jwt);
+            jwtAuthenticationResponse.setUser(user);
+            return jwtAuthenticationResponse;
+        }
+        return null;
+    }
+
+    @Override
     public User CreateAccountForAdmin(User_Admin_DTO userDTO) {
         //admin có thể set đc position , role,
         // Lấy thời gian hiện tại
@@ -153,32 +167,14 @@ public class UserServiceImpl implements UserService {
         // var refreshToken = jwtService.generateRefreshToken(new HashMap<>(), user);
         JwtAuthenticationResponse jwtAuthenticationResponse = new JwtAuthenticationResponse();
         jwtAuthenticationResponse.setToken(jwt);
-        jwtAuthenticationResponse.setRefreshToken("");
+      //  jwtAuthenticationResponse.setRefreshToken("");
+
         jwtAuthenticationResponse.setUser(user);
         return jwtAuthenticationResponse;
     }
 
 
-    @Override
-    public JwtAuthenticationResponse refreshToken(RefreshTokenRequest refreshTokenRequest) {
-        String userEmail = jwtService.extractUserName(refreshTokenRequest.getToken());
-        //   User user = userRepository.findByEmail(userEmail).orElseThrow();
-        UserDetails user;
-        try {
-            user = userDetailsService.loadUserByUsername(userEmail);
-        } catch (UsernameNotFoundException e) {
-            throw new AppException(ErrorCode.WRONG_PASS_OR_EMAIL);
-        }
 
-        if (jwtService.isTokenValid(refreshTokenRequest.getToken(), user)) {
-            var jwt = jwtService.generateToken(new HashMap<>(), user);
-            JwtAuthenticationResponse jwtAuthenticationResponse = new JwtAuthenticationResponse();
-            jwtAuthenticationResponse.setToken(refreshTokenRequest.getToken());
-            jwtAuthenticationResponse.setRefreshToken("");
-            return jwtAuthenticationResponse;
-        }
-        return null;
-    }
 
     @Override
     public void checkConditions(RegisterDTO userDTO) { //check các điều kiện cho form Register

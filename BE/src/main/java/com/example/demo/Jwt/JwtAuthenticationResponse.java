@@ -11,6 +11,6 @@ import org.springframework.security.core.userdetails.UserDetails;
 @Setter
 public class JwtAuthenticationResponse {
     private String token;
-    private String refreshToken;
+ //   private String refreshToken;
     private UserDetails user;
 }

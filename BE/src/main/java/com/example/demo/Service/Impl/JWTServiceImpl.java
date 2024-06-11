@@ -40,13 +40,13 @@ public class JWTServiceImpl implements JWTService {
                 .signWith(getSiginKey(), SignatureAlgorithm.HS256)
                 .compact();
     }
-//    public String generateRefreshToken(Map<String,Object> extraClaims, UserDetails userDetails){
-//        return Jwts.builder().setClaims(extraClaims).setSubject(userDetails.getUsername())
-//                .setIssuedAt(new Date(System.currentTimeMillis()))
-//                .setExpiration(new Date(System.currentTimeMillis() + 1000*60*60))
-//                .signWith(getSiginKey(), SignatureAlgorithm.HS256)
-//                .compact();
-//    }
+    public String generateRefreshToken(Map<String,Object> extraClaims, UserDetails userDetails){
+        return Jwts.builder().setClaims(extraClaims).setSubject(userDetails.getUsername())
+                .setIssuedAt(new Date(System.currentTimeMillis()))
+                .setExpiration(new Date(System.currentTimeMillis() + 1000*60*60*7*24))
+                .signWith(getSiginKey(), SignatureAlgorithm.HS256)
+                .compact();
+    }
     //Trích xuất tên người dùng từ mã JWT.
     public String extractUserName(String token){
 

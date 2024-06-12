@@ -26,15 +26,42 @@ public class UserInfor {
 
     @Column(name = "address")
     private String address;
+
     @JsonIgnore
     @OneToOne(mappedBy = "userInfor")
     @JsonBackReference
     private User user;
 
+    @Column(name = "bank")
+    private String bank_name;
 
-    public UserInfor(String fullname, String phoneNumber, String address) {
-        this.fullname = fullname;
+    @Column(name = "bank_account_number")
+    private String bank_number;
+
+    @Column(name = "city_province")
+    private String city_province;
+
+    @Column(name = "district")
+    private String district;
+
+    @Column(name = "wards")
+    private String wards;
+
+
+//    public UserInfor(String fullname, String phoneNumber, String address) {
+//        this.fullname = fullname;
+//        this.phoneNumber = phoneNumber;
+//        this.address = address;
+//    }
+
+    public UserInfor(String phoneNumber, String fullname, String address, String bank_name, String bank_number, String city_province, String district, String wards) {
         this.phoneNumber = phoneNumber;
+        this.fullname = fullname;
         this.address = address;
+        this.bank_name = bank_name;
+        this.bank_number = bank_number;
+        this.city_province = city_province;
+        this.district = district;
+        this.wards = wards;
     }
 }

@@ -31,5 +31,19 @@ public class RegisterDTO {
 //    @NotNull(message = "MUST_REQUIRED")
 //    private int position;
     @NotNull(message = "MUST_REQUIRED")
-    private int role;
+    private String bank_name;
+
+    @NotNull(message = "MUST_REQUIRED")
+    private String bank_number;
+
+    @NotNull(message = "MUST_REQUIRED")
+    private String city;
+
+    @NotNull(message = "MUST_REQUIRED")
+    private String district;
+
+    @NotNull(message = "MUST_REQUIRED")
+    private String wards;
+
+
 }

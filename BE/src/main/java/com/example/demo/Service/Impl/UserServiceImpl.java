@@ -52,8 +52,8 @@ public class UserServiceImpl implements UserService {
     private PositionRepository positionRepository;
     @Autowired
     private ModelMapper modelMapper;
-    @Autowired
-    private UserInforRepository userInforRepository;
+//    @Autowired
+//    private UserInforRepository userInforRepository;
     @Autowired
     private CheckConditionService checkConditionService;
 
@@ -92,6 +92,20 @@ public class UserServiceImpl implements UserService {
 
         );
         return userRepository.save(user);
+    }
+
+    @Override
+    public JwtAuthenticationResponse refreshToken(RefreshTokenRequest refreshTokenRequest) {
+        String userEmail = jwtService.extractUserName(refreshTokenRequest.getToken());
+        UserDetails user =userDetailsService.loadUserByUsername(userEmail);
+        if (jwtService.isTokenValid(refreshTokenRequest.getToken(), user)) {
+            var jwt = jwtService.generateToken(new HashMap<>(),user);
+            JwtAuthenticationResponse jwtAuthenticationResponse = new JwtAuthenticationResponse();
+            jwtAuthenticationResponse.setToken(jwt);
+            jwtAuthenticationResponse.setUser(user);
+            return jwtAuthenticationResponse;
+        }
+        return null;
     }
 
     @Override
@@ -153,32 +167,14 @@ public class UserServiceImpl implements UserService {
         // var refreshToken = jwtService.generateRefreshToken(new HashMap<>(), user);
         JwtAuthenticationResponse jwtAuthenticationResponse = new JwtAuthenticationResponse();
         jwtAuthenticationResponse.setToken(jwt);
-        jwtAuthenticationResponse.setRefreshToken("");
+      //  jwtAuthenticationResponse.setRefreshToken("");
+
         jwtAuthenticationResponse.setUser(user);
         return jwtAuthenticationResponse;
     }
 
 
-    @Override
-    public JwtAuthenticationResponse refreshToken(RefreshTokenRequest refreshTokenRequest) {
-        String userEmail = jwtService.extractUserName(refreshTokenRequest.getToken());
-        //   User user = userRepository.findByEmail(userEmail).orElseThrow();
-        UserDetails user;
-        try {
-            user = userDetailsService.loadUserByUsername(userEmail);
-        } catch (UsernameNotFoundException e) {
-            throw new AppException(ErrorCode.WRONG_PASS_OR_EMAIL);
-        }
 
-        if (jwtService.isTokenValid(refreshTokenRequest.getToken(), user)) {
-            var jwt = jwtService.generateToken(new HashMap<>(), user);
-            JwtAuthenticationResponse jwtAuthenticationResponse = new JwtAuthenticationResponse();
-            jwtAuthenticationResponse.setToken(refreshTokenRequest.getToken());
-            jwtAuthenticationResponse.setRefreshToken("");
-            return jwtAuthenticationResponse;
-        }
-        return null;
-    }
 
     @Override
     public void checkConditions(RegisterDTO userDTO) { //check các điều kiện cho form Register
@@ -310,7 +306,7 @@ public class UserServiceImpl implements UserService {
     public void DeleteUserById(int UserId) {
         User user = userRepository.findById(UserId).get();
         int info_id = user.getUserInfor().getInforId();
-        userInforRepository.deleteById(info_id);
+        informationUserRepository.deleteById(info_id);
         userRepository.DeleteById(UserId);
     }
 

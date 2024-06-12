@@ -89,19 +89,19 @@ public class GlobalExceptionHandler {
 //
 //    }
 
-//    //bat Exception AccessDeniedException
-//    @ExceptionHandler(value = ExpiredJwtException.class)
-//    ResponseEntity<ApiResponse> handlingExpiredJwtException(ExpiredJwtException exception){
-//        ErrorCode errorCode= ErrorCode.TOKEN_EXPIRED;
-//        ApiResponse apiResponse= new ApiResponse();
-//        apiResponse.setCode(errorCode.getCode());
-//        apiResponse.setMessage(errorCode.getMessage());
-//
-//        return  ResponseEntity
-//                .status(errorCode.getStatusCode())
-//                .body(apiResponse);
-//
-//    }
+    //bat Exception AccessDeniedException
+    @ExceptionHandler(value = ExpiredJwtException.class)
+    ResponseEntity<ApiResponse> handlingExpiredJwtException(ExpiredJwtException exception){
+        ErrorCode errorCode= ErrorCode.TOKEN_EXPIRED;
+        ApiResponse apiResponse= new ApiResponse();
+        apiResponse.setCode(errorCode.getCode());
+        apiResponse.setMessage(errorCode.getMessage());
+
+        return  ResponseEntity
+                .status(errorCode.getStatusCode())
+                .body(apiResponse);
+
+    }
 
 }
 

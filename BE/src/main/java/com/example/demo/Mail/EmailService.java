@@ -27,7 +27,8 @@ public class EmailService {
 
     @Value("${spring.mail.username}")
     private String emailSentTo;
-    public void sendSimpleMessage(MailBody mailBody){
+
+    public void sendSimpleMessage(MailBody mailBody) {
         SimpleMailMessage message = new SimpleMailMessage();
         message.setSubject("[Thông Báo Xưởng Gỗ]");
         message.setTo(mailBody.to());
@@ -63,6 +64,7 @@ public class EmailService {
             throw new RuntimeException(e);
         }
     }
+
     public String sendMail1(SendMailRequest sendMailRequest) {
         try {
             MimeMessage mimeMessage = javaMailSender.createMimeMessage();
@@ -73,22 +75,24 @@ public class EmailService {
             mimeMessageHelper.setCc(sendMailRequest.getCc());
             mimeMessageHelper.setSubject(sendMailRequest.getSubject());
 
-
-            // Gọi API để lấy ảnh Base64
-          String qrResponse = paymentService.getQRCodeBankingString(sendMailRequest.getAmount(), sendMailRequest.getOrderInfo());
+            String qrResponse = paymentService.getQRCodeBankingString(sendMailRequest.getAmount(), sendMailRequest.getOrderInfo());
 
             if (qrResponse == null || qrResponse.isEmpty()) {
-                throw new RuntimeException("Invalid QR code data"); // Hoặc xử lý lỗi theo cách khác
+                throw new RuntimeException("Invalid QR code data");
             }
+
+            String base64Image = qrResponse.split(",")[1];
+            byte[] imageBytes = Base64.getDecoder().decode(base64Image);
+            ByteArrayResource imageResource = new ByteArrayResource(imageBytes);
+            mimeMessageHelper.addAttachment("QRCode.png", imageResource);
+
             String htmlContent = "<html><body>" + sendMailRequest.getBody() +
                     "<img src='" + qrResponse + "' />" + // Không cần thêm data:image/png;base64,
                     "</body></html>";
             mimeMessageHelper.setText(htmlContent, true);
-
             javaMailSender.send(mimeMessage);
 
             return "Email sent successfully";
-
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
@@ -98,9 +102,6 @@ public class EmailService {
 
     cc: (Carbon Copy) Đại diện cho các địa chỉ email khác mà bạn muốn gửi một bản sao của email.
     Những người nhận trong phần cc sẽ thấy địa chỉ email của người nhận chính (to) và các địa chỉ cc khác.*/
-
-
-
 
 
 }

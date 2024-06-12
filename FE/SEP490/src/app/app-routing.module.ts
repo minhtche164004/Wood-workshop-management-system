@@ -8,6 +8,7 @@ import { RegisterComponent } from './register/register.component';
 import { VerifyOtpComponent } from './verify-otp/verify-otp.component';
 import { PageAdminComponent } from './Admin/page-admin/page-admin.component';
 import { UserManagementComponent } from './Admin/user-management/user-management.component';
+import { PaymentSalaryComponent } from './payment-salary/payment-salary.component';
 
 const routes: Routes = [
   { path: 'homepage', component: HomepageComponent },
@@ -15,9 +16,11 @@ const routes: Routes = [
   { path: 'otp', component: VerifyOtpComponent },
   { path: 'admin', component: PageAdminComponent },
   { path: 'user_management', component: UserManagementComponent },
+  { path: 'payment-salary', component: PaymentSalaryComponent },
   { path: 'product', component: ProductComponent }, // Add route for ProductComponent
   { path: '', redirectTo: '/homepage', pathMatch: 'full' },
-  { path: '**', redirectTo: '/homepage', pathMatch: 'full' }
+  { path: '**', redirectTo: '/homepage', pathMatch: 'full' },
+
 ];
 
 @NgModule({

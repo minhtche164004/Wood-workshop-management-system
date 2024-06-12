@@ -16,6 +16,7 @@ import { FooterComponent } from './Layout/footer/footer.component';
 import { PageAdminComponent } from './Admin/page-admin/page-admin.component';
 import { UserManagementComponent } from './Admin/user-management/user-management.component';
 import { DashboardComponent } from './Layout/dashboard/dashboard.component';
+import { PaymentSalaryComponent } from './payment-salary/payment-salary.component';
 
 
 
@@ -31,6 +32,7 @@ import { DashboardComponent } from './Layout/dashboard/dashboard.component';
     PageAdminComponent,
     UserManagementComponent,
     DashboardComponent,
+    PaymentSalaryComponent,
     
    
   ],

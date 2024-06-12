@@ -104,11 +104,11 @@ public class PaymentController {
     }
 
 
-//@GetMapping("/getqr")
-//    public ResponseEntity<String> getQR12(@RequestParam("amount") int amount, @RequestParam("orderInfo") String orderInfo){
-//    return ResponseEntity.ok(paymentService.getQRCodeBankingString(amount, orderInfo));
-//
-//}
+@GetMapping("/getqr")
+    public ResponseEntity<String> getQR12(@RequestParam("amount") int amount, @RequestParam("orderInfo") String orderInfo){
+    return ResponseEntity.ok(paymentService.getQRCodeBankingString(amount, orderInfo));
+
+}
 
     // lay response cua qr dang json
 //    @PostMapping ("/getQRBanking")

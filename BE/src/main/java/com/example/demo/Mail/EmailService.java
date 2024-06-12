@@ -81,7 +81,7 @@ public class EmailService {
                 throw new RuntimeException("Invalid QR code data"); // Hoặc xử lý lỗi theo cách khác
             }
             String htmlContent = "<html><body>" + sendMailRequest.getBody() +
-                    "<img src='data:image/png;base64, " + qrResponse + "' />" +
+                    "<img src='" + qrResponse + "' />" + // Không cần thêm data:image/png;base64,
                     "</body></html>";
             mimeMessageHelper.setText(htmlContent, true);
 

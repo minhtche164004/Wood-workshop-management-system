@@ -1,13 +1,10 @@
 package com.example.demo.Controllers;
 
 import com.example.demo.Config.VNPayService;
-import com.example.demo.Service.Impl.PaymentServiceImpl;
 import com.example.demo.Service.PaymentService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.AllArgsConstructor;
-import net.minidev.json.JSONArray;
-import net.minidev.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.ui.Model;

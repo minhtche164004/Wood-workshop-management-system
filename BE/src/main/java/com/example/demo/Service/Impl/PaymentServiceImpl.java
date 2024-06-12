@@ -22,6 +22,7 @@ public class PaymentServiceImpl implements PaymentService {
     private String username = "0983682547";
     private String password = "Password@123456";
 
+
     public String login() {
         deviceId = getDeviceId();
 //      header
@@ -137,5 +138,40 @@ public class PaymentServiceImpl implements PaymentService {
 
     private String getDeviceId() {
         return this.makeDeviceId(45);
+    }
+
+    public String getQRCodeBanking(int amout, String orderInfo) {
+        accessToken =  login();
+
+        Map<String, Object> data = new HashMap<>();
+        data.put("accountNo", "00002189180");
+        data.put("accountName", "LE NAM");
+        data.put("acqId", "970423");
+        data.put("amount", amout);
+        data.put("addInfo", "THANH TOAN " + orderInfo);
+        data.put("format", "text");
+        data.put("template", "compact2");
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.set("Accept", "application/json, text/plain, */*");
+        headers.set("Accept-Language", "vi,en-US;q=0.9,en;q=0.8");
+        headers.set("Connection", "keep-alive");
+        headers.set("Content-Type", "application/json");
+
+        HttpEntity<Map<String, Object>> entity = new HttpEntity<>(data, headers);
+
+        RestTemplate restTemplate = new RestTemplate();
+        ResponseEntity<String> response = null;
+        try {
+            response = restTemplate.postForEntity(
+                    "https://api.vietqr.io/v2/generate",
+                    entity,
+                    String.class
+            );
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return response.getBody();
     }
 }

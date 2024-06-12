@@ -84,4 +84,40 @@ public class PaymentController {
         }
         return ResponseEntity.ok(map);
     }
+//      lay response moi string cua qr dang string
+//    @PostMapping ("/getQRBanking")
+//    public ResponseEntity<String> getQR(@RequestParam("amount") int amount, @RequestParam("orderInfo") String orderInfo) {
+//        String info = paymentService.getQRCodeBanking(amount, orderInfo);
+//        ObjectMapper mapper = new ObjectMapper();
+//        Map<String, Object> map = new HashMap<>();
+//        try {
+//            map = mapper.readValue(info, Map.class);
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
+//        Map<String, Object> dataMap = (Map<String, Object>) map.get("data");
+//        String qrCode = (String) dataMap.get("qrCode");
+//
+//        return ResponseEntity.ok(qrCode);
+//    }
+
+    // lay response cua qr dang json
+    @PostMapping ("/getQRBanking")
+    public ResponseEntity<Map<String, String>> getQR(@RequestParam("amount") int amount, @RequestParam("orderInfo") String orderInfo) {
+        String info = paymentService.getQRCodeBanking(amount, orderInfo);
+        ObjectMapper mapper = new ObjectMapper();
+        Map<String, Object> map = new HashMap<>();
+        try {
+            map = mapper.readValue(info, Map.class);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        Map<String, Object> dataMap = (Map<String, Object>) map.get("data");
+        String qrCode = (String) dataMap.get("qrDataURL");
+
+        Map<String, String> responseMap = new HashMap<>();
+        responseMap.put("qrCode", qrCode);
+
+        return ResponseEntity.ok(responseMap);
+    }
 }

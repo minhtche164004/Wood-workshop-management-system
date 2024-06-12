@@ -1,8 +1,5 @@
 package com.example.demo.Repository;
 
-import com.example.demo.Entity.Categories;
-import com.example.demo.Entity.Role;
-import com.example.demo.Entity.Status;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;

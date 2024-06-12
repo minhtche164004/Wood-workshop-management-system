@@ -35,7 +35,7 @@ public class Orders {
     @Column(name = "payment_method")
     private Integer paymentMethod; // Assuming you'll use an enum later
 
-    @Column(name = "deposite", precision = 38, scale = 2)
+    @Column(name = "deposite")
     private BigDecimal deposite;
 
     @ManyToOne // Relationship with InformationUser entity

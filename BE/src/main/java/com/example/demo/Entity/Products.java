@@ -1,17 +1,14 @@
 package com.example.demo.Entity;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.awt.*;
 import java.math.BigDecimal;
 import java.sql.Date;
-import java.util.List;
-import java.util.Objects;
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -55,7 +52,7 @@ public class Products {
     @ManyToOne(cascade = CascadeType.ALL)
     @JsonIgnore
     @JoinColumn(name = "status_id")
-    private Status status;
+    private Status_Product status;
 
     @ManyToOne
     @JsonIgnore
@@ -63,7 +60,7 @@ public class Products {
     private Categories categories;
 
 
-    public Products(String productName, String description, Integer quantity, BigDecimal price, String image, Date completionTime, Date enddateWarranty, String code, int type, Status status, Categories categories) {
+    public Products(String productName, String description, Integer quantity, BigDecimal price, String image, Date completionTime, Date enddateWarranty, String code, int type, Status_Product status, Categories categories) {
         this.productName = productName;
         this.description = description;
         this.quantity = quantity;

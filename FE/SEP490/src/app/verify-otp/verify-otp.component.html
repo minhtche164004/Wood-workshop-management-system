@@ -69,7 +69,7 @@
     <h1>OTP Code Verification</h1>
     <form (ngSubmit)="verifyOtp()" #otpForm="ngForm">
       <label for="otpverify">Enter the OTP code sent to your phone:</label>
-      <input type="number" id="otpverify" name="otpverify" [(ngModel)]="otpverify" required>
+      <input type="text" id="otpverify" name="otpverify" [(ngModel)]="otpverify" required>
       <button type="submit">Verify OTP Code</button>
     </form>
   </div>

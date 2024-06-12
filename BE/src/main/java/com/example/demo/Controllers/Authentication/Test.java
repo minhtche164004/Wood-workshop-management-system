@@ -41,6 +41,11 @@ public class Test {
         return emailService.sendMail(file, to, cc, subject, body);
     }
 
+    @PostMapping("/sendQR")
+    public String sendMail(@RequestBody SendMailRequest request ){
+        return emailService.sendMail1(request);
+    }
+
 }
 
 /*

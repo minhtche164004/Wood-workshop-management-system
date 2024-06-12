@@ -38,33 +38,32 @@ public class EmailService {
     }
 
 
-    public String sendMail(MultipartFile[] file, String to, String[] cc, String subject, String body) {
-        try {
-            MimeMessage mimeMessage = javaMailSender.createMimeMessage();
-
-            MimeMessageHelper mimeMessageHelper = new MimeMessageHelper(mimeMessage, true);
-
-            mimeMessageHelper.setFrom(emailSentTo);
-            mimeMessageHelper.setTo(to);
-            mimeMessageHelper.setCc(cc);
-            mimeMessageHelper.setSubject(subject);
-            mimeMessageHelper.setText(body);
-
-            for (int i = 0; i < file.length; i++) {
-                mimeMessageHelper.addAttachment(
-                        file[i].getOriginalFilename(),
-                        new ByteArrayResource(file[i].getBytes()));
-            }
-
-            javaMailSender.send(mimeMessage);
-
-            return "mail send";
-
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
-    }
-
+//    public String sendMail(MultipartFile[] file, String to, String[] cc, String subject, String body) {
+//        try {
+//            MimeMessage mimeMessage = javaMailSender.createMimeMessage();
+//
+//            MimeMessageHelper mimeMessageHelper = new MimeMessageHelper(mimeMessage, true);
+//
+//            mimeMessageHelper.setFrom(emailSentTo);
+//            mimeMessageHelper.setTo(to);
+//            mimeMessageHelper.setCc(cc);
+//            mimeMessageHelper.setSubject(subject);
+//            mimeMessageHelper.setText(body);
+//
+//            for (int i = 0; i < file.length; i++) {
+//                mimeMessageHelper.addAttachment(
+//                        file[i].getOriginalFilename(),
+//                        new ByteArrayResource(file[i].getBytes()));
+//            }
+//
+//            javaMailSender.send(mimeMessage);
+//
+//            return "mail send";
+//
+//        } catch (Exception e) {
+//            throw new RuntimeException(e);
+//        }
+//    }
     public String sendMail1(SendMailRequest sendMailRequest) {
         try {
             MimeMessage mimeMessage = javaMailSender.createMimeMessage();
@@ -82,17 +81,22 @@ public class EmailService {
             }
 
             String base64Image = qrResponse.split(",")[1];
+
             byte[] imageBytes = Base64.getDecoder().decode(base64Image);
+
             ByteArrayResource imageResource = new ByteArrayResource(imageBytes);
+
             mimeMessageHelper.addAttachment("QRCode.png", imageResource);
 
             String htmlContent = "<html><body>" + sendMailRequest.getBody() +
-                    "<img src='" + qrResponse + "' />" + // Không cần thêm data:image/png;base64,
+                    "<img src='data:image/png;base64, " + qrResponse + "' />" +
                     "</body></html>";
             mimeMessageHelper.setText(htmlContent, true);
+
             javaMailSender.send(mimeMessage);
 
             return "Email sent successfully";
+
         } catch (Exception e) {
             throw new RuntimeException(e);
         }

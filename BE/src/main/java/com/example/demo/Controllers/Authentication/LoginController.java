@@ -20,21 +20,22 @@ public class LoginController {
     private UserService userService;
 
     @PostMapping("/login")
-    public ApiResponse<?> login(@RequestBody LoginRequest loginRequest, HttpSession session){
+    public ApiResponse<?> login(@RequestBody LoginRequest loginRequest){
         ApiResponse<JwtAuthenticationResponse> apiResponse= new ApiResponse<>();
         apiResponse.setResult(userService.signin(loginRequest));
 
-        String a = apiResponse.getResult().getToken();
-
-        session.setAttribute("token", a);
         return apiResponse;
     }
 
 
-////đang lỗi , nếu cần thiết thì ko cần refresh token mà sẽ trả về trang login để bắt login lại khi token hết hạn
-//@PostMapping("/refresh")
-//public ResponseEntity<JwtAuthenticationResponse> refresh(@RequestBody RefreshTokenRequest refreshTokenRequest){
-//    return  ResponseEntity.ok(userService.refreshToken(refreshTokenRequest));
-//}
+    @PostMapping("/refreshToken")
+    public ApiResponse<?> refreshToken(@RequestBody RefreshTokenRequest refreshTokenRequest){
+        ApiResponse<JwtAuthenticationResponse> apiResponse= new ApiResponse<>();
+        apiResponse.setResult(userService.refreshToken(refreshTokenRequest));
+        return apiResponse;
+    }
+
+
+
 
 }

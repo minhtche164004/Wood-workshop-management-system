@@ -1,45 +1,41 @@
 package com.example.demo.Entity;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
 import java.util.Objects;
-
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 @Entity
 @Table(name = "orderdetails", schema = "test1", catalog = "")
 public class Orderdetails {
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
-    @Column(name = "order_detail_id")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "order_detail_id", nullable = false)
     private int orderDetailId;
-    @Basic
-    @Column(name = "order_id")
-    private Integer orderId;
-    @Basic
-    @Column(name = "product_id")
-    private Integer productId;
-    @Basic
+
+    @ManyToOne // Relationship with Orders entity
+    @JoinColumn(name = "order_id", referencedColumnName = "order_id")
+    private Orders order;  // Assuming you have an Orders entity
+
+    @ManyToOne // Relationship with Products entity
+    @JoinColumn(name = "product_id", referencedColumnName = "product_id")
+    private Products product;  // Assuming you have a Products entity
+
     @Column(name = "quantity")
     private Integer quantity;
-    @Basic
-    @Column(name = "unit_price")
+
+    @Column(name = "unit_price", precision = 38, scale = 2)
     private BigDecimal unitPrice;
-    @Basic
-    @Column(name = "request_product_id")
-    private Integer requestProductId;
+
+    @ManyToOne // Relationship with RequestProducts entity
+    @JoinColumn(name = "request_product_id", referencedColumnName = "request_product_id")
+    private RequestProducts requestProduct; // Assuming you have a RequestProducts entity
 
 
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Orderdetails that = (Orderdetails) o;
-        return orderDetailId == that.orderDetailId && Objects.equals(orderId, that.orderId) && Objects.equals(productId, that.productId) && Objects.equals(quantity, that.quantity) && Objects.equals(unitPrice, that.unitPrice) && Objects.equals(requestProductId, that.requestProductId);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(orderDetailId, orderId, productId, quantity, unitPrice, requestProductId);
-    }
 }

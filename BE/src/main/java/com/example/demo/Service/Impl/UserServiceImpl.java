@@ -18,7 +18,6 @@ import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -28,7 +27,6 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.*;
-import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 @Service
@@ -45,7 +43,7 @@ public class UserServiceImpl implements UserService {
     @Autowired
     private RoleRepository roleRepository;
     @Autowired
-    private StatusRepository statusRepository;
+    private Status_User_Repository statusRepository;
     @Autowired
     private UserDetailsServiceImpl userDetailsService;
     @Autowired
@@ -54,8 +52,8 @@ public class UserServiceImpl implements UserService {
     private PositionRepository positionRepository;
     @Autowired
     private ModelMapper modelMapper;
-    @Autowired
-    private UserInforRepository userInforRepository;
+//    @Autowired
+//    private UserInforRepository userInforRepository;
     @Autowired
     private CheckConditionService checkConditionService;
 
@@ -68,12 +66,17 @@ public class UserServiceImpl implements UserService {
         Date hireDate = Date.from(currentDateTime.atZone(ZoneId.systemDefault()).toInstant());
         String pass = passwordEncoder.encode(userDTO.getPassword());
         Role userRole = roleRepository.findById(2); //Default la CUSTOMER
-        Status status = statusRepository.findById(2); //Default la KICHHOAT
+        Status_User status = statusRepository.findById(2); //Default la KICHHOAT
         //Position position = positionRepository.findById(1);//Default la khong phai employee
         UserInfor userInfor = new UserInfor(
                 userDTO.getFullname(),
                 userDTO.getPhoneNumber(),
-                userDTO.getAddress()
+                userDTO.getAddress(),
+                userDTO.getBank_name(),
+                userDTO.getBank_number(),
+                userDTO.getCity(),
+                userDTO.getDistrict(),
+                userDTO.getWards()
         );
         informationUserRepository.save(userInfor);
         User user = new User(
@@ -92,6 +95,20 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public JwtAuthenticationResponse refreshToken(RefreshTokenRequest refreshTokenRequest) {
+        String userEmail = jwtService.extractUserName(refreshTokenRequest.getToken());
+        UserDetails user =userDetailsService.loadUserByUsername(userEmail);
+        if (jwtService.isTokenValid(refreshTokenRequest.getToken(), user)) {
+            var jwt = jwtService.generateToken(new HashMap<>(),user);
+            JwtAuthenticationResponse jwtAuthenticationResponse = new JwtAuthenticationResponse();
+            jwtAuthenticationResponse.setToken(jwt);
+            jwtAuthenticationResponse.setUser(user);
+            return jwtAuthenticationResponse;
+        }
+        return null;
+    }
+
+    @Override
     public User CreateAccountForAdmin(User_Admin_DTO userDTO) {
         //admin có thể set đc position , role,
         // Lấy thời gian hiện tại
@@ -100,12 +117,18 @@ public class UserServiceImpl implements UserService {
         Date hireDate = Date.from(currentDateTime.atZone(ZoneId.systemDefault()).toInstant());
         String pass = passwordEncoder.encode(userDTO.getPassword());
         Role userRole = roleRepository.findById(userDTO.getRole());
-        Status status = statusRepository.findById(2);
+        Status_User status = statusRepository.findById(2);
         Position position = positionRepository.findById(userDTO.getPosition());
         UserInfor userInfor = new UserInfor(
                 userDTO.getFullname(),
                 userDTO.getPhoneNumber(),
-                userDTO.getAddress()
+                userDTO.getAddress(),
+                userDTO.getBank_name(),
+                userDTO.getBank_number(),
+                userDTO.getCity(),
+                userDTO.getDistrict(),
+                userDTO.getWards()
+
         );
         informationUserRepository.save(userInfor);
         User user = new User(
@@ -144,32 +167,14 @@ public class UserServiceImpl implements UserService {
         // var refreshToken = jwtService.generateRefreshToken(new HashMap<>(), user);
         JwtAuthenticationResponse jwtAuthenticationResponse = new JwtAuthenticationResponse();
         jwtAuthenticationResponse.setToken(jwt);
-        jwtAuthenticationResponse.setRefreshToken("");
+      //  jwtAuthenticationResponse.setRefreshToken("");
+
         jwtAuthenticationResponse.setUser(user);
         return jwtAuthenticationResponse;
     }
 
 
-    @Override
-    public JwtAuthenticationResponse refreshToken(RefreshTokenRequest refreshTokenRequest) {
-        String userEmail = jwtService.extractUserName(refreshTokenRequest.getToken());
-        //   User user = userRepository.findByEmail(userEmail).orElseThrow();
-        UserDetails user;
-        try {
-            user = userDetailsService.loadUserByUsername(userEmail);
-        } catch (UsernameNotFoundException e) {
-            throw new AppException(ErrorCode.WRONG_PASS_OR_EMAIL);
-        }
 
-        if (jwtService.isTokenValid(refreshTokenRequest.getToken(), user)) {
-            var jwt = jwtService.generateToken(new HashMap<>(), user);
-            JwtAuthenticationResponse jwtAuthenticationResponse = new JwtAuthenticationResponse();
-            jwtAuthenticationResponse.setToken(refreshTokenRequest.getToken());
-            jwtAuthenticationResponse.setRefreshToken("");
-            return jwtAuthenticationResponse;
-        }
-        return null;
-    }
 
     @Override
     public void checkConditions(RegisterDTO userDTO) { //check các điều kiện cho form Register
@@ -286,7 +291,11 @@ public class UserServiceImpl implements UserService {
         user.getUserInfor().setFullname(updateProfileDTO.getFullname());
         user.setUsername(updateProfileDTO.getUsername());
         user.getUserInfor().setPhoneNumber(updateProfileDTO.getPhoneNumber());
-        user.setEmail(updateProfileDTO.getEmail());
+        user.getUserInfor().setBank_name(updateProfileDTO.getBank_name());
+        user.getUserInfor().setBank_number(updateProfileDTO.getBank_number());
+        user.getUserInfor().setCity_province(updateProfileDTO.getCity());
+        user.getUserInfor().setDistrict(updateProfileDTO.getDistrict());
+        user.getUserInfor().setWards(updateProfileDTO.getWards());
        userRepository.save(user);
         return modelMapper.map(user, UserDTO.class);
     }
@@ -297,7 +306,7 @@ public class UserServiceImpl implements UserService {
     public void DeleteUserById(int UserId) {
         User user = userRepository.findById(UserId).get();
         int info_id = user.getUserInfor().getInforId();
-        userInforRepository.deleteById(info_id);
+        informationUserRepository.deleteById(info_id);
         userRepository.DeleteById(UserId);
     }
 

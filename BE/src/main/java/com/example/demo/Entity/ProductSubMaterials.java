@@ -31,6 +31,8 @@ public class ProductSubMaterials {
     @JoinColumn(name = "product_id") // Chỉ định cột khóa ngoại
     private Products product; // Thêm thuộc tính Products để liên kết với bảng products
 
+    @Column(name = "quantity")
+    private Integer quantity;
 
 
 }

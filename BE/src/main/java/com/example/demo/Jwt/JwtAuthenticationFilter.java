@@ -5,7 +5,6 @@ import com.example.demo.Exception.AppException;
 import com.example.demo.Exception.ErrorCode;
 import com.example.demo.Service.JWTService;
 import com.example.demo.Service.UserService;
-import io.jsonwebtoken.ExpiredJwtException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -13,8 +12,6 @@ import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -70,14 +67,11 @@ Cuối cùng, filter chuyển tiếp yêu cầu đến filter tiếp theo trong 
                     securityContext.setAuthentication(token);
                     SecurityContextHolder.setContext(securityContext); //đặt thông tin người dùng vừa đưcọ xác thực vào securityContext
                 }
-            }catch (ExpiredJwtException e) {
-                response.setStatus(HttpStatus.UNAUTHORIZED.value());
-                response.getWriter().write(e.getMessage());
-                response.setContentType(MediaType.APPLICATION_JSON_VALUE);
-                return;
-            }
+            } catch (AppException e) {
+                // Token hết hạn
+                throw new AppException(ErrorCode.TOKEN_EXPIRED);
             }
         }
-       // filterChain.doFilter(request,response);
-
+        filterChain.doFilter(request,response);
+    }
 }

@@ -6,7 +6,9 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
+import java.sql.Time;
 import java.sql.Timestamp;
+import java.util.Date;
 import java.util.Objects;
 @Data
 @AllArgsConstructor
@@ -20,7 +22,7 @@ public class Orders {
     private int orderId;
 
     @Column(name = "order_date")
-    private Timestamp orderDate;
+    private Date orderDate;
 
     @ManyToOne // Relationship with Status entity
     @JoinColumn(name = "status_id", referencedColumnName = "status_id")

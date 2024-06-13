@@ -1,6 +1,10 @@
 package com.example.demo.Controllers;
 
 import com.example.demo.Config.VNPayService;
+import com.example.demo.Dto.RequestOrder;
+import com.example.demo.Entity.Orders;
+import com.example.demo.Response.ApiResponse;
+import com.example.demo.Service.OrderService;
 import com.example.demo.Service.PaymentService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.mail.internet.MimeMessage;
@@ -25,6 +29,8 @@ public class PaymentController {
     private VNPayService vnPayService;
     @Autowired
     private PaymentService paymentService;
+    @Autowired
+    private OrderService orderService;
 
 
     @GetMapping("")
@@ -129,4 +135,11 @@ public class PaymentController {
 //
 //        return ResponseEntity.ok(responseMap);
 //    }
+
+    @PostMapping ("/AddOrder")
+    public ApiResponse<?> AddOrder(@RequestBody RequestOrder requestOrder) {
+        ApiResponse<Orders> apiResponse = new ApiResponse<>();
+        apiResponse.setResult(orderService.AddOrder(requestOrder));
+        return apiResponse;
+    }
 }

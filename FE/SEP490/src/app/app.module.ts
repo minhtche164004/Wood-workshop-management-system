@@ -16,8 +16,7 @@ import { FooterComponent } from './Layout/footer/footer.component';
 import { PageAdminComponent } from './Admin/page-admin/page-admin.component';
 import { UserManagementComponent } from './Admin/user-management/user-management.component';
 import { DashboardComponent } from './Layout/dashboard/dashboard.component';
-
-
+import { MatSnackBarModule } from '@angular/material/snack-bar';
 
 @NgModule({
   declarations: [
@@ -39,7 +38,8 @@ import { DashboardComponent } from './Layout/dashboard/dashboard.component';
     FormsModule,
     HttpClientModule,
     RouterModule, // Import RouterModule
-    AppRoutingModule // Import AppRoutingModule
+    AppRoutingModule, // Import AppRoutingModule
+    MatSnackBarModule
   ],
   providers: [],
   bootstrap: [AppComponent]

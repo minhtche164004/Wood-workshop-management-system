@@ -8,12 +8,15 @@ import com.example.demo.Entity.*;
 import com.example.demo.Exception.AppException;
 import com.example.demo.Exception.ErrorCode;
 import com.example.demo.Repository.*;
+import com.example.demo.Response.ApiResponse;
 import com.example.demo.Service.CheckConditionService;
 import com.example.demo.Service.ProductService;
 import com.example.demo.Service.UploadImageService;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import java.time.LocalDate;
@@ -32,14 +35,17 @@ public class ProductServiceImpl implements ProductService {
     private ProductRepository productRepository;
     @Autowired
     private CheckConditionService checkConditionService;
-    @Autowired
-    private ProductImageRepository productImageRepository;
+
     @Autowired
     private UploadImageService uploadImageService;
     @Autowired
     private ModelMapper modelMapper;
     @Autowired
     private RequestProductRepository requestProductRepository;
+    @Autowired
+    private SubMaterialsRepository subMaterialsRepository;
+    @Autowired
+    private ProductSubMaterialsRepository productSubMaterialsRepository;
 
 
     @Override
@@ -129,7 +135,7 @@ public class ProductServiceImpl implements ProductService {
 
     //Tạo Request Product
     @Override
-    public RequestProducts AddNewProductRequest(RequestProductDTO requestProductDTO, MultipartFile multipartFiles_thumbnal) {
+    public RequestProducts AddNewProductRequest(RequestProductDTO requestProductDTO, MultipartFile[] multipartFiles) {
         RequestProducts requestProducts = new RequestProducts();
         requestProducts.setRequestProductName(requestProductDTO.getRequestProductName());
         requestProducts.setDescription(requestProductDTO.getDescription());
@@ -139,19 +145,22 @@ public class ProductServiceImpl implements ProductService {
         if (!checkConditionService.checkInputName(requestProductDTO.getRequestProductName())) {
             throw new AppException(ErrorCode.INVALID_FORMAT_NAME);
         }
-        if (productRepository.countByProductName(requestProductDTO.getRequestProductName()) > 0) {
-            throw new AppException(ErrorCode.NAME_EXIST);
-        }
+//        if (requestProductRepository.countByRequestProductName(requestProductDTO.getRequestProductName()) > 0) {
+//            throw new AppException(ErrorCode.NAME_EXIST);
+//        }
         if (!checkConditionService.checkInputQuantity(requestProductDTO.getQuantity())) {
             throw new AppException(ErrorCode.QUANTITY_INVALID);
         }
         if (!checkConditionService.checkInputPrice(requestProductDTO.getPrice())) {
             throw new AppException(ErrorCode.PRICE_INVALID);
         }
-        //set ảnh thumbnail
-        Product_Thumbnail t = uploadImageService.uploadFile_Thumnail(multipartFiles_thumbnal);
-        requestProducts.setImage(t.getFullPath());
-        requestProductRepository.save(requestProducts);
+        requestProducts = requestProductRepository.save(requestProducts);
+//        //set ảnh thumbnail
+//        Product_Thumbnail t = uploadImageService.uploadFile_Thumnail(multipartFiles_thumbnal);
+//        requestProducts.setImage(t.getFullPath());
+        //set ảnh của product
+        RequestProducts requestProduct = requestProductRepository.findByName(requestProductDTO.getRequestProductName());
+        uploadImageService.uploadFile1(multipartFiles, requestProduct.getRequestProductId());
         return requestProducts;
     }
 
@@ -167,4 +176,43 @@ public class ProductServiceImpl implements ProductService {
             throw new AppException(ErrorCode.PRICE_INVALID);
         }
     }
+
+
+    //Đơn xuất vật liệu(Tạo đơn xuất vật liệu cho sản phẩm  UC_30)
+    @Transactional
+    @Override
+    public ResponseEntity<ApiResponse<List<ProductSubMaterials>>> createExportMaterialProduct(int productId, Map<Integer, Integer> subMaterialQuantities) {
+        Products product = productRepository.findById(productId);
+
+        List<ProductSubMaterials> productSubMaterialsList = new ArrayList<>();
+        Map<String, String> errors = new HashMap<>(); //hashmap cho error
+
+        for (Map.Entry<Integer, Integer> entry : subMaterialQuantities.entrySet()) {
+            int subMaterialId = entry.getKey();
+            int quantity = entry.getValue();
+
+            SubMaterials subMaterial = subMaterialsRepository.findById1(subMaterialId);
+
+            int currentQuantity = subMaterial.getQuantity();
+            if (quantity > currentQuantity) {
+                errors.put(subMaterial.getSubMaterialName(), "Không đủ số lượng");
+                continue;
+            }
+
+            subMaterial.setQuantity(currentQuantity - quantity);
+            subMaterialsRepository.save(subMaterial);
+
+            ProductSubMaterials productSubMaterial = new ProductSubMaterials(subMaterial, product, quantity);
+            productSubMaterialsList.add(productSubMaterial);
+        }
+        ApiResponse<List<ProductSubMaterials>> apiResponse = new ApiResponse<>();
+        if (!errors.isEmpty()) {
+            apiResponse.setError(1028, errors);
+            return ResponseEntity.badRequest().body(apiResponse);
+        } else {
+            apiResponse.setResult(productSubMaterialsRepository.saveAll(productSubMaterialsList));
+            return ResponseEntity.ok(apiResponse);
+        }
+    }
+
 }

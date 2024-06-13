@@ -1,12 +1,10 @@
 package com.example.demo.Controllers.Product;
 
+import com.example.demo.Dto.ProductDTO.CreateExportMaterialProductRequest;
 import com.example.demo.Dto.ProductDTO.ProductDTO;
 import com.example.demo.Dto.ProductDTO.RequestProductDTO;
 import com.example.demo.Dto.SubMaterialDTO.SubMaterialDTO;
-import com.example.demo.Entity.Productimages;
-import com.example.demo.Entity.Products;
-import com.example.demo.Entity.RequestProducts;
-import com.example.demo.Entity.SubMaterials;
+import com.example.demo.Entity.*;
 import com.example.demo.Exception.AppException;
 import com.example.demo.Exception.ErrorCode;
 import com.example.demo.Repository.CategoryRepository;
@@ -116,10 +114,10 @@ public class ProductController {
     @PostMapping(value = "/AddNewRequestProduct", consumes = MediaType.MULTIPART_FORM_DATA_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ApiResponse<?> AddNewRequestProduct(
             @RequestPart("productDTO") RequestProductDTO requestProductDTO,
-            @RequestPart("file_thumbnail") MultipartFile file_thumbnail
+            @RequestPart("files") MultipartFile[] files
     ) {
         ApiResponse<RequestProducts> apiResponse = new ApiResponse<>();
-        apiResponse.setResult(productService.AddNewProductRequest(requestProductDTO, file_thumbnail));
+        apiResponse.setResult(productService.AddNewProductRequest(requestProductDTO, files));
         return apiResponse;
     }
 
@@ -136,4 +134,8 @@ public class ProductController {
         return apiResponse;
     }
 
+    @PostMapping("/createExportMaterialProduct")
+    public ResponseEntity<ApiResponse<List<ProductSubMaterials>>> createExportMaterialProduct(@RequestBody CreateExportMaterialProductRequest request) {
+        return productService.createExportMaterialProduct(request.getProductId(), request.getSubMaterialQuantities());
+    }
 }

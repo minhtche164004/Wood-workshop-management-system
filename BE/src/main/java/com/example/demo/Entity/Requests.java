@@ -39,6 +39,16 @@ public class Requests {
     private String code;
 
 
+    @Column(name = "phone_number")
+    private String phoneNumber;
+
+    @Column(name = "fullname")
+    private String fullname;
+
+    @Column(name = "address")
+    private String address;
+
+
 
 
 }

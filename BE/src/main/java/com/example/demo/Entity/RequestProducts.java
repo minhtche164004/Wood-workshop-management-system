@@ -34,8 +34,12 @@ public class RequestProducts {
     @Column(name = "completion_time")
     private Date completionTime;
 
-    @Column(name = "image")
-    private String image;
+//    @Column(name = "image")
+//    private String image;
+
+    @ManyToOne
+    @JoinColumn(name = "request_id", referencedColumnName = "request_id")
+    private Requests requests;
 
 
 

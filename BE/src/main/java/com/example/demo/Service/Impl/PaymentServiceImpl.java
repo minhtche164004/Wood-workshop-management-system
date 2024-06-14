@@ -1,6 +1,7 @@
 package com.example.demo.Service.Impl;
 
 import com.example.demo.Service.PaymentService;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import net.minidev.json.JSONObject;
 import net.minidev.json.JSONValue;
 import org.springframework.http.*;
@@ -173,5 +174,21 @@ public class PaymentServiceImpl implements PaymentService {
         }
 
         return response.getBody();
+    }
+
+
+    public String getQRCodeBankingString(int amount, String orderInfo) {
+        String info = getQRCodeBanking(amount, orderInfo);
+        ObjectMapper mapper = new ObjectMapper();
+        Map<String, Object> map = new HashMap<>();
+        try {
+            map = mapper.readValue(info, Map.class);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        Map<String, Object> dataMap = (Map<String, Object>) map.get("data");
+        String qrCode = (String) dataMap.get("qrDataURL");
+
+        return qrCode;
     }
 }

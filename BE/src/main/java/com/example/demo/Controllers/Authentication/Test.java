@@ -36,9 +36,14 @@ public class Test {
 
     }
 
-    @PostMapping("/send")
-    public String sendMail(@RequestParam(value = "file", required = false) MultipartFile[] file, String to, String[] cc, String subject, String body) {
-        return emailService.sendMail(file, to, cc, subject, body);
+//    @PostMapping("/send")
+//    public String sendMail(@RequestParam(value = "file", required = false) MultipartFile[] file, String to, String[] cc, String subject, String body) {
+//        return emailService.sendMail(file, to, cc, subject, body);
+//    }
+
+    @PostMapping("/sendQR")
+    public String sendMail(@RequestBody SendMailRequest request ){
+        return emailService.sendMail1(request);
     }
 
 }

@@ -1,10 +1,10 @@
 package com.example.demo.Controllers.Product;
 
+import com.example.demo.Dto.ProductDTO.CreateExportMaterialProductRequest;
 import com.example.demo.Dto.ProductDTO.ProductDTO;
+import com.example.demo.Dto.ProductDTO.RequestProductDTO;
 import com.example.demo.Dto.SubMaterialDTO.SubMaterialDTO;
-import com.example.demo.Entity.Productimages;
-import com.example.demo.Entity.Products;
-import com.example.demo.Entity.SubMaterials;
+import com.example.demo.Entity.*;
 import com.example.demo.Exception.AppException;
 import com.example.demo.Exception.ErrorCode;
 import com.example.demo.Repository.CategoryRepository;
@@ -20,6 +20,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.parameters.P;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -105,10 +106,36 @@ public class ProductController {
             String absoluteUploadPath = projectDir + "/src/main/java/com/example/demo/Images/";
 
             // Tạo đường dẫn tuyệt đối đến tệp tin sẽ được lưu
-
-
             return absoluteUploadPath;
 
     }
 
+
+    @PostMapping(value = "/AddNewRequestProduct", consumes = MediaType.MULTIPART_FORM_DATA_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ApiResponse<?> AddNewRequestProduct(
+            @RequestPart("productDTO") RequestProductDTO requestProductDTO,
+            @RequestPart("files") MultipartFile[] files
+    ) {
+        ApiResponse<RequestProducts> apiResponse = new ApiResponse<>();
+        apiResponse.setResult(productService.AddNewProductRequest(requestProductDTO, files));
+        return apiResponse;
+    }
+
+
+    @PostMapping(value = "/EditProduct", consumes = MediaType.MULTIPART_FORM_DATA_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ApiResponse<?> EditProduct(
+            @RequestParam(value="product_id") int productId,
+            @RequestPart("productDTO") ProductDTO productDTO,
+            @RequestPart("files") MultipartFile[] files,
+            @RequestPart("file_thumbnail") MultipartFile file_thumbnail
+    ) {
+        ApiResponse<Products> apiResponse = new ApiResponse<>();
+        apiResponse.setResult(productService.EditProduct(productId,productDTO,files, file_thumbnail));
+        return apiResponse;
+    }
+
+    @PostMapping("/createExportMaterialProduct")
+    public ResponseEntity<ApiResponse<List<ProductSubMaterials>>> createExportMaterialProduct(@RequestBody CreateExportMaterialProductRequest request) {
+        return productService.createExportMaterialProduct(request.getProductId(), request.getSubMaterialQuantities());
+    }
 }

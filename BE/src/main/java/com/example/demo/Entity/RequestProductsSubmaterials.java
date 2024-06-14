@@ -28,7 +28,8 @@ public class RequestProductsSubmaterials {
     @JoinColumn(name = "request_product_id")
     private RequestProducts requestProduct;
 
-
+    @Column(name = "quantity")
+    private Integer quantity;
 
 
 }

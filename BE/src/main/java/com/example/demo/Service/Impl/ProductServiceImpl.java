@@ -19,6 +19,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
+
+import java.nio.file.Paths;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
@@ -123,12 +125,17 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public List<ProductDTO_Show> GetAllProduct() {
+        String projectDir = Paths.get("").toAbsolutePath().toString().replace("\\", "/");
         List<Products> product_list = productRepository.findAll();
         if (product_list.isEmpty()) {
             throw new AppException(ErrorCode.NOT_FOUND);
         }
         return product_list.stream()
-                .map(product -> modelMapper.map(product, ProductDTO_Show.class))
+                .map(product -> {
+                    ProductDTO_Show productDTO = modelMapper.map(product, ProductDTO_Show.class);
+                    productDTO.setImages( projectDir + productDTO.getImages());
+                    return productDTO;
+                })
                 .collect(Collectors.toList());
     }
 

@@ -1,0 +1,11 @@
+<select [formControl]="provinceControl">
+  <option *ngFor="let province of provinces" [value]="province.code">{{province.name}}</option>
+</select>
+
+<select [formControl]="districtControl">
+  <option *ngFor="let district of districts" [value]="district.code">{{district.name}}</option>
+</select>
+
+<select [formControl]="wardControl">
+  <option *ngFor="let ward of wards" [value]="ward.code">{{ward.name}}</option>
+</select>

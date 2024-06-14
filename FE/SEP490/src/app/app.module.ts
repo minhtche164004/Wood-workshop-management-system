@@ -20,6 +20,8 @@ import { PaymentSalaryComponent } from './payment-salary/payment-salary.componen
 import { VerifyMailComponent } from './forgotPassword/verify-mail/verify-mail.component';
 import { ChangePasswordComponent } from './forgotPassword/change-password/change-password.component';
 import { VerifyOtpMailComponent } from './forgotPassword/verify-otp-mail/verify-otp-mail.component';
+import { ApiProvinceComponent } from './api-province/api-province.component';
+import { ReactiveFormsModule } from '@angular/forms';
 
 
 
@@ -40,6 +42,7 @@ import { VerifyOtpMailComponent } from './forgotPassword/verify-otp-mail/verify-
     VerifyMailComponent,
     ChangePasswordComponent,
     VerifyOtpMailComponent,
+    ApiProvinceComponent,
  
     
    
@@ -49,7 +52,8 @@ import { VerifyOtpMailComponent } from './forgotPassword/verify-otp-mail/verify-
     FormsModule,
     HttpClientModule,
     RouterModule, // Import RouterModule
-    AppRoutingModule // Import AppRoutingModule
+    AppRoutingModule, // Import AppRoutingModule,
+    ReactiveFormsModule
   ],
   providers: [],
   bootstrap: [AppComponent]

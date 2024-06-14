@@ -11,9 +11,11 @@ import { UserManagementComponent } from './Admin/user-management/user-management
 import { PaymentSalaryComponent } from './payment-salary/payment-salary.component';
 import { VerifyMailComponent } from './forgotPassword/verify-mail/verify-mail.component';
 import { ChangePasswordComponent } from './forgotPassword/change-password/change-password.component';
+import { ApiProvinceComponent } from './api-province/api-province.component';
 
 const routes: Routes = [
   { path: 'homepage', component: HomepageComponent },
+  { path: 'api-province', component: ApiProvinceComponent },
   { path: 'register', component: RegisterComponent },
   { path: 'otp', component: VerifyOtpComponent },
   { path: 'admin', component: PageAdminComponent },

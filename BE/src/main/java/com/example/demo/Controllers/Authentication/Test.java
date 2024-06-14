@@ -1,6 +1,7 @@
 package com.example.demo.Controllers.Authentication;
 
 import com.example.demo.Entity.User;
+import com.example.demo.Mail.EmailService;
 import com.example.demo.Repository.UserRepository;
 import com.example.demo.Response.ApiResponse;
 import lombok.AllArgsConstructor;
@@ -9,9 +10,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 @RestController
 @RequestMapping("/api/auth/")
@@ -20,14 +20,12 @@ import org.springframework.web.bind.annotation.RestController;
 public class Test {
     @Autowired
     private UserRepository userRepository;
+    @Autowired
+    private EmailService emailService;
 
     @PreAuthorize("hasAuthority('CUSTOMER')")
     @GetMapping("user")
     public ResponseEntity<String> Testuser() {
-//        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-//        ApiResponse<User> apiResponse = new ApiResponse<>();
-//        apiResponse.setResult(userRepository.findByEmail(authentication.getName()).get());
-//        return apiResponse;
         return ResponseEntity.ok("trang danh cho Customer");
     }
    // @PreAuthorize("hasAnyAuthority('ADMIN','USER')")
@@ -37,13 +35,18 @@ public class Test {
         return ResponseEntity.ok("trang danh cho admin");
 
     }
-        /*
-    Có thể truy cập vào thuôc tính Result để lấy thông tin
-      User a = apiResponse.getResult();
-       String role= a.getRole();
-     */
-}
 
+//    @PostMapping("/send")
+//    public String sendMail(@RequestParam(value = "file", required = false) MultipartFile[] file, String to, String[] cc, String subject, String body) {
+//        return emailService.sendMail(file, to, cc, subject, body);
+//    }
+
+    @PostMapping("/sendQR")
+    public String sendMail(@RequestBody SendMailRequest request ){
+        return emailService.sendMail1(request);
+    }
+
+}
 
 /*
 Authentication trong Spring Security chứa các thông tin cơ bản của người dùng được xác thực. Đối tượng Authentication bao gồm một số thông tin như:

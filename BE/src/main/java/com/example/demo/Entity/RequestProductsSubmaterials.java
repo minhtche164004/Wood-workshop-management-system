@@ -18,18 +18,18 @@ public class RequestProductsSubmaterials {
     @Column(name = "request_products_submaterials_id")
     private int requestProductsSubmaterialsId;
 
-    @Column(name = "request_product_id")
-    private Integer requestProductId;
-
-//    @Column(name = "sub_material_id")
-//    private Integer subMaterialId;
 
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "sub_material_id")
     private SubMaterials subMaterial;
 
 
+    @ManyToOne // Many-to-One relationship with RequestProducts
+    @JoinColumn(name = "request_product_id")
+    private RequestProducts requestProduct;
 
+    @Column(name = "quantity")
+    private Integer quantity;
 
 
 }

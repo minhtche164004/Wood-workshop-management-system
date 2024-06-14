@@ -47,7 +47,7 @@ public class SecurityConfiguration {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http.csrf(AbstractHttpConfigurer::disable).
                 cors(Customizer.withDefaults()).// by default uses a Bean by the name of corsConfigurationSource
-                authorizeHttpRequests(request -> request.requestMatchers("/api/auth/**","api/forgotPassword/**","/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html")
+                authorizeHttpRequests(request -> request.requestMatchers("/api/auth/**","/api/auth/send","api/forgotPassword/**","/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html")
                 .permitAll()
                 .anyRequest().authenticated())
                 .sessionManagement(manager ->manager.sessionCreationPolicy(SessionCreationPolicy.STATELESS))

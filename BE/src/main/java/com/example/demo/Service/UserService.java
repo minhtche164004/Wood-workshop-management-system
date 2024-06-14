@@ -43,4 +43,5 @@ public interface UserService {
     User CreateAccountForAdmin(User_Admin_DTO userDTO);
 
     void checkConditionsForAdmin(User_Admin_DTO userDTO);
+    void changeStatusAccount(int id,int status_id);
 }

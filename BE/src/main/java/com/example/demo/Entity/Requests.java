@@ -1,48 +1,54 @@
 package com.example.demo.Entity;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.sql.Timestamp;
 import java.util.Objects;
-
+@AllArgsConstructor
+@NoArgsConstructor
+@Data
 @Entity
 @Table(name = "requests", schema = "test1", catalog = "")
 public class Requests {
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
-    @Column(name = "request_id")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "request_id", nullable = false)
     private int requestId;
-    @Basic
-    @Column(name = "user_id")
-    private Integer userId;
-    @Basic
+
+    @ManyToOne
+    @JoinColumn(name = "user_id", referencedColumnName = "user_id")
+    private User user;  // Assuming you have a Users entity
+
     @Column(name = "request_date")
     private Timestamp requestDate;
-    @Basic
-    @Column(name = "status_id")
-    private Integer statusId;
-    @Basic
+
+    @ManyToOne
+    @JoinColumn(name = "status_id", referencedColumnName = "status_id")
+    private Status_Request status;  // Assuming you have a Status entity
+
     @Column(name = "response")
     private String response;
-    @Basic
+
     @Column(name = "description")
     private String description;
-    @Basic
+
     @Column(name = "code")
     private String code;
 
 
+    @Column(name = "phone_number")
+    private String phoneNumber;
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Requests that = (Requests) o;
-        return requestId == that.requestId && Objects.equals(userId, that.userId) && Objects.equals(requestDate, that.requestDate) && Objects.equals(statusId, that.statusId) && Objects.equals(response, that.response) && Objects.equals(description, that.description) && Objects.equals(code, that.code);
-    }
+    @Column(name = "fullname")
+    private String fullname;
 
-    @Override
-    public int hashCode() {
-        return Objects.hash(requestId, userId, requestDate, statusId, response, description, code);
-    }
+    @Column(name = "address")
+    private String address;
+
+
+
+
 }

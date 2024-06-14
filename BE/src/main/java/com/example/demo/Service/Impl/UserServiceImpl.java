@@ -52,8 +52,8 @@ public class UserServiceImpl implements UserService {
     private PositionRepository positionRepository;
     @Autowired
     private ModelMapper modelMapper;
-    @Autowired
-    private UserInforRepository userInforRepository;
+//    @Autowired
+//    private UserInforRepository userInforRepository;
     @Autowired
     private CheckConditionService checkConditionService;
 
@@ -72,8 +72,8 @@ public class UserServiceImpl implements UserService {
                 userDTO.getFullname(),
                 userDTO.getPhoneNumber(),
                 userDTO.getAddress(),
-                userDTO.getBank_name(),
-                userDTO.getBank_number(),
+                "",
+                "",
                 userDTO.getCity(),
                 userDTO.getDistrict(),
                 userDTO.getWards()
@@ -92,6 +92,20 @@ public class UserServiceImpl implements UserService {
 
         );
         return userRepository.save(user);
+    }
+
+    @Override
+    public JwtAuthenticationResponse refreshToken(RefreshTokenRequest refreshTokenRequest) {
+        String userEmail = jwtService.extractUserName(refreshTokenRequest.getToken());
+        UserDetails user =userDetailsService.loadUserByUsername(userEmail);
+        if (jwtService.isTokenValid(refreshTokenRequest.getToken(), user)) {
+            var jwt = jwtService.generateToken(new HashMap<>(),user);
+            JwtAuthenticationResponse jwtAuthenticationResponse = new JwtAuthenticationResponse();
+            jwtAuthenticationResponse.setToken(jwt);
+            jwtAuthenticationResponse.setUser(user);
+            return jwtAuthenticationResponse;
+        }
+        return null;
     }
 
     @Override
@@ -153,32 +167,14 @@ public class UserServiceImpl implements UserService {
         // var refreshToken = jwtService.generateRefreshToken(new HashMap<>(), user);
         JwtAuthenticationResponse jwtAuthenticationResponse = new JwtAuthenticationResponse();
         jwtAuthenticationResponse.setToken(jwt);
-        jwtAuthenticationResponse.setRefreshToken("");
+      //  jwtAuthenticationResponse.setRefreshToken("");
+
         jwtAuthenticationResponse.setUser(user);
         return jwtAuthenticationResponse;
     }
 
 
-    @Override
-    public JwtAuthenticationResponse refreshToken(RefreshTokenRequest refreshTokenRequest) {
-        String userEmail = jwtService.extractUserName(refreshTokenRequest.getToken());
-        //   User user = userRepository.findByEmail(userEmail).orElseThrow();
-        UserDetails user;
-        try {
-            user = userDetailsService.loadUserByUsername(userEmail);
-        } catch (UsernameNotFoundException e) {
-            throw new AppException(ErrorCode.WRONG_PASS_OR_EMAIL);
-        }
 
-        if (jwtService.isTokenValid(refreshTokenRequest.getToken(), user)) {
-            var jwt = jwtService.generateToken(new HashMap<>(), user);
-            JwtAuthenticationResponse jwtAuthenticationResponse = new JwtAuthenticationResponse();
-            jwtAuthenticationResponse.setToken(refreshTokenRequest.getToken());
-            jwtAuthenticationResponse.setRefreshToken("");
-            return jwtAuthenticationResponse;
-        }
-        return null;
-    }
 
     @Override
     public void checkConditions(RegisterDTO userDTO) { //check các điều kiện cho form Register
@@ -219,11 +215,6 @@ public class UserServiceImpl implements UserService {
         }
     }
 
-
-//    @Override
-//    public User getUserbyEmail(String email) {
-//        return userRepository.getUserByEmail(email);
-//    }
 
     @Override
     public List<UserDTO> GetAllUser() {
@@ -271,8 +262,8 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserDTO UpdateProfile(UpdateProfileDTO updateProfileDTO){
-       UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-      String username = userDetails.getUsername();
+        UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        String username = userDetails.getUsername();
         Optional<User> userOptional = userRepository.findByUsername(username);
         User user = userOptional.orElseThrow(() -> new AppException(ErrorCode.NOT_FOUND));
         if (!checkConditionService.checkAddress(updateProfileDTO.getAddress())) {
@@ -284,25 +275,30 @@ public class UserServiceImpl implements UserService {
         if (!checkConditionService.checkFullName(updateProfileDTO.getFullname())) {
             throw new AppException(ErrorCode.INVALID_FORMAT_NAME);
         }
-        if (userRepository.countByEmail(updateProfileDTO.getEmail()) > 0) {
+        if (!updateProfileDTO.getEmail().equals(user.getEmail()) &&
+                userRepository.findByEmail(updateProfileDTO.getEmail()).isPresent()) {
             throw new AppException(ErrorCode.GMAIL_EXISTED);
         }
-        if (userRepository.countByUsername(updateProfileDTO.getUsername()) > 0) {
+        if (!updateProfileDTO.getUsername().equals(user.getUsername()) &&
+                userRepository.findByUsername(updateProfileDTO.getUsername()).isPresent()) {
             throw new AppException(ErrorCode.USERNAME_EXISTED);
         }
 
-        user.getUserInfor().setAddress(updateProfileDTO.getAddress());
-        user.getUserInfor().setFullname(updateProfileDTO.getFullname());
         user.setUsername(updateProfileDTO.getUsername());
+              user.getUserInfor().setFullname(updateProfileDTO.getFullname());
+        user.setEmail(updateProfileDTO.getEmail());
+        user.getUserInfor().setAddress(updateProfileDTO.getAddress());
         user.getUserInfor().setPhoneNumber(updateProfileDTO.getPhoneNumber());
         user.getUserInfor().setBank_name(updateProfileDTO.getBank_name());
         user.getUserInfor().setBank_number(updateProfileDTO.getBank_number());
         user.getUserInfor().setCity_province(updateProfileDTO.getCity());
         user.getUserInfor().setDistrict(updateProfileDTO.getDistrict());
         user.getUserInfor().setWards(updateProfileDTO.getWards());
-       userRepository.save(user);
+userRepository.save(user);
         return modelMapper.map(user, UserDTO.class);
     }
+
+
 
     @Transactional
     //Đảm bảo tính toàn vẹn dữ liệu, nếu có lỗi thì tất cả các thao tác sẽ được rollback (hoàn tác)
@@ -310,8 +306,16 @@ public class UserServiceImpl implements UserService {
     public void DeleteUserById(int UserId) {
         User user = userRepository.findById(UserId).get();
         int info_id = user.getUserInfor().getInforId();
-        userInforRepository.deleteById(info_id);
+        informationUserRepository.deleteById(info_id);
         userRepository.DeleteById(UserId);
+    }
+
+    //Ban Account For Admin
+    @Override
+  public  void changeStatusAccount(int id,int status_id){
+        userRepository.editStatus(id,status_id);
+
+
     }
 
 

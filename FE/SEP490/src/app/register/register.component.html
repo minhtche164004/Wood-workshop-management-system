@@ -17,19 +17,19 @@
         <input type="text" placeholder="Phone Number" name="phoneNumber" [(ngModel)]="phoneNumber" required>
         <input type="text" placeholder="Address" name="address" [(ngModel)]="address" required>
         <input type="text" placeholder="Fullname" name="fullname" [(ngModel)]="fullname" required>
-        <select id="province" [(ngModel)]="selectedProvinceCode" (change)="onProvinceChange()">
-          <option value="">Chọn tỉnh/thành phố</option>
+  
+        <select [(ngModel)]="selectedProvince" (change)="onProvinceChange()">
+          <option value="-1">Select a Province</option>
           <option *ngFor="let province of provinces" [value]="province.code">{{ province.name }}</option>
         </select>
         
-        <select id="district" [(ngModel)]="selectedDistrictCode" (change)="onDistrictChange()">
-          <option value="">Chọn quận/huyện</option>
+        <select [(ngModel)]="selectedDistrict" (change)="onDistrictChange()">
+          <option value="-1">Select a District</option>
           <option *ngFor="let district of districts" [value]="district.code">{{ district.name }}</option>
         </select>
         
-        
-        <select id="ward">
-          <option value="0">Chọn phường/xã</option>
+        <select [(ngModel)]="selectedWard">
+          <option value="-1">Select a Ward</option>
           <option *ngFor="let ward of wards" [value]="ward.code">{{ ward.name }}</option>
         </select>
         <button type="submit">Sign Up</button>

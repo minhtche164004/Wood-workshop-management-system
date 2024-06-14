@@ -1,29 +1,29 @@
 import { Component, OnInit, ElementRef } from '@angular/core';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Router } from '@angular/router';
-import { ProvincesService } from 'src/app/service/provinces.service'; // Ensure correct path
-
+import { ProvincesService } from 'src/app/service/provinces.service'; // Ensure correct path to your ProvincesService
 
 interface JwtAuthenticationResponse {
   token: string;
   refreshToken: string;
 }
 interface Province {
-  code: string; // Update type to string if your data is string type
+  code: string;
   name: string;
   districts: District[];
 }
 
 interface District {
-  code: string; // Update type to string if your data is string type
+  code: string;
   name: string;
-  wards: Ward[];
+  wards: Town[];
 }
 
-interface Ward {
-  code: string; // Update type to string if your data is string type
+interface Town {
+  code: string;
   name: string;
 }
+
 interface RegistrationRequest {
   username: string;
   password: string;
@@ -44,10 +44,11 @@ export class RegisterComponent implements OnInit {
 
   provinces: Province[] = [];
   districts: District[] = [];
-  wards: Ward[] = [];
-  selectedProvinceCode: string = '';
-  selectedDistrictCode: string = '';
+  wards: Town[] = [];
 
+  selectedProvince = '-1';
+  selectedDistrict = '-1';
+  selectedWard = '-1';
  
 
 
@@ -71,11 +72,10 @@ export class RegisterComponent implements OnInit {
 
 
 
-  constructor(private elementRef: ElementRef, private http: HttpClient, private router: Router, private provincesService: ProvincesService) {}
+  constructor(private elementRef: ElementRef, private http: HttpClient, private router: Router, private dataService: ProvincesService) {}
 
   ngOnInit(): void {
-    this.loadProvinces();
-
+    this.getProvinces();
     const signUpButton = this.elementRef.nativeElement.querySelector('#signUp');
     const signInButton = this.elementRef.nativeElement.querySelector('#signIn');
     const container = this.elementRef.nativeElement.querySelector('#container');
@@ -87,40 +87,39 @@ export class RegisterComponent implements OnInit {
     signInButton.addEventListener('click', () => {
       container.classList.remove('right-panel-active');
     });
-    
+
+  
   }
-  loadProvinces(): void {
-    this.provincesService.getProvinces().subscribe(
-      (data: any[]) => {
+
+  getProvinces() {
+    this.dataService.getProvinces().subscribe(
+      (data: Province[]) => {
         this.provinces = data;
-        console.log('Loaded provinces:', this.provinces); // Log provinces to check data
       },
-      (error) => {
+      (error: any) => {
         console.error('Error fetching provinces:', error);
+        // Handle error as needed
       }
     );
+  
   }
-  onProvinceChange(): void {
-    const selectedProvince = this.provinces.find(p => p.code === this.selectedProvinceCode);
-    if (selectedProvince) {
-      this.districts = selectedProvince.districts;
-      this.selectedDistrictCode = ''; // Reset selected district
-      this.wards = []; // Reset wards when province changes
-    } else {
-      this.districts = [];
-      this.wards = [];
+
+  onProvinceChange() {
+    const selectedProvinceObject = this.provinces.find(p => p.code.toString() === this.selectedProvince);
+    if (selectedProvinceObject) {
+      this.districts = selectedProvinceObject.districts;
+      this.selectedDistrict = '-1';
+      this.selectedWard = '-1';
     }
   }
 
-  onDistrictChange(): void {
-    const selectedDistrict = this.districts.find(d => d.code === this.selectedDistrictCode);
-    if (selectedDistrict) {
-      this.wards = selectedDistrict.wards;
-    } else {
-      this.wards = [];
+  onDistrictChange() {
+    const selectedDistrictObject = this.districts.find(d => d.code.toString() === this.selectedDistrict);
+    if (selectedDistrictObject) {
+      this.wards = selectedDistrictObject.wards;
+      this.selectedWard = '-1';
     }
   }
-
 
 
   onLogin(): void {
@@ -209,4 +208,7 @@ export class RegisterComponent implements OnInit {
       });
   }
 
+  
+ 
+ 
 }

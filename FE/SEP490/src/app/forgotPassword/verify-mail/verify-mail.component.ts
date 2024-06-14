@@ -14,20 +14,15 @@ export class VerifyMailComponent {
   constructor(private http: HttpClient, private router: Router) { }
 
   verifyMail() {
-    if (!this.email || !this.email.includes('@')) {
-      this.errorMessage = "Please enter a valid email address.";
-      return;
-    }
-    
-    this.http.post<any>(
-      `http://localhost:8080/api/forgotPassword/verifyMail/${this.email}`,
-      {}
-    ).subscribe(
-      (response) => {
+ 
+    const apiUrl = `http://localhost:8080/api/forgotPassword/verifyMail/${this.email}`;
+
+    this.http.post(apiUrl, {}, { responseType: 'text' }).subscribe(
+      (response: any) => {
         console.log('Response:', response);
         if (typeof response === 'string' && response.includes("Check OTP đã được gửi đến gmail!")) {
+          this.router.navigateByUrl('/verifyOtp');
           console.log('Email verified successfully');
-          this.router.navigate(['/verifyOtp']);
         } else {
           console.error('Email verification failed: Unexpected response', response);
           this.errorMessage = "Unexpected response from server.";
@@ -35,7 +30,11 @@ export class VerifyMailComponent {
       },
       (error: HttpErrorResponse) => {
         console.error('Email verification failed', error);
-        if (error.error instanceof ErrorEvent) {
+        console.log('Error response:', error.error);
+
+        if (typeof error.error === 'string') {
+          this.errorMessage = error.error;
+        } else if (error.error instanceof ErrorEvent) {
           this.errorMessage = `An error occurred: ${error.error.message}`;
         } else {
           this.errorMessage = `Server returned error ${error.status}: ${error.error}`;

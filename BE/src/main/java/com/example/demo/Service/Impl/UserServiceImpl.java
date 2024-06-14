@@ -72,8 +72,8 @@ public class UserServiceImpl implements UserService {
                 userDTO.getFullname(),
                 userDTO.getPhoneNumber(),
                 userDTO.getAddress(),
-                userDTO.getBank_name(),
-                userDTO.getBank_number(),
+                "",
+                "",
                 userDTO.getCity(),
                 userDTO.getDistrict(),
                 userDTO.getWards()

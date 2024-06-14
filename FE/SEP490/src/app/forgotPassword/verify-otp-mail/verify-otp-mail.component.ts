@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Router } from '@angular/router';
 
 @Component({
@@ -9,20 +9,22 @@ import { Router } from '@angular/router';
 })
 export class VerifyOtpMailComponent {
   otp: number = 0;
-  email: string = "";
   constructor(private http: HttpClient, private router: Router) {}
-
   verifyOtp_Email() {
-    const otp = this.otp; // Gán giá trị cho biến otp từ otpverify
-    const email = this.email; // Gán giá trị cho biến otp từ otpverify
-    this.http.post(`http://localhost:8080/api/forgotPassword/verifyOtp/${otp}/${email}`, {}, { withCredentials: true }).subscribe(
+    const otp = this.otp;
+    this.http.post(`http://localhost:8080/api/forgotPassword/verifyOtp/${otp}`,  {  withCredentials: true }).subscribe(
       (response: any) => {
         console.log('OTP verified successfully', response);
         this.router.navigate(['/change_pass']);
       },
       (error) => {
         console.error('OTP verification failed', error);
-        alert('OTP verification failed: ' + error.error.message); // Cung cấp phản hồi cho người dùng
+        if (error.status === 401) {
+          alert('Session expired or unauthorized. Please log in again.');
+          this.router.navigate(['/login']);
+        } else {
+          alert('OTP verification failed: ' + error.error.message);
+        }
       }
     );
   }

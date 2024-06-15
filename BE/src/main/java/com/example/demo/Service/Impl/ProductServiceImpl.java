@@ -15,6 +15,7 @@ import com.example.demo.Service.ProductService;
 import com.example.demo.Service.UploadImageService;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.apache.commons.math3.stat.descriptive.summary.Product;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -260,9 +261,8 @@ public class ProductServiceImpl implements ProductService {
             return ResponseEntity.ok(apiResponse);
         }
     }
-
-
     //Đơn tạo đơn xuất vật liệu cho Employee
+
 
 
 }

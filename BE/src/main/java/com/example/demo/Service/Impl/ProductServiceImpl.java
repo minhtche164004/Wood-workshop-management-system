@@ -132,7 +132,8 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public List<ProductDTO_Show> GetAllProduct() {
-        String projectDir = Paths.get("").toAbsolutePath().toString().replace("\\", "/");
+//        String projectDir = Paths.get("").toAbsolutePath().toString().replace("\\", "/");
+        String projectDir = System.getProperty("user.dir").replace("\\", "/");
         List<Products> product_list = productRepository.findAll();
         if (product_list.isEmpty()) {
             throw new AppException(ErrorCode.NOT_FOUND);

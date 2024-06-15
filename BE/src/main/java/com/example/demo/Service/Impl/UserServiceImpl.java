@@ -152,7 +152,7 @@ public class UserServiceImpl implements UserService {
         try {
             user = userDetailsService.loadUserByUsername(loginRequest.getUsername());
         } catch (UsernameNotFoundException e) {
-            throw new AppException(ErrorCode.WRONG_PASS_OR_EMAIL);
+            throw new AppException(ErrorCode.WRONG_USER_NAME);
         }
         User a = userRepository.getUserByUsername(user.getUsername());
         if (a.getStatus().getStatus_id() == 1) {
@@ -160,7 +160,7 @@ public class UserServiceImpl implements UserService {
         }
         // Kiểm tra xem mật khẩu nhập vào có khớp với mật khẩu lưu trong cơ sở dữ liệu không
         if (!passwordEncoder.matches(loginRequest.getPassword(), user.getPassword())) {
-            throw new AppException(ErrorCode.WRONG_PASS_OR_EMAIL);
+            throw new AppException(ErrorCode.WRONG_PASS);
         }
         // Nếu mọi thứ đều đúng, tạo JWT token và trả về
         var jwt = jwtService.generateToken(new HashMap<>(), user);

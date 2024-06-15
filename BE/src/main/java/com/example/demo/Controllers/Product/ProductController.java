@@ -3,6 +3,7 @@ package com.example.demo.Controllers.Product;
 import com.example.demo.Dto.ProductDTO.CreateExportMaterialProductRequest;
 import com.example.demo.Dto.ProductDTO.ProductDTO;
 import com.example.demo.Dto.ProductDTO.RequestProductDTO;
+import com.example.demo.Dto.RequestDTO.RequestDTO;
 import com.example.demo.Dto.SubMaterialDTO.SubMaterialDTO;
 import com.example.demo.Entity.*;
 import com.example.demo.Exception.AppException;
@@ -137,5 +138,15 @@ public class ProductController {
     @PostMapping("/createExportMaterialProduct")
     public ResponseEntity<ApiResponse<List<ProductSubMaterials>>> createExportMaterialProduct(@RequestBody CreateExportMaterialProductRequest request) {
         return productService.createExportMaterialProduct(request.getProductId(), request.getSubMaterialQuantities());
+    }
+
+    @PostMapping(value = "/AddNewRequest", consumes = MediaType.MULTIPART_FORM_DATA_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ApiResponse<?> AddNewRequest(
+            @RequestPart("requestDTO") RequestDTO requestDTO,
+            @RequestPart("files") MultipartFile[] files
+    ) {
+        ApiResponse<Requests> apiResponse = new ApiResponse<>();
+        apiResponse.setResult(productService.AddNewRequest(requestDTO, files));
+        return apiResponse;
     }
 }

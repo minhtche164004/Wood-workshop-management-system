@@ -4,6 +4,7 @@ import com.example.demo.Dto.ProductDTO.ProductDTO;
 import com.example.demo.Dto.ProductDTO.ProductDTO_Show;
 import com.example.demo.Dto.ProductDTO.Product_Thumbnail;
 import com.example.demo.Dto.ProductDTO.RequestProductDTO;
+import com.example.demo.Dto.RequestDTO.RequestDTO;
 import com.example.demo.Entity.*;
 import com.example.demo.Exception.AppException;
 import com.example.demo.Exception.ErrorCode;
@@ -37,6 +38,10 @@ public class ProductServiceImpl implements ProductService {
     private ProductRepository productRepository;
     @Autowired
     private CheckConditionService checkConditionService;
+    @Autowired
+    private UserRepository userRepository;
+    @Autowired
+    private Status_Request_Repository statusRequestRepository;
 
     @Autowired
     private UploadImageService uploadImageService;
@@ -48,6 +53,8 @@ public class ProductServiceImpl implements ProductService {
     private SubMaterialsRepository subMaterialsRepository;
     @Autowired
     private ProductSubMaterialsRepository productSubMaterialsRepository;
+    @Autowired
+    private RequestRepository requestRepository;
 
 
     @Override
@@ -170,6 +177,39 @@ public class ProductServiceImpl implements ProductService {
         uploadImageService.uploadFile1(multipartFiles, requestProduct.getRequestProductId());
         return requestProducts;
     }
+    //Tạo Request
+    //Tạo Request Product
+    @Override
+    public Requests AddNewRequest(RequestDTO requestDTO, MultipartFile[] multipartFiles) {
+        Requests requests = new Requests();
+        User user = userRepository.findById(requestDTO.getUser_id()).get();
+        requests.setUser(user);
+        Status_Request statusRequest =statusRequestRepository.findById(requestDTO.getStatus_id()).get();
+        requests.setRequestDate(requestDTO.getRequestDate());
+        requests.setDescription(requestDTO.getDescription());
+        requests.setStatus(statusRequest);
+        requests.setAddress(requestDTO.getAddress());
+        requests.setFullname(requestDTO.getFullname());
+        requests.setPhoneNumber(requestDTO.getPhoneNumber());
+        requests.setResponse(requestDTO.getResponse());
+
+        LocalDate today = LocalDate.now();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("ddMMyy");
+        String dateString = today.format(formatter);
+
+        Requests lastRequest = requestRepository.findRequestTop(dateString + "RQ");
+        int count = lastRequest != null ? Integer.parseInt(lastRequest.getCode().substring(8)) + 1 : 1;
+        String code = dateString + "RQ" + String.format("%03d", count);
+        requests.setCode(code);
+
+        if (!checkConditionService.checkInputName(requestDTO.getFullname())) {
+            throw new AppException(ErrorCode.INVALID_FORMAT_NAME);
+        }
+
+        requests = requestRepository.save(requests);
+        uploadImageService.uploadFile2(multipartFiles, requests.getRequestId());
+        return requests;
+    }
 
     // Hàm kiểm tra điều kiện đầu vào
     private void validateProductDTO(ProductDTO productDTO) {
@@ -197,7 +237,6 @@ public class ProductServiceImpl implements ProductService {
         for (Map.Entry<Integer, Integer> entry : subMaterialQuantities.entrySet()) {
             int subMaterialId = entry.getKey();
             int quantity = entry.getValue();
-
             SubMaterials subMaterial = subMaterialsRepository.findById1(subMaterialId);
 
             int currentQuantity = subMaterial.getQuantity();
@@ -221,5 +260,9 @@ public class ProductServiceImpl implements ProductService {
             return ResponseEntity.ok(apiResponse);
         }
     }
+
+
+    //Đơn tạo đơn xuất vật liệu cho Employee
+
 
 }

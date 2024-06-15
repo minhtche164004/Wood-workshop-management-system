@@ -1,14 +1,29 @@
 import { Component, OnInit, ElementRef } from '@angular/core';
-import { HttpClient ,HttpErrorResponse} from '@angular/common/http';
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Router } from '@angular/router';
-
+import { ProvincesService } from 'src/app/service/provinces.service'; // Ensure correct path
 
 
 interface JwtAuthenticationResponse {
   token: string;
   refreshToken: string;
 }
+interface Province {
+  code: string; // Update type to string if your data is string type
+  name: string;
+  districts: District[];
+}
 
+interface District {
+  code: string; // Update type to string if your data is string type
+  name: string;
+  wards: Ward[];
+}
+
+interface Ward {
+  code: string; // Update type to string if your data is string type
+  name: string;
+}
 interface RegistrationRequest {
   username: string;
   password: string;
@@ -18,8 +33,6 @@ interface RegistrationRequest {
   address: string;
   fullname: string;
   status: number;
- 
-  role: number;
 }
 
 @Component({
@@ -28,11 +41,21 @@ interface RegistrationRequest {
   styleUrls: ['./register.component.scss']
 })
 export class RegisterComponent implements OnInit {
+
+  provinces: Province[] = [];
+  districts: District[] = [];
+  wards: Ward[] = [];
+  selectedProvinceCode: string = '';
+  selectedDistrictCode: string = '';
+
+ 
+
+
   loginObj: any = {
     "username": "",
     "password": ""
   };
-  
+
   username: string = '';
   password: string = '';
   checkPass: string = '';
@@ -41,15 +64,18 @@ export class RegisterComponent implements OnInit {
   address: string = '';
   fullname: string = '';
   status: number = 0; // Default value for status
-  role: number = 0; // Default value for role
+
   errorMessage: string = '';
   successMessage: string = '';
   private apiUrl_registration = 'http://localhost:8080/api/auth/registration'; // URL của backend
 
 
-  constructor(private elementRef: ElementRef, private http: HttpClient, private router: Router) {}
+
+  constructor(private elementRef: ElementRef, private http: HttpClient, private router: Router, private provincesService: ProvincesService) {}
 
   ngOnInit(): void {
+    this.loadProvinces();
+
     const signUpButton = this.elementRef.nativeElement.querySelector('#signUp');
     const signInButton = this.elementRef.nativeElement.querySelector('#signIn');
     const container = this.elementRef.nativeElement.querySelector('#container');
@@ -61,13 +87,43 @@ export class RegisterComponent implements OnInit {
     signInButton.addEventListener('click', () => {
       container.classList.remove('right-panel-active');
     });
+    
+  }
+  loadProvinces(): void {
+    this.provincesService.getProvinces().subscribe(
+      (data: any[]) => {
+        this.provinces = data;
+        console.log('Loaded provinces:', this.provinces); // Log provinces to check data
+      },
+      (error) => {
+        console.error('Error fetching provinces:', error);
+      }
+    );
+  }
+  onProvinceChange(): void {
+    const selectedProvince = this.provinces.find(p => p.code === this.selectedProvinceCode);
+    if (selectedProvince) {
+      this.districts = selectedProvince.districts;
+      this.selectedDistrictCode = ''; // Reset selected district
+      this.wards = []; // Reset wards when province changes
+    } else {
+      this.districts = [];
+      this.wards = [];
+    }
+  }
 
-    localStorage.removeItem('loginToken');
+  onDistrictChange(): void {
+    const selectedDistrict = this.districts.find(d => d.code === this.selectedDistrictCode);
+    if (selectedDistrict) {
+      this.wards = selectedDistrict.wards;
+    } else {
+      this.wards = [];
+    }
   }
 
 
- 
-  onLogin() {
+
+  onLogin(): void {
     console.log("Bắt đầu chạy login");
     console.log("username: " + this.loginObj.username);
     console.log("password: " + this.loginObj.password);
@@ -105,7 +161,6 @@ export class RegisterComponent implements OnInit {
         } 
       },
       (error: HttpErrorResponse) => {
-       
         console.error('Lỗi khi đăng nhập', error);
         if (error.status === 400 && error.error.code === 1006 && error.error.message === "Sai Tên đăng nhập hoặc mật khẩu") {
           console.log("Sai tên đăng nhập hoặc mật khẩu");
@@ -123,7 +178,7 @@ export class RegisterComponent implements OnInit {
     );
   }
 
-  registerUser() {
+  registerUser(): void {
     const registrationRequest: RegistrationRequest = {
       username: this.username,
       password: this.password,
@@ -133,8 +188,8 @@ export class RegisterComponent implements OnInit {
       address: this.address,
       fullname: this.fullname,
       status: 0,
-      role: 0
     };
+
     console.log('Username:', this.username);
     console.log('Password:', this.password);
     console.log('Confirm Password:', this.checkPass);
@@ -143,13 +198,8 @@ export class RegisterComponent implements OnInit {
     console.log('Address:', this.address);
     console.log('Fullname:', this.fullname);
     console.log('Status:', registrationRequest.status); // Log status
-    console.log('Role:', registrationRequest.role); // Log role
-    
- 
-  
 
     this.http.post<any>(this.apiUrl_registration, registrationRequest, { withCredentials: true })
-
       .subscribe(() => {
         console.log('Check Mail để kiểm tra OTP'); // Display success message
         this.router.navigate(['/otp']);
@@ -158,6 +208,5 @@ export class RegisterComponent implements OnInit {
         this.errorMessage = 'Registration failed. Please try again.'; // Display error message
       });
   }
-  
-  
+
 }

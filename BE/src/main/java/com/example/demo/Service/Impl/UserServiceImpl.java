@@ -72,8 +72,8 @@ public class UserServiceImpl implements UserService {
                 userDTO.getFullname(),
                 userDTO.getPhoneNumber(),
                 userDTO.getAddress(),
-                userDTO.getBank_name(),
-                userDTO.getBank_number(),
+                "",
+                "",
                 userDTO.getCity(),
                 userDTO.getDistrict(),
                 userDTO.getWards()
@@ -216,11 +216,6 @@ public class UserServiceImpl implements UserService {
     }
 
 
-//    @Override
-//    public User getUserbyEmail(String email) {
-//        return userRepository.getUserByEmail(email);
-//    }
-
     @Override
     public List<UserDTO> GetAllUser() {
         List<User> userList = userRepository.findAll();
@@ -267,8 +262,8 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserDTO UpdateProfile(UpdateProfileDTO updateProfileDTO){
-       UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-      String username = userDetails.getUsername();
+        UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        String username = userDetails.getUsername();
         Optional<User> userOptional = userRepository.findByUsername(username);
         User user = userOptional.orElseThrow(() -> new AppException(ErrorCode.NOT_FOUND));
         if (!checkConditionService.checkAddress(updateProfileDTO.getAddress())) {
@@ -280,25 +275,30 @@ public class UserServiceImpl implements UserService {
         if (!checkConditionService.checkFullName(updateProfileDTO.getFullname())) {
             throw new AppException(ErrorCode.INVALID_FORMAT_NAME);
         }
-        if (userRepository.countByEmail(updateProfileDTO.getEmail()) > 0) {
+        if (!updateProfileDTO.getEmail().equals(user.getEmail()) &&
+                userRepository.findByEmail(updateProfileDTO.getEmail()).isPresent()) {
             throw new AppException(ErrorCode.GMAIL_EXISTED);
         }
-        if (userRepository.countByUsername(updateProfileDTO.getUsername()) > 0) {
+        if (!updateProfileDTO.getUsername().equals(user.getUsername()) &&
+                userRepository.findByUsername(updateProfileDTO.getUsername()).isPresent()) {
             throw new AppException(ErrorCode.USERNAME_EXISTED);
         }
 
-        user.getUserInfor().setAddress(updateProfileDTO.getAddress());
-        user.getUserInfor().setFullname(updateProfileDTO.getFullname());
         user.setUsername(updateProfileDTO.getUsername());
+              user.getUserInfor().setFullname(updateProfileDTO.getFullname());
+        user.setEmail(updateProfileDTO.getEmail());
+        user.getUserInfor().setAddress(updateProfileDTO.getAddress());
         user.getUserInfor().setPhoneNumber(updateProfileDTO.getPhoneNumber());
         user.getUserInfor().setBank_name(updateProfileDTO.getBank_name());
         user.getUserInfor().setBank_number(updateProfileDTO.getBank_number());
         user.getUserInfor().setCity_province(updateProfileDTO.getCity());
         user.getUserInfor().setDistrict(updateProfileDTO.getDistrict());
         user.getUserInfor().setWards(updateProfileDTO.getWards());
-       userRepository.save(user);
+userRepository.save(user);
         return modelMapper.map(user, UserDTO.class);
     }
+
+
 
     @Transactional
     //Đảm bảo tính toàn vẹn dữ liệu, nếu có lỗi thì tất cả các thao tác sẽ được rollback (hoàn tác)
@@ -308,6 +308,14 @@ public class UserServiceImpl implements UserService {
         int info_id = user.getUserInfor().getInforId();
         informationUserRepository.deleteById(info_id);
         userRepository.DeleteById(UserId);
+    }
+
+    //Ban Account For Admin
+    @Override
+  public  void changeStatusAccount(int id,int status_id){
+        userRepository.editStatus(id,status_id);
+
+
     }
 
 

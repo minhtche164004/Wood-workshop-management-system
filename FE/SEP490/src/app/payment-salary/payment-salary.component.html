@@ -1,0 +1,6 @@
+<button (click)="getTransactions()">Get Transactions</button>
+
+<div *ngIf="transactionData">
+  <!-- Display transaction data here -->
+  <pre>{{transactionData | json}}</pre>
+</div>

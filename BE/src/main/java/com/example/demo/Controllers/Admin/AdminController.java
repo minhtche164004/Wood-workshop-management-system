@@ -73,4 +73,13 @@ public class AdminController {
         return apiResponse;
     }
 
+    @PostMapping("ChangeStatusAccount")
+    public ApiResponse<?> ChangeStatusAccount(@RequestParam(value = "user_id") int user_id,
+                                              @RequestParam(value = "status_id") int status_id){
+        ApiResponse<String> apiResponse = new ApiResponse<>();
+        userService.changeStatusAccount(user_id,status_id);
+        apiResponse.setResult("Sửa Status thành công");
+        return apiResponse;
+    }
+
 }

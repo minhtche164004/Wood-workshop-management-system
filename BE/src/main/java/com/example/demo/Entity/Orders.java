@@ -6,7 +6,9 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
+import java.sql.Time;
 import java.sql.Timestamp;
+import java.util.Date;
 import java.util.Objects;
 @Data
 @AllArgsConstructor
@@ -20,7 +22,7 @@ public class Orders {
     private int orderId;
 
     @Column(name = "order_date")
-    private Timestamp orderDate;
+    private Date orderDate;
 
     @ManyToOne // Relationship with Status entity
     @JoinColumn(name = "status_id", referencedColumnName = "status_id")
@@ -35,7 +37,7 @@ public class Orders {
     @Column(name = "payment_method")
     private Integer paymentMethod; // Assuming you'll use an enum later
 
-    @Column(name = "deposite", precision = 38, scale = 2)
+    @Column(name = "deposite")
     private BigDecimal deposite;
 
     @ManyToOne // Relationship with InformationUser entity
@@ -44,6 +46,15 @@ public class Orders {
 
     @Column(name = "code")
     private String code;
+
+    @Column(name = "phone_number")
+    private String phoneNumber;
+
+    @Column(name = "fullname")
+    private String fullname;
+
+    @Column(name = "address")
+    private String address;
 
 
 

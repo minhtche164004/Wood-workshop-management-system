@@ -31,7 +31,9 @@ public enum ErrorCode {
     //-----------------------------------
 
     //--------------Exception của Login----------------
-    WRONG_PASS_OR_EMAIL(1006,"Sai Tên đăng nhập hoặc mật khẩu",HttpStatus.BAD_REQUEST),
+
+    WRONG_PASS(1006,"Sai mật khẩu",HttpStatus.BAD_REQUEST),
+    WRONG_USER_NAME(1028,"Sai Tên đăng nhập",HttpStatus.BAD_REQUEST),
     //404 la NOTFOUND , vi du nhu tim user nhung ko ton tai
     //-----------------------------------
 

@@ -7,6 +7,7 @@ import com.example.demo.Dto.UserDTO.User_Admin_DTO;
 import com.example.demo.Entity.User;
 import com.example.demo.Repository.UserRepository;
 import com.example.demo.Response.ApiResponse;
+import com.example.demo.Service.PositionService;
 import com.example.demo.Service.UserService;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,8 +22,20 @@ public class AdminController {
     @Autowired
     private UserService userService;
     @Autowired
-    private UserRepository userRepository;
+    private PositionService positionService;
 
+//    @GetMapping("/GetAllPositionName")
+//    public ApiResponse<?> GetAllPositionName(){
+//        ApiResponse<List> apiResponse= new ApiResponse<>();
+//        apiResponse.setResult(positionService.getListNamePosition());
+//        return apiResponse;
+//    }
+    @GetMapping("/GetAllPosition")
+    public ApiResponse<?> GetAllPosition(){
+        ApiResponse<List> apiResponse= new ApiResponse<>();
+        apiResponse.setResult(positionService.getListPosition());
+        return apiResponse;
+    }
 
     @GetMapping("/GetAllUser")
     public ApiResponse<?> getAllUser(){
@@ -37,25 +50,31 @@ public class AdminController {
         apiResponse.setResult(userService.FindByUsernameOrAddress(query));
         return  apiResponse;
     }
+    @GetMapping("/FilterByStatus")
+    public ApiResponse<?> FilterByStatus(@RequestParam(value = "query", required = false) int query){
+        ApiResponse<List> apiResponse = new ApiResponse<>();
+        apiResponse.setResult(userService.FilterByStatus(query));
+        return  apiResponse;
+    }
+    @GetMapping("/FilterByRole")
+    public ApiResponse<?> FilterByRole(@RequestParam(value = "query", required = false) int query){
+        ApiResponse<List> apiResponse = new ApiResponse<>();
+        apiResponse.setResult(userService.FilterByRole(query));
+        return  apiResponse;
+    }
 
-    @GetMapping("GetById1")
+    @GetMapping("GetById")
     public  ApiResponse<?> getUserById1(@RequestParam(value = "user_id", required = false) int user_id) {
         ApiResponse<UserDTO> apiResponse = new ApiResponse<>();
         apiResponse.setResult(userService.FindbyId(user_id));
         return apiResponse;
     }
-    @GetMapping("GetById2")
-    public  ApiResponse<?> getUserById2(@RequestParam(value = "user_id", required = false) int user_id) {
-        ApiResponse<UserUpdateDTO> apiResponse = new ApiResponse<>();
-        apiResponse.setResult(userService.GetUserById(user_id));
-        return apiResponse;
-    }
-    @GetMapping("GetById3")
-    public  ApiResponse<?> getUserById3(@RequestParam(value = "user_id", required = false) int user_id) {
-        ApiResponse<User> apiResponse = new ApiResponse<>();
-        apiResponse.setResult(userService.FindbyId1(user_id));
-        return apiResponse;
-    }
+//    @GetMapping("ViewProfile")
+//    public  ApiResponse<?> ViewProfile(@RequestParam(value = "user_id", required = false) int user_id) {
+//        ApiResponse<UserUpdateDTO> apiResponse = new ApiResponse<>();
+//        apiResponse.setResult(userService.ViewProfile(user_id));
+//        return apiResponse;
+//    }
 
     @DeleteMapping("DeleteUserById")
     public  ApiResponse<?> DeleteUserById(@RequestParam(value = "user_id", required = false) int user_id) {
@@ -72,6 +91,12 @@ public class AdminController {
         apiResponse.setResult(userService.CreateAccountForAdmin(registerDTO));
         return apiResponse;
     }
+    @PutMapping("EditUser")
+    public ApiResponse<?> EditUser(@RequestParam(value = "user_id", required = false) int user_id,@RequestBody UserDTO userDTO){
+        ApiResponse<UserDTO> apiResponse = new ApiResponse<>();
+        apiResponse.setResult(userService.EditUser(user_id,userDTO));
+        return apiResponse;
+    }
 
     @PostMapping("ChangeStatusAccount")
     public ApiResponse<?> ChangeStatusAccount(@RequestParam(value = "user_id") int user_id,
@@ -81,5 +106,4 @@ public class AdminController {
         apiResponse.setResult("Sửa Status thành công");
         return apiResponse;
     }
-
 }

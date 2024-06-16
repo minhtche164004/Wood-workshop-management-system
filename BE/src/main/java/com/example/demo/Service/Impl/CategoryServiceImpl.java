@@ -2,6 +2,9 @@ package com.example.demo.Service.Impl;
 
 import com.example.demo.Dto.Category.CategoryNameDTO;
 import com.example.demo.Dto.SupplierDTO.SupplierNameDTO;
+import com.example.demo.Entity.Categories;
+import com.example.demo.Exception.AppException;
+import com.example.demo.Exception.ErrorCode;
 import com.example.demo.Repository.CategoryRepository;
 import com.example.demo.Service.CategorySevice;
 import com.example.demo.Service.CheckConditionService;
@@ -26,4 +29,26 @@ public class CategoryServiceImpl implements CategorySevice {
                 .map(cate -> modelMapper.map(cate, CategoryNameDTO.class))
                 .collect(Collectors.toList());
     }
+    @Override
+    public void AddnewCategory(CategoryNameDTO categoryNameDTO) {
+        if(categoryRepository.findByCategoryName(categoryNameDTO.getCategoryName()) != null){
+            throw new AppException(ErrorCode.NAME_EXIST);
+        }
+        Categories categories = new Categories();
+        categories.setCategoryName(categoryNameDTO.getCategoryName());
+        categoryRepository.save(categories);
+    }
+    @Override
+    public Categories UpdateCategoty(int id,CategoryNameDTO categoryNameDTO){
+        Categories categories = categoryRepository.findById(id);
+        if(!categoryNameDTO.getCategoryName().equals(categories.getCategoryName()) &&
+                categoryRepository.findByCategoryName(categoryNameDTO.getCategoryName()) != null){
+            throw new AppException(ErrorCode.NAME_EXIST);
+        }
+        categories.setCategoryName(categoryNameDTO.getCategoryName());
+        categoryRepository.save(categories);
+        return categories;
+    }
+
+
 }

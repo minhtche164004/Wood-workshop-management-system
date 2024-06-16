@@ -52,7 +52,5 @@ public class Requests {
     @Column(name = "address")
     private String address;
 
-
-
-
+    
 }

@@ -27,5 +27,9 @@ public interface SubMaterialsRepository extends JpaRepository<SubMaterials,Integ
     SubMaterials findSubMaterialsTop(@Param("prefix") String prefix);
 
 
+    @Query("SELECT u.quantity FROM SubMaterials u WHERE u.subMaterialId = :query")
+    Integer findQuantityBySubMaterialId(int query);
+
+
 
 }

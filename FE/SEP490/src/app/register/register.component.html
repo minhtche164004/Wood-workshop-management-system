@@ -17,25 +17,27 @@
         <input type="text" placeholder="Phone Number" name="phoneNumber" [(ngModel)]="phoneNumber" required>
         <input type="text" placeholder="Address" name="address" [(ngModel)]="address" required>
         <input type="text" placeholder="Fullname" name="fullname" [(ngModel)]="fullname" required>
-  
-        <select [(ngModel)]="selectedProvince" (change)="onProvinceChange()">
-          <option value="-1">Select a Province</option>
-          <option *ngFor="let province of provinces" [value]="province.code">{{ province.name }}</option>
+
+    
+        <select [formControl]="provinceControl" required>
+          <option [ngValue]="null" disabled>Province</option>
+          <option *ngFor="let province of provinces" [value]="province.code">{{province.name}}</option>
         </select>
-        
-        <select [(ngModel)]="selectedDistrict" (change)="onDistrictChange()">
-          <option value="-1">Select a District</option>
-          <option *ngFor="let district of districts" [value]="district.code">{{ district.name }}</option>
+      
+        <select [formControl]="districtControl" required>
+          <option [ngValue]="null" disabled>Districts</option>
+          <option *ngFor="let district of districts" [value]="district.code">{{district.name}}</option>
         </select>
-        
-        <select [(ngModel)]="selectedWard">
-          <option value="-1">Select a Ward</option>
-          <option *ngFor="let ward of wards" [value]="ward.code">{{ ward.name }}</option>
+      
+        <select [formControl]="wardControl" required>
+          <option [ngValue]="null" disabled>Ward</option>
+          <option *ngFor="let ward of wards" [value]="ward.code">{{ward.name}}</option>
+>>>>>>> main
         </select>
         <button type="submit">Sign Up</button>
       </form>
     </div>
-          
+    
   <!-- fomr login -->
         <div class="form-container sign-in-container">
             <form >

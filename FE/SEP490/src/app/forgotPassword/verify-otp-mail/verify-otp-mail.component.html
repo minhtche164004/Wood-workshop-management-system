@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>OTP Code Verification Form</title>
+  <title>Email Verification Form</title>
   <style>
     * {
       box-sizing: border-box;
@@ -40,11 +40,12 @@
       margin-bottom: 8px;
       color: #666;
     }
-    input[type="text"],
-    input[type="number"] {
-      width: calc(100% - 24px);
-      padding: 12px;
-      margin-bottom: 16px;
+
+    input[type="email"] {
+      width: calc(100% - 40px);
+      padding: 12px 20px;
+      margin-bottom: 20px;
+
       border: 1px solid #ccc;
       border-radius: 5px;
       box-sizing: border-box;
@@ -69,14 +70,15 @@
 </head>
 <body>
   <div class="container">
-    <h1>OTP Code Verification</h1>
-    <form (ngSubmit)="verifyOtp_Email()" #otpForm="ngForm">
-      <label for="email">Email:</label>
-     
-      <label for="otp">OTP Code:</label>
-      <input type="number" id="otp" name="otp" [(ngModel)]="otp" required>
 
-      <button type="submit">Verify OTP Code</button>
+    <h1>Email Verification</h1>
+    <form (ngSubmit)="verifyOtpEmail()" #emailForm="ngForm">
+      <label for="email">Enter the Email sent to your phone:</label>
+      <input type="email" id="otp" name="otp" [(ngModel)]="otp" required>
+      <input hidden type="email" id="email" name="email" [(ngModel)]="email" required>
+    
+      <button type="submit">Verify Email</button>
+
     </form>
   </div>
 </body>

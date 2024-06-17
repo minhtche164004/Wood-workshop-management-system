@@ -1,12 +1,18 @@
 package com.example.demo.Controllers;
 
 import com.example.demo.Config.VNPayService;
+import com.example.demo.Dto.RequestOrder;
+import com.example.demo.Entity.Orders;
+import com.example.demo.Response.ApiResponse;
+import com.example.demo.Service.OrderService;
 import com.example.demo.Service.PaymentService;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import jakarta.mail.internet.MimeMessage;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
@@ -23,6 +29,8 @@ public class PaymentController {
     private VNPayService vnPayService;
     @Autowired
     private PaymentService paymentService;
+    @Autowired
+    private OrderService orderService;
 
 
     @GetMapping("")
@@ -85,25 +93,8 @@ public class PaymentController {
         return ResponseEntity.ok(map);
     }
 //      lay response moi string cua qr dang string
-//    @PostMapping ("/getQRBanking")
-//    public ResponseEntity<String> getQR(@RequestParam("amount") int amount, @RequestParam("orderInfo") String orderInfo) {
-//        String info = paymentService.getQRCodeBanking(amount, orderInfo);
-//        ObjectMapper mapper = new ObjectMapper();
-//        Map<String, Object> map = new HashMap<>();
-//        try {
-//            map = mapper.readValue(info, Map.class);
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
-//        Map<String, Object> dataMap = (Map<String, Object>) map.get("data");
-//        String qrCode = (String) dataMap.get("qrCode");
-//
-//        return ResponseEntity.ok(qrCode);
-//    }
-
-    // lay response cua qr dang json
     @PostMapping ("/getQRBanking")
-    public ResponseEntity<Map<String, String>> getQR(@RequestParam("amount") int amount, @RequestParam("orderInfo") String orderInfo) {
+    public ResponseEntity<String> getQR(@RequestParam("amount") int amount, @RequestParam("orderInfo") String orderInfo) {
         String info = paymentService.getQRCodeBanking(amount, orderInfo);
         ObjectMapper mapper = new ObjectMapper();
         Map<String, Object> map = new HashMap<>();
@@ -115,9 +106,40 @@ public class PaymentController {
         Map<String, Object> dataMap = (Map<String, Object>) map.get("data");
         String qrCode = (String) dataMap.get("qrDataURL");
 
-        Map<String, String> responseMap = new HashMap<>();
-        responseMap.put("qrCode", qrCode);
+        return ResponseEntity.ok(qrCode);
+    }
 
-        return ResponseEntity.ok(responseMap);
+
+@GetMapping("/getqr")
+    public ResponseEntity<String> getQR12(@RequestParam("amount") int amount, @RequestParam("orderInfo") String orderInfo){
+    return ResponseEntity.ok(paymentService.getQRCodeBankingString(amount, orderInfo));
+
+}
+
+    // lay response cua qr dang json
+//    @PostMapping ("/getQRBanking")
+//    public ResponseEntity<Map<String, String>> getQR(@RequestParam("amount") int amount, @RequestParam("orderInfo") String orderInfo) {
+//        String info = paymentService.getQRCodeBanking(amount, orderInfo);
+//        ObjectMapper mapper = new ObjectMapper();
+//        Map<String, Object> map = new HashMap<>();
+//        try {
+//            map = mapper.readValue(info, Map.class);
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
+//        Map<String, Object> dataMap = (Map<String, Object>) map.get("data");
+//        String qrCode = (String) dataMap.get("qrDataURL");
+//
+//        Map<String, String> responseMap = new HashMap<>();
+//        responseMap.put("qrCode", qrCode);
+//
+//        return ResponseEntity.ok(responseMap);
+//    }
+
+    @PostMapping ("/AddOrder")
+    public ApiResponse<?> AddOrder(@RequestBody RequestOrder requestOrder) {
+        ApiResponse<Orders> apiResponse = new ApiResponse<>();
+        apiResponse.setResult(orderService.AddOrder(requestOrder));
+        return apiResponse;
     }
 }

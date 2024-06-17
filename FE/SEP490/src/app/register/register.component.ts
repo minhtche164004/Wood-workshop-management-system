@@ -3,6 +3,7 @@ import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { ProvincesService } from 'src/app/service/provinces.service'; // Ensure correct path to your ProvincesService
 
+import { FormControl } from '@angular/forms';
 interface JwtAuthenticationResponse {
   token: string;
   refreshToken: string;
@@ -16,10 +17,12 @@ interface Province {
 interface District {
   code: string;
   name: string;
-  wards: Town[];
+  wards: Ward[];
 }
 
-interface Town {
+
+interface Ward {
+
   code: string;
   name: string;
 }
@@ -33,6 +36,9 @@ interface RegistrationRequest {
   address: string;
   fullname: string;
   status: number;
+  city: string;
+  district: string;
+  wards: string;
 }
 
 @Component({
@@ -42,14 +48,17 @@ interface RegistrationRequest {
 })
 export class RegisterComponent implements OnInit {
 
+
   provinces: Province[] = [];
   districts: District[] = [];
-  wards: Town[] = [];
 
-  selectedProvince = '-1';
-  selectedDistrict = '-1';
-  selectedWard = '-1';
- 
+  wards: Ward[] = [];
+  provinceControl = new FormControl();
+  districtControl = new FormControl();
+  wardControl = new FormControl();
+  selectedProvince: any;
+  selectedDistrict: any;
+
 
 
   loginObj: any = {
@@ -72,10 +81,31 @@ export class RegisterComponent implements OnInit {
 
 
 
-  constructor(private elementRef: ElementRef, private http: HttpClient, private router: Router, private dataService: ProvincesService) {}
+  constructor(private elementRef: ElementRef, private http: HttpClient, private router: Router, private provincesService: ProvincesService) {}
 
   ngOnInit(): void {
-    this.getProvinces();
+
+    this.provincesService.getProvinces().subscribe((data: Province[]) => {
+      this.provinces = data;
+      console.log(this.provinces);
+    });
+
+    this.provinceControl.valueChanges.subscribe(provinceCode => {
+//      console.log('provinceCode:', provinceCode);
+      this.selectedProvince = this.provinces.find(province => province.code == provinceCode);
+//      console.log('selectedProvince:', this.selectedProvince);
+      this.districts = this.selectedProvince ? this.selectedProvince.districts : [];
+    });
+
+    this.districtControl.valueChanges.subscribe(districtCode => {
+//      console.log('districtCode:', districtCode);
+      const selectedDistrict = this.districts.find(district => district.code == districtCode);
+//      console.log('selectedDistrict:', this.selectedDistrict);
+      this.wards = selectedDistrict ? selectedDistrict.wards : [];
+      this.wardControl.reset();
+    });
+
+
     const signUpButton = this.elementRef.nativeElement.querySelector('#signUp');
     const signInButton = this.elementRef.nativeElement.querySelector('#signIn');
     const container = this.elementRef.nativeElement.querySelector('#container');
@@ -91,38 +121,11 @@ export class RegisterComponent implements OnInit {
   
   }
 
-  getProvinces() {
-    this.dataService.getProvinces().subscribe(
-      (data: Province[]) => {
-        this.provinces = data;
-      },
-      (error: any) => {
-        console.error('Error fetching provinces:', error);
-        // Handle error as needed
-      }
-    );
-  
-  }
-
-  onProvinceChange() {
-    const selectedProvinceObject = this.provinces.find(p => p.code.toString() === this.selectedProvince);
-    if (selectedProvinceObject) {
-      this.districts = selectedProvinceObject.districts;
-      this.selectedDistrict = '-1';
-      this.selectedWard = '-1';
-    }
-  }
-
-  onDistrictChange() {
-    const selectedDistrictObject = this.districts.find(d => d.code.toString() === this.selectedDistrict);
-    if (selectedDistrictObject) {
-      this.wards = selectedDistrictObject.wards;
-      this.selectedWard = '-1';
-    }
-  }
+ 
 
 
   onLogin(): void {
+    
     console.log("Bắt đầu chạy login");
     console.log("username: " + this.loginObj.username);
     console.log("password: " + this.loginObj.password);
@@ -186,9 +189,11 @@ export class RegisterComponent implements OnInit {
       phoneNumber: this.phoneNumber,
       address: this.address,
       fullname: this.fullname,
-      status: 0,
+      status: this.status,
+      city: this.provinceControl.value,
+      district: this.districtControl.value,
+      wards: this.wardControl.value
     };
-
     console.log('Username:', this.username);
     console.log('Password:', this.password);
     console.log('Confirm Password:', this.checkPass);

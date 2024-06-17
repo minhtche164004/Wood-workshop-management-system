@@ -13,7 +13,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/api/auth1/user/")
+@RequestMapping("/api/auth/user/")
 @AllArgsConstructor
 public class UserController {
     @Autowired
@@ -29,7 +29,7 @@ public class UserController {
     }
 
     @GetMapping("/CheckGetPrincipal")
-    public ApiResponse<?> UpdateProfile(){
+    public ApiResponse<?> CheckGetPrincipal(){
         ApiResponse<UserDetails> apiResponse= new ApiResponse<>();
         UserDetails userDetails =(UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         apiResponse.setResult(userDetails);

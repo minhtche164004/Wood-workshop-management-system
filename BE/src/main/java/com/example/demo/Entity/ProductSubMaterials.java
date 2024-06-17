@@ -20,19 +20,22 @@ public class ProductSubMaterials {
     @Column(name = "product_sub_material_id")
     private int productSubMaterialId;
 
-    @ManyToOne(fetch = FetchType.LAZY) // Sử dụng FetchType.LAZY để tối ưu việc truy vấn
-    @JsonIgnore
-    @JoinColumn(name = "sub_material_id") // Chỉ định cột khóa ngoại
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "sub_material_id", referencedColumnName = "sub_material_id") // Chỉ rõ tên cột liên kết ở cả 2 bảng
     private SubMaterials subMaterial;
 
-
     @ManyToOne(fetch = FetchType.LAZY)
-    @JsonIgnore
-    @JoinColumn(name = "product_id") // Chỉ định cột khóa ngoại
-    private Products product; // Thêm thuộc tính Products để liên kết với bảng products
+    @JoinColumn(name = "product_id", referencedColumnName = "product_id")
+    private Products product;
 
+    @Column(name = "quantity")
+    private Integer quantity;
 
-
+    public ProductSubMaterials(SubMaterials subMaterial, Products product, Integer quantity) {
+        this.subMaterial = subMaterial;
+        this.product = product;
+        this.quantity = quantity;
+    }
 }
 
 /*Một nhân viên (users) có thể có nhiều bản ghi vật liệu nhân viên (employeematerials).

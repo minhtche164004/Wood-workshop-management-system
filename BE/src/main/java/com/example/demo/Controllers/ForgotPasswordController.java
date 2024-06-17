@@ -22,7 +22,7 @@ import java.util.Objects;
 import java.util.Random;
 
 @RestController()
-@RequestMapping("/api/forgotPassword")
+@RequestMapping("/api/auth/forgotPassword")
 @CrossOrigin(origins="http://localhost:5173")
 public class ForgotPasswordController {
 

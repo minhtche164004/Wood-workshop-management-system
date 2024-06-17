@@ -22,7 +22,7 @@ import java.util.Objects;
 import java.util.Random;
 
 @RestController()
-@RequestMapping("/api/forgotPassword")
+@RequestMapping("/api/auth/forgotPassword")
 public class ForgotPasswordController {
 
     @Autowired
@@ -109,7 +109,6 @@ public class ForgotPasswordController {
                                                         @PathVariable String email) {
         if (!Objects.equals(changePassword.password(), changePassword.repeatPassword())) {
             throw new AppException(ErrorCode.NOT_MATCH_PASS);
-
         }
         String encodedPassword = passwordEncoder.encode(changePassword.password());
         userRepository.updatePassword(email, encodedPassword);

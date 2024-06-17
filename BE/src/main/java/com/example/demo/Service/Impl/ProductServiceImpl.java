@@ -1,5 +1,6 @@
 package com.example.demo.Service.Impl;
 
+import com.example.demo.Dto.Category.CategoryNameDTO;
 import com.example.demo.Dto.ProductDTO.ProductDTO;
 import com.example.demo.Dto.ProductDTO.ProductDTO_Show;
 import com.example.demo.Dto.ProductDTO.Product_Thumbnail;
@@ -15,12 +16,14 @@ import com.example.demo.Service.ProductService;
 import com.example.demo.Service.UploadImageService;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.apache.commons.math3.stat.descriptive.summary.Product;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -124,10 +127,13 @@ public class ProductServiceImpl implements ProductService {
                 productDTO.getStatus_id(),
                 productDTO.getCategory_id(),
                 productDTO.getType(),
-                t.getFullPath()
+                t.getFullPath(),
+                productDTO.getCompletionTime(),
+                productDTO.getEnddateWarranty()
         );
         return products;
     }
+
 
 
     @Override
@@ -138,13 +144,18 @@ public class ProductServiceImpl implements ProductService {
         if (product_list.isEmpty()) {
             throw new AppException(ErrorCode.NOT_FOUND);
         }
-        return product_list.stream()
-                .map(product -> {
-                    ProductDTO_Show productDTO = modelMapper.map(product, ProductDTO_Show.class);
-                    productDTO.setImages( projectDir + productDTO.getImages());
-                    return productDTO;
-                })
-                .collect(Collectors.toList());
+        for(Products product : product_list) {
+            product.setImage(getAddressLocalComputer() + product.getImage());
+        }
+       return product_list;
+    }
+
+    @Override
+    public Products GetProductById(int product_id){
+        Products products = productRepository.findById(product_id);
+      //  String projectDir = Paths.get("").toAbsolutePath().toString().replace("\\", "/");
+        products.setImage(getAddressLocalComputer() + products.getImage());
+        return products;
     }
 
 
@@ -178,6 +189,35 @@ public class ProductServiceImpl implements ProductService {
         uploadImageService.uploadFile1(multipartFiles, requestProduct.getRequestProductId());
         return requestProducts;
     }
+    @Override
+    public List<RequestProducts> GetAllProductRequest() {
+        List<RequestProducts> reproduct_list = requestProductRepository.findAll();
+        if (reproduct_list.isEmpty()) {
+            throw new AppException(ErrorCode.NOT_FOUND);
+        }
+        return reproduct_list;
+    }
+
+    @Override
+    public List<Requests> GetAllRequests() {
+        List<Requests> request_list = requestRepository.findAll();
+        if (request_list.isEmpty()) {
+            throw new AppException(ErrorCode.NOT_FOUND);
+        }
+        return request_list;
+    }
+
+    @Override
+    public List<Products> findProductByNameCode(String key) {
+        List<Products> productsList = productRepository.findProductByNameCode(key);
+        for(Products products :productsList){
+          //  String projectDir = Paths.get("").toAbsolutePath().toString().replace("\\", "/");
+            products.setImage(getAddressLocalComputer() + products.getImage());
+        }
+        return productsList;
+    }
+
+
     //Tạo Request
     //Tạo Request Product
     @Override
@@ -261,9 +301,8 @@ public class ProductServiceImpl implements ProductService {
             return ResponseEntity.ok(apiResponse);
         }
     }
-
-
     //Đơn tạo đơn xuất vật liệu cho Employee
+
 
 
 }

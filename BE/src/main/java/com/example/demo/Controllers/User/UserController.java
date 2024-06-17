@@ -27,12 +27,13 @@ public class UserController {
         apiResponse.setResult(userService.UpdateProfile(updateProfileDTO));
         return apiResponse;
     }
-
-    @GetMapping("/CheckGetPrincipal")
-    public ApiResponse<?> CheckGetPrincipal(){
-        ApiResponse<UserDetails> apiResponse= new ApiResponse<>();
-        UserDetails userDetails =(UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        apiResponse.setResult(userDetails);
+//View Profile
+    @GetMapping("/ViewProfile")
+    public ApiResponse<?> ViewProfile(){
+        ApiResponse<UpdateProfileDTO> apiResponse= new ApiResponse<>();
+//        UserDetails userDetails =(UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        UpdateProfileDTO updateProfileDTO = userService.ViewProfile();
+        apiResponse.setResult(updateProfileDTO);
         return apiResponse;
     }
 

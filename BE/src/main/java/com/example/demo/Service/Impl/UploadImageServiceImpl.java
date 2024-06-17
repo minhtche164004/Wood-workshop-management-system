@@ -79,11 +79,11 @@ public class UploadImageServiceImpl implements UploadImageService {
                 // Tạo tên tệp mới để tránh trùng lặp
                 var fileNameUpload = FilenameUtils.removeExtension(filename) + "_" + Calendar.getInstance().getTimeInMillis() + "." + fileExtension;
 
-                // Ghi tệp tin vào thư mục upload với tên tệp mới
-
-//                Files.write(Paths.get(uploadPath + fileNameUpload), bytes);
                 String projectDir = Paths.get("").toAbsolutePath().toString().replace("\\", "/");
-                String absoluteUploadPath = projectDir + uploadPath;
+                Path projectDirPath = Paths.get(projectDir);
+                Path parentDir = projectDirPath.getParent(); // Lấy thư mục cha
+                String desiredPath = parentDir.toString(); // Chuyển đổi thành chuỗi
+                String absoluteUploadPath = desiredPath + uploadPath;
                 Path filePath = Paths.get(absoluteUploadPath, fileNameUpload);
                 Files.write(filePath, bytes);
                 // Tạo đối tượng Productimages để lưu thông tin ảnh vào cơ sở dữ liệu
@@ -155,9 +155,11 @@ public class UploadImageServiceImpl implements UploadImageService {
 
                 // Ghi tệp tin vào thư mục upload với tên tệp mới
 
-//                Files.write(Paths.get(uploadPath + fileNameUpload), bytes);
                 String projectDir = Paths.get("").toAbsolutePath().toString().replace("\\", "/");
-                String absoluteUploadPath = projectDir + uploadPath;
+                Path projectDirPath = Paths.get(projectDir);
+                Path parentDir = projectDirPath.getParent(); // Lấy thư mục cha
+                String desiredPath = parentDir.toString(); // Chuyển đổi thành chuỗi
+                String absoluteUploadPath = desiredPath + uploadPath;
                 Path filePath = Paths.get(absoluteUploadPath, fileNameUpload);
                 Files.write(filePath, bytes);
                 // Tạo đối tượng Productimages để lưu thông tin ảnh vào cơ sở dữ liệu
@@ -231,9 +233,11 @@ public class UploadImageServiceImpl implements UploadImageService {
 
                 // Ghi tệp tin vào thư mục upload với tên tệp mới
 
-//                Files.write(Paths.get(uploadPath + fileNameUpload), bytes);
                 String projectDir = Paths.get("").toAbsolutePath().toString().replace("\\", "/");
-                String absoluteUploadPath = projectDir + uploadPath;
+                Path projectDirPath = Paths.get(projectDir);
+                Path parentDir = projectDirPath.getParent(); // Lấy thư mục cha
+                String desiredPath = parentDir.toString(); // Chuyển đổi thành chuỗi
+                String absoluteUploadPath = desiredPath + uploadPath;
                 Path filePath = Paths.get(absoluteUploadPath, fileNameUpload);
                 Files.write(filePath, bytes);
                 // Tạo đối tượng Productimages để lưu thông tin ảnh vào cơ sở dữ liệu
@@ -281,7 +285,7 @@ public class UploadImageServiceImpl implements UploadImageService {
         }
         try {
             String filename = StringUtils.cleanPath(Objects.requireNonNull(multipartFile.getOriginalFilename()));
-            String fileExtension = getFileExtension(filename);
+            String fileExtension = getFileExtension(filename); //tên file ảnh
 
             List<String> allowedExtensions = Arrays.asList("jpg", "jpeg", "png");
             if (!allowedExtensions.contains(fileExtension.toLowerCase())) {
@@ -292,11 +296,11 @@ public class UploadImageServiceImpl implements UploadImageService {
             // Tạo tên tệp mới (có thể thêm logic tạo thumbnail ở đây)
             String fileNameUpload = "thumbnail_" + FilenameUtils.removeExtension(filename) + "_" + Calendar.getInstance().getTimeInMillis() + "." + fileExtension;
 
-            // Ghi tệp vào thư mục upload
-//            Path filePath = Paths.get(uploadPath + fileNameUpload);
-//            Files.write(filePath, bytes);
             String projectDir = Paths.get("").toAbsolutePath().toString().replace("\\", "/");
-            String absoluteUploadPath = projectDir + uploadPath;
+            Path projectDirPath = Paths.get(projectDir);
+            Path parentDir = projectDirPath.getParent(); // Lấy thư mục cha
+            String desiredPath = parentDir.toString(); // Chuyển đổi thành chuỗi
+            String absoluteUploadPath = desiredPath + uploadPath;
             Path filePath = Paths.get(absoluteUploadPath, fileNameUpload);
             Files.write(filePath, bytes);
             // Tạo và trả về đối tượng Product_Thumbnail

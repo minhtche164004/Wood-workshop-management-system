@@ -28,6 +28,10 @@ spring:
     level:
       org.hibernate.SQL: DEBUG
       org.hibernate.type: trace
+      root: INFO
+    pattern:
+      console: "%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n"  # Định dạng log
+
 
   main:
     allow-circular-references: true
@@ -52,7 +56,8 @@ jwt:
 
 upload:
   file:  # Thay đổi từ "files" thành "file"
-    path: /src/main/java/com/example/demo/Images/
+#    path: /src/main/java/com/example/demo/Images/
+    path: /FE/SEP490/src/assets/product_images/
     extension: jpg,png,jpeg,gif
 
 

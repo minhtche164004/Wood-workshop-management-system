@@ -23,6 +23,7 @@ import java.util.Random;
 
 @RestController()
 @RequestMapping("/api/auth/forgotPassword")
+@CrossOrigin(origins="http://localhost:5173")
 public class ForgotPasswordController {
 
     @Autowired
@@ -101,6 +102,7 @@ public class ForgotPasswordController {
         }
         forgotPasswordRepository.deleteById(fp.getFpid()); //xác nhận xong thì xoá bản ghi cós trong forgotpass để có thể sử dụng cho lần sau nếu quên pass
         return ResponseEntity.ok("OTP verified!");
+
 
     }
 

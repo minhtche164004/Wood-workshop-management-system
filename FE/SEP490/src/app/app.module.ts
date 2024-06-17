@@ -22,10 +22,7 @@ import { ChangePasswordComponent } from './forgotPassword/change-password/change
 import { VerifyOtpMailComponent } from './forgotPassword/verify-otp-mail/verify-otp-mail.component';
 import { ApiProvinceComponent } from './api-province/api-province.component';
 import { ReactiveFormsModule } from '@angular/forms';
-
-
-
-
+import { OrderRequiredComponent } from './order-required/order-required.component';
 @NgModule({
   declarations: [
     AppComponent,
@@ -43,17 +40,17 @@ import { ReactiveFormsModule } from '@angular/forms';
     ChangePasswordComponent,
     VerifyOtpMailComponent,
     ApiProvinceComponent,
- 
-    
-   
+    OrderRequiredComponent,
   ],
   imports: [
     BrowserModule,
     FormsModule,
     HttpClientModule,
     RouterModule, // Import RouterModule
+
     AppRoutingModule, // Import AppRoutingModule,
     ReactiveFormsModule
+
   ],
   providers: [],
   bootstrap: [AppComponent]

@@ -2,12 +2,15 @@ package com.example.demo.Repository;
 
 import com.example.demo.Entity.Products;
 import com.example.demo.Entity.Role;
+import jakarta.transaction.Transactional;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -25,5 +28,11 @@ public interface ProductRepository extends JpaRepository<Products, Integer> {
     Products findByName(String query);
 
     int countByProductName(String ProductName);
+
+    @Transactional
+    @Modifying
+    @Query("update Products u set u.productName = ?2,u.description=?3,u.quantity=?4,u.price=?5,u.status.status_id=?6," +
+            "u.categories.categoryId=?7,u.type=?8,u.image=?9 where u.productId = ?1")
+    void updateProduct(int productId, String productName, String description, int quantity, BigDecimal price, int status_id, int categoryId, int type, String image);
 }
 

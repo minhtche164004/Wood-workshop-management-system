@@ -30,10 +30,10 @@ public class RegisterDTO {
     private int status;
 //    @NotNull(message = "MUST_REQUIRED")
 //    private int position;
-    @NotNull(message = "MUST_REQUIRED")
+//    @NotNull(message = "MUST_REQUIRED")
     private String bank_name;
-
-    @NotNull(message = "MUST_REQUIRED")
+//
+//    @NotNull(message = "MUST_REQUIRED")
     private String bank_number;
 
     @NotNull(message = "MUST_REQUIRED")

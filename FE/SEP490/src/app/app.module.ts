@@ -22,6 +22,8 @@ import { ChangePasswordComponent } from './forgotPassword/change-password/change
 import { VerifyOtpMailComponent } from './forgotPassword/verify-otp-mail/verify-otp-mail.component';
 import { ApiProvinceComponent } from './api-province/api-province.component';
 import { ReactiveFormsModule } from '@angular/forms';
+
+import { ProductListComponent } from './product-list/product-list.component';
 import { OrderRequiredComponent } from './order-required/order-required.component';
 @NgModule({
   declarations: [
@@ -40,7 +42,9 @@ import { OrderRequiredComponent } from './order-required/order-required.componen
     ChangePasswordComponent,
     VerifyOtpMailComponent,
     ApiProvinceComponent,
+    ProductListComponent,
     OrderRequiredComponent,
+
   ],
   imports: [
     BrowserModule,

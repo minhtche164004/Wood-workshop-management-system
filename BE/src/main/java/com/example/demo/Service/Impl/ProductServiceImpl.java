@@ -23,6 +23,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -149,17 +150,23 @@ public class ProductServiceImpl implements ProductService {
 //                })
 //                .collect(Collectors.toList());
 //    }
+    private String getAddressLocalComputer(){
+        String projectDir = Paths.get("").toAbsolutePath().toString().replace("\\", "/");
+        Path projectDirPath = Paths.get(projectDir);
+        Path parentDir = projectDirPath.getParent(); // Lấy thư mục cha(ko có /BE)
+        String desiredPath = parentDir.toString(); // Chuyển đổi thành chuỗi
+        return desiredPath;
+    }
 
 
     @Override
     public List<Products> GetAllProduct() {
-        String projectDir = Paths.get("").toAbsolutePath().toString().replace("\\", "/");
         List<Products> product_list = productRepository.findAll();
         if (product_list.isEmpty()) {
             throw new AppException(ErrorCode.NOT_FOUND);
         }
         for(Products product : product_list) {
-            product.setImage(projectDir + product.getImage());
+            product.setImage(getAddressLocalComputer() + product.getImage());
         }
        return product_list;
     }
@@ -167,8 +174,8 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public Products GetProductById(int product_id){
         Products products = productRepository.findById(product_id);
-        String projectDir = Paths.get("").toAbsolutePath().toString().replace("\\", "/");
-        products.setImage(projectDir + products.getImage());
+      //  String projectDir = Paths.get("").toAbsolutePath().toString().replace("\\", "/");
+        products.setImage(getAddressLocalComputer() + products.getImage());
         return products;
     }
 
@@ -225,8 +232,8 @@ public class ProductServiceImpl implements ProductService {
     public List<Products> findProductByNameCode(String key) {
         List<Products> productsList = productRepository.findProductByNameCode(key);
         for(Products products :productsList){
-            String projectDir = Paths.get("").toAbsolutePath().toString().replace("\\", "/");
-            products.setImage(projectDir + products.getImage());
+          //  String projectDir = Paths.get("").toAbsolutePath().toString().replace("\\", "/");
+            products.setImage(getAddressLocalComputer() + products.getImage());
         }
         return productsList;
     }

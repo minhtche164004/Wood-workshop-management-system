@@ -49,13 +49,13 @@ public class Products {
     @Column(name = "type") //type này là kiểu có sẵn hoặc không có sẵn( o là không có sẵn,1 là hàng có sẵn )
     private int type;
 
-    @ManyToOne(cascade = CascadeType.ALL)
-    @JsonIgnore
+    @ManyToOne(fetch = FetchType.EAGER,cascade = CascadeType.ALL)
+//    @JsonIgnore
     @JoinColumn(name = "status_id")
     private Status_Product status;
 
-    @ManyToOne
-    @JsonIgnore
+    @ManyToOne(fetch = FetchType.EAGER)
+//    @JsonIgnore
     @JoinColumn(name = "category_id")
     private Categories categories;
 

@@ -1,6 +1,9 @@
 import { Component } from '@angular/core';
+
 import { HttpClient, HttpHeaders, HttpErrorResponse } from '@angular/common/http';
 import { ActivatedRoute, Router } from '@angular/router';
+
+
 @Component({
   selector: 'app-change-password',
   templateUrl: './change-password.component.html',
@@ -11,6 +14,7 @@ export class ChangePasswordComponent {
   email: string = '';
   password: string = '';
   repeatPassword: string = '';
+
   baseUrl = 'http://localhost:8080/api/auth/forgotPassword';
 
   errorMessage: string = '';

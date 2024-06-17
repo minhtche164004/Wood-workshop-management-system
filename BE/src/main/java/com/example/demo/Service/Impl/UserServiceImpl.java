@@ -152,7 +152,7 @@ public class UserServiceImpl implements UserService {
         try {
             user = userDetailsService.loadUserByUsername(loginRequest.getUsername());
         } catch (UsernameNotFoundException e) {
-            throw new AppException(ErrorCode.WRONG_PASS_OR_EMAIL);
+            throw new AppException(ErrorCode.WRONG_USER_NAME);
         }
         User a = userRepository.getUserByUsername(user.getUsername());
         if (a.getStatus().getStatus_id() == 1) {
@@ -160,7 +160,7 @@ public class UserServiceImpl implements UserService {
         }
         // Kiểm tra xem mật khẩu nhập vào có khớp với mật khẩu lưu trong cơ sở dữ liệu không
         if (!passwordEncoder.matches(loginRequest.getPassword(), user.getPassword())) {
-            throw new AppException(ErrorCode.WRONG_PASS_OR_EMAIL);
+            throw new AppException(ErrorCode.WRONG_PASS);
         }
         // Nếu mọi thứ đều đúng, tạo JWT token và trả về
         var jwt = jwtService.generateToken(new HashMap<>(), user);
@@ -234,6 +234,7 @@ public class UserServiceImpl implements UserService {
         return modelMapper.map(user, UserDTO.class); // Ánh xạ User sang TestDTO1
     }
 
+
     @Override
     public List<UserDTO> FindByUsernameOrAddress(String key) {
         List<User> userList = userRepository.findByUsernameOrAddress(key);
@@ -246,17 +247,10 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserUpdateDTO GetUserById(int user_id) {
-        Optional<UserUpdateDTO> userOptional = userRepository.findByIdTest1(user_id);
-        return userOptional
-                .orElseThrow(() -> new AppException(ErrorCode.NOT_FOUND));
-    }
-
-    @Override
-    public User FindbyId1(int user_id) {
-        Optional<User> userOptional = userRepository.findById(user_id); // Lấy Optional<User> từ repository
-        return userOptional
-                .orElseThrow(() -> new AppException(ErrorCode.NOT_FOUND));
+    public UpdateProfileDTO ViewProfile() {
+        UserDetails userDetails =(UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        User user =userRepository.getUserByUsername(userDetails.getUsername());
+        return modelMapper.map(user, UpdateProfileDTO.class);
     }
 
 
@@ -297,6 +291,43 @@ public class UserServiceImpl implements UserService {
 userRepository.save(user);
         return modelMapper.map(user, UserDTO.class);
     }
+    @Override
+    public UserDTO EditUser(int id, UserDTO userDTO){
+        Optional<User> userOptional = userRepository.findById(id);
+        User user = userOptional.orElseThrow(() -> new AppException(ErrorCode.NOT_FOUND));
+        if (!checkConditionService.checkAddress(userDTO.getAddress())) {
+            throw new AppException(ErrorCode.INVALID_FORMAT_ADDRESS);
+        }
+        if (!checkConditionService.checkPhoneNumber(userDTO.getPhoneNumber())) {
+            throw new AppException(ErrorCode.INVALID_FORMAT_PHONE_NUMBER);
+        }
+        if (!checkConditionService.checkFullName(userDTO.getFullname())) {
+            throw new AppException(ErrorCode.INVALID_FORMAT_NAME);
+        }
+        if (!userDTO.getEmail().equals(user.getEmail()) &&
+                userRepository.findByEmail(userDTO.getEmail()).isPresent()) {
+            throw new AppException(ErrorCode.GMAIL_EXISTED);
+        }
+        if (!userDTO.getUsername().equals(user.getUsername()) &&
+                userRepository.findByUsername(userDTO.getUsername()).isPresent()) {
+            throw new AppException(ErrorCode.USERNAME_EXISTED);
+        }
+        user.setUsername(userDTO.getUsername());
+        user.setEmail(userDTO.getEmail());
+        user.getUserInfor().setPhoneNumber(userDTO.getPhoneNumber());
+        user.getUserInfor().setAddress(userDTO.getAddress());
+        user.getUserInfor().setFullname(userDTO.getFullname());
+        Position position = positionRepository.findByName(userDTO.getPosition_name());
+        user.setPosition(position);
+        Status_User statusUser = statusRepository.findByName(userDTO.getStatus_name());
+        user.setStatus(statusUser);
+        Role role =roleRepository.findByName(userDTO.getRole_name());
+        user.setRole(role);
+        userRepository.save(user);
+        return modelMapper.map(user, UserDTO.class);
+
+    }
+
 
 
 
@@ -314,8 +345,28 @@ userRepository.save(user);
     @Override
   public  void changeStatusAccount(int id,int status_id){
         userRepository.editStatus(id,status_id);
+    }
 
+    @Override
+    public List<UserDTO> FilterByStatus(int status_id) {
+        List<User> userList = userRepository.FilterByStatus(status_id);
+        if (userList.isEmpty()) {
+            throw new AppException(ErrorCode.NOT_FOUND);
+        }
+        return userList.stream()
+                .map(user -> modelMapper.map(user, UserDTO.class))
+                .collect(Collectors.toList());
+    }
 
+    @Override
+    public List<UserDTO> FilterByRole(int roleId) {
+        List<User> userList = userRepository.FilterByRole(roleId);
+        if (userList.isEmpty()) {
+            throw new AppException(ErrorCode.NOT_FOUND);
+        }
+        return userList.stream()
+                .map(user -> modelMapper.map(user, UserDTO.class))
+                .collect(Collectors.toList());
     }
 
 

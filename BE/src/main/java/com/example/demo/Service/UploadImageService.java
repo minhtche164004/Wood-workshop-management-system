@@ -11,7 +11,7 @@ public interface UploadImageService {
     //up cho product
     List<ProductImageDTO> uploadFile(MultipartFile[] multipartFiles, int product_id);
     //up cho requestProduct
-    List<ProductImageDTO> uploadFile1(MultipartFile[] multipartFiles, int product_id);
-
+    List<ProductImageDTO> uploadFile1(MultipartFile[] multipartFiles, int requestProduct_id);
+    List<ProductImageDTO> uploadFile2(MultipartFile[] multipartFiles, int request_id);
      Product_Thumbnail uploadFile_Thumnail(MultipartFile multipartFiles);
 }

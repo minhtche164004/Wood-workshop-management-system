@@ -6,6 +6,7 @@ import com.example.demo.Dto.ProductDTO.ProductDTO;
 import com.example.demo.Dto.ProductDTO.ProductDTO_Show;
 import com.example.demo.Dto.SubMaterialDTO.SubMaterialNameDTO;
 import com.example.demo.Dto.SupplierDTO.SupplierNameDTO;
+import com.example.demo.Dto.UserDTO.UpdateProfileDTO;
 import com.example.demo.Dto.UserDTO.UserDTO;
 import com.example.demo.Entity.*;
 import org.modelmapper.ModelMapper;
@@ -29,6 +30,20 @@ public class ModelMapperConfig {
                 .addMapping(src -> src.getUserInfor().getAddress(), UserDTO::setAddress)
                 .addMapping(src -> src.getStatus().getStatus_name(), UserDTO::setStatus_name)
                 .addMapping(src -> src.getRole().getRoleName(), UserDTO::setRole_name);// Ánh xạ roleName
+
+        modelMapper.typeMap(User.class, UpdateProfileDTO.class)
+                .addMapping(src -> src.getUserInfor().getBank_name(), UpdateProfileDTO::setBank_name)
+                .addMapping(src -> src.getUserInfor().getBank_number(), UpdateProfileDTO::setBank_number)
+                .addMapping(User::getUsername, UpdateProfileDTO::setUsername)
+                .addMapping(User::getEmail, UpdateProfileDTO::setEmail)
+                .addMapping(src -> src.getUserInfor().getFullname(), UpdateProfileDTO::setFullname)
+                .addMapping(src -> src.getUserInfor().getPhoneNumber(), UpdateProfileDTO::setPhoneNumber)
+                .addMapping(src -> src.getUserInfor().getAddress(), UpdateProfileDTO::setAddress)
+                .addMapping(src -> src.getUserInfor().getCity_province(), UpdateProfileDTO::setCity)
+                .addMapping(src -> src.getUserInfor().getDistrict(), UpdateProfileDTO::setDistrict)
+                .addMapping(src -> src.getUserInfor().getWards(), UpdateProfileDTO::setWards);
+
+
 
         modelMapper.typeMap(Products.class, ProductDTO_Show.class)
                 .addMapping(Products::getProductName, ProductDTO_Show::setProduct_name)

@@ -1,11 +1,13 @@
 package com.example.demo.Entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.sql.Timestamp;
+import java.util.Date;
 import java.util.Objects;
 @AllArgsConstructor
 @NoArgsConstructor
@@ -18,13 +20,15 @@ public class Requests {
     @Column(name = "request_id", nullable = false)
     private int requestId;
 
+//    @JsonIgnore
     @ManyToOne
     @JoinColumn(name = "user_id", referencedColumnName = "user_id")
     private User user;  // Assuming you have a Users entity
 
     @Column(name = "request_date")
-    private Timestamp requestDate;
+    private Date requestDate;
 
+//    @JsonIgnore
     @ManyToOne
     @JoinColumn(name = "status_id", referencedColumnName = "status_id")
     private Status_Request status;  // Assuming you have a Status entity
@@ -48,7 +52,5 @@ public class Requests {
     @Column(name = "address")
     private String address;
 
-
-
-
+    
 }

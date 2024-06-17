@@ -46,10 +46,25 @@ public interface UserRepository extends JpaRepository<User,Integer> {
 //    @Query("SELECT u FROM User u WHERE u.username LIKE %:username%" )
 //    List<User> findByUsername(@Param("username") String username);
 
-    @Query("SELECT u FROM User u WHERE u.username LIKE %:keyword% OR u.userInfor.address LIKE %:keyword%")
+//    @Query("SELECT u FROM User u WHERE u.username LIKE %:keyword% OR u.userInfor.address LIKE %:keyword% OR u.userInfor.wards LIKE %:keyword%" +
+//            "OR u.userInfor.district LIKE %:keyword% OR u.userInfor.city_province LIKE %:keyword%")
+//    List<User> findByUsernameOrAddress(@Param("keyword") String keyword);
+
+    @Query("SELECT u FROM User u JOIN u.userInfor ui WHERE u.username LIKE CONCAT('%', :keyword, '%') OR " +
+            "ui.address LIKE CONCAT('%', :keyword, '%') OR " +
+            "ui.wards LIKE CONCAT('%', :keyword, '%') OR " +
+            "ui.district LIKE CONCAT('%', :keyword, '%') OR " +
+            "ui.city_province LIKE CONCAT('%', :keyword, '%')")
     List<User> findByUsernameOrAddress(@Param("keyword") String keyword);
 
- @Query(value =
+    @Query("SELECT u FROM User u WHERE u.status.status_id=?1")
+    List<User> FilterByStatus(@Param("status_id") int status_id);
+
+    @Query("SELECT u FROM User u WHERE u.role.roleId=?1")
+    List<User> FilterByRole(@Param("roleId") int roleId);
+
+
+    @Query(value =
          "SELECT new com.example.demo.Dto.UserDTO.UserUpdateDTO(u.username,ui.address,s.status_name,p.position_name,r.roleName,u.email)" +
                  "FROM User u " +
                  "INNER JOIN u.userInfor ui " +

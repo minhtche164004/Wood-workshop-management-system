@@ -1,8 +1,10 @@
 package com.example.demo.Controllers.Product;
 
+import com.example.demo.Dto.Category.CategoryNameDTO;
 import com.example.demo.Dto.ProductDTO.CreateExportMaterialProductRequest;
 import com.example.demo.Dto.ProductDTO.ProductDTO;
 import com.example.demo.Dto.ProductDTO.RequestProductDTO;
+import com.example.demo.Dto.RequestDTO.RequestDTO;
 import com.example.demo.Dto.SubMaterialDTO.SubMaterialDTO;
 import com.example.demo.Entity.*;
 import com.example.demo.Exception.AppException;
@@ -53,11 +55,39 @@ public class ProductController {
     private UploadImageService uploadImageService;
 
     @GetMapping("/GetAllProduct")
-
-
     public ApiResponse<?> getAllProduct() {
         ApiResponse<List> apiResponse = new ApiResponse<>();
         apiResponse.setResult(productService.GetAllProduct());
+        return apiResponse;
+    }
+    @GetMapping("/GetAllProductRequest")
+    public ApiResponse<?> GetAllProductRequest() {
+        ApiResponse<List> apiResponse = new ApiResponse<>();
+        apiResponse.setResult(productService.GetAllProductRequest());
+        return apiResponse;
+
+    }
+
+    @GetMapping("/GetAllRequest")
+    public ApiResponse<?> GetAllRequest() {
+        ApiResponse<List> apiResponse = new ApiResponse<>();
+        apiResponse.setResult(productService.GetAllRequests());
+        return apiResponse;
+
+    }
+
+
+    @GetMapping("/GetProductById")
+    public ApiResponse<?> GetProductById(@RequestParam("product_id") int product_id) {
+        ApiResponse<Products> apiResponse = new ApiResponse<>();
+        apiResponse.setResult(productService.GetProductById(product_id));
+        return apiResponse;
+
+    }
+    @GetMapping("/findProductByNameorCode")
+    public ApiResponse<?> getProductByNameorCodelCategory(@RequestParam("key") String key) {
+        ApiResponse<List> apiResponse = new ApiResponse<>();
+        apiResponse.setResult(productService.findProductByNameCode(key));
         return apiResponse;
 
     }
@@ -74,6 +104,19 @@ public class ProductController {
     public ApiResponse<?> getAllCategoryName() {
         ApiResponse<List> apiResponse = new ApiResponse<>();
         apiResponse.setResult(categorySevice.GetListName());
+        return apiResponse;
+    }
+    @PostMapping("/AddNewCategory")
+    public ApiResponse<?> AddNewCategory(@RequestBody CategoryNameDTO categoryNameDTO) {
+        ApiResponse<String> apiResponse = new ApiResponse<>();
+        categorySevice.AddnewCategory(categoryNameDTO);
+        apiResponse.setResult("Thêm mới Loại Sản Phẩm Thành công");
+        return apiResponse;
+    }
+    @PutMapping("/EditCategory")
+    public ApiResponse<?> EditCategory(@RequestParam("cate_id") int cate_id,@RequestBody CategoryNameDTO categoryNameDTO) {
+        ApiResponse<Categories> apiResponse = new ApiResponse<>();
+        apiResponse.setResult(categorySevice.UpdateCategoty(cate_id,categoryNameDTO));
         return apiResponse;
     }
 
@@ -137,5 +180,15 @@ public class ProductController {
     @PostMapping("/createExportMaterialProduct")
     public ResponseEntity<ApiResponse<List<ProductSubMaterials>>> createExportMaterialProduct(@RequestBody CreateExportMaterialProductRequest request) {
         return productService.createExportMaterialProduct(request.getProductId(), request.getSubMaterialQuantities());
+    }
+
+    @PostMapping(value = "/AddNewRequest", consumes = MediaType.MULTIPART_FORM_DATA_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ApiResponse<?> AddNewRequest(
+            @RequestPart("requestDTO") RequestDTO requestDTO,
+            @RequestPart("files") MultipartFile[] files
+    ) {
+        ApiResponse<Requests> apiResponse = new ApiResponse<>();
+        apiResponse.setResult(productService.AddNewRequest(requestDTO, files));
+        return apiResponse;
     }
 }

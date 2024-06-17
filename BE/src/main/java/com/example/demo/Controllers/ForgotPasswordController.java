@@ -37,18 +37,18 @@ public class ForgotPasswordController {
 
     //send mail for email verification
     @PostMapping("/verifyMail/{email}")
-    public ResponseEntity<String> verifyEmail(@PathVariable String email){
-        User user = userRepository.findByEmail(email).orElseThrow(()->new AppException(ErrorCode.NOT_FOUND_EMAIL));
-        int otp= otpGenerator();
-        MailBody mailBody= MailBody.builder()
+    public ResponseEntity<String> verifyEmail(@PathVariable String email) {
+        User user = userRepository.findByEmail(email).orElseThrow(() -> new AppException(ErrorCode.NOT_FOUND_EMAIL));
+        int otp = otpGenerator();
+        MailBody mailBody = MailBody.builder()
                 .to(email)
-                .text("Đây là OTP dành cho yêu cầu quên mật khẩu:" +otp)
+                .text("Đây là OTP dành cho yêu cầu quên mật khẩu:" + otp)
                 .subject("[OTP để xác thực quên mật khẩu]")
                 .build();
 
-        ForgotPassword fp= ForgotPassword.builder()
+        ForgotPassword fp = ForgotPassword.builder()
                 .otp(otp)
-                .expirationTime(new Date(System.currentTimeMillis()+40*1000))
+                .expirationTime(new Date(System.currentTimeMillis() + 40 * 1000))
                 .user(user)
                 .build();
 
@@ -58,7 +58,8 @@ public class ForgotPasswordController {
         return ResponseEntity.ok("Check OTP đã được gửi đến gmail!");
 
     }
-//    @PostMapping("/verifyOtp/{otp}/{email}")
+
+    //    @PostMapping("/verifyOtp/{otp}/{email}")
 //    public ResponseEntity<String> verifyOtp(@PathVariable Integer otp, @PathVariable String email){
 //        User user = userRepository.findByEmail(email).orElseThrow(()->new AppException(ErrorCode.WRONG_PASS_OR_EMAIL));
 //        ForgotPassword fp= forgotPasswordRepository.findByOtpAndUser(otp,user).orElseThrow(()->new AppException(ErrorCode.INVALID_OTP));
@@ -68,58 +69,58 @@ public class ForgotPasswordController {
 //        }
 //        return ResponseEntity.ok("OTP verify!");
 //    }
-@PostMapping("/verifyOtp/{otp}/{email}")
-public ResponseEntity<String> verifyOtp(@PathVariable Integer otp, @PathVariable String email){
-    User user = userRepository.findByEmail(email).orElseThrow(() -> new AppException(ErrorCode.NOT_FOUND_EMAIL));
-    ForgotPassword fp = forgotPasswordRepository.findByOtpAndUser(otp, user).orElseThrow(() -> new AppException(ErrorCode.INVALID_OTP));
+    @PostMapping("/verifyOtp/{otp}/{email}")
+    public ResponseEntity<String> verifyOtp(@PathVariable Integer otp, @PathVariable String email) {
+        User user = userRepository.findByEmail(email).orElseThrow(() -> new AppException(ErrorCode.NOT_FOUND_EMAIL));
+        ForgotPassword fp = forgotPasswordRepository.findByOtpAndUser(otp, user).orElseThrow(() -> new AppException(ErrorCode.INVALID_OTP));
 
-    if (fp.getExpirationTime().before(Date.from(Instant.now()))) { //check time xem otp đã hết hạn hay chưa
-        // Xóa bản ghi OTP  nếu đã hết hạn
-      forgotPasswordRepository.deleteById(fp.getFpid());
+        if (fp.getExpirationTime().before(Date.from(Instant.now()))) { //check time xem otp đã hết hạn hay chưa
+            // Xóa bản ghi OTP  nếu đã hết hạn
+            forgotPasswordRepository.deleteById(fp.getFpid());
 
-        // Tạo mã OTP mới
-        int newOtp = otpGenerator();
-        MailBody mailBody = MailBody.builder()
-                .to(email)
-                .text("Đây là OTP dành cho quên mật khẩu: " + newOtp)
-                .subject("[OTP dành cho quên mật khẩu]")
-                .build();
+            // Tạo mã OTP mới
+            int newOtp = otpGenerator();
+            MailBody mailBody = MailBody.builder()
+                    .to(email)
+                    .text("Đây là OTP dành cho quên mật khẩu: " + newOtp)
+                    .subject("[OTP dành cho quên mật khẩu]")
+                    .build();
 //thời gian hết hạn là 40 giây
-        ForgotPassword newFp = ForgotPassword.builder()
-                .otp(newOtp)
-                .expirationTime(new Date(System.currentTimeMillis() + 40 * 1000)) //
-                .user(user)
-                .build();
+            ForgotPassword newFp = ForgotPassword.builder()
+                    .otp(newOtp)
+                    .expirationTime(new Date(System.currentTimeMillis() + 40 * 1000)) //
+                    .user(user)
+                    .build();
 
-        // Gửi email với mã OTP mới
-        emailService.sendSimpleMessage(mailBody);
+            // Gửi email với mã OTP mới
+            emailService.sendSimpleMessage(mailBody);
 
-        // Lưu thông tin OTP mới vào cơ sở dữ liệu
-        forgotPasswordRepository.save(newFp);
-    
-        throw new AppException(ErrorCode.OTP_EXPIRED);
+            // Lưu thông tin OTP mới vào cơ sở dữ liệu
+            forgotPasswordRepository.save(newFp);
+
+            throw new AppException(ErrorCode.OTP_EXPIRED);
+        }
+        forgotPasswordRepository.deleteById(fp.getFpid()); //xác nhận xong thì xoá bản ghi cós trong forgotpass để có thể sử dụng cho lần sau nếu quên pass
+        return ResponseEntity.ok("OTP verified!");
+
+
     }
-    forgotPasswordRepository.deleteById(fp.getFpid()); //xác nhận xong thì xoá bản ghi cós trong forgotpass để có thể sử dụng cho lần sau nếu quên pass
-    return ResponseEntity.ok("OTP verified!");
-
-}
 
     @PostMapping("/changePassword/{email}")
     public ResponseEntity<String> changePasswordHandler(@RequestBody ChangePassword changePassword,
-                                                        @PathVariable String email){
-        if(!Objects.equals(changePassword.password(),changePassword.repeatPassword())){
+                                                        @PathVariable String email) {
+        if (!Objects.equals(changePassword.password(), changePassword.repeatPassword())) {
             throw new AppException(ErrorCode.NOT_MATCH_PASS);
-
         }
         String encodedPassword = passwordEncoder.encode(changePassword.password());
-        userRepository.updatePassword(email,encodedPassword);
+        userRepository.updatePassword(email, encodedPassword);
         return ResponseEntity.ok("Password has been changed!");
 
     }
 
-    private Integer otpGenerator(){
-        Random random= new Random();
-        return random.nextInt(100_000,999_999);
 
+    private Integer otpGenerator() {
+        Random random = new Random();
+        return random.nextInt(100_000, 999_999);
     }
 }

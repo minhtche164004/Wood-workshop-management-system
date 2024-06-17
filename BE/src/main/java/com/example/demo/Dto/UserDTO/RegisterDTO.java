@@ -32,7 +32,7 @@ public class RegisterDTO {
 //    private int position;
 //    @NotNull(message = "MUST_REQUIRED")
     private String bank_name;
-//
+
 //    @NotNull(message = "MUST_REQUIRED")
     private String bank_number;
 

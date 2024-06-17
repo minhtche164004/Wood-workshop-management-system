@@ -6,6 +6,7 @@ import com.example.demo.Jwt.JwtAuthenticationResponse;
 import com.example.demo.Jwt.RefreshTokenRequest;
 import com.example.demo.Request.LoginRequest;
 
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -30,11 +31,10 @@ public interface UserService {
 
     List<UserDTO> GetAllUser();
 
-    UserUpdateDTO GetUserById(int user_id);
+    UpdateProfileDTO ViewProfile();
 
     UserDTO FindbyId(int user_id);
 
-    User FindbyId1(int user_id);
 
     UserDTO UpdateProfile(UpdateProfileDTO updateProfileDTO);
 
@@ -44,4 +44,7 @@ public interface UserService {
 
     void checkConditionsForAdmin(User_Admin_DTO userDTO);
     void changeStatusAccount(int id,int status_id);
+    List<UserDTO> FilterByStatus(int status_id);
+    List<UserDTO> FilterByRole(int roleId);
+    UserDTO EditUser(int id,UserDTO userDTO);
 }

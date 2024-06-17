@@ -135,32 +135,11 @@ public class ProductServiceImpl implements ProductService {
     }
 
 
-//    @Override
-//    public List<ProductDTO_Show> GetAllProduct() {
-//        String projectDir = Paths.get("").toAbsolutePath().toString().replace("\\", "/");
-//        List<Products> product_list = productRepository.findAll();
-//        if (product_list.isEmpty()) {
-//            throw new AppException(ErrorCode.NOT_FOUND);
-//        }
-//        return product_list.stream()
-//                .map(product -> {
-//                    ProductDTO_Show productDTO = modelMapper.map(product, ProductDTO_Show.class);
-//                    productDTO.setImages( projectDir + productDTO.getImages());
-//                    return productDTO;
-//                })
-//                .collect(Collectors.toList());
-//    }
-    private String getAddressLocalComputer(){
-        String projectDir = Paths.get("").toAbsolutePath().toString().replace("\\", "/");
-        Path projectDirPath = Paths.get(projectDir);
-        Path parentDir = projectDirPath.getParent(); // Lấy thư mục cha(ko có /BE)
-        String desiredPath = parentDir.toString(); // Chuyển đổi thành chuỗi
-        return desiredPath;
-    }
-
 
     @Override
-    public List<Products> GetAllProduct() {
+    public List<ProductDTO_Show> GetAllProduct() {
+//        String projectDir = Paths.get("").toAbsolutePath().toString().replace("\\", "/");
+        String projectDir = System.getProperty("user.dir").replace("\\", "/");
         List<Products> product_list = productRepository.findAll();
         if (product_list.isEmpty()) {
             throw new AppException(ErrorCode.NOT_FOUND);

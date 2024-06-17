@@ -22,6 +22,7 @@ import { ChangePasswordComponent } from './forgotPassword/change-password/change
 import { VerifyOtpMailComponent } from './forgotPassword/verify-otp-mail/verify-otp-mail.component';
 import { ApiProvinceComponent } from './api-province/api-province.component';
 import { ReactiveFormsModule } from '@angular/forms';
+import { ProductListComponent } from './product-list/product-list.component';
 
 
 
@@ -43,6 +44,7 @@ import { ReactiveFormsModule } from '@angular/forms';
     ChangePasswordComponent,
     VerifyOtpMailComponent,
     ApiProvinceComponent,
+    ProductListComponent,
  
     
    

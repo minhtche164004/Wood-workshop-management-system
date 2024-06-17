@@ -1,0 +1,18 @@
+<div *ngIf="products.length > 0" class="product-list">
+    <div *ngFor="let product of products" class="product-item">
+      <h3>{{ product.product_name }}</h3>
+      <p>{{ product.description }}</p>
+      <p>Quantity: {{ product.quantity }}</p>
+      <p>Price: {{ product.price | currency }}</p>
+      <p>Status: {{ product.status_id }}</p>
+      <img src="assets/product_images/thumbnail_Screenshot 2024-05-26 174916_1718618062325.png" alt="Product image">
+      
+      <p>Category ID: {{ product.category_id }}</p>
+      <p>Type: {{ product.type }}</p>
+      <hr>
+    </div>
+  </div>
+  
+  <div *ngIf="products.length === 0" class="no-products">
+    <p>No products available.</p>
+  </div>

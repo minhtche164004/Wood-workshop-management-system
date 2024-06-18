@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
 import java.sql.Date;
+import java.util.List;
 import java.util.Objects;
 @Data
 @AllArgsConstructor
@@ -34,13 +35,11 @@ public class RequestProducts {
     @Column(name = "completion_time")
     private Date completionTime;
 
-//    @Column(name = "image")
-//    private String image;
 
+// @OneToMany(mappedBy = "requestProducts")
+// private List<Product_Requestimages> productRequestimages;
     @ManyToOne
     @JoinColumn(name = "request_id", referencedColumnName = "request_id")
     private Requests requests;
-
-
 
 }

@@ -12,5 +12,6 @@ public class RequestOrder {
     private CusInfo cusInfo;
     private OrderDetailRequest orderDetailRequest;
     private OderDetail oderDetail;
+    private Integer payment_method;
 
 }

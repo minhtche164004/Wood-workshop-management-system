@@ -30,7 +30,7 @@ public class Product_Requestimages {
     @Column(name="full_path")
     private String fullPath;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     @JsonIgnore
     @JoinColumn(name = "request_product_id")
     private RequestProducts requestProducts;

@@ -45,15 +45,15 @@ public class ModelMapperConfig {
 
 
 
-        modelMapper.typeMap(Products.class, ProductDTO_Show.class)
-                .addMapping(Products::getProductName, ProductDTO_Show::setProduct_name)
-                .addMapping(Products::getDescription, ProductDTO_Show::setDescription)
-                .addMapping(Products::getQuantity, ProductDTO_Show::setQuantity)
-                .addMapping(Products::getPrice, ProductDTO_Show::setPrice)
-                .addMapping(src -> src.getStatus().getStatus_id(), ProductDTO_Show::setStatus_id)
-                .addMapping(Products::getImage, ProductDTO_Show::setImages)
-                .addMapping(Products::getType, ProductDTO_Show::setType)
-                .addMapping(src -> src.getCategories().getCategoryId(), ProductDTO_Show::setCategory_id);
+//        modelMapper.typeMap(Products.class, ProductDTO_Show.class)
+//                .addMapping(Products::getProductName, ProductDTO_Show::setProduct_name)
+//                .addMapping(Products::getDescription, ProductDTO_Show::setDescription)
+//                .addMapping(Products::getQuantity, ProductDTO_Show::setQuantity)
+//                .addMapping(Products::getPrice, ProductDTO_Show::setPrice)
+//                .addMapping(src -> src.getStatus().getStatus_id(), ProductDTO_Show::setStatus_id)
+//                .addMapping(Products::getImage, ProductDTO_Show::setImages)
+//                .addMapping(Products::getType, ProductDTO_Show::setType)
+//                .addMapping(src -> src.getCategories().getCategoryId(), ProductDTO_Show::setCategory_id);
         return modelMapper;
     }
 

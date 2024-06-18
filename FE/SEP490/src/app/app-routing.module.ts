@@ -15,6 +15,7 @@ import { ApiProvinceComponent } from './api-province/api-province.component';
 import { ProductListComponent } from './product-list/product-list.component';
 
 import { VerifyOtpMailComponent } from './forgotPassword/verify-otp-mail/verify-otp-mail.component';
+import { ProductManagementComponent } from './Admin/product-management/product-management.component';
 const routes: Routes = [
   { path: 'homepage', component: HomepageComponent },
   { path: 'api-province', component: ApiProvinceComponent },
@@ -30,6 +31,7 @@ const routes: Routes = [
   { path: 'change_pass/:email', component: ChangePasswordComponent },  // Route with email as a parameter
   { path: 'product', component: ProductComponent }, // Add route for ProductComponent
   { path: 'productsList', component: ProductListComponent },
+  { path: 'product_management', component: ProductManagementComponent },
   { path: '', redirectTo: '/homepage', pathMatch: 'full' },
   { path: '**', redirectTo: '/homepage', pathMatch: 'full' },
 

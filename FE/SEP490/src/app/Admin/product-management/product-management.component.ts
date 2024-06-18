@@ -1,14 +1,15 @@
 import { Component, OnInit } from '@angular/core';
-import { ProductListService } from 'src/app/service/product/product-list.service'; // Đảm bảo đường dẫn đúng
+import { ProductListService } from 'src/app/service/product/product-list.service';
 
 @Component({
-  selector: 'app-product-list',
-  templateUrl: './product-list.component.html',
-  styleUrls: ['./product-list.component.scss']
+  selector: 'app-product-management',
+  templateUrl: './product-management.component.html',
+  styleUrls: ['./product-management.component.scss']
 })
-export class ProductListComponent implements OnInit {
+export class ProductManagementComponent implements OnInit {
   products: any[] = [];
   loginToken: string | null = null;
+  currentPage: number = 1; // Biến lưu trữ trang hiện tại
 
   constructor(private productListService: ProductListService) { }
 

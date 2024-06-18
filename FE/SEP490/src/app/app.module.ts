@@ -25,6 +25,8 @@ import { ReactiveFormsModule } from '@angular/forms';
 
 import { ProductListComponent } from './product-list/product-list.component';
 import { OrderRequiredComponent } from './order-required/order-required.component';
+import { ProductManagementComponent } from './Admin/product-management/product-management.component';
+import { NgxPaginationModule } from 'ngx-pagination';
 @NgModule({
   declarations: [
     AppComponent,
@@ -44,6 +46,7 @@ import { OrderRequiredComponent } from './order-required/order-required.componen
     ApiProvinceComponent,
     ProductListComponent,
     OrderRequiredComponent,
+    ProductManagementComponent,
 
   ],
   imports: [
@@ -51,7 +54,7 @@ import { OrderRequiredComponent } from './order-required/order-required.componen
     FormsModule,
     HttpClientModule,
     RouterModule, // Import RouterModule
-
+    NgxPaginationModule,
     AppRoutingModule, // Import AppRoutingModule,
     ReactiveFormsModule
 

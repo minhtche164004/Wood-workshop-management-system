@@ -57,16 +57,7 @@ public class ForgotPasswordController {
         return ResponseEntity.ok("Check OTP đã được gửi đến gmail!");
 
     }
-//    @PostMapping("/verifyOtp/{otp}/{email}")
-//    public ResponseEntity<String> verifyOtp(@PathVariable Integer otp, @PathVariable String email){
-//        User user = userRepository.findByEmail(email).orElseThrow(()->new AppException(ErrorCode.WRONG_PASS_OR_EMAIL));
-//        ForgotPassword fp= forgotPasswordRepository.findByOtpAndUser(otp,user).orElseThrow(()->new AppException(ErrorCode.INVALID_OTP));
-//        if(fp.getExpirationTime().before(Date.from(Instant.now()))){
-//            forgotPasswordRepository.deleteById(fp.getFpid());
-//            return new ResponseEntity<>("OTP has expired!", HttpStatus.EXPECTATION_FAILED);
-//        }
-//        return ResponseEntity.ok("OTP verify!");
-//    }
+
 @PostMapping("/verifyOtp/{otp}/{email}")
 public ResponseEntity<String> verifyOtp(@PathVariable Integer otp, @PathVariable String email){
     User user = userRepository.findByEmail(email).orElseThrow(() -> new AppException(ErrorCode.NOT_FOUND_EMAIL));

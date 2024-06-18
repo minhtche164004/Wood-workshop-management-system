@@ -17,6 +17,9 @@ public interface ProductImageRepository extends JpaRepository<Productimages, Int
     @Query("SELECT p FROM Productimages p WHERE p.image_name = :image_name")
     Optional<Productimages> findByImage_name(@Param("image_name") String image_name);
 
+    @Query("SELECT p FROM Productimages p WHERE p.product.productId = :productId")
+    List<Productimages> findImageByProductId(@Param("productId") int productId);
+
 
     @Query(value = "SELECT p FROM Productimages p WHERE p.product.productId = :productId" )
     List<Productimages> findByImage_Id(@Param("productId") int productId);

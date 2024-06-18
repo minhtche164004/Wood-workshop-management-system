@@ -1,5 +1,9 @@
 package com.example.demo.Dto.ProductDTO;
 
+import com.example.demo.Entity.Categories;
+import com.example.demo.Entity.Productimages;
+import com.example.demo.Entity.Status_Product;
+import jakarta.persistence.*;
 import jakarta.validation.constraints.DecimalMin;
 import jakarta.validation.constraints.Digits;
 import jakarta.validation.constraints.Min;
@@ -9,28 +13,26 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
+import java.sql.Date;
+import java.util.List;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 public class ProductDTO_Show {
-    @NotNull(message = "MUST_REQUIRED")
-    private String product_name;
-    @NotNull(message = "MUST_REQUIRED")
+
+    private int productId;
+    private String productName;
     private String description;
-    @NotNull(message = "MUST_REQUIRED") // Không được để trống
-    @Min(value = 0, message = "QUANTITY_INVALID") // Giá trị tối thiểu là 0
-    @Digits(integer = 10, fraction = 0, message = "QUANTITY_INVALID") // Chỉ được nhập số nguyên
-    private int quantity;
-    @NotNull(message = "MUST_REQUIRED") // Không được để trống
-    @DecimalMin(value = "0.0", inclusive = false, message = "PRICE_INVALID") // Giá trị tối thiểu lớn hơn 0
+    private Integer quantity;
     private BigDecimal price;
-    @NotNull(message = "MUST_REQUIRED")
-    private int status_id;
-       @NotNull(message = "MUST_REQUIRED")
-   private String images;
-    @NotNull(message = "MUST_REQUIRED")
-    private int category_id;
-    @NotNull(message = "MUST_REQUIRED")
+    private String image;
+    private Date completionTime;
+    private Date enddateWarranty;
+    private String code;
     private int type;
+    private Status_Product status;
+    private Categories categories;
+    private List<Productimages> imageList;
+
 }

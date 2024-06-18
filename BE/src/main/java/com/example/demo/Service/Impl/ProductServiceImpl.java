@@ -141,6 +141,7 @@ public class ProductServiceImpl implements ProductService {
     }
 
 
+
     @Override
     public ProductDTO_Show GetProductByIdWithImage(int id) {
         List<Productimages> productimagesList = productImageRepository.findImageByProductId(id);
@@ -171,7 +172,7 @@ public class ProductServiceImpl implements ProductService {
 public List<RequestProducts> GetAllProductRequest() {
     return requestProductRepository.findAll();
 }
-    private String getAddressLocalComputer(String imagePath){
+    private String getAddressLocalComputer(String imagePath) {
         int assetsIndex = imagePath.indexOf("/assets/");
         if (assetsIndex != -1) {
             imagePath = imagePath.substring(assetsIndex); // Cắt từ "/assets/"
@@ -179,8 +180,10 @@ public List<RequestProducts> GetAllProductRequest() {
                 imagePath = imagePath.substring(1); // Loại bỏ dấu "/" đầu tiên
             }
         }
-        return imagePath; // Trả về đường dẫn tương đối hoặc đường dẫn ban đầu nếu không tìm thấy "/assets/"
-    }
+        return imagePath;
+    }// Trả về đường dẫn tương đối hoặc đường dẫn ban đầu nếu không tìm thấy "/assets/"
+
+
 
 
     @Override
@@ -241,7 +244,6 @@ public List<RequestProducts> GetAllProductRequest() {
         for (Products product : productList) {
             product.setImage(getAddressLocalComputer(product.getImage())); // Cập nhật lại đường dẫn ảnh
         }
-
         return productList;
     }
 
@@ -252,6 +254,7 @@ public List<RequestProducts> GetAllProductRequest() {
         Products products = productRepository.findById(product_id);
       //  String projectDir = Paths.get("").toAbsolutePath().toString().replace("\\", "/");
         products.setImage(getAddressLocalComputer(products.getImage()));
+
         return products;
     }
 
@@ -303,9 +306,11 @@ public List<RequestProducts> GetAllProductRequest() {
     @Override
     public List<Products> findProductByNameCode(String key) {
         List<Products> productsList = productRepository.findProductByNameCode(key);
-        for(Products products :productsList){
-          //  String projectDir = Paths.get("").toAbsolutePath().toString().replace("\\", "/");
+        for(Products products :productsList) {
+
+            //  String projectDir = Paths.get("").toAbsolutePath().toString().replace("\\", "/");
             products.setImage(getAddressLocalComputer(products.getImage()));
+
         }
         return productsList;
     }

@@ -1,29 +1,32 @@
 import { Component, OnInit, ElementRef } from '@angular/core';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Router } from '@angular/router';
-import { ProvincesService } from 'src/app/service/provinces.service'; // Ensure correct path
+import { ProvincesService } from 'src/app/service/provinces.service'; // Ensure correct path to your ProvincesService
 
-
+import { FormControl } from '@angular/forms';
 interface JwtAuthenticationResponse {
   token: string;
   refreshToken: string;
 }
 interface Province {
-  code: string; // Update type to string if your data is string type
+  code: string;
   name: string;
   districts: District[];
 }
 
 interface District {
-  code: string; // Update type to string if your data is string type
+  code: string;
   name: string;
   wards: Ward[];
 }
 
+
 interface Ward {
-  code: string; // Update type to string if your data is string type
+
+  code: string;
   name: string;
 }
+
 interface RegistrationRequest {
   username: string;
   password: string;
@@ -33,6 +36,9 @@ interface RegistrationRequest {
   address: string;
   fullname: string;
   status: number;
+  city: string;
+  district: string;
+  wards: string;
 }
 
 @Component({
@@ -42,13 +48,17 @@ interface RegistrationRequest {
 })
 export class RegisterComponent implements OnInit {
 
+
   provinces: Province[] = [];
   districts: District[] = [];
-  wards: Ward[] = [];
-  selectedProvinceCode: string = '';
-  selectedDistrictCode: string = '';
 
- 
+  wards: Ward[] = [];
+  provinceControl = new FormControl();
+  districtControl = new FormControl();
+  wardControl = new FormControl();
+  selectedProvince: any;
+  selectedDistrict: any;
+
 
 
   loginObj: any = {
@@ -74,7 +84,27 @@ export class RegisterComponent implements OnInit {
   constructor(private elementRef: ElementRef, private http: HttpClient, private router: Router, private provincesService: ProvincesService) {}
 
   ngOnInit(): void {
-    this.loadProvinces();
+
+    this.provincesService.getProvinces().subscribe((data: Province[]) => {
+      this.provinces = data;
+      console.log(this.provinces);
+    });
+
+    this.provinceControl.valueChanges.subscribe(provinceCode => {
+//      console.log('provinceCode:', provinceCode);
+      this.selectedProvince = this.provinces.find(province => province.code == provinceCode);
+//      console.log('selectedProvince:', this.selectedProvince);
+      this.districts = this.selectedProvince ? this.selectedProvince.districts : [];
+    });
+
+    this.districtControl.valueChanges.subscribe(districtCode => {
+//      console.log('districtCode:', districtCode);
+      const selectedDistrict = this.districts.find(district => district.code == districtCode);
+//      console.log('selectedDistrict:', this.selectedDistrict);
+      this.wards = selectedDistrict ? selectedDistrict.wards : [];
+      this.wardControl.reset();
+    });
+
 
     const signUpButton = this.elementRef.nativeElement.querySelector('#signUp');
     const signInButton = this.elementRef.nativeElement.querySelector('#signIn');
@@ -87,43 +117,15 @@ export class RegisterComponent implements OnInit {
     signInButton.addEventListener('click', () => {
       container.classList.remove('right-panel-active');
     });
-    
-  }
-  loadProvinces(): void {
-    this.provincesService.getProvinces().subscribe(
-      (data: any[]) => {
-        this.provinces = data;
-        console.log('Loaded provinces:', this.provinces); // Log provinces to check data
-      },
-      (error) => {
-        console.error('Error fetching provinces:', error);
-      }
-    );
-  }
-  onProvinceChange(): void {
-    const selectedProvince = this.provinces.find(p => p.code === this.selectedProvinceCode);
-    if (selectedProvince) {
-      this.districts = selectedProvince.districts;
-      this.selectedDistrictCode = ''; // Reset selected district
-      this.wards = []; // Reset wards when province changes
-    } else {
-      this.districts = [];
-      this.wards = [];
-    }
+
+  
   }
 
-  onDistrictChange(): void {
-    const selectedDistrict = this.districts.find(d => d.code === this.selectedDistrictCode);
-    if (selectedDistrict) {
-      this.wards = selectedDistrict.wards;
-    } else {
-      this.wards = [];
-    }
-  }
-
+ 
 
 
   onLogin(): void {
+    
     console.log("Bắt đầu chạy login");
     console.log("username: " + this.loginObj.username);
     console.log("password: " + this.loginObj.password);
@@ -187,9 +189,11 @@ export class RegisterComponent implements OnInit {
       phoneNumber: this.phoneNumber,
       address: this.address,
       fullname: this.fullname,
-      status: 0,
+      status: this.status,
+      city: this.provinceControl.value,
+      district: this.districtControl.value,
+      wards: this.wardControl.value
     };
-
     console.log('Username:', this.username);
     console.log('Password:', this.password);
     console.log('Confirm Password:', this.checkPass);
@@ -209,4 +213,7 @@ export class RegisterComponent implements OnInit {
       });
   }
 
+  
+ 
+ 
 }

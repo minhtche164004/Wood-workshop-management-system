@@ -12,7 +12,9 @@ import { PaymentSalaryComponent } from './payment-salary/payment-salary.componen
 import { VerifyMailComponent } from './forgotPassword/verify-mail/verify-mail.component';
 import { ChangePasswordComponent } from './forgotPassword/change-password/change-password.component';
 import { ApiProvinceComponent } from './api-province/api-province.component';
+import { ProductListComponent } from './product-list/product-list.component';
 
+import { VerifyOtpMailComponent } from './forgotPassword/verify-otp-mail/verify-otp-mail.component';
 const routes: Routes = [
   { path: 'homepage', component: HomepageComponent },
   { path: 'api-province', component: ApiProvinceComponent },
@@ -20,13 +22,17 @@ const routes: Routes = [
   { path: 'otp', component: VerifyOtpComponent },
   { path: 'admin', component: PageAdminComponent },
   { path: 'verifyMail', component: VerifyMailComponent },
-  { path: 'verifyOtp', component: VerifyOtpComponent },
+  { path: 'verifyOtp', component: VerifyOtpMailComponent },
   { path: 'change_pass', component: ChangePasswordComponent },
   { path: 'user_management', component: UserManagementComponent },
   { path: 'payment-salary', component: PaymentSalaryComponent },
+  { path: 'verifyOtp/:email', component: VerifyOtpMailComponent },  // Route with email as a parameter
+  { path: 'change_pass/:email', component: ChangePasswordComponent },  // Route with email as a parameter
   { path: 'product', component: ProductComponent }, // Add route for ProductComponent
+  { path: 'productsList', component: ProductListComponent },
   { path: '', redirectTo: '/homepage', pathMatch: 'full' },
   { path: '**', redirectTo: '/homepage', pathMatch: 'full' },
+
 
 ];
 

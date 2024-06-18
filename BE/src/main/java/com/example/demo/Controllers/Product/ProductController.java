@@ -1,9 +1,7 @@
 package com.example.demo.Controllers.Product;
 
 import com.example.demo.Dto.Category.CategoryNameDTO;
-import com.example.demo.Dto.ProductDTO.CreateExportMaterialProductRequest;
-import com.example.demo.Dto.ProductDTO.ProductDTO;
-import com.example.demo.Dto.ProductDTO.RequestProductDTO;
+import com.example.demo.Dto.ProductDTO.*;
 import com.example.demo.Dto.RequestDTO.RequestDTO;
 import com.example.demo.Dto.SubMaterialDTO.SubMaterialDTO;
 import com.example.demo.Entity.*;
@@ -75,7 +73,38 @@ public class ProductController {
         return apiResponse;
 
     }
+    @GetMapping("/GetProductByIdWithImage")
+    public ApiResponse<?> GetProductByIdWithImage(@RequestParam("id") int id) {
+        ApiResponse<ProductDTO_Show> apiResponse = new ApiResponse<>();
+        apiResponse.setResult(productService.GetProductByIdWithImage(id));
+        return apiResponse;
+    }
 
+//    @GetMapping("/GetRequestById")
+//    public ApiResponse<?> GetRequestById(@RequestParam("id") int id) {
+//        ApiResponse<Requests> apiResponse = new ApiResponse<>();
+//        apiResponse.setResult(productService.getRequestById(id));
+//        return apiResponse;
+//    }
+    @GetMapping("/GetRequestById")
+    public ApiResponse<?> GetRequestById(@RequestParam("id") int id) {
+        ApiResponse<RequestAllDTO> apiResponse = new ApiResponse<>();
+        apiResponse.setResult(productService.GetRequestById(id));
+        return apiResponse;
+    }
+    @GetMapping("/GetRequestProductById")
+    public ApiResponse<?> GetRequestProductById(@RequestParam("id") int id) {
+        ApiResponse<RequestProductAllDTO> apiResponse = new ApiResponse<>();
+        apiResponse.setResult(productService.GetProductRequestById(id));
+        return apiResponse;
+    }
+
+//    @GetMapping("/GetRequestProductById")
+//    public ApiResponse<?> GetRequestProductById(@RequestParam("id") int id) {
+//        ApiResponse<RequestProducts> apiResponse = new ApiResponse<>();
+//        apiResponse.setResult(productService.getRequestProductsById(id));
+//        return apiResponse;
+//    }
 
     @GetMapping("/GetProductById")
     public ApiResponse<?> GetProductById(@RequestParam("product_id") int product_id) {
@@ -165,7 +194,7 @@ public class ProductController {
     }
 
 
-    @PostMapping(value = "/EditProduct", consumes = MediaType.MULTIPART_FORM_DATA_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @PutMapping(value = "/EditProduct", consumes = MediaType.MULTIPART_FORM_DATA_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ApiResponse<?> EditProduct(
             @RequestParam(value="product_id") int productId,
             @RequestPart("productDTO") ProductDTO productDTO,
@@ -180,6 +209,14 @@ public class ProductController {
     @PostMapping("/createExportMaterialProduct")
     public ResponseEntity<ApiResponse<List<ProductSubMaterials>>> createExportMaterialProduct(@RequestBody CreateExportMaterialProductRequest request) {
         return productService.createExportMaterialProduct(request.getProductId(), request.getSubMaterialQuantities());
+    }
+
+    @PostMapping("/Approve_Reject_Request")
+    public ApiResponse<?> Approve_Reject_Request(@RequestParam("id") int id,@RequestParam("status_id") int status_id) {
+        ApiResponse<String> apiResponse = new ApiResponse<>();
+        productService.Approve_Reject_Request(id,status_id);
+        apiResponse.setResult("Chỉnh Đơn hàng thành công");
+        return apiResponse;
     }
 
     @PostMapping(value = "/AddNewRequest", consumes = MediaType.MULTIPART_FORM_DATA_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)

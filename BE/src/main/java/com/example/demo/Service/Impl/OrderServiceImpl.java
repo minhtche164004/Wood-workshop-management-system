@@ -4,6 +4,7 @@ import com.example.demo.Dto.ProductItem;
 import com.example.demo.Dto.RequestOrder;
 import com.example.demo.Dto.RequestProductItem;
 import com.example.demo.Entity.Orders;
+import com.example.demo.Entity.Products;
 import com.example.demo.Entity.Status_Order;
 import com.example.demo.Entity.UserInfor;
 import com.example.demo.Repository.InformationUserRepository;
@@ -15,6 +16,7 @@ import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 @Service
@@ -35,13 +37,17 @@ public class OrderServiceImpl implements OrderService {
         orders.setOrderDate(sqlCompletionTime);
         Status_Order statusOrder = statusOrderRepository.findById(1);//tự set cho nó là 1
         orders.setStatus(statusOrder);
-        orders.setPaymentMethod(1);
-        orders.setDeposite(BigDecimal.valueOf(100000));
+        orders.setPaymentMethod(requestOrder.getPayment_method()); //1 là trả tiền trực tiếp, 2 là chuyển khoản
+        orders.setAddress(requestOrder.getCusInfo().getAddress());
+        orders.setFullname(requestOrder.getCusInfo().getFullname());
+        orders.setPhoneNumber(requestOrder.getCusInfo().getPhone());
 
         UserInfor userInfor = new UserInfor();
         userInfor.setFullname(requestOrder.getCusInfo().getFullname());
         userInfor.setAddress(requestOrder.getCusInfo().getAddress());
         userInfor.setPhoneNumber(requestOrder.getCusInfo().getPhone());
+
+
         if (requestOrder.getSpecial_order() == 0) { // là hàng có sẵn
             BigDecimal total = BigDecimal.ZERO; // Khởi tạo total là 0
             List<ProductItem> productItems = requestOrder.getOderDetail().getProductItems(); // Lấy danh sách sản phẩm
@@ -54,7 +60,7 @@ public class OrderServiceImpl implements OrderService {
                     total = total.add(itemPrice.multiply(itemQuantity)); // Cộng dồn vào total
                 }
             }
-
+            orders.setDeposite(total.multiply(BigDecimal.valueOf(0.2))); // 20% tiền cọc của tổng tiền đơn hàng
             orders.setTotalAmount(total);
             orders.setSpecialOrder(false);
         }
@@ -71,12 +77,21 @@ public class OrderServiceImpl implements OrderService {
                         total = total.add(itemPrice.multiply(itemQuantity)); // Cộng dồn vào total
                     }
                 }
-
+            orders.setDeposite(total.multiply(BigDecimal.valueOf(0.2))); // 20% tiền cọc của tổng tiền đơn hàng
                 orders.setTotalAmount(total);
                 orders.setSpecialOrder(true);
             }
         informationUserRepository.save(userInfor);
             orders.setUserInfor(userInfor);
+        LocalDate today = LocalDate.now();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("ddMMyy");
+        String dateString = today.format(formatter);
+
+        Orders lastOrder = orderRepository.findOrderTop(dateString + "OD");
+        int count = lastOrder != null ? Integer.parseInt(lastOrder.getCode().substring(8)) + 1 : 1;
+        String code = dateString + "OD" + String.format("%03d", count);
+        orders.setCode(code);
+
             orderRepository.save(orders);
 
             return orders;

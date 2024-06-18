@@ -1,27 +1,26 @@
-package com.example.demo.Dto.RequestDTO;
+package com.example.demo.Dto.ProductDTO;
 
-import jakarta.persistence.Column;
+import com.example.demo.Entity.Product_Requestimages;
+import com.example.demo.Entity.Requestimages;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.springframework.data.jpa.repository.Modifying;
 
-import java.sql.Timestamp;
 import java.util.Date;
-@Data
+import java.util.List;
+
 @AllArgsConstructor
 @NoArgsConstructor
-public class RequestDTO {
-//    @NotNull(message = "MUST_REQUIRED")
-//    private Integer user_id;
-    @NotNull(message = "MUST_REQUIRED")
+@Data
+public class RequestAllDTO {
+    private Integer user_id;
     private Integer status_id;
-    @NotNull(message = "MUST_REQUIRED")
+
     private Date requestDate;
 
     private String response;
-    @NotNull(message = "MUST_REQUIRED")
+
     private String description;
     private String phoneNumber;
     private String fullname;
@@ -29,4 +28,5 @@ public class RequestDTO {
     private String city_province;
     private String district;
     private String wards;
+    private List<Requestimages> imagesList;
 }

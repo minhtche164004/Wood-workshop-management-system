@@ -1,10 +1,7 @@
 package com.example.demo.Service.Impl;
 
 import com.example.demo.Dto.Category.CategoryNameDTO;
-import com.example.demo.Dto.ProductDTO.ProductDTO;
-import com.example.demo.Dto.ProductDTO.ProductDTO_Show;
-import com.example.demo.Dto.ProductDTO.Product_Thumbnail;
-import com.example.demo.Dto.ProductDTO.RequestProductDTO;
+import com.example.demo.Dto.ProductDTO.*;
 import com.example.demo.Dto.RequestDTO.RequestDTO;
 import com.example.demo.Entity.*;
 import com.example.demo.Exception.AppException;
@@ -16,10 +13,13 @@ import com.example.demo.Service.ProductService;
 import com.example.demo.Service.UploadImageService;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.math3.stat.descriptive.summary.Product;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -58,6 +58,12 @@ public class ProductServiceImpl implements ProductService {
     private ProductSubMaterialsRepository productSubMaterialsRepository;
     @Autowired
     private RequestRepository requestRepository;
+    @Autowired
+    private Product_RequestimagesRepository productRequestimagesRepository;
+    @Autowired
+    private RequestimagesRepository requestimagesRepository;
+    @Autowired
+    private ProductImageRepository productImageRepository;
 
 
     @Override
@@ -135,60 +141,135 @@ public class ProductServiceImpl implements ProductService {
     }
 
 
-    //    @Override
-//    public List<ProductDTO_Show> GetAllProduct() {
-//        String projectDir = Paths.get("").toAbsolutePath().toString().replace("\\", "/");
-//        List<Products> product_list = productRepository.findAll();
-//        if (product_list.isEmpty()) {
-//            throw new AppException(ErrorCode.NOT_FOUND);
-//        }
-//        return product_list.stream()
-//                .map(product -> {
-//                    ProductDTO_Show productDTO = modelMapper.map(product, ProductDTO_Show.class);
-//                    productDTO.setImages( projectDir + productDTO.getImages());
-//                    return productDTO;
-//                })
-//                .collect(Collectors.toList());
-//    }
-    private String getAddressLocalComputer(){
-        String projectDir = Paths.get("").toAbsolutePath().toString().replace("\\", "/");
-        Path projectDirPath = Paths.get(projectDir);
-        Path parentDir = projectDirPath.getParent(); // Lấy thư mục cha(ko có /BE)
-        String desiredPath = parentDir.toString(); // Chuyển đổi thành chuỗi
-        return desiredPath;
+
+    @Override
+    public ProductDTO_Show GetProductByIdWithImage(int id) {
+        List<Productimages> productimagesList = productImageRepository.findImageByProductId(id);
+        Products products = productRepository.findById(id);
+        ProductDTO_Show productDTOShow = new ProductDTO_Show();
+        productDTOShow.setProductId(products.getProductId());
+        productDTOShow.setProductName(products.getProductName());
+        productDTOShow.setDescription(products.getDescription());
+        productDTOShow.setPrice(products.getPrice());
+        productDTOShow.setImage(getAddressLocalComputer(products.getImage()));
+        productDTOShow.setCompletionTime(products.getCompletionTime());
+        productDTOShow.setEnddateWarranty(products.getEnddateWarranty());
+        productDTOShow.setCode(products.getCode());
+        productDTOShow.setType(products.getType());
+        productDTOShow.setStatus(products.getStatus());
+        productDTOShow.setCategories(products.getCategories());
+        List<Productimages> processedImages = new ArrayList<>(); // Danh sách mới
+        for(Productimages productimages : productimagesList){
+            productimages.setFullPath(getAddressLocalComputer(productimages.getFullPath()));
+            processedImages.add(productimages); // Thêm vào danh sách mới
+        }
+        productDTOShow.setImageList(processedImages); // Gán danh sách mới vào DTO
+
+        return productDTOShow;
+
     }
+@Override
+public List<RequestProducts> GetAllProductRequest() {
+    return requestProductRepository.findAll();
+}
+    private String getAddressLocalComputer(String imagePath) {
+        int assetsIndex = imagePath.indexOf("/assets/");
+        if (assetsIndex != -1) {
+            imagePath = imagePath.substring(assetsIndex); // Cắt từ "/assets/"
+            if (imagePath.startsWith("/")) { // Kiểm tra xem có dấu "/" ở đầu không
+                imagePath = imagePath.substring(1); // Loại bỏ dấu "/" đầu tiên
+            }
+        }
+        return imagePath;
+    }// Trả về đường dẫn tương đối hoặc đường dẫn ban đầu nếu không tìm thấy "/assets/"
+
+
+
+
+    @Override
+    public RequestProductAllDTO GetProductRequestById(int id) {
+        List<Product_Requestimages> productRequestimagesList = productRequestimagesRepository.findById(id);
+        RequestProducts requestProducts = requestProductRepository.findById(id);
+        RequestProductAllDTO requestProductAllDTO = new RequestProductAllDTO();
+        requestProductAllDTO.setId(requestProducts.getRequestProductId());
+        requestProductAllDTO.setRequest_id(requestProducts.getRequestProductId());
+        requestProductAllDTO.setQuantity(requestProducts.getQuantity());
+        requestProductAllDTO.setPrice(requestProducts.getPrice());
+        requestProductAllDTO.setCompletionTime(requestProducts.getCompletionTime());
+        requestProductAllDTO.setDescription(requestProducts.getDescription());
+        List<Product_Requestimages> processedImages = new ArrayList<>(); // Danh sách mới
+        for(Product_Requestimages productRequestimages : productRequestimagesList){
+            productRequestimages.setFullPath(getAddressLocalComputer(productRequestimages.getFullPath()));
+            processedImages.add(productRequestimages); // Thêm vào danh sách mới
+        }
+        requestProductAllDTO.setImagesList(processedImages); // Gán danh sách mới vào DTO
+
+        return requestProductAllDTO;
+    }
+
+    @Override
+    public RequestAllDTO GetRequestById(int id) {
+        List<Requestimages> requestimagesList = requestimagesRepository.findById(id);
+        Requests requests = requestRepository.findById(id);
+        RequestAllDTO requestAllDTO = new RequestAllDTO();
+        requestAllDTO.setUser_id(requests.getUser().getUserId());
+        requestAllDTO.setRequestDate(requests.getRequestDate());
+        requestAllDTO.setResponse(requests.getResponse());
+        requestAllDTO.setPhoneNumber(requests.getPhoneNumber());
+        requestAllDTO.setFullname(requests.getFullname());
+        requestAllDTO.setAddress(requests.getAddress());
+        requestAllDTO.setCity_province(requests.getCity_province());
+        requestAllDTO.setStatus_id(requests.getStatus().getStatus_id());
+        requestAllDTO.setDistrict(requests.getDistrict());
+        requestAllDTO.setWards(requests.getWards());
+        requestAllDTO.setDescription(requests.getDescription());
+        List<Requestimages> processedImages = new ArrayList<>(); // Danh sách mới
+        for(Requestimages requestimages : requestimagesList){
+            requestimages.setFullPath(getAddressLocalComputer(requestimages.getFullPath()));
+            processedImages.add(requestimages); // Thêm vào danh sách mới
+        }
+        requestAllDTO.setImagesList(processedImages); // Gán danh sách mới vào DTO
+
+        return requestAllDTO;
+    }
+
 
 
     @Override
     public List<Products> GetAllProduct() {
-        List<Products> product_list = productRepository.findAll();
-        if (product_list.isEmpty()) {
+        List<Products> productList = productRepository.findAll();
+        if (productList.isEmpty()) {
             throw new AppException(ErrorCode.NOT_FOUND);
         }
-        for(Products product : product_list) {
-            product.setImage(getAddressLocalComputer() + product.getImage());
+        for (Products product : productList) {
+            product.setImage(getAddressLocalComputer(product.getImage())); // Cập nhật lại đường dẫn ảnh
         }
-        return product_list;
+        return productList;
     }
+
+
 
     @Override
     public Products GetProductById(int product_id){
         Products products = productRepository.findById(product_id);
-        //  String projectDir = Paths.get("").toAbsolutePath().toString().replace("\\", "/");
-        products.setImage(getAddressLocalComputer() + products.getImage());
+      //  String projectDir = Paths.get("").toAbsolutePath().toString().replace("\\", "/");
+        products.setImage(getAddressLocalComputer(products.getImage()));
+
         return products;
     }
 
 
     //Tạo Request Product
     @Override
-    public RequestProducts AddNewProductRequest(RequestProductDTO requestProductDTO, MultipartFile[] multipartFiles) {
+    public RequestProducts AddNewProductRequest(RequestProductDTO requestProductDTO, MultipartFile[] multipartFiles) { //lấy từ request
         RequestProducts requestProducts = new RequestProducts();
         requestProducts.setRequestProductName(requestProductDTO.getRequestProductName());
         requestProducts.setDescription(requestProductDTO.getDescription());
         requestProducts.setPrice(requestProductDTO.getPrice());
         requestProducts.setQuantity(requestProductDTO.getQuantity());
         requestProducts.setCompletionTime(requestProductDTO.getCompletionTime());
+        Requests requests = requestRepository.findById(requestProductDTO.getRequest_id());
+        requestProducts.setRequests(requests);
         if (!checkConditionService.checkInputName(requestProductDTO.getRequestProductName())) {
             throw new AppException(ErrorCode.INVALID_FORMAT_NAME);
         }
@@ -210,14 +291,8 @@ public class ProductServiceImpl implements ProductService {
         uploadImageService.uploadFile1(multipartFiles, requestProduct.getRequestProductId());
         return requestProducts;
     }
-    @Override
-    public List<RequestProducts> GetAllProductRequest() {
-        List<RequestProducts> reproduct_list = requestProductRepository.findAll();
-        if (reproduct_list.isEmpty()) {
-            throw new AppException(ErrorCode.NOT_FOUND);
-        }
-        return reproduct_list;
-    }
+
+
 
     @Override
     public List<Requests> GetAllRequests() {
@@ -231,9 +306,11 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public List<Products> findProductByNameCode(String key) {
         List<Products> productsList = productRepository.findProductByNameCode(key);
-        for(Products products :productsList){
+        for(Products products :productsList) {
+
             //  String projectDir = Paths.get("").toAbsolutePath().toString().replace("\\", "/");
-            products.setImage(getAddressLocalComputer() + products.getImage());
+            products.setImage(getAddressLocalComputer(products.getImage()));
+
         }
         return productsList;
     }
@@ -244,17 +321,22 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public Requests AddNewRequest(RequestDTO requestDTO, MultipartFile[] multipartFiles) {
         Requests requests = new Requests();
-        User user = userRepository.findById(requestDTO.getUser_id()).get();
+        UserDetails userDetails =(UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        User user =userRepository.getUserByUsername(userDetails.getUsername());
+        //lấy thông tin thằng đang login
+     //   User user = userRepository.findById(requestDTO.getUser_id()).get();
         requests.setUser(user);
-        Status_Request statusRequest =statusRequestRepository.findById(requestDTO.getStatus_id()).get();
+        Status_Request statusRequest =statusRequestRepository.findById(1).get();//nghĩa là request đang chờ phê duyệt
         requests.setRequestDate(requestDTO.getRequestDate());
         requests.setDescription(requestDTO.getDescription());
         requests.setStatus(statusRequest);
         requests.setAddress(requestDTO.getAddress());
         requests.setFullname(requestDTO.getFullname());
         requests.setPhoneNumber(requestDTO.getPhoneNumber());
-        requests.setResponse(requestDTO.getResponse());
-
+        requests.setResponse("");
+        requests.setCity_province(requestDTO.getCity_province());
+        requests.setDistrict(requestDTO.getDistrict());
+        requests.setWards(requestDTO.getWards());
         LocalDate today = LocalDate.now();
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("ddMMyy");
         String dateString = today.format(formatter);
@@ -271,6 +353,19 @@ public class ProductServiceImpl implements ProductService {
         requests = requestRepository.save(requests);
         uploadImageService.uploadFile2(multipartFiles, requests.getRequestId());
         return requests;
+    }
+    @Override
+    public Requests getRequestById(int id){
+        return requestRepository.findById(id);
+    }
+    @Override
+    public RequestProducts getRequestProductsById(int id){
+        return requestProductRepository.findById(id);
+    }
+    @Transactional
+    @Override
+    public void Approve_Reject_Request(int id, int status_id){
+        requestRepository.updateStatus(id,status_id);
     }
 
     // Hàm kiểm tra điều kiện đầu vào

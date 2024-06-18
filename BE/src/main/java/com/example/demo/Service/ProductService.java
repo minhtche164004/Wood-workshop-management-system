@@ -1,10 +1,7 @@
 package com.example.demo.Service;
 
 import com.example.demo.Dto.Category.CategoryNameDTO;
-import com.example.demo.Dto.ProductDTO.ProductDTO;
-import com.example.demo.Dto.ProductDTO.ProductDTO_Show;
-import com.example.demo.Dto.ProductDTO.ProductImageDTO;
-import com.example.demo.Dto.ProductDTO.RequestProductDTO;
+import com.example.demo.Dto.ProductDTO.*;
 import com.example.demo.Dto.RequestDTO.RequestDTO;
 import com.example.demo.Entity.*;
 import com.example.demo.Response.ApiResponse;
@@ -29,6 +26,16 @@ public interface ProductService {
     List<Requests> GetAllRequests();
 
     List<Products> findProductByNameCode(String key);
+
+    Requests getRequestById(int id);
+    RequestProducts getRequestProductsById(int id);
+    void Approve_Reject_Request(int id,int status_id);
+
+
+    RequestProductAllDTO GetProductRequestById(int id);
+    RequestAllDTO GetRequestById(int id);
+
+    ProductDTO_Show GetProductByIdWithImage(int id);
 
 
 

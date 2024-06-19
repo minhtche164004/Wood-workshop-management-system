@@ -1,0 +1,36 @@
+body {
+    background: #f8f8f8;
+  }
+
+  .header-bg {
+    background-color: #007bff; /* Màu sắc nền header */
+    padding: 20px 0; /* Khoảng cách lề trên và dưới */
+    margin-left: 200px; /* Khoảng cách lề trái */
+  }
+
+  .input-with-icon {
+    position: relative;
+  }
+
+  .input-with-icon input[type="text"] {
+    padding-right: 30px;
+  }
+
+  .input-with-icon .icon {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #333;
+    cursor: pointer;
+    transition: color 0.3s ease;
+  }
+
+  .input-with-icon .icon:hover {
+    color: #007bff;
+  }
+
+  /* Ẩn input file mặc định */
+  #uploadInput {
+    display: none;
+  }

@@ -50,7 +50,6 @@ import { NgxPaginationModule } from 'ngx-pagination';
     ProductListComponent,
     OrderRequiredComponent,
     ProductManagementComponent,
-    
   ],
   imports: [
     BrowserModule,
@@ -61,7 +60,7 @@ import { NgxPaginationModule } from 'ngx-pagination';
     AppRoutingModule, // Import AppRoutingModule,
     ReactiveFormsModule,
     BrowserAnimationsModule,
-    ToastrModule.forRoot()
+    ToastrModule.forRoot()  
   ],
   providers: [
     // {

@@ -59,6 +59,32 @@ suppliermaterialRepository.save(suppliermaterial);
                 .map(supp -> modelMapper.map(supp, SupplierNameDTO.class))
                 .collect(Collectors.toList());
     }
+    @Override
+    public Suppliermaterial EditSupplier(int id, SupplierMaterialDTO supplierMaterialDTO){
+        Suppliermaterial suppliermaterial = suppliermaterialRepository.findById(id);
+        if(!checkConditionService.checkInputName(supplierMaterialDTO.getSupplierName())){
+            throw new AppException(ErrorCode.INVALID_FORMAT_NAME);
+        }
+        if (!supplierMaterialDTO.getSupplierName().equals(suppliermaterial.getSupplierName()) &&
+                suppliermaterialRepository.findByName(supplierMaterialDTO.getSupplierName()) != null) {
+            throw new AppException(ErrorCode.NAME_EXIST);
+        }
+        suppliermaterial.setSupplierName(supplierMaterialDTO.getSupplierName());
+        suppliermaterial.setPhoneNumber(supplierMaterialDTO.getPhoneNumber());
+        SubMaterials subMaterials = subMaterialsRepository.findById1(supplierMaterialDTO.getSub_material_id());
+        suppliermaterial.setSubMaterial(subMaterials);
+        suppliermaterialRepository.save(suppliermaterial);
+        return suppliermaterial;
+    }
+
+    @Override
+    public List<Suppliermaterial> SearchSupplierByName(String key){
+        List<Suppliermaterial> suppliermaterialList = suppliermaterialRepository.SearchSupplierByName(key);
+        if(suppliermaterialList.size() == 0){
+            throw  new AppException(ErrorCode.NOT_FOUND);
+        }
+        return suppliermaterialList;
+    }
 
 
 

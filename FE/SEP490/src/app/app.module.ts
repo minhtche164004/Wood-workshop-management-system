@@ -1,11 +1,11 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { FormsModule } from '@angular/forms';
-import { HttpClientModule } from '@angular/common/http';
+import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
 import { RouterModule } from '@angular/router';
 
 import { AppRoutingModule } from './app-routing.module'; // Import AppRoutingModule
-
+import { ToastrModule, provideToastr } from 'ngx-toastr';
 import { AppComponent } from './app.component';
 import { HomepageComponent } from './features/homepage/homepage.component';
 import { RegisterComponent } from './register/register.component';
@@ -22,13 +22,15 @@ import { ChangePasswordComponent } from './forgotPassword/change-password/change
 import { VerifyOtpMailComponent } from './forgotPassword/verify-otp-mail/verify-otp-mail.component';
 import { ApiProvinceComponent } from './api-province/api-province.component';
 import { ReactiveFormsModule } from '@angular/forms';
-
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ProductListComponent } from './product-list/product-list.component';
 import { OrderRequiredComponent } from './order-required/order-required.component';
 import { ProductManagementComponent } from './Admin/product-management/product-management.component';
-import { NgxPaginationModule } from 'ngx-pagination';
-import { ViewProfileComponent } from './features/view-profile/view-profile.component';
+  import { NgxPaginationModule } from 'ngx-pagination';
+
+// import { AuthInterceptor } from './service/auth.interceptor';
 @NgModule({
+  
   declarations: [
     AppComponent,
     HomepageComponent,
@@ -48,8 +50,6 @@ import { ViewProfileComponent } from './features/view-profile/view-profile.compo
     ProductListComponent,
     OrderRequiredComponent,
     ProductManagementComponent,
-    ViewProfileComponent,
-
   ],
   imports: [
     BrowserModule,
@@ -58,10 +58,21 @@ import { ViewProfileComponent } from './features/view-profile/view-profile.compo
     RouterModule, // Import RouterModule
     NgxPaginationModule,
     AppRoutingModule, // Import AppRoutingModule,
-    ReactiveFormsModule
-
+    ReactiveFormsModule,
+    BrowserAnimationsModule,
+    ToastrModule.forRoot()  
   ],
-  providers: [],
+  providers: [
+    // {
+    //   provide: HTTP_INTERCEPTORS,
+    //   useClass: AuthInterceptor,
+    //   multi: true
+    // }
+  
+    provideToastr(),
+    
+    
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

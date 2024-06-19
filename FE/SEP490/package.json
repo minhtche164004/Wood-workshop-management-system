@@ -10,7 +10,7 @@
   },
   "private": true,
   "dependencies": {
-    "@angular/animations": "^15.2.0",
+    "@angular/animations": "^15.2.10",
     "@angular/common": "^15.2.0",
     "@angular/compiler": "^15.2.0",
     "@angular/core": "^15.2.0",
@@ -27,6 +27,8 @@
     "feather-icons": "^4.29.2",
     "jquery": "^3.7.1",
     "ngx-pagination": "^6.0.3",
+    "ngx-toastr": "^16.2.0",
+    "primeng": "^15.4.1",
     "rxjs": "~7.8.0",
     "slick-carousel": "^1.8.1",
     "tslib": "^2.3.0",

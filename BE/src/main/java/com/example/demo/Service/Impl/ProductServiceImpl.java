@@ -306,6 +306,9 @@ public List<RequestProducts> GetAllProductRequest() {
     @Override
     public List<Products> findProductByNameCode(String key) {
         List<Products> productsList = productRepository.findProductByNameCode(key);
+        if(productsList.size() ==0){
+            throw new AppException(ErrorCode.NOT_FOUND);
+        }
         for(Products products :productsList) {
 
             //  String projectDir = Paths.get("").toAbsolutePath().toString().replace("\\", "/");

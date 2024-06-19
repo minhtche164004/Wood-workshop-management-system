@@ -1,5 +1,6 @@
 package com.example.demo.Repository;
 
+import com.example.demo.Entity.Products;
 import com.example.demo.Entity.SubMaterials;
 import com.example.demo.Entity.Suppliermaterial;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -17,6 +18,14 @@ public interface SuppliermaterialRepository extends JpaRepository<Suppliermateri
 
    // int countBySuppliermaterialName(String SuppliermaterialName);
 
+    @Query("SELECT u FROM Suppliermaterial u WHERE u.supplierMaterial = :query")
+    Suppliermaterial findById(int query);
 
+    @Query("SELECT u FROM Suppliermaterial u WHERE u.supplierName = :query")
+    Suppliermaterial findByName(String query);
+
+
+    @Query("SELECT u FROM Suppliermaterial u  WHERE u.supplierName LIKE CONCAT('%', :keyword, '%')")
+    List<Suppliermaterial> SearchSupplierByName(@Param("keyword") String keyword);
 
 }

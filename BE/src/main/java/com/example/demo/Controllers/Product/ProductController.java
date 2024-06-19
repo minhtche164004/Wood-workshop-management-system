@@ -3,36 +3,25 @@ package com.example.demo.Controllers.Product;
 import com.example.demo.Dto.Category.CategoryNameDTO;
 import com.example.demo.Dto.ProductDTO.*;
 import com.example.demo.Dto.RequestDTO.RequestDTO;
-import com.example.demo.Dto.SubMaterialDTO.SubMaterialDTO;
 import com.example.demo.Entity.*;
-import com.example.demo.Exception.AppException;
-import com.example.demo.Exception.ErrorCode;
 import com.example.demo.Repository.CategoryRepository;
 import com.example.demo.Repository.ProductImageRepository;
 import com.example.demo.Repository.ProductRepository;
 import com.example.demo.Response.ApiResponse;
 import com.example.demo.Service.*;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.parameters.P;
+
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.Base64;
 import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/auth/product/")
@@ -40,8 +29,8 @@ import java.util.stream.Collectors;
 @AllArgsConstructor
 public class ProductController {
 
-//    @Autowired
-//    private ProductRepository productRepository;
+    @Autowired
+    private ProductRepository productRepository;
     @Autowired
     private CategoryRepository categoryRepository;
     @Autowired
@@ -49,31 +38,24 @@ public class ProductController {
     @Autowired
     private CategorySevice categorySevice;
     @Autowired
-    private ProductImageRepository productImageRepository;
-    @Autowired
     private UploadImageService uploadImageService;
+    @Autowired
+    private WhiteListService whiteListService;
 
+//    @PreAuthorize("hasAnyAuthority('ADMIN')")
     @GetMapping("/GetAllProduct")
     public ApiResponse<?> getAllProduct() {
         ApiResponse<List> apiResponse = new ApiResponse<>();
         apiResponse.setResult(productService.GetAllProduct());
         return apiResponse;
     }
-    @GetMapping("/GetAllProductRequest")
-    public ApiResponse<?> GetAllProductRequest() {
+    @GetMapping("/GetProductByCategory")
+    public ApiResponse<?> GetProductByCategory(@RequestParam("id") int id) {
         ApiResponse<List> apiResponse = new ApiResponse<>();
-        apiResponse.setResult(productService.GetAllProductRequest());
+        apiResponse.setResult(productRepository.findByCategory(id));
         return apiResponse;
-
     }
 
-    @GetMapping("/GetAllRequest")
-    public ApiResponse<?> GetAllRequest() {
-        ApiResponse<List> apiResponse = new ApiResponse<>();
-        apiResponse.setResult(productService.GetAllRequests());
-        return apiResponse;
-
-    }
     @GetMapping("/GetProductByIdWithImage")
     public ApiResponse<?> GetProductByIdWithImage(@RequestParam("id") int id) {
         ApiResponse<ProductDTO_Show> apiResponse = new ApiResponse<>();
@@ -87,18 +69,7 @@ public class ProductController {
 //        apiResponse.setResult(productService.getRequestById(id));
 //        return apiResponse;
 //    }
-    @GetMapping("/GetRequestById")
-    public ApiResponse<?> GetRequestById(@RequestParam("id") int id) {
-        ApiResponse<RequestAllDTO> apiResponse = new ApiResponse<>();
-        apiResponse.setResult(productService.GetRequestById(id));
-        return apiResponse;
-    }
-    @GetMapping("/GetRequestProductById")
-    public ApiResponse<?> GetRequestProductById(@RequestParam("id") int id) {
-        ApiResponse<RequestProductAllDTO> apiResponse = new ApiResponse<>();
-        apiResponse.setResult(productService.GetProductRequestById(id));
-        return apiResponse;
-    }
+
 
 //    @GetMapping("/GetRequestProductById")
 //    public ApiResponse<?> GetRequestProductById(@RequestParam("id") int id) {
@@ -127,7 +98,6 @@ public class ProductController {
         ApiResponse<List> apiResponse = new ApiResponse<>();
         apiResponse.setResult(categoryRepository.findAll());
         return apiResponse;
-
     }
 
     @GetMapping("/getAllCategoryName")
@@ -143,6 +113,9 @@ public class ProductController {
         apiResponse.setResult("Thêm mới Loại Sản Phẩm Thành công");
         return apiResponse;
     }
+
+
+
     @PutMapping("/EditCategory")
     public ApiResponse<?> EditCategory(@RequestParam("cate_id") int cate_id,@RequestBody CategoryNameDTO categoryNameDTO) {
         ApiResponse<Categories> apiResponse = new ApiResponse<>();
@@ -184,15 +157,6 @@ public class ProductController {
     }
 
 
-    @PostMapping(value = "/AddNewRequestProduct", consumes = MediaType.MULTIPART_FORM_DATA_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ApiResponse<?> AddNewRequestProduct(
-            @RequestPart("productDTO") RequestProductDTO requestProductDTO,
-            @RequestPart("files") MultipartFile[] files
-    ) {
-        ApiResponse<RequestProducts> apiResponse = new ApiResponse<>();
-        apiResponse.setResult(productService.AddNewProductRequest(requestProductDTO, files));
-        return apiResponse;
-    }
 
 
     @PutMapping(value = "/EditProduct", consumes = MediaType.MULTIPART_FORM_DATA_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
@@ -212,21 +176,5 @@ public class ProductController {
         return productService.createExportMaterialProduct(request.getProductId(), request.getSubMaterialQuantities());
     }
 
-    @PostMapping("/Approve_Reject_Request")
-    public ApiResponse<?> Approve_Reject_Request(@RequestParam("id") int id,@RequestParam("status_id") int status_id) {
-        ApiResponse<String> apiResponse = new ApiResponse<>();
-        productService.Approve_Reject_Request(id,status_id);
-        apiResponse.setResult("Chỉnh Đơn hàng thành công");
-        return apiResponse;
-    }
 
-    @PostMapping(value = "/AddNewRequest", consumes = MediaType.MULTIPART_FORM_DATA_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ApiResponse<?> AddNewRequest(
-            @RequestPart("requestDTO") RequestDTO requestDTO,
-            @RequestPart("files") MultipartFile[] files
-    ) {
-        ApiResponse<Requests> apiResponse = new ApiResponse<>();
-        apiResponse.setResult(productService.AddNewRequest(requestDTO, files));
-        return apiResponse;
-    }
 }

@@ -11,10 +11,7 @@ import com.example.demo.Repository.CategoryRepository;
 import com.example.demo.Repository.ProductImageRepository;
 import com.example.demo.Repository.ProductRepository;
 import com.example.demo.Response.ApiResponse;
-import com.example.demo.Service.CategorySevice;
-import com.example.demo.Service.ProductService;
-import com.example.demo.Service.UploadImageService;
-import com.example.demo.Service.WhiteListService;
+import com.example.demo.Service.*;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -27,7 +24,8 @@ import java.util.List;
 @RequestMapping("/api/auth/order/")
 @AllArgsConstructor
 public class OrderController {
-
+@Autowired
+private OrderService orderService;
     @Autowired
     private ProductService productService;
     @Autowired
@@ -36,27 +34,27 @@ public class OrderController {
     @GetMapping("/GetAllProductRequest")
     public ApiResponse<?> GetAllProductRequest() {
         ApiResponse<List> apiResponse = new ApiResponse<>();
-        apiResponse.setResult(productService.GetAllProductRequest());
+        apiResponse.setResult(orderService.GetAllProductRequest());
         return apiResponse;
 
     }
     @GetMapping("/GetAllRequest")
     public ApiResponse<?> GetAllRequest() {
         ApiResponse<List> apiResponse = new ApiResponse<>();
-        apiResponse.setResult(productService.GetAllRequests());
+        apiResponse.setResult(orderService.GetAllRequests());
         return apiResponse;
 
     }
     @GetMapping("/GetRequestById")
     public ApiResponse<?> GetRequestById(@RequestParam("id") int id) {
         ApiResponse<RequestAllDTO> apiResponse = new ApiResponse<>();
-        apiResponse.setResult(productService.GetRequestById(id));
+        apiResponse.setResult(orderService.GetRequestById(id));
         return apiResponse;
     }
     @GetMapping("/GetRequestProductById")
     public ApiResponse<?> GetRequestProductById(@RequestParam("id") int id) {
         ApiResponse<RequestProductAllDTO> apiResponse = new ApiResponse<>();
-        apiResponse.setResult(productService.GetProductRequestById(id));
+        apiResponse.setResult(orderService.GetProductRequestById(id));
         return apiResponse;
     }
     @PostMapping("/AddWhiteList")
@@ -84,13 +82,13 @@ public class OrderController {
             @RequestPart("files") MultipartFile[] files
     ) {
         ApiResponse<RequestProducts> apiResponse = new ApiResponse<>();
-        apiResponse.setResult(productService.AddNewProductRequest(requestProductDTO, files));
+        apiResponse.setResult(orderService.AddNewProductRequest(requestProductDTO, files));
         return apiResponse;
     }
     @PostMapping("/Approve_Reject_Request")
     public ApiResponse<?> Approve_Reject_Request(@RequestParam("id") int id,@RequestParam("status_id") int status_id) {
         ApiResponse<String> apiResponse = new ApiResponse<>();
-        productService.Approve_Reject_Request(id,status_id);
+        orderService.Approve_Reject_Request(id,status_id);
         apiResponse.setResult("Chỉnh Đơn hàng thành công");
         return apiResponse;
     }
@@ -101,7 +99,7 @@ public class OrderController {
             @RequestPart("files") MultipartFile[] files
     ) {
         ApiResponse<Requests> apiResponse = new ApiResponse<>();
-        apiResponse.setResult(productService.AddNewRequest(requestDTO, files));
+        apiResponse.setResult(orderService.AddNewRequest(requestDTO, files));
         return apiResponse;
     }
 }

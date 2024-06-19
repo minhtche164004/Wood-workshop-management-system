@@ -1,12 +1,11 @@
 package com.example.demo.Exception;
 
-import lombok.Data;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 @Getter
 @Setter
 @Data
+@NoArgsConstructor
 
 //taoj AppException riêng để trả về trong service( vis dụ trong userservice)
 public class AppException extends  RuntimeException{

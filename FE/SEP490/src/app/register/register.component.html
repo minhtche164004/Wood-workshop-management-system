@@ -24,20 +24,17 @@
           <option *ngFor="let province of provinces" [value]="province.code">{{province.name}}</option>
         </select>
       
-        <select [formControl]="districtControl" required>
+        <select [formControl]="districtControl" required> 
           <option [ngValue]="null" disabled>Districts</option>
           <option *ngFor="let district of districts" [value]="district.code">{{district.name}}</option>
         </select>
-      
         <select [formControl]="wardControl" required>
           <option [ngValue]="null" disabled>Ward</option>
           <option *ngFor="let ward of wards" [value]="ward.code">{{ward.name}}</option>
->>>>>>> main
         </select>
         <button type="submit">Sign Up</button>
       </form>
     </div>
-    
   <!-- fomr login -->
         <div class="form-container sign-in-container">
             <form >
@@ -56,9 +53,6 @@
                 <button (click)="onLogin()">Đăng nhập</button>
             </form>
         </div>
-   
-
-
         <div class="overlay-container">
             <div class="overlay">
                 <div class="overlay-panel overlay-left">

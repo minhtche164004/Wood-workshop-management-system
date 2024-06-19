@@ -1,5 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { ProductListService } from 'src/app/service/product/product-list.service';
+interface ApiResponse {
+  code: number;
+  result: any[]; // hoặc bạn có thể sử dụng một interface riêng để định nghĩa cấu trúc của mảng result
+}
 
 @Component({
   selector: 'app-product-management',
@@ -11,12 +15,21 @@ export class ProductManagementComponent implements OnInit {
   loginToken: string | null = null;
   currentPage: number = 1; // Biến lưu trữ trang hiện tại
 
-  constructor(private productListService: ProductListService) { }
+
+  categories: any[] = [];
+  selectedCategory: any = null;
+
+
+
+  constructor(private productListService: ProductListService ) { }
 
   ngOnInit(): void {
+
+   
+
     // Lấy loginToken từ localStorage
     this.loginToken = localStorage.getItem('loginToken');
-
+    this.loadCategories();
     if (this.loginToken) {
       console.log('Retrieved loginToken:', this.loginToken);
 
@@ -38,4 +51,20 @@ export class ProductManagementComponent implements OnInit {
       console.error('No loginToken found in localStorage.');
     }
   }
+  loadCategories(): void {
+    this.productListService.getAllCategories().subscribe(
+      (data: any) => { // them any vao`
+        if (data.code === 1000) {
+          this.categories = data.result;
+          console.log('Danh sách Loại:', this.categories);
+        } else {
+          console.error('Dữ liệu trả về không hợp lệ:', data);
+        }
+      },
+      (error) => {
+        console.error('Lỗi khi lấy danh sách Loại:', error);
+      }
+    );
+  }
+    
 }

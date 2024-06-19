@@ -1,18 +1,23 @@
-<div *ngIf="products.length > 0" class="product-list">
-    <div *ngFor="let product of products" class="product-item">
-      <h3>{{ product.product_name }}</h3>
-      <p>{{ product.description }}</p>
-      <p>Quantity: {{ product.quantity }}</p>
-      <p>Price: {{ product.price | currency }}</p>
-      <p>Status: {{ product.status_id }}</p>
-      <img src="assets/product_images/thumbnail_Screenshot 2024-05-26 174916_1718618062325.png" alt="Product image">
-      
-      <p>Category ID: {{ product.category_id }}</p>
-      <p>Type: {{ product.type }}</p>
-      <hr>
+<div class="container py-4">
+  <div *ngIf="products.length > 0" class="row">
+    <div class="col-lg-3 col-md-6 col-12 mb-4" *ngFor="let product of products">
+      <div class="card h-100">
+        <img [src]="product.image" class="card-img-top" [alt]="product.product_name">
+        <div class="card-body">
+          <h5 class="card-title">{{ product.product_name }}</h5>
+          <p class="card-text" *ngIf="product.rootPrice">
+            <del>{{ product.rootPrice | currency }}</del> {{ product.price | currency }}
+          </p>
+          <p class="card-text" *ngIf="!product.rootPrice">
+            {{ product.price | currency }}
+          </p>
+          <p class="card-text"><small class="text-muted">{{ product.reviews }} đánh giá</small></p>
+          <a [href]="product.detailUrl" class="btn btn-primary"><i class="fas fa-cart-plus"></i> Thêm vào giỏ</a>
+        </div>
+      </div>
     </div>
   </div>
-  
   <div *ngIf="products.length === 0" class="no-products">
     <p>No products available.</p>
   </div>
+</div>

@@ -13,10 +13,11 @@ import { VerifyMailComponent } from './forgotPassword/verify-mail/verify-mail.co
 import { ChangePasswordComponent } from './forgotPassword/change-password/change-password.component';
 import { ApiProvinceComponent } from './api-province/api-province.component';
 import { ProductListComponent } from './product-list/product-list.component';
-
 import { VerifyOtpMailComponent } from './forgotPassword/verify-otp-mail/verify-otp-mail.component';
 import { ProductManagementComponent } from './Admin/product-management/product-management.component';
+
 import { OrderRequiredComponent } from './order-required/order-required.component';
+
 const routes: Routes = [
   { path: 'homepage', component: HomepageComponent },
   { path: 'api-province', component: ApiProvinceComponent },

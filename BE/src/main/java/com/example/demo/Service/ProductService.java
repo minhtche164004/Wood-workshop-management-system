@@ -17,23 +17,11 @@ import java.util.Map;
 public interface ProductService {
     Products AddNewProduct(ProductDTO productDTO,MultipartFile[] multipartFiles,MultipartFile multipartFiles_thumbnal) ;
     List<Products> GetAllProduct();
-    RequestProducts AddNewProductRequest(RequestProductDTO requestProductDTO,MultipartFile[] multipartFiles);
     Products EditProduct(int id,ProductDTO productDTO,MultipartFile[] multipartFiles,MultipartFile multipartFiles_thumbnal);
     ResponseEntity<ApiResponse<List<ProductSubMaterials>>> createExportMaterialProduct(int product_id, Map<Integer, Integer> subMaterialQuantities);
-    Requests AddNewRequest(RequestDTO requestDTO, MultipartFile[] multipartFiles);
      Products GetProductById(int product_id);
-     List<RequestProducts> GetAllProductRequest();
-    List<Requests> GetAllRequests();
 
     List<Products> findProductByNameCode(String key);
-
-    Requests getRequestById(int id);
-    RequestProducts getRequestProductsById(int id);
-    void Approve_Reject_Request(int id,int status_id);
-
-
-    RequestProductAllDTO GetProductRequestById(int id);
-    RequestAllDTO GetRequestById(int id);
 
     ProductDTO_Show GetProductByIdWithImage(int id);
 

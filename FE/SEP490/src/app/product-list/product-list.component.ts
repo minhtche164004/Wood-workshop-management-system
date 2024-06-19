@@ -18,7 +18,7 @@ export class ProductListComponent implements OnInit {
 
     if (this.loginToken) {
       console.log('Retrieved loginToken:', this.loginToken);
-
+      
       // Gọi dịch vụ để lấy danh sách sản phẩm
       this.productListService.getProducts().subscribe(
         (data) => {

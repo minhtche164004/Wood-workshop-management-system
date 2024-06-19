@@ -31,7 +31,11 @@ export class UserManagementComponent implements OnInit {
         (data: ApiResponse) => {
           if (data.code === 1000) {
             this.user = data.result;
+
+
+
             console.log('Danh sách người dùng:', this.user);
+
           } else {
             console.error('Failed to fetch products:', data);
           }

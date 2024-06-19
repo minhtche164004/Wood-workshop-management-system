@@ -17,6 +17,7 @@ import { VerifyOtpMailComponent } from './forgotPassword/verify-otp-mail/verify-
 import { ProductManagementComponent } from './Admin/product-management/product-management.component';
 
 import { OrderRequiredComponent } from './order-required/order-required.component';
+import { ViewProfileComponent } from './features/view-profile/view-profile.component';
 
 const routes: Routes = [
   { path: 'homepage', component: HomepageComponent },
@@ -35,6 +36,9 @@ const routes: Routes = [
   { path: 'productsList', component: ProductListComponent },
   { path: 'product_management', component: ProductManagementComponent },
   { path: 'order_rq', component: OrderRequiredComponent },
+
+  { path: 'profile', component: ViewProfileComponent },
+
   { path: '', redirectTo: '/homepage', pathMatch: 'full' },
   { path: '**', redirectTo: '/homepage', pathMatch: 'full' },
 

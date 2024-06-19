@@ -56,7 +56,7 @@
                               <div class="form-group">
                                 <select class="form-control" [formControl]="provinceControl" required>
                                   <option [ngValue]="null" disabled selected>Tỉnh / Thành Phố</option>
-                                  <option *ngFor="let province of provinces" [ngValue]="province.code">{{ province.name }}</option>
+                                  <option *ngFor="let province of provinces" [ngValue]="province.name">{{ province.name }}</option>
                                 </select>
                               </div>
                             </div>
@@ -64,7 +64,7 @@
                               <div class="form-group">
                                 <select class="form-control" [formControl]="districtControl" required>
                                   <option [ngValue]="null" disabled selected>Quận / Huyện</option>
-                                  <option *ngFor="let district of districts" [ngValue]="district.code">{{ district.name }}</option>
+                                  <option *ngFor="let district of districts" [ngValue]="district.name">{{ district.name }}</option>
                                 </select>
                               </div>
                             </div>
@@ -72,7 +72,7 @@
                               <div class="form-group">
                                 <select class="form-control" [formControl]="wardControl" required>
                                   <option [ngValue]="null" disabled selected>Phường / Xã</option>
-                                  <option *ngFor="let ward of wards" [ngValue]="ward.code">{{ ward.name }}</option>
+                                  <option *ngFor="let ward of wards" [ngValue]="ward.name">{{ ward.name }}</option>
                                 </select>
                               </div>
                             </div>

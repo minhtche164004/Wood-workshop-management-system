@@ -1,0 +1,74 @@
+body {
+    background: #f7f7ff;
+    margin-top: 20px;
+}
+
+.card {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+    word-wrap: break-word;
+    background-color: #fff;
+    background-clip: border-box;
+    border: 0 solid transparent;
+    border-radius: .25rem;
+    margin-bottom: 1.5rem;
+    box-shadow: 0 2px 6px 0 rgb(218 218 253 / 65%), 0 2px 6px 0 rgb(206 206 238 / 54%);
+}
+
+.me-2 {
+    margin-right: .5rem !important;
+}
+
+.icon-inline {
+    vertical-align: middle;
+    margin-right: 8px;
+}
+
+.progress-bar {
+    height: 5px;
+}
+
+.text-secondary {
+    color: #6c757d !important;
+}
+
+.font-size-sm {
+    font-size: 0.875rem;
+}
+
+.rounded-circle {
+    border-radius: 50% !important;
+}
+
+.bg-primary {
+    background-color: #007bff !important;
+}
+
+.btn-primary {
+    background-color: #007bff;
+    border-color: #007bff;
+}
+
+.btn-outline-primary {
+    border-color: #007bff;
+    color: #007bff;
+}
+
+.btn-outline-primary:hover {
+    background-color: #007bff;
+    color: #fff;
+}
+.custom-input {
+    height: 50px; /* chiều cao của input */
+    font-size: 16px; /* kích thước chữ */
+    padding: 10px; /* khoảng cách bên trong */
+    margin-bottom: 10px; /* khoảng cách dưới cùng mỗi input */
+}
+.label_lb{
+    height: 50px; /* chiều cao của input */
+    font-size: 16px; /* kích thước chữ */
+    padding: 10px; /* khoảng cách bên trong */
+    margin-bottom: 10px; /* khoảng cách dưới cùng mỗi input */
+}

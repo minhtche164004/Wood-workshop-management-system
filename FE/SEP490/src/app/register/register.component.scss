@@ -256,3 +256,27 @@ footer a {
     color: #3c97bf;
     text-decoration: none;
 }
+
+.custom-row {
+    background-color: #f0f0f0;
+    padding: 10px;
+    border-radius: 5px;
+}
+
+.custom-col {
+    margin-bottom: 10px; /* Để tạo khoảng cách giữa các cột */
+}
+
+.custom-select {
+    width: 100%;
+    padding: 8px;
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+}
+
+.custom-select:focus {
+    outline: none;
+    border-color: #4CAF50; /* Tô màu khi focus vào select */
+}

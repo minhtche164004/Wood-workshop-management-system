@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { ProvincesService } from '../service/provinces.service'; 
+import { ProvincesService } from 'src/app/service/provinces.service';
 import { FormControl } from '@angular/forms';
 
 interface Province {
@@ -20,11 +20,11 @@ interface Ward {
 }
 
 @Component({
-  selector: 'app-order-required',
-  templateUrl: './order-required.component.html',
-  styleUrls: ['./order-required.component.scss']
+  selector: 'app-view-profile',
+  templateUrl: './view-profile.component.html',
+  styleUrls: ['./view-profile.component.scss']
 })
-export class OrderRequiredComponent implements OnInit {
+export class ViewProfileComponent implements OnInit {
   provinces: Province[] = [];
   districts: District[] = [];
   wards: Ward[] = [];
@@ -35,11 +35,7 @@ export class OrderRequiredComponent implements OnInit {
   selectedDistrict: any;
 
   constructor(private provincesService: ProvincesService) { }
-  onFileSelected(event: any) {
-    const selectedFile = event.target.files[0];
-    // Xử lý logic khi đã chọn file, ví dụ như upload lên server
-    console.log('Selected File:', selectedFile);
-  }
+
   ngOnInit() {
     this.provincesService.getProvinces().subscribe((data: Province[]) => {
       this.provinces = data;

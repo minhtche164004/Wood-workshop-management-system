@@ -13,6 +13,10 @@ import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.parameters.P;
+
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -37,8 +41,10 @@ public class ProductController {
     private ProductImageRepository productImageRepository;
     @Autowired
     private UploadImageService uploadImageService;
+
     @Autowired
     private WhiteListService whiteListService;
+
 //    @PreAuthorize("hasAnyAuthority('ADMIN')")
     @GetMapping("/GetAllProduct")
     public ApiResponse<?> getAllProduct() {

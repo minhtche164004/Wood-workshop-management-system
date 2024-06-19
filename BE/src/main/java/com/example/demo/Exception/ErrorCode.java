@@ -47,7 +47,7 @@ public enum ErrorCode {
     TOO_MANY_ATTEMPTS(1027, "Nhập sai OTP quá 3 lần , vui lòng check lại OTP mới trong mail",HttpStatus.BAD_REQUEST),
     //-----------------------------------
 
-    NOT_FOUND(1015,"Không tìm thấy kết quả tìm kiếm ",HttpStatus.NOT_FOUND),
+    NOT_FOUND(1015,"Không tìm thấy kết quả tìm kiếm ",HttpStatus.OK),
 
 
     //Exception của Materials

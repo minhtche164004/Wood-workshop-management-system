@@ -5,6 +5,7 @@ import com.example.demo.Dto.UserDTO.UserDTO;
 import com.example.demo.Dto.UserDTO.UserUpdateDTO;
 import com.example.demo.Dto.UserDTO.User_Admin_DTO;
 import com.example.demo.Entity.User;
+import com.example.demo.Repository.RoleRepository;
 import com.example.demo.Repository.UserRepository;
 import com.example.demo.Response.ApiResponse;
 import com.example.demo.Service.PositionService;
@@ -23,6 +24,8 @@ public class AdminController {
     private UserService userService;
     @Autowired
     private PositionService positionService;
+    @Autowired
+    private RoleRepository roleRepository;
 
 //    @GetMapping("/GetAllPositionName")
 //    public ApiResponse<?> GetAllPositionName(){
@@ -42,7 +45,12 @@ public class AdminController {
         ApiResponse<List> apiResponse= new ApiResponse<>();
         apiResponse.setResult(userService.GetAllUser());
         return apiResponse;
-
+    }
+    @GetMapping("/GetAllRole")
+    public ApiResponse<?> GetAllRole(){
+        ApiResponse<List> apiResponse= new ApiResponse<>();
+        apiResponse.setResult(roleRepository.findAll());
+        return apiResponse;
     }
     @GetMapping("/SearchUserByNameorAddress")
     public ApiResponse<?> SearchUserByName(@RequestParam(value = "query", required = false) String query){
@@ -69,6 +77,7 @@ public class AdminController {
         apiResponse.setResult(userService.FindbyId(user_id));
         return apiResponse;
     }
+
 //    @GetMapping("ViewProfile")
 //    public  ApiResponse<?> ViewProfile(@RequestParam(value = "user_id", required = false) int user_id) {
 //        ApiResponse<UserUpdateDTO> apiResponse = new ApiResponse<>();

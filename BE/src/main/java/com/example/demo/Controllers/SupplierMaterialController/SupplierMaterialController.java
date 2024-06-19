@@ -31,10 +31,24 @@ public class SupplierMaterialController {
         apiResponse.setResult(supplierMaterialService.AddNewSupplier(supplierMaterialDTO));
         return  apiResponse;
     }
+
+    @PutMapping("/EditSupplier")
+    public ApiResponse<?> EditSupplier(@RequestBody @Valid SupplierMaterialDTO supplierMaterialDTO,@RequestParam("id") int id){
+        ApiResponse<Suppliermaterial> apiResponse= new ApiResponse<>();
+        apiResponse.setResult(supplierMaterialService.EditSupplier(id,supplierMaterialDTO));
+        return  apiResponse;
+    }
     @GetMapping("/getAllName")
     public ApiResponse<?> getAllSupplierMaterialsName(){
         ApiResponse<List> apiResponse = new ApiResponse<>();
         apiResponse.setResult(supplierMaterialService.GetListName());
+        return apiResponse;
+    }
+
+    @GetMapping("/SearchByName")
+    public ApiResponse<?> searchByName(@RequestParam("key") String key){
+        ApiResponse<List> apiResponse = new ApiResponse<>();
+        apiResponse.setResult(supplierMaterialService.SearchSupplierByName(key));
         return apiResponse;
     }
 }

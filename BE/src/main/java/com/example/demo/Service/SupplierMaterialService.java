@@ -14,4 +14,6 @@ public interface SupplierMaterialService {
     List<Suppliermaterial> GetAllSupplier();
     Suppliermaterial AddNewSupplier(SupplierMaterialDTO supplierMaterialDTO);
     List<SupplierNameDTO> GetListName();
+    Suppliermaterial EditSupplier(int id,SupplierMaterialDTO supplierMaterialDTO);
+    List<Suppliermaterial> SearchSupplierByName(String key);
 }

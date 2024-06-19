@@ -3,36 +3,21 @@ package com.example.demo.Controllers.Product;
 import com.example.demo.Dto.Category.CategoryNameDTO;
 import com.example.demo.Dto.ProductDTO.*;
 import com.example.demo.Dto.RequestDTO.RequestDTO;
-import com.example.demo.Dto.SubMaterialDTO.SubMaterialDTO;
 import com.example.demo.Entity.*;
-import com.example.demo.Exception.AppException;
-import com.example.demo.Exception.ErrorCode;
 import com.example.demo.Repository.CategoryRepository;
 import com.example.demo.Repository.ProductImageRepository;
 import com.example.demo.Repository.ProductRepository;
 import com.example.demo.Response.ApiResponse;
 import com.example.demo.Service.*;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.parameters.P;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.Base64;
 import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/auth/product/")
@@ -40,8 +25,8 @@ import java.util.stream.Collectors;
 @AllArgsConstructor
 public class ProductController {
 
-//    @Autowired
-//    private ProductRepository productRepository;
+    @Autowired
+    private ProductRepository productRepository;
     @Autowired
     private CategoryRepository categoryRepository;
     @Autowired
@@ -52,11 +37,19 @@ public class ProductController {
     private ProductImageRepository productImageRepository;
     @Autowired
     private UploadImageService uploadImageService;
-
+    @Autowired
+    private WhiteListService whiteListService;
+//    @PreAuthorize("hasAnyAuthority('ADMIN')")
     @GetMapping("/GetAllProduct")
     public ApiResponse<?> getAllProduct() {
         ApiResponse<List> apiResponse = new ApiResponse<>();
         apiResponse.setResult(productService.GetAllProduct());
+        return apiResponse;
+    }
+    @GetMapping("/GetProductByCategory")
+    public ApiResponse<?> GetProductByCategory(@RequestParam("id") int id) {
+        ApiResponse<List> apiResponse = new ApiResponse<>();
+        apiResponse.setResult(productRepository.findByCategory(id));
         return apiResponse;
     }
     @GetMapping("/GetAllProductRequest")
@@ -66,7 +59,6 @@ public class ProductController {
         return apiResponse;
 
     }
-
     @GetMapping("/GetAllRequest")
     public ApiResponse<?> GetAllRequest() {
         ApiResponse<List> apiResponse = new ApiResponse<>();
@@ -127,7 +119,6 @@ public class ProductController {
         ApiResponse<List> apiResponse = new ApiResponse<>();
         apiResponse.setResult(categoryRepository.findAll());
         return apiResponse;
-
     }
 
     @GetMapping("/getAllCategoryName")
@@ -143,6 +134,27 @@ public class ProductController {
         apiResponse.setResult("Thêm mới Loại Sản Phẩm Thành công");
         return apiResponse;
     }
+
+    @PostMapping("/AddWhiteList")
+    public ApiResponse<?> AddWhiteList(@RequestParam("product_id") int product_id) {
+        ApiResponse<WhiteList> apiResponse = new ApiResponse<>();
+        apiResponse.setResult(whiteListService.AddWhiteList(product_id));
+        return apiResponse;
+    }
+    @GetMapping("/GetWhiteListByUserID")
+    public ApiResponse<?> GetWhiteListByUserID(@RequestParam("user_id") int user_id) {
+        ApiResponse<List> apiResponse = new ApiResponse<>();
+        apiResponse.setResult(whiteListService.ViewWhiteList(user_id));
+        return apiResponse;
+    }
+    @DeleteMapping("/DeleteWhiteList")
+    public ApiResponse<?> DeleteWhiteList(@RequestParam("user_id") int user_id) {
+        ApiResponse<String> apiResponse = new ApiResponse<>();
+        whiteListService.DeleteWhiteList(user_id);
+        apiResponse.setResult("Xoá Sản Phẩm khỏi danh sách yêu thích thành công !");
+        return apiResponse;
+    }
+
     @PutMapping("/EditCategory")
     public ApiResponse<?> EditCategory(@RequestParam("cate_id") int cate_id,@RequestBody CategoryNameDTO categoryNameDTO) {
         ApiResponse<Categories> apiResponse = new ApiResponse<>();

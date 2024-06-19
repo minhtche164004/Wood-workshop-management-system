@@ -37,6 +37,7 @@ import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/auth/product/")
+@CrossOrigin(origins="http://localhost:5173")
 @AllArgsConstructor
 public class ProductController {
 

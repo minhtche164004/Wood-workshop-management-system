@@ -27,6 +27,8 @@ import { ProductListComponent } from './product-list/product-list.component';
 import { OrderRequiredComponent } from './order-required/order-required.component';
 import { ProductManagementComponent } from './Admin/product-management/product-management.component';
   import { NgxPaginationModule } from 'ngx-pagination';
+import { ViewProfileComponent } from './features/view-profile/view-profile.component';
+
 
 // import { AuthInterceptor } from './service/auth.interceptor';
 @NgModule({
@@ -50,6 +52,8 @@ import { ProductManagementComponent } from './Admin/product-management/product-m
     ProductListComponent,
     OrderRequiredComponent,
     ProductManagementComponent,
+    ViewProfileComponent,
+   
   ],
   imports: [
     BrowserModule,

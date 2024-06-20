@@ -27,3 +27,4 @@ stages:
         dockerfile: '$(Build.SourcesDirectory)/FE/SEP490/Dockerfile'
         tags: |
           $(tag)
+    - task: PublishBuildArtifacts@1

@@ -46,6 +46,7 @@ export class OrderRequiredComponent implements OnInit {
       console.log(this.provinces);
     });
 
+
     this.provinceControl.valueChanges.subscribe(provinceName => {
       console.log('provinceName:', provinceName);
       this.selectedProvince = this.provinces.find(province => province.name === provinceName);
@@ -60,5 +61,11 @@ export class OrderRequiredComponent implements OnInit {
       this.wards = selectedDistrict ? selectedDistrict.wards : [];
       this.wardControl.reset();
   });
+
+
+
+
+
+
   }
 }

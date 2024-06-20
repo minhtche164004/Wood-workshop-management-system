@@ -12,6 +12,7 @@ export class ProductListService {
   private apiUrl_Cate = 'http://localhost:8080/api/auth/product/getAllCategoryName';
   private apiUrl_GetAllUser = 'http://localhost:8080/api/auth/admin/GetAllUser';
   private apiUrl_Position = '  http://localhost:8080/api/auth/admin/GetAllPosition';
+
   private apiUrl_findProduct = 'http://localhost:8080/api/auth/product'
   private apiUrl_getProductByID = 'http://localhost:8080/api/auth/product/GetProductById'; // Assuming the correct endpoint
 
@@ -56,3 +57,4 @@ export class ProductListService {
     return this.http.get<any>(url); // Make the GET request with the constructed URL
   }
   }
+

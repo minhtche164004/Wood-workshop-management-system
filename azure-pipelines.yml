@@ -14,7 +14,7 @@ variables:
   imageRepository: 'minhtchewoodworkshopmanagementsystem'
   containerRegistry: 'dogosydungfe.azurecr.io'
   dockerfilePath: '$(Build.SourcesDirectory)/FE/SEP490/Dockerfile'
-  tag: '$(Build.BuildId)'
+  tag: 'latest'
 
   # Agent VM image name
   vmImageName: 'ubuntu-latest'

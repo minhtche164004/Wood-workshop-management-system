@@ -1,15 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { ProductListService } from 'src/app/service/product/product-list.service';
-
-
-
 import { ToastrService } from 'ngx-toastr'; // Import ToastrService
 
 interface ApiResponse {
   code: number;
   result: any[]; // Or a specific interface for the result structure
 }
-
 
 @Component({
   selector: 'app-product-management',
@@ -26,29 +22,11 @@ export class ProductManagementComponent implements OnInit {
   categories: any[] = [];
   selectedCategory: any = null;
 
-
-
-  categories: any[] = [];
-  selectedCategory: any = null;
-
-
-
-  constructor(private productListService: ProductListService ) { }
-
-  ngOnInit(): void {
-
-   
-
-    // Lấy loginToken từ localStorage
-    this.loginToken = localStorage.getItem('loginToken');
-    this.loadCategories();
-
   constructor(private productListService: ProductListService, private toastr: ToastrService) { } // Inject ToastrService
 
   ngOnInit(): void {
     this.loginToken = localStorage.getItem('loginToken');
     this.loadCategories();
-
 
     if (this.loginToken) {
       console.log('Retrieved loginToken:', this.loginToken);
@@ -72,12 +50,9 @@ export class ProductManagementComponent implements OnInit {
     }
   }
 
-
-
   loadCategories(): void {
     this.productListService.getAllCategories().subscribe(
       (data: any) => {
-
         if (data.code === 1000) {
           this.categories = data.result;
           console.log('Danh sách Loại:', this.categories);
@@ -90,7 +65,6 @@ export class ProductManagementComponent implements OnInit {
       }
     );
   }
-
 
   searchProduct(): void {
     console.log("Thực hiện tìm kiếm sản phẩm");
@@ -147,4 +121,4 @@ export class ProductManagementComponent implements OnInit {
   }
 
 
-
+}

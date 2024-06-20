@@ -15,27 +15,16 @@
                           </a>
                       </div>
                     </div>
-
-                
-
                    
                     <table class="table table-striped table-hover">
                       </table>
-
                     <div class="row">
                       <div class="col-md-7"></div> <!-- Dummy column to push the search box to the right -->
                       <div class="col-md-5 text-end">
                         <div class="input-group mb-3">
                           <!-- product.component.html -->
                           <select [(ngModel)]="selectedCategory">
-                          
-                          </select>
-                        
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-
+                            <option [ngValue]="null" disabled selected>Chọn danh mục</option>
                             <option *ngFor="let category of categories" [ngValue]="category.categoryId">{{ category.categoryName }}</option>
                           </select>
                           <input type="text" class="form-control" placeholder="Tìm kiếm sản phẩm..." [(ngModel)]="searchKey">
@@ -50,7 +39,6 @@
                   </div>
                     
                  
-
                 <table class="table table-striped table-hover">
                     <thead>
                       <tr>
@@ -102,7 +90,6 @@
                 </div>
 
 
-
             </div>
         </div>
     </div>
@@ -205,106 +192,6 @@
         </div>
     </div>
 </div>
-
-
-
-  <!-- Modal for Adding Product -->
-  <div class="modal fade" id="addProductModal" tabindex="-1" role="dialog" aria-labelledby="addProductModalLabel" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-      <div class="modal-content">
-        <div class="modal-header">
-            <h5 class="modal-title text-center" id="addProductModalLabel">Add New Product</h5>
-            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-              <span aria-hidden="true">&times;</span>
-            </button>
-          </div>
-        <div class="modal-body">
-          <form>
-            <div class="form-group">
-              <label for="productName">Product Name</label>
-              <input type="text" class="form-control" id="productName" placeholder="Enter product name">
-            </div>
-            <div class="form-group">
-              <label for="productDescription">Description</label>
-              <textarea class="form-control" id="productDescription" rows="3" placeholder="Enter product description"></textarea>
-            </div>
-            <div class="form-group">
-              <label for="productCategory">Category</label>
-              <select class="form-control" id="productCategory">
-                <option [ngValue]="null" disabled selected>Choose category</option>
-                <option *ngFor="let category of categories" [ngValue]="category.categoryId">{{ category.categoryName }}</option>
-              </select>
-            </div>
-            <div class="form-group">
-              <label for="productQuantity">Quantity</label>
-              <input type="number" class="form-control" id="productQuantity" placeholder="Enter quantity">
-            </div>
-            <div class="form-group">
-              <label for="productPrice">Price (vnđ)</label>
-              <input type="number" class="form-control" id="productPrice" placeholder="Enter price">
-            </div>
-            <div class="form-group">
-              <label for="productImage">Product Image</label>
-              <input type="file" class="form-control-file" id="productImage">
-            </div>
-          </form>
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-          <button type="button" class="btn btn-primary">Save changes</button>
-        </div>
-      </div>
-    </div>
-  </div>
-  <!-- Modal for Editing Product -->
-<div class="modal fade" id="editProductModal" tabindex="-1" role="dialog" aria-labelledby="editProductModalLabel" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="editProductModalLabel">Edit Product</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                <form>
-                    <div class="form-group">
-                        <label for="editProductName">Product Name</label>
-                        <input type="text" class="form-control" id="editProductName" >
-                    </div>
-                    <div class="form-group">
-                        <label for="editProductDescription">Description</label>
-                        <textarea class="form-control" id="editProductDescription" rows="3" ></textarea>
-                    </div>
-                    <div class="form-group">
-                        <label for="editProductCategory">Category</label>
-                        <select class="form-control" id="editProductCategory" >
-                            <option [ngValue]="null" disabled selected>Choose category</option>
-                            <option *ngFor="let category of categories" [ngValue]="category.categoryId">{{ category.categoryName }}</option>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label for="editProductQuantity">Quantity</label>
-                        <input type="number" class="form-control" id="editProductQuantity">
-                    </div>
-                    <div class="form-group">
-                        <label for="editProductPrice">Price (vnđ)</label>
-                        <input type="number" class="form-control" id="editProductPrice">
-                    </div>
-                    <div class="form-group">
-                        <label for="editProductImage">Product Image</label>
-                        <input type="file" class="form-control-file" id="editProductImage">
-                    </div>
-                </form>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-primary" >Save changes</button>
-            </div>
-        </div>
-    </div>
-</div>
-
   <!-- Modal for Delete Product -->
 <div class="modal fade" id="confirmDeleteModal" tabindex="-1" role="dialog" aria-labelledby="confirmDeleteModalLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
@@ -355,4 +242,3 @@
         </div>
     </div>
 </div>
-

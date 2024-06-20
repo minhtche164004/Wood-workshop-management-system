@@ -10,6 +10,9 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.math.BigDecimal;
+import java.util.Date;
+
 @Repository
 public interface RequestRepository extends JpaRepository<Requests,Integer> {
 
@@ -23,5 +26,13 @@ public interface RequestRepository extends JpaRepository<Requests,Integer> {
     @Modifying
     @Query("UPDATE Requests u SET u.status.status_id = :status_id WHERE u.requestId = :requestId")
     void updateStatus(@Param("requestId") int requestId, @Param("status_id") int status_id);
+
+
+//    @Transactional
+//    @Modifying
+//    @Query("update Requests u set u.requestDate = ?2,u.status.status_id=?3,u.response=?4,u.description=?5,u.address=?6," +
+//            "u.fullname=?7,u.phoneNumber=?8,u.city_province=?9,u.district=?10, u.wards=?11 where u.requestId = ?1")
+//    void updateRequest(int productId, Date requestDate, int status_id, String response, String description, String address,
+//                       String fullname, String phoneNumber, String city_province, String district, String wards);
 
 }

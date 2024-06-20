@@ -5,6 +5,7 @@ import com.example.demo.Dto.MaterialDTO.MaterialDTO;
 import com.example.demo.Dto.ProductDTO.ProductDTO;
 import com.example.demo.Dto.ProductDTO.ProductDTO_Show;
 import com.example.demo.Dto.SubMaterialDTO.SubMaterialNameDTO;
+import com.example.demo.Dto.SubMaterialDTO.UpdateSubDTO;
 import com.example.demo.Dto.SupplierDTO.SupplierNameDTO;
 import com.example.demo.Dto.UserDTO.UpdateProfileDTO;
 import com.example.demo.Dto.UserDTO.UserDTO;
@@ -42,6 +43,13 @@ public class ModelMapperConfig {
                 .addMapping(src -> src.getUserInfor().getCity_province(), UpdateProfileDTO::setCity)
                 .addMapping(src -> src.getUserInfor().getDistrict(), UpdateProfileDTO::setDistrict)
                 .addMapping(src -> src.getUserInfor().getWards(), UpdateProfileDTO::setWards);
+
+
+        modelMapper.typeMap(SubMaterials.class, UpdateSubDTO.class)
+                .addMapping(SubMaterials::getSubMaterialName, UpdateSubDTO::setSub_material_name)
+                .addMapping(SubMaterials::getDescription, UpdateSubDTO::setDescription)
+                .addMapping(SubMaterials::getQuantity, UpdateSubDTO::setQuantity)
+                .addMapping(SubMaterials::getUnitPrice, UpdateSubDTO::setUnit_price);
 
 
 

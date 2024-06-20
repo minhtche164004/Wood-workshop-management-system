@@ -3,6 +3,7 @@ package com.example.demo.Service.Impl;
 import com.example.demo.Dto.MaterialDTO.MaterialDTO;
 import com.example.demo.Dto.SubMaterialDTO.SubMaterialDTO;
 import com.example.demo.Dto.SubMaterialDTO.SubMaterialNameDTO;
+import com.example.demo.Dto.SubMaterialDTO.UpdateSubDTO;
 import com.example.demo.Entity.Materials;
 import com.example.demo.Entity.Products;
 import com.example.demo.Entity.SubMaterials;
@@ -153,6 +154,19 @@ public class SubMaterialServiceImpl implements SubMaterialService {
                 .map(sub -> modelMapper.map(sub, SubMaterialNameDTO.class))
                 .collect(Collectors.toList());
     }
+    @Override
+    public List<SubMaterials> SearchByNameorCode(String key){
+        return subMaterialsRepository.findSubMaterialsByNameCode(key);
+    }
+    @Transactional
+    @Override
+    public UpdateSubDTO UpdateSub(int id, UpdateSubDTO updateSubDTO){
+        SubMaterials subMaterials = subMaterialsRepository.findById1(id);
+        subMaterialsRepository.updateSubMaterials(id, updateSubDTO.getSub_material_name(),updateSubDTO.getDescription()
+        , updateSubDTO.getQuantity(),updateSubDTO.getUnit_price());
+        return modelMapper.map(subMaterials,UpdateSubDTO.class);
+    }
+
 
 //    public Boolean checkSubMaterialName(String name) {
 //        Pattern p = Pattern.compile("^[a-zA-ZÀ-ỹ\\s]+$"); // Chấp nhận cả dấu tiếng Việt và khoảng trắng

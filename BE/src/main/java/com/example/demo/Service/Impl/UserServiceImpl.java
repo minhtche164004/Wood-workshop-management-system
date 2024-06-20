@@ -12,6 +12,7 @@ import com.example.demo.Request.LoginRequest;
 import com.example.demo.Service.CheckConditionService;
 import com.example.demo.Service.JWTService;
 import com.example.demo.Service.UserService;
+import jakarta.persistence.EntityManager;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 //import org.modelmapper.ModelMapper;
@@ -56,6 +57,8 @@ public class UserServiceImpl implements UserService {
 //    private UserInforRepository userInforRepository;
     @Autowired
     private CheckConditionService checkConditionService;
+    @Autowired
+    private EntityManager entityManager;
 
 
     @Override
@@ -69,8 +72,8 @@ public class UserServiceImpl implements UserService {
         Status_User status = statusRepository.findById(2); //Default la KICHHOAT
         //Position position = positionRepository.findById(1);//Default la khong phai employee
         UserInfor userInfor = new UserInfor(
-                userDTO.getFullname(),
                 userDTO.getPhoneNumber(),
+                userDTO.getFullname(),
                 userDTO.getAddress(),
                 "",
                 "",
@@ -253,16 +256,16 @@ public class UserServiceImpl implements UserService {
         return modelMapper.map(user, UpdateProfileDTO.class);
     }
 
-
+    @Transactional
     @Override
     public UserDTO UpdateProfile(UpdateProfileDTO updateProfileDTO){
         UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         String username = userDetails.getUsername();
         Optional<User> userOptional = userRepository.findByUsername(username);
         User user = userOptional.orElseThrow(() -> new AppException(ErrorCode.NOT_FOUND));
-        if (!checkConditionService.checkAddress(updateProfileDTO.getAddress())) {
-            throw new AppException(ErrorCode.INVALID_FORMAT_ADDRESS);
-        }
+//        if (!checkConditionService.checkAddress(updateProfileDTO.getAddress())) {
+//            throw new AppException(ErrorCode.INVALID_FORMAT_ADDRESS);
+//        }
         if (!checkConditionService.checkPhoneNumber(updateProfileDTO.getPhoneNumber())) {
             throw new AppException(ErrorCode.INVALID_FORMAT_PHONE_NUMBER);
         }
@@ -289,15 +292,18 @@ public class UserServiceImpl implements UserService {
         user.getUserInfor().setDistrict(updateProfileDTO.getDistrict());
         user.getUserInfor().setWards(updateProfileDTO.getWards());
 userRepository.save(user);
+   //     entityManager.refresh(user); // Làm mới đối tượng
         return modelMapper.map(user, UserDTO.class);
+
     }
+    @Transactional
     @Override
     public UserDTO EditUser(int id, UserDTO userDTO){
         Optional<User> userOptional = userRepository.findById(id);
         User user = userOptional.orElseThrow(() -> new AppException(ErrorCode.NOT_FOUND));
-        if (!checkConditionService.checkAddress(userDTO.getAddress())) {
-            throw new AppException(ErrorCode.INVALID_FORMAT_ADDRESS);
-        }
+//        if (!checkConditionService.checkAddress(userDTO.getAddress())) {
+//            throw new AppException(ErrorCode.INVALID_FORMAT_ADDRESS);
+//        }
         if (!checkConditionService.checkPhoneNumber(userDTO.getPhoneNumber())) {
             throw new AppException(ErrorCode.INVALID_FORMAT_PHONE_NUMBER);
         }
@@ -324,6 +330,7 @@ userRepository.save(user);
         Role role =roleRepository.findByName(userDTO.getRole_name());
         user.setRole(role);
         userRepository.save(user);
+        entityManager.refresh(user); // Làm mới đối tượng
         return modelMapper.map(user, UserDTO.class);
 
     }
@@ -342,6 +349,7 @@ userRepository.save(user);
     }
 
     //Ban Account For Admin
+    @Transactional
     @Override
   public  void changeStatusAccount(int id,int status_id){
         userRepository.editStatus(id,status_id);

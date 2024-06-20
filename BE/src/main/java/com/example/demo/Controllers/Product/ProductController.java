@@ -49,6 +49,13 @@ public class ProductController {
         return apiResponse;
     }
 
+    @PutMapping("/UpdateStatusProduct")
+    public ApiResponse<?> UpdateStatusProduct(@RequestParam("product_id") int product_id,@RequestParam("status_id") int status_id) {
+        ApiResponse<Products> apiResponse = new ApiResponse<>();
+        apiResponse.setResult(productService.UpdateStatusProduct(product_id,status_id));
+        return apiResponse;
+    }
+
     @GetMapping("/GetProductByIdWithImage")
     public ApiResponse<?> GetProductByIdWithImage(@RequestParam("id") int id) {
         ApiResponse<ProductDTO_Show> apiResponse = new ApiResponse<>();
@@ -150,8 +157,6 @@ public class ProductController {
     }
 
 
-
-
     @PutMapping(value = "/EditProduct", consumes = MediaType.MULTIPART_FORM_DATA_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ApiResponse<?> EditProduct(
             @RequestParam(value="product_id") int productId,
@@ -160,6 +165,7 @@ public class ProductController {
             @RequestPart("file_thumbnail") MultipartFile file_thumbnail
     ) {
         ApiResponse<Products> apiResponse = new ApiResponse<>();
+
         apiResponse.setResult(productService.EditProduct(productId,productDTO,files, file_thumbnail));
         return apiResponse;
     }

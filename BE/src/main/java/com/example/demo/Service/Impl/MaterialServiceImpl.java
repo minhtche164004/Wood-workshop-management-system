@@ -6,6 +6,7 @@ import com.example.demo.Entity.Materials;
 import com.example.demo.Exception.AppException;
 import com.example.demo.Exception.ErrorCode;
 import com.example.demo.Repository.MaterialRepository;
+import com.example.demo.Repository.ProductRepository;
 import com.example.demo.Service.CheckConditionService;
 import com.example.demo.Service.MaterialService;
 import org.modelmapper.ModelMapper;
@@ -24,6 +25,9 @@ public class MaterialServiceImpl implements MaterialService {
     private ModelMapper modelMapper;
     @Autowired
     private CheckConditionService checkConditionService;
+    @Autowired
+    private ProductRepository productRepository;
+
     @Override
     public List<Materials> getAllMaterials() {
         return materialRepository.findAll();
@@ -50,6 +54,17 @@ public class MaterialServiceImpl implements MaterialService {
                 .map(material -> modelMapper.map(material, MaterialDTO.class))
                 .collect(Collectors.toList());
     }
+
+    @Override
+    public Materials EditMaterial(int id,MaterialDTO materialDTO){
+        materialRepository.updateMaterial(id, materialDTO.getMaterialName());
+       return materialRepository.findById1(id);
+    }
+//    @Override
+//    public void DeleteMaterial(int id){
+//        materialRepository.deleteById(id);
+//    }
+
 
 
 

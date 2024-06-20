@@ -32,7 +32,7 @@ public class CheckConditionsImpl implements CheckConditionService {
         return p.matcher(name).find();
     }
     public boolean checkAddress(String name) {
-        Pattern p = Pattern.compile("^[a-zA-Z0-9 ]+$");
+        Pattern p = Pattern.compile("^[a-zA-Z0-9À-ỹ\\s]+$");
         return p.matcher(name).find();
     }
     public boolean checkPhoneNumber(String name) {
@@ -40,7 +40,7 @@ public class CheckConditionsImpl implements CheckConditionService {
         return p.matcher(name).find();
     }
     public boolean checkFullName(String name) {
-        Pattern p = Pattern.compile("^[a-zA-Z ]+$");
+        Pattern p = Pattern.compile("^[a-zA-ZÀ-ỹ\\s]+$");
         return p.matcher(name).find();
     }
     public boolean checkInputName(String name) {

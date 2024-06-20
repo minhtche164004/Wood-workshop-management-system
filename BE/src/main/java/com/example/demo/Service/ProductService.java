@@ -25,6 +25,8 @@ public interface ProductService {
 
     ProductDTO_Show GetProductByIdWithImage(int id);
 
+    Products UpdateStatusProduct(int product_id, int status_id);
+
 
 
 }

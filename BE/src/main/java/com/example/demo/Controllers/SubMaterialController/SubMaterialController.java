@@ -2,6 +2,7 @@ package com.example.demo.Controllers.SubMaterialController;
 
 import com.example.demo.Dto.ProductDTO.ProductDTO;
 import com.example.demo.Dto.SubMaterialDTO.SubMaterialDTO;
+import com.example.demo.Dto.SubMaterialDTO.UpdateSubDTO;
 import com.example.demo.Entity.Products;
 import com.example.demo.Entity.SubMaterials;
 import com.example.demo.Response.ApiResponse;
@@ -57,6 +58,21 @@ public class SubMaterialController {
         return apiResponse;
     }
 
+    @GetMapping("/UpdateSubMaterial")
+    public ApiResponse<?> UpdateSubMaterial(@RequestParam("id") int id, @RequestBody @Valid UpdateSubDTO updateSubDTO) {
+        ApiResponse<UpdateSubDTO> apiResponse = new ApiResponse<>();
+        apiResponse.setResult(subMaterialService.UpdateSub(id,updateSubDTO));
+        return apiResponse;
+    }
+
+
+    @GetMapping("/SearchByNameorCode")
+    public ApiResponse<?> SearchByNameorCode(@RequestParam("key") String key) {
+        ApiResponse<List> apiResponse = new ApiResponse<>();
+        apiResponse.setResult(subMaterialService.SearchByNameorCode(key));
+        return apiResponse;
+    }
+
     @PostMapping("/upload-submaterial-data")
     public ApiResponse<?> uploadCustomersData(@RequestParam("file") MultipartFile file) {
         ApiResponse<String> apiResponse = new ApiResponse<>();
@@ -64,6 +80,8 @@ public class SubMaterialController {
         apiResponse.setResult("Đọc file thành công , dữ liệu đã đưọc thêm vào ");
         return apiResponse;
     }
+
+
     @GetMapping("/download-form-submaterial-data-excel")
     public ResponseEntity<Resource> downloadFile() {
         try {

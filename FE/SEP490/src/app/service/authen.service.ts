@@ -11,7 +11,10 @@ export class AuthenListService {
   private apiUrl_UpdateProfile = 'http://localhost:8080/api/auth/user/UpdateProfile';
 
   constructor(private http: HttpClient) { }
-
+  isLoggedIn(): boolean {
+    const token = localStorage.getItem('loginToken');
+    return !!token; // Trả về true nếu tồn tại token trong localStorage, ngược lại false
+  }
   getUserProfile(): Observable<any> {
     const token = localStorage.getItem('loginToken');
 

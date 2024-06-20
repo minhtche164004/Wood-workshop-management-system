@@ -5,7 +5,7 @@ import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
 import { RouterModule } from '@angular/router';
 
 import { AppRoutingModule } from './app-routing.module'; // Import AppRoutingModule
-
+import { ToastrModule, provideToastr } from 'ngx-toastr';
 import { AppComponent } from './app.component';
 import { HomepageComponent } from './features/homepage/homepage.component';
 import { RegisterComponent } from './register/register.component';
@@ -22,13 +22,20 @@ import { ChangePasswordComponent } from './forgotPassword/change-password/change
 import { VerifyOtpMailComponent } from './forgotPassword/verify-otp-mail/verify-otp-mail.component';
 import { ApiProvinceComponent } from './api-province/api-province.component';
 import { ReactiveFormsModule } from '@angular/forms';
-
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ProductListComponent } from './product-list/product-list.component';
 import { OrderRequiredComponent } from './order-required/order-required.component';
 import { ProductManagementComponent } from './Admin/product-management/product-management.component';
-import { NgxPaginationModule } from 'ngx-pagination';
-//import { AuthInterceptor } from './service/auth.interceptor';
+
+  import { NgxPaginationModule } from 'ngx-pagination';
+
+import { ViewProfileComponent } from './features/view-profile/view-profile.component';
+
+
+// import { AuthInterceptor } from './service/auth.interceptor';
+
 @NgModule({
+  
   declarations: [
     AppComponent,
     HomepageComponent,
@@ -49,6 +56,10 @@ import { NgxPaginationModule } from 'ngx-pagination';
     OrderRequiredComponent,
     ProductManagementComponent,
 
+    ViewProfileComponent,
+
+
+
   ],
   imports: [
     BrowserModule,
@@ -57,8 +68,9 @@ import { NgxPaginationModule } from 'ngx-pagination';
     RouterModule, // Import RouterModule
     NgxPaginationModule,
     AppRoutingModule, // Import AppRoutingModule,
-    ReactiveFormsModule
-
+    ReactiveFormsModule,
+    BrowserAnimationsModule,
+    ToastrModule.forRoot()  
   ],
   providers: [
     // {
@@ -66,8 +78,10 @@ import { NgxPaginationModule } from 'ngx-pagination';
     //   useClass: AuthInterceptor,
     //   multi: true
     // }
-
-
+  
+    provideToastr(),
+    
+    
   ],
   bootstrap: [AppComponent]
 })

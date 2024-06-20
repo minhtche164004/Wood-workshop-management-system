@@ -1,0 +1,120 @@
+<app-header></app-header>
+<div class="container" style="margin-top: 160px;">
+  <div class="main-body">
+    <div class="row">
+      <div class="col-lg-4">
+        <div class="card">
+          <div class="card-body text-center">
+            <img src="https://mcdn.coolmate.me/image/March2023/thay-ong-noi-meme-1440_806.jpg" alt="Admin" class="custom-avatar">
+            <div class="mt-3">
+              <h4>{{ userProfile.fullname }}</h4>
+              <h4>{{ userProfile.address }}</h4>
+              <h4>{{ userProfile.email }}</h4>
+              <button class="btn btn-primary">Follow</button>
+              <button class="btn btn-outline-primary">Message</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-lg-8">
+        <div class="card">
+          <div class="card-body">
+            <div class="row mb-3">
+              <div class="col-sm-3">
+                <label class="label_lb">Tên tài khoản</label>
+              </div>
+              <div class="col-sm-9 text-secondary">
+                <input type="text" class="form-control custom-input" [(ngModel)]="userProfile.username" disabled>
+              </div>
+            </div>
+            <div class="row mb-3">
+              <div class="col-sm-3">
+                <label class="label_lb">Email</label>
+              </div>
+              <div class="col-sm-9 text-secondary">
+                <input type="text" class="form-control custom-input" [(ngModel)]="userProfile.email">
+              </div>
+            </div>
+            <div class="row mb-3">
+              <div class="col-sm-3">
+                <label class="label_lb">Họ tên</label>
+              </div>
+              <div class="col-sm-9 text-secondary">
+                <input type="text" class="form-control custom-input" [(ngModel)]="userProfile.fullname">
+              </div>
+            </div>
+            <div class="row mb-3">
+              <div class="col-sm-3">
+                <label class="label_lb">Số điện thoại</label>
+              </div>
+              <div class="col-sm-9 text-secondary">
+                <input type="text" class="form-control custom-input" [(ngModel)]="userProfile.phoneNumber">
+              </div>
+            </div>
+            <div class="row mb-3">
+              <div class="col-sm-3">
+                <label class="label_lb">Tên ngân hàng</label>
+              </div>
+              <div class="col-sm-9 text-secondary">
+                <input type="text" class="form-control custom-input" [(ngModel)]="userProfile.bank_name">
+              </div>
+            </div>
+            <div class="row mb-3">
+              <div class="col-sm-3">
+                <label class="label_lb">Số tài khoản</label>
+              </div>
+              <div class="col-sm-9 text-secondary">
+                <input type="text" class="form-control custom-input" [(ngModel)]="userProfile.bank_number">
+              </div>
+            </div>
+            
+            <div class="row mb-3">
+              <div class="col-sm-3">
+                <label class="label_lb">Địa chỉ</label>
+              </div>
+              <div class="col-sm-9 text-secondary">
+                <div class="form-row">
+                  <div class="form-group col-md-4">
+                    <label for="city">Tỉnh/Thành phố</label>
+                    <select id="city" class="form-control" [(ngModel)]="userProfile.city" (change)="onProvinceChange()">
+                      <option *ngFor="let province of provinces" [value]="province.name">{{ province.name }}</option>
+                    </select>
+                  </div>
+                  <div class="form-group col-md-4">
+                    <label for="district">Quận/Huyện</label>
+                    <select id="district" class="form-control" [(ngModel)]="userProfile.district" (change)="onDistrictChange()">
+                      <option *ngFor="let district of districts" [value]="district.name">{{ district.name }}</option>
+                    </select>
+                  </div>
+                  <div class="form-group col-md-4">
+                    <label for="wards">Phường/Xã</label>
+                    <select id="wards" class="form-control" [(ngModel)]="userProfile.wards">
+                      <option *ngFor="let ward of wards" [value]="ward.name">{{ ward.name }}</option>
+                    </select>
+                  </div>
+                  
+                </div>
+              </div>
+            </div>
+            <div class="row mb-3">
+              <div class="col-sm-3">
+                <label class="label_lb">Địa chỉ cụ thể</label>
+              </div>
+              <div class="col-sm-9 text-secondary">
+                <input type="text" class="form-control custom-input" [(ngModel)]="userProfile.address">
+              </div>
+            </div>
+           
+            <div class="row">
+              <div class="col-sm-10"></div>
+              <div class="col-sm-2 text-secondary">
+                <button class="btn btn-primary px-4" (click)="saveChanges()">Save Changes</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<app-footer></app-footer>

@@ -1,44 +1,54 @@
-import { Component } from '@angular/core';
-
+import { Component, OnInit } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpErrorResponse } from '@angular/common/http';
 import { ActivatedRoute, Router } from '@angular/router';
-
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-change-password',
   templateUrl: './change-password.component.html',
   styleUrls: ['./change-password.component.scss']
 })
-export class ChangePasswordComponent {
+export class ChangePasswordComponent implements OnInit {
 
   email: string = '';
   password: string = '';
   repeatPassword: string = '';
-
+  errorMessage: string = '';
   baseUrl = 'http://localhost:8080/api/auth/forgotPassword';
 
-  errorMessage: string = '';
-  constructor(private http: HttpClient, private router: Router, private route: ActivatedRoute) { }
+  constructor(
+    private http: HttpClient,
+    private router: Router,
+    private route: ActivatedRoute,
+    private toastr: ToastrService
+  ) {}
 
-  validatePassword(): boolean {
-    // Add your password validation logic here
-    return this.password === this.repeatPassword;
-  }
   ngOnInit(): void {
-    // Retrieve email from route parameters
     this.route.params.subscribe(params => {
       this.email = params['email'];
     });
   }
+
+  validatePassword(): boolean {
+    if (this.password.length < 8) {
+      this.toastr.error('Mật khẩu phải có ít nhất 8 ký tự.', 'Lỗi xác thực');
+      return false;
+    }
+    if (this.password !== this.repeatPassword) {
+      this.toastr.error('Mật khẩu không khớp.', 'Lỗi xác thực');
+      return false;
+    }
+    return true;
+  }
+
   onSubmit(): void {
     if (!this.validatePassword()) {
-      this.errorMessage = "Passwords must match.";
       return;
     }
 
     const options = {
       headers: new HttpHeaders({ 'Content-Type': 'application/json' }),
-      responseType: 'text' as 'json' // Ensure response type is set to 'text'
+      responseType: 'text' as 'json'
     };
 
     const payload = {
@@ -52,24 +62,25 @@ export class ChangePasswordComponent {
       options
     ).subscribe(
       (response) => {
-        console.log('Password change successful', response);
-        // Assuming the response is in text format, handle it accordingly
+        console.log('Đổi mật khẩu thành công', response);
         if (response.includes('Password has been changed!')) {
-          this.errorMessage = ''; // Clear any previous error messages
-          alert('Password has been changed successfully!');
-          this.router.navigate(['/register']); // Navigate upon successful verification
+          this.errorMessage = '';
+          this.toastr.success('Mật khẩu đã được thay đổi thành công!', 'Thành công');
+          this.router.navigate(['/login']);
         } else {
-          console.error('Unexpected response from server:', response);
-          this.errorMessage = 'An unexpected error occurred. Please try again.';
+          console.error('Phản hồi không mong muốn từ máy chủ:', response);
+          this.errorMessage = 'Đã xảy ra lỗi không mong muốn. Vui lòng thử lại.';
         }
       },
       (error: HttpErrorResponse) => {
-        console.error('Error changing password', error);
+        console.error('Lỗi đổi mật khẩu', error);
         if (error.status === 400 && error.error) {
-          this.errorMessage = error.error; // Display server-side error message
+          this.errorMessage = error.error;
+          this.toastr.error(this.errorMessage, 'Lỗi');
         } else {
-          console.error('Unexpected error details:', error);
-          this.errorMessage = 'An unexpected error occurred. Please try again.'; // Generic error message
+          console.error('Chi tiết lỗi không mong muốn:', error);
+          this.errorMessage = 'Đã xảy ra lỗi không mong muốn. Vui lòng thử lại.';
+          this.toastr.error(this.errorMessage, 'Lỗi');
         }
       }
     );

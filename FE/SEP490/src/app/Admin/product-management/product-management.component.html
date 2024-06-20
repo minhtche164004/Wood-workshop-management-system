@@ -15,7 +15,9 @@
                           </a>
                       </div>
                     </div>
-                
+                   
+                    <table class="table table-striped table-hover">
+                      </table>
                     <div class="row">
                       <div class="col-md-7"></div> <!-- Dummy column to push the search box to the right -->
                       <div class="col-md-5 text-end">
@@ -23,17 +25,20 @@
                           <!-- product.component.html -->
                           <select [(ngModel)]="selectedCategory">
                             <option [ngValue]="null" disabled selected>Chọn danh mục</option>
-                            <option *ngFor="let category of categories" [ngValue]="category.categoryId">{{ category.categoryName }}
-                            </option>
+                            <option *ngFor="let category of categories" [ngValue]="category.categoryId">{{ category.categoryName }}</option>
                           </select>
-                          <input type="text" class="form-control" placeholder="Tìm kiếm sản phẩm...">
-                          <button class="btn search-button" type="button">
+                          <input type="text" class="form-control" placeholder="Tìm kiếm sản phẩm..." [(ngModel)]="searchKey">
+                          <button class="btn search-button" type="button" (click)="searchProduct()">
                             <i class="fa fa-search"></i>
                           </button>
+                        
                         </div>
                       </div>
                     </div>
+                    
                   </div>
+                    
+                 
                 <table class="table table-striped table-hover">
                     <thead>
                       <tr>
@@ -49,6 +54,7 @@
                         <th>Đơn giá (vnđ)</th>
                       </tr>
                     </thead>
+                    
                     <tbody>
                       <tr *ngFor="let product of products | paginate: { itemsPerPage: 10, currentPage: currentPage }; let i = index">
                         <td>{{ i + 1 + (currentPage - 1) * 10 }}</td>
@@ -236,4 +242,3 @@
         </div>
     </div>
 </div>
-

@@ -87,24 +87,20 @@
                       </div>
                       <ul class="icon-nav justify-content-end d-flex">
                         
-
                         <div class="dropdown">
-                            <li>
-                                <a class="icon-user" href=""  data-bs-toggle="modal" data-bs-target="#exampleModal"><i class="fas fa-user-alt"></i></a>
-                            </li>
+                            <a class="icon-user" href="" data-bs-toggle="modal" data-bs-target="#exampleModal"><i class="fas fa-user-alt"></i></a>
                             <div class="dropdown-content">
-                              <a routerLink="/register">Profile</a>
-                              <a  (click)="onLogout()">Logout</a>
-
-                              <a href="#">Forgot Password</a>
+                              <ng-container *ngIf="isLogout(); else loggedInLinks">
+                                <a routerLink="/register">Login</a>                      
+                              </ng-container>
+                              <ng-template #loggedInLinks>
+                                <a routerLink="/profile">Profile</a>
+                                <a routerLink="/forgot">Forgot Password</a>
+                                <a (click)="onLogout()">Logout</a>
+                              </ng-template>
                             </div>
                           </div>
-
-
-
-
-
-
+                          
                         <li>
                             <a class="icon-buy" href="cart.html">
                                 <i class="fas fa-shopping-cart"></i>

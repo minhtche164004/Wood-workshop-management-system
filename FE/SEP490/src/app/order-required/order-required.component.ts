@@ -46,19 +46,26 @@ export class OrderRequiredComponent implements OnInit {
       console.log(this.provinces);
     });
 
-    this.provinceControl.valueChanges.subscribe(provinceCode => {
-//      console.log('provinceCode:', provinceCode);
-      this.selectedProvince = this.provinces.find(province => province.code == provinceCode);
-//      console.log('selectedProvince:', this.selectedProvince);
-      this.districts = this.selectedProvince ? this.selectedProvince.districts : [];
-    });
 
-    this.districtControl.valueChanges.subscribe(districtCode => {
-//      console.log('districtCode:', districtCode);
-      const selectedDistrict = this.districts.find(district => district.code == districtCode);
-//      console.log('selectedDistrict:', this.selectedDistrict);
+    this.provinceControl.valueChanges.subscribe(provinceName => {
+      console.log('provinceName:', provinceName);
+      this.selectedProvince = this.provinces.find(province => province.name === provinceName);
+      console.log('selectedProvince:', this.selectedProvince);
+      this.districts = this.selectedProvince ? this.selectedProvince.districts : [];
+  });
+  
+  this.districtControl.valueChanges.subscribe(districtName => {
+      console.log('districtName:', districtName);
+      const selectedDistrict = this.districts.find(district => district.name === districtName);
+      console.log('selectedDistrict:', selectedDistrict);
       this.wards = selectedDistrict ? selectedDistrict.wards : [];
       this.wardControl.reset();
-    });
+  });
+
+
+
+
+
+
   }
 }

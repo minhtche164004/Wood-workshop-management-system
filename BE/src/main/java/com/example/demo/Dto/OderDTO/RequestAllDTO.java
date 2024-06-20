@@ -29,4 +29,5 @@ public class RequestAllDTO {
     private String district;
     private String wards;
     private List<Requestimages> imagesList;
+    private String code;
 }

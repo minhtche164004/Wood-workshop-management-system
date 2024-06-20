@@ -69,8 +69,8 @@ public class UserServiceImpl implements UserService {
         Status_User status = statusRepository.findById(2); //Default la KICHHOAT
         //Position position = positionRepository.findById(1);//Default la khong phai employee
         UserInfor userInfor = new UserInfor(
-                userDTO.getFullname(),
                 userDTO.getPhoneNumber(),
+                userDTO.getFullname(),
                 userDTO.getAddress(),
                 "",
                 "",
@@ -260,9 +260,9 @@ public class UserServiceImpl implements UserService {
         String username = userDetails.getUsername();
         Optional<User> userOptional = userRepository.findByUsername(username);
         User user = userOptional.orElseThrow(() -> new AppException(ErrorCode.NOT_FOUND));
-        if (!checkConditionService.checkAddress(updateProfileDTO.getAddress())) {
-            throw new AppException(ErrorCode.INVALID_FORMAT_ADDRESS);
-        }
+//        if (!checkConditionService.checkAddress(updateProfileDTO.getAddress())) {
+//            throw new AppException(ErrorCode.INVALID_FORMAT_ADDRESS);
+//        }
         if (!checkConditionService.checkPhoneNumber(updateProfileDTO.getPhoneNumber())) {
             throw new AppException(ErrorCode.INVALID_FORMAT_PHONE_NUMBER);
         }
@@ -295,9 +295,9 @@ userRepository.save(user);
     public UserDTO EditUser(int id, UserDTO userDTO){
         Optional<User> userOptional = userRepository.findById(id);
         User user = userOptional.orElseThrow(() -> new AppException(ErrorCode.NOT_FOUND));
-        if (!checkConditionService.checkAddress(userDTO.getAddress())) {
-            throw new AppException(ErrorCode.INVALID_FORMAT_ADDRESS);
-        }
+//        if (!checkConditionService.checkAddress(userDTO.getAddress())) {
+//            throw new AppException(ErrorCode.INVALID_FORMAT_ADDRESS);
+//        }
         if (!checkConditionService.checkPhoneNumber(userDTO.getPhoneNumber())) {
             throw new AppException(ErrorCode.INVALID_FORMAT_PHONE_NUMBER);
         }

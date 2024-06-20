@@ -14,7 +14,7 @@ variables:
   imageRepository: 'be'
   containerRegistry: 'dogosydungfe.azurecr.io'
   dockerfilePath: '$(Build.SourcesDirectory)/BE/Dockerfile'
-  tag: '$(Build.BuildId)'
+  tag: 'latest'
 
   # Agent VM image name
   vmImageName: 'ubuntu-latest'

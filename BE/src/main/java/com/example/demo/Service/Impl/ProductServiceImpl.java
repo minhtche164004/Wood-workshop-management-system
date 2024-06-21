@@ -11,6 +11,7 @@ import com.example.demo.Response.ApiResponse;
 import com.example.demo.Service.CheckConditionService;
 import com.example.demo.Service.ProductService;
 import com.example.demo.Service.UploadImageService;
+import jakarta.persistence.EntityManager;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
@@ -49,6 +50,8 @@ public class ProductServiceImpl implements ProductService {
     private ProductSubMaterialsRepository productSubMaterialsRepository;
     @Autowired
     private ProductImageRepository productImageRepository;
+    @Autowired
+    private EntityManager entityManager;
 
 
     @Override
@@ -98,12 +101,22 @@ public class ProductServiceImpl implements ProductService {
         return products;
     }
 
+    @Transactional
     @Override
     public Products EditProduct(int id, ProductDTO productDTO, MultipartFile[] multipartFiles, MultipartFile multipartFiles_thumbnal) {
         Products products = productRepository.findById(id);
-        //set ảnh thumbnail
-        Product_Thumbnail t = uploadImageService.uploadFile_Thumnail(multipartFiles_thumbnal);
-        uploadImageService.uploadFile(multipartFiles, products.getProductId());
+        String thumbnailPath = products.getImage(); // Lấy đường dẫn thumbnail hiện tại
+
+        if (multipartFiles_thumbnal != null && !multipartFiles_thumbnal.isEmpty()) {
+            //set ảnh thumbnail
+            Product_Thumbnail t = uploadImageService.uploadFile_Thumnail(multipartFiles_thumbnal);
+            thumbnailPath = t.getFullPath(); // Cập nhật nếu có ảnh mới
+        }
+        if (multipartFiles != null &&
+                Arrays.stream(multipartFiles).anyMatch(file -> file != null && !file.isEmpty())) {
+            productImageRepository.deleteProductImages(id); // Xóa những ảnh trước đó
+            uploadImageService.uploadFile(multipartFiles, products.getProductId());
+        }
         // Kiểm tra tên sản phẩm trước khi cập nhật
         if (!productDTO.getProduct_name().equals(products.getProductName()) &&
                 productRepository.findByName(productDTO.getProduct_name()) != null) {
@@ -118,11 +131,19 @@ public class ProductServiceImpl implements ProductService {
                 productDTO.getStatus_id(),
                 productDTO.getCategory_id(),
                 productDTO.getType(),
-                t.getFullPath(),
+                thumbnailPath, // Sử dụng thumbnailPath đã cập nhật
                 productDTO.getCompletionTime(),
                 productDTO.getEnddateWarranty()
         );
-        return products;
+        entityManager.refresh(products); // Làm mới đối tượng products
+return products;
+    }
+
+    @Transactional
+    @Override
+    public  Products UpdateStatusProduct(int product_id, int status_id){
+        productRepository.updateStatus(product_id,status_id);
+        return productRepository.findById(product_id);
     }
 
 

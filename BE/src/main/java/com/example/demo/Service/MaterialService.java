@@ -11,4 +11,7 @@ public interface MaterialService {
     List<Materials> getAllMaterials();
 Materials AddNewMaterial(MaterialDTO materialDTO);
 List<MaterialDTO> GetListName();
+
+Materials EditMaterial(int id,MaterialDTO materialDTO);
+//void DeleteMaterial(int id);
 }

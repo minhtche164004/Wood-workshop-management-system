@@ -8,6 +8,8 @@ import com.example.demo.Exception.ErrorCode;
 import com.example.demo.Repository.CategoryRepository;
 import com.example.demo.Service.CategorySevice;
 import com.example.demo.Service.CheckConditionService;
+import jakarta.persistence.EntityManager;
+import jakarta.transaction.Transactional;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -23,6 +25,8 @@ public class CategoryServiceImpl implements CategorySevice {
     private CheckConditionService checkConditionService;
     @Autowired
     private ModelMapper modelMapper;
+    @Autowired
+    private EntityManager entityManager;
     @Override
     public List<CategoryNameDTO> GetListName() {
         return categoryRepository.findAll().stream()
@@ -38,6 +42,7 @@ public class CategoryServiceImpl implements CategorySevice {
         categories.setCategoryName(categoryNameDTO.getCategoryName());
         categoryRepository.save(categories);
     }
+    @Transactional
     @Override
     public Categories UpdateCategoty(int id,CategoryNameDTO categoryNameDTO){
         Categories categories = categoryRepository.findById(id);
@@ -47,6 +52,7 @@ public class CategoryServiceImpl implements CategorySevice {
         }
         categories.setCategoryName(categoryNameDTO.getCategoryName());
         categoryRepository.save(categories);
+        entityManager.refresh(categories);
         return categories;
     }
 

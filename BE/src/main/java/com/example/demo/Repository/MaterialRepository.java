@@ -2,8 +2,10 @@ package com.example.demo.Repository;
 
 import com.example.demo.Entity.Categories;
 import com.example.demo.Entity.Materials;
+import jakarta.transaction.Transactional;
 import org.hibernate.annotations.processing.Find;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.stereotype.Repository;
@@ -20,5 +22,10 @@ public interface MaterialRepository extends JpaRepository<Materials,Integer> {
 
     @Query("SELECT u FROM Materials u WHERE u.materialId = :query")
     Materials findById1(int query);
+
+    @Transactional
+    @Modifying
+    @Query("update Materials  u set u.materialName=?2 where u.materialId=?1")
+    void updateMaterial(int materialId,String materialName);
 
 }

@@ -23,6 +23,7 @@ public interface ProductRepository extends JpaRepository<Products, Integer> {
     @Query(value = "SELECT p.* FROM products p WHERE p.code LIKE :prefix% ORDER BY p.code DESC LIMIT 1", nativeQuery = true)
     Products findProductTop(@Param("prefix") String prefix);
 
+
     @Query("SELECT u FROM Products u WHERE u.productId = :query")
     Products findById(int query);
 
@@ -36,6 +37,11 @@ public interface ProductRepository extends JpaRepository<Products, Integer> {
             "u.code LIKE CONCAT('%', :keyword, '%')")
     List<Products> findProductByNameCode(@Param("keyword") String keyword);
 
+    @Transactional
+    @Modifying
+    @Query("update Products u set u.status.status_id = ?2" +
+            " where u.productId = ?1")
+    void updateStatus(int productId, int status_id);
 
     int countByProductName(String ProductName);
 

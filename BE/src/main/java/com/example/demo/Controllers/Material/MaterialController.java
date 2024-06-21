@@ -35,4 +35,11 @@ public class MaterialController {
         apiResponse.setResult(materialService.GetListName());
         return apiResponse;
     }
+
+    @PutMapping("/EditMaterial")
+    public ApiResponse<?> EditMaterial(@RequestParam("id") int material_id,@RequestBody MaterialDTO materialDTO){
+        ApiResponse<Materials> apiResponse = new ApiResponse<>();
+        apiResponse.setResult(materialService.EditMaterial(material_id,materialDTO));
+        return apiResponse;
+    }
 }

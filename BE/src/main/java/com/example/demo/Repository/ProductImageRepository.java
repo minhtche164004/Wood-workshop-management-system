@@ -1,7 +1,9 @@
 package com.example.demo.Repository;
 
 import com.example.demo.Entity.Productimages;
+import jakarta.transaction.Transactional;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.data.repository.query.Param;
@@ -23,4 +25,9 @@ public interface ProductImageRepository extends JpaRepository<Productimages, Int
 
     @Query(value = "SELECT p FROM Productimages p WHERE p.product.productId = :productId" )
     List<Productimages> findByImage_Id(@Param("productId") int productId);
+
+    @Transactional
+    @Modifying
+    @Query("DELETE FROM Productimages p WHERE p.product.productId = :productId")
+    void deleteProductImages(@Param("productId") int productId);
 }

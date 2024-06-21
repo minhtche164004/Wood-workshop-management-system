@@ -1,4 +1,4 @@
 export const environment = {
-    production: true,
-    apiUrl: 'https://dogosydungs.azurewebsites.net/' // URL API cho môi trường production
-  };
+  production: false,
+  apiUrl: 'https://dogosydungbe.azurewebsites.net/' // Thay đổi URL tại đây
+};

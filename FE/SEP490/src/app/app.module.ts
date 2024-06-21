@@ -30,6 +30,7 @@ import { ProductManagementComponent } from './Admin/product-management/product-m
   import { NgxPaginationModule } from 'ngx-pagination';
 
 import { ViewProfileComponent } from './features/view-profile/view-profile.component';
+import { FileUploadComponent } from './file-upload/file-upload.component';
 
 
 // import { AuthInterceptor } from './service/auth.interceptor';
@@ -57,6 +58,7 @@ import { ViewProfileComponent } from './features/view-profile/view-profile.compo
     ProductManagementComponent,
 
     ViewProfileComponent,
+      FileUploadComponent,
 
 
 

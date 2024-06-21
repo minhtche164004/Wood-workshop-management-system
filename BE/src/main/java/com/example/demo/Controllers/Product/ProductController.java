@@ -7,6 +7,7 @@ import com.example.demo.Entity.*;
 import com.example.demo.Repository.CategoryRepository;
 import com.example.demo.Repository.ProductImageRepository;
 import com.example.demo.Repository.ProductRepository;
+import com.example.demo.Repository.Status_Product_Repository;
 import com.example.demo.Response.ApiResponse;
 import com.example.demo.Service.*;
 import lombok.AllArgsConstructor;
@@ -41,12 +42,20 @@ public class ProductController {
     private UploadImageService uploadImageService;
     @Autowired
     private WhiteListService whiteListService;
+    @Autowired
+    private Status_Product_Repository statusProductRepository;
 
 //    @PreAuthorize("hasAnyAuthority('ADMIN')")
     @GetMapping("/GetAllProduct")
     public ApiResponse<?> getAllProduct() {
         ApiResponse<List> apiResponse = new ApiResponse<>();
         apiResponse.setResult(productService.GetAllProduct());
+        return apiResponse;
+    }
+    @GetMapping("/GetProductByStatus")
+    public ApiResponse<?> GetProductByStatus(@RequestParam("id")int id) {
+        ApiResponse<List> apiResponse = new ApiResponse<>();
+        apiResponse.setResult(productRepository.findByStatus(id));
         return apiResponse;
     }
     @GetMapping("/GetProductByCategory")
@@ -130,25 +139,33 @@ public class ProductController {
         return apiResponse;
     }
 
-    @PostMapping(value = "/AddNewProduct", consumes = MediaType.MULTIPART_FORM_DATA_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ApiResponse<?> AddNewProduct(
-            @RequestPart("productDTO") ProductDTO productDTO,
-            @RequestPart("files") MultipartFile[] files,
-            @RequestPart("file_thumbnail") MultipartFile file_thumbnail
-    ) {
-        ApiResponse<Products> apiResponse = new ApiResponse<>();
-        apiResponse.setResult(productService.AddNewProduct(productDTO, files, file_thumbnail));
-        return apiResponse;
-    }
+//    @PostMapping(value = "/AddNewProduct", consumes = MediaType.MULTIPART_FORM_DATA_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+//    public ApiResponse<?> AddNewProduct(
+//            @RequestPart("productDTO") ProductDTO productDTO,
+//            @RequestPart("files") MultipartFile[] files,
+//            @RequestPart("file_thumbnail") MultipartFile file_thumbnail
+//    ) {
+//        ApiResponse<Products> apiResponse = new ApiResponse<>();
+//        apiResponse.setResult(productService.AddNewProduct(productDTO, files, file_thumbnail));
+//        return apiResponse;
+//    }
+@PostMapping(value = "/AddNewProduct")
+public ApiResponse<?> AddNewProduct(
+       @RequestBody ProductDTO1 productDTO1
+) {
+    ApiResponse<Products> apiResponse = new ApiResponse<>();
+    apiResponse.setResult(productService.AddNewProduct(productDTO1));
+    return apiResponse;
+}
 
-    @PostMapping("/upload")
-    public ResponseEntity<Object> uploadImage(@RequestParam("files") MultipartFile[] files, @RequestParam("product_id") int product_id) {
-        try {
-            return ResponseEntity.ok().body(uploadImageService.uploadFile(files, product_id));
-        } catch (Exception e) {
-            return ResponseEntity.badRequest().body(e.getLocalizedMessage());
-        }
-    }
+//    @PostMapping("/upload")
+//    public ResponseEntity<Object> uploadImage(@RequestParam("files") MultipartFile[] files, @RequestParam("product_id") int product_id) {
+//        try {
+//            return ResponseEntity.ok().body(uploadImageService.uploadFile(files, product_id));
+//        } catch (Exception e) {
+//            return ResponseEntity.badRequest().body(e.getLocalizedMessage());
+//        }
+//    }
 
     @GetMapping("/upload")
     public String uploadFile() {
@@ -164,16 +181,27 @@ public class ProductController {
     }
 
 
-    @PutMapping(value = "/EditProduct", consumes = MediaType.MULTIPART_FORM_DATA_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+//    @PutMapping(value = "/EditProduct", consumes = MediaType.MULTIPART_FORM_DATA_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+//    public ApiResponse<?> EditProduct(
+//            @RequestParam(value="product_id") int productId,
+//            @RequestPart("productDTO") ProductDTO productDTO,
+//            @RequestPart("files") MultipartFile[] files,
+//            @RequestPart("file_thumbnail") MultipartFile file_thumbnail
+//    ) {
+//        ApiResponse<Products> apiResponse = new ApiResponse<>();
+//
+//        apiResponse.setResult(productService.EditProduct(productId,productDTO,files, file_thumbnail));
+//        return apiResponse;
+//    }
+
+    @PutMapping(value = "/EditProduct")
     public ApiResponse<?> EditProduct(
             @RequestParam(value="product_id") int productId,
-            @RequestPart("productDTO") ProductDTO productDTO,
-            @RequestPart("files") MultipartFile[] files,
-            @RequestPart("file_thumbnail") MultipartFile file_thumbnail
+          @RequestBody ProductDTO1 productDTO1
     ) {
         ApiResponse<Products> apiResponse = new ApiResponse<>();
 
-        apiResponse.setResult(productService.EditProduct(productId,productDTO,files, file_thumbnail));
+        apiResponse.setResult(productService.EditProduct(productId,productDTO1));
         return apiResponse;
     }
 
@@ -182,5 +210,11 @@ public class ProductController {
         return productService.createExportMaterialProduct(request.getProductId(), request.getSubMaterialQuantities());
     }
 
+    @GetMapping("/GetStatusProduct")
+    public ApiResponse<?> GetAllStatusProduct() {
+        ApiResponse<List> apiResponse = new ApiResponse<>();
+        apiResponse.setResult(statusProductRepository.findAll());
+        return apiResponse;
+    }
 
 }

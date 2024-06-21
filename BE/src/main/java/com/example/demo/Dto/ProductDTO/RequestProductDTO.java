@@ -10,6 +10,8 @@ import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
 import java.sql.Date;
+import java.util.List;
+
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
@@ -27,6 +29,7 @@ public class RequestProductDTO {
     private Date completionTime;
     @NotNull(message = "MUST_REQUIRED")
     private int request_id;
+    private List<String> files;
 
 //    private String image;
 }

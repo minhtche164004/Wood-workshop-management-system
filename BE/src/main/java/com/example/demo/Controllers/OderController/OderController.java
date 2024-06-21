@@ -6,7 +6,9 @@ import com.example.demo.Dto.ProductDTO.RequestProductDTO;
 import com.example.demo.Dto.RequestDTO.RequestDTO;
 import com.example.demo.Entity.RequestProducts;
 import com.example.demo.Entity.Requests;
+import com.example.demo.Entity.Status_Order;
 import com.example.demo.Entity.WhiteList;
+import com.example.demo.Repository.Status_Order_Repository;
 import com.example.demo.Response.ApiResponse;
 import com.example.demo.Service.*;
 import lombok.AllArgsConstructor;
@@ -27,7 +29,15 @@ private OrderService orderService;
     private ProductService productService;
     @Autowired
     private WhiteListService whiteListService;
+    @Autowired
+    private Status_Order_Repository statusOrderRepository;
 
+    @GetMapping("/GetStatusOrder")
+    public ApiResponse<?> GetStatusOrder() {
+        ApiResponse<List> apiResponse = new ApiResponse<>();
+        apiResponse.setResult(statusOrderRepository.findAll());
+        return apiResponse;
+    }
     @GetMapping("/GetAllProductRequest")
     public ApiResponse<?> GetAllProductRequest() {
         ApiResponse<List> apiResponse = new ApiResponse<>();
@@ -54,6 +64,8 @@ private OrderService orderService;
         apiResponse.setResult(orderService.GetProductRequestById(id));
         return apiResponse;
     }
+
+
     @PostMapping("/AddWhiteList")
     public ApiResponse<?> AddWhiteList(@RequestParam("product_id") int product_id) {
         ApiResponse<WhiteList> apiResponse = new ApiResponse<>();
@@ -73,13 +85,13 @@ private OrderService orderService;
         apiResponse.setResult("Xoá Sản Phẩm khỏi danh sách yêu thích thành công !");
         return apiResponse;
     }
-    @PostMapping(value = "/AddNewRequestProduct", consumes = MediaType.MULTIPART_FORM_DATA_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(value = "/AddNewRequestProduct")
     public ApiResponse<?> AddNewRequestProduct(
-            @RequestPart("productDTO") RequestProductDTO requestProductDTO,
-            @RequestPart("files") MultipartFile[] files
+            @RequestBody  RequestProductDTO requestProductDTO
+
     ) {
         ApiResponse<RequestProducts> apiResponse = new ApiResponse<>();
-        apiResponse.setResult(orderService.AddNewProductRequest(requestProductDTO, files));
+        apiResponse.setResult(orderService.AddNewProductRequest(requestProductDTO));
         return apiResponse;
     }
     @PostMapping("/Approve_Reject_Request")
@@ -90,13 +102,13 @@ private OrderService orderService;
         return apiResponse;
     }
 
-    @PostMapping(value = "/AddNewRequest", consumes = MediaType.MULTIPART_FORM_DATA_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(value = "/AddNewRequest")
     public ApiResponse<?> AddNewRequest(
-            @RequestPart("requestDTO") RequestDTO requestDTO,
-            @RequestPart("files") MultipartFile[] files
+            @RequestBody RequestDTO requestDTO
+
     ) {
         ApiResponse<Requests> apiResponse = new ApiResponse<>();
-        apiResponse.setResult(orderService.AddNewRequest(requestDTO, files));
+        apiResponse.setResult(orderService.AddNewRequest(requestDTO));
         return apiResponse;
     }
 }

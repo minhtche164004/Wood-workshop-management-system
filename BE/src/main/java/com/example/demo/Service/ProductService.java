@@ -15,9 +15,10 @@ import java.util.Map;
 
 @Service
 public interface ProductService {
-    Products AddNewProduct(ProductDTO productDTO,MultipartFile[] multipartFiles,MultipartFile multipartFiles_thumbnal) ;
+//    Products AddNewProduct(ProductDTO productDTO,MultipartFile[] multipartFiles,MultipartFile multipartFiles_thumbnal);
+    Products AddNewProduct(ProductDTO1 productDTO1);
     List<Products> GetAllProduct();
-    Products EditProduct(int id,ProductDTO productDTO,MultipartFile[] multipartFiles,MultipartFile multipartFiles_thumbnal);
+    Products EditProduct(int id,ProductDTO1 productDTO1);
     ResponseEntity<ApiResponse<List<ProductSubMaterials>>> createExportMaterialProduct(int product_id, Map<Integer, Integer> subMaterialQuantities);
      Products GetProductById(int product_id);
 

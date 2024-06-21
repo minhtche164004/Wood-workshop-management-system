@@ -131,7 +131,7 @@ public class OrderServiceImpl implements OrderService {
     //Tạo Request
     //Tạo Request Product
     @Override
-    public Requests AddNewRequest(RequestDTO requestDTO, MultipartFile[] multipartFiles) {
+    public Requests AddNewRequest(RequestDTO requestDTO) {
         Requests requests = new Requests();
         UserDetails userDetails =(UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         User user =userRepository.getUserByUsername(userDetails.getUsername());
@@ -163,7 +163,7 @@ public class OrderServiceImpl implements OrderService {
         }
 
         requests = requestRepository.save(requests);
-        uploadImageService.uploadFile2(multipartFiles, requests.getRequestId());
+        uploadImageService.uploadFile_Request(requestDTO.getFiles(), requests.getRequestId());
         return requests;
     }
     @Override
@@ -181,7 +181,7 @@ public class OrderServiceImpl implements OrderService {
     }
     //Tạo Request Product
     @Override
-    public RequestProducts AddNewProductRequest(RequestProductDTO requestProductDTO, MultipartFile[] multipartFiles) { //lấy từ request
+    public RequestProducts AddNewProductRequest(RequestProductDTO requestProductDTO) { //lấy từ request
         RequestProducts requestProducts = new RequestProducts();
         requestProducts.setRequestProductName(requestProductDTO.getRequestProductName());
         requestProducts.setDescription(requestProductDTO.getDescription());
@@ -208,7 +208,7 @@ public class OrderServiceImpl implements OrderService {
 //        requestProducts.setImage(t.getFullPath());
         //set ảnh của product
         RequestProducts requestProduct = requestProductRepository.findByName(requestProductDTO.getRequestProductName());
-        uploadImageService.uploadFile1(multipartFiles, requestProduct.getRequestProductId());
+        uploadImageService.uploadFile_RequestProduct(requestProductDTO.getFiles(), requestProduct.getRequestProductId());
         return requestProducts;
     }
 
@@ -226,6 +226,9 @@ public class OrderServiceImpl implements OrderService {
     public RequestProductAllDTO GetProductRequestById(int id) {
         List<Product_Requestimages> productRequestimagesList = productRequestimagesRepository.findById(id);
         RequestProducts requestProducts = requestProductRepository.findById(id);
+        if(requestProducts == null){
+            throw new AppException(ErrorCode.NOT_FOUND);
+        }
         RequestProductAllDTO requestProductAllDTO = new RequestProductAllDTO();
         requestProductAllDTO.setId(requestProducts.getRequestProductId());
         requestProductAllDTO.setRequest_id(requestProducts.getRequestProductId());
@@ -247,6 +250,9 @@ public class OrderServiceImpl implements OrderService {
     public RequestAllDTO GetRequestById(int id) {
         List<Requestimages> requestimagesList = requestimagesRepository.findById(id);
         Requests requests = requestRepository.findById(id);
+        if(requests == null){
+            throw new AppException(ErrorCode.NOT_FOUND);
+        }
         RequestAllDTO requestAllDTO = new RequestAllDTO();
         requestAllDTO.setUser_id(requests.getUser().getUserId());
         requestAllDTO.setRequestDate(requests.getRequestDate());

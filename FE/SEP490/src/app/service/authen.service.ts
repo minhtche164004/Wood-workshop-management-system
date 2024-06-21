@@ -2,13 +2,13 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpErrorResponse } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
-
+import { environment } from 'src/app/environments/environment'; // Đường dẫn đúng tới file môi trường
 @Injectable({
   providedIn: 'root'
 })
 export class AuthenListService {
-  private apiUrl_ViewProfile = 'http://localhost:8080/api/auth/user/ViewProfile';
-  private apiUrl_UpdateProfile = 'http://localhost:8080/api/auth/user/UpdateProfile';
+  private apiUrl_ViewProfile = `${environment.apiUrl}api/auth/user/ViewProfile`;
+  private apiUrl_UpdateProfile = `${environment.apiUrl}api/auth/user/UpdateProfile`;
 
   constructor(private http: HttpClient) { }
   isLoggedIn(): boolean {

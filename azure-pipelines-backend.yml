@@ -3,11 +3,11 @@
 # https://docs.microsoft.com/azure/devops/pipelines/languages/docker
 
 trigger:
-- none
+- main
 
 resources:
 - repo: self
-
+pr: none
 variables:
   # Container registry service connection established during pipeline creation
   dockerRegistryServiceConnection: '18ad06a8-ce28-425e-9d9d-9d82a5b830ec'

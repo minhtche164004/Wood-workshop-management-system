@@ -30,6 +30,9 @@ public interface ProductRepository extends JpaRepository<Products, Integer> {
     @Query("SELECT u FROM Products u WHERE u.categories.categoryId = :query")
     List<Products> findByCategory(int query);
 
+    @Query("SELECT u FROM Products u WHERE u.status.status_id = :query")
+    List<Products> findByStatus(int query);
+
     @Query("SELECT u FROM Products u WHERE u.productName = :query")
     Products findByName(String query);
 

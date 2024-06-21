@@ -1,6 +1,7 @@
 import { Component, OnInit, ElementRef } from '@angular/core';
 import { HttpClient ,HttpErrorResponse} from '@angular/common/http';
 import { Router } from '@angular/router';
+import { environment } from '../environments/environment';
 
 
 
@@ -44,7 +45,7 @@ export class RegisterComponent implements OnInit {
   role: number = 0; // Default value for role
   errorMessage: string = '';
   successMessage: string = '';
-  private apiUrl_registration = 'http://localhost:8080/api/auth/registration'; // URL của backend
+  private apiUrl_registration = `${environment.apiUrl}api/auth/registration`; // URL của backend
 
 
   constructor(private elementRef: ElementRef, private http: HttpClient, private router: Router) {}
@@ -72,7 +73,7 @@ export class RegisterComponent implements OnInit {
     console.log("username: " + this.loginObj.username);
     console.log("password: " + this.loginObj.password);
 
-    this.http.post('http://localhost:8080/api/auth/login', this.loginObj).subscribe(
+    this.http.post(`${environment.apiUrl}api/auth/login`, this.loginObj).subscribe(
       (response: any) => {
         console.log('Truy cập API login thành công');
         if (response.code === 1000) {

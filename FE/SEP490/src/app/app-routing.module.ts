@@ -20,6 +20,10 @@ import { OrderRequiredComponent } from './order-required/order-required.componen
 
 
 import { ViewProfileComponent } from './features/view-profile/view-profile.component';
+import { FileUploadComponent } from './file-upload/file-upload.component';
+
+import { SubMaterialManagementComponent } from './Admin/sub-material-management/sub-material-management.component';
+import { SupplierManagementComponent } from './supplier-management/supplier-management.component';
 
 
 
@@ -41,9 +45,9 @@ const routes: Routes = [
   { path: 'productsList', component: ProductListComponent },
   { path: 'product_management', component: ProductManagementComponent },
   { path: 'order_rq', component: OrderRequiredComponent },
-
+  { path: 'supplier_management', component: SupplierManagementComponent },
   { path: 'profile', component: ViewProfileComponent },
-
+  { path: 'submtr_management', component: SubMaterialManagementComponent },
   { path: '', redirectTo: '/homepage', pathMatch: 'full' },
   { path: '**', redirectTo: '/homepage', pathMatch: 'full' },
 

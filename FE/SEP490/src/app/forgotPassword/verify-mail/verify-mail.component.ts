@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
-
+import { environment } from 'src/app/environments/environment'; // Đường dẫn đúng tới file môi trường
 @Component({
   selector: 'app-verify-mail',
   templateUrl: './verify-mail.component.html',
@@ -50,7 +50,7 @@ export class VerifyMailComponent implements OnInit {
 
     // HTTP POST request to verify email
     this.http.post<any>(
-      `http://localhost:8080/api/auth/forgotPassword/verifyMail/${this.email}`,
+      `${environment.apiUrl}api/auth/forgotPassword/verifyMail/${this.email}`,
       {},
       options
     ).subscribe(

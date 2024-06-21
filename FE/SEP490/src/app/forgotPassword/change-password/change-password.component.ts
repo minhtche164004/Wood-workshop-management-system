@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpErrorResponse } from '@angular/common/http';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
-
+import { environment } from 'src/app/environments/environment'; // Đường dẫn đúng tới file môi trường
 @Component({
   selector: 'app-change-password',
   templateUrl: './change-password.component.html',
@@ -14,7 +14,7 @@ export class ChangePasswordComponent implements OnInit {
   password: string = '';
   repeatPassword: string = '';
   errorMessage: string = '';
-  baseUrl = 'http://localhost:8080/api/auth/forgotPassword';
+  baseUrl = `${environment.apiUrl}api/auth/forgotPassword`;
 
   constructor(
     private http: HttpClient,

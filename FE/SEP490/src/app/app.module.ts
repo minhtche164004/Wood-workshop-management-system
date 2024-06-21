@@ -26,16 +26,22 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ProductListComponent } from './product-list/product-list.component';
 import { OrderRequiredComponent } from './order-required/order-required.component';
 import { ProductManagementComponent } from './Admin/product-management/product-management.component';
+import { ConfirmDialogModule } from 'primeng/confirmdialog';
+import { ConfirmPopupModule } from 'primeng/confirmpopup';
+import { NgxPaginationModule } from 'ngx-pagination';
 
-  import { NgxPaginationModule } from 'ngx-pagination';
+import { SupplierManagementComponent } from 'src/app/supplier-management/supplier-management.component';
 
 import { ViewProfileComponent } from './features/view-profile/view-profile.component';
+import { FileUploadComponent } from './file-upload/file-upload.component';
 
-
+import { SubMaterialManagementComponent } from './Admin/sub-material-management/sub-material-management.component';
 // import { AuthInterceptor } from './service/auth.interceptor';
 
+
+
 @NgModule({
-  
+
   declarations: [
     AppComponent,
     HomepageComponent,
@@ -55,11 +61,9 @@ import { ViewProfileComponent } from './features/view-profile/view-profile.compo
     ProductListComponent,
     OrderRequiredComponent,
     ProductManagementComponent,
-
     ViewProfileComponent,
-
-
-
+    SubMaterialManagementComponent,
+    SupplierManagementComponent
   ],
   imports: [
     BrowserModule,
@@ -70,18 +74,20 @@ import { ViewProfileComponent } from './features/view-profile/view-profile.compo
     AppRoutingModule, // Import AppRoutingModule,
     ReactiveFormsModule,
     BrowserAnimationsModule,
-    ToastrModule.forRoot()  
+    ToastrModule.forRoot(),
+    ConfirmDialogModule,
+    ConfirmPopupModule
   ],
   providers: [
     // {
     //   provide: HTTP_INTERCEPTORS,
     //   useClass: AuthInterceptor,
     //   multi: true
-    // }
-  
+    // },
+
     provideToastr(),
-    
-    
+
+
   ],
   bootstrap: [AppComponent]
 })

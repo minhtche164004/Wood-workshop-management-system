@@ -1,0 +1,169 @@
+<app-dashboard></app-dashboard>
+
+<div class="dashboard-main">
+  <div class="container-fluid">
+    <div class="table-responsive">
+      <div class="table-wrapper">
+        <div class="table-title">
+          <div class="row">
+            <div class="col-sm-5">
+              <h2>Quản lí Nhà cung cấp nguyên vật liệu</h2>
+            </div>
+            <div class="col-sm-7 text-end" style="text-align: center;">
+              <a href="#" class="btn btn-secondary" data-toggle="modal" data-target="#addProductModal">
+                <i class="material-icons">&#xE147;</i> <span>Thêm nhà cung cấp </span>
+              </a>
+            </div>
+            <div class="row">
+              <div class="col-md-7"></div> <!-- Dummy column to push the search box to the right -->
+              <div class="col-md-5 text-end">
+                <div class="input-group mb-3">
+                  <!-- product.component.html -->
+
+                  <input type="text" class="form-control" placeholder="Tìm kiếm nhà cung cấp vật liệu theo tên"
+                    [(ngModel)]="searchKey" name="searchKey">
+                  <button class="btn search-button" type="button" (click)="searchSupplier()">
+                    <i class="fa fa-search"></i>
+                  </button>
+
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <table class="table table-striped table-hover">
+          <thead>
+            <tr>
+              <th>STT</th>
+              <th>Thao tác</th>
+              <th>Mã nhà cung cấp</th>
+
+              <th>Tên nhà cung cấp</th>
+              <th>Số điện thoại</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr
+              *ngFor="let supplier of suppliers | paginate: { itemsPerPage: 10, currentPage: currentPage }; let i = index">
+              <td>{{ i + 1 + (currentPage - 1) * 10 }}</td>
+              <td class="action-buttons">
+                <a href="#" class="settings" title="Edit" data-toggle="modal" data-target="#editProductModal">
+                  <i class="fa-solid fa-pen-to-square"></i>
+                </a>
+                <a href="#" class="delete" title="Delete" data-toggle="modal" data-target="#confirmDeleteModal">
+                  <i class="fa-regular fa-trash-can"></i>
+                </a>
+                <a href="#" class="info" title="Info" data-toggle="modal" data-target="#productDetailModal">
+                  <i class="fa-solid fa-circle-info"></i>
+                </a>
+              </td>
+              <td>{{ supplier.supplierMaterial }}</td>
+              <td>{{ supplier.supplierName }}</td>
+              <td>{{ supplier.phoneNumber }}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <pagination-controls style="justify-content: right; display: flex;"
+      (pageChange)="currentPage = $event"></pagination-controls>
+    <div class="clearfix" style="justify-content: right; display: flex;">
+      <div class="hint-text">Showing <b>{{ (currentPage - 1) * 10 + 1 }}</b> to <b>{{ currentPage * 10
+          > suppliers.length ? suppliers.length : currentPage * 10 }}</b> out of <b>{{
+          suppliers.length }}</b> entries</div>
+    </div>
+
+
+    <div class="modal fade" id="addProductModal" tabindex="-1" role="dialog" aria-labelledby="addProductModalLabel"
+      aria-hidden="true">
+
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title text-center" (click)="loadMaterials()" id="addProductModalLabel">Thêm nhà cung cấp</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <form (ngSubmit)="addSupplier()">
+              <div class="form-group">
+                <label for="productName">Tên nhà cung cấp</label>
+                <input type="text" class="form-control" name="supplierName" id="supplierName" placeholder="Nhập tên nhà cung cấp" [(ngModel)]="supplierName" required>
+              </div>
+              <div class="form-group">
+                <label for="productName" style="margin-right: 20px;">Kiểu vật liệu</label>
+                <select name="selectedMaterial"  [(ngModel)]="selectedMaterial">
+                  <option [ngValue]="null" disabled selected>Chọn danh mục</option>
+                  <option *ngFor="let category of materials" [ngValue]="category.materialId">{{ category.materialName }}</option>
+                </select>
+              </div>
+              
+              <div class="form-group">
+                <label for="productDescription">Số điện thoại</label>
+                <input type="text" class="form-control" name="phoneNumber" id="supplierPhone" rows="3" placeholder="Số điện thoại nhà cung cấp" [(ngModel)]="phoneNumber">
+              </div>
+      
+              <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="submit" class="btn btn-primary" >Save changes</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+      
+      </div>
+      <!-- Modal for Delete Product -->
+      <div class="modal fade" id="confirmDeleteModal" tabindex="-1" role="dialog"
+        aria-labelledby="confirmDeleteModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="confirmDeleteModalLabel">Confirm Delete</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body">
+              Are you sure you want to delete this product?
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+              <button type="button" class="btn btn-danger">Delete</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- Modal for Product Detail -->
+      <div class="modal fade" id="productDetailModal" tabindex="-1" role="dialog"
+        aria-labelledby="productDetailModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="productDetailModalLabel">Product Detail</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body">
+              <div class="row">
+                <div class="col-md-6">
+                  <img class="img-fluid" [src]="" alt="Product Image">
+                </div>
+                <div class="col-md-6">
+                  <h4></h4>
+                  <p><strong>Description:</strong> </p>
+                  <p><strong>Category:</strong> </p>
+                  <p><strong>Quantity:</strong> </p>
+                  <p><strong>Price (vnđ):</strong> </p>
+                </div>
+              </div>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+          </div>
+        </div>
+      </div>

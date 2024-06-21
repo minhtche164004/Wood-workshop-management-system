@@ -3,6 +3,7 @@ import { HttpClient, HttpHeaders, HttpErrorResponse } from '@angular/common/http
 import { Observable } from 'rxjs';
 import { interval } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
+import { environment } from 'src/app/environments/environment'; // Đường dẫn đúng tới file môi trường
 @Component({
   selector: 'app-payment-salary',
   templateUrl: './payment-salary.component.html',
@@ -16,7 +17,7 @@ export class PaymentSalaryComponent implements OnInit {
   ngOnInit(): void {
     interval(5000) // Update every 5 seconds
       .pipe(
-        switchMap(() => this.http.get('http://localhost:8080/api/auth/getTransaction'))
+        switchMap(() => this.http.get(`${environment.apiUrl}api/auth/getTransaction`))
       )
       .subscribe((data: any) => {
         this.transactionData = data['transactionInfos'];
@@ -25,7 +26,7 @@ export class PaymentSalaryComponent implements OnInit {
   }
 
   getTransactions(): void {
-    this.http.get('http://localhost:8080/api/auth/getTransaction').subscribe((data: any) => {
+    this.http.get(`${environment.apiUrl}api/auth/getTransaction`).subscribe((data: any) => {
       this.transactionData = data['transactionInfos'];
     });
   }

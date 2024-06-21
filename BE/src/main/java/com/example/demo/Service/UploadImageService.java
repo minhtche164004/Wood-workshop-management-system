@@ -9,9 +9,14 @@ import java.util.List;
 @Service
 public interface UploadImageService {
     //up cho product
-    List<ProductImageDTO> uploadFile(MultipartFile[] multipartFiles, int product_id);
+//    List<ProductImageDTO> uploadFile(MultipartFile[] multipartFiles, int product_id);
     //up cho requestProduct
-    List<ProductImageDTO> uploadFile1(MultipartFile[] multipartFiles, int requestProduct_id);
-    List<ProductImageDTO> uploadFile2(MultipartFile[] multipartFiles, int request_id);
-     Product_Thumbnail uploadFile_Thumnail(MultipartFile multipartFiles);
+//    List<ProductImageDTO> uploadFile1(MultipartFile[] multipartFiles, int requestProduct_id);
+//    List<ProductImageDTO> uploadFile2(MultipartFile[] multipartFiles, int request_id);
+//     Product_Thumbnail uploadFile_Thumnail(MultipartFile multipartFiles);
+    Product_Thumbnail uploadFile_Thumnail(String imageName);
+
+    List<ProductImageDTO> uploadFile(List<String> imageNames, int product_id);
+    List<ProductImageDTO> uploadFile_Request(List<String> imageNames, int requestId);
+    List<ProductImageDTO> uploadFile_RequestProduct(List<String> imageNames, int requestProductId);
 }

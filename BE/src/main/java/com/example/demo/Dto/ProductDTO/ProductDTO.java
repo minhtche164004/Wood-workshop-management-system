@@ -36,4 +36,7 @@ public class ProductDTO implements Serializable {
     @NotNull(message = "MUST_REQUIRED")
     private int type;
 
+
+
+
 }

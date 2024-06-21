@@ -13,8 +13,8 @@ import java.util.List;
 @Service
 public interface OrderService {
     Orders AddOrder(RequestOrder requestOrder);
-    RequestProducts AddNewProductRequest(RequestProductDTO requestProductDTO, MultipartFile[] multipartFiles);
-    Requests AddNewRequest(RequestDTO requestDTO, MultipartFile[] multipartFiles);
+    RequestProducts AddNewProductRequest(RequestProductDTO requestProductDTO);
+    Requests AddNewRequest(RequestDTO requestDTO);
     List<RequestProducts> GetAllProductRequest();
     List<Requests> GetAllRequests();
     Requests getRequestById(int id);

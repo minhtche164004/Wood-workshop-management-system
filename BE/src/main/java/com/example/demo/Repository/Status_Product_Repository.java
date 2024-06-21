@@ -20,4 +20,6 @@ public interface Status_Product_Repository extends JpaRepository<Status_Product,
     @Modifying
     @Query("UPDATE Status_Product u SET u.status_name = :newName WHERE u.status_id = :id")
     void updateStatusName(@Param("newName") String newName, @Param("id") int id);
+
+
 }

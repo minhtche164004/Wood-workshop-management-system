@@ -1,20 +1,21 @@
 package com.example.demo.Dto.ProductDTO;
 
-import jakarta.validation.constraints.*;
+import jakarta.validation.constraints.DecimalMin;
+import jakarta.validation.constraints.Digits;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.springframework.web.multipart.MultipartFile;
 
-import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
 
-@Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class ProductDTO implements Serializable {
+@Data
+public class ProductDTO1 {
     @NotNull(message = "MUST_REQUIRED")
     private String product_name;
     @NotNull(message = "MUST_REQUIRED")
@@ -29,14 +30,14 @@ public class ProductDTO implements Serializable {
     private int status_id;
     private Date enddateWarranty;
     private Date completionTime;
-//   @NotNull(message = "MUST_REQUIRED")
+    //   @NotNull(message = "MUST_REQUIRED")
 //   private String images;
     @NotNull(message = "MUST_REQUIRED")
     private int category_id;
     @NotNull(message = "MUST_REQUIRED")
     private int type;
 
-
-
+    private String file_thumbnail;
+    private List<String> files;
 
 }

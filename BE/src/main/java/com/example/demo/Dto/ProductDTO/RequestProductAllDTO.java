@@ -24,7 +24,4 @@ public class RequestProductAllDTO {
     private int request_id;
     private List<Product_Requestimages> imagesList;
 
-
-
-
 }

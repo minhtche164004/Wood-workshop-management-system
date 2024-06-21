@@ -10,4 +10,7 @@ import org.springframework.stereotype.Repository;
 public interface Status_Order_Repository extends JpaRepository<Status_Order,Integer> {
     @Query("SELECT u FROM Status_Order u WHERE u.status_id = :query")
     Status_Order findById(int query);
+
+
+
 }

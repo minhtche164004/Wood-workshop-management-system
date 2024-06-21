@@ -3,7 +3,7 @@ import { Component, OnInit } from '@angular/core';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
-
+import { environment } from 'src/app/environments/environment.prod'; // Đường dẫn đúng tới file môi trường
 
 @Component({
   selector: 'app-verify-otp-mail',
@@ -46,7 +46,7 @@ export class VerifyOtpMailComponent implements OnInit {
       return;
     }
 
-    this.http.post(`http://localhost:8080/api/auth/forgotPassword/verifyOtp/${this.otp}/${this.email}`, {}, { responseType: 'text' })
+    this.http.post(`${environment.apiUrl}api/auth/forgotPassword/verifyOtp/${this.otp}/${this.email}`, {}, { responseType: 'text' })
       .subscribe(
         (response) => {
           console.log('Response:', response);

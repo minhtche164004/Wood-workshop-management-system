@@ -4,7 +4,7 @@ import { Router } from '@angular/router';
 import { ProvincesService } from 'src/app/service/provinces.service'; // Ensure correct path to your ProvincesService
 import { ToastrService } from 'ngx-toastr';
 import { FormControl } from '@angular/forms';
-
+import { environment } from 'src/app/environments/environment.prod'; // Đường dẫn đúng tới file môi trường
 interface JwtAuthenticationResponse {
   token: string;
   refreshToken: string;
@@ -71,7 +71,7 @@ export class RegisterComponent implements OnInit {
 
   errorMessage: string = '';
   successMessage: string = '';
-  private apiUrl_registration = 'http://localhost:8080/api/auth/registration'; // URL của backend
+  private apiUrl_registration = '${environment.apiUrl}api/auth/registration'; // URL của backend
 
   constructor(
     private elementRef: ElementRef,
@@ -251,7 +251,7 @@ validateRegistration(): boolean {
     console.log('Tên đăng nhập:', this.loginObj.username);
     console.log('Mật khẩu:', this.loginObj.password);
 
-    this.http.post('http://localhost:8080/api/auth/login', this.loginObj).subscribe(
+    this.http.post(`${environment.apiUrl}api/auth/login`, this.loginObj).subscribe(
       (response: any) => {
         console.log('Truy cập API đăng nhập thành công');
         if (response.code === 1000) {

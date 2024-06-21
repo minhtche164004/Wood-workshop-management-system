@@ -195,15 +195,6 @@ export class RegisterComponent implements OnInit {
       district: this.districtControl.value,
       wards: this.wardControl.value
     };
-    console.log('Username:', this.username);
-    console.log('Password:', this.password);
-    console.log('Confirm Password:', this.checkPass);
-    console.log('Email:', this.email);
-    console.log('Phone Number:', this.phoneNumber);
-    console.log('Address:', this.address);
-    console.log('Fullname:', this.fullname);
-    console.log('Status:', registrationRequest.status); // Log status
-
     this.http.post<any>(this.apiUrl_registration, registrationRequest, { withCredentials: true })
       .subscribe(() => {
         console.log('Check Mail để kiểm tra OTP'); // Display success message

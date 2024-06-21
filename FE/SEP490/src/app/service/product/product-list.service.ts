@@ -2,23 +2,25 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpErrorResponse } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
+import { environment } from 'src/app/environments/environment.prod';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ProductListService {
 
-  private apiUrl = '${environment.apiUrl}api/auth/product/GetAllProduct';
-  private apiUrl_Cate = '${environment.apiUrl}api/auth/product/getAllCategoryName';
-  private apiUrl_GetAllUser = '${environment.apiUrl}api/auth/admin/GetAllUser';
-  private apiUrl_Position = '${environment.apiUrl}api/auth/admin/GetAllPosition';
+  private apiUrl = `${environment.apiUrl}api/auth/product/GetAllProduct`;
+  private apiUrl_Cate = `${environment.apiUrl}api/auth/product/getAllCategoryName`;
+  private apiUrl_GetAllUser = `${environment.apiUrl}api/auth/admin/GetAllUser`;
+  private apiUrl_Position = `${environment.apiUrl}api/auth/admin/GetAllPosition`;
 
-  private apiUrl_findProduct = '${environment.apiUrl}api/auth/product'
-  private apiUrl_getProductByID = '${environment.apiUrl}api/auth/product/GetProductById'; // Assuming the correct endpoint
+  private apiUrl_findProduct = `${environment.apiUrl}api/auth/product`;
+  private apiUrl_getProductByID = `${environment.apiUrl}api/auth/product/GetProductById`; // Assuming the correct endpoint
 
   constructor(private http: HttpClient) { }
 
   getProducts(): Observable<any> {
+    console.log(this.apiUrl)
     return this.http.get<any>(this.apiUrl).pipe(
       catchError(this.handleError) 
     );

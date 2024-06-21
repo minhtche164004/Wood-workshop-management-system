@@ -17,7 +17,7 @@ export class PaymentSalaryComponent implements OnInit {
   ngOnInit(): void {
     interval(5000) // Update every 5 seconds
       .pipe(
-        switchMap(() => this.http.get('${environment.apiUrl}api/auth/getTransaction'))
+        switchMap(() => this.http.get(`${environment.apiUrl}api/auth/getTransaction`))
       )
       .subscribe((data: any) => {
         this.transactionData = data['transactionInfos'];
@@ -26,7 +26,7 @@ export class PaymentSalaryComponent implements OnInit {
   }
 
   getTransactions(): void {
-    this.http.get('${environment.apiUrl}api/auth/getTransaction').subscribe((data: any) => {
+    this.http.get(`${environment.apiUrl}api/auth/getTransaction`).subscribe((data: any) => {
       this.transactionData = data['transactionInfos'];
     });
   }

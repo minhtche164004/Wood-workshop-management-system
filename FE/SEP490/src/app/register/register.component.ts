@@ -71,7 +71,7 @@ export class RegisterComponent implements OnInit {
 
   errorMessage: string = '';
   successMessage: string = '';
-  private apiUrl_registration = '${environment.apiUrl}api/auth/registration'; // URL của backend
+  private apiUrl_registration = `${environment.apiUrl}api/auth/registration`; // URL của backend
 
   constructor(
     private elementRef: ElementRef,

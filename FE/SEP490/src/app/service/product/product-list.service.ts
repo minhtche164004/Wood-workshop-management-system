@@ -8,13 +8,13 @@ import { catchError } from 'rxjs/operators';
 })
 export class ProductListService {
 
-  private apiUrl = 'http://localhost:8080/api/auth/product/GetAllProduct';
-  private apiUrl_Cate = 'http://localhost:8080/api/auth/product/getAllCategoryName';
-  private apiUrl_GetAllUser = 'http://localhost:8080/api/auth/admin/GetAllUser';
-  private apiUrl_Position = '  http://localhost:8080/api/auth/admin/GetAllPosition';
+  private apiUrl = '${environment.apiUrl}api/auth/product/GetAllProduct';
+  private apiUrl_Cate = '${environment.apiUrl}api/auth/product/getAllCategoryName';
+  private apiUrl_GetAllUser = '${environment.apiUrl}api/auth/admin/GetAllUser';
+  private apiUrl_Position = '${environment.apiUrl}api/auth/admin/GetAllPosition';
 
-  private apiUrl_findProduct = 'http://localhost:8080/api/auth/product'
-  private apiUrl_getProductByID = 'http://localhost:8080/api/auth/product/GetProductById'; // Assuming the correct endpoint
+  private apiUrl_findProduct = '${environment.apiUrl}api/auth/product'
+  private apiUrl_getProductByID = '${environment.apiUrl}api/auth/product/GetProductById'; // Assuming the correct endpoint
 
   constructor(private http: HttpClient) { }
 

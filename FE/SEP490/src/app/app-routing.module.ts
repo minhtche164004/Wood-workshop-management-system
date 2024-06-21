@@ -20,6 +20,7 @@ import { OrderRequiredComponent } from './order-required/order-required.componen
 
 
 import { ViewProfileComponent } from './features/view-profile/view-profile.component';
+import { FileUploadComponent } from './file-upload/file-upload.component';
 
 
 
@@ -43,6 +44,7 @@ const routes: Routes = [
   { path: 'order_rq', component: OrderRequiredComponent },
 
   { path: 'profile', component: ViewProfileComponent },
+  { path: 'upload', component: FileUploadComponent },
 
   { path: '', redirectTo: '/homepage', pathMatch: 'full' },
   { path: '**', redirectTo: '/homepage', pathMatch: 'full' },

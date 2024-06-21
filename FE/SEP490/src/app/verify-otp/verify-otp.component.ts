@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
-
+import { environment } from 'src/app/environments/environment.prod'; // Đường dẫn đúng tới file môi trường
 @Component({
   selector: 'app-verify-otp',
   templateUrl: './verify-otp.component.html',
@@ -33,7 +33,7 @@ export class VerifyOtpComponent {
     const otp = this.otpverify; // Assign OTP value from component property
 
     // Send OTP verification request to backend
-    this.http.post(`http://localhost:8080/api/auth/verifyMail1/${otp}`, {}, { withCredentials: true }).subscribe(
+    this.http.post(`${environment.apiUrl}api/auth/verifyMail1/${otp}`, {}, { withCredentials: true }).subscribe(
       (response: any) => {
         console.log('OTP verified successfully', response);
         this.toastr.success('Đăng ký tài khoàn thành công! Bạn có thể đăng nhập ngay bây giờ', 'Thành công');

@@ -81,13 +81,13 @@
                     </tbody>
                   </table>
                   
-                <pagination-controls style="justify-content: right; display: flex;"
-                    (pageChange)="currentPage = $event"></pagination-controls>
-                <div class="clearfix" style="justify-content: right; display: flex;">
-                    <div class="hint-text">Showing <b>{{ (currentPage - 1) * 10 + 1 }}</b> to <b>{{ currentPage * 10
-                            > products.length ? products.length : currentPage * 10 }}</b> out of <b>{{
-                            products.length }}</b> entries</div>
-                </div>
+                  <pagination-controls style="justify-content: right; display: flex;"
+                      (pageChange)="currentPage = $event"></pagination-controls>
+                  <div class="clearfix" style="justify-content: right; display: flex;">
+                      <div class="hint-text">Showing <b>{{ (currentPage - 1) * 10 + 1 }}</b> to <b>{{ currentPage * 10
+                              > products.length ? products.length : currentPage * 10 }}</b> out of <b>{{
+                              products.length }}</b> entries</div>
+                  </div>
 
 
             </div>

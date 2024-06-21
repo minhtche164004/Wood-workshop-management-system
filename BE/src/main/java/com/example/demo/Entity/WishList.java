@@ -12,7 +12,7 @@ import lombok.NoArgsConstructor;
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
-public class WhiteList {
+public class WishList {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
@@ -26,7 +26,7 @@ public class WhiteList {
     @JoinColumn(name = "product_id")
     private Products product; // Liên kết với bảng Products
 
-    public WhiteList(User user, Products product) {
+    public WishList(User user, Products product) {
         this.user = user;
         this.product = product;
     }

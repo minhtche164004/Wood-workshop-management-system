@@ -1,14 +1,14 @@
-package com.example.demo.Controllers.OderController;
+package com.example.demo.Controllers.OrderController;
 
-import com.example.demo.Dto.OderDTO.RequestAllDTO;
+import com.example.demo.Dto.RequestDTO.RequestAllDTO;
 import com.example.demo.Dto.ProductDTO.RequestProductAllDTO;
 import com.example.demo.Dto.ProductDTO.RequestProductDTO;
 import com.example.demo.Dto.RequestDTO.RequestDTO;
+import com.example.demo.Dto.OrderDTO.RequestOrder;
+import com.example.demo.Entity.Orders;
 import com.example.demo.Entity.RequestProducts;
 import com.example.demo.Entity.Requests;
-import com.example.demo.Entity.Status_Order;
-import com.example.demo.Entity.WhiteList;
-import com.example.demo.Repository.Status_Order_Repository;
+import com.example.demo.Entity.WishList;
 import com.example.demo.Response.ApiResponse;
 import com.example.demo.Service.*;
 import lombok.AllArgsConstructor;
@@ -22,22 +22,14 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/auth/order/")
 @AllArgsConstructor
-public class OderController {
+public class OrderController {
 @Autowired
 private OrderService orderService;
     @Autowired
     private ProductService productService;
     @Autowired
     private WhiteListService whiteListService;
-    @Autowired
-    private Status_Order_Repository statusOrderRepository;
 
-    @GetMapping("/GetStatusOrder")
-    public ApiResponse<?> GetStatusOrder() {
-        ApiResponse<List> apiResponse = new ApiResponse<>();
-        apiResponse.setResult(statusOrderRepository.findAll());
-        return apiResponse;
-    }
     @GetMapping("/GetAllProductRequest")
     public ApiResponse<?> GetAllProductRequest() {
         ApiResponse<List> apiResponse = new ApiResponse<>();
@@ -64,11 +56,9 @@ private OrderService orderService;
         apiResponse.setResult(orderService.GetProductRequestById(id));
         return apiResponse;
     }
-
-
     @PostMapping("/AddWhiteList")
     public ApiResponse<?> AddWhiteList(@RequestParam("product_id") int product_id) {
-        ApiResponse<WhiteList> apiResponse = new ApiResponse<>();
+        ApiResponse<WishList> apiResponse = new ApiResponse<>();
         apiResponse.setResult(whiteListService.AddWhiteList(product_id));
         return apiResponse;
     }
@@ -85,13 +75,13 @@ private OrderService orderService;
         apiResponse.setResult("Xoá Sản Phẩm khỏi danh sách yêu thích thành công !");
         return apiResponse;
     }
-    @PostMapping(value = "/AddNewRequestProduct")
+    @PostMapping(value = "/AddNewRequestProduct", consumes = MediaType.MULTIPART_FORM_DATA_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ApiResponse<?> AddNewRequestProduct(
-            @RequestBody  RequestProductDTO requestProductDTO
-
+            @RequestPart("productDTO") RequestProductDTO requestProductDTO,
+            @RequestPart("files") MultipartFile[] files
     ) {
         ApiResponse<RequestProducts> apiResponse = new ApiResponse<>();
-        apiResponse.setResult(orderService.AddNewProductRequest(requestProductDTO));
+        apiResponse.setResult(orderService.AddNewProductRequest(requestProductDTO, files));
         return apiResponse;
     }
     @PostMapping("/Approve_Reject_Request")
@@ -102,13 +92,20 @@ private OrderService orderService;
         return apiResponse;
     }
 
-    @PostMapping(value = "/AddNewRequest")
+    @PostMapping(value = "/AddNewRequest", consumes = MediaType.MULTIPART_FORM_DATA_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ApiResponse<?> AddNewRequest(
-            @RequestBody RequestDTO requestDTO
-
+            @RequestPart("requestDTO") RequestDTO requestDTO,
+            @RequestPart("files") MultipartFile[] files
     ) {
         ApiResponse<Requests> apiResponse = new ApiResponse<>();
-        apiResponse.setResult(orderService.AddNewRequest(requestDTO));
+        apiResponse.setResult(orderService.AddNewRequest(requestDTO, files));
+        return apiResponse;
+    }
+
+    @PostMapping ("/AddOrder")
+    public ApiResponse<?> AddOrder(@RequestBody RequestOrder requestOrder) {
+        ApiResponse<Orders> apiResponse = new ApiResponse<>();
+        apiResponse.setResult(orderService.AddOrder(requestOrder));
         return apiResponse;
     }
 }

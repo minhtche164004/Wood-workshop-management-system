@@ -228,9 +228,6 @@ validateRegistration(): boolean {
       district: this.districtControl.value,
       wards: this.wardControl.value
     };
-    console.log('Registration Request:',  this.phoneNumber);
-    console.log('Registration Request:', registrationRequest);
-
     this.http.post<any>(this.apiUrl_registration, registrationRequest, { withCredentials: true })
       .subscribe(
         () => {

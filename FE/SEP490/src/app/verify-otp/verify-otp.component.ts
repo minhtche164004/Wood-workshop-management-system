@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
-import { environment } from 'src/app/environments/environment.prod'; // Đường dẫn đúng tới file môi trường
+import { environment } from 'src/app/environments/environment'; // Đường dẫn đúng tới file môi trường
 @Component({
   selector: 'app-verify-otp',
   templateUrl: './verify-otp.component.html',

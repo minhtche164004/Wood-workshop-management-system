@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpErrorResponse } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
-import { environment } from 'src/app/environments/environment.prod'; // Đường dẫn đúng tới file môi trường
+import { environment } from 'src/app/environments/environment'; // Đường dẫn đúng tới file môi trường
 @Injectable({
   providedIn: 'root'
 })

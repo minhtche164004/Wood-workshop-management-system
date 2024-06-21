@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
-import { environment } from 'src/app/environments/environment.prod'; // Đường dẫn đúng tới file môi trường
+import { environment } from 'src/app/environments/environment'; // Đường dẫn đúng tới file môi trường
 @Component({
   selector: 'app-verify-mail',
   templateUrl: './verify-mail.component.html',

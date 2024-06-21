@@ -1,8 +1,6 @@
-package com.example.demo.Dto.ProductDTO;
+package com.example.demo.Dto.OderDTO;
 
-import com.example.demo.Entity.Product_Requestimages;
 import com.example.demo.Entity.Requestimages;
-import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -29,4 +27,5 @@ public class RequestAllDTO {
     private String district;
     private String wards;
     private List<Requestimages> imagesList;
+    private String code;
 }

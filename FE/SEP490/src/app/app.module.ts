@@ -33,6 +33,7 @@ import { NgxPaginationModule } from 'ngx-pagination';
 import { SupplierManagementComponent } from 'src/app/supplier-management/supplier-management.component';
 
 import { ViewProfileComponent } from './features/view-profile/view-profile.component';
+import { FileUploadComponent } from './file-upload/file-upload.component';
 
 import { SubMaterialManagementComponent } from './Admin/sub-material-management/sub-material-management.component';
 // import { AuthInterceptor } from './service/auth.interceptor';

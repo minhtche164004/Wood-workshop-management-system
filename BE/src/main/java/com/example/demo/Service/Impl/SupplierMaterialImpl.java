@@ -12,6 +12,8 @@ import com.example.demo.Repository.SuppliermaterialRepository;
 import com.example.demo.Service.CheckConditionService;
 import com.example.demo.Service.SubMaterialService;
 import com.example.demo.Service.SupplierMaterialService;
+import jakarta.persistence.EntityManager;
+import jakarta.transaction.Transactional;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -30,6 +32,8 @@ private SubMaterialsRepository subMaterialsRepository;
 private ModelMapper modelMapper;
     @Autowired
     private CheckConditionService checkConditionService;
+    @Autowired
+    private EntityManager entityManager;
 
     @Override
     public List<Suppliermaterial> GetAllSupplier() {
@@ -59,6 +63,7 @@ suppliermaterialRepository.save(suppliermaterial);
                 .map(supp -> modelMapper.map(supp, SupplierNameDTO.class))
                 .collect(Collectors.toList());
     }
+    @Transactional
     @Override
     public Suppliermaterial EditSupplier(int id, SupplierMaterialDTO supplierMaterialDTO){
         Suppliermaterial suppliermaterial = suppliermaterialRepository.findById(id);
@@ -74,6 +79,7 @@ suppliermaterialRepository.save(suppliermaterial);
         SubMaterials subMaterials = subMaterialsRepository.findById1(supplierMaterialDTO.getSub_material_id());
         suppliermaterial.setSubMaterial(subMaterials);
         suppliermaterialRepository.save(suppliermaterial);
+        entityManager.refresh(suppliermaterial);
         return suppliermaterial;
     }
 
@@ -85,6 +91,7 @@ suppliermaterialRepository.save(suppliermaterial);
         }
         return suppliermaterialList;
     }
+
 
 
 

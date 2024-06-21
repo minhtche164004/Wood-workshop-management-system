@@ -1,15 +1,12 @@
 package com.example.demo.Controllers.OderController;
 
-import com.example.demo.Dto.ProductDTO.RequestAllDTO;
+import com.example.demo.Dto.OderDTO.RequestAllDTO;
 import com.example.demo.Dto.ProductDTO.RequestProductAllDTO;
 import com.example.demo.Dto.ProductDTO.RequestProductDTO;
 import com.example.demo.Dto.RequestDTO.RequestDTO;
 import com.example.demo.Entity.RequestProducts;
 import com.example.demo.Entity.Requests;
 import com.example.demo.Entity.WhiteList;
-import com.example.demo.Repository.CategoryRepository;
-import com.example.demo.Repository.ProductImageRepository;
-import com.example.demo.Repository.ProductRepository;
 import com.example.demo.Response.ApiResponse;
 import com.example.demo.Service.*;
 import lombok.AllArgsConstructor;
@@ -23,7 +20,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/auth/order/")
 @AllArgsConstructor
-public class OrderController {
+public class OderController {
 @Autowired
 private OrderService orderService;
     @Autowired

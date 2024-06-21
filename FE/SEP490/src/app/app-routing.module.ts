@@ -20,6 +20,7 @@ import { OrderRequiredComponent } from './order-required/order-required.componen
 
 
 import { ViewProfileComponent } from './features/view-profile/view-profile.component';
+import { FileUploadComponent } from './file-upload/file-upload.component';
 
 import { SubMaterialManagementComponent } from './Admin/sub-material-management/sub-material-management.component';
 import { SupplierManagementComponent } from './supplier-management/supplier-management.component';

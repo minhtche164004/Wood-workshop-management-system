@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
 import { ActivatedRoute, Router } from '@angular/router';
-import { EmailService } from 'src/app/service/email.service'; // Import EmailService
-
+import { ToastrService } from 'ngx-toastr';
+import { environment } from 'src/app/environments/environment.prod'; // Đường dẫn đúng tới file môi trường
 @Component({
   selector: 'app-verify-mail',
   templateUrl: './verify-mail.component.html',
@@ -16,43 +16,51 @@ export class VerifyMailComponent implements OnInit {
     private http: HttpClient,
     private router: Router,
     private route: ActivatedRoute,
-    private emailService: EmailService
+    private toastr: ToastrService
   ) { }
-
 
   ngOnInit(): void {
     // Retrieve email from route parameters
     this.route.params.subscribe(params => {
-      const email = params['email'];
-      this.emailService.setEmail(email); // Save email to service
+      this.email = params['email'];
     });
   }
 
+  validateEmail(email: string): boolean {
+    const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
+    return emailRegex.test(email);
+  }
+
   verifyMail(): void {
-    if (!this.email || !this.email.includes('@')) {
-      this.errorMessage = 'Please enter a valid email address.';
+    if (!this.email || this.email.trim() === "") {
+      this.toastr.error('Email không được để trống.', 'Lỗi');
       return;
     }
 
-    // Specify response type as 'text' to prevent JSON parsing
+    if (!this.validateEmail(this.email)) {
+      this.toastr.error('Email không hợp lệ.', 'Lỗi');
+      return;
+    }
+
+    // Headers and options for the HTTP request
     const options = {
       headers: new HttpHeaders({ 'Content-Type': 'application/json' }),
       responseType: 'text' as 'json'  // Specify 'text' response type
     };
 
+    // HTTP POST request to verify email
     this.http.post<any>(
-      `http://localhost:8080/api/auth/forgotPassword/verifyMail/${this.email}`,
+      `${environment.apiUrl}api/auth/forgotPassword/verifyMail/${this.email}`,
       {},
-      options  // Pass options with responseType 'text'
+      options
     ).subscribe(
       (response) => {
         console.log('Response:', response);
         // Check if response contains the success message
         if (typeof response === 'string' && response.includes('Check OTP đã được gửi đến gmail!')) {
           console.log('Email verified successfully');
-          // Navigate to OTP verification component and pass email as a route parameter
+          this.toastr.success('Kiểm tra mã OTP đã được gửi đến email!', 'Thành công');
           this.router.navigate(['/verifyOtp', { email: this.email }]);
-
         } else {
           console.error('Email verification failed: Unexpected response', response);
           this.errorMessage = 'Unexpected response from server.';
@@ -60,14 +68,20 @@ export class VerifyMailComponent implements OnInit {
       },
       (error: HttpErrorResponse) => {
         console.error('Email verification failed', error);
-        console.log('Error response:', error.error);
 
-        if (typeof error.error === 'string') {
-          this.errorMessage = error.error;
-        } else if (error.error instanceof ErrorEvent) {
-          this.errorMessage = `An error occurred: ${error.error.message}`;
+        // Parse the error response to access its properties
+        let errorResponse;
+        try {
+          errorResponse = JSON.parse(error.error);
+        } catch (e) {
+          errorResponse = { message: 'Unexpected error format' };
+        }
+
+        // Handle specific error codes from backend
+        if (errorResponse.code === 1020) {
+          this.toastr.error('Email không tồn tại! Vui lòng kiểm tra lại.', 'Lỗi khi thực hiện xác nhận');
         } else {
-          this.errorMessage = `Server returned error ${error.status}: ${error.error}`;
+          this.toastr.error('Đã xảy ra lỗi trong quá trình xác nhận email.', 'Lỗi khi thực hiện xác nhận');
         }
       }
     );

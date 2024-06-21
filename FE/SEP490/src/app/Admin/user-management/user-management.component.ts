@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ProductListService } from 'src/app/service/product/product-list.service';
 
+
 interface ApiResponse {
   code: number;
   result: any[];

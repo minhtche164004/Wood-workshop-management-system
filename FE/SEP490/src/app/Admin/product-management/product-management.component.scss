@@ -1,3 +1,14 @@
+/* Original code (line 222) */
+.my-element {
+  justify-content: start; /* Or align-items: start; */
+}
+
+/* Updated code (line 222) */
+.my-element {
+  justify-content: flex-start; /* Or align-items: flex-start; */
+}
+
+
 .dashboard-main {
   color: #566787;
   background: #f5f5f5;
@@ -11,11 +22,9 @@
   max-width: 100%;
   padding: 0 15px; // khoảng cách cho các thiết bị nhỏ hơn
 }
-
 .table-responsive {
   margin: 30px 0;
 }
-
 .table-wrapper {
   background: #fff;
   padding: 20px 25px;
@@ -169,15 +178,12 @@ table.table .avatar {
   text-align: center;
   padding: 0 6px;
 }
-
 .pagination li a:hover {
   color: #666;
 }	
-
 .pagination li.active a, .pagination li.active a.page-link {
   background: #03A9F4;
 }
-
 .pagination li.active a:hover {        
   background: #0397d6;
 }
@@ -242,7 +248,6 @@ table.table .avatar {
 select {
   color: black; /* Màu chữ mặc định cho dropdown */
 }
-
 /* Thay đổi màu chữ cho từng option */
 option[value="option1"] {
   color: red; /* Màu đỏ cho Sản Phẩm 1 */
@@ -258,24 +263,18 @@ option[value="option3"] {
   max-height: 100px;
   object-fit: cover;
 }
-
 .table td,
 .table th {
   word-wrap: break-word;
   white-space: normal;
 }
-
 .table td {
   max-width: 100px; /* Adjust this value as needed */
 }
-
 .action-buttons a {
   display: inline-block;
   margin-right: 3px;
 }
-
-
-
 .table td.action-buttons {
   width: 150px; /* Adjust this value as needed */
 }
@@ -310,7 +309,6 @@ option[value="option3"] {
   border: 1px solid #ced4da;
   margin-right: 10px;
 }
-
 .table-title .search-button {
   height: 36px;
   width: 36px;
@@ -322,16 +320,13 @@ option[value="option3"] {
   background-color: #e3f2fd;
   color: #0d6efd;
 }
-
 .table-title .input-group {
   display: flex;
   align-items: center;
 }
-
 .table-title .row {
   margin-bottom: 10px;
 }
-
 .table-title .row:last-child {
   margin-bottom: 0;
 }

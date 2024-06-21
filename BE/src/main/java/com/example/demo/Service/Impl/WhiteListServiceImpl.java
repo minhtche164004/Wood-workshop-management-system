@@ -2,7 +2,7 @@ package com.example.demo.Service.Impl;
 
 import com.example.demo.Entity.Products;
 import com.example.demo.Entity.User;
-import com.example.demo.Entity.WhiteList;
+import com.example.demo.Entity.WishList;
 import com.example.demo.Exception.AppException;
 import com.example.demo.Exception.ErrorCode;
 import com.example.demo.Repository.ProductRepository;
@@ -28,8 +28,8 @@ public class WhiteListServiceImpl implements WhiteListService {
 
 
     @Override
-    public WhiteList AddWhiteList(int product_id){
-        WhiteList whiteLis = new WhiteList();
+    public WishList AddWhiteList(int product_id){
+        WishList whiteLis = new WishList();
         UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         String username = userDetails.getUsername();
         Optional<User> userOptional = userRepository.findByUsername(username);
@@ -46,12 +46,12 @@ public class WhiteListServiceImpl implements WhiteListService {
     }
 
     @Override
-    public List<WhiteList> ViewWhiteList(int user_id){
-    List<WhiteList> whiteLists = whiteListRepository.findByUserID(user_id);
-    if(whiteLists.size() ==0){
+    public List<WishList> ViewWhiteList(int user_id){
+    List<WishList> wishLists = whiteListRepository.findByUserID(user_id);
+    if(wishLists.size() ==0){
         throw new AppException(ErrorCode.NOT_FOUND);
         }
-    return whiteLists;
+    return wishLists;
     }
 
 }

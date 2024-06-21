@@ -1,12 +1,14 @@
-package com.example.demo.Controllers.OderController;
+package com.example.demo.Controllers.OrderController;
 
-import com.example.demo.Dto.OderDTO.RequestAllDTO;
+import com.example.demo.Dto.RequestDTO.RequestAllDTO;
 import com.example.demo.Dto.ProductDTO.RequestProductAllDTO;
 import com.example.demo.Dto.ProductDTO.RequestProductDTO;
 import com.example.demo.Dto.RequestDTO.RequestDTO;
+import com.example.demo.Dto.OrderDTO.RequestOrder;
+import com.example.demo.Entity.Orders;
 import com.example.demo.Entity.RequestProducts;
 import com.example.demo.Entity.Requests;
-import com.example.demo.Entity.WhiteList;
+import com.example.demo.Entity.WishList;
 import com.example.demo.Response.ApiResponse;
 import com.example.demo.Service.*;
 import lombok.AllArgsConstructor;
@@ -20,7 +22,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/auth/order/")
 @AllArgsConstructor
-public class OderController {
+public class OrderController {
 @Autowired
 private OrderService orderService;
     @Autowired
@@ -56,7 +58,7 @@ private OrderService orderService;
     }
     @PostMapping("/AddWhiteList")
     public ApiResponse<?> AddWhiteList(@RequestParam("product_id") int product_id) {
-        ApiResponse<WhiteList> apiResponse = new ApiResponse<>();
+        ApiResponse<WishList> apiResponse = new ApiResponse<>();
         apiResponse.setResult(whiteListService.AddWhiteList(product_id));
         return apiResponse;
     }
@@ -97,6 +99,13 @@ private OrderService orderService;
     ) {
         ApiResponse<Requests> apiResponse = new ApiResponse<>();
         apiResponse.setResult(orderService.AddNewRequest(requestDTO, files));
+        return apiResponse;
+    }
+
+    @PostMapping ("/AddOrder")
+    public ApiResponse<?> AddOrder(@RequestBody RequestOrder requestOrder) {
+        ApiResponse<Orders> apiResponse = new ApiResponse<>();
+        apiResponse.setResult(orderService.AddOrder(requestOrder));
         return apiResponse;
     }
 }

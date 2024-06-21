@@ -64,8 +64,8 @@ public enum ErrorCode {
     IMAGE_INVALID(1026, "Lỗi ảnh truyền vào , hãy thử lại",HttpStatus.BAD_REQUEST),
 
 
-
-
+    //Exception của Order
+    OUT_OF_STOCK(1029,"Sản phẩm đã hết hàng",HttpStatus.BAD_REQUEST),
 
     // OTP_EXPIRED(1013,"OTP has expired! A new OTP has been sent to your email",HttpStatus.EXPECTATION_FAILED),
     ;

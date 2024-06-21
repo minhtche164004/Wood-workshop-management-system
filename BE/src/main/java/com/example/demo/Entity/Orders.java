@@ -10,6 +10,7 @@ import java.sql.Time;
 import java.sql.Timestamp;
 import java.util.Date;
 import java.util.Objects;
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -56,7 +57,14 @@ public class Orders {
     @Column(name = "address")
     private String address;
 
+    @Column(name = "city_province")
+    private String city_province;
 
+    @Column(name = "district")
+    private String district;
+
+    @Column(name = "wards")
+    private String wards;
 
 
 }

@@ -1,19 +1,19 @@
 package com.example.demo.Service.Impl;
 
-import com.example.demo.Dto.OderDTO.RequestAllDTO;
-import com.example.demo.Dto.OderDTO.RequestUpdateDTO;
+import com.example.demo.Dto.RequestDTO.RequestAllDTO;
+import com.example.demo.Dto.RequestDTO.RequestUpdateDTO;
 import com.example.demo.Dto.ProductDTO.RequestProductAllDTO;
 import com.example.demo.Dto.ProductDTO.RequestProductDTO;
-import com.example.demo.Dto.ProductItem;
+import com.example.demo.Dto.OrderDTO.ProductItem;
 import com.example.demo.Dto.RequestDTO.RequestDTO;
-import com.example.demo.Dto.RequestOrder;
-import com.example.demo.Dto.RequestProductItem;
+import com.example.demo.Dto.OrderDTO.RequestOrder;
 import com.example.demo.Entity.*;
 import com.example.demo.Exception.AppException;
 import com.example.demo.Exception.ErrorCode;
 import com.example.demo.Repository.*;
 import com.example.demo.Service.CheckConditionService;
 import com.example.demo.Service.OrderService;
+import com.example.demo.Service.ProductService;
 import com.example.demo.Service.UploadImageService;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,10 +37,6 @@ public class OrderServiceImpl implements OrderService {
     @Autowired
     private InformationUserRepository informationUserRepository;
     @Autowired
-    private Status_Product_Repository statusRepository;
-    @Autowired
-    private CategoryRepository categoryRepository;
-    @Autowired
     private ProductRepository productRepository;
     @Autowired
     private CheckConditionService checkConditionService;
@@ -58,7 +54,8 @@ public class OrderServiceImpl implements OrderService {
     private Product_RequestimagesRepository productRequestimagesRepository;
     @Autowired
     private RequestimagesRepository requestimagesRepository;
-
+    @Autowired
+    private OrderDetailRepository orderDetailRepository;
     @Override
     public Orders AddOrder(RequestOrder requestOrder) {
         LocalDate currentDate = LocalDate.now();
@@ -66,29 +63,60 @@ public class OrderServiceImpl implements OrderService {
 
         Orders orders = new Orders();
         orders.setOrderDate(sqlCompletionTime);
-        Status_Order statusOrder = statusOrderRepository.findById(1);//tự set cho nó là 1
+        Status_Order statusOrder = statusOrderRepository.findById(4);//tự set cho nó là 1
         orders.setStatus(statusOrder);
         orders.setPaymentMethod(requestOrder.getPayment_method()); //1 là trả tiền trực tiếp, 2 là chuyển khoản
         orders.setAddress(requestOrder.getCusInfo().getAddress());
         orders.setFullname(requestOrder.getCusInfo().getFullname());
         orders.setPhoneNumber(requestOrder.getCusInfo().getPhone());
-
+        //day la` dia chi nhan hang cua khach hang
+        orders.setCity_province(requestOrder.getCusInfo().getAddress());
+        orders.setDistrict(requestOrder.getCusInfo().getAddress());
+        orders.setWards(requestOrder.getCusInfo().getAddress());
+        //
         UserInfor userInfor = new UserInfor();
         userInfor.setFullname(requestOrder.getCusInfo().getFullname());
         userInfor.setAddress(requestOrder.getCusInfo().getAddress());
         userInfor.setPhoneNumber(requestOrder.getCusInfo().getPhone());
 
+        informationUserRepository.save(userInfor);
+        orders.setUserInfor(userInfor);
+        LocalDate today = LocalDate.now();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("ddMMyy");
+        String dateString = today.format(formatter);
+
+        Orders lastOrder = orderRepository.findOrderTop(dateString + "OD");
+        int count = lastOrder != null ? Integer.parseInt(lastOrder.getCode().substring(8)) + 1 : 1;
+        String code = dateString + "OD" + String.format("%03d", count);
+        orders.setCode(code);
+
+        orderRepository.save(orders);
+
 
         if (requestOrder.getSpecial_order() == 0) { // là hàng có sẵn
             BigDecimal total = BigDecimal.ZERO; // Khởi tạo total là 0
-            List<ProductItem> productItems = requestOrder.getOderDetail().getProductItems(); // Lấy danh sách sản phẩm
+            List<ProductItem> productItems = requestOrder.getOrderDetail().getProductItems(); // Lấy danh sách sản phẩm
 
             // Kiểm tra nếu danh sách sản phẩm không rỗng
             if (productItems != null && !productItems.isEmpty()) {
                 for (ProductItem item : productItems) { // Duyệt qua từng sản phẩm
+                    Products product = productRepository.findById(item.getId());
+                    Orderdetails orderdetail = new Orderdetails();
+                    orderdetail.setOrder(orders);
+                    orderdetail.setProduct(productRepository.findById(item.getId()));
+                    orderdetail.setQuantity(item.getQuantity()); //set quantity
+                    orderdetail.setUnitPrice(item.getPrice()); //set unit price
+                    if(orderdetail.getProduct().getQuantity() < item.getQuantity()){
+                        throw new AppException(ErrorCode.OUT_OF_STOCK);
+                    }
+                    product.setQuantity(product.getQuantity() - item.getQuantity());
+                    productRepository.save(product);
+                    orderdetail.setRequestProduct(null);
                     BigDecimal itemPrice = item.getPrice();
                     BigDecimal itemQuantity = BigDecimal.valueOf(item.getQuantity());
                     total = total.add(itemPrice.multiply(itemQuantity)); // Cộng dồn vào total
+                    orderDetailRepository.save(orderdetail);
+
                 }
             }
             orders.setDeposite(total.multiply(BigDecimal.valueOf(0.2))); // 20% tiền cọc của tổng tiền đơn hàng
@@ -98,30 +126,33 @@ public class OrderServiceImpl implements OrderService {
         if (requestOrder.getSpecial_order() == 1) {//là hàng có sẵn
 
                 BigDecimal total = BigDecimal.ZERO; // Khởi tạo total là 0
-                List<RequestProductItem> requestProductItems = requestOrder.getOrderDetailRequest().getRequestProductItems();
+                List<ProductItem> requestProductItems = requestOrder.getOrderDetail().getProductItems();
 
                 // Kiểm tra nếu danh sách sản phẩm không rỗng
                 if (requestProductItems != null && !requestProductItems.isEmpty()) {
-                    for (RequestProductItem item : requestProductItems) { // Duyệt qua từng sản phẩm
+                    for (ProductItem item : requestProductItems) { // Duyệt qua từng sản phẩm
+                        RequestProducts requestProducts = requestProductRepository.findById(item.getId());
+                        Orderdetails orderdetail= new Orderdetails();
+                        orderdetail.setOrder(orders);
+                        orderdetail.setRequestProduct(requestProductRepository.findById(item.getId()));
+                        orderdetail.setQuantity(item.getQuantity()); //set quantity
+                        orderdetail.setUnitPrice(item.getPrice()); //set unit price
+                        if(orderdetail.getRequestProduct().getQuantity() < item.getQuantity()){
+                            throw new AppException(ErrorCode.OUT_OF_STOCK);
+                        }
+                        requestProducts.setQuantity(requestProducts.getQuantity() - item.getQuantity());
+                        requestProductRepository.save(requestProducts);
+                        orderdetail.setProduct(null); //set product null
                         BigDecimal itemPrice = item.getPrice();
                         BigDecimal itemQuantity = BigDecimal.valueOf(item.getQuantity());
                         total = total.add(itemPrice.multiply(itemQuantity)); // Cộng dồn vào total
+                        orderDetailRepository.save(orderdetail);
                     }
                 }
             orders.setDeposite(total.multiply(BigDecimal.valueOf(0.2))); // 20% tiền cọc của tổng tiền đơn hàng
                 orders.setTotalAmount(total);
                 orders.setSpecialOrder(true);
             }
-        informationUserRepository.save(userInfor);
-            orders.setUserInfor(userInfor);
-        LocalDate today = LocalDate.now();
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("ddMMyy");
-        String dateString = today.format(formatter);
-
-        Orders lastOrder = orderRepository.findOrderTop(dateString + "OD");
-        int count = lastOrder != null ? Integer.parseInt(lastOrder.getCode().substring(8)) + 1 : 1;
-        String code = dateString + "OD" + String.format("%03d", count);
-        orders.setCode(code);
 
             orderRepository.save(orders);
 

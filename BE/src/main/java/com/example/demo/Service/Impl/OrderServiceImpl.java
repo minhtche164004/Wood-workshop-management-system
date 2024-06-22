@@ -28,6 +28,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class OrderServiceImpl implements OrderService {
@@ -57,6 +58,7 @@ public class OrderServiceImpl implements OrderService {
     private RequestimagesRepository requestimagesRepository;
     @Autowired
     private OrderDetailRepository orderDetailRepository;
+
     @Override
     public Orders AddOrder(RequestOrder requestOrder) {
         LocalDate currentDate = LocalDate.now();
@@ -67,21 +69,37 @@ public class OrderServiceImpl implements OrderService {
         Status_Order statusOrder = statusOrderRepository.findById(4);//tự set cho nó là 1
         orders.setStatus(statusOrder);
         orders.setPaymentMethod(requestOrder.getPayment_method()); //1 là trả tiền trực tiếp, 2 là chuyển khoản
-        orders.setAddress(requestOrder.getCusInfo().getAddress());
-        orders.setFullname(requestOrder.getCusInfo().getFullname());
-        orders.setPhoneNumber(requestOrder.getCusInfo().getPhone());
-        //day la` dia chi nhan hang cua khach hang
-        orders.setCity_province(requestOrder.getCusInfo().getAddress());
-        orders.setDistrict(requestOrder.getCusInfo().getAddress());
-        orders.setWards(requestOrder.getCusInfo().getAddress());
-        //
-        UserInfor userInfor = new UserInfor();
-        userInfor.setFullname(requestOrder.getCusInfo().getFullname());
-        userInfor.setAddress(requestOrder.getCusInfo().getAddress());
-        userInfor.setPhoneNumber(requestOrder.getCusInfo().getPhone());
 
-        informationUserRepository.save(userInfor);
-        orders.setUserInfor(userInfor);
+        //lưu thông tin người nhận hàng
+
+        orders.setAddress(requestOrder.getReceiveInfo().getAddress());
+        orders.setFullname(requestOrder.getReceiveInfo().getFullname());
+        orders.setPhoneNumber(requestOrder.getReceiveInfo().getPhone());
+        orders.setCity_province(requestOrder.getReceiveInfo().getFullname());
+        orders.setDistrict(requestOrder.getReceiveInfo().getAddress());
+        orders.setWards(requestOrder.getReceiveInfo().getAddress());
+
+        //lưu thông tin người đặt
+        UserInfor userInfor = new UserInfor();
+
+        //truong hop khach hang da co tai khoan trong he thong
+        Optional<UserInfor> existingUserInfor = informationUserRepository.findById(requestOrder.getCusInfo().getUserid());
+        if (existingUserInfor != null) {
+            userInfor.setInforId(requestOrder.getCusInfo().getUserid());
+            orders.setUserInfor(userInfor);
+        }
+        //truong hop khach hang moi khong co trong he thong
+        else {
+            userInfor.setPhoneNumber(requestOrder.getCusInfo().getPhone());
+            userInfor.setFullname(requestOrder.getCusInfo().getFullname());
+            userInfor.setCity_province(requestOrder.getCusInfo().getCity_province());
+            userInfor.setDistrict(requestOrder.getCusInfo().getDistrict());
+            userInfor.setWards(requestOrder.getCusInfo().getWards());
+            userInfor.setAddress(requestOrder.getCusInfo().getAddress());
+            informationUserRepository.save(userInfor);
+            orders.setUserInfor(userInfor);
+        }
+
         LocalDate today = LocalDate.now();
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("ddMMyy");
         String dateString = today.format(formatter);
@@ -107,7 +125,7 @@ public class OrderServiceImpl implements OrderService {
                     orderdetail.setProduct(productRepository.findById(item.getId()));
                     orderdetail.setQuantity(item.getQuantity()); //set quantity
                     orderdetail.setUnitPrice(item.getPrice()); //set unit price
-                    if(orderdetail.getProduct().getQuantity() < item.getQuantity()){
+                    if (orderdetail.getProduct().getQuantity() < item.getQuantity()) {
                         throw new AppException(ErrorCode.OUT_OF_STOCK);
                     }
                     product.setQuantity(product.getQuantity() - item.getQuantity());
@@ -126,51 +144,51 @@ public class OrderServiceImpl implements OrderService {
         }
         if (requestOrder.getSpecial_order() == 1) {//là hàng có sẵn
 
-                BigDecimal total = BigDecimal.ZERO; // Khởi tạo total là 0
-                List<ProductItem> requestProductItems = requestOrder.getOrderDetail().getProductItems();
+            BigDecimal total = BigDecimal.ZERO; // Khởi tạo total là 0
+            List<ProductItem> requestProductItems = requestOrder.getOrderDetail().getProductItems();
 
-                // Kiểm tra nếu danh sách sản phẩm không rỗng
-                if (requestProductItems != null && !requestProductItems.isEmpty()) {
-                    for (ProductItem item : requestProductItems) { // Duyệt qua từng sản phẩm
-                        RequestProducts requestProducts = requestProductRepository.findById(item.getId());
-                        Orderdetails orderdetail= new Orderdetails();
-                        orderdetail.setOrder(orders);
-                        orderdetail.setRequestProduct(requestProductRepository.findById(item.getId()));
-                        orderdetail.setQuantity(item.getQuantity()); //set quantity
-                        orderdetail.setUnitPrice(item.getPrice()); //set unit price
-                        if(orderdetail.getRequestProduct().getQuantity() < item.getQuantity()){
-                            throw new AppException(ErrorCode.OUT_OF_STOCK);
-                        }
-                        requestProducts.setQuantity(requestProducts.getQuantity() - item.getQuantity());
-                        requestProductRepository.save(requestProducts);
-                        orderdetail.setProduct(null); //set product null
-                        BigDecimal itemPrice = item.getPrice();
-                        BigDecimal itemQuantity = BigDecimal.valueOf(item.getQuantity());
-                        total = total.add(itemPrice.multiply(itemQuantity)); // Cộng dồn vào total
-                        orderDetailRepository.save(orderdetail);
+            // Kiểm tra nếu danh sách sản phẩm không rỗng
+            if (requestProductItems != null && !requestProductItems.isEmpty()) {
+                for (ProductItem item : requestProductItems) { // Duyệt qua từng sản phẩm
+                    RequestProducts requestProducts = requestProductRepository.findById(item.getId());
+                    Orderdetails orderdetail = new Orderdetails();
+                    orderdetail.setOrder(orders);
+                    orderdetail.setRequestProduct(requestProductRepository.findById(item.getId()));
+                    orderdetail.setQuantity(item.getQuantity()); //set quantity
+                    orderdetail.setUnitPrice(item.getPrice()); //set unit price
+                    if (orderdetail.getRequestProduct().getQuantity() < item.getQuantity()) {
+                        throw new AppException(ErrorCode.OUT_OF_STOCK);
                     }
+                    requestProducts.setQuantity(requestProducts.getQuantity() - item.getQuantity());
+                    requestProductRepository.save(requestProducts);
+                    orderdetail.setProduct(null); //set product null
+                    BigDecimal itemPrice = item.getPrice();
+                    BigDecimal itemQuantity = BigDecimal.valueOf(item.getQuantity());
+                    total = total.add(itemPrice.multiply(itemQuantity)); // Cộng dồn vào total
+                    orderDetailRepository.save(orderdetail);
                 }
-            orders.setDeposite(total.multiply(BigDecimal.valueOf(0.2))); // 20% tiền cọc của tổng tiền đơn hàng
-                orders.setTotalAmount(total);
-                orders.setSpecialOrder(true);
             }
-
-            orderRepository.save(orders);
-
-            return orders;
+            orders.setDeposite(total.multiply(BigDecimal.valueOf(0.2))); // 20% tiền cọc của tổng tiền đơn hàng
+            orders.setTotalAmount(total);
+            orders.setSpecialOrder(true);
         }
+
+        orderRepository.save(orders);
+
+        return orders;
+    }
 
     //Tạo Request
     //Tạo Request Product
     @Override
     public Requests AddNewRequest(RequestDTO requestDTO) {
         Requests requests = new Requests();
-        UserDetails userDetails =(UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        User user =userRepository.getUserByUsername(userDetails.getUsername());
+        UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        User user = userRepository.getUserByUsername(userDetails.getUsername());
         //lấy thông tin thằng đang login
         //   User user = userRepository.findById(requestDTO.getUser_id()).get();
         requests.setUser(user);
-        Status_Request statusRequest =statusRequestRepository.findById(1).get();//nghĩa là request đang chờ phê duyệt
+        Status_Request statusRequest = statusRequestRepository.findById(1).get();//nghĩa là request đang chờ phê duyệt
         requests.setRequestDate(requestDTO.getRequestDate());
         requests.setDescription(requestDTO.getDescription());
         requests.setStatus(statusRequest);
@@ -198,19 +216,23 @@ public class OrderServiceImpl implements OrderService {
         uploadImageService.uploadFile_Request(requestDTO.getFiles(), requests.getRequestId());
         return requests;
     }
+
     @Override
-    public Requests getRequestById(int id){
+    public Requests getRequestById(int id) {
         return requestRepository.findById(id);
     }
+
     @Override
-    public RequestProducts getRequestProductsById(int id){
+    public RequestProducts getRequestProductsById(int id) {
         return requestProductRepository.findById(id);
     }
+
     @Transactional
     @Override
-    public void Approve_Reject_Request(int id, int status_id){
-        requestRepository.updateStatus(id,status_id);
+    public void Approve_Reject_Request(int id, int status_id) {
+        requestRepository.updateStatus(id, status_id);
     }
+
     //Tạo Request Product
     @Override
     public RequestProducts AddNewProductRequest(RequestProductDTO requestProductDTO) { //lấy từ request
@@ -245,7 +267,6 @@ public class OrderServiceImpl implements OrderService {
     }
 
 
-
     @Override
     public List<Requests> GetAllRequests() {
         List<Requests> request_list = requestRepository.findAll();
@@ -254,11 +275,12 @@ public class OrderServiceImpl implements OrderService {
         }
         return request_list;
     }
+
     @Override
     public RequestProductAllDTO GetProductRequestById(int id) {
         List<Product_Requestimages> productRequestimagesList = productRequestimagesRepository.findById(id);
         RequestProducts requestProducts = requestProductRepository.findById(id);
-        if(requestProducts == null){
+        if (requestProducts == null) {
             throw new AppException(ErrorCode.NOT_FOUND);
         }
         RequestProductAllDTO requestProductAllDTO = new RequestProductAllDTO();
@@ -269,7 +291,7 @@ public class OrderServiceImpl implements OrderService {
         requestProductAllDTO.setCompletionTime(requestProducts.getCompletionTime());
         requestProductAllDTO.setDescription(requestProducts.getDescription());
         List<Product_Requestimages> processedImages = new ArrayList<>(); // Danh sách mới
-        for(Product_Requestimages productRequestimages : productRequestimagesList){
+        for (Product_Requestimages productRequestimages : productRequestimagesList) {
             productRequestimages.setFullPath(getAddressLocalComputer(productRequestimages.getFullPath()));
             processedImages.add(productRequestimages); // Thêm vào danh sách mới
         }
@@ -282,7 +304,7 @@ public class OrderServiceImpl implements OrderService {
     public RequestAllDTO GetRequestById(int id) {
         List<Requestimages> requestimagesList = requestimagesRepository.findById(id);
         Requests requests = requestRepository.findById(id);
-        if(requests == null){
+        if (requests == null) {
             throw new AppException(ErrorCode.NOT_FOUND);
         }
         RequestAllDTO requestAllDTO = new RequestAllDTO();
@@ -298,7 +320,7 @@ public class OrderServiceImpl implements OrderService {
         requestAllDTO.setWards(requests.getWards());
         requestAllDTO.setDescription(requests.getDescription());
         List<Requestimages> processedImages = new ArrayList<>(); // Danh sách mới
-        for(Requestimages requestimages : requestimagesList){
+        for (Requestimages requestimages : requestimagesList) {
             requestimages.setFullPath(getAddressLocalComputer(requestimages.getFullPath()));
             processedImages.add(requestimages); // Thêm vào danh sách mới
         }
@@ -315,7 +337,7 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public List<Orders> FindByNameOrCode(String key) {
         List<Orders> ordersList = orderRepository.findOrderByAddressorCode(key);
-        if(ordersList.isEmpty()){
+        if (ordersList.isEmpty()) {
             throw new AppException(ErrorCode.NOT_FOUND);
         }
         return ordersList;
@@ -324,7 +346,7 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public List<Orders> FilterByDate(Date from, Date to) {
         List<Orders> ordersList = orderRepository.findByOrderDateBetween(from, to);
-        if(ordersList.isEmpty()){
+        if (ordersList.isEmpty()) {
             throw new AppException(ErrorCode.NOT_FOUND);
         }
         return ordersList;
@@ -334,7 +356,7 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public List<Orders> FilterByStatus(int status_id) {
         List<Orders> ordersList = orderRepository.filterByStatus(status_id);
-        if(ordersList.isEmpty()){
+        if (ordersList.isEmpty()) {
             throw new AppException(ErrorCode.NOT_FOUND);
         }
         return ordersList;
@@ -343,10 +365,10 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public List<Orders> HistoryOrder() {
-        UserDetails userDetails =(UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        User user =userRepository.getUserByUsername(userDetails.getUsername());
+        UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        User user = userRepository.getUserByUsername(userDetails.getUsername());
         List<Orders> ordersList = orderRepository.findHistoryOrder(user.getUserId());
-        if(ordersList.isEmpty()){
+        if (ordersList.isEmpty()) {
             throw new AppException(ErrorCode.NOT_FOUND);
         }
         return ordersList;
@@ -357,6 +379,7 @@ public class OrderServiceImpl implements OrderService {
     public List<RequestProducts> GetAllProductRequest() {
         return requestProductRepository.findAll();
     }
+
     private String getAddressLocalComputer(String imagePath) {
         int assetsIndex = imagePath.indexOf("/assets/");
         if (assetsIndex != -1) {
@@ -367,6 +390,6 @@ public class OrderServiceImpl implements OrderService {
         }
         return imagePath;
     }// Trả về đường dẫn tương đối hoặc đường dẫn ban đầu nếu không tìm thấy "/assets/"
-    }
+}
 
 

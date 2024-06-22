@@ -13,10 +13,12 @@ import com.example.demo.Response.ApiResponse;
 import com.example.demo.Service.*;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.Date;
 import java.util.List;
 
 @RestController
@@ -75,13 +77,13 @@ private OrderService orderService;
         apiResponse.setResult("Xoá Sản Phẩm khỏi danh sách yêu thích thành công !");
         return apiResponse;
     }
-    @PostMapping(value = "/AddNewRequestProduct", consumes = MediaType.MULTIPART_FORM_DATA_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(value = "/AddNewRequestProduct")
     public ApiResponse<?> AddNewRequestProduct(
-            @RequestPart("productDTO") RequestProductDTO requestProductDTO,
-            @RequestPart("files") MultipartFile[] files
+            @RequestBody RequestProductDTO requestProductDTO
+
     ) {
         ApiResponse<RequestProducts> apiResponse = new ApiResponse<>();
-        apiResponse.setResult(orderService.AddNewProductRequest(requestProductDTO, files));
+        apiResponse.setResult(orderService.AddNewProductRequest(requestProductDTO));
         return apiResponse;
     }
     @PostMapping("/Approve_Reject_Request")
@@ -92,13 +94,25 @@ private OrderService orderService;
         return apiResponse;
     }
 
-    @PostMapping(value = "/AddNewRequest", consumes = MediaType.MULTIPART_FORM_DATA_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(value = "/AddNewRequest")
     public ApiResponse<?> AddNewRequest(
-            @RequestPart("requestDTO") RequestDTO requestDTO,
-            @RequestPart("files") MultipartFile[] files
+            @RequestBody RequestDTO requestDTO
+
     ) {
         ApiResponse<Requests> apiResponse = new ApiResponse<>();
-        apiResponse.setResult(orderService.AddNewRequest(requestDTO, files));
+        apiResponse.setResult(orderService.AddNewRequest(requestDTO));
+        return apiResponse;
+    }
+    @GetMapping("GetAllOrder")
+    public ApiResponse<?> GetAllOrder(){
+        ApiResponse<List> apiResponse = new ApiResponse<>();
+        apiResponse.setResult(orderService.GetAllOrder());
+        return apiResponse;
+    }
+    @GetMapping("FindOrderByNameorCode")
+    public ApiResponse<?> FindOrderByNameorCode(@RequestParam("key") String key){
+        ApiResponse<List> apiResponse = new ApiResponse<>();
+        apiResponse.setResult(orderService.FindByNameOrCode(key));
         return apiResponse;
     }
 
@@ -106,6 +120,29 @@ private OrderService orderService;
     public ApiResponse<?> AddOrder(@RequestBody RequestOrder requestOrder) {
         ApiResponse<Orders> apiResponse = new ApiResponse<>();
         apiResponse.setResult(orderService.AddOrder(requestOrder));
+        return apiResponse;
+    }
+
+    @GetMapping("/filter-by-date")
+    public ApiResponse<?>  getOrdersByDateRange(
+            @RequestParam("startDate") @DateTimeFormat(pattern = "yyyy-MM-dd") Date from,
+            @RequestParam("endDate") @DateTimeFormat(pattern = "yyyy-MM-dd") Date to) {
+        ApiResponse<List> apiResponse = new ApiResponse<>();
+        apiResponse.setResult(orderService.FilterByDate(from,to));
+        return apiResponse;
+    }
+    @GetMapping("/filter-by-status")
+    public ApiResponse<?>  FilterByStatus(
+           @RequestParam("status_id") int status_id){
+        ApiResponse<List> apiResponse = new ApiResponse<>();
+        apiResponse.setResult(orderService.FilterByStatus(status_id));
+        return apiResponse;
+    }
+
+    @GetMapping("/historyOrder")
+    public ApiResponse<?>  historyOrder() {
+        ApiResponse<List> apiResponse = new ApiResponse<>();
+        apiResponse.setResult(orderService.HistoryOrder());
         return apiResponse;
     }
 }

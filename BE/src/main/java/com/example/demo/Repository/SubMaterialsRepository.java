@@ -22,6 +22,9 @@ public interface SubMaterialsRepository extends JpaRepository<SubMaterials,Integ
     @Query("SELECT u FROM SubMaterials u WHERE u.subMaterialId = :query")
     SubMaterials findById1(int query);
 
+    @Query("SELECT u FROM SubMaterials u WHERE u.material.materialId = :query")
+    List<SubMaterials> findSubMaterialIdByMaterial(int query);
+
 
     List<SubMaterials> findAll();
     int countBySubMaterialName(String SubMaterialName);
@@ -32,6 +35,8 @@ public interface SubMaterialsRepository extends JpaRepository<SubMaterials,Integ
 
     @Query("SELECT u.quantity FROM SubMaterials u WHERE u.subMaterialId = :query")
     Integer findQuantityBySubMaterialId(int query);
+
+
 
 
     @Query("SELECT u FROM SubMaterials u  WHERE u.subMaterialName LIKE CONCAT('%', :keyword, '%') OR " +

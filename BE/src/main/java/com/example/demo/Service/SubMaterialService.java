@@ -13,6 +13,7 @@ import java.util.List;
 @Service
 public interface SubMaterialService {
     List<SubMaterials> getAll();
+    List<SubMaterials> FilterByMaterial(int material_id);
     SubMaterials addNew(SubMaterialDTO subMaterialDTO);
     List<SubMaterialNameDTO> GetListName();
     void saveSubMaterialToDatabase(MultipartFile file);

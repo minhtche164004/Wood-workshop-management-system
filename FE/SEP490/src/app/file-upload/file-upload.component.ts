@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { environment } from 'src/app/environments/environment.prod'; // Đường dẫn đúng tới file môi trườngg
+import { environment } from 'src/app/environments/environment'; // Đường dẫn đúng tới file môi trườngg
 
 @Component({
   selector: 'app-file-upload',

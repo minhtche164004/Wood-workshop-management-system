@@ -1,4 +1,5 @@
 export const environment = {
     production: false,
-    apiUrl: '${environment.apiUrl}' // URL API cho môi trường development
+    apiUrl: 'http://localhost:8080/' // URL API cho môi trường development
+    // https://dogosydungbe.azurewebsites.net/
   };

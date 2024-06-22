@@ -9,6 +9,8 @@ import org.springframework.data.jpa.repository.Modifying;
 
 import java.sql.Timestamp;
 import java.util.Date;
+import java.util.List;
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -29,4 +31,5 @@ public class RequestDTO {
     private String city_province;
     private String district;
     private String wards;
+    private List<String> files;
 }

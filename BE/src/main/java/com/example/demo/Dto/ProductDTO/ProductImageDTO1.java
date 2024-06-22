@@ -1,13 +1,12 @@
-package com.example.demo.Dto;
+package com.example.demo.Dto.ProductDTO;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
-public class OderDetail {
-    private List<ProductItem> productItems;
+public class ProductImageDTO1 {
+    private String fullpath;
 }

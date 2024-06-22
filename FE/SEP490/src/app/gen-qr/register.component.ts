@@ -1,7 +1,7 @@
 import { Component, OnInit, ElementRef } from '@angular/core';
 import { HttpClient ,HttpErrorResponse} from '@angular/common/http';
 import { Router } from '@angular/router';
-import { environment } from '../environments/environment.prod';
+import { environment } from '../environments/environment';
 
 
 

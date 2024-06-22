@@ -1,4 +1,4 @@
-package com.example.demo.Dto.OderDTO;
+package com.example.demo.Dto.RequestDTO;
 
 import com.example.demo.Entity.Requestimages;
 import lombok.AllArgsConstructor;

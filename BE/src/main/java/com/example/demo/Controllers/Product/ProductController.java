@@ -1,14 +1,19 @@
 package com.example.demo.Controllers.Product;
 
+import com.example.demo.Config.RedisConfig;
 import com.example.demo.Dto.Category.CategoryNameDTO;
 import com.example.demo.Dto.ProductDTO.*;
 import com.example.demo.Dto.RequestDTO.RequestDTO;
+import com.example.demo.Dto.UserDTO.UserDTO;
 import com.example.demo.Entity.*;
 import com.example.demo.Repository.CategoryRepository;
 import com.example.demo.Repository.ProductImageRepository;
 import com.example.demo.Repository.ProductRepository;
+import com.example.demo.Repository.Status_Product_Repository;
 import com.example.demo.Response.ApiResponse;
 import com.example.demo.Service.*;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -19,13 +24,15 @@ import org.springframework.security.core.parameters.P;
 
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import redis.clients.jedis.Jedis;
 
+import java.lang.reflect.Type;
 import java.nio.file.Paths;
 import java.util.List;
 
 @RestController
 @RequestMapping("/api/auth/product/")
-@CrossOrigin(origins="http://localhost:5173")
+@CrossOrigin(origins = "http://localhost:5173")
 @AllArgsConstructor
 public class ProductController {
 
@@ -41,25 +48,78 @@ public class ProductController {
     private UploadImageService uploadImageService;
     @Autowired
     private WhiteListService whiteListService;
+    @Autowired
+    private Status_Product_Repository statusProductRepository;
+    private static final Jedis jedis = RedisConfig.getRedisInstance();
 
-//    @PreAuthorize("hasAnyAuthority('ADMIN')")
+    //    @PreAuthorize("hasAnyAuthority('ADMIN')")
     @GetMapping("/GetAllProduct")
     public ApiResponse<?> getAllProduct() {
         ApiResponse<List> apiResponse = new ApiResponse<>();
-        apiResponse.setResult(productService.GetAllProduct());
+        String cacheKey = "all_products";
+        List<Products> products;
+        String cachedData = jedis.get(cacheKey);
+        if (cachedData != null) {
+            Type type = new TypeToken<List<Products>>() {
+            }.getType();
+            products = new Gson().fromJson(cachedData, type);
+        } else {
+            products = productService.GetAllProduct();
+            String jsonData = new Gson().toJson(products);
+            jedis.set(cacheKey, jsonData);
+            jedis.expire(cacheKey, 1200);
+        }
+        apiResponse.setResult(products);
         return apiResponse;
     }
+
+    @GetMapping("/GetProductByStatus")
+    public ApiResponse<?> GetProductByStatus(@RequestParam("id") int id) {
+        ApiResponse<List> apiResponse = new ApiResponse<>();
+        String cacheKey = "all_products_by_status";
+        List<Products> products;
+        String cachedData = jedis.hget(cacheKey, id + "");
+        if (cachedData != null) {
+            Type type = new TypeToken<List<Products>>() {
+            }.getType();
+            products = new Gson().fromJson(cachedData, type);
+        } else {
+            products = productRepository.findByStatus(id);
+            String jsonData = new Gson().toJson(products);
+            jedis.hset(cacheKey, id + "", jsonData);
+            jedis.expire(cacheKey, 1200);
+        }
+        apiResponse.setResult(products);
+        return apiResponse;
+    }
+
     @GetMapping("/GetProductByCategory")
     public ApiResponse<?> GetProductByCategory(@RequestParam("id") int id) {
         ApiResponse<List> apiResponse = new ApiResponse<>();
-        apiResponse.setResult(productRepository.findByCategory(id));
+        String cacheKey = "all_products_by_cate";
+        List<Products> products;
+        String cachedData = jedis.hget(cacheKey, id + "");
+        if (cachedData != null) {
+            Type type = new TypeToken<List<Products>>() {
+            }.getType();
+            products = new Gson().fromJson(cachedData, type);
+        } else {
+            products = productRepository.findByCategory(id);
+            String jsonData = new Gson().toJson(products);
+            jedis.hset(cacheKey, id + "", jsonData);
+            jedis.expire(cacheKey, 1200);
+        }
+        apiResponse.setResult(products);
         return apiResponse;
     }
 
     @PutMapping("/UpdateStatusProduct")
-    public ApiResponse<?> UpdateStatusProduct(@RequestParam("product_id") int product_id,@RequestParam("status_id") int status_id) {
+    public ApiResponse<?> UpdateStatusProduct(@RequestParam("product_id") int product_id, @RequestParam("status_id") int status_id) {
         ApiResponse<Products> apiResponse = new ApiResponse<>();
-        apiResponse.setResult(productService.UpdateStatusProduct(product_id,status_id));
+        apiResponse.setResult(productService.UpdateStatusProduct(product_id, status_id));
+        jedis.del("all_products");
+        jedis.del("all_products_by_status");
+        jedis.del("all_products_by_cate");
         return apiResponse;
     }
 
@@ -92,10 +152,24 @@ public class ProductController {
         return apiResponse;
 
     }
+
     @GetMapping("/findProductByNameorCode")
     public ApiResponse<?> getProductByNameorCodelCategory(@RequestParam("key") String key) {
         ApiResponse<List> apiResponse = new ApiResponse<>();
-        apiResponse.setResult(productService.findProductByNameCode(key));
+        String cacheKey = "all_products_by_Name_Or_Code";
+        List<Products> products;
+        String cachedData = jedis.hget(cacheKey, key);
+        if (cachedData != null) {
+            Type type = new TypeToken<List<Products>>() {
+            }.getType();
+            products = new Gson().fromJson(cachedData, type);
+        } else {
+            products = productService.findProductByNameCode(key);
+            String jsonData = new Gson().toJson(products);
+            jedis.hset(cacheKey, key, jsonData);
+            jedis.expire(cacheKey, 300);
+        }
+        apiResponse.setResult(products);
         return apiResponse;
 
     }
@@ -103,77 +177,132 @@ public class ProductController {
     @GetMapping("/GetAllCategory")
     public ApiResponse<?> getAllCategory() {
         ApiResponse<List> apiResponse = new ApiResponse<>();
-        apiResponse.setResult(categoryRepository.findAll());
+        String cacheKey = "all_categories";
+        List<Categories> categories;
+        String cachedData = jedis.get(cacheKey);
+        if (cachedData != null) {
+            Type type = new TypeToken<List<Categories>>() {
+            }.getType();
+            categories = new Gson().fromJson(cachedData, type);
+        } else {
+            categories = categoryRepository.findAll();
+            String jsonData = new Gson().toJson(categories);
+            jedis.set(cacheKey, jsonData);
+            jedis.expire(cacheKey, 300);
+        }
+        apiResponse.setResult(categories);
         return apiResponse;
     }
 
     @GetMapping("/getAllCategoryName")
     public ApiResponse<?> getAllCategoryName() {
         ApiResponse<List> apiResponse = new ApiResponse<>();
-        apiResponse.setResult(categorySevice.GetListName());
+        String cacheKey = "all_categories_name";
+        List<CategoryNameDTO> categories;
+        String cachedData = jedis.get(cacheKey);
+        if (cachedData != null) {
+            Type type = new TypeToken<List<CategoryNameDTO>>() {
+            }.getType();
+            categories = new Gson().fromJson(cachedData, type);
+        } else {
+            categories = categorySevice.GetListName();
+            String jsonData = new Gson().toJson(categories);
+            jedis.set(cacheKey, jsonData);
+            jedis.expire(cacheKey, 300);
+        }
+        apiResponse.setResult(categories);
         return apiResponse;
     }
+
     @PostMapping("/AddNewCategory")
     public ApiResponse<?> AddNewCategory(@RequestBody CategoryNameDTO categoryNameDTO) {
         ApiResponse<String> apiResponse = new ApiResponse<>();
         categorySevice.AddnewCategory(categoryNameDTO);
+        jedis.del("all_categories");
+        jedis.del("all_categories_name");
         apiResponse.setResult("Thêm mới Loại Sản Phẩm Thành công");
         return apiResponse;
     }
 
 
-
     @PutMapping("/EditCategory")
-    public ApiResponse<?> EditCategory(@RequestParam("cate_id") int cate_id,@RequestBody CategoryNameDTO categoryNameDTO) {
+    public ApiResponse<?> EditCategory(@RequestParam("cate_id") int cate_id, @RequestBody CategoryNameDTO categoryNameDTO) {
         ApiResponse<Categories> apiResponse = new ApiResponse<>();
-        apiResponse.setResult(categorySevice.UpdateCategoty(cate_id,categoryNameDTO));
+        apiResponse.setResult(categorySevice.UpdateCategoty(cate_id, categoryNameDTO));
+        jedis.del("all_categories");
+        jedis.del("all_categories_name");
         return apiResponse;
     }
 
-    @PostMapping(value = "/AddNewProduct", consumes = MediaType.MULTIPART_FORM_DATA_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    //    @PostMapping(value = "/AddNewProduct", consumes = MediaType.MULTIPART_FORM_DATA_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+//    public ApiResponse<?> AddNewProduct(
+//            @RequestPart("productDTO") ProductDTO productDTO,
+//            @RequestPart("files") MultipartFile[] files,
+//            @RequestPart("file_thumbnail") MultipartFile file_thumbnail
+//    ) {
+//        ApiResponse<Products> apiResponse = new ApiResponse<>();
+//        apiResponse.setResult(productService.AddNewProduct(productDTO, files, file_thumbnail));
+//        return apiResponse;
+//    }
+    @PostMapping(value = "/AddNewProduct")
     public ApiResponse<?> AddNewProduct(
-            @RequestPart("productDTO") ProductDTO productDTO,
-            @RequestPart("files") MultipartFile[] files,
-            @RequestPart("file_thumbnail") MultipartFile file_thumbnail
+            @RequestBody ProductDTO1 productDTO1
     ) {
         ApiResponse<Products> apiResponse = new ApiResponse<>();
-        apiResponse.setResult(productService.AddNewProduct(productDTO, files, file_thumbnail));
+        apiResponse.setResult(productService.AddNewProduct(productDTO1));
+        jedis.del("all_products");
+        jedis.del("all_products_by_status");
+        jedis.del("all_products_by_cate");
         return apiResponse;
     }
 
-    @PostMapping("/upload")
-    public ResponseEntity<Object> uploadImage(@RequestParam("files") MultipartFile[] files, @RequestParam("product_id") int product_id) {
-        try {
-            return ResponseEntity.ok().body(uploadImageService.uploadFile(files, product_id));
-        } catch (Exception e) {
-            return ResponseEntity.badRequest().body(e.getLocalizedMessage());
-        }
-    }
+//    @PostMapping("/upload")
+//    public ResponseEntity<Object> uploadImage(@RequestParam("files") MultipartFile[] files, @RequestParam("product_id") int product_id) {
+//        try {
+//            return ResponseEntity.ok().body(uploadImageService.uploadFile(files, product_id));
+//        } catch (Exception e) {
+//            return ResponseEntity.badRequest().body(e.getLocalizedMessage());
+//        }
+//    }
 
     @GetMapping("/upload")
     public String uploadFile() {
-            // Lấy tên tệp tin gốc
+        // Lấy tên tệp tin gốc
 
-            // Tạo đường dẫn tuyệt đối đến thư mục Images
+        // Tạo đường dẫn tuyệt đối đến thư mục Images
         String projectDir = Paths.get("").toAbsolutePath().toString().replace("\\", "/");
-            String absoluteUploadPath = projectDir + "/src/main/java/com/example/demo/Images/";
+        String absoluteUploadPath = projectDir + "/src/main/java/com/example/demo/Images/";
 
-            // Tạo đường dẫn tuyệt đối đến tệp tin sẽ được lưu
-            return absoluteUploadPath;
+        // Tạo đường dẫn tuyệt đối đến tệp tin sẽ được lưu
+        return absoluteUploadPath;
 
     }
 
 
-    @PutMapping(value = "/EditProduct", consumes = MediaType.MULTIPART_FORM_DATA_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+//    @PutMapping(value = "/EditProduct", consumes = MediaType.MULTIPART_FORM_DATA_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+//    public ApiResponse<?> EditProduct(
+//            @RequestParam(value="product_id") int productId,
+//            @RequestPart("productDTO") ProductDTO productDTO,
+//            @RequestPart("files") MultipartFile[] files,
+//            @RequestPart("file_thumbnail") MultipartFile file_thumbnail
+//    ) {
+//        ApiResponse<Products> apiResponse = new ApiResponse<>();
+//
+//        apiResponse.setResult(productService.EditProduct(productId,productDTO,files, file_thumbnail));
+//        return apiResponse;
+//    }
+
+    @PutMapping(value = "/EditProduct")
     public ApiResponse<?> EditProduct(
-            @RequestParam(value="product_id") int productId,
-            @RequestPart("productDTO") ProductDTO productDTO,
-            @RequestPart("files") MultipartFile[] files,
-            @RequestPart("file_thumbnail") MultipartFile file_thumbnail
+            @RequestParam(value = "product_id") int productId,
+            @RequestBody ProductDTO1 productDTO1
     ) {
         ApiResponse<Products> apiResponse = new ApiResponse<>();
 
-        apiResponse.setResult(productService.EditProduct(productId,productDTO,files, file_thumbnail));
+        apiResponse.setResult(productService.EditProduct(productId, productDTO1));
+        jedis.del("all_products");
+        jedis.del("all_products_by_status");
+        jedis.del("all_products_by_cate");
         return apiResponse;
     }
 
@@ -182,5 +311,11 @@ public class ProductController {
         return productService.createExportMaterialProduct(request.getProductId(), request.getSubMaterialQuantities());
     }
 
+    @GetMapping("/GetStatusProduct")
+    public ApiResponse<?> GetAllStatusProduct() {
+        ApiResponse<List> apiResponse = new ApiResponse<>();
+        apiResponse.setResult(statusProductRepository.findAll());
+        return apiResponse;
+    }
 
 }

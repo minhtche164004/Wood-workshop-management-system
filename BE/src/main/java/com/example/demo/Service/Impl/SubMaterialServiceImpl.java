@@ -50,6 +50,15 @@ public class SubMaterialServiceImpl implements SubMaterialService {
     }
 
     @Override
+    public List<SubMaterials> FilterByMaterial(int material_id) {
+        List<SubMaterials> subMaterialsList = subMaterialsRepository.findSubMaterialIdByMaterial(material_id);
+        if(subMaterialsList.isEmpty()){
+            throw new AppException(ErrorCode.NOT_FOUND);
+        }
+        return subMaterialsList;
+    }
+
+    @Override
     public SubMaterials addNew(SubMaterialDTO subMaterialDTO) {
         SubMaterials subMaterials = new SubMaterials();
         subMaterials.setSubMaterialName(subMaterialDTO.getSub_material_name());

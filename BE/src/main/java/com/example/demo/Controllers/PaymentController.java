@@ -1,20 +1,20 @@
 package com.example.demo.Controllers;
 
-import com.example.demo.Config.VNPayService;
-import com.example.demo.Dto.RequestOrder;
 import com.example.demo.Entity.Orders;
-import com.example.demo.Response.ApiResponse;
+import com.example.demo.Entity.Status_Order;
+import com.example.demo.Repository.OrderRepository;
+import com.example.demo.Repository.Status_Order_Repository;
+import com.example.demo.Service.VNPayService;
 import com.example.demo.Service.OrderService;
 import com.example.demo.Service.PaymentService;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import jakarta.mail.internet.MimeMessage;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+
 
 import java.util.HashMap;
 import java.util.Map;
@@ -31,6 +31,10 @@ public class PaymentController {
     private PaymentService paymentService;
     @Autowired
     private OrderService orderService;
+    @Autowired
+    private Status_Order_Repository status_Order_Repository;
+    @Autowired
+    private OrderRepository orderRepository;
 
 
     @GetMapping("")
@@ -42,26 +46,55 @@ public class PaymentController {
     public String submidOrder(@RequestParam("amount") int orderTotal,
                               @RequestParam("orderInfo") String orderInfo,
                               HttpServletRequest request) {
-        String baseUrl = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort();
+        String baseUrl = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort() + "/api/auth";
         String vnpayUrl = vnPayService.createOrder(orderTotal, orderInfo, baseUrl);
-        return "redirect:" + vnpayUrl;
+        return vnpayUrl;
     }
 
-    @GetMapping("/vnpay-payment")
-    public String GetMapping(HttpServletRequest request, Model model) {
-        int paymentStatus = vnPayService.orderReturn(request);
+//    @GetMapping("/vnpay-payment")
+//    public String GetMapping(HttpServletRequest request, Model model) {
+//        int paymentStatus = vnPayService.orderReturn(request);
+//
+//        String orderInfo = request.getParameter("vnp_OrderInfo");
+//        String paymentTime = request.getParameter("vnp_PayDate");
+//        String transactionId = request.getParameter("vnp_TransactionNo");
+//        String totalPrice = request.getParameter("vnp_Amount");
+//
+//        model.addAttribute("orderId", orderInfo);
+//        model.addAttribute("totalPrice", totalPrice);
+//        model.addAttribute("paymentTime", paymentTime);
+//        model.addAttribute("transactionId", transactionId);
+//        if(paymentStatus == 1) {
+//            return "ordersuccess";
+//        }else {
+//            return "orderfail";
+//        }
+////        return paymentStatus == 1 ? "ordersuccess" : "orderfail";
+//    }
 
+    @GetMapping("/vnpay-payment")
+    public ResponseEntity<String> GetMapping(HttpServletRequest request, Model model) {
+        int paymentStatus = vnPayService.orderReturn(request);
         String orderInfo = request.getParameter("vnp_OrderInfo");
         String paymentTime = request.getParameter("vnp_PayDate");
         String transactionId = request.getParameter("vnp_TransactionNo");
         String totalPrice = request.getParameter("vnp_Amount");
 
+        Orders orders = orderRepository.findByCode(orderInfo);
+
         model.addAttribute("orderId", orderInfo);
         model.addAttribute("totalPrice", totalPrice);
         model.addAttribute("paymentTime", paymentTime);
         model.addAttribute("transactionId", transactionId);
+        if (paymentStatus == 1) {
+            Status_Order statusOrder = status_Order_Repository.findById(1);
+            orders.setStatus(statusOrder);
+            orderRepository.save(orders);
+            return ResponseEntity.ok("ordersuccess");
+        } else {
+            return ResponseEntity.ok("orderfail");
+        }
 
-        return paymentStatus == 1 ? "ordersuccess" : "orderfail";
     }
 
 //    @GetMapping("/getToken")
@@ -92,8 +125,9 @@ public class PaymentController {
         }
         return ResponseEntity.ok(map);
     }
-//      lay response moi string cua qr dang string
-    @PostMapping ("/getQRBanking")
+
+    //      lay response moi string cua qr dang string
+    @PostMapping("/getQRBanking")
     public ResponseEntity<String> getQR(@RequestParam("amount") int amount, @RequestParam("orderInfo") String orderInfo) {
         String info = paymentService.getQRCodeBanking(amount, orderInfo);
         ObjectMapper mapper = new ObjectMapper();
@@ -110,11 +144,11 @@ public class PaymentController {
     }
 
 
-@GetMapping("/getqr")
-    public ResponseEntity<String> getQR12(@RequestParam("amount") int amount, @RequestParam("orderInfo") String orderInfo){
-    return ResponseEntity.ok(paymentService.getQRCodeBankingString(amount, orderInfo));
+    @GetMapping("/getqr")
+    public ResponseEntity<String> getQR12(@RequestParam("amount") int amount, @RequestParam("orderInfo") String orderInfo) {
+        return ResponseEntity.ok(paymentService.getQRCodeBankingString(amount, orderInfo));
 
-}
+    }
 
     // lay response cua qr dang json
 //    @PostMapping ("/getQRBanking")
@@ -136,10 +170,5 @@ public class PaymentController {
 //        return ResponseEntity.ok(responseMap);
 //    }
 
-    @PostMapping ("/AddOrder")
-    public ApiResponse<?> AddOrder(@RequestBody RequestOrder requestOrder) {
-        ApiResponse<Orders> apiResponse = new ApiResponse<>();
-        apiResponse.setResult(orderService.AddOrder(requestOrder));
-        return apiResponse;
-    }
+//
 }

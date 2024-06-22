@@ -1,3 +1,13 @@
+/* Original code (line 222) */
+.my-element {
+  justify-content: start; /* Or align-items: start; */
+}
+
+/* Updated code (line 222) */
+.my-element {
+  justify-content: flex-start; /* Or align-items: flex-start; */
+}
+
 
 .dashboard-main {
   color: #566787;

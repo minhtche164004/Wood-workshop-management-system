@@ -4,7 +4,7 @@ import { Router } from '@angular/router';
 import { ProvincesService } from 'src/app/service/provinces.service'; // Ensure correct path to your ProvincesService
 import { ToastrService } from 'ngx-toastr';
 import { FormControl } from '@angular/forms';
-import { environment } from 'src/app/environments/environment.prod'; // Đường dẫn đúng tới file môi trường
+import { environment } from 'src/app/environments/environment'; // Đường dẫn đúng tới file môi trường
 interface JwtAuthenticationResponse {
   token: string;
   refreshToken: string;
@@ -228,9 +228,6 @@ validateRegistration(): boolean {
       district: this.districtControl.value,
       wards: this.wardControl.value
     };
-    console.log('Registration Request:',  this.phoneNumber);
-    console.log('Registration Request:', registrationRequest);
-
     this.http.post<any>(this.apiUrl_registration, registrationRequest, { withCredentials: true })
       .subscribe(
         () => {

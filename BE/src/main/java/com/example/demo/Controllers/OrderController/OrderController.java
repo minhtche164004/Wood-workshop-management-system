@@ -1,26 +1,30 @@
-package com.example.demo.Controllers.OderController;
+package com.example.demo.Controllers.OrderController;
 
-import com.example.demo.Dto.OderDTO.RequestAllDTO;
+import com.example.demo.Dto.RequestDTO.RequestAllDTO;
 import com.example.demo.Dto.ProductDTO.RequestProductAllDTO;
 import com.example.demo.Dto.ProductDTO.RequestProductDTO;
 import com.example.demo.Dto.RequestDTO.RequestDTO;
+import com.example.demo.Dto.OrderDTO.RequestOrder;
+import com.example.demo.Entity.Orders;
 import com.example.demo.Entity.RequestProducts;
 import com.example.demo.Entity.Requests;
-import com.example.demo.Entity.WhiteList;
+import com.example.demo.Entity.WishList;
 import com.example.demo.Response.ApiResponse;
 import com.example.demo.Service.*;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.Date;
 import java.util.List;
 
 @RestController
 @RequestMapping("/api/auth/order/")
 @AllArgsConstructor
-public class OderController {
+public class OrderController {
 @Autowired
 private OrderService orderService;
     @Autowired
@@ -56,7 +60,7 @@ private OrderService orderService;
     }
     @PostMapping("/AddWhiteList")
     public ApiResponse<?> AddWhiteList(@RequestParam("product_id") int product_id) {
-        ApiResponse<WhiteList> apiResponse = new ApiResponse<>();
+        ApiResponse<WishList> apiResponse = new ApiResponse<>();
         apiResponse.setResult(whiteListService.AddWhiteList(product_id));
         return apiResponse;
     }
@@ -73,13 +77,13 @@ private OrderService orderService;
         apiResponse.setResult("Xoá Sản Phẩm khỏi danh sách yêu thích thành công !");
         return apiResponse;
     }
-    @PostMapping(value = "/AddNewRequestProduct", consumes = MediaType.MULTIPART_FORM_DATA_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(value = "/AddNewRequestProduct")
     public ApiResponse<?> AddNewRequestProduct(
-            @RequestPart("productDTO") RequestProductDTO requestProductDTO,
-            @RequestPart("files") MultipartFile[] files
+            @RequestBody RequestProductDTO requestProductDTO
+
     ) {
         ApiResponse<RequestProducts> apiResponse = new ApiResponse<>();
-        apiResponse.setResult(orderService.AddNewProductRequest(requestProductDTO, files));
+        apiResponse.setResult(orderService.AddNewProductRequest(requestProductDTO));
         return apiResponse;
     }
     @PostMapping("/Approve_Reject_Request")
@@ -90,13 +94,55 @@ private OrderService orderService;
         return apiResponse;
     }
 
-    @PostMapping(value = "/AddNewRequest", consumes = MediaType.MULTIPART_FORM_DATA_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(value = "/AddNewRequest")
     public ApiResponse<?> AddNewRequest(
-            @RequestPart("requestDTO") RequestDTO requestDTO,
-            @RequestPart("files") MultipartFile[] files
+            @RequestBody RequestDTO requestDTO
+
     ) {
         ApiResponse<Requests> apiResponse = new ApiResponse<>();
-        apiResponse.setResult(orderService.AddNewRequest(requestDTO, files));
+        apiResponse.setResult(orderService.AddNewRequest(requestDTO));
+        return apiResponse;
+    }
+    @GetMapping("GetAllOrder")
+    public ApiResponse<?> GetAllOrder(){
+        ApiResponse<List> apiResponse = new ApiResponse<>();
+        apiResponse.setResult(orderService.GetAllOrder());
+        return apiResponse;
+    }
+    @GetMapping("FindOrderByNameorCode")
+    public ApiResponse<?> FindOrderByNameorCode(@RequestParam("key") String key){
+        ApiResponse<List> apiResponse = new ApiResponse<>();
+        apiResponse.setResult(orderService.FindByNameOrCode(key));
+        return apiResponse;
+    }
+
+    @PostMapping ("/AddOrder")
+    public ApiResponse<?> AddOrder(@RequestBody RequestOrder requestOrder) {
+        ApiResponse<Orders> apiResponse = new ApiResponse<>();
+        apiResponse.setResult(orderService.AddOrder(requestOrder));
+        return apiResponse;
+    }
+
+    @GetMapping("/filter-by-date")
+    public ApiResponse<?>  getOrdersByDateRange(
+            @RequestParam("startDate") @DateTimeFormat(pattern = "yyyy-MM-dd") Date from,
+            @RequestParam("endDate") @DateTimeFormat(pattern = "yyyy-MM-dd") Date to) {
+        ApiResponse<List> apiResponse = new ApiResponse<>();
+        apiResponse.setResult(orderService.FilterByDate(from,to));
+        return apiResponse;
+    }
+    @GetMapping("/filter-by-status")
+    public ApiResponse<?>  FilterByStatus(
+           @RequestParam("status_id") int status_id){
+        ApiResponse<List> apiResponse = new ApiResponse<>();
+        apiResponse.setResult(orderService.FilterByStatus(status_id));
+        return apiResponse;
+    }
+
+    @GetMapping("/historyOrder")
+    public ApiResponse<?>  historyOrder() {
+        ApiResponse<List> apiResponse = new ApiResponse<>();
+        apiResponse.setResult(orderService.HistoryOrder());
         return apiResponse;
     }
 }

@@ -50,11 +50,16 @@ public class SubMaterialController {
         apiResponse.setResult(subMaterialService.addNew(subMaterialDTO));
         return apiResponse;
     }
-
     @GetMapping("/getAllName")
     public ApiResponse<?> getAllSubMaterialsName() {
         ApiResponse<List> apiResponse = new ApiResponse<>();
         apiResponse.setResult(subMaterialService.GetListName());
+        return apiResponse;
+    }
+    @GetMapping("/FilterByMaterial")
+    public ApiResponse<?> FilterByMaterial(@RequestParam("id") int material_id) {
+        ApiResponse<List> apiResponse = new ApiResponse<>();
+        apiResponse.setResult(subMaterialService.FilterByMaterial(material_id));
         return apiResponse;
     }
 

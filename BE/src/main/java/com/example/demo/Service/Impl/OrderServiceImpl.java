@@ -26,6 +26,7 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 @Service
@@ -305,6 +306,53 @@ public class OrderServiceImpl implements OrderService {
 
         return requestAllDTO;
     }
+
+    @Override
+    public List<Orders> GetAllOrder() {
+        return orderRepository.findAll();
+    }
+
+    @Override
+    public List<Orders> FindByNameOrCode(String key) {
+        List<Orders> ordersList = orderRepository.findOrderByAddressorCode(key);
+        if(ordersList.isEmpty()){
+            throw new AppException(ErrorCode.NOT_FOUND);
+        }
+        return ordersList;
+    }
+
+    @Override
+    public List<Orders> FilterByDate(Date from, Date to) {
+        List<Orders> ordersList = orderRepository.findByOrderDateBetween(from, to);
+        if(ordersList.isEmpty()){
+            throw new AppException(ErrorCode.NOT_FOUND);
+        }
+        return ordersList;
+
+    }
+
+    @Override
+    public List<Orders> FilterByStatus(int status_id) {
+        List<Orders> ordersList = orderRepository.filterByStatus(status_id);
+        if(ordersList.isEmpty()){
+            throw new AppException(ErrorCode.NOT_FOUND);
+        }
+        return ordersList;
+
+    }
+
+    @Override
+    public List<Orders> HistoryOrder() {
+        UserDetails userDetails =(UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        User user =userRepository.getUserByUsername(userDetails.getUsername());
+        List<Orders> ordersList = orderRepository.findHistoryOrder(user.getUserId());
+        if(ordersList.isEmpty()){
+            throw new AppException(ErrorCode.NOT_FOUND);
+        }
+        return ordersList;
+
+    }
+
     @Override
     public List<RequestProducts> GetAllProductRequest() {
         return requestProductRepository.findAll();

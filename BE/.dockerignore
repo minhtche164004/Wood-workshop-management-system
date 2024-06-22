@@ -6,4 +6,5 @@
 !target/demo-0.0.1-SNAPSHOT.jar
 !src
 !pom.xml
-!.mvn
+!mvnw
+!mvnw.cmd

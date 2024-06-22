@@ -1,23 +1,38 @@
-# Stage 1: Build
-FROM eclipse-temurin:17-jdk-alpine as builder
-WORKDIR /opt/app
-COPY .mvn/ .mvn
-COPY mvnw pom.xml ./
-RUN chmod +x mvnw
-RUN ./mvnw dependency:go-offline
-COPY ./src ./src
-RUN ./mvnw clean install
+FROM amazoncorretto:17.0.3-alpine as corretto-jdk
+MAINTAINER TrinhCongMInh
+ENV DOCKER_BUILDKIT=1
 
-# Stage 2: Create runtime image using jlink
-FROM eclipse-temurin:17-jdk-alpine as jlink
-WORKDIR /opt/jlink
-COPY --from=builder /opt/app/target/*.jar /opt/app/app.jar
-RUN jlink --add-modules ALL-MODULE-PATH --output /opt/jre --strip-debug --no-header-files --no-man-pages --compress=2
+# required for strip-debug to work
+RUN apk add --no-cache binutils
 
-# Stage 3: Runtime
-FROM alpine:3.18
-WORKDIR /opt/app
+# Build small JRE image
+RUN $JAVA_HOME/bin/jlink \
+         --verbose \
+         --add-modules java.base,java.logging,java.desktop,java.management,java.naming,java.sql,java.xml,java.security.jgss,java.instrument,jdk.unsupported \
+         --strip-debug \
+         --no-man-pages \
+         --no-header-files \
+         --compress=2 \
+         --output /customjre
+
+# Final image
+FROM alpine:latest
+ENV JAVA_HOME=/jre
+ENV PATH="${JAVA_HOME}/bin:${PATH}"
+
+# Copy custom JRE from the build stage
+COPY --from=corretto-jdk /customjre $JAVA_HOME
+
+# Add app user
+ARG APPLICATION_USER=appuser
+RUN adduser --no-create-home -u 1000 -D $APPLICATION_USER \
+&& mkdir /app && \
+    chown -R $APPLICATION_USER /app
+
+USER 1000
+
+COPY --chown=1000:1000 target/demo-0.0.1-SNAPSHOT.jar /app/app.jar
+WORKDIR /app
+
 EXPOSE 8080
-COPY --from=jlink /opt/jre /opt/jre
-COPY --from=builder /opt/app/target/*.jar /opt/app/app.jar
-ENTRYPOINT ["/opt/jre/bin/java", "-jar", "/opt/app/app.jar"]
+ENTRYPOINT [ "/jre/bin/java", "-jar", "/app/app.jar" ]

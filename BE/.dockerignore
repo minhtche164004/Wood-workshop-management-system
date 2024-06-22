@@ -1,5 +1,6 @@
 # Excludes all files & folders by default
-./
+*.*
+*/
 
 # Includes necessary files & folders
 !target/demo-0.0.1-SNAPSHOT.jar

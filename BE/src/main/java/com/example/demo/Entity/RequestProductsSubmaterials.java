@@ -31,5 +31,9 @@ public class RequestProductsSubmaterials {
     @Column(name = "quantity")
     private Integer quantity;
 
-
+    public RequestProductsSubmaterials(SubMaterials subMaterial, RequestProducts requestProduct, Integer quantity) {
+        this.subMaterial = subMaterial;
+        this.requestProduct = requestProduct;
+        this.quantity = quantity;
+    }
 }

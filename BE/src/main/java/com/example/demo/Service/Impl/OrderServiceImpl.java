@@ -354,6 +354,15 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
+    public List<Orderdetails> getAllOrderDetail() {
+        List<Orderdetails> orderdetailsList = orderDetailRepository.findAll();
+        if(orderdetailsList.isEmpty()){
+            throw new AppException(ErrorCode.NOT_FOUND);
+        }
+        return orderdetailsList;
+    }
+
+    @Override
     public List<RequestProducts> GetAllProductRequest() {
         return requestProductRepository.findAll();
     }

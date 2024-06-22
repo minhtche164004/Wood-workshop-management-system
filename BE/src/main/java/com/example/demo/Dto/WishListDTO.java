@@ -7,7 +7,7 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class WhiteListDTO {
+public class WishListDTO {
     private Integer user_id;
     private Integer product_id;
 }

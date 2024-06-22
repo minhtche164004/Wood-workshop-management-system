@@ -23,6 +23,10 @@ public class Jobs {
     @Column(name = "job_id")
     private int jobId;
 
+    //thêm trường name cho job
+    @Column(name = "job_name")
+    private String job_name;
+
     @ManyToOne
     @JsonIgnore
     @JoinColumn(name = "user_id")
@@ -32,6 +36,11 @@ public class Jobs {
     @JoinColumn(name = "product_id")
     @JsonIgnore
     private Products product;  // Liên kết với entity Products
+
+    @ManyToOne
+    @JoinColumn(name = "request_product_id")
+    @JsonIgnore
+    private RequestProducts requestProducts;  // Liên kết với entity RequestProduct
 
     @Column(name = "description")
     private String description;

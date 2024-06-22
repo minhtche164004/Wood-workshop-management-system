@@ -14,8 +14,8 @@ public class Employeematerials {
     @Column(name = "emp_material_id")
     private int empMaterialId;
 
-    @Column(name = "quantity")
-    private int quantity;
+//    @Column(name = "quantity")
+//    private int quantity;
 
     @ManyToOne
     @JoinColumn(name = "employee_id")
@@ -25,8 +25,9 @@ public class Employeematerials {
     @JoinColumn(name = "product_sub_material_id") // Liên kết với ProductSubMaterials
     private ProductSubMaterials productSubMaterial;
 
-
-
+    @ManyToOne
+    @JoinColumn(name = "request_products_submaterials_id") // Liên kết RequestProductsSubmaterials
+    private RequestProductsSubmaterials requestProductsSubmaterials;
 
 }
 

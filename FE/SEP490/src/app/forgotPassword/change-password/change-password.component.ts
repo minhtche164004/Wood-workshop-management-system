@@ -2,14 +2,15 @@ import { Component, OnInit } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpErrorResponse } from '@angular/common/http';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
-import { environment } from 'src/app/environments/environment'; // Đường dẫn đúng tới file môi trường
+import { environment } from 'src/app/environments/environment';
+
 @Component({
   selector: 'app-change-password',
   templateUrl: './change-password.component.html',
   styleUrls: ['./change-password.component.scss']
 })
 export class ChangePasswordComponent implements OnInit {
-
+  isLoading = false;
   email: string = '';
   password: string = '';
   repeatPassword: string = '';
@@ -43,6 +44,7 @@ export class ChangePasswordComponent implements OnInit {
 
   onSubmit(): void {
     if (!this.validatePassword()) {
+      this.isLoading = false;
       return;
     }
 
@@ -56,6 +58,8 @@ export class ChangePasswordComponent implements OnInit {
       repeatPassword: this.repeatPassword
     };
 
+    this.isLoading = true; // Start loading before HTTP request
+
     this.http.post<any>(
       `${this.baseUrl}/changePassword/${encodeURIComponent(this.email)}`,
       payload,
@@ -66,7 +70,7 @@ export class ChangePasswordComponent implements OnInit {
         if (response.includes('Password has been changed!')) {
           this.errorMessage = '';
           this.toastr.success('Mật khẩu đã được thay đổi thành công!', 'Thành công');
-          this.router.navigate(['/login']);
+          this.router.navigate(['/register']);
         } else {
           console.error('Phản hồi không mong muốn từ máy chủ:', response);
           this.errorMessage = 'Đã xảy ra lỗi không mong muốn. Vui lòng thử lại.';
@@ -82,6 +86,9 @@ export class ChangePasswordComponent implements OnInit {
           this.errorMessage = 'Đã xảy ra lỗi không mong muốn. Vui lòng thử lại.';
           this.toastr.error(this.errorMessage, 'Lỗi');
         }
+      },
+      () => {
+        this.isLoading = false; // Stop loading regardless of success or error
       }
     );
   }

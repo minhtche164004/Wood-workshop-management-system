@@ -2,62 +2,64 @@
 <h2>Đăng ký / Đăng nhập</h2>
 <div class="container" id="container">
     <!-- Form Đăng ký -->
-    <div class="form-container sign-up-container">
+    <div style="margin-top: 40px;" class="form-container sign-up-container">
 
         <form (ngSubmit)="registerUser()" #registerForm="ngForm">
             <h1>Tạo tài khoản</h1>
-            <div class="social-container">
-                <a href="#" class="social"><i class="fab fa-facebook-f"></i></a>
-                <a href="#" class="social"><i class="fab fa-google-plus-g"></i></a>
-                <a href="#" class="social"><i class="fab fa-linkedin-in"></i></a>
-            </div>
-            <span>hoặc sử dụng email của bạn để đăng ký</span>
+
             <input type="text" placeholder="Tên tài khoản" name="username" [(ngModel)]="username" required>
             <input type="password" placeholder="Mật khẩu" name="password" [(ngModel)]="password" required>
             <input type="password" placeholder="Xác nhận mật khẩu" name="checkPass" [(ngModel)]="checkPass" required>
             <input type="email" placeholder="Email" name="email" [(ngModel)]="email" required>
             <input type="text" placeholder="Số điện thoại" name="phoneNumber" [(ngModel)]="phoneNumber" required>
             <input type="text" placeholder="Họ tên" name="fullname" [(ngModel)]="fullname" required>
-            
+        
             <select [formControl]="provinceControl" required>
                 <option [ngValue]="null" disabled>Tỉnh / Thành Phố</option>
                 <option *ngFor="let province of provinces" [value]="province.name">{{ province.name }}</option>
             </select>
-            
-            <select [formControl]="districtControl" required> 
+        
+            <select [formControl]="districtControl" required>
                 <option [ngValue]="null" disabled>Quận / Huyện</option>
                 <option *ngFor="let district of districts" [value]="district.name">{{ district.name }}</option>
             </select>
-            
+        
             <select [formControl]="wardControl" required>
                 <option [ngValue]="null" disabled>Phường / Xã</option>
                 <option *ngFor="let ward of wards" [value]="ward.name">{{ ward.name }}</option>
             </select>
-            
+        
             <input type="text" placeholder="Địa chỉ cụ thể" name="address" [(ngModel)]="address" required>
-            
-            <button type="submit">Đăng ký</button>
+        
+            <button [disabled]="isLoading">
+                <span *ngIf="!isLoading">Đăng ký</span>
+                <span *ngIf="isLoading" class="loader"></span>
+            </button>
         </form>
     </div>
 
     <!-- Form Đăng nhập -->
     <div class="form-container sign-in-container">
         <form>
-            <h1>Đăng nhập</h1>
-            <div class="social-container">
-                <a href="#" class="social"><i class="fab fa-facebook-f"></i></a>
-                <a href="#" class="social"><i class="fab fa-google-plus-g"></i></a>
-                <a href="#" class="social"><i class="fab fa-linkedin-in"></i></a>
-            </div>
-            <span>hoặc sử dụng tài khoản của bạn</span>
-            <input type="text" id="username" [(ngModel)]="loginObj.username" name="username" placeholder="Tên đăng nhập" required />
-            <input type="password" id="password" [(ngModel)]="loginObj.password" name="password" placeholder="Mật khẩu" required />
-            <a routerLink="/verifyMail">Quên mật khẩu của bạn?</a>
-            <div *ngIf="errorMessage" class="message error">{{ errorMessage }}</div>
-            <div *ngIf="successMessage" class="message success">{{ successMessage }}</div>
-            <button (click)="onLogin()">Đăng nhập</button>
+          <h1>Đăng nhập</h1>
+          <div class="social-container">
+            <a href="#" class="social"><i class="fab fa-facebook-f"></i></a>
+            <a href="#" class="social"><i class="fab fa-google-plus-g"></i></a>
+            <a href="#" class="social"><i class="fab fa-linkedin-in"></i></a>
+          </div>
+          <span>hoặc sử dụng tài khoản của bạn</span>
+          <input type="text" id="username" [(ngModel)]="loginObj.username" name="username" placeholder="Tên đăng nhập" required />
+          <input type="password" id="password" [(ngModel)]="loginObj.password" name="password" placeholder="Mật khẩu" required />
+          <a routerLink="/verifyMail">Quên mật khẩu của bạn?</a>
+          <div *ngIf="errorMessage" class="message error">{{ errorMessage }}</div>
+          <div *ngIf="successMessage" class="message success">{{ successMessage }}</div>
+          <button [disabled]="isLoading" (click)="onLogin()">
+            <span *ngIf="!isLoading">Đăng nhập</span>
+            <span *ngIf="isLoading" class="loader"></span>
+          </button>
         </form>
-    </div>
+      </div>
+      
 
     <!-- Overlay -->
     <div class="overlay-container">

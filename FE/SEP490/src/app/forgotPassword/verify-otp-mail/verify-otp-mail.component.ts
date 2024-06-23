@@ -15,7 +15,7 @@ export class VerifyOtpMailComponent implements OnInit {
   otp: number;
   email: string;
   errorMessage: string;
-
+  isLoading = false;
   constructor(private http: HttpClient, private router: Router, private route: ActivatedRoute, private toastr: ToastrService) {
     this.otp = 0;
     this.email = '';
@@ -41,11 +41,13 @@ export class VerifyOtpMailComponent implements OnInit {
   }
 
   verifyOtpEmail() {
-    if (!this.email || !this.otp) {
-      this.errorMessage = 'Please provide both OTP and Email.';
+    this.isLoading = true;
+    
+    if (!this.validateOTP(this.otp)) {
+      this.toastr.error('OTP phải là 6 số và chỉ chứa số.', 'Lỗi');
+      this.isLoading = false;
       return;
     }
-
     this.http.post(`${environment.apiUrl}api/auth/forgotPassword/verifyOtp/${this.otp}/${this.email}`, {}, { responseType: 'text' })
       .subscribe(
         (response) => {
@@ -75,7 +77,8 @@ export class VerifyOtpMailComponent implements OnInit {
           this.toastr.error('OTP đã hết hạn , OTP mới đã được gửi, vui lòng check mail');
         }
         }
-      );
-
+      ).add(() => {
+        this.isLoading = false; // Stop loading after API call completes
+    });
+    }
   }
-}

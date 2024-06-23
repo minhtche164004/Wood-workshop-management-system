@@ -19,4 +19,7 @@ public class Status_Product {
     private Integer status_id;
     @Column(name = "status_name", nullable = false)
     private String status_name;
+    @Column(name = "type", nullable = false)
+    private Integer type;
+
 }

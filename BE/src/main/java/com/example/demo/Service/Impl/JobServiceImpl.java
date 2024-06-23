@@ -18,6 +18,8 @@ public class JobServiceImpl implements JobService {
     }
 
 
+
+
     //manager view 1 list orderDetail(bao gồm các sản phẩm và số lượng của nó có trong đơn hàng , 1 order thì có thể có nhiều orderDetail)
     //trong list ấy , manager sẽ bấm vào thao tác phân việc
 

@@ -27,7 +27,7 @@ public class JobDTO {
     private BigDecimal cost;
     @NotNull(message = "MUST_REQUIRED")
     private String job_name;
-
+    private Integer order_detail_id;
     private Integer product_id;
     private Integer request_product_id;
 

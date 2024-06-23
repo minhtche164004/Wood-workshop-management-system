@@ -46,6 +46,13 @@ public class Jobs {
     @JoinColumn(name = "order_detail_id") // Khóa ngoại tới OrderDetail
     private Orderdetails orderdetails;
 
+//nay la status của job (status_product có type=1 , là đang thi công hay đã hoàn thành)
+    @ManyToOne(fetch = FetchType.EAGER,cascade = CascadeType.ALL)
+//    @JsonIgnore
+    @JoinColumn(name = "status_id")
+    private Status_Product status;
+
+
     @Column(name = "description")
     private String description;
 

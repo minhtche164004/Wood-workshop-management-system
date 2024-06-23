@@ -24,6 +24,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.math.BigDecimal;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.LocalDate;
@@ -197,11 +198,18 @@ return products;
 
 
 
+
     @Override
     public ProductDTO_Show GetProductByIdWithImage(int id) {
         List<Productimages> productimagesList = productImageRepository.findImageByProductId(id);
         Products products = productRepository.findById(id);
+        if(products == null){
+            throw new AppException(ErrorCode.NOT_FOUND);
+        }
         ProductDTO_Show productDTOShow = new ProductDTO_Show();
+        if(productimagesList == null){
+            productDTOShow.setImageList(null);
+        }
         productDTOShow.setProductId(products.getProductId());
         productDTOShow.setProductName(products.getProductName());
         productDTOShow.setDescription(products.getDescription());
@@ -218,6 +226,11 @@ return products;
             productimages.setFullPath(getAddressLocalComputer(productimages.getFullPath()));
             processedImages.add(productimages); // Thêm vào danh sách mới
         }
+       List<String> list = productSubMaterialsRepository.GetSubNameByProductId(id);
+        if(list.isEmpty()){
+            productDTOShow.setSub_material_name(null);
+        }
+        productDTOShow.setSub_material_name(list);
         productDTOShow.setImageList(processedImages); // Gán danh sách mới vào DTO
 
         return productDTOShow;
@@ -236,9 +249,10 @@ return products;
     }// Trả về đường dẫn tương đối hoặc đường dẫn ban đầu nếu không tìm thấy "/assets/"
 
 
+    //này là dành cho trang homepage
     @Override
-    public List<Products> GetAllProduct() {
-        List<Products> productList = productRepository.findAll();
+    public List<Products> GetAllProductForCustomer() {
+        List<Products> productList = productRepository.ViewProductLandingPage(3); //status =3 , nghĩa là các sản phẩm đang còn hàng
         if (productList.isEmpty()) {
             throw new AppException(ErrorCode.NOT_FOUND);
         }
@@ -248,6 +262,18 @@ return products;
         return productList;
     }
 
+    //này là giày cho trang quản lí của admin , list hết product ra
+    @Override
+    public List<Products> GetAllProductForAdmin() {
+        List<Products> productList = productRepository.findAll();
+        if (productList.isEmpty()) {
+            throw new AppException(ErrorCode.NOT_FOUND);
+        }
+        for (Products product : productList) {
+            product.setImage(getAddressLocalComputer(product.getImage())); // Cập nhật lại đường dẫn ảnh
+        }
+        return productList;
+    }
 
 
     @Override
@@ -276,7 +302,6 @@ return products;
         }
         return productsList;
     }
-
 
 
 

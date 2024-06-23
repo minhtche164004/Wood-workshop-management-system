@@ -1,8 +1,10 @@
 package com.example.demo.Config;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Configuration;
 import redis.clients.jedis.Jedis;
 
+@Configuration
 public class RedisConfig {
 
     private static Jedis jedis;

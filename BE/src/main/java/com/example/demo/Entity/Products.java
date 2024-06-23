@@ -1,13 +1,16 @@
 package com.example.demo.Entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Min;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
 import java.sql.Date;
+import java.util.List;
 
 @Data
 @AllArgsConstructor
@@ -49,7 +52,11 @@ public class Products {
     @Column(name = "type") //type này là kiểu có sẵn hoặc không có sẵn( o là không có sẵn,1 là hàng có sẵn )
     private int type;
 
+//    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL)
+//    private List<ProductSubMaterials> productSubMaterials;
+
     @ManyToOne(fetch = FetchType.EAGER,cascade = CascadeType.ALL)
+
 //    @JsonIgnore
     @JoinColumn(name = "status_id")
     private Status_Product status;

@@ -45,6 +45,8 @@ public class Orders {
     @JoinColumn(name = "infor_id", referencedColumnName = "infor_id")
     private UserInfor userInfor; // Assuming you have an InformationUser entity
 
+
+
     @Column(name = "code")
     private String code;
 

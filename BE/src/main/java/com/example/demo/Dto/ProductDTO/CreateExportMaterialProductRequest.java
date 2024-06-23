@@ -11,5 +11,5 @@ import java.util.Map;
 @NoArgsConstructor
 public class CreateExportMaterialProductRequest {
     private int productId;
-    private Map<Integer, Integer> subMaterialQuantities;
+    private Map<Integer, Double> subMaterialQuantities;
 }

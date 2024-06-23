@@ -28,6 +28,7 @@ public interface OrderService {
     List<Orders> FilterByDate(Date from, Date to);
     List<Orders> FilterByStatus(int status_id);
     List<Orders> HistoryOrder();
+    List<Orderdetails> getAllOrderDetail();
 
 
 

@@ -12,7 +12,7 @@ import java.util.Objects;
 @AllArgsConstructor
 @Data
 @NoArgsConstructor
-@Table(name = "processproducterror", schema = "test1", catalog = "")
+@Table(name = "process_product_error", schema = "test1", catalog = "")
 public class Processproducterror {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

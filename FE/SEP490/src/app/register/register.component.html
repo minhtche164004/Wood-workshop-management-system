@@ -2,16 +2,11 @@
 <h2>Đăng ký / Đăng nhập</h2>
 <div class="container" id="container">
     <!-- Form Đăng ký -->
-    <div class="form-container sign-up-container">
+    <div style="margin-top: 40px;" class="form-container sign-up-container">
 
         <form (ngSubmit)="registerUser()" #registerForm="ngForm">
             <h1>Tạo tài khoản</h1>
-            <div class="social-container">
-                <a href="#" class="social"><i class="fab fa-facebook-f"></i></a>
-                <a href="#" class="social"><i class="fab fa-google-plus-g"></i></a>
-                <a href="#" class="social"><i class="fab fa-linkedin-in"></i></a>
-            </div>
-            <span>hoặc sử dụng email của bạn để đăng ký</span>
+
             <input type="text" placeholder="Tên tài khoản" name="username" [(ngModel)]="username" required>
             <input type="password" placeholder="Mật khẩu" name="password" [(ngModel)]="password" required>
             <input type="password" placeholder="Xác nhận mật khẩu" name="checkPass" [(ngModel)]="checkPass" required>

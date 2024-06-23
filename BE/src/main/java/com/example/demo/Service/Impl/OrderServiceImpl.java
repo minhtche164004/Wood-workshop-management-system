@@ -138,9 +138,9 @@ public class OrderServiceImpl implements OrderService {
                         orderdetail.setRequestProduct(requestProductRepository.findById(item.getId()));
                         orderdetail.setQuantity(item.getQuantity()); //set quantity
                         orderdetail.setUnitPrice(item.getPrice()); //set unit price
-                        if(orderdetail.getRequestProduct().getQuantity() < item.getQuantity()){
-                            throw new AppException(ErrorCode.OUT_OF_STOCK);
-                        }
+//                        if(orderdetail.getRequestProduct().getQuantity() < item.getQuantity()){
+//                            throw new AppException(ErrorCode.OUT_OF_STOCK);
+//                        }
                         requestProducts.setQuantity(requestProducts.getQuantity() - item.getQuantity());
                         requestProductRepository.save(requestProducts);
                         orderdetail.setProduct(null); //set product null
@@ -218,7 +218,7 @@ public class OrderServiceImpl implements OrderService {
         requestProducts.setRequestProductName(requestProductDTO.getRequestProductName());
         requestProducts.setDescription(requestProductDTO.getDescription());
         requestProducts.setPrice(requestProductDTO.getPrice());
-        requestProducts.setQuantity(requestProductDTO.getQuantity());
+        requestProducts.setQuantity(0);
         requestProducts.setCompletionTime(requestProductDTO.getCompletionTime());
         Requests requests = requestRepository.findById(requestProductDTO.getRequest_id());
         requestProducts.setRequests(requests);
@@ -228,9 +228,9 @@ public class OrderServiceImpl implements OrderService {
 //        if (requestProductRepository.countByRequestProductName(requestProductDTO.getRequestProductName()) > 0) {
 //            throw new AppException(ErrorCode.NAME_EXIST);
 //        }
-        if (!checkConditionService.checkInputQuantity(requestProductDTO.getQuantity())) {
-            throw new AppException(ErrorCode.QUANTITY_INVALID);
-        }
+//        if (!checkConditionService.checkInputQuantityInt(requestProductDTO.getQuantity())) {
+//            throw new AppException(ErrorCode.QUANTITY_INVALID);
+//        }
         if (!checkConditionService.checkInputPrice(requestProductDTO.getPrice())) {
             throw new AppException(ErrorCode.PRICE_INVALID);
         }

@@ -40,6 +40,9 @@ public interface UserRepository extends JpaRepository<User,Integer> {
     @Query("SELECT u FROM User u WHERE u.position.position_id IS NOT NULL")
     List<User> findUsersWithPosition();
 
+//    @Query("SELECT u FROM User u WHERE u.position.position_id IS NOT NULL AND ")
+//    List<User> CountJobEmployee(@Param("userId") int userId);
+
 
 //    @Transactional
 //    @Modifying

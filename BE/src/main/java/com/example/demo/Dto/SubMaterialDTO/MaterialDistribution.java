@@ -19,5 +19,4 @@ public class MaterialDistribution {
     private Date delivery_date ; //ngày nhận
     private String category_name; //loại sản phẩm
 
-
 }

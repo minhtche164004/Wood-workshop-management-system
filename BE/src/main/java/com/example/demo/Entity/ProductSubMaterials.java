@@ -29,9 +29,9 @@ public class ProductSubMaterials {
     private Products product;
 
     @Column(name = "quantity")
-    private Integer quantity;
+    private Double quantity;
 
-    public ProductSubMaterials(SubMaterials subMaterial, Products product, Integer quantity) {
+    public ProductSubMaterials(SubMaterials subMaterial, Products product, Double quantity) {
         this.subMaterial = subMaterial;
         this.product = product;
         this.quantity = quantity;

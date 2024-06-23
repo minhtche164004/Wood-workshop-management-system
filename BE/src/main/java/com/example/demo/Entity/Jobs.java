@@ -42,6 +42,10 @@ public class Jobs {
     @JsonIgnore
     private RequestProducts requestProducts;  // Liên kết với entity RequestProduct
 
+    @ManyToOne
+    @JoinColumn(name = "order_detail_id") // Khóa ngoại tới OrderDetail
+    private Orderdetails orderdetails;
+
     @Column(name = "description")
     private String description;
 

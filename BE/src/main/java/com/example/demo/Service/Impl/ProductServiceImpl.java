@@ -79,11 +79,11 @@ public class ProductServiceImpl implements ProductService {
         products.setCategories(categories);
         products.setType(productDTO1.getType());
 
-        products.setQuantity(productDTO1.getQuantity());
-        if (productRepository.countByProductName(productDTO1.getProduct_name()) > 0) {
-            throw new AppException(ErrorCode.NAME_EXIST);
-        }
-
+//        products.setQuantity(productDTO1.getQuantity());
+//        if (productRepository.countByProductName(productDTO1.getProduct_name()) > 0) {
+//            throw new AppException(ErrorCode.NAME_EXIST);
+//        }
+        products.setQuantity(0);//tạo mới product thì quantity mặc định là 0
         validateProductDTO1(productDTO1);
         LocalDate today = LocalDate.now();
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("ddMMyy");
@@ -171,11 +171,11 @@ public class ProductServiceImpl implements ProductService {
                 productRepository.findByName(productDTO1.getProduct_name()) != null) {
             throw new AppException(ErrorCode.NAME_EXIST);
         }
+        //ko đc chỉnh sửa quantity
         validateProductDTO1(productDTO1);
         productRepository.updateProduct(id,
                 productDTO1.getProduct_name(),
                 productDTO1.getDescription(),
-                productDTO1.getQuantity(),
                 productDTO1.getPrice(),
                 productDTO1.getStatus_id(),
                 productDTO1.getCategory_id(),
@@ -285,7 +285,7 @@ return products;
         if (!checkConditionService.checkInputName(productDTO.getProduct_name())) {
             throw new AppException(ErrorCode.INVALID_FORMAT_NAME);
         }
-        if (!checkConditionService.checkInputQuantity(productDTO.getQuantity())) {
+        if (!checkConditionService.checkInputQuantityInt(productDTO.getQuantity())) {
             throw new AppException(ErrorCode.QUANTITY_INVALID);
         }
         if (!checkConditionService.checkInputPrice(productDTO.getPrice())) {
@@ -296,9 +296,9 @@ return products;
         if (!checkConditionService.checkInputName(productDTO1.getProduct_name())) {
             throw new AppException(ErrorCode.INVALID_FORMAT_NAME);
         }
-        if (!checkConditionService.checkInputQuantity(productDTO1.getQuantity())) {
-            throw new AppException(ErrorCode.QUANTITY_INVALID);
-        }
+//        if (!checkConditionService.checkInputQuantityInt(productDTO1.getQuantity())) {
+//            throw new AppException(ErrorCode.QUANTITY_INVALID);
+//        }
         if (!checkConditionService.checkInputPrice(productDTO1.getPrice())) {
             throw new AppException(ErrorCode.PRICE_INVALID);
         }
@@ -310,18 +310,18 @@ return products;
     //nếu xuất đơn mà ko đủ quantity thì sẽ hiển thị thông báo lỗi -> người dùng vào nhập thêo sub_material, bấm xuất lại đơn .
     @Transactional
     @Override
-    public ResponseEntity<ApiResponse<List<ProductSubMaterials>>> createExportMaterialProduct(int productId, Map<Integer, Integer> subMaterialQuantities) {
+    public ResponseEntity<ApiResponse<List<ProductSubMaterials>>> createExportMaterialProduct(int productId, Map<Integer, Double> subMaterialQuantities) {
         Products product = productRepository.findById(productId);
 
         List<ProductSubMaterials> productSubMaterialsList = new ArrayList<>();
         Map<String, String> errors = new HashMap<>(); //hashmap cho error
 
-        for (Map.Entry<Integer, Integer> entry : subMaterialQuantities.entrySet()) {
+        for (Map.Entry<Integer, Double> entry : subMaterialQuantities.entrySet()) {
             int subMaterialId = entry.getKey();
-            int quantity = entry.getValue();
+            double quantity = entry.getValue();
             SubMaterials subMaterial = subMaterialsRepository.findById1(subMaterialId);
 
-            int currentQuantity = subMaterial.getQuantity();
+            double currentQuantity = subMaterial.getQuantity();
             if (quantity > currentQuantity) {
                 errors.put(subMaterial.getSubMaterialName(), "Không đủ số lượng");
                 continue;
@@ -345,18 +345,18 @@ return products;
 
     @Transactional
     @Override
-    public ResponseEntity<ApiResponse<List<RequestProductsSubmaterials>>> createExportMaterialProductRequest(int request_product_id, Map<Integer, Integer> subMaterialQuantities) {
+    public ResponseEntity<ApiResponse<List<RequestProductsSubmaterials>>> createExportMaterialProductRequest(int request_product_id, Map<Integer, Double> subMaterialQuantities) {
         RequestProducts requestProducts = requestProductRepository.findById(request_product_id);
 
         List<RequestProductsSubmaterials> requestProductsSubmaterialsList = new ArrayList<>();
         Map<String, String> errors = new HashMap<>(); //hashmap cho error
 
-        for (Map.Entry<Integer, Integer> entry : subMaterialQuantities.entrySet()) {
+        for (Map.Entry<Integer, Double> entry : subMaterialQuantities.entrySet()) {
             int subMaterialId = entry.getKey();
-            int quantity = entry.getValue();
+            double quantity = entry.getValue();
             SubMaterials subMaterial = subMaterialsRepository.findById1(subMaterialId);
 
-            int currentQuantity = subMaterial.getQuantity();
+            double currentQuantity = subMaterial.getQuantity();
             if (quantity > currentQuantity) {
                 errors.put(subMaterial.getSubMaterialName(), "Không đủ số lượng");
                 continue;

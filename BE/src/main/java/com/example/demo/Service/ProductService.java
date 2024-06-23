@@ -20,11 +20,11 @@ public interface ProductService {
     List<Products> GetAllProduct();
     Products EditProduct(int id,ProductDTO1 productDTO1);
     //xuất nguyên liệu cho sản phẩm có sẵn
-    ResponseEntity<ApiResponse<List<ProductSubMaterials>>> createExportMaterialProduct(int product_id, Map<Integer, Integer> subMaterialQuantities);
+    ResponseEntity<ApiResponse<List<ProductSubMaterials>>> createExportMaterialProduct(int product_id, Map<Integer, Double> subMaterialQuantities);
 
     //xuất nguyên liệu cho sản phẩm  theo yêu cầu
 
-    ResponseEntity<ApiResponse<List<RequestProductsSubmaterials>>> createExportMaterialProductRequest(int request_product_id, Map<Integer, Integer> subMaterialQuantities);
+    ResponseEntity<ApiResponse<List<RequestProductsSubmaterials>>> createExportMaterialProductRequest(int request_product_id, Map<Integer, Double> subMaterialQuantities);
 
      Products GetProductById(int product_id);
 

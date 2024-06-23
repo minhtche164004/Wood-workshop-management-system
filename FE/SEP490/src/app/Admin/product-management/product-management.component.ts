@@ -3,30 +3,33 @@ import { ProductListService } from 'src/app/service/product/product-list.service
 import { ToastrService } from 'ngx-toastr';
 import { HttpHeaders } from '@angular/common/http';
 import { MessageService } from 'primeng/api';
+
+interface Category{
+  categoryId: number;
+  categoryName: string;
+}
 @Component({
   selector: 'app-product-management',
   templateUrl: './product-management.component.html',
   styleUrls: ['./product-management.component.scss']
 })
+
 export class ProductManagementComponent implements OnInit {
 
-  products: any[] = [];
+  categories: Category[] = [];
   loginToken: string | null = null;
+  products: any[] = [];
   currentPage: number = 1;
-
   searchKey: string = '';
-  categories: any[] = [];
-  selectedCategory: any = null;
+  selectedCategory: number = 0;
   selectedStatus: any = null;
   product_name: string = '';
   description: string = '';
   quantity: number = 0;
   price: number = 0;
-  category_id: number | null = null;
   selectedType: number = 0;
   productImages: File[] = [];
   thumbnailImage: File | null = null;
-
   constructor(private productListService: ProductListService, private toastr: ToastrService) { }
 
   ngOnInit(): void {
@@ -54,26 +57,39 @@ export class ProductManagementComponent implements OnInit {
       console.error('No loginToken found in localStorage.');
     }
   }
-
   loadCategories(): void {
     this.productListService.getAllCategories().subscribe(
       (data: any) => {
         if (data.code === 1000) {
-          this.categories = data.result;
-          console.log('Danh sách Loại:', this.categories);
+          this.categories = data.result as Category[];
+
+          // Log categories to console for verification
+          console.log('Categories:', this.categories);
+
+          // Iterate through categories and log ID and name
+          this.categories.forEach(category => {
+            console.log(`Category ID: ${category.categoryId}, Category Name: ${category.categoryName}`);
+          });
         } else {
-          console.error('Dữ liệu trả về không hợp lệ:', data);
+          console.error('Invalid data returned:', data);
         }
       },
       (error) => {
-        console.error('Lỗi khi lấy danh sách Loại:', error);
+        console.error('Error fetching categories:', error); 
       }
     );
   }
+ onCategoryChange(selectedValue: string) {
+    // Parse the selected value (if necessary)
+    const categoryId = parseInt(selectedValue, 10); // Assuming it's a number
 
+    // Use the categoryId to perform actions or update data
+    console.log("Selected category ID:", categoryId);
+    // You can perform other actions based on the categoryId
+  }
   searchProduct(): void {
     console.log("Thực hiện tìm kiếm sản phẩm: ", this.searchKey);
-    console.log("Tìm theo loại: ", this.selectedCategory);
+   
     if (this.searchKey && this.selectedCategory == null) {
       this.productListService.findProductByNameOrCode(this.searchKey)
         .subscribe(
@@ -89,7 +105,8 @@ export class ProductManagementComponent implements OnInit {
             } 
           }
         );
-    } else if (this.selectedCategory && this.searchKey == null){
+    } else if (this.selectedCategory != null){
+      console.log("Tìm theo loại: ", this.selectedCategory);
       this.productListService.findProductByCategory(this.selectedCategory)
         .subscribe(
         

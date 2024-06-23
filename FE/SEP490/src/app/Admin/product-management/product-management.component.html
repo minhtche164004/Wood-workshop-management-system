@@ -24,9 +24,8 @@
               <div class="input-group mb-3">
                 <!-- product.component.html -->
                 <select [(ngModel)]="selectedCategory">
-                  <option [ngValue]="null" disabled selected>Chọn danh mục</option>
-                  <option *ngFor="let category of categories" [ngValue]="category.categoryId">{{ category.categoryName
-                    }}</option>
+                  <option [ngValue]="0" disabled selected>Chọn danh mục sản phẩm</option>
+                  <option *ngFor="let category of categories" [ngValue]="category.categoryId">{{ category.categoryName }}</option>
                 </select>
                 <input type="text" class="form-control" placeholder="Tìm kiếm sản phẩm..." [(ngModel)]="searchKey">
                 <button class="btn search-button" type="button" (click)="searchProduct()">
@@ -62,15 +61,15 @@
             <td>{{ i + 1 + (currentPage - 1) * 10 }}</td>
             <td>{{ product.code }}</td>
             <td class="action-buttons">
-              <a href="#" class="settings" title="Edit" data-toggle="modal" data-target="#editProductModal" (click)="editProduct(product.id)">
+              <a href="#" class="settings" title="Chỉnh sửa" data-toggle="modal" data-target="#editProductModal" (click)="editProduct(product.id)">
                 <i class="fa-solid fa-pen-to-square"></i>
               </a>
-              <a href="#" class="delete" title="Delete" data-toggle="modal" data-target="#confirmDeleteModal" (click)="deleteProduct(product.id)">
+              <a href="#" class="delete" title="Xóa" data-toggle="modal" data-target="#confirmDeleteModal" (click)="deleteProduct(product.id)">
                 <i class="fa-regular fa-trash-can"></i>
               </a>
-              <a href="#" class="info" title="Info" data-toggle="modal" data-target="#productDetailModal" (click)="showProductDetails(product.id)">
-                <i class="fa-solid fa-circle-info"></i>
-              </a>
+              <a href="#" class="info" title="CChi tiết" data-toggle="modal" data-target="#productDetailModal" (click)="showProductDetails(product.id)">
+                <i class="fa-solid fa-ellipsis-vertical"></i>
+              </a>  
             </td>
             <td><img class="img_product" [src]="product.image" alt="Ảnh đại diện"></td>
             <td>{{ product.completionTime }}</td>

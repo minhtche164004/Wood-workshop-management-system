@@ -2,7 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
-import { environment } from 'src/app/environments/environment'; // Đường dẫn đúng tới file môi trường
+import { environment } from 'src/app/environments/environment';
+
 @Component({
   selector: 'app-verify-mail',
   templateUrl: './verify-mail.component.html',
@@ -11,13 +12,14 @@ import { environment } from 'src/app/environments/environment'; // Đường d�
 export class VerifyMailComponent implements OnInit {
   email: string = '';
   errorMessage: string = '';
+  isLoading = false;
 
   constructor(
     private http: HttpClient,
     private router: Router,
     private route: ActivatedRoute,
     private toastr: ToastrService
-  ) { }
+  ) {}
 
   ngOnInit(): void {
     // Retrieve email from route parameters
@@ -41,6 +43,8 @@ export class VerifyMailComponent implements OnInit {
       this.toastr.error('Email không hợp lệ.', 'Lỗi');
       return;
     }
+
+    this.isLoading = true; // Start loading before HTTP request
 
     // Headers and options for the HTTP request
     const options = {
@@ -83,7 +87,10 @@ export class VerifyMailComponent implements OnInit {
         } else {
           this.toastr.error('Đã xảy ra lỗi trong quá trình xác nhận email.', 'Lỗi khi thực hiện xác nhận');
         }
+      },
+      () => {
+        this.isLoading = false; // Stop loading regardless of success or error
       }
     );
   }
-}
+} 

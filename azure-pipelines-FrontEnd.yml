@@ -12,6 +12,7 @@ pool:
 
 variables:
   buildConfiguration: 'prod'
+  system.debug: 'true'
 
 steps:
 - script: |

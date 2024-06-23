@@ -23,6 +23,7 @@ import org.springframework.security.core.parameters.P;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import redis.clients.jedis.Jedis;
+import redis.clients.jedis.JedisPooled;
 
 import java.lang.reflect.Type;
 import java.nio.file.Paths;
@@ -50,49 +51,49 @@ public class ProductController {
     private WhiteListService whiteListService;
     @Autowired
     private Status_Product_Repository statusProductRepository;
-    private static final Jedis jedis = RedisConfig.getRedisInstance();
+    private static final JedisPooled jedis = RedisConfig.getRedisInstance();
 
     //    @PreAuthorize("hasAnyAuthority('ADMIN')")
     @GetMapping("/getAllProductForCustomer")
     public ApiResponse<?> getAllProductForCustomer() {
         ApiResponse<List> apiResponse = new ApiResponse<>();
-//        String cacheKey = "all_products";
-//        List<Products> products;
-//        String cachedData = jedis.get(cacheKey);
-//        if (cachedData != null) {
-//            Type type = new TypeToken<List<Products>>() {
-//            }.getType();
-//            Gson gson = new GsonBuilder().setDateFormat("MMM dd, yyyy").create();
-//            products = new Gson().fromJson(cachedData, type);
-//        } else {
-//            products = productService.GetAllProduct();
-//            String jsonData = new Gson().toJson(products);
-//            jedis.set(cacheKey, jsonData);
-//            jedis.expire(cacheKey, 1200);
-//        }
-//        apiResponse.setResult(products);
-        apiResponse.setResult(productService.GetAllProductForCustomer());
+        String cacheKey = "all_products_customer";
+        List<Products> products;
+        String cachedData = jedis.get(cacheKey);
+        if (cachedData != null) {
+            Type type = new TypeToken<List<Products>>() {
+            }.getType();
+            Gson gson = new GsonBuilder().setDateFormat("MMM dd, yyyy").create();
+            products = gson.fromJson(cachedData, type);
+        } else {
+            products = productService.GetAllProductForCustomer();
+            String jsonData = new Gson().toJson(products);
+            jedis.set(cacheKey, jsonData);
+            jedis.expire(cacheKey, 1800);
+        }
+        apiResponse.setResult(products);
+//        apiResponse.setResult(productService.GetAllProduct());
         return apiResponse;
     }
     @GetMapping("/getAllProductForAdmin")
     public ApiResponse<?> getAllProductForAdmin() {
         ApiResponse<List> apiResponse = new ApiResponse<>();
-//        String cacheKey = "all_products";
-//        List<Products> products;
-//        String cachedData = jedis.get(cacheKey);
-//        if (cachedData != null) {
-//            Type type = new TypeToken<List<Products>>() {
-//            }.getType();
-//            Gson gson = new GsonBuilder().setDateFormat("MMM dd, yyyy").create();
-//            products = new Gson().fromJson(cachedData, type);
-//        } else {
-//            products = productService.GetAllProduct();
-//            String jsonData = new Gson().toJson(products);
-//            jedis.set(cacheKey, jsonData);
-//            jedis.expire(cacheKey, 1200);
-//        }
-//        apiResponse.setResult(products);
-        apiResponse.setResult(productService.GetAllProductForAdmin());
+        String cacheKey = "all_products_admin";
+        List<Products> products;
+        String cachedData = jedis.get(cacheKey);
+        if (cachedData != null) {
+            Type type = new TypeToken<List<Products>>() {
+            }.getType();
+            Gson gson = new GsonBuilder().setDateFormat("MMM dd, yyyy").create();
+            products = gson.fromJson(cachedData, type);
+        } else {
+            products = productService.GetAllProductForAdmin();
+            String jsonData = new Gson().toJson(products);
+            jedis.set(cacheKey, jsonData);
+            jedis.expire(cacheKey, 1200);
+        }
+        apiResponse.setResult(products);
+//        apiResponse.setResult(productService.GetAllProductForAdmin());
         return apiResponse;
     }
 
@@ -100,41 +101,44 @@ public class ProductController {
     @GetMapping("/GetProductByStatus")
     public ApiResponse<?> GetProductByStatus(@RequestParam("id") int id) {
         ApiResponse<List> apiResponse = new ApiResponse<>();
-//        String cacheKey = "all_products_by_status";
-//        List<Products> products;
-//        String cachedData = jedis.hget(cacheKey, id + "");
-//        if (cachedData != null) {
-//            Type type = new TypeToken<List<Products>>() {
-//            }.getType();
-//            products = new Gson().fromJson(cachedData, type);
-//        } else {
-//            products = productRepository.findByStatus(id);
-//            String jsonData = new Gson().toJson(products);
-//            jedis.hset(cacheKey, id + "", jsonData);
-//            jedis.expire(cacheKey, 1200);
-//        }
-//        apiResponse.setResult(products);
-        apiResponse.setResult(productRepository.findByStatus(id));
+        String cacheKey = "all_products_by_status";
+        List<Products> products;
+        String cachedData = jedis.hget(cacheKey, id + "");
+        if (cachedData != null) {
+            Type type = new TypeToken<List<Products>>() {
+            }.getType();
+            Gson gson = new GsonBuilder().setDateFormat("MMM dd, yyyy").create();
+            products = gson.fromJson(cachedData, type);
+        } else {
+            products = productRepository.findByStatus(id);
+            String jsonData = new Gson().toJson(products);
+            jedis.hset(cacheKey, id + "", jsonData);
+            jedis.expire(cacheKey, 1800);
+        }
+        apiResponse.setResult(products);
+//        apiResponse.setResult(productRepository.findByStatus(id));
         return apiResponse;
     }
 
     @GetMapping("/GetProductByCategory")
     public ApiResponse<?> GetProductByCategory(@RequestParam("id") int id) {
         ApiResponse<List> apiResponse = new ApiResponse<>();
-//        String cacheKey = "all_products_by_cate";
-//        List<Products> products;
-//        String cachedData = jedis.hget(cacheKey, id + "");
-//        if (cachedData != null) {
-//            Type type = new TypeToken<List<Products>>() {
-//            }.getType();
-//            products = new Gson().fromJson(cachedData, type);
-//        } else {
-//            products = productRepository.findByCategory(id);
-//            String jsonData = new Gson().toJson(products);
-//            jedis.hset(cacheKey, id + "", jsonData);
-//            jedis.expire(cacheKey, 1200);
-//        }
-        apiResponse.setResult(productRepository.findByCategory(id));
+        String cacheKey = "all_products_by_cate";
+        List<Products> products;
+        String cachedData = jedis.hget(cacheKey, id + "");
+        if (cachedData != null) {
+            Type type = new TypeToken<List<Products>>() {
+            }.getType();
+            Gson gson = new GsonBuilder().setDateFormat("MMM dd, yyyy").create();
+            products = gson.fromJson(cachedData, type);
+        } else {
+            products = productRepository.findByCategory(id);
+            String jsonData = new Gson().toJson(products);
+            jedis.hset(cacheKey, id + "", jsonData);
+            jedis.expire(cacheKey, 1800);
+        }
+        apiResponse.setResult(products);
+//        apiResponse.setResult(productRepository.findByCategory(id));
         return apiResponse;
     }
 
@@ -142,9 +146,9 @@ public class ProductController {
     public ApiResponse<?> UpdateStatusProduct(@RequestParam("product_id") int product_id, @RequestParam("status_id") int status_id) {
         ApiResponse<Products> apiResponse = new ApiResponse<>();
         apiResponse.setResult(productService.UpdateStatusProduct(product_id, status_id));
-//        jedis.del("all_products");
-//        jedis.del("all_products_by_status");
-//        jedis.del("all_products_by_cate");
+        jedis.del("all_products");
+        jedis.del("all_products_by_status");
+        jedis.del("all_products_by_cate");
         return apiResponse;
     }
 
@@ -180,21 +184,22 @@ public class ProductController {
     @GetMapping("/findProductByNameorCode")
     public ApiResponse<?> getProductByNameorCodelCategory(@RequestParam("key") String key) {
         ApiResponse<List> apiResponse = new ApiResponse<>();
-//        String cacheKey = "all_products_by_Name_Or_Code";
-//        List<Products> products;
-//        String cachedData = jedis.hget(cacheKey, key);
-//        if (cachedData != null) {
-//            Type type = new TypeToken<List<Products>>() {
-//            }.getType();
-//            products = new Gson().fromJson(cachedData, type);
-//        } else {
-//            products = productService.findProductByNameCode(key);
-//            String jsonData = new Gson().toJson(products);
-//            jedis.hset(cacheKey, key, jsonData);
-//            jedis.expire(cacheKey, 300);
-//        }
-//        apiResponse.setResult(products);
-        apiResponse.setResult(productService.findProductByNameCode(key));
+        String cacheKey = "all_products_by_Name_Or_Code";
+        List<Products> products;
+        String cachedData = jedis.hget(cacheKey, key);
+        if (cachedData != null) {
+            Type type = new TypeToken<List<Products>>() {
+            }.getType();
+            Gson gson = new GsonBuilder().setDateFormat("MMM dd, yyyy").create();
+            products = gson.fromJson(cachedData, type);
+        } else {
+            products = productService.findProductByNameCode(key);
+            String jsonData = new Gson().toJson(products);
+            jedis.hset(cacheKey, key, jsonData);
+            jedis.expire(cacheKey, 1800);
+        }
+        apiResponse.setResult(products);
+//        apiResponse.setResult(productService.findProductByNameCode(key));
         return apiResponse;
 
     }
@@ -202,21 +207,22 @@ public class ProductController {
     @GetMapping("/GetAllCategory")
     public ApiResponse<?> getAllCategory() {
         ApiResponse<List> apiResponse = new ApiResponse<>();
-//        String cacheKey = "all_categories";
-//        List<Categories> categories;
-//        String cachedData = jedis.get(cacheKey);
-//        if (cachedData != null) {
-//            Type type = new TypeToken<List<Categories>>() {
-//            }.getType();
-//            categories = new Gson().fromJson(cachedData, type);
-//        } else {
-//            categories = categoryRepository.findAll();
-//            String jsonData = new Gson().toJson(categories);
-//            jedis.set(cacheKey, jsonData);
-//            jedis.expire(cacheKey, 300);
-//        }
-//        apiResponse.setResult(categories);
-        apiResponse.setResult(categoryRepository.findAll());
+        String cacheKey = "all_categories";
+        List<Categories> categories;
+        String cachedData = jedis.get(cacheKey);
+        if (cachedData != null) {
+            Type type = new TypeToken<List<Categories>>() {
+            }.getType();
+            Gson gson = new GsonBuilder().setDateFormat("MMM dd, yyyy").create();
+            categories = gson.fromJson(cachedData, type);
+        } else {
+            categories = categoryRepository.findAll();
+            String jsonData = new Gson().toJson(categories);
+            jedis.set(cacheKey, jsonData);
+            jedis.expire(cacheKey, 1800);
+        }
+        apiResponse.setResult(categories);
+//        apiResponse.setResult(categoryRepository.findAll());
         return apiResponse;
     }
 
@@ -224,20 +230,21 @@ public class ProductController {
     public ApiResponse<?> getAllCategoryName() {
         ApiResponse<List> apiResponse = new ApiResponse<>();
         String cacheKey = "all_categories_name";
-//        List<CategoryNameDTO> categories;
-//        String cachedData = jedis.get(cacheKey);
-//        if (cachedData != null) {
-//            Type type = new TypeToken<List<CategoryNameDTO>>() {
-//            }.getType();
-//            categories = new Gson().fromJson(cachedData, type);
-//        } else {
-//            categories = categorySevice.GetListName();
-//            String jsonData = new Gson().toJson(categories);
-//            jedis.set(cacheKey, jsonData);
-//            jedis.expire(cacheKey, 300);
-//        }
-//        apiResponse.setResult(categories);
-        apiResponse.setResult(categorySevice.GetListName());
+        List<CategoryNameDTO> categories;
+        String cachedData = jedis.get(cacheKey);
+        if (cachedData != null) {
+            Type type = new TypeToken<List<CategoryNameDTO>>() {
+            }.getType();
+            Gson gson = new GsonBuilder().setDateFormat("MMM dd, yyyy").create();
+            categories = gson.fromJson(cachedData, type);
+        } else {
+            categories = categorySevice.GetListName();
+            String jsonData = new Gson().toJson(categories);
+            jedis.set(cacheKey, jsonData);
+            jedis.expire(cacheKey, 1800);
+        }
+        apiResponse.setResult(categories);
+//        apiResponse.setResult(categorySevice.GetListName());
         return apiResponse;
     }
 
@@ -245,8 +252,8 @@ public class ProductController {
     public ApiResponse<?> AddNewCategory(@RequestBody CategoryNameDTO categoryNameDTO) {
         ApiResponse<String> apiResponse = new ApiResponse<>();
         categorySevice.AddnewCategory(categoryNameDTO);
-//        jedis.del("all_categories");
-//        jedis.del("all_categories_name");
+        jedis.del("all_categories");
+        jedis.del("all_categories_name");
         apiResponse.setResult("Thêm mới Loại Sản Phẩm Thành công");
         return apiResponse;
     }
@@ -256,8 +263,8 @@ public class ProductController {
     public ApiResponse<?> EditCategory(@RequestParam("cate_id") int cate_id, @RequestBody CategoryNameDTO categoryNameDTO) {
         ApiResponse<Categories> apiResponse = new ApiResponse<>();
         apiResponse.setResult(categorySevice.UpdateCategoty(cate_id, categoryNameDTO));
-//        jedis.del("all_categories");
-//        jedis.del("all_categories_name");
+        jedis.del("all_categories");
+        jedis.del("all_categories_name");
         return apiResponse;
     }
 
@@ -277,9 +284,9 @@ public class ProductController {
     ) {
         ApiResponse<Products> apiResponse = new ApiResponse<>();
         apiResponse.setResult(productService.AddNewProduct(productDTO1));
-//        jedis.del("all_products");
-//        jedis.del("all_products_by_status");
-//        jedis.del("all_products_by_cate");
+        jedis.del("all_products");
+        jedis.del("all_products_by_status");
+        jedis.del("all_products_by_cate");
         return apiResponse;
     }
 
@@ -327,9 +334,9 @@ public class ProductController {
         ApiResponse<Products> apiResponse = new ApiResponse<>();
 
         apiResponse.setResult(productService.EditProduct(productId, productDTO1));
-//        jedis.del("all_products");
-//        jedis.del("all_products_by_status");
-//        jedis.del("all_products_by_cate");
+        jedis.del("all_products");
+        jedis.del("all_products_by_status");
+        jedis.del("all_products_by_cate");
         return apiResponse;
     }
     //xuất đơn nguyên vật liệu cho product có sẵn

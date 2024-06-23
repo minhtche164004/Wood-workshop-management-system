@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 
 @Component({
@@ -6,20 +6,33 @@ import { HttpClient } from '@angular/common/http';
   templateUrl: './file-upload.component.html',
   styleUrls: ['./file-upload.component.scss']
 })
-export class FileUploadComponent implements OnInit {
-  constructor(private http: HttpClient) { }
+export class FileUploadComponent {
+  selectedFile: File | null = null;
 
-  ngOnInit(): void { }
+  constructor(private http: HttpClient) {}
 
-  onChangeFile(event: any) {
-    if (event.target.files.length > 0) {
-      const file = event.target.files[0];
+  onFileSelected(event: any) {
+    this.selectedFile = event.target.files[0];
+  }
+
+  onUpload() {
+    if (this.selectedFile) {
       const formData = new FormData();
-      formData.append('file', file);
+      formData.append('file', this.selectedFile);
 
-      this.http.post('http://localhost:8080/api/auth/product/upload', formData).subscribe((res: any) => {
-        console.log('File uploaded successfully:', res);
-      });
+      // Replace with your actual backend API endpoint
+      this.http.post('http://your-backend-api.com/upload', formData)
+        .subscribe(
+          (response) => {
+            console.log('Upload successful!', response);
+            this.selectedFile = null; // Clear selection after successful upload
+          },
+          (error) => {
+            console.error('Upload failed:', error);
+          }
+        );
+    } else {
+      console.error('Please select a file to upload.');
     }
   }
 }

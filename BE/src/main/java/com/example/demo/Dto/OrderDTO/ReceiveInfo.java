@@ -7,8 +7,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
-public class CusInfo {
-    private int userid;
+public class ReceiveInfo {
     private String fullname;
     private String address;
     private String city_province;

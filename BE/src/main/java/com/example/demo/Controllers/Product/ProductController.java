@@ -13,6 +13,7 @@ import com.example.demo.Repository.Status_Product_Repository;
 import com.example.demo.Response.ApiResponse;
 import com.example.demo.Service.*;
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -62,7 +63,8 @@ public class ProductController {
         if (cachedData != null) {
             Type type = new TypeToken<List<Products>>() {
             }.getType();
-            products = new Gson().fromJson(cachedData, type);
+            Gson gson = new GsonBuilder().setDateFormat("MMM dd, yyyy").create();
+            products = gson.fromJson(cachedData, type);
         } else {
             products = productService.GetAllProduct();
             String jsonData = new Gson().toJson(products);
@@ -82,7 +84,8 @@ public class ProductController {
         if (cachedData != null) {
             Type type = new TypeToken<List<Products>>() {
             }.getType();
-            products = new Gson().fromJson(cachedData, type);
+            Gson gson = new GsonBuilder().setDateFormat("MMM dd, yyyy").create();
+            products = gson.fromJson(cachedData, type);
         } else {
             products = productRepository.findByStatus(id);
             String jsonData = new Gson().toJson(products);
@@ -102,7 +105,8 @@ public class ProductController {
         if (cachedData != null) {
             Type type = new TypeToken<List<Products>>() {
             }.getType();
-            products = new Gson().fromJson(cachedData, type);
+            Gson gson = new GsonBuilder().setDateFormat("MMM dd, yyyy").create();
+            products = gson.fromJson(cachedData, type);
         } else {
             products = productRepository.findByCategory(id);
             String jsonData = new Gson().toJson(products);
@@ -162,7 +166,8 @@ public class ProductController {
         if (cachedData != null) {
             Type type = new TypeToken<List<Products>>() {
             }.getType();
-            products = new Gson().fromJson(cachedData, type);
+            Gson gson = new GsonBuilder().setDateFormat("MMM dd, yyyy").create();
+            products = gson.fromJson(cachedData, type);
         } else {
             products = productService.findProductByNameCode(key);
             String jsonData = new Gson().toJson(products);

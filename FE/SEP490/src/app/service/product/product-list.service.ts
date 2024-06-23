@@ -9,8 +9,6 @@ import { environment } from 'src/app/environments/environment';
 })
 export class ProductListService {
 
- 
-
   private apiAddProduct = `${environment.apiUrl}api/auth/product/AddNewProduct`;
   private apiDeleteProduct = `${environment.apiUrl}api/auth/product/DeleteProduct`; // Assuming the delete endpoint
   private api_findProductByCategory = `${environment.apiUrl}api/auth/product`;

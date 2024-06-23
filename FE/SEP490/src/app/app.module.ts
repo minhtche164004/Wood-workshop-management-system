@@ -36,6 +36,9 @@ import { ViewProfileComponent } from './features/view-profile/view-profile.compo
 import { FileUploadComponent } from './file-upload/file-upload.component';
 
 import { SubMaterialManagementComponent } from './Admin/sub-material-management/sub-material-management.component';
+import { TestUploadComponent } from './test-upload/test-upload.component';
+
+
 // import { AuthInterceptor } from './service/auth.interceptor';
 
 
@@ -63,7 +66,9 @@ import { SubMaterialManagementComponent } from './Admin/sub-material-management/
     ProductManagementComponent,
     ViewProfileComponent,
     SubMaterialManagementComponent,
-    SupplierManagementComponent
+    SupplierManagementComponent,
+    TestUploadComponent,
+  
   ],
   imports: [
     BrowserModule,

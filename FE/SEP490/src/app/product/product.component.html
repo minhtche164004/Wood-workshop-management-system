@@ -1,4 +1,3 @@
-
 <div class="container-fluid">
 
     <app-header></app-header>
@@ -18,105 +17,62 @@
                         <div class="loaihang">
                             <div class="accordion" id="accordionExample">
                                 <div class="accordion-item">
-                                  <h2 class="accordion-header" id="headingOne">
-                                    <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
-                                      Loại sản phẩm
-                                    </button>
-                                  </h2>
-                                  <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne" data-bs-parent="#accordionExample">
-                                    <div class="accordion-body">
-                                        <ul>
-                                           <li class="all-sp"><input type="checkbox" name="" id=""> Tất cả</li>
-                                            <li class="checkban"><input type="checkbox" name="" id=""> Bàn</li>
-                                            <li class="checkghe"><input type="checkbox" name="" id=""> Ghế</li>
-                                            <li class="checksofa"><input type="checkbox" name="" id=""> Sofa</li>
-                                        </ul>
+                                    <h2 class="accordion-header" id="headingOne">
+                                        <button class="accordion-button" type="button" data-bs-toggle="collapse"
+                                            data-bs-target="#collapseOne" aria-expanded="true"
+                                            aria-controls="collapseOne">
+                                            Loại sản phẩm
+                                        </button>
+                                    </h2>
+                                    <div id="collapseOne" class="accordion-collapse collapse show"
+                                        aria-labelledby="headingOne" data-bs-parent="#accordionExample">
+                                        <div class="accordion-body">
+                                            <ul class="category-list">
+                                                <li class="all-sp">
+                                                  <input type="checkbox" name="category" id="all" value="0" >
+                                                  <label for="all">Tất cả</label>
+                                                </li>
+                                                <li *ngFor="let category of categories" style=" margin-top: -5x" class="{{ category.categoryName.toLowerCase() }}-check">
+                                                  <input style="margin-right: 5px;" type="checkbox" name="category" id="{{ category.categoryId }}" value="{{ category.categoryId }}" >
+                                                  <label for="{{ category.categoryId }}">{{ category.categoryName }}</label>
+                                                </li>
+                                              </ul>
+                                              
+                                        </div>
                                     </div>
-                                  </div>
                                 </div>
                             </div>
                         </div>
                         <div class="loctheogia">
                             <div class="accordion accordion-flush" id="accordionFlushExample">
                                 <div class="accordion-item">
-                                  <h2 class="accordion-header" id="flush-headingOne">
-                                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseOne" aria-expanded="false" aria-controls="flush-collapseOne">
-                                        Mức giá
-                                    </button>
-                                  </h2>
-                                  <div id="flush-collapseOne" class="accordion-collapse collapse" aria-labelledby="flush-headingOne" data-bs-parent="#accordionFlushExample">
-                                    <div class="accordion-body text-center">
-                                        <div class="ranger-slider">
-                                            <div id="slider-range"></div>
-                                            <div class="price-filter d-flex align-items-center justify-content-center">
-                                                <p>Giá:</p><strong></strong> <span id="slider-range-value1"></span><span>-</span><strong></strong> <span id="slider-range-value2"></span>
+                                    <h2 class="accordion-header" id="flush-headingOne">
+                                        <button class="accordion-button collapsed" type="button"
+                                            data-bs-toggle="collapse" data-bs-target="#flush-collapseOne"
+                                            aria-expanded="false" aria-controls="flush-collapseOne">
+                                            Mức giá
+                                        </button>
+                                    </h2>
+                                    <div id="flush-collapseOne" class="accordion-collapse collapse"
+                                        aria-labelledby="flush-headingOne" data-bs-parent="#accordionFlushExample">
+                                        <div class="accordion-body text-center">
+                                            <div class="ranger-slider">
+                                                <div id="slider-range"></div>
+                                                <div
+                                                    class="price-filter d-flex align-items-center justify-content-center">
+                                                    <p>Giá:</p><strong></strong> <span
+                                                        id="slider-range-value1"></span><span>-</span><strong></strong>
+                                                    <span id="slider-range-value2"></span>
+                                                </div>
                                             </div>
+                                            <button class="button-filter">Lọc</button>
                                         </div>
-                                        <button class="button-filter">Lọc</button>
                                     </div>
-                                  </div>
                                 </div>
-                              </div>
+                            </div>
                         </div>
                     </div>
-                    <div class="selling-products">
-                        <p class="selling-title">Sản phẩm bán chạy</p>
-                        <hr>
-                        <a href="detail1.html">
-                            <div class="row">
-                                <div class="col-5 ">
-                                    <img src="assets/img/ban/ban1/ban1.1.webp" alt="">
-                                </div>
-                                <div class="col-7">
-                                    <div class="selling-name">Bàn Mara Walnut</div>
-                                    <div class="selling-price">3.700.000đ</div>
-                                    <div class="selling-star">
-                                        <i class="fas fa-star"></i>
-                                        <i class="fas fa-star"></i>
-                                        <i class="fas fa-star"></i>
-                                        <i class="fas fa-star"></i>
-                                        <i class="fas fa-star"></i>
-                                    </div>
-                                </div>
-                            </div>
-                        </a>
-                        <a href="detail8.html">
-                            <div class="row">
-                                <div class="col-5 ">
-                                    <img src="assets/img/ge/ge2/ge2.1.webp" alt="">
-                                </div>
-                                <div class="col-7">
-                                    <div class="selling-name">Ghế Nosh Grey Walnut</div>
-                                    <div class="selling-price">1.500.000đ</div>
-                                    <div class="selling-star">
-                                        <i class="fas fa-star"></i>
-                                        <i class="fas fa-star"></i>
-                                        <i class="fas fa-star"></i>
-                                        <i class="fas fa-star"></i>
-                                        <i class="fas fa-star"></i>
-                                    </div>
-                                </div>
-                            </div>
-                        </a>
-                        <a href="detail3.html">
-                            <div class="row">
-                                <div class="col-5 ">
-                                    <img src="assets/img/sofa/sofa1/sofa1.1.webp" alt="">
-                                </div>
-                                <div class="col-7">
-                                    <div class="selling-name">Sofa gỗ Charme Tan</div>
-                                    <div class="selling-price">19.500.000đ</div>
-                                    <div class="selling-star">
-                                        <i class="fas fa-star"></i>
-                                        <i class="fas fa-star"></i>
-                                        <i class="fas fa-star"></i>
-                                        <i class="fas fa-star"></i>
-                                        <i class="fas fa-star"></i>
-                                    </div>
-                                </div>
-                            </div>
-                        </a>
-                    </div>
+
                 </div>
                 <div class="col-lg-9 col-12">
                     <div class="boloc d-flex">
@@ -124,608 +80,56 @@
                         <p class="giathap"><i class="fas fa-sort-amount-down-alt"></i>Giá thấp</p>
                         <p class="xemnhieu"><i class="fas fa-eye"></i>Xem nhiều</p>
                     </div>
-                    <div class="trang1 trang">
-                        <div class="row">
-                            <div class="col-lg-4 col-md-6  nopadding ban">
-                                <div class="product">
-                                    <a href="detail3.html">
-                                        <img src="assets/img/ban/ban3/ban3.1.webp" alt="" class="product-img">
-                                        <div class="product-info">
-                                            <p class="name-product text-center">Bàn Narro Black Side</p>
-                                            <div class="price-product text-center d-flex align-items-center">
-                                                <p class="price">2.200.000 đ</p>
-                                                <p class="root-price">2.500.000 đ</p>
-                                            </div>
-                                            <div class="rate d-flex">
-                                                <div class="stars">
-                                                    <i class="fas fa-star"></i>
-                                                    <i class="fas fa-star"></i>
-                                                    <i class="fas fa-star"></i>
-                                                    <i class="fas fa-star"></i>
-                                                    <i class="fas fa-star"></i>
+
+                    <div>
+                        <div>
+                            <div class="row">
+
+                                <div class="col-lg-4 col-md-6 col-12 nopadding"
+                                *ngFor="let product of products | paginate: { itemsPerPage: 9, currentPage: currentPage }; let i = index">
+                                    <div class="product">
+                                        <a style="text-decoration: none;" href="{{ product.productName }}">
+                                            <img src="{{ product.image }}" alt="" class="product-img">
+                                            <div class="product-info">
+                                                <p class="name-product text-center">{{ product.productName }}</p>
+                                                <p class="description"
+                                                    style="text-decoration: none; color: black; text-align: center;">{{
+                                                    product.description }}</p>
+                                                <div class="price-product text-center d-flex align-items-center">
+                                                    <p class="price">{{ product.price | number: '1.0-3' }} vnđ</p>
+
+                                                    <p class="root-price" *ngIf="product.rootPrice">{{ product.rootPrice
+                                                        |
+                                                        currency:'VND' }}</p>
                                                 </div>
-                                                <div class="rate-number">
-                                                    <p>16 đánh giá</p>
+                                                <div class="buttons d-flex ">
+                                                    <button class="addCart">
+                                                        Thêm vào danh sách yêu thích <i class="fa-solid fa-heart"></i>
+                                                    </button>
                                                 </div>
                                             </div>
-                                            <div class="buttons d-flex ">
-                                                <button class="addCart" onclick="addToCart('b3','Bàn Narro Black Side', 10,2200000, 'img/ban/ban3/ban3.1.webp',300000)"><i class="fas fa-cart-plus"></i>   Thêm vào giỏ</button>
-                                                <!-- <button class="buyNow">Mua ngay</button> -->
-                                            </div>
+                                        </a>
                                         </div>
-                                    </a>
-                                    <div class="discount">
-                                        -20%
-                                    </div>
                                 </div>
-                            </div>
-                            <div class="col-lg-4 col-md-6 nopadding ban">
-                                <div class="product">
-                                    <a href="detail2.html">
-                                        <img src="assets/img/ban/ban2/ban2.1.webp" alt="" class="product-img">
-                                        <div class="product-info">
-                                            <p class="name-product text-center">Bàn hình bầu dục Lenia Walnut</p>
-                                            <div class="price-product text-center d-flex align-items-center">
-                                                <p class="price">3.200.000 đ</p>
-                                                <!-- <p class="root-price">300.000 đ</p> -->
-                                            </div>
-                                            <div class="rate d-flex">
-                                                <div class="stars">
-                                                    <i class="fas fa-star"></i>
-                                                    <i class="fas fa-star"></i>
-                                                    <i class="fas fa-star"></i>
-                                                    <i class="fas fa-star"></i>
-                                                    <i class="far fa-star"></i>
-                                                </div>
-                                                <div class="rate-number">
-                                                    <p>8 đánh giá</p>
-                                                </div>
-                                            </div>
-                                            <div class="buttons d-flex ">
-                                                <button class="addCart" onclick="addToCart('b2','Bàn hình bầu dục Lenia Walnut', 10,3200000, 'img/ban/ban2/ban2.1.webp',0)"><i class="fas fa-cart-plus"></i>   Thêm vào giỏ</button>
-                                                <!-- <button class="buyNow">Mua ngay</button> -->
-                                            </div>
-                                        </div>
-                                    </a>
-                                </div>
-                            </div>
-                            <div class="col-lg-4 col-md-6 nopadding ge">
-                                <div class="product">
-                                    <a href="detail8.html">
-                                        <img src="assets/img/ge/ge2/ge2.1.webp" alt="" class="product-img">
-                                        <div class="product-info">
-                                            <p class="name-product text-center">Ghế Nosh Grey Walnut </p>
-                                            <div class="price-product text-center d-flex align-items-center">
-                                                <p class="price">1.500.000 đ</p>
-                                                <p class="root-price">1.700.000 đ</p>
-                                            </div>
-                                            <div class="rate d-flex">
-                                                <div class="stars">
-                                                    <i class="fas fa-star"></i>
-                                                    <i class="fas fa-star"></i>
-                                                    <i class="fas fa-star"></i>
-                                                    <i class="fas fa-star"></i>
-                                                    <i class="far fa-star"></i>
-                                                </div>
-                                                <div class="rate-number">
-                                                    <p>17 đánh giá</p>
-                                                </div>
-                                            </div>
-                                            <div class="buttons d-flex ">
-                                                <button class="addCart" onclick="addToCart('g2','Ghế Nosh Grey Walnut', 10,1500000, 'img/ge/ge2/ge2.1.webp',200000)"><i class="fas fa-cart-plus"></i>   Thêm vào giỏ</button>
-                                                <!-- <button class="buyNow">Mua ngay</button> -->
-                                            </div>
-                                        </div>
-                                    </a>
-                                    <div class="discount">
-                                        -16%
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-lg-4 col-md-6 nopadding ge">
-                                <div class="product">
-                                    <a href="detail10.html">
-                                        <img src="assets/img/ge/ge4/ge4.1.webp" alt="" class="product-img">
-                                        <div class="product-info">
-                                            <p class="name-product text-center">Ghế đẩu màu đen Anco</p>
-                                            <div class="price-product text-center d-flex align-items-center">
-                                                <p class="price">1.850.000 đ</p>
-                                                <!-- <p class="root-price">300.000 đ</p> -->
-                                            </div>
-                                            <div class="rate d-flex">
-                                                <div class="stars">
-                                                    <i class="fas fa-star"></i>
-                                                    <i class="fas fa-star"></i>
-                                                    <i class="fas fa-star"></i>
-                                                    <i class="fas fa-star"></i>
-                                                    <i class="far fa-star"></i>
-                                                </div>
-                                                <div class="rate-number">
-                                                    <p>33 đánh giá</p>
-                                                </div>
-                                            </div>
-                                            <div class="buttons d-flex ">
-                                                <button class="addCart" onclick="addToCart('g4','Ghế đẩu màu đen Anco', 10,1850000, 'img/ge/ge4/ge4.1.webp',0)"><i class="fas fa-cart-plus"></i>Thêm vào giỏ</button>
-                                                <!-- <button class="buyNow">Mua ngay</button> -->
-                                            </div>
-                                        </div>
-                                    </a>
-                                </div>
-                            </div>
-                            <div class="col-lg-4 col-md-6 nopadding sofa">
-                                <div class="product">
-                                    <a href="detail15.html">
-                                        <img src="assets/img/sofa/sofa3/sofa3.1.webp" alt="" class="product-img">
-                                        <div class="product-info">
-                                            <p class="name-product text-center">Sofa Sven Charme Tan</p>
-                                            <div class="price-product text-center d-flex align-items-center">
-                                                <p class="price">14.500.000 đ</p>
-                                                <p class="root-price">16.000.000 đ</p>
-                                            </div>
-                                            <div class="rate d-flex">
-                                                <div class="stars">
-                                                    <i class="fas fa-star"></i>
-                                                    <i class="fas fa-star"></i>
-                                                    <i class="fas fa-star"></i>
-                                                    <i class="fas fa-star"></i>
-                                                    <i class="far fa-star"></i>
-                                                </div>
-                                                <div class="rate-number">
-                                                    <p>18 đánh giá</p>
-                                                </div>
-                                            </div>
-                                            <div class="buttons d-flex ">
-                                                <button class="addCart" onclick="addToCart('sofa3','Sofa Sven Charme Tan', 10,14500000, 'img/sofa/sofa3/sofa3.1.webp',1500000)"><i class="fas fa-cart-plus"></i>   Thêm vào giỏ</button>
-                                                <!-- <button class="buyNow">Mua ngay</button> -->
-                                            </div>
-                                        </div>
-                                    </a>
-                                    <div class="discount">
-                                        -20%
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-lg-4 col-md-6 nopadding sofa">
-                                <div class="product">
-                                    <a href="detail16.html">
-                                        <img src="assets/img/sofa/sofa4/sofa4.1.webp" alt="" class="product-img">
-                                        <div class="product-info">
-                                            <p class="name-product text-center">Sofa gỗ Olio xanh</p>
-                                            <div class="price-product text-center d-flex align-items-center">
-                                                <p class="price">15.600.000 đ</p>
-                                                <!-- <p class="root-price">300.000 đ</p> -->
-                                            </div>
-                                            <div class="rate d-flex">
-                                                <div class="stars">
-                                                    <i class="fas fa-star"></i>
-                                                    <i class="fas fa-star"></i>
-                                                    <i class="fas fa-star"></i>
-                                                    <i class="fas fa-star"></i>
-                                                    <i class="far fa-star"></i>
-                                                </div>
-                                                <div class="rate-number">
-                                                    <p>17 đánh giá</p>
-                                                </div>
-                                            </div>
-                                            <div class="buttons d-flex ">
-                                                <button class="addCart" onclick="addToCart('sofa4','Sofa gỗ Olio xanh', 10,15600000, 'img/sofa/sofa4/sofa4.1.webp',0)"><i class="fas fa-cart-plus"></i>   Thêm vào giỏ</button>
-                                                <!-- <button class="buyNow">Mua ngay</button> -->
-                                            </div>
-                                        </div>
-                                    </a>
-                                </div>
+
                             </div>
                         </div>
-                    </div>
-                    <div class="trang2 hide trang">
-                        <div class="row">
-                            <div class="col-lg-4 col-md-6 nopadding ge">
-                                <div class="product">
-                                    <a href="detail7.html">
-                                        <img src="assets/img/ge/ge1/ge1.1.webp" alt="" class="product-img">
-                                        <div class="product-info">
-                                            <p class="name-product text-center">Ghế Svelti Cove Teal</p>
-                                            <div class="price-product text-center d-flex align-items-center">
-                                                <p class="price">1.200.000 đ</p>
-                                                <p class="root-price">1.500.000 đ</p>
-                                            </div>
-                                            <div class="rate d-flex">
-                                                <div class="stars">
-                                                    <i class="fas fa-star"></i>
-                                                    <i class="fas fa-star"></i>
-                                                    <i class="fas fa-star"></i>
-                                                    <i class="fas fa-star"></i>
-                                                    <i class="far fa-star"></i>
-                                                </div>
-                                                <div class="rate-number">
-                                                    <p>19 đánh giá</p>
-                                                </div>
-                                            </div>
-                                            <div class="buttons d-flex ">
-                                                <button class="addCart" onclick="addToCart('g1','Ghế Svelti Cove Teal', 10,1200000, 'img/ge/ge1/ge1.1.webp',300000)"><i class="fas fa-cart-plus"></i>   Thêm vào giỏ</button>
-                                                <!-- <button class="buyNow">Mua ngay</button> -->
-                                            </div>
-                                        </div>
-                                    </a>
-                                    <div class="discount">
-                                        -20%
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-lg-4 col-md-6 nopadding sofa">
-                                <div class="product">
-                                    <a href="detail5.html">
-                                        <img src="assets/img/ban/ban5/ban5.1.webp" alt="" class="product-img">
-                                        <div class="product-info">
-                                            <p class="name-product text-center">Bàn Vena Rectangular</p>
-                                            <div class="price-product text-center d-flex align-items-center">
-                                                <p class="price">3.100.000 đ</p>
-                                                <!-- <p class="root-price">23.000.000 đ</p> -->
-                                            </div>
-                                            <div class="rate d-flex">
-                                                <div class="stars">
-                                                    <i class="fas fa-star"></i>
-                                                    <i class="fas fa-star"></i>
-                                                    <i class="fas fa-star"></i>
-                                                    <i class="fas fa-star"></i>
-                                                    <i class="far fa-star"></i>
-                                                </div>
-                                                <div class="rate-number">
-                                                    <p>17 đánh giá</p>
-                                                </div>
-                                            </div>
-                                            <div class="buttons d-flex ">
-                                                <button class="addCart" onclick="addToCart('b5','Bàn Vena Rectangular', 10,3100000, 'img/ban/ban5/ban5.1.webp',0)"><i class="fas fa-cart-plus"></i>   Thêm vào giỏ</button>
-                                                <!-- <button class="buyNow">Mua ngay</button> -->
-                                            </div>
-                                        </div>
-                                    </a>
-                                    <!-- <div class="discount">
-                                        -21%
-                                    </div> -->
-                                </div>
-                            </div>
-                            <div class="col-lg-4 col-md-6 nopadding sofa">
-                                <div class="product">
-                                    <a href="detail14.html">
-                                        <img src="assets/img/sofa/sofa2/sofa2.1.webp" alt="" class="product-img">
-                                        <div class="product-info">
-                                            <p class="name-product text-center">Ghế sofa màu trắng Abisko</p>
-                                            <div class="price-product text-center d-flex align-items-center">
-                                                <p class="price">20.400.000 đ</p>
-                                                <p class="root-price">25.000.000 đ</p>
-                                            </div>
-                                            <div class="rate d-flex">
-                                                <div class="stars">
-                                                    <i class="fas fa-star"></i>
-                                                    <i class="fas fa-star"></i>
-                                                    <i class="fas fa-star"></i>
-                                                    <i class="fas fa-star"></i>
-                                                    <i class="far fa-star"></i>
-                                                </div>
-                                                <div class="rate-number">
-                                                    <p>15 đánh giá</p>
-                                                </div>
-                                            </div>
-                                            <div class="buttons d-flex ">
-                                                <button class="addCart" onclick="addToCart('sofa2','Ghế sofa màu trắng Abisko', 10,20400000, 'img/sofa/sofa2/sofa2.1.webp',0)"><i class="fas fa-cart-plus"></i>   Thêm vào giỏ</button>
-                                                <!-- <button class="buyNow">Mua ngay</button> -->
-                                            </div>
-                                        </div>
-                                    </a>
-                                    <div class="discount">
-                                        -20%
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-lg-4 col-md-6 nopadding ge">
-                                <div class="product">
-                                    <a href="detail9.html">
-                                        <img src="assets/img/ge/ge3/ge3.1.webp" alt="" class="product-img">
-                                        <div class="product-info">
-                                            <p class="name-product text-center">Ghế salon da đen Lento</p>
-                                            <div class="price-product text-center d-flex align-items-center">
-                                                <p class="price">1.700.000 đ</p>
-                                                <p class="root-price">2.000.000 đ</p>
-                                            </div>
-                                            <div class="rate d-flex">
-                                                <div class="stars">
-                                                    <i class="fas fa-star"></i>
-                                                    <i class="fas fa-star"></i>
-                                                    <i class="fas fa-star"></i>
-                                                    <i class="fas fa-star"></i>
-                                                    <i class="fas fa-star"></i>
-                                                </div>
-                                                <div class="rate-number">
-                                                    <p>16 đánh giá</p>
-                                                </div>
-                                            </div>
-                                            <div class="buttons d-flex ">
-                                                <button class="addCart" onclick="addToCart('g3','Ghế salon da đen Lento', 10,1700000, 'img/ge/ge3/ge3.1.webp',300000)"><i class="fas fa-cart-plus"></i>   Thêm vào giỏ</button>
-                                                <!-- <button class="buyNow">Mua ngay</button> -->
-                                            </div>
-                                        </div>
-                                    </a>
-                                    <div class="discount">
-                                        -20%
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-lg-4 col-md-6 nopadding ban">
-                                <div class="product">
-                                    <a href="detail5.html">
-                                        <img src="assets/img/ban/ban6/ban6.1.webp" alt="" class="product-img">
-                                        <div class="product-info">
-                                            <p class="name-product text-center">Bàn Culla Walnut</p>
-                                            <div class="price-product text-center d-flex align-items-center">
-                                                <p class="price">3.000.000 đ</p>
-                                                <p class="root-price">6.000.000 đ</p>
-                                            </div>
-                                            <div class="rate d-flex">
-                                                <div class="stars">
-                                                    <i class="fas fa-star"></i>
-                                                    <i class="fas fa-star"></i>
-                                                    <i class="fas fa-star"></i>
-                                                    <i class="fas fa-star"></i>
-                                                    <i class="fas fa-star"></i>
-                                                </div>
-                                                <div class="rate-number">
-                                                    <p>21 đánh giá</p>
-                                                </div>
-                                            </div>
-                                            <div class="buttons d-flex ">
-                                                <button class="addCart" onclick="addToCart('b6','Bàn Culla Walnut', 10,3000000, 'img/ban/ban6/ban6.1.webp',6000000)"><i class="fas fa-cart-plus"></i>   Thêm vào giỏ</button>
-                                                <!-- <button class="buyNow">Mua ngay</button> -->
-                                            </div>
-                                        </div>
-                                    </a>
-                                    <div class="discount">
-                                        -50%
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-lg-4 col-md-6 nopadding ban">
-                                <div class="product">
-                                    <a href="detail4.html">
-                                        <img src="assets/img/ban/ban4/ban4.1.webp" alt="" class="product-img">
-                                        <div class="product-info">
-                                            <p class="name-product text-center">Bàn Amoeba Wild Walnut</p>
-                                            <div class="price-product text-center d-flex align-items-center">
-                                                <p class="price">2.200.000 đ</p>
-                                                <!-- <p class="root-price">300.000 đ</p> -->
-                                            </div>
-                                            <div class="rate d-flex">
-                                                <div class="stars">
-                                                    <i class="fas fa-star"></i>
-                                                    <i class="fas fa-star"></i>
-                                                    <i class="fas fa-star"></i>
-                                                    <i class="fas fa-star"></i>
-                                                    <i class="fas fa-star"></i>
-                                                </div>
-                                                <div class="rate-number">
-                                                    <p>12 đánh giá</p>
-                                                </div>
-                                            </div>
-                                            <div class="buttons d-flex ">
-                                                <button class="addCart" onclick="addToCart('b4','Bàn Amoeba Wild Walnut', 10,2200000, 'img/ban/ban4/ban4.1.webp',0)"><i class="fas fa-cart-plus"></i>   Thêm vào giỏ</button>
-                                                <!-- <button class="buyNow">Mua ngay</button> -->
-                                            </div>
-                                        </div>
-                                    </a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="trang3 hide trang">
-                        <div class="row">
-                            <div class="col-lg-4 col-md-6 nopadding ban">
-                                <div class="product">
-                                    <a href="detail18.html">
-                                        <img src="assets/img/sofa/sofa6/sofa6.1.webp" alt="" class="product-img">
-                                        <div class="product-info">
-                                            <p class="name-product text-center">Sofa Bouclé Ottoman</p>
-                                            <div class="price-product text-center d-flex align-items-center">
-                                                <p class="price">2.600.000 đ</p>
-                                                <p class="root-price">5.200.000 đ</p>
-                                            </div>
-                                            <div class="rate d-flex">
-                                                <div class="stars">
-                                                    <i class="fas fa-star"></i>
-                                                    <i class="fas fa-star"></i>
-                                                    <i class="fas fa-star"></i>
-                                                    <i class="fas fa-star"></i>
-                                                    <i class="fas fa-star"></i>
-                                                </div>
-                                                <div class="rate-number">
-                                                    <p>21 đánh giá</p>
-                                                </div>
-                                            </div>
-                                            <div class="buttons d-flex ">
-                                                <button class="addCart" onclick="addToCart('sofa6','Sofa Bouclé Ottoman', 10,2600000, 'img/sofa/sofa6/sofa6.1.webp',5200000)"><i class="fas fa-cart-plus"></i>   Thêm vào giỏ</button>
-                                                <!-- <button class="buyNow">Mua ngay</button> -->
-                                            </div>
-                                        </div>
-                                    </a>
-                                    <div class="discount">
-                                        -50%
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-lg-4 col-md-6 nopadding ban">
-                                <div class="product">
-                                    <a href="detail1.html">
-                                        <img src="assets/img/ban/ban1/ban1.1.webp" alt="" class="product-img">
-                                        <div class="product-info">
-                                            <p class="name-product text-center">Bàn Mara Walnut</p>
-                                            <div class="price-product text-center d-flex align-items-center">
-                                                <p class="price">3.700.000 đ</p>
-                                                <p class="root-price">4000.000 đ</p>
-                                            </div>
-                                            <div class="rate d-flex">
-                                                <div class="stars">
-                                                    <i class="fas fa-star"></i>
-                                                    <i class="fas fa-star"></i>
-                                                    <i class="fas fa-star"></i>
-                                                    <i class="fas fa-star"></i>
-                                                    <i class="fas fa-star"></i>
-                                                </div>
-                                                <div class="rate-number">
-                                                    <p>21 đánh giá</p>
-                                                </div>
-                                            </div>
-                                            <div class="buttons d-flex ">
-                                                <button class="addCart" onclick="addToCart('b1','Bàn Mara Walnut', 10,3700000, 'img/ban/ban1/ban1.1.webp',300000)"><i class="fas fa-cart-plus"></i>   Thêm vào giỏ</button>
-                                                <!-- <button class="buyNow">Mua ngay</button> -->
-                                            </div>
-                                        </div>
-                                    </a>
-                                    <div class="discount">
-                                        -16%
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-lg-4 col-md-6 nopadding sofa">
-                                <div class="product">
-                                    <a href="detail13.html">
-                                        <img src="assets/img/sofa/sofa1/sofa1.1.webp" alt="" class="product-img">
-                                        <div class="product-info">
-                                            <p class="name-product text-center">Sofa Gỗ Charme Tan</p>
-                                            <div class="price-product text-center d-flex align-items-center">
-                                                <p class="price">19.500.000 đ</p>
-                                                <p class="root-price">23.000.000 đ</p>
-                                            </div>
-                                            <div class="rate d-flex">
-                                                <div class="stars">
-                                                    <i class="fas fa-star"></i>
-                                                    <i class="fas fa-star"></i>
-                                                    <i class="fas fa-star"></i>
-                                                    <i class="fas fa-star"></i>
-                                                    <i class="far fa-star"></i>
-                                                </div>
-                                                <div class="rate-number">
-                                                    <p>16 đánh giá</p>
-                                                </div>
-                                            </div>
-                                            <div class="buttons d-flex ">
-                                                <button class="addCart" onclick="addToCart('sofa3','Sofa Gỗ Charme Tan', 10,19500000, 'img/sofa/sofa1/sofa1.1.webp',3500000)"><i class="fas fa-cart-plus"></i>   Thêm vào giỏ</button>
-                                                <!-- <button class="buyNow">Mua ngay</button> -->
-                                            </div>
-                                        </div>
-                                    </a>
-                                    <div class="discount">
-                                        -22%
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-lg-4 col-md-6 nopadding sofa">
-                                <div class="product">
-                                    <a href="detail17.html">
-                                        <img src="assets/img/sofa/sofa5/sofa5.1.webp" alt="" class="product-img">
-                                        <div class="product-info">
-                                            <p class="name-product text-center">Sofa Bouclé Loveseat</p>
-                                            <div class="price-product text-center d-flex align-items-center">
-                                                <p class="price">7.200.000 đ</p>
-                                                <p class="root-price">9.500.000 đ</p>
-                                            </div>
-                                            <div class="rate d-flex">
-                                                <div class="stars">
-                                                    <i class="fas fa-star"></i>
-                                                    <i class="fas fa-star"></i>
-                                                    <i class="fas fa-star"></i>
-                                                    <i class="fas fa-star"></i>
-                                                    <i class="far fa-star"></i>
-                                                </div>
-                                                <div class="rate-number">
-                                                    <p>12 đánh giá</p>
-                                                </div>
-                                            </div>
-                                            <div class="buttons d-flex ">
-                                                <button class="addCart" onclick="addToCart('sofa5','Sofa Bouclé Loveseat', 10,7200000, 'img/sofa/sofa5/sofa5.1.webp',2300000)"><i class="fas fa-cart-plus"></i>   Thêm vào giỏ</button>
-                                                <!-- <button class="buyNow">Mua ngay</button> -->
-                                            </div>
-                                        </div>
-                                    </a>
-                                    <div class="discount">
-                                        -22%
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-lg-4 col-md-6 nopadding ge">
-                                <div class="product">
-                                    <a href="detail11.html">
-                                        <img src="assets/img/ge/ge5/ge5.1.webp" alt="" class="product-img">
-                                        <div class="product-info">
-                                            <p class="name-product text-center">Blue Berry Armchair</p>
-                                            <div class="price-product text-center d-flex align-items-center">
-                                                <p class="price">2.400.000 đ</p>
-                                                <!-- <p class="root-price">300.000 đ</p> -->
-                                            </div>
-                                            <div class="rate d-flex">
-                                                <div class="stars">
-                                                    <i class="fas fa-star"></i>
-                                                    <i class="fas fa-star"></i>
-                                                    <i class="fas fa-star"></i>
-                                                    <i class="fas fa-star"></i>
-                                                    <i class="far fa-star"></i>
-                                                </div>
-                                                <div class="rate-number">
-                                                    <p>19 đánh giá</p>
-                                                </div>
-                                            </div>
-                                            <div class="buttons d-flex ">
-                                                <button class="addCart" onclick="addToCart('g5','Blue Berry Armchair', 10,2400000, 'img/ge/ge5/ge5.1.webp',0)"><i class="fas fa-cart-plus"></i>   Thêm vào giỏ</button>
-                                                <!-- <button class="buyNow">Mua ngay</button> -->
-                                            </div>
-                                        </div>
-                                    </a>
-                                </div>
-                            </div>
-                            <div class="col-lg-4 col-md-6 nopadding ge">
-                                <div class="product">
-                                    <a href="detail12.html">
-                                        <img src="assets/img/ge/ge6/ge6.1.webp" alt="" class="product-img">
-                                        <div class="product-info">
-                                            <p class="name-product text-center">Ghế Zina Ember Black</p>
-                                            <div class="price-product text-center d-flex align-items-center">
-                                                <p class="price">1.300.000 đ</p>
-                                                <p class="root-price">2.600.000 đ</p>
-                                            </div>
-                                            <div class="rate d-flex">
-                                                <div class="stars">
-                                                    <i class="fas fa-star"></i>
-                                                    <i class="fas fa-star"></i>
-                                                    <i class="fas fa-star"></i>
-                                                    <i class="fas fa-star"></i>
-                                                    <i class="far fa-star"></i>
-                                                </div>
-                                                <div class="rate-number">
-                                                    <p>12 đánh giá</p>
-                                                </div>
-                                            </div>
-                                            <div class="buttons d-flex ">
-                                                <button class="addCart" onclick="addToCart('g6','Ghế Zina Ember Black', 10,1300000, 'img/ge/ge6/ge6.1.webp',1300000)"><i class="fas fa-cart-plus"></i>   Thêm vào giỏ</button>
-                                                <!-- <button class="buyNow">Mua ngay</button> -->
-                                            </div>
-                                        </div>
-                                    </a>
-                                    <div class="discount">
-                                        -50%
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+
+                        
                     </div>
                     <div class="pagination justify-content-center d-flex">
-                        <div class="btn btn-prev align-items-center d-flex"><i class="fas fa-angle-double-left"></i></div>
-                        <div class="btn btn-number" page="1">1</div>
-                        <div class="btn btn-number" page="2">2</div>
-                        <div class="btn btn-number" page="3">3</div>
-                        <div class="btn btn-next align-items-center d-flex"><i class="fas fa-angle-double-right"></i></div>
+                        <pagination-controls style="justify-content: right; display: flex;"
+          (pageChange)="currentPage = $event"></pagination-controls>
+        <div class="clearfix" style="justify-content: right; display: flex;">
+          <div class="hint-text"> <br>Từ sản phẩm <b>{{ (currentPage - 1) * 9 + 1 }}</b> đến <b>{{ currentPage * 9
+              > products.length ? products.length : currentPage * 9 }}</b> trong tổng số <b>{{
+              products.length }}</b> sản phẩm</div>
+        </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-   
+
     <app-footer></app-footer>
 </div>

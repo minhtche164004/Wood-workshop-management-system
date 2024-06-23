@@ -50,7 +50,7 @@ const routes: Routes = [
   { path: 'profile', component: ViewProfileComponent },
   { path: 'submtr_management', component: SubMaterialManagementComponent },
   { path: 'upload', component: FileUploadComponent },
-
+  { path: 'product_list', component: ProductListComponent },
   { path: '', redirectTo: '/homepage', pathMatch: 'full' },
   { path: '**', redirectTo: '/homepage', pathMatch: 'full' },
 

@@ -22,6 +22,6 @@ steps:
   displayName: 'Build angular app'
 - task: PublishPipelineArtifact@1
   inputs:
-    targetPath: '$(Build.ArtifactStagingDirectory)/FE/SEP490/dist'
+    targetPath: '$(Build.ArtifactStagingDirectory)/SEP490/dist'
     ArtifactName: 'angular-app'
   displayName: 'Publist Build Artifacts'

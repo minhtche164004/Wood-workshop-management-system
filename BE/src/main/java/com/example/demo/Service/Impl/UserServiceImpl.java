@@ -335,7 +335,14 @@ userRepository.save(user);
 
     }
 
-
+    @Override
+    public List<User> getAllEmployee() {
+        List<User> list = userRepository.findUsersWithPosition();
+        if(list.isEmpty()){
+            throw new AppException(ErrorCode.NOT_FOUND);
+        }
+        return list;
+    }
 
 
     @Transactional

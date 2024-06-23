@@ -27,7 +27,8 @@ public interface CheckConditionService {
 
     boolean checkInputName(String name);
 
-     boolean checkInputQuantity(int number);
+     boolean checkInputQuantity(Double number);
+    boolean checkInputQuantityInt(int number);
 
    boolean checkInputPrice(BigDecimal number);
 

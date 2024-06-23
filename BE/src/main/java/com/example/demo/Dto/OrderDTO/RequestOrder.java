@@ -10,6 +10,7 @@ import lombok.NoArgsConstructor;
 public class RequestOrder {
     private Integer special_order;
     private CusInfo cusInfo;
+    private ReceiveInfo receiveInfo;
     private OrderDetail orderDetail;
     private Integer payment_method;
 

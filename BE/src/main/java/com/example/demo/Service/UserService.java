@@ -47,4 +47,5 @@ public interface UserService {
     List<UserDTO> FilterByStatus(int status_id);
     List<UserDTO> FilterByRole(int roleId);
     UserDTO EditUser(int id,UserDTO userDTO);
+    List<User> getAllEmployee();
 }

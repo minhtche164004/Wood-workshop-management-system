@@ -145,7 +145,7 @@ public class PaymentServiceImpl implements PaymentService {
         accessToken =  login();
 
         Map<String, Object> data = new HashMap<>();
-        data.put("accountNo", "00002189180");
+        data.put("accountNo", accountId);
         data.put("accountName", "LE NAM");
         data.put("acqId", "970423");
         data.put("amount", amout);

@@ -46,6 +46,7 @@ interface RegistrationRequest {
   styleUrls: ['./register.component.scss']
 })
 export class RegisterComponent implements OnInit {
+  isLoading = false;
   provinces: Province[] = [];
   districts: District[] = [];
   wards: Ward[] = [];
@@ -210,44 +211,49 @@ validateRegistration(): boolean {
 }
 
 
-  registerUser(): void {
-    if (!this.validateRegistration()) {
-      return;
-    }
+registerUser(): void {
+  if (!this.validateRegistration()) {
+    return;
+  }
+  this.isLoading = true; // Start loading
 
-    const registrationRequest: RegistrationRequest = {
-      username: this.username,
-      password: this.password,
-      checkPass: this.checkPass,
-      email: this.email,
-      phoneNumber: this.phoneNumber,
-      address: this.address,
-      fullname: this.fullname,
-      status: this.status,
-      city: this.provinceControl.value,
-      district: this.districtControl.value,
-      wards: this.wardControl.value
-    };
-    this.http.post<any>(this.apiUrl_registration, registrationRequest, { withCredentials: true })
-      .subscribe(
-        () => {
+  const registrationRequest: RegistrationRequest = {
+    username: this.username,
+    password: this.password,
+    checkPass: this.checkPass,
+    email: this.email,
+    phoneNumber: this.phoneNumber,
+    address: this.address,
+    fullname: this.fullname,
+    status: this.status,
+    city: this.provinceControl.value,
+    district: this.districtControl.value,
+    wards: this.wardControl.value
+  };
+
+  this.http.post<any>(this.apiUrl_registration, registrationRequest, { withCredentials: true })
+  .subscribe(
+      () => {
           console.log('Registration successful. Check your email for OTP.');
           this.toastr.success('Đăng ký thành công! Kiểm tra email để nhận OTP.', 'Thành công');
           this.router.navigate(['/otp']);
-        },
-        (error: any) => {
+      },
+      (error: any) => {
           console.error('Registration failed', error);
-          this.errorMessage = 'Registration failed. Please try again.';
+          this.errorMessage = 'Đăng ký thất bại. Vui lòng thử lại.';
           this.toastr.error('Đăng ký thất bại. Vui lòng thử lại.', 'Lỗi');
-        }
-      );
-  }
-
+      }
+  )
+  .add(() => {
+      this.isLoading = false; // Stop loading after API call completes
+  });
+}
   onLogin(): void {
+    this.isLoading = true;
     console.log('Bắt đầu quá trình đăng nhập');
     console.log('Tên đăng nhập:', this.loginObj.username);
     console.log('Mật khẩu:', this.loginObj.password);
-
+  
     this.http.post(`${environment.apiUrl}api/auth/login`, this.loginObj).subscribe(
       (response: any) => {
         console.log('Truy cập API đăng nhập thành công');
@@ -257,10 +263,10 @@ validateRegistration(): boolean {
           const token = response.result.token;
           console.log('Access Token:', token);
           localStorage.setItem('loginToken', token);
-
+  
           const userData = response.result.user;
           console.log('Thông tin người dùng:', userData);
-
+  
           const authorities = userData.authorities.map((authority: { authority: any }) => authority.authority);
           if (authorities.includes('CUSTOMER')) {
             this.router.navigateByUrl('/homepage');
@@ -270,18 +276,19 @@ validateRegistration(): boolean {
             this.router.navigateByUrl('/employee-work');
           } else {
             console.error('Vai trò người dùng không hợp lệ:', authorities);
-            this.toastr.error('Vai trò người dùng không hợp lệ', 'Lỗi cố khi thực hiện đăng nhập'); // Ví dụ về việc sử dụng toastr trong logic if-else
+            this.toastr.error('Vai trò người dùng không hợp lệ', 'Lỗi cố khi thực hiện đăng nhập');
           }
         }
+        this.isLoading = false; // Stop the loading spinner
       },
       (error: HttpErrorResponse) => {
         console.error('Lỗi khi đăng nhập', error);
-          if (error.status === 400 && error.error.code === 1028) {
-          this.toastr.error('Sai Tên đăng nhập ! Vui lòng kiểm tra lại', 'Lỗi cố khi thực hiện đăng nhập'); // Hiển thị thông báo lỗi cho tài khoản bị khóa
-        } 
-        else if (error.status === 400 && error.error.code === 1006) {
-          this.toastr.error('Sai Mật khẩu ! Vui lòng kiểm tra lại', 'Lỗi cố khi thực hiện đăng nhập'); // Hiển thị thông báo lỗi cho tài khoản bị khóa
-        } 
+        if (error.status === 400 && error.error.code === 1028) {
+          this.toastr.error('Sai Tên đăng nhập ! Vui lòng kiểm tra lại', 'Lỗi cố khi thực hiện đăng nhập');
+        } else if (error.status === 400 && error.error.code === 1006) {
+          this.toastr.error('Sai Mật khẩu ! Vui lòng kiểm tra lại', 'Lỗi cố khi thực hiện đăng nhập');
+        }
+        this.isLoading = false; // Stop the loading spinner on error
       }
     );
   }

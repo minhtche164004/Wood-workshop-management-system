@@ -15,7 +15,7 @@ export class ProductListService {
   private apiDeleteProduct = `${environment.apiUrl}api/auth/product/DeleteProduct`; // Assuming the delete endpoint
   private api_findProductByCategory = `${environment.apiUrl}api/auth/product`;
 
-  private apiUrl = `${environment.apiUrl}api/auth/product/GetAllProduct`;
+  private apiUrl = `${environment.apiUrl}api/auth/product/getAllProductForAdmin`;
   private apiUrl_Cate = `${environment.apiUrl}api/auth/product/getAllCategoryName`;
   private apiUrl_GetAllUser = `${environment.apiUrl}api/auth/admin/GetAllUser`;
   private apiUrl_Position = `${environment.apiUrl}api/auth/admin/GetAllPosition`;

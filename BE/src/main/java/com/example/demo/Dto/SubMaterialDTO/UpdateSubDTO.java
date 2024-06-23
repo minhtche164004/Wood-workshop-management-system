@@ -17,7 +17,7 @@ public class UpdateSubDTO {
     private String description;
     @NotNull(message = "MUST_REQUIRED") // Không được để trống
     @Min(value = 0, message = "QUANTITY_INVALID") // Giá trị tối thiểu là 0
-    private Integer quantity;
+    private Double quantity;
     @NotNull(message = "MUST_REQUIRED") // Không được để trống
 
     private BigDecimal unit_price;

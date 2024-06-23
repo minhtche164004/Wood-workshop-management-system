@@ -20,7 +20,6 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 public class ProductDTO_Show {
-
     private int productId;
     private String productName;
     private String description;
@@ -34,5 +33,6 @@ public class ProductDTO_Show {
     private Status_Product status;
     private Categories categories;
     private List<Productimages> imageList;
+    private List<String> sub_material_name;
 
 }

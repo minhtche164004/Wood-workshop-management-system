@@ -28,7 +28,7 @@ public class SubMaterials {
     private String description;
 
     @Column(name = "quantity")
-    private Integer quantity;
+    private Double quantity;
 
     @Column(name = "unit_price")
     private BigDecimal unitPrice;

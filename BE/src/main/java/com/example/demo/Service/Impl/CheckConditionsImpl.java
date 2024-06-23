@@ -48,7 +48,10 @@ public class CheckConditionsImpl implements CheckConditionService {
         return p.matcher(name).find();
     }
 
-    public boolean checkInputQuantity(int number) {
+    public boolean checkInputQuantity(Double number) {
+        return number > 0; // Kiểm tra trực tiếp xem số có lớn hơn 0 hay không
+    }
+    public boolean checkInputQuantityInt(int number) {
         return number > 0; // Kiểm tra trực tiếp xem số có lớn hơn 0 hay không
     }
     public boolean checkInputPrice(BigDecimal number) {

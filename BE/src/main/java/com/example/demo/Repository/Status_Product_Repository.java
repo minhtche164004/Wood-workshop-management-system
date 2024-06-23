@@ -8,6 +8,8 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 @Repository
 
 public interface Status_Product_Repository extends JpaRepository<Status_Product, Integer> {
@@ -16,6 +18,12 @@ public interface Status_Product_Repository extends JpaRepository<Status_Product,
 
     @Query("SELECT u FROM Status_Product u WHERE u.status_id = :query")
     Status_Product findById(int query);
+
+    @Query("SELECT u FROM Status_Product u WHERE u.type=0")
+    List<Status_Product> GetListStatusType0();
+
+    @Query("SELECT u FROM Status_Product u WHERE u.type=1")
+    List<Status_Product> GetListStatusType1();
 
     @Modifying
     @Query("UPDATE Status_Product u SET u.status_name = :newName WHERE u.status_id = :id")

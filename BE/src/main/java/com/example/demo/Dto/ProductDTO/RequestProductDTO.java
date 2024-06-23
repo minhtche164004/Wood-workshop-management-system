@@ -23,8 +23,8 @@ public class RequestProductDTO {
     @NotNull(message = "MUST_REQUIRED") // Không được để trống
     @DecimalMin(value = "0.0", inclusive = false, message = "PRICE_INVALID")
     private BigDecimal price;
-    @Min(value = 0, message = "QUANTITY_INVALID")
-    private Integer quantity;
+//    @Min(value = 0, message = "QUANTITY_INVALID")
+//    private Integer quantity;
     @NotNull(message = "MUST_REQUIRED")
     private Date completionTime;
     @NotNull(message = "MUST_REQUIRED")

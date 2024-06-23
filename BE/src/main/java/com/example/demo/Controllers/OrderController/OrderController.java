@@ -145,4 +145,11 @@ private OrderService orderService;
         apiResponse.setResult(orderService.HistoryOrder());
         return apiResponse;
     }
+
+    @GetMapping("/getAllOrderDetail")
+    public ApiResponse<?>  getAllOrderDetail() {
+        ApiResponse<List> apiResponse = new ApiResponse<>();
+        apiResponse.setResult(orderService.getAllOrderDetail());
+        return apiResponse;
+    }
 }

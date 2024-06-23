@@ -125,6 +125,12 @@ public class AdminController {
         apiResponse.setResult(userService.FilterByRole(query));
         return apiResponse;
     }
+    @GetMapping("/getAllEmployee")
+    public ApiResponse<?> getAllEmployee(){
+        ApiResponse<List> apiResponse = new ApiResponse<>();
+        apiResponse.setResult(userService.getAllEmployee());
+        return  apiResponse;
+    }
 
     @GetMapping("GetById")
     public ApiResponse<?> getUserById1(@RequestParam(value = "user_id", required = false) int user_id) {

@@ -6,10 +6,7 @@ import com.example.demo.Dto.ProductDTO.*;
 import com.example.demo.Dto.RequestDTO.RequestDTO;
 import com.example.demo.Dto.UserDTO.UserDTO;
 import com.example.demo.Entity.*;
-import com.example.demo.Repository.CategoryRepository;
-import com.example.demo.Repository.ProductImageRepository;
-import com.example.demo.Repository.ProductRepository;
-import com.example.demo.Repository.Status_Product_Repository;
+import com.example.demo.Repository.*;
 import com.example.demo.Response.ApiResponse;
 import com.example.demo.Service.*;
 import com.google.gson.Gson;
@@ -41,6 +38,8 @@ public class ProductController {
     @Autowired
     private ProductRepository productRepository;
     @Autowired
+    private ProductSubMaterialsRepository productSubMaterialsRepository;
+    @Autowired
     private CategoryRepository categoryRepository;
     @Autowired
     private ProductService productService;
@@ -55,10 +54,10 @@ public class ProductController {
     private static final JedisPooled jedis = RedisConfig.getRedisInstance();
 
     //    @PreAuthorize("hasAnyAuthority('ADMIN')")
-    @GetMapping("/GetAllProduct")
-    public ApiResponse<?> getAllProduct() {
+    @GetMapping("/getAllProductForCustomer")
+    public ApiResponse<?> getAllProductForCustomer() {
         ApiResponse<List> apiResponse = new ApiResponse<>();
-        String cacheKey = "all_products";
+        String cacheKey = "all_products_customer";
         List<Products> products;
         String cachedData = jedis.get(cacheKey);
         if (cachedData != null) {
@@ -67,7 +66,7 @@ public class ProductController {
             Gson gson = new GsonBuilder().setDateFormat("MMM dd, yyyy").create();
             products = gson.fromJson(cachedData, type);
         } else {
-            products = productService.GetAllProduct();
+            products = productService.GetAllProductForCustomer();
             String jsonData = new Gson().toJson(products);
             jedis.set(cacheKey, jsonData);
             jedis.expire(cacheKey, 1800);
@@ -76,6 +75,28 @@ public class ProductController {
 //        apiResponse.setResult(productService.GetAllProduct());
         return apiResponse;
     }
+    @GetMapping("/getAllProductForAdmin")
+    public ApiResponse<?> getAllProductForAdmin() {
+        ApiResponse<List> apiResponse = new ApiResponse<>();
+        String cacheKey = "all_products_admin";
+        List<Products> products;
+        String cachedData = jedis.get(cacheKey);
+        if (cachedData != null) {
+            Type type = new TypeToken<List<Products>>() {
+            }.getType();
+            Gson gson = new GsonBuilder().setDateFormat("MMM dd, yyyy").create();
+            products = gson.fromJson(cachedData, type);
+        } else {
+            products = productService.GetAllProductForAdmin();
+            String jsonData = new Gson().toJson(products);
+            jedis.set(cacheKey, jsonData);
+            jedis.expire(cacheKey, 1200);
+        }
+        apiResponse.setResult(products);
+//        apiResponse.setResult(productService.GetAllProductForAdmin());
+        return apiResponse;
+    }
+
 
     @GetMapping("/GetProductByStatus")
     public ApiResponse<?> GetProductByStatus(@RequestParam("id") int id) {
@@ -131,7 +152,7 @@ public class ProductController {
         return apiResponse;
     }
 
-    @GetMapping("/GetProductByIdWithImage")
+    @GetMapping("/ViewDetailProductById")
     public ApiResponse<?> GetProductByIdWithImage(@RequestParam("id") int id) {
         ApiResponse<ProductDTO_Show> apiResponse = new ApiResponse<>();
         apiResponse.setResult(productService.GetProductByIdWithImage(id));
@@ -158,7 +179,6 @@ public class ProductController {
         ApiResponse<Products> apiResponse = new ApiResponse<>();
         apiResponse.setResult(productService.GetProductById(product_id));
         return apiResponse;
-
     }
 
     @GetMapping("/findProductByNameorCode")
@@ -319,16 +339,22 @@ public class ProductController {
         jedis.del("all_products_by_cate");
         return apiResponse;
     }
-
+    //xuất đơn nguyên vật liệu cho product có sẵn
     @PostMapping("/createExportMaterialProduct")
     public ResponseEntity<ApiResponse<List<ProductSubMaterials>>> createExportMaterialProduct(@RequestBody CreateExportMaterialProductRequest request) {
         return productService.createExportMaterialProduct(request.getProductId(), request.getSubMaterialQuantities());
     }
 
+    //xuất đơn vật liệu cho đơn hàng đặt theo yêu cầu , request product
+    @PostMapping("/createExportMaterialProductRequest")
+    public ResponseEntity<ApiResponse<List<RequestProductsSubmaterials>>> createExportMaterialProductRequest(@RequestBody CreateExportMaterialProductRequest request) {
+        return productService.createExportMaterialProductRequest(request.getProductId(), request.getSubMaterialQuantities());
+    }
+
     @GetMapping("/GetStatusProduct")
     public ApiResponse<?> GetAllStatusProduct() {
         ApiResponse<List> apiResponse = new ApiResponse<>();
-        apiResponse.setResult(statusProductRepository.findAll());
+        apiResponse.setResult(statusProductRepository.GetListStatusType0());
         return apiResponse;
     }
 

@@ -20,10 +20,10 @@ public class ProductDTO1 {
     private String product_name;
     @NotNull(message = "MUST_REQUIRED")
     private String description;
-    @NotNull(message = "MUST_REQUIRED") // Không được để trống
-    @Min(value = 0, message = "QUANTITY_INVALID") // Giá trị tối thiểu là 0
-    @Digits(integer = 10, fraction = 0, message = "QUANTITY_INVALID") // Chỉ được nhập số nguyên
-    private int quantity;
+//    @NotNull(message = "MUST_REQUIRED") // Không được để trống
+//    @Min(value = 0, message = "QUANTITY_INVALID") // Giá trị tối thiểu là 0
+//    @Digits(integer = 10, fraction = 0, message = "QUANTITY_INVALID") // Chỉ được nhập số nguyên
+//    private int quantity;
     @NotNull(message = "MUST_REQUIRED") // Không được để trống
     @DecimalMin(value = "0.0", inclusive = false, message = "PRICE_INVALID") // Giá trị tối thiểu lớn hơn 0
     private BigDecimal price;

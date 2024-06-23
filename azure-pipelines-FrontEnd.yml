@@ -20,8 +20,8 @@ steps:
     npm install
     npm run build-prod
   displayName: 'Build angular app'
-- task: PublishBuildArtifacts@1
+- task: PublishPipelineArtifact@1
   inputs:
-    PathtoPublish: '$(Build.ArtifactStagingDirectory)/FE/SEP490/dist'
+    targetPath: '$(Build.ArtifactStagingDirectory)/dist'
     ArtifactName: 'angular-app'
   displayName: 'Publist Build Artifacts'

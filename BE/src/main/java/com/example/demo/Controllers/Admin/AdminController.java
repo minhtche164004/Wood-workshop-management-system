@@ -19,6 +19,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import redis.clients.jedis.Jedis;
+import redis.clients.jedis.JedisPooled;
 
 import java.lang.reflect.Type;
 import java.util.List;
@@ -34,7 +35,7 @@ public class AdminController {
     @Autowired
     private RoleRepository roleRepository;
 
-    private static final Jedis jedis = RedisConfig.getRedisInstance();
+    private static final JedisPooled jedis = RedisConfig.getRedisInstance();
 
     //    @GetMapping("/GetAllPositionName")
 //    public ApiResponse<?> GetAllPositionName(){
@@ -58,7 +59,7 @@ public class AdminController {
             jedis.set(cacheKey, jsonData);
             jedis.expire(cacheKey, 3000);
         }
-        apiResponse.setResult(positionService.getListPosition());
+        apiResponse.setResult(positions);
         return apiResponse;
     }
 
@@ -76,7 +77,7 @@ public class AdminController {
             users = userService.GetAllUser();
             String jsonData = new Gson().toJson(users);
             jedis.set(cacheKey, jsonData);
-            jedis.expire(cacheKey, 3600);
+            jedis.expire(cacheKey, 3000);
         }
         apiResponse.setResult(users);
         return apiResponse;

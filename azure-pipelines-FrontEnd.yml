@@ -18,7 +18,7 @@ steps:
     cd FE/SEP490/
     npm install -g @angular/cli
     npm install
-    ng build --configuration=production --output-hashing=all
+    ng build --configuration production
   displayName: 'Build angular app'
 - task: PublishBuildArtifacts@1
   inputs:

@@ -37,6 +37,13 @@ public interface UserRepository extends JpaRepository<User,Integer> {
     @Query("update User u set u.status.status_id = ?2 where u.userId = ?1")
     void editStatus(int userId, int status_id);
 
+    @Query("SELECT u FROM User u WHERE u.position.position_id IS NOT NULL")
+    List<User> findUsersWithPosition();
+
+//    @Query("SELECT u FROM User u WHERE u.position.position_id IS NOT NULL AND ")
+//    List<User> CountJobEmployee(@Param("userId") int userId);
+
+
 //    @Transactional
 //    @Modifying
 //    @Query("update User u set u.email = ?2 , u.userInfor.address =?3,u.userInfor.fullname=?4,u.userInfor.phoneNumber=?5 ,u.username=?6 where u.userId = ?1")

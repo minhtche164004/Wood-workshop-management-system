@@ -17,9 +17,16 @@ import java.util.Map;
 public interface ProductService {
 //    Products AddNewProduct(ProductDTO productDTO,MultipartFile[] multipartFiles,MultipartFile multipartFiles_thumbnal);
     Products AddNewProduct(ProductDTO1 productDTO1);
-    List<Products> GetAllProduct();
+    List<Products> GetAllProductForCustomer();
+    List<Products> GetAllProductForAdmin();
     Products EditProduct(int id,ProductDTO1 productDTO1);
-    ResponseEntity<ApiResponse<List<ProductSubMaterials>>> createExportMaterialProduct(int product_id, Map<Integer, Integer> subMaterialQuantities);
+    //xuất nguyên liệu cho sản phẩm có sẵn
+    ResponseEntity<ApiResponse<List<ProductSubMaterials>>> createExportMaterialProduct(int product_id, Map<Integer, Double> subMaterialQuantities);
+
+    //xuất nguyên liệu cho sản phẩm  theo yêu cầu
+
+    ResponseEntity<ApiResponse<List<RequestProductsSubmaterials>>> createExportMaterialProductRequest(int request_product_id, Map<Integer, Double> subMaterialQuantities);
+
      Products GetProductById(int product_id);
 
     List<Products> findProductByNameCode(String key);
@@ -27,6 +34,9 @@ public interface ProductService {
     ProductDTO_Show GetProductByIdWithImage(int id);
 
     Products UpdateStatusProduct(int product_id, int status_id);
+
+
+
 
 
 

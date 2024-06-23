@@ -48,7 +48,7 @@ public interface SubMaterialsRepository extends JpaRepository<SubMaterials,Integ
     @Modifying
     @Query("update SubMaterials u set u.subMaterialName = ?2,u.description=?3,u.quantity=?4,u.unitPrice=?5" +
             " where u.subMaterialId = ?1")
-    void updateSubMaterials(int productId, String subMaterialName, String description, int quantity, BigDecimal unitPrice);
+    void updateSubMaterials(int productId, String subMaterialName, String description, Double quantity, BigDecimal unitPrice);
 
 
 

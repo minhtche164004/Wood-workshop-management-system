@@ -30,7 +30,7 @@ public class User  {
     private Status_User status;
 
     @ManyToOne(cascade = CascadeType.ALL)
-    @JsonIgnore
+//    @JsonIgnore
     @JoinColumn(name = "position_id")
     private Position position;
 

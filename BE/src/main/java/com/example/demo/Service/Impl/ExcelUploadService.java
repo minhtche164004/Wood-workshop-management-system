@@ -46,7 +46,7 @@ public class ExcelUploadService {
                         case 0 -> subMaterialDTO.setSub_material_name(cell.getStringCellValue());
                         case 1 -> subMaterialDTO.setMaterial_id((int) cell.getNumericCellValue());
                         case 2 -> subMaterialDTO.setDescription(cell.getStringCellValue());
-                        case 3 -> subMaterialDTO.setQuantity((int) cell.getNumericCellValue());
+                        case 3 -> subMaterialDTO.setQuantity(cell.getNumericCellValue());
                         case 4 -> subMaterialDTO.setUnit_price(BigDecimal.valueOf(cell.getNumericCellValue()));
                         default ->  {
 

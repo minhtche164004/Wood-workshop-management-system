@@ -23,6 +23,10 @@ public class Jobs {
     @Column(name = "job_id")
     private int jobId;
 
+    //thêm trường name cho job
+    @Column(name = "job_name")
+    private String job_name;
+
     @ManyToOne
     @JsonIgnore
     @JoinColumn(name = "user_id")
@@ -32,6 +36,22 @@ public class Jobs {
     @JoinColumn(name = "product_id")
     @JsonIgnore
     private Products product;  // Liên kết với entity Products
+
+    @ManyToOne
+    @JoinColumn(name = "request_product_id")
+    @JsonIgnore
+    private RequestProducts requestProducts;  // Liên kết với entity RequestProduct
+
+    @ManyToOne
+    @JoinColumn(name = "order_detail_id") // Khóa ngoại tới OrderDetail
+    private Orderdetails orderdetails;
+
+//nay la status của job (status_product có type=1 , là đang thi công hay đã hoàn thành)
+    @ManyToOne(fetch = FetchType.EAGER,cascade = CascadeType.ALL)
+//    @JsonIgnore
+    @JoinColumn(name = "status_id")
+    private Status_Product status;
+
 
     @Column(name = "description")
     private String description;

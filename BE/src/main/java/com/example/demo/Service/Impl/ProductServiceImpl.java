@@ -24,6 +24,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.math.BigDecimal;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.LocalDate;
@@ -49,9 +50,13 @@ public class ProductServiceImpl implements ProductService {
     @Autowired
     private ProductSubMaterialsRepository productSubMaterialsRepository;
     @Autowired
+    private RequestProductsSubmaterialsRepository requestProductsSubmaterialsRepository;
+    @Autowired
     private ProductImageRepository productImageRepository;
     @Autowired
     private EntityManager entityManager;
+    @Autowired
+    private RequestProductRepository requestProductRepository;
     @Override
     public Products AddNewProduct(ProductDTO1 productDTO1){
         Products products = new Products();
@@ -75,11 +80,11 @@ public class ProductServiceImpl implements ProductService {
         products.setCategories(categories);
         products.setType(productDTO1.getType());
 
-        products.setQuantity(productDTO1.getQuantity());
-        if (productRepository.countByProductName(productDTO1.getProduct_name()) > 0) {
-            throw new AppException(ErrorCode.NAME_EXIST);
-        }
-
+//        products.setQuantity(productDTO1.getQuantity());
+//        if (productRepository.countByProductName(productDTO1.getProduct_name()) > 0) {
+//            throw new AppException(ErrorCode.NAME_EXIST);
+//        }
+        products.setQuantity(0);//tạo mới product thì quantity mặc định là 0
         validateProductDTO1(productDTO1);
         LocalDate today = LocalDate.now();
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("ddMMyy");
@@ -167,11 +172,11 @@ public class ProductServiceImpl implements ProductService {
                 productRepository.findByName(productDTO1.getProduct_name()) != null) {
             throw new AppException(ErrorCode.NAME_EXIST);
         }
+        //ko đc chỉnh sửa quantity
         validateProductDTO1(productDTO1);
         productRepository.updateProduct(id,
                 productDTO1.getProduct_name(),
                 productDTO1.getDescription(),
-                productDTO1.getQuantity(),
                 productDTO1.getPrice(),
                 productDTO1.getStatus_id(),
                 productDTO1.getCategory_id(),
@@ -193,11 +198,18 @@ return products;
 
 
 
+
     @Override
     public ProductDTO_Show GetProductByIdWithImage(int id) {
         List<Productimages> productimagesList = productImageRepository.findImageByProductId(id);
         Products products = productRepository.findById(id);
+        if(products == null){
+            throw new AppException(ErrorCode.NOT_FOUND);
+        }
         ProductDTO_Show productDTOShow = new ProductDTO_Show();
+        if(productimagesList == null){
+            productDTOShow.setImageList(null);
+        }
         productDTOShow.setProductId(products.getProductId());
         productDTOShow.setProductName(products.getProductName());
         productDTOShow.setDescription(products.getDescription());
@@ -214,6 +226,11 @@ return products;
             productimages.setFullPath(getAddressLocalComputer(productimages.getFullPath()));
             processedImages.add(productimages); // Thêm vào danh sách mới
         }
+       List<String> list = productSubMaterialsRepository.GetSubNameByProductId(id);
+        if(list.isEmpty()){
+            productDTOShow.setSub_material_name(null);
+        }
+        productDTOShow.setSub_material_name(list);
         productDTOShow.setImageList(processedImages); // Gán danh sách mới vào DTO
 
         return productDTOShow;
@@ -232,9 +249,10 @@ return products;
     }// Trả về đường dẫn tương đối hoặc đường dẫn ban đầu nếu không tìm thấy "/assets/"
 
 
+    //này là dành cho trang homepage
     @Override
-    public List<Products> GetAllProduct() {
-        List<Products> productList = productRepository.findAll();
+    public List<Products> GetAllProductForCustomer() {
+        List<Products> productList = productRepository.ViewProductLandingPage(3); //status =3 , nghĩa là các sản phẩm đang còn hàng
         if (productList.isEmpty()) {
             throw new AppException(ErrorCode.NOT_FOUND);
         }
@@ -244,6 +262,18 @@ return products;
         return productList;
     }
 
+    //này là giày cho trang quản lí của admin , list hết product ra
+    @Override
+    public List<Products> GetAllProductForAdmin() {
+        List<Products> productList = productRepository.findAll();
+        if (productList.isEmpty()) {
+            throw new AppException(ErrorCode.NOT_FOUND);
+        }
+        for (Products product : productList) {
+            product.setImage(getAddressLocalComputer(product.getImage())); // Cập nhật lại đường dẫn ảnh
+        }
+        return productList;
+    }
 
 
     @Override
@@ -275,13 +305,12 @@ return products;
 
 
 
-
     // Hàm kiểm tra điều kiện đầu vào
     private void validateProductDTO(ProductDTO productDTO) {
         if (!checkConditionService.checkInputName(productDTO.getProduct_name())) {
             throw new AppException(ErrorCode.INVALID_FORMAT_NAME);
         }
-        if (!checkConditionService.checkInputQuantity(productDTO.getQuantity())) {
+        if (!checkConditionService.checkInputQuantityInt(productDTO.getQuantity())) {
             throw new AppException(ErrorCode.QUANTITY_INVALID);
         }
         if (!checkConditionService.checkInputPrice(productDTO.getPrice())) {
@@ -292,9 +321,9 @@ return products;
         if (!checkConditionService.checkInputName(productDTO1.getProduct_name())) {
             throw new AppException(ErrorCode.INVALID_FORMAT_NAME);
         }
-        if (!checkConditionService.checkInputQuantity(productDTO1.getQuantity())) {
-            throw new AppException(ErrorCode.QUANTITY_INVALID);
-        }
+//        if (!checkConditionService.checkInputQuantityInt(productDTO1.getQuantity())) {
+//            throw new AppException(ErrorCode.QUANTITY_INVALID);
+//        }
         if (!checkConditionService.checkInputPrice(productDTO1.getPrice())) {
             throw new AppException(ErrorCode.PRICE_INVALID);
         }
@@ -302,20 +331,22 @@ return products;
 
 
     //Đơn xuất vật liệu(Tạo đơn xuất vật liệu cho sản phẩm  UC_30)
+    //manger list ra 1 danh sách các sản phẩm có trong đơn hàng , manager chọn vào xuất nguyên vật liệu cho product có trong đơn hàng(list order detail)
+    //nếu xuất đơn mà ko đủ quantity thì sẽ hiển thị thông báo lỗi -> người dùng vào nhập thêo sub_material, bấm xuất lại đơn .
     @Transactional
     @Override
-    public ResponseEntity<ApiResponse<List<ProductSubMaterials>>> createExportMaterialProduct(int productId, Map<Integer, Integer> subMaterialQuantities) {
+    public ResponseEntity<ApiResponse<List<ProductSubMaterials>>> createExportMaterialProduct(int productId, Map<Integer, Double> subMaterialQuantities) {
         Products product = productRepository.findById(productId);
 
         List<ProductSubMaterials> productSubMaterialsList = new ArrayList<>();
         Map<String, String> errors = new HashMap<>(); //hashmap cho error
 
-        for (Map.Entry<Integer, Integer> entry : subMaterialQuantities.entrySet()) {
+        for (Map.Entry<Integer, Double> entry : subMaterialQuantities.entrySet()) {
             int subMaterialId = entry.getKey();
-            int quantity = entry.getValue();
+            double quantity = entry.getValue();
             SubMaterials subMaterial = subMaterialsRepository.findById1(subMaterialId);
 
-            int currentQuantity = subMaterial.getQuantity();
+            double currentQuantity = subMaterial.getQuantity();
             if (quantity > currentQuantity) {
                 errors.put(subMaterial.getSubMaterialName(), "Không đủ số lượng");
                 continue;
@@ -336,7 +367,43 @@ return products;
             return ResponseEntity.ok(apiResponse);
         }
     }
+
+    @Transactional
+    @Override
+    public ResponseEntity<ApiResponse<List<RequestProductsSubmaterials>>> createExportMaterialProductRequest(int request_product_id, Map<Integer, Double> subMaterialQuantities) {
+        RequestProducts requestProducts = requestProductRepository.findById(request_product_id);
+
+        List<RequestProductsSubmaterials> requestProductsSubmaterialsList = new ArrayList<>();
+        Map<String, String> errors = new HashMap<>(); //hashmap cho error
+
+        for (Map.Entry<Integer, Double> entry : subMaterialQuantities.entrySet()) {
+            int subMaterialId = entry.getKey();
+            double quantity = entry.getValue();
+            SubMaterials subMaterial = subMaterialsRepository.findById1(subMaterialId);
+
+            double currentQuantity = subMaterial.getQuantity();
+            if (quantity > currentQuantity) {
+                errors.put(subMaterial.getSubMaterialName(), "Không đủ số lượng");
+                continue;
+            }
+
+            subMaterial.setQuantity(currentQuantity - quantity);
+            subMaterialsRepository.save(subMaterial);
+
+            RequestProductsSubmaterials requestProductsSubmaterials = new RequestProductsSubmaterials(subMaterial, requestProducts, quantity);
+            requestProductsSubmaterialsList.add(requestProductsSubmaterials);
+        }
+        ApiResponse<List<RequestProductsSubmaterials>> apiResponse = new ApiResponse<>();
+        if (!errors.isEmpty()) {
+            apiResponse.setError(1028, errors);
+            return ResponseEntity.badRequest().body(apiResponse);
+        } else {
+            apiResponse.setResult(requestProductsSubmaterialsRepository.saveAll(requestProductsSubmaterialsList));
+            return ResponseEntity.ok(apiResponse);
+        }
+    }
     //Đơn tạo đơn xuất vật liệu cho Employee
+
 
 
 

@@ -1,8 +1,6 @@
 package com.example.demo.Repository;
 
 import com.example.demo.Entity.Products;
-import com.example.demo.Entity.Role;
-import com.example.demo.Entity.User;
 import jakarta.transaction.Transactional;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
@@ -12,7 +10,6 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.math.BigDecimal;
-import java.time.LocalDate;
 import java.util.Date;
 import java.util.List;
 
@@ -33,6 +30,11 @@ public interface ProductRepository extends JpaRepository<Products, Integer> {
     @Query("SELECT u FROM Products u WHERE u.status.status_id = :query")
     List<Products> findByStatus(int query);
 
+    @Query("SELECT u FROM Products u WHERE u.status.status_id = :query")
+    List<Products> ViewProductLandingPage(int query);
+
+
+
     @Query("SELECT u FROM Products u WHERE u.productName = :query")
     Products findByName(String query);
 
@@ -50,8 +52,11 @@ public interface ProductRepository extends JpaRepository<Products, Integer> {
 
     @Transactional
     @Modifying
-    @Query("update Products u set u.productName = ?2,u.description=?3,u.quantity=?4,u.price=?5,u.status.status_id=?6," +
-            "u.categories.categoryId=?7,u.type=?8,u.image=?9,u.completionTime=?10, u.enddateWarranty=?11 where u.productId = ?1")
-    void updateProduct(int productId, String productName, String description, int quantity, BigDecimal price, int status_id, int categoryId, int type, String image, Date completionTime,Date enddateWarranty);
+    @Query("update Products u set u.productName = ?2,u.description=?3,u.price=?4,u.status.status_id=?5," +
+            "u.categories.categoryId=?6,u.type=?7,u.image=?8,u.completionTime=?9, u.enddateWarranty=?10 where u.productId = ?1")
+    void updateProduct(int productId, String productName, String description, BigDecimal price, int status_id, int categoryId, int type, String image, Date completionTime,Date enddateWarranty);
+
+
+
 }
 

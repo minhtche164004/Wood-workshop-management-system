@@ -16,6 +16,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 
+import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -73,7 +74,7 @@ public class PaymentController {
 //    }
 
     @GetMapping("/vnpay-payment")
-    public ResponseEntity<String> GetMapping(HttpServletRequest request, Model model) {
+    public ResponseEntity<String> GetMapping(HttpServletRequest request) {
         int paymentStatus = vnPayService.orderReturn(request);
         String orderInfo = request.getParameter("vnp_OrderInfo");
         String paymentTime = request.getParameter("vnp_PayDate");
@@ -82,17 +83,14 @@ public class PaymentController {
 
         Orders orders = orderRepository.findByCode(orderInfo);
 
-        model.addAttribute("orderId", orderInfo);
-        model.addAttribute("totalPrice", totalPrice);
-        model.addAttribute("paymentTime", paymentTime);
-        model.addAttribute("transactionId", transactionId);
-        if (paymentStatus == 1) {
+        if (paymentStatus == 1 && orders != null &&
+                new BigDecimal(totalPrice).compareTo(orders.getDeposite()) == 0) {
             Status_Order statusOrder = status_Order_Repository.findById(1);
             orders.setStatus(statusOrder);
             orderRepository.save(orders);
-            return ResponseEntity.ok("ordersuccess");
+            return ResponseEntity.ok("order success");
         } else {
-            return ResponseEntity.ok("orderfail");
+            return ResponseEntity.badRequest().body("order fail");
         }
 
     }

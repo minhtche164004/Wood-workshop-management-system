@@ -1,0 +1,53 @@
+.order-detail-card {
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    font-size: 14px; /* Tăng kích thước font chữ chung cho toàn bộ card */
+  
+    .card-header {
+      background-color: #007bff;
+      color: #fff;
+    }
+  
+    .card-title {
+      margin: 0;
+      font-size: 2.5rem;
+      padding: 10px;
+    }
+  
+    .card-body {
+      padding: 2rem;
+    }
+  
+    .customer-info,
+    .order-summary {
+      h5 {
+        font-size: 1.75rem; /* Tăng kích thước font cho các tiêu đề h5 */
+        margin-bottom: 1rem;
+        font-size: 1.9rem;
+        color: #007bff;
+      }
+  
+      p {
+        margin-bottom: 1.75rem; /* Giảm khoảng cách giữa các đoạn văn bản */
+        font-size: 1.5rem; /* Tăng kích thước font cho đoạn văn bản */
+        color: #333;
+      }
+  
+      textarea {
+        margin-top: 1rem;
+        font-size: 1.5rem; /* Tăng kích thước font cho textarea */
+        padding: 1rem;
+        border-radius: 0.25rem;
+        border: 1px solid #ccc;
+      }
+    }
+  
+    .row {
+      margin-bottom: 1.5rem;
+    }
+  
+    .border-left {
+      border-left: 2px solid #ddd;
+    }
+  }
+  

@@ -12,9 +12,11 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import redis.clients.jedis.JedisPooled;
 
 import java.lang.reflect.Type;
@@ -270,15 +272,25 @@ public class ProductController {
 //        apiResponse.setResult(productService.AddNewProduct(productDTO, files, file_thumbnail));
 //        return apiResponse;
 //    }
-    @PostMapping(value = "/AddNewProduct")
+//    @PostMapping(value = "/AddNewProduct")
+//    public ApiResponse<?> AddNewProduct(
+//            @RequestBody ProductAddDTO productAddDTO
+//    ) {
+//        ApiResponse<Products> apiResponse = new ApiResponse<>();
+//        apiResponse.setResult(productService.AddNewProduct(productAddDTO));
+//        jedis.del("all_products");
+//        jedis.del("all_products_by_status");
+//        jedis.del("all_products_by_cate");
+//        return apiResponse;
+//    }
+    @PostMapping(value = "/AddNewProduct", consumes = MediaType.MULTIPART_FORM_DATA_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ApiResponse<?> AddNewProduct(
-            @RequestBody ProductAddDTO productAddDTO
+            @RequestPart("productDTO") ProductAddDTO productAddDTO,
+            @RequestPart("files") MultipartFile[] files,
+            @RequestPart("file_thumbnail") MultipartFile file_thumbnail
     ) {
         ApiResponse<Products> apiResponse = new ApiResponse<>();
-        apiResponse.setResult(productService.AddNewProduct(productAddDTO));
-        jedis.del("all_products");
-        jedis.del("all_products_by_status");
-        jedis.del("all_products_by_cate");
+        apiResponse.setResult(productService.AddNewProduct(productAddDTO, files, file_thumbnail));
         return apiResponse;
     }
 
@@ -305,33 +317,33 @@ public class ProductController {
     }
 
 
-//    @PutMapping(value = "/EditProduct", consumes = MediaType.MULTIPART_FORM_DATA_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-//    public ApiResponse<?> EditProduct(
-//            @RequestParam(value="product_id") int productId,
-//            @RequestPart("productDTO") ProductDTO productDTO,
-//            @RequestPart("files") MultipartFile[] files,
-//            @RequestPart("file_thumbnail") MultipartFile file_thumbnail
-//    ) {
-//        ApiResponse<Products> apiResponse = new ApiResponse<>();
-//
-//        apiResponse.setResult(productService.EditProduct(productId,productDTO,files, file_thumbnail));
-//        return apiResponse;
-//    }
-
-    //edit chỗ status product thì chỉ cho chọn là hết hàng hay là còn hàng , nếu còn hàng thì show ra cho customer xem trên landingpage
-    @PutMapping(value = "/EditProduct")
+    @PutMapping(value = "/EditProduct", consumes = MediaType.MULTIPART_FORM_DATA_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ApiResponse<?> EditProduct(
-            @RequestParam(value = "product_id") int productId,
-            @RequestBody ProductEditDTO productEditDTO
+            @RequestParam(value="product_id") int productId,
+            @RequestPart("productDTO") ProductEditDTO productEditDTO,
+            @RequestPart("files") MultipartFile[] files,
+            @RequestPart("file_thumbnail") MultipartFile file_thumbnail
     ) {
         ApiResponse<Products> apiResponse = new ApiResponse<>();
 
-        apiResponse.setResult(productService.EditProduct(productId, productEditDTO));
-        jedis.del("all_products");
-        jedis.del("all_products_by_status");
-        jedis.del("all_products_by_cate");
+        apiResponse.setResult(productService.EditProduct(productId,productEditDTO,files, file_thumbnail));
         return apiResponse;
     }
+
+    //edit chỗ status product thì chỉ cho chọn là hết hàng hay là còn hàng , nếu còn hàng thì show ra cho customer xem trên landingpage
+//    @PutMapping(value = "/EditProduct")
+//    public ApiResponse<?> EditProduct(
+//            @RequestParam(value = "product_id") int productId,
+//            @RequestBody ProductEditDTO productEditDTO
+//    ) {
+//        ApiResponse<Products> apiResponse = new ApiResponse<>();
+//
+//        apiResponse.setResult(productService.EditProduct(productId, productEditDTO));
+//        jedis.del("all_products");
+//        jedis.del("all_products_by_status");
+//        jedis.del("all_products_by_cate");
+//        return apiResponse;
+//    }
     //xuất đơn nguyên vật liệu cho product có sẵn
     @PostMapping("/createExportMaterialProduct")
     public ResponseEntity<ApiResponse<List<ProductSubMaterials>>> createExportMaterialProduct(@RequestBody CreateExportMaterialProductRequest request) {

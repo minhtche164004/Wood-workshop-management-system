@@ -39,8 +39,7 @@ public class User  {
     private Date hireDate;
 
     @ManyToOne(cascade = CascadeType.ALL)
-//    @JsonIgnore
-    @JsonManagedReference
+   @JsonIgnore
     @JoinColumn(name = "role_id")
     private Role role;
 

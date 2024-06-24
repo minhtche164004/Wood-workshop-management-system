@@ -1,5 +1,6 @@
 package com.example.demo.Entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -15,14 +16,17 @@ import java.util.Objects;
 public class Orderdetails {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+
     @Column(name = "order_detail_id", nullable = false)
     private int orderDetailId;
 
     @ManyToOne // Relationship with Orders entity
+    @JsonIgnore
     @JoinColumn(name = "order_id", referencedColumnName = "order_id")
     private Orders order;  // Assuming you have an Orders entity
 
     @ManyToOne // Relationship with Products entity
+    @JsonIgnore
     @JoinColumn(name = "product_id", referencedColumnName = "product_id")
     private Products product;  // Assuming you have a Products entity
 
@@ -33,6 +37,7 @@ public class Orderdetails {
     private BigDecimal unitPrice;
 
     @ManyToOne // Relationship with RequestProducts entity
+    @JsonIgnore
     @JoinColumn(name = "request_product_id", referencedColumnName = "request_product_id")
     private RequestProducts requestProduct; // Assuming you have a RequestProducts entity
 

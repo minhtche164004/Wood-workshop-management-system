@@ -26,7 +26,6 @@ public class Role {
     private String roleName;
 //    @JsonIgnore
     @OneToMany(mappedBy = "role", cascade = CascadeType.ALL)
-    @JsonBackReference
     private List<User> user;
 
 }

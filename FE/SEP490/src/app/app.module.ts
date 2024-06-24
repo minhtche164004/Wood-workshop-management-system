@@ -2,7 +2,7 @@ import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { FormsModule } from '@angular/forms';
 import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
-import { RouterModule } from '@angular/router';
+import { ROUTES, RouterModule } from '@angular/router';
 
 import { AppRoutingModule } from './app-routing.module'; // Import AppRoutingModule
 import { ToastrModule, provideToastr } from 'ngx-toastr';
@@ -37,6 +37,11 @@ import { FileUploadComponent } from './file-upload/file-upload.component';
 
 import { SubMaterialManagementComponent } from './Admin/sub-material-management/sub-material-management.component';
 import { TestUploadComponent } from './test-upload/test-upload.component';
+import { OrderDetailManagementComponent } from './Admin/order-detail-management/order-detail-management.component';
+import { OrderDetailComponent } from './Admin/order-detail/order-detail.component';
+import { ProcessProductManagementComponent } from './Admin/process-product-management/process-product-management.component';
+import { OrderRequestComponentComponent } from './Admin/order-request-component/order-request-component.component';
+import { OrderRqDetailComponent } from './Admin/order-rq-detail/order-rq-detail.component';
 
 
 // import { AuthInterceptor } from './service/auth.interceptor';
@@ -68,6 +73,11 @@ import { TestUploadComponent } from './test-upload/test-upload.component';
     SubMaterialManagementComponent,
     SupplierManagementComponent,
     TestUploadComponent,
+    OrderDetailManagementComponent,
+    OrderDetailComponent,
+    ProcessProductManagementComponent,
+    OrderRequestComponentComponent,
+    OrderRqDetailComponent,
   
   ],
   imports: [
@@ -81,8 +91,10 @@ import { TestUploadComponent } from './test-upload/test-upload.component';
     BrowserAnimationsModule,
     ToastrModule.forRoot(),
     ConfirmDialogModule,
-    ConfirmPopupModule
+    ConfirmPopupModule,
+  
   ],
+  
   providers: [
     // {
     //   provide: HTTP_INTERCEPTORS,

@@ -3,16 +3,19 @@ import { Injectable } from '@angular/core';
 import { Observable, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { environment } from '../environments/environment';
+
 @Injectable({
   providedIn: 'root'
 })
-export class SupplierService {
-  private supplierApi = `${environment.apiUrl}api/auth/supplier/GetAllSupplier` // Path to your JSON file
-  private apiUrl_findProduct = `${environment.apiUrl}api/auth/supplier`
-  private apiUrl_addSupplier = `${environment.apiUrl}api/auth/supplier/AddNewSupplier`
+export class OrderRequestService {
+  private urlGetAllRequestOrder = `${environment.apiUrl}api/auth/order/GetAllRequest`;
+  private urlGetRequestByID = `${environment.apiUrl}api/auth/order/GetRequestById`;
+  private urlGetProductbyID = `${environment.apiUrl}api/auth/order/GetRequestProductById`
+  
   constructor(private http: HttpClient) { }
-  getAllSuppliers(): Observable<any> {
-    return this.http.get<any>(this.supplierApi).pipe(
+
+  getAllRequestOrder(): Observable<any>{
+    return this.http.get<any>(this.urlGetAllRequestOrder).pipe(
       catchError(this.handleError) 
     );
   }
@@ -29,13 +32,15 @@ export class SupplierService {
     console.error(errorMessage); // Ghi log lỗi để debug
     return throwError(errorMessage); // Ném lỗi lại như một observable
   }
-
-  findSupplierName(key: string): Observable<any> {
-    return this.http.get<any>(`${this.apiUrl_findProduct}/SearchByName?key=${key}`);
+  getRequestById(orderId: number): Observable<any> {
+    const url = `${this.urlGetRequestByID}?id=${orderId}`;
+    return this.http.get<any>(url).pipe(
+      catchError(this.handleError)
+    );
   }
-  addNewSupplier(supplierData: any): Observable<any> {
-    
-    return this.http.post<any>(this.apiUrl_addSupplier, supplierData).pipe(
+  getProductById(orderId: number): Observable<any> {
+    const url = `${this.urlGetProductbyID}?id=${orderId}`;
+    return this.http.get<any>(url).pipe(
       catchError(this.handleError)
     );
   }

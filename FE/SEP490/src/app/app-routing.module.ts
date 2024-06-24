@@ -28,6 +28,7 @@ import { SupplierManagementComponent } from './supplier-management/supplier-mana
 
 
 
+
 const routes: Routes = [
   { path: 'homepage', component: HomepageComponent },
   { path: 'api-province', component: ApiProvinceComponent },
@@ -48,6 +49,8 @@ const routes: Routes = [
   { path: 'supplier_management', component: SupplierManagementComponent },
   { path: 'profile', component: ViewProfileComponent },
   { path: 'submtr_management', component: SubMaterialManagementComponent },
+  { path: 'upload', component: FileUploadComponent },
+  { path: 'product_list', component: ProductListComponent },
   { path: '', redirectTo: '/homepage', pathMatch: 'full' },
   { path: '**', redirectTo: '/homepage', pathMatch: 'full' },
 

@@ -9,14 +9,12 @@ import { environment } from 'src/app/environments/environment';
 })
 export class ProductListService {
 
- 
-
   private apiAddProduct = `${environment.apiUrl}api/auth/product/AddNewProduct`;
   private apiDeleteProduct = `${environment.apiUrl}api/auth/product/DeleteProduct`; // Assuming the delete endpoint
   private api_findProductByCategory = `${environment.apiUrl}api/auth/product`;
-
-  private apiUrl = `${environment.apiUrl}api/auth/product/GetAllProduct`;
-  private apiUrl_Cate = `${environment.apiUrl}api/auth/product/getAllCategoryName`;
+  private apiUrlGetProduct = `${environment.apiUrl}api/auth/product/getAllProductForCustomer`;
+  private apiUrl = `${environment.apiUrl}api/auth/product/getAllProductForAdmin`;
+  private apiUrl_Cate = `${environment.apiUrl}api/auth/product/GetAllCategory`;
   private apiUrl_GetAllUser = `${environment.apiUrl}api/auth/admin/GetAllUser`;
   private apiUrl_Position = `${environment.apiUrl}api/auth/admin/GetAllPosition`;
 
@@ -27,6 +25,11 @@ export class ProductListService {
 
   getProducts(): Observable<any> {
     console.log(this.apiUrl)
+    return this.http.get<any>(this.apiUrl).pipe(
+      catchError(this.handleError)
+    );
+  }getAllProductCustomer(): Observable<any> {
+    console.log(this.apiUrlGetProduct)
     return this.http.get<any>(this.apiUrl).pipe(
       catchError(this.handleError)
     );
@@ -57,7 +60,7 @@ export class ProductListService {
     return this.http.get<any>(`${this.apiUrl_findProduct}/findProductByNameorCode?key=${key}`);
   }
 
-  findProductByCategory(key: string): Observable<any> {
+  findProductByCategory(key: number): Observable<any> {
     return this.http.get<any>(`${this.api_findProductByCategory}/GetProductByCategory?id=${key}`);
   }
 

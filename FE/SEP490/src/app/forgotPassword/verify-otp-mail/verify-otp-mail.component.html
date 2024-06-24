@@ -1,10 +1,6 @@
-
-
-
-
-
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -13,6 +9,7 @@
     * {
       box-sizing: border-box;
     }
+
     body {
       font-family: Arial, Helvetica, sans-serif;
       margin: 0;
@@ -23,6 +20,7 @@
       height: 100vh;
       background-color: #f0f0f0;
     }
+
     .container {
       width: 100%;
       max-width: 400px;
@@ -31,21 +29,26 @@
       border-radius: 10px;
       box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
     }
+
     h1 {
       text-align: center;
       margin-bottom: 20px;
       color: #333;
     }
+
     form {
       display: flex;
       flex-direction: column;
       align-items: center;
     }
+
     label {
       margin-bottom: 10px;
       color: #666;
     }
-    input[type="email"] {
+
+    input[type="email"],
+    input[type="text"] {
       width: calc(100% - 40px);
       padding: 12px 20px;
       margin-bottom: 20px;
@@ -54,32 +57,61 @@
       box-sizing: border-box;
       outline: none;
     }
-    button[type="submit"] {
+
+    button {
+    border-radius: 20px;
+    border: 1px solid #4CAF50;
+    background-color: #4CAF50;
+    color: #FFFFFF;
+    font-size: 12px;
+    font-weight: bold;
+    padding: 12px 45px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    transition: transform 80ms ease-in;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  
+    &:disabled {
       background-color: #4CAF50;
-      color: white;
-      padding: 12px 20px;
-      border: none;
-      border-radius: 5px;
-      cursor: pointer;
-      width: 90%;
-      transition: background-color 0.3s;
+      cursor: not-allowed;
     }
-    button[type="submit"]:hover {
-      background-color: #45a049;
-    }
+  }
+  
+  .loader {
+    border: 2px solid transparent;
+    border-top: 2px solid white;
+    border-right: 2px solid white;
+    border-radius: 50%;
+    width: 16px;
+    height: 16px;
+    animation: spin 1s linear infinite;
+    margin-left: 10px; /* Optional: Adjust margin for spacing */
+    vertical-align: middle; /* Optional: Align loader vertically */
+  }
+  
+  @keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+  }
   </style>
 </head>
+
 <body>
   <div class="container">
     <h1>Xác minh mã OTP</h1>
     <form (ngSubmit)="verifyOtpEmail()" #emailForm="ngForm">
-      <label for="email">Xác nhận mã OTP đã được gửi đến email</label>
-      <input type="email" id="otp" name="otp" [(ngModel)]="otp" required>
-      <input hidden type="email" id="email" name="email" [(ngModel)]="email" required>
-      <button type="submit">Xác minh mã OTP</button>
+      <label for="otp">Xác nhận mã OTP đã được gửi đến email</label>
+      <input type="text" id="otp" name="otp" [(ngModel)]="otp" required>
+      <!-- Hidden input to store email -->
+      <input type="hidden" id="email" name="email" [(ngModel)]="email" required>
+      <button type="submit" [disabled]="isLoading">
+        <span *ngIf="!isLoading">Xác minh mã OTP</span>
+        <span *ngIf="isLoading" class="loader"></span>
+      </button>
     </form>
   </div>
 </body>
+
 </html>
-
-

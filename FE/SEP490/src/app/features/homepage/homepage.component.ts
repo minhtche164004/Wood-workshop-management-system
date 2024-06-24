@@ -179,4 +179,17 @@ export class HomepageComponent implements AfterViewInit, OnInit {
 
     }, 1000);
   }
+  addToWishlist(productId: any) {
+    // Gọi service hoặc hàm xử lý logic để thêm sản phẩm vào danh sách yêu thích
+    this.productListService.addWishlist(productId).subscribe(
+      response => {
+        // Xử lý khi thành công
+        console.log('Đã thêm sản phẩm vào danh sách yêu thích');
+      },
+      error => {
+        // Xử lý khi lỗi
+        console.error('Lỗi khi thêm sản phẩm vào danh sách yêu thích', error);
+      }
+    );
+  }
 }

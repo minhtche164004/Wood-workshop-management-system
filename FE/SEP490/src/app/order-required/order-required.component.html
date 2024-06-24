@@ -1,8 +1,7 @@
 <app-dashboard></app-dashboard>
 
 
-
-<div class="container" style="margin: 50px 0px 250px 200px;">
+<div class="container" style="margin: 80px 0px 250px 220px;">
   <div class="row justify-content-center">
     <div class="col-lg-10">
       <div class="card">
@@ -21,29 +20,37 @@
                       <div class="row">
                         <div class="col-md-6 mb-3">
                           <div class="form-group">
-                            <input class="form-control" type="text" name="name" placeholder="Họ Và Tên">
+                            <label>Họ tên khách hàng</label>
+                            <input class="form-control" type="text" name="name" placeholder="">
                           </div>
                         </div>
                         <div class="col-md-6 mb-3">
                           <div class="form-group">
-                            <input class="form-control" type="text" name="phone" placeholder="Số điện thoại">
+                            <label>Số điện thoại</label>
+                            <input class="form-control" type="text" name="phone" placeholder="">
                           </div>
                         </div>
                       </div>
                       <div class="row">
                         <div class="col-md-6 mb-3">
                           <div class="form-group">
-                            <input class="form-control" type="text" name="email" placeholder="Email">
+                            <label>Email</label>
+                            <input class="form-control" type="text" name="email" placeholder="">
                           </div>
                         </div>
                         <div class="col-md-6 mb-3">
                           <div class="form-group">
                             <div class="input-with-icon">
-                              <input class="form-control" type="text" name="sampleImage" placeholder="Ảnh mẫu sản phẩm">
-                              <label for="uploadInput" class="icon">
-                                <i class="fa fa-upload"></i>
-                              </label>
-                              <input id="uploadInput" type="file" style="display: none;" (change)="onFileSelected($event)">
+                              <label>Ảnh mẫu sản phẩm</label>
+                              <div style="position: relative;">
+                                <input class="form-control" type="text" name="sampleImage" placeholder="">
+                                <label for="uploadInput" class="icon" style="position: absolute; top: 12px; right: 0;">
+                                  <i class="fa fa-upload"></i>
+                                </label>
+                                <input id="uploadInput" type="file"
+                                  style="position: absolute; top: 0; right: 0; opacity: 0; height: 100%;"
+                                  (change)="onFileSelected($event)">
+                              </div>
                             </div>
                           </div>
                         </div>
@@ -57,7 +64,8 @@
                                 <select class="form-control" [formControl]="provinceControl" required>
                                   <option [ngValue]="null" disabled selected>Tỉnh / Thành Phố</option>
 
-                                  <option *ngFor="let province of provinces" [ngValue]="province.name">{{ province.name }}</option>
+                                  <option *ngFor="let province of provinces" [ngValue]="province.name">{{ province.name
+                                    }}</option>
 
                                 </select>
                               </div>
@@ -67,7 +75,8 @@
                                 <select class="form-control" [formControl]="districtControl" required>
                                   <option [ngValue]="null" disabled selected>Quận / Huyện</option>
 
-                                  <option *ngFor="let district of districts" [ngValue]="district.name">{{ district.name }}</option>
+                                  <option *ngFor="let district of districts" [ngValue]="district.name">{{ district.name
+                                    }}</option>
 
                                 </select>
                               </div>
@@ -78,7 +87,7 @@
                                   <option [ngValue]="null" disabled selected>Phường / Xã</option>
 
                                   <option *ngFor="let ward of wards" [ngValue]="ward.name">{{ ward.name }}</option>
-               </select>
+                                </select>
                               </div>
                             </div>
                           </div>
@@ -87,21 +96,23 @@
                       <div class="row mb-3">
                         <div class="col">
                           <div class="form-group">
-                            <input class="form-control" type="text" placeholder="Địa chỉ cụ thể">
+                            <label>Địa chỉ cụ thể</label>
+                            <input class="form-control" type="text" placeholder="">
                           </div>
                         </div>
                       </div>
                       <div class="row mb-3">
                         <div class="col">
                           <div class="form-group">
-                            <textarea class="form-control" rows="5" placeholder="Mô tả đơn hàng"></textarea>
+                            <label>Mô tả đơn hàng</label>
+                            <textarea class="form-control" rows="5" placeholder=""></textarea>
                           </div>
                         </div>
                       </div>
                       <div class="row">
                         <div class="col d-flex justify-content-center">
-                          <button class="btn btn-warning btn-lg mx-5" type="submit">Gửi</button>
-                          <button class="btn btn-warning btn-lg mx-5" type="button">Hủy Bỏ</button>
+                          <button class="btn btn-primary btn-lg mx-5" type="submit">Gửi</button>
+                          <button class="btn btn-mau-do btn-lg mx-5" type="button">Hủy Bỏ</button>
                         </div>
                       </div>
                     </div>

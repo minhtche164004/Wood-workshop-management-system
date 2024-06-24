@@ -24,7 +24,7 @@ import { ApiProvinceComponent } from './api-province/api-province.component';
 import { ReactiveFormsModule } from '@angular/forms';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ProductListComponent } from './product-list/product-list.component';
-import { OrderRequiredComponent } from './order-required/order-required.component';
+
 import { ProductManagementComponent } from './Admin/product-management/product-management.component';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { ConfirmPopupModule } from 'primeng/confirmpopup';
@@ -36,6 +36,10 @@ import { ViewProfileComponent } from './features/view-profile/view-profile.compo
 import { FileUploadComponent } from './file-upload/file-upload.component';
 
 import { SubMaterialManagementComponent } from './Admin/sub-material-management/sub-material-management.component';
+import { ProductDetailComponent } from './features/product-detail/product-detail.component';
+
+import { OrderRequiredComponent } from './order-required/order-required.component';
+import { CreateOrderComponent } from './create-order/create-order.component';
 // import { AuthInterceptor } from './service/auth.interceptor';
 
 
@@ -63,7 +67,9 @@ import { SubMaterialManagementComponent } from './Admin/sub-material-management/
     ProductManagementComponent,
     ViewProfileComponent,
     SubMaterialManagementComponent,
-    SupplierManagementComponent
+    SupplierManagementComponent,
+    ProductDetailComponent,
+    CreateOrderComponent
   ],
   imports: [
     BrowserModule,

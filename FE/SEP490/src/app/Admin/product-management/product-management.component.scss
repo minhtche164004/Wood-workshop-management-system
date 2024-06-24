@@ -17,7 +17,10 @@
   padding: 5px 20px; // thêm khoảng cách cho responsive
   margin-left: 17%;
 }
-
+.modal-dialog-wide {
+  max-width: 60%; /* Adjust the percentage as needed */
+  margin-right: 150px;
+}
 .container-fluid {
   max-width: 100%;
   padding: 0 15px; // khoảng cách cho các thiết bị nhỏ hơn
@@ -97,7 +100,7 @@ table.table-striped.table-hover tbody tr:hover {
 }
 
 table.table th i {
-  font-size: 13px;
+  font-size: 16 px;
   margin: 0 5px;
   cursor: pointer;
 }	
@@ -329,4 +332,18 @@ option[value="option3"] {
 }
 .table-title .row:last-child {
   margin-bottom: 0;
+}
+.bg-primary {
+  background-color: #20EC4D !important;
+}
+
+.btn-primary {
+  background-color: #20EC4D;
+  border-color: #20EC4D;
+}
+.btn-mau-do {
+  /* CSS cụ thể cho nút màu đỏ */
+  background: #CC4949;
+  color: white;
+  /* Các thuộc tính khác */
 }

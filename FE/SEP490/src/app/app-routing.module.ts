@@ -16,7 +16,7 @@ import { ProductListComponent } from './product-list/product-list.component';
 import { VerifyOtpMailComponent } from './forgotPassword/verify-otp-mail/verify-otp-mail.component';
 import { ProductManagementComponent } from './Admin/product-management/product-management.component';
 
-import { OrderRequiredComponent } from './order-required/order-required.component';
+
 
 
 import { ViewProfileComponent } from './features/view-profile/view-profile.component';
@@ -27,6 +27,9 @@ import { SupplierManagementComponent } from './supplier-management/supplier-mana
 import { OrderDetailManagementComponent } from './Admin/order-detail-management/order-detail-management.component';
 import { OrderRequestComponentComponent } from './Admin/order-request-component/order-request-component.component';
 import { OrderRqDetailComponent } from './Admin/order-rq-detail/order-rq-detail.component';
+
+import { OrderRequiredComponent } from './order-required/order-required.component';
+import { CreateOrderComponent } from './create-order/create-order.component';
 
 
 
@@ -52,6 +55,9 @@ const routes: Routes = [
   { path: 'supplier_management', component: SupplierManagementComponent },
   { path: 'profile', component: ViewProfileComponent },
   { path: 'submtr_management', component: SubMaterialManagementComponent },
+
+  { path: 'create_order', component: CreateOrderComponent },
+
   { path: 'upload', component: FileUploadComponent },
   { path: 'product_list', component: ProductListComponent },
   { path: 'order_detail_management', component: OrderDetailManagementComponent },

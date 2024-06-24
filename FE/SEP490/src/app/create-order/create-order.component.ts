@@ -3,6 +3,7 @@ import { ProvincesService } from 'src/app/service/provinces.service';
 import { FormControl } from '@angular/forms';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { ToastrService } from 'ngx-toastr';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 interface Province {
   code: string;
   name: string;
@@ -21,11 +22,16 @@ interface Ward {
 }
 
 @Component({
-  selector: 'app-order-required',
-  templateUrl: './order-required.component.html',
-  styleUrls: ['./order-required.component.scss']
+  selector: 'app-create-order',
+  templateUrl: './create-order.component.html',
+  styleUrls: ['./create-order.component.scss']
 })
-export class OrderRequiredComponent implements OnInit {
+export class CreateOrderComponent implements OnInit {
+  input1Value: string = '';
+  input2Value: string = '';
+  onInput1Change() {
+    this.input2Value = this.input1Value;
+  }
   provinces: Province[] = [];
   districts: District[] = [];
   wards: Ward[] = [];
@@ -34,8 +40,8 @@ export class OrderRequiredComponent implements OnInit {
   wardControl = new FormControl();
   selectedProvince: any;
   selectedDistrict: any;
-
-  constructor(private provincesService: ProvincesService) { }
+  
+  constructor(private provincesService: ProvincesService ,private fb: FormBuilder) { }
   onFileSelected(event: any) {
     const selectedFile = event.target.files[0];
     // Xử lý logic khi đã chọn file, ví dụ như upload lên server

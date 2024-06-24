@@ -42,14 +42,7 @@ body {
     border-radius: 50% !important;
 }
 
-.bg-primary {
-    background-color: #007bff !important;
-}
 
-.btn-primary {
-    background-color: #007bff;
-    border-color: #007bff;
-}
 
 .btn-outline-primary {
     border-color: #007bff;
@@ -71,4 +64,24 @@ body {
     font-size: 16px; /* kích thước chữ */
     padding: 10px; /* khoảng cách bên trong */
     margin-bottom: 10px; /* khoảng cách dưới cùng mỗi input */
+}
+.btn {
+    /* CSS chung cho tất cả các nút */
+    /* Ví dụ: */
+    padding: 10px;
+    border: none;
+}
+.bg-primary {
+    background-color: #20EC4D !important;
+}
+
+.btn-primary {
+    background-color: #20EC4D;
+    border-color: #20EC4D;
+}
+.btn-mau-do {
+    /* CSS cụ thể cho nút màu đỏ */
+    background: #CC4949;
+    color: white;
+    /* Các thuộc tính khác */
 }

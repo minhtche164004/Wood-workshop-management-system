@@ -30,6 +30,7 @@ public class RequestProductDTO {
     @NotNull(message = "MUST_REQUIRED")
     private int request_id;
     private List<String> files;
+//    private int status_id;
 
 //    private String image;
 }

@@ -4,10 +4,12 @@ import { ToastrService } from 'ngx-toastr';
 import { HttpHeaders } from '@angular/common/http';
 import { MessageService } from 'primeng/api';
 
+
 interface Category{
   categoryId: number;
   categoryName: string;
 }
+
 @Component({
   selector: 'app-product-management',
   templateUrl: './product-management.component.html',

@@ -46,6 +46,8 @@ public class ProductServiceImpl implements ProductService {
     private EntityManager entityManager;
     @Autowired
     private RequestProductRepository requestProductRepository;
+    @Autowired
+    private Status_Product_Repository statusProductRepository;
 //    @Override
 //    public Products AddNewProduct(ProductAddDTO productAddDTO){
 //        Products products = new Products();
@@ -160,8 +162,7 @@ public class ProductServiceImpl implements ProductService {
             products.setPrice(productAddDTO.getPrice());
 
 
-            Status_Product status = statusRepository.findById(11);
-
+            Status_Product status = statusProductRepository.findById(2);//tuc la kich hoạt
             products.setStatus(status);
             Categories categories = categoryRepository.findById(productAddDTO.getCategory_id());
 
@@ -195,7 +196,6 @@ public class ProductServiceImpl implements ProductService {
 
                 return products;
             }
-
 
     @Transactional
     @Override
@@ -302,7 +302,7 @@ return products;
     //này là dành cho trang homepage
     @Override
     public List<Products> GetAllProductForCustomer() {
-        List<Products> productList = productRepository.ViewProductLandingPage(); //sản phẩm có quantity >0 thì cho hiển thị lên trang home
+        List<Products> productList = productRepository.ViewProductLandingPage(); //sản phẩm có status là kích hoạt thì cho hiển thị lên trang home
         if (productList.isEmpty()) {
             throw new AppException(ErrorCode.NOT_FOUND);
         }

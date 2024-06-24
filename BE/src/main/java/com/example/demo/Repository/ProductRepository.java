@@ -12,6 +12,7 @@ import org.springframework.stereotype.Repository;
 import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 @EnableJpaRepositories
@@ -30,13 +31,17 @@ public interface ProductRepository extends JpaRepository<Products, Integer> {
     @Query("SELECT u FROM Products u WHERE u.status.status_id = :query")
     List<Products> findByStatus(int query);
 
-    @Query("SELECT u FROM Products u WHERE u.status.status_id = :query")
-    List<Products> ViewProductLandingPage(int query);
+//    @Query("SELECT u FROM Products u WHERE u.status.status_id = :query")
+//    List<Products> ViewProductLandingPage(int query);
 
-
+    @Query("SELECT u FROM Products u WHERE  u.quantity > 0")
+    List<Products> ViewProductLandingPage();
 
     @Query("SELECT u FROM Products u WHERE u.productName = :query")
     Products findByName(String query);
+
+    @Query("SELECT u FROM Products u WHERE u.productId = :query")
+    Optional<Products> findByIdJob(int query);
 
     @Query("SELECT u FROM Products u  WHERE u.productName LIKE CONCAT('%', :keyword, '%') OR " +
             "u.code LIKE CONCAT('%', :keyword, '%')")
@@ -54,7 +59,7 @@ public interface ProductRepository extends JpaRepository<Products, Integer> {
     @Modifying
     @Query("update Products u set u.productName = ?2,u.description=?3,u.price=?4,u.status.status_id=?5," +
             "u.categories.categoryId=?6,u.type=?7,u.image=?8,u.completionTime=?9, u.enddateWarranty=?10 where u.productId = ?1")
-    void updateProduct(int productId, String productName, String description, BigDecimal price, int status_id, int categoryId, int type, String image, Date completionTime,Date enddateWarranty);
+    void updateProduct(int productId, String productName, String description, BigDecimal price,int status_id, int categoryId, int type, String image, Date completionTime,Date enddateWarranty);
 
 
 

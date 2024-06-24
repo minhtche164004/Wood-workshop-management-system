@@ -32,4 +32,6 @@ public interface OrderRepository extends JpaRepository<Orders,Integer> {
     @Query("SELECT u FROM Orders u WHERE u.userInfor.user.userId = :query")
     List<Orders> findHistoryOrder(int query);
 
+
+
 }

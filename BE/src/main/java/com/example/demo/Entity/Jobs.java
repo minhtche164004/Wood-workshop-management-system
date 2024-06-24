@@ -7,8 +7,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
-import java.sql.Date;
 import java.sql.Timestamp;
+import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 
@@ -57,7 +57,7 @@ public class Jobs {
     private String description;
 
     @Column(name = "time_finish")
-    private Timestamp timeFinish;
+    private Date timeFinish;
 
     @Column(name = "quantity_product")
     private Integer quantityProduct;

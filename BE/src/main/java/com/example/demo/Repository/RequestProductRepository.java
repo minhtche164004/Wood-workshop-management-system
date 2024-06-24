@@ -9,6 +9,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface RequestProductRepository extends JpaRepository<RequestProducts,Integer> {
@@ -22,6 +23,10 @@ public interface RequestProductRepository extends JpaRepository<RequestProducts,
 //            "rp.price, rp.quantity, rp.completionTime, rp.requests.requestId, pri.fullPath, pri.productImageId) " +
 //            "FROM RequestProducts rp JOIN rp.productRequestimages pri")
 //    List<RequestProductAllDTO> findAllWithImages();
+
+
+    @Query("SELECT u FROM RequestProducts u WHERE u.requestProductId = :query")
+    Optional<RequestProducts> findByIdJob(int query);
 
 
 

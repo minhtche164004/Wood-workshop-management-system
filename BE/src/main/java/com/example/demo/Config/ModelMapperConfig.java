@@ -2,6 +2,7 @@ package com.example.demo.Config;
 
 import com.example.demo.Dto.Category.CategoryNameDTO;
 import com.example.demo.Dto.MaterialDTO.MaterialDTO;
+import com.example.demo.Dto.OrderDTO.OrderDetailDTO;
 import com.example.demo.Dto.ProductDTO.ProductDTO;
 import com.example.demo.Dto.ProductDTO.ProductDTO_Show;
 import com.example.demo.Dto.SubMaterialDTO.SubMaterialNameDTO;
@@ -50,6 +51,8 @@ public class ModelMapperConfig {
                 .addMapping(SubMaterials::getDescription, UpdateSubDTO::setDescription)
                 .addMapping(SubMaterials::getQuantity, UpdateSubDTO::setQuantity)
                 .addMapping(SubMaterials::getUnitPrice, UpdateSubDTO::setUnit_price);
+
+
 
 
 

@@ -1,2 +1,2 @@
-<input type="file" (change)="onFileChanged($event)">
-<button (click)="onUpload()">Upload</button>
+<input type="file" (change)="onFileSelected($event)" title="Select file" name="file" />
+<button class="btn btn-info btn-sm" (click)="onUpload()">Upload</button>

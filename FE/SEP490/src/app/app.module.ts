@@ -36,10 +36,17 @@ import { ViewProfileComponent } from './features/view-profile/view-profile.compo
 import { FileUploadComponent } from './file-upload/file-upload.component';
 
 import { SubMaterialManagementComponent } from './Admin/sub-material-management/sub-material-management.component';
+
 import { ProductDetailComponent } from './features/product-detail/product-detail.component';
 
 import { OrderRequiredComponent } from './order-required/order-required.component';
 import { CreateOrderComponent } from './create-order/create-order.component';
+import { TestUploadComponent } from './test-upload/test-upload.component';
+
+
+
+
+
 // import { AuthInterceptor } from './service/auth.interceptor';
 
 
@@ -68,8 +75,13 @@ import { CreateOrderComponent } from './create-order/create-order.component';
     ViewProfileComponent,
     SubMaterialManagementComponent,
     SupplierManagementComponent,
+
     ProductDetailComponent,
-    CreateOrderComponent
+    CreateOrderComponent,
+
+    TestUploadComponent,
+  
+
   ],
   imports: [
     BrowserModule,

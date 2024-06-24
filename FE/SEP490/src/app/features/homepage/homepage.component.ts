@@ -1,5 +1,6 @@
-import { Component, AfterViewInit } from '@angular/core';
-
+import { Component, AfterViewInit, OnInit } from '@angular/core';
+import { ProductListService } from 'src/app/service/product/product-list.service';
+import { ToastrService } from 'ngx-toastr';
 declare var $: any; // Declare jQuery globally
 
 @Component({
@@ -7,7 +8,28 @@ declare var $: any; // Declare jQuery globally
   templateUrl: './homepage.component.html',
   styleUrls: ['./homepage.component.scss']
 })
-export class HomepageComponent implements AfterViewInit {
+export class HomepageComponent implements AfterViewInit, OnInit {
+  products: any[] = [];
+  constructor(private productListService: ProductListService, private toastr: ToastrService) { }
+  ngOnInit(): void {
+    
+    this.productListService.getProducts().subscribe(
+      (data) => {
+        if (data.code === 1000) {
+          this.products = data.result;
+          console.log('Danh sách sản phẩm:', this.products);
+        } else {
+          console.error('Failed to fetch products:', data);
+          this.toastr.error('Không thể lấy danh sách sản phẩm!', 'Lỗi');
+        }
+      },
+      (error) => {
+        console.error('Error fetching products:', error);
+        this.toastr.error('Có lỗi xảy ra!', 'Lỗi');
+      }
+    );
+  }
+  
 
   ngAfterViewInit(): void {
     this.initializeSlickSliders();

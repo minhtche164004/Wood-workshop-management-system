@@ -13,7 +13,7 @@ export class HomepageComponent implements AfterViewInit, OnInit {
   constructor(private productListService: ProductListService, private toastr: ToastrService) { }
   ngOnInit(): void {
     
-    this.productListService.getProducts().subscribe(
+    this.productListService.getAllProductCustomer().subscribe(
       (data) => {
         if (data.code === 1000) {
           this.products = data.result;

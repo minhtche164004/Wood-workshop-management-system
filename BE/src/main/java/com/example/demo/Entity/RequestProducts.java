@@ -29,6 +29,14 @@ public class RequestProducts {
     @Column(name = "price", precision = 19, scale = 4) // Increased precision and scale for wider range and decimals
     private BigDecimal price; // Changed to BigDecimal for accuracy
 
+
+    @ManyToOne(fetch = FetchType.EAGER,cascade = CascadeType.ALL)
+
+//    @JsonIgnore
+    @JoinColumn(name = "status_id")
+    private Status_Product status;
+
+
     @Column(name = "quantity")
     private Integer quantity;
 

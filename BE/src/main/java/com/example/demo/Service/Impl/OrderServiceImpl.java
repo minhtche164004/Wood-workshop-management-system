@@ -58,6 +58,10 @@ public class OrderServiceImpl implements OrderService {
     private RequestimagesRepository requestimagesRepository;
     @Autowired
     private OrderDetailRepository orderDetailRepository;
+    @Autowired
+    private Status_Product_Repository statusProduct;
+    @Autowired
+    private Status_Product_Repository status_Product_Repository;
 
     @Override
     public Orders AddOrder(RequestOrder requestOrder) {
@@ -228,6 +232,8 @@ public class OrderServiceImpl implements OrderService {
         requestProducts.setCompletionTime(requestProductDTO.getCompletionTime());
         Requests requests = requestRepository.findById(requestProductDTO.getRequest_id());
         requestProducts.setRequests(requests);
+        Status_Product status = status_Product_Repository.findById(11); //set lúc đầu là chưa giao việc
+        requestProducts.setStatus(status);
         if (!checkConditionService.checkInputName(requestProductDTO.getRequestProductName())) {
             throw new AppException(ErrorCode.INVALID_FORMAT_NAME);
         }

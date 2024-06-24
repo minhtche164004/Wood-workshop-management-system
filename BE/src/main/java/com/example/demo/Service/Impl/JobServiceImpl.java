@@ -35,6 +35,8 @@ public class JobServiceImpl implements JobService {
     private RequestProductRepository requestProductRepository;
     @Autowired
     private Status_Product_Repository statusProductRepository;
+    @Autowired
+    private Status_Job_Repository statusJobRepository;
 
 
     @Override
@@ -113,8 +115,8 @@ List<OrderDetailDTO> orderdetailsList = orderDetailRepository.getRequestProductI
         jobs.setJob_name(jobDTO.getJob_name());
         jobs.setTimeFinish(jobDTO.getFinish());
         jobs.setTimeStart(jobDTO.getStart());
-        Status_Product statusProduct = statusProductRepository.findById(5); //set mac dinh la job dang thi cong
-        jobs.setStatus(statusProduct);
+        Status_Job statusJob = statusJobRepository.findById(1); //set mac dinh la job dang thi cong
+        jobs.setStatus(statusJob);
         LocalDate today = LocalDate.now();
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("ddMMyy");
         String dateString = today.format(formatter);
@@ -150,9 +152,7 @@ List<OrderDetailDTO> orderdetailsList = orderDetailRepository.getRequestProductI
             products.setStatus(statusProductRepository.findById(9));
             productRepository.save(products);
         }
-
         return jobs;
-
     }
 
 }

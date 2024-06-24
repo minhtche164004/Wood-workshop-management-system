@@ -26,6 +26,11 @@ public class Processproducterror {
 
     @ManyToOne
     @JsonIgnore
+    @JoinColumn(name = "request_product_id")
+    private RequestProducts requestProducts; // Liên kết với Products
+
+    @ManyToOne
+    @JsonIgnore
     @JoinColumn(name = "job_id")
     private Jobs job; // Liên kết với Jobs
 

@@ -1,6 +1,7 @@
 package com.example.demo.Dto.OrderDTO;
 
 import com.example.demo.Entity.Status_Product;
+import com.example.demo.Entity.User;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -21,6 +22,7 @@ public class OrderDetailDTO {
 //    private int status_id;
     private Status_Product statusProduct;
     private int quantity;
+    private User user;
 
     public OrderDetailDTO(String code, int product_id, String product_name, String description, BigDecimal price,Status_Product statusProduct, int quantity) {
         this.code = code;

@@ -21,6 +21,9 @@ public class Status_Job {
     private String status_name;
     @Column(name = "type", nullable = false)
     private Integer type;
+    @Column(name = "des")
+    private String des;
+
 
 
 }

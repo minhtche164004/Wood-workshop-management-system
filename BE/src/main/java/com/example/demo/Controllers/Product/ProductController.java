@@ -66,7 +66,7 @@ public class ProductController {
             jedis.expire(cacheKey, 1800);
         }
         apiResponse.setResult(products);
-//        apiResponse.setResult(productService.GetAllProduct());
+//        apiResponse.setResult(productService.GetAllProductForCustomer());
         return apiResponse;
     }
     @GetMapping("/getAllProductForAdmin")
@@ -344,6 +344,7 @@ public class ProductController {
 //        jedis.del("all_products_by_cate");
 //        return apiResponse;
 //    }
+
     //xuất đơn nguyên vật liệu cho product có sẵn
     @PostMapping("/createExportMaterialProduct")
     public ResponseEntity<ApiResponse<List<ProductSubMaterials>>> createExportMaterialProduct(@RequestBody CreateExportMaterialProductRequest request) {

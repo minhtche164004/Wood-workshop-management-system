@@ -24,6 +24,9 @@ import { FileUploadComponent } from './file-upload/file-upload.component';
 
 import { SubMaterialManagementComponent } from './Admin/sub-material-management/sub-material-management.component';
 import { SupplierManagementComponent } from './supplier-management/supplier-management.component';
+import { OrderDetailManagementComponent } from './Admin/order-detail-management/order-detail-management.component';
+import { OrderRequestComponentComponent } from './Admin/order-request-component/order-request-component.component';
+import { OrderRqDetailComponent } from './Admin/order-rq-detail/order-rq-detail.component';
 
 import { OrderRequiredComponent } from './order-required/order-required.component';
 import { CreateOrderComponent } from './create-order/create-order.component';
@@ -57,7 +60,11 @@ const routes: Routes = [
 
   { path: 'upload', component: FileUploadComponent },
   { path: 'product_list', component: ProductListComponent },
-
+  { path: 'order_detail_management', component: OrderDetailManagementComponent },
+  { path: 'order_request_management', component: OrderRequestComponentComponent },
+  { path: 'order_request_management/:id', component: OrderRequestComponentComponent },
+  { path: 'orderRq_detail', component: OrderRqDetailComponent },
+ 
   { path: '', redirectTo: '/homepage', pathMatch: 'full' },
   { path: '**', redirectTo: '/homepage', pathMatch: 'full' },
 

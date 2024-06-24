@@ -4,7 +4,7 @@
 # https://docs.microsoft.com/azure/devops/pipelines/languages/javascript
 
 trigger:
-- main
+- none
 
 
 pool:
@@ -13,7 +13,7 @@ pool:
 variables:
   buildConfiguration: 'production'
   system.debug: 'true'
-
+pr: none
 steps:
 - script: |
     cd FE/SEP490/

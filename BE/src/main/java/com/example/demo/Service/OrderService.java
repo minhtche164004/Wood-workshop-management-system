@@ -29,9 +29,5 @@ public interface OrderService {
     List<Orders> FilterByStatus(int status_id);
     List<Orders> HistoryOrder();
     List<Orderdetails> getAllOrderDetail();
-
-
-
-
-
+    List<Orderdetails> getOrderDetailByOrderId(int order_id);
 }

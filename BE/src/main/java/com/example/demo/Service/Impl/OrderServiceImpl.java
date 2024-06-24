@@ -1,7 +1,6 @@
 package com.example.demo.Service.Impl;
 
 import com.example.demo.Dto.RequestDTO.RequestAllDTO;
-import com.example.demo.Dto.RequestDTO.RequestUpdateDTO;
 import com.example.demo.Dto.ProductDTO.RequestProductAllDTO;
 import com.example.demo.Dto.ProductDTO.RequestProductDTO;
 import com.example.demo.Dto.OrderDTO.ProductItem;
@@ -13,14 +12,12 @@ import com.example.demo.Exception.ErrorCode;
 import com.example.demo.Repository.*;
 import com.example.demo.Service.CheckConditionService;
 import com.example.demo.Service.OrderService;
-import com.example.demo.Service.ProductService;
 import com.example.demo.Service.UploadImageService;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -28,7 +25,6 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class OrderServiceImpl implements OrderService {
@@ -389,6 +385,16 @@ public class OrderServiceImpl implements OrderService {
         }
         return imagePath;
     }// Trả về đường dẫn tương đối hoặc đường dẫn ban đầu nếu không tìm thấy "/assets/"
+
+    @Override
+    public List<Orderdetails> getOrderDetailByOrderId(int order_id) {
+        List<Orderdetails> orderdetailsList = orderDetailRepository.getOrderDetailByOrderId(order_id);
+        if(orderdetailsList.isEmpty()){
+            throw new AppException(ErrorCode.NOT_FOUND);
+        }
+        return orderdetailsList;
+    }
+
 }
 
 

@@ -8,10 +8,9 @@
             <img src="https://mcdn.coolmate.me/image/March2023/thay-ong-noi-meme-1440_806.jpg" alt="Admin" class="custom-avatar">
             <div class="mt-3">
               <h4>{{ userProfile.fullname }}</h4>
-              <h4>{{ userProfile.address }}</h4>
-              <h4>{{ userProfile.email }}</h4>
-              <button class="btn btn-primary">Follow</button>
-              <button class="btn btn-outline-primary">Message</button>
+   
+       
+           
             </div>
           </div>
         </div>
@@ -24,7 +23,7 @@
                 <label class="label_lb">Tên tài khoản</label>
               </div>
               <div class="col-sm-9 text-secondary">
-                <input type="text" class="form-control custom-input" [(ngModel)]="userProfile.username" disabled>
+                <input type="text" class="form-control custom-input" [(ngModel)]="userProfile.username" readonly>
               </div>
             </div>
             <div class="row mb-3">
@@ -32,7 +31,7 @@
                 <label class="label_lb">Email</label>
               </div>
               <div class="col-sm-9 text-secondary">
-                <input type="text" class="form-control custom-input" [(ngModel)]="userProfile.email">
+                <input type="text" class="form-control custom-input" [(ngModel)]="userProfile.email" [readonly]="!isEditing">
               </div>
             </div>
             <div class="row mb-3">
@@ -40,7 +39,7 @@
                 <label class="label_lb">Họ tên</label>
               </div>
               <div class="col-sm-9 text-secondary">
-                <input type="text" class="form-control custom-input" [(ngModel)]="userProfile.fullname">
+                <input type="text" class="form-control custom-input" [(ngModel)]="userProfile.fullname" [readonly]="!isEditing">
               </div>
             </div>
             <div class="row mb-3">
@@ -48,26 +47,11 @@
                 <label class="label_lb">Số điện thoại</label>
               </div>
               <div class="col-sm-9 text-secondary">
-                <input type="text" class="form-control custom-input" [(ngModel)]="userProfile.phoneNumber">
+                <input type="text" class="form-control custom-input" [(ngModel)]="userProfile.phoneNumber" [readonly]="!isEditing">
               </div>
             </div>
-            <div class="row mb-3">
-              <div class="col-sm-3">
-                <label class="label_lb">Tên ngân hàng</label>
-              </div>
-              <div class="col-sm-9 text-secondary">
-                <input type="text" class="form-control custom-input" [(ngModel)]="userProfile.bank_name">
-              </div>
-            </div>
-            <div class="row mb-3">
-              <div class="col-sm-3">
-                <label class="label_lb">Số tài khoản</label>
-              </div>
-              <div class="col-sm-9 text-secondary">
-                <input type="text" class="form-control custom-input" [(ngModel)]="userProfile.bank_number">
-              </div>
-            </div>
-            
+       
+        
             <div class="row mb-3">
               <div class="col-sm-3">
                 <label class="label_lb">Địa chỉ</label>
@@ -76,23 +60,22 @@
                 <div class="form-row">
                   <div class="form-group col-md-4">
                     <label for="city">Tỉnh/Thành phố</label>
-                    <select id="city" class="form-control" [(ngModel)]="userProfile.city" (change)="onProvinceChange()">
+                    <select id="city" class="form-control custom-input" [(ngModel)]="userProfile.city" (change)="onProvinceChange()" [disabled]="!isEditing">
                       <option *ngFor="let province of provinces" [value]="province.name">{{ province.name }}</option>
                     </select>
                   </div>
                   <div class="form-group col-md-4">
                     <label for="district">Quận/Huyện</label>
-                    <select id="district" class="form-control" [(ngModel)]="userProfile.district" (change)="onDistrictChange()">
+                    <select id="district" class="form-control custom-input" [(ngModel)]="userProfile.district" (change)="onDistrictChange()" [disabled]="!isEditing">
                       <option *ngFor="let district of districts" [value]="district.name">{{ district.name }}</option>
                     </select>
                   </div>
                   <div class="form-group col-md-4">
                     <label for="wards">Phường/Xã</label>
-                    <select id="wards" class="form-control" [(ngModel)]="userProfile.wards">
+                    <select id="wards" class="form-control custom-input" [(ngModel)]="userProfile.wards"  [disabled]="!isEditing">
                       <option *ngFor="let ward of wards" [value]="ward.name">{{ ward.name }}</option>
                     </select>
                   </div>
-                  
                 </div>
               </div>
             </div>
@@ -101,16 +84,21 @@
                 <label class="label_lb">Địa chỉ cụ thể</label>
               </div>
               <div class="col-sm-9 text-secondary">
-                <input type="text" class="form-control custom-input" [(ngModel)]="userProfile.address">
+                <input type="text" class="form-control custom-input" [(ngModel)]="userProfile.address" [readonly]="!isEditing">
               </div>
             </div>
-           
             <div class="row">
-              <div class="col-sm-10"></div>
-              <div class="col-sm-2 text-secondary">
-                <button class="btn btn-primary px-4" (click)="saveChanges()">Lưu thay đổi</button>
+              <div class="col-sm-9"></div>
+              <div class="col-sm-3 text-right text-secondary">
+                <button class="btn btn-primary px-4 float-right " *ngIf="!isEditing" (click)="editProfile()">Chỉnh sửa</button>
+                <div *ngIf="isEditing" class="btn-group float-right">
+                  <button class="btn btn-mau-do" (click)="cancelChanges()">Hủy bỏ</button>
+                  <button style="margin-left: 10px;" class="btn btn-primary" (click)="saveChanges()">Lưu thay đổi</button>
+                </div>
               </div>
             </div>
+            
+         
           </div>
         </div>
       </div>

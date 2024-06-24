@@ -3,63 +3,100 @@
 <div class="container" id="container">
     <!-- Form Đăng ký -->
     <div style="margin-top: 40px;" class="form-container sign-up-container">
-
         <form (ngSubmit)="registerUser()" #registerForm="ngForm">
-            <h1>Tạo tài khoản</h1>
+            <h1 style="margin-bottom: 20px;">Tạo tài khoản</h1>
 
-            <input type="text" placeholder="Tên tài khoản" name="username" [(ngModel)]="username" required>
-            <input type="password" placeholder="Mật khẩu" name="password" [(ngModel)]="password" required>
-            <input type="password" placeholder="Xác nhận mật khẩu" name="checkPass" [(ngModel)]="checkPass" required>
-            <input type="email" placeholder="Email" name="email" [(ngModel)]="email" required>
-            <input type="text" placeholder="Số điện thoại" name="phoneNumber" [(ngModel)]="phoneNumber" required>
-            <input type="text" placeholder="Họ tên" name="fullname" [(ngModel)]="fullname" required>
-        
-            <select [formControl]="provinceControl" required>
-                <option [ngValue]="null" disabled>Tỉnh / Thành Phố</option>
-                <option *ngFor="let province of provinces" [value]="province.name">{{ province.name }}</option>
-            </select>
-        
-            <select [formControl]="districtControl" required>
-                <option [ngValue]="null" disabled>Quận / Huyện</option>
-                <option *ngFor="let district of districts" [value]="district.name">{{ district.name }}</option>
-            </select>
-        
-            <select [formControl]="wardControl" required>
-                <option [ngValue]="null" disabled>Phường / Xã</option>
-                <option *ngFor="let ward of wards" [value]="ward.name">{{ ward.name }}</option>
-            </select>
-        
-            <input type="text" placeholder="Địa chỉ cụ thể" name="address" [(ngModel)]="address" required>
-        
-            <button [disabled]="isLoading">
+            <div class="input-container">
+                <label for="username">Tên tài khoản</label>
+                <input type="text" id="username" name="username" [(ngModel)]="username" required>
+            </div>
+
+            <div class="input-container">
+                <label for="password">Mật khẩu</label>
+                <input type="password" id="password" name="password" [(ngModel)]="password" required>
+            </div>
+
+            <div class="input-container">
+                <label for="checkPass">Xác nhận mật khẩu</label>
+                <input type="password" id="checkPass" name="checkPass" [(ngModel)]="checkPass" required>
+            </div>
+
+            <div class="input-container">
+                <label for="email">Email</label>
+                <input type="email" id="email" name="email" [(ngModel)]="email" required>
+            </div>
+
+            <div class="input-container">
+                <label for="phoneNumber">Số điện thoại</label>
+                <input type="text" id="phoneNumber" name="phoneNumber" [(ngModel)]="phoneNumber" required>
+            </div>
+
+            <div class="input-container">
+                <label for="fullname">Họ tên</label>
+                <input type="text" id="fullname" name="fullname" [(ngModel)]="fullname" required>
+            </div>
+
+            <div class="row">
+                <div class="input-container col-md-4">
+                    <label for="province">Tỉnh / Thành Phố</label>
+                    <select id="province" [formControl]="provinceControl" required>
+                        <option [ngValue]="null" disabled>Tỉnh / Thành Phố</option>
+                        <option *ngFor="let province of provinces" [value]="province.name">{{ province.name }}</option>
+                    </select>
+                </div>
+
+                <div class="input-container col-md-4">
+                    <label for="district">Quận / Huyện</label>
+                    <select id="district" [formControl]="districtControl" required>
+                        <option [ngValue]="null" disabled>Quận / Huyện</option>
+                        <option *ngFor="let district of districts" [value]="district.name">{{ district.name }}</option>
+                    </select>
+                </div>
+
+                <div class="input-container col-md-4">
+                    <label for="ward">Phường / Xã</label>
+                    <select id="ward" [formControl]="wardControl" required>
+                        <option [ngValue]="null" disabled>Phường / Xã</option>
+                        <option *ngFor="let ward of wards" [value]="ward.name">{{ ward.name }}</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="input-container">
+                <label for="address">Địa chỉ cụ thể</label>
+                <input type="text" id="address" name="address" [(ngModel)]="address" required>
+            </div>
+
+            <button [disabled]="isLoading" >
                 <span *ngIf="!isLoading">Đăng ký</span>
                 <span *ngIf="isLoading" class="loader"></span>
             </button>
         </form>
     </div>
-
     <!-- Form Đăng nhập -->
     <div class="form-container sign-in-container">
         <form>
-          <h1>Đăng nhập</h1>
-          <div class="social-container">
-            <a href="#" class="social"><i class="fab fa-facebook-f"></i></a>
-            <a href="#" class="social"><i class="fab fa-google-plus-g"></i></a>
-            <a href="#" class="social"><i class="fab fa-linkedin-in"></i></a>
-          </div>
-          <span>hoặc sử dụng tài khoản của bạn</span>
-          <input type="text" id="username" [(ngModel)]="loginObj.username" name="username" placeholder="Tên đăng nhập" required />
-          <input type="password" id="password" [(ngModel)]="loginObj.password" name="password" placeholder="Mật khẩu" required />
-          <a routerLink="/verifyMail">Quên mật khẩu của bạn?</a>
-          <div *ngIf="errorMessage" class="message error">{{ errorMessage }}</div>
-          <div *ngIf="successMessage" class="message success">{{ successMessage }}</div>
-          <button [disabled]="isLoading" (click)="onLogin()">
-            <span *ngIf="!isLoading">Đăng nhập</span>
-            <span *ngIf="isLoading" class="loader"></span>
-          </button>
+            <h1 style="margin-bottom: 50px;">Đăng nhập</h1>
+
+            <div class="input-container">
+                <label for="loginUsername">Tên đăng nhập</label>
+                <input type="text" id="loginUsername" [(ngModel)]="loginObj.username" name="username" required />
+            </div>
+
+            <div class="input-container">
+                <label for="loginPassword">Mật khẩu</label>
+                <input type="password" id="loginPassword" [(ngModel)]="loginObj.password" name="password" required />
+            </div>
+
+            <a routerLink="/verifyMail">Quên mật khẩu của bạn?</a>
+            <div *ngIf="errorMessage" class="message error">{{ errorMessage }}</div>
+            <div *ngIf="successMessage" class="message success">{{ successMessage }}</div>
+            <button [disabled]="isLoading" (click)="onLogin()">
+                <span *ngIf="!isLoading">Đăng nhập</span>
+                <span *ngIf="isLoading" class="loader"></span>
+            </button>
         </form>
-      </div>
-      
+    </div>
 
     <!-- Overlay -->
     <div class="overlay-container">
@@ -73,9 +110,7 @@
                 <h1>Xin chào, bạn!</h1>
                 <p>Nhập thông tin cá nhân của bạn và bắt đầu hành trình cùng chúng tôi</p>
                 <button class="ghost" id="signUp">Đăng ký</button>
-
- 
+            </div>
         </div>
-        
     </div>
 </div>

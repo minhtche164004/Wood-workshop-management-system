@@ -1,5 +1,5 @@
 
-  body {
+body {
     background: #f8f8f8;
   }
 
@@ -14,7 +14,7 @@
   }
 
   .input-with-icon input[type="text"] {
-    padding-right: 30px;
+    padding-right: 10px;
   }
 
   .input-with-icon .icon {
@@ -62,3 +62,9 @@
   .form-group label{
   font-size: 14px;
 }
+
+.form-group_1 label{
+    font-size: 14px;
+    text-align: center;
+    align-items: center;
+  }

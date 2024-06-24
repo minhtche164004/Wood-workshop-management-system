@@ -16,7 +16,7 @@ import { ProductListComponent } from './product-list/product-list.component';
 import { VerifyOtpMailComponent } from './forgotPassword/verify-otp-mail/verify-otp-mail.component';
 import { ProductManagementComponent } from './Admin/product-management/product-management.component';
 
-import { OrderRequiredComponent } from './order-required/order-required.component';
+
 
 
 import { ViewProfileComponent } from './features/view-profile/view-profile.component';
@@ -24,6 +24,9 @@ import { FileUploadComponent } from './file-upload/file-upload.component';
 
 import { SubMaterialManagementComponent } from './Admin/sub-material-management/sub-material-management.component';
 import { SupplierManagementComponent } from './supplier-management/supplier-management.component';
+
+import { OrderRequiredComponent } from './order-required/order-required.component';
+import { CreateOrderComponent } from './create-order/create-order.component';
 
 
 
@@ -49,8 +52,12 @@ const routes: Routes = [
   { path: 'supplier_management', component: SupplierManagementComponent },
   { path: 'profile', component: ViewProfileComponent },
   { path: 'submtr_management', component: SubMaterialManagementComponent },
+
+  { path: 'create_order', component: CreateOrderComponent },
+
   { path: 'upload', component: FileUploadComponent },
   { path: 'product_list', component: ProductListComponent },
+
   { path: '', redirectTo: '/homepage', pathMatch: 'full' },
   { path: '**', redirectTo: '/homepage', pathMatch: 'full' },
 

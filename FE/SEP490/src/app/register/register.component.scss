@@ -45,8 +45,8 @@ a {
 
 button {
     border-radius: 20px;
-    border: 1px solid #FF4B2B;
-    background-color: #FF4B2B;
+    border: 1px solid #20EC4D;
+    background-color: #20EC4D;
     color: #FFFFFF;
     font-size: 12px;
     font-weight: bold;
@@ -57,14 +57,14 @@ button {
     display: inline-flex;
     align-items: center;
     justify-content: center;
-  
-    &:disabled {
-      background-color: #6c757d;
-      cursor: not-allowed;
-    }
-  }
-  
-  .loader {
+}
+
+button:disabled {
+    background-color: #6c757d;
+    cursor: not-allowed;
+}
+
+.loader {
     border: 2px solid transparent;
     border-top: 2px solid white;
     border-right: 2px solid white;
@@ -72,12 +72,13 @@ button {
     width: 16px;
     height: 16px;
     animation: spin 1s linear infinite;
-  }
-  
-  @keyframes spin {
+}
+
+@keyframes spin {
     0% { transform: rotate(0deg); }
     100% { transform: rotate(360deg); }
-  }
+}
+
 button:active {
     transform: scale(0.95);
 }
@@ -188,7 +189,7 @@ select {
 }
 
 .overlay {
-    background: #FF416C;
+    background: #20EC4D;
     background: -webkit-linear-gradient(to right, #FF4B2B, #FF416C);
     background: linear-gradient(to right, #FF4B2B, #FF416C);
     background-repeat: no-repeat;
@@ -301,4 +302,22 @@ footer a {
 .custom-select:focus {
     outline: none;
     border-color: #4CAF50; /* Tô màu khi focus vào select */
+}
+
+.input-container {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    margin: 0,1px 0;
+}
+
+.input-container label {
+    width: 25%;
+    text-align: left;
+    padding-right: 10px;
+}
+
+.input-container input, .input-container select {
+    background-color: #eee;
+    border: none;
 }

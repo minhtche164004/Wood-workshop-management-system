@@ -47,6 +47,8 @@ import { OrderDetailComponent } from './Admin/order-detail/order-detail.componen
 import { ProcessProductManagementComponent } from './Admin/process-product-management/process-product-management.component';
 import { OrderRequestComponentComponent } from './Admin/order-request-component/order-request-component.component';
 import { OrderRqDetailComponent } from './Admin/order-rq-detail/order-rq-detail.component';
+import { JobManagementComponent } from './Admin/job-management/job-management.component';
+import { JobDetailComponent } from './Admin/job-detail/job-detail.component';
 
 
 
@@ -90,6 +92,8 @@ import { OrderRqDetailComponent } from './Admin/order-rq-detail/order-rq-detail.
     ProcessProductManagementComponent,
     OrderRequestComponentComponent,
     OrderRqDetailComponent,
+    JobManagementComponent,
+    JobDetailComponent,
   
 
   ],

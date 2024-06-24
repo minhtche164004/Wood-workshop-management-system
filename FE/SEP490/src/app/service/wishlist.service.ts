@@ -6,13 +6,13 @@ import { environment } from '../environments/environment';
 @Injectable({
   providedIn: 'root'
 })
-export class SupplierService {
-  private supplierApi = `${environment.apiUrl}api/auth/supplier/GetAllSupplier` // Path to your JSON file
-  private apiUrl_findProduct = `${environment.apiUrl}api/auth/supplier`
-  private apiUrl_addSupplier = `${environment.apiUrl}api/auth/supplier/AddNewSupplier`
+export class WishlistService {
+  private apiGetWhiteListByUserID = `${environment.apiUrl}api/auth/order/GetWhiteListByUserID`
+  
   constructor(private http: HttpClient) { }
-  getAllSuppliers(): Observable<any> {
-    return this.http.get<any>(this.supplierApi).pipe(
+
+  GetWhiteListByUserID(): Observable<any>{
+    return this.http.get<any>(this.apiGetWhiteListByUserID).pipe(
       catchError(this.handleError) 
     );
   }
@@ -28,15 +28,5 @@ export class SupplierService {
     }
     console.error(errorMessage); // Ghi log lỗi để debug
     return throwError(errorMessage); // Ném lỗi lại như một observable
-  }
-
-  findSupplierName(key: string): Observable<any> {
-    return this.http.get<any>(`${this.apiUrl_findProduct}/SearchByName?key=${key}`);
-  }
-  addNewSupplier(supplierData: any): Observable<any> {
-    
-    return this.http.post<any>(this.apiUrl_addSupplier, supplierData).pipe(
-      catchError(this.handleError)
-    );
   }
 }

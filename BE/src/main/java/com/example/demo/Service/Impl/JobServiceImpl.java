@@ -35,6 +35,8 @@ public class JobServiceImpl implements JobService {
     private RequestProductRepository requestProductRepository;
     @Autowired
     private Status_Product_Repository statusProductRepository;
+    @Autowired
+    private Status_Job_Repository statusJobRepository;
 
 
     @Override
@@ -113,8 +115,8 @@ List<OrderDetailDTO> orderdetailsList = orderDetailRepository.getRequestProductI
         jobs.setJob_name(jobDTO.getJob_name());
         jobs.setTimeFinish(jobDTO.getFinish());
         jobs.setTimeStart(jobDTO.getStart());
-        Status_Product statusProduct = statusProductRepository.findById(5); //set mac dinh la job dang thi cong
-        jobs.setStatus(statusProduct);
+        Status_Job statusJob = statusJobRepository.findById(1); //set mac dinh la job dang thi cong
+        jobs.setStatus(statusJob);
         LocalDate today = LocalDate.now();
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("ddMMyy");
         String dateString = today.format(formatter);
@@ -133,27 +135,24 @@ List<OrderDetailDTO> orderdetailsList = orderDetailRepository.getRequestProductI
             productRepository.save(products);
         }
 
-        if(status_id == 7 && products ==null){// đang làm mộc ->  phân đang đánh nhám(tức là công đoạn đang làm mộc đã xong)
+        if(status_id == 12 && products ==null){// đã làm mộc xong ->  phân đang đánh nhám(tức là công đoạn đang làm mộc đã xong)
             requestProducts.setStatus(statusProductRepository.findById(8));
             requestProductRepository.save(requestProducts);
-
         }
-        if(status_id == 7 && requestProducts == null){
+        if(status_id == 12 && requestProducts == null){
             products.setStatus(statusProductRepository.findById(8));
             productRepository.save(products);
         }
 
-        if(status_id == 8 && products ==null){//đang đánh nhám ->phân đang sơn(tức là công đoạn đang đánh nhám đã xong)
+        if(status_id == 13 && products ==null){//đã đánh nhám xong -> phân đang sơn(tức là công đoạn đang đánh nhám đã xong)
             requestProducts.setStatus(statusProductRepository.findById(9));
             requestProductRepository.save(requestProducts);
         }
-        if(status_id == 8 && requestProducts == null){
+        if(status_id == 13 && requestProducts == null){
             products.setStatus(statusProductRepository.findById(9));
             productRepository.save(products);
         }
-
         return jobs;
-
     }
 
 }

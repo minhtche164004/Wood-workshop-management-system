@@ -22,7 +22,28 @@ export class ProductListService {
   private apiUrl_getProductByID = `${environment.apiUrl}api/auth/product/GetProductById`; // Assuming the correct endpoint
   private apiUrl_GetAllOrder = `${environment.apiUrl}api/auth/order/GetAllOrder`; // Assuming the correct endpoint
 
+  private apiAddWishlist = `${environment.apiUrl}api/auth/order/AddWhiteList`
+
   constructor(private http: HttpClient) { }
+
+  addWishlist(key: number): Observable<any> {
+    const token = localStorage.getItem('loginToken');
+
+    if (!token) {
+      return throwError(new Error('Login token not found in localStorage.'));
+    }
+
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${token}`
+    });
+
+    console.log("Add wishlist header:", headers.get('Authorization'));
+
+    console.log(this.apiAddWishlist,{ headers })
+    return this.http.get<any>(`this.apiAddWishlist?product_id=${key}`).pipe(
+      catchError(this.handleError)
+    );
+  }
 
   getProducts(): Observable<any> {
     console.log(this.apiUrl)
@@ -30,15 +51,17 @@ export class ProductListService {
       catchError(this.handleError)
     );
   }
+
   getAllOrder(): Observable<any> {
     console.log(this.apiUrl_GetAllOrder)
     return this.http.get<any>(this.apiUrl_GetAllOrder).pipe(
       catchError(this.handleError)
     );
   }
+
   getAllProductCustomer(): Observable<any> {
     console.log(this.apiUrlGetProduct)
-    return this.http.get<any>(this.apiUrl).pipe(
+    return this.http.get<any>(this.apiUrlGetProduct).pipe(
       catchError(this.handleError)
     );
   }

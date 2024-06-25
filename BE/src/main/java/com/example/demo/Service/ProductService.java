@@ -5,17 +5,18 @@ import com.example.demo.Entity.*;
 import com.example.demo.Response.ApiResponse;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 import java.util.Map;
 
 @Service
 public interface ProductService {
-//    Products AddNewProduct(ProductDTO productDTO,MultipartFile[] multipartFiles,MultipartFile multipartFiles_thumbnal);
-    Products AddNewProduct(ProductAddDTO productAddDTO);
+    Products AddNewProduct(ProductAddDTO productAddDTO, MultipartFile[] multipartFiles, MultipartFile multipartFiles_thumbnal);
+//    Products AddNewProduct(ProductAddDTO productAddDTO);
     List<Products> GetAllProductForCustomer();
     List<Products> GetAllProductForAdmin();
-    Products EditProduct(int id, ProductEditDTO productEditDTO);
+    Products EditProduct(int id, ProductEditDTO productEditDTO,MultipartFile[] multipartFiles, MultipartFile multipartFiles_thumbnal);
     //xuất nguyên liệu cho sản phẩm có sẵn
     ResponseEntity<ApiResponse<List<ProductSubMaterials>>> createExportMaterialProduct(int product_id, Map<Integer, Double> subMaterialQuantities);
 

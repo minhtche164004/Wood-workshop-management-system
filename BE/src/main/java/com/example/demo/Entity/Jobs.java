@@ -50,7 +50,7 @@ public class Jobs {
     @ManyToOne(fetch = FetchType.EAGER,cascade = CascadeType.ALL)
 //    @JsonIgnore
     @JoinColumn(name = "status_id")
-    private Status_Product status;
+    private Status_Job status;
 
 
     @Column(name = "description")

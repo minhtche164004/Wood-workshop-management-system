@@ -25,6 +25,9 @@ public interface ProductRepository extends JpaRepository<Products, Integer> {
     @Query("SELECT u FROM Products u WHERE u.productId = :query")
     Products findById(int query);
 
+    @Query("SELECT u FROM Products u WHERE u.code = :query")
+    Products findByCode(String query);
+
     @Query("SELECT u FROM Products u WHERE u.categories.categoryId = :query")
     List<Products> findByCategory(int query);
 
@@ -34,7 +37,7 @@ public interface ProductRepository extends JpaRepository<Products, Integer> {
 //    @Query("SELECT u FROM Products u WHERE u.status.status_id = :query")
 //    List<Products> ViewProductLandingPage(int query);
 
-    @Query("SELECT u FROM Products u WHERE  u.quantity > 0")
+    @Query("SELECT u FROM Products u WHERE  u.status.status_id = 2")
     List<Products> ViewProductLandingPage();
 
     @Query("SELECT u FROM Products u WHERE u.productName = :query")

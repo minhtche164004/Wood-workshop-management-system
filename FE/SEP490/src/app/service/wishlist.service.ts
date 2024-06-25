@@ -35,12 +35,13 @@ export class WishlistService {
     }
 
     const headers = new HttpHeaders({
-      'Authorization': `Bearer ` + token,
+      'Authorization': `Bearer ${token}`
     });
 
-    console.log("headers: ", headers)
+    console.log("Authorization header:", headers.get('Authorization'));
 
-    return this.http.post<any>(`${this.apiAddWishlist}?product_id=${productId}`,{ headers , withCredentials: true }).pipe(
+
+    return this.http.post<any>(`${this.apiAddWishlist}?product_id=${productId}`, {}, { headers: headers, withCredentials: true }).pipe(
       catchError(this.handleError)
     );
   }

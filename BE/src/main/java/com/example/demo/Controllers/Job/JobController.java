@@ -2,24 +2,16 @@ package com.example.demo.Controllers.Job;
 
 import com.example.demo.Config.RedisConfig;
 import com.example.demo.Dto.JobDTO.JobDTO;
-import com.example.demo.Dto.OrderDTO.OrderDetailDTO;
 import com.example.demo.Entity.Jobs;
-import com.example.demo.Entity.Orderdetails;
-import com.example.demo.Entity.Products;
-import com.example.demo.Entity.User;
 import com.example.demo.Repository.JobRepository;
 import com.example.demo.Repository.OrderDetailRepository;
 import com.example.demo.Response.ApiResponse;
 import com.example.demo.Service.JobService;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.reflect.TypeToken;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import redis.clients.jedis.JedisPooled;
 
-import java.lang.reflect.Type;
 import java.util.List;
 
 @RestController
@@ -40,21 +32,21 @@ public class JobController {
         apiResponse.setResult(jobService.getListRequestProductJob());
         return apiResponse;
     }
-    //lúc filter các có sẵn thì call api này
+//    //lúc filter các có sẵn thì call api này
     @GetMapping("/getListProductForJob")
     public ApiResponse<?> getListProductForJob() {
         ApiResponse<List> apiResponse = new ApiResponse<>();
         apiResponse.setResult(jobService.getListProductJob());
         return apiResponse;
     }
-
+//
     @GetMapping("/getRequestProductInOrderDetailByCode")
     public ApiResponse<?> getRequestProductInOrderDetailByCode(@RequestParam("key") String key) {
         ApiResponse<List> apiResponse = new ApiResponse<>();
         apiResponse.setResult(jobService.getRequestProductInOrderDetailByCode(key));
         return apiResponse;
     }
-    @GetMapping("/getListProductJobByNameOrCode")
+    @GetMapping("/getListProductJobByNameOrCodeProduct")
     public ApiResponse<?> getListProductJobByNameOrCode(@RequestParam("key") String key) {
         ApiResponse<List> apiResponse = new ApiResponse<>();
         apiResponse.setResult(jobService.getListProductJobByNameOrCode(key));
@@ -81,12 +73,19 @@ public class JobController {
         apiResponse.setResult(jobRepository.findUsersWithPosition3AndLessThan3Jobs());
         return apiResponse;
     }
-
-    @PostMapping("/CreateJobs")
-    public ApiResponse<?> CreateJobs(@RequestBody JobDTO jobDTO , @RequestParam("user_id") int user_id, @RequestParam("p_id") int p_id,@RequestParam("status_id") int status_id) {
-        ApiResponse<Jobs> apiResponse = new ApiResponse<>();
-        apiResponse.setResult(jobService.CreateJob(jobDTO,user_id,p_id,status_id));
+    @GetMapping("/getListStatusJobByType")
+    public ApiResponse<?> getListStatusJobByType(@RequestParam("type") int type) {
+        ApiResponse<List> apiResponse = new ApiResponse<>();
+        apiResponse.setResult(jobRepository.findByStatusByType(type));
         return apiResponse;
     }
+
+    @PostMapping("/CreateJobs")
+    public ApiResponse<?> CreateJobs(@RequestBody JobDTO jobDTO , @RequestParam("user_id") int user_id, @RequestParam("p_id") int p_id,@RequestParam("status_id") int status_id,@RequestParam("job_id") int job_id) {
+        ApiResponse<Jobs> apiResponse = new ApiResponse<>();
+        apiResponse.setResult(jobService.CreateJob(jobDTO,user_id,p_id,status_id,job_id));
+        return apiResponse;
+    }
+
 
 }

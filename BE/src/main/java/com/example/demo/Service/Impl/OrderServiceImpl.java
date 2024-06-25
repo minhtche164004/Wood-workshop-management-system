@@ -165,6 +165,7 @@ public class OrderServiceImpl implements OrderService {
                         jobs.setCode(code1);
                         jobs.setJob_name("");
                         jobs.setOrderdetails(orderdetail);
+                        jobs.setJob_log(false);
                         jobs.setStatus(statusJobRepository.findById(14));
                         jobRepository.save(jobs);
 

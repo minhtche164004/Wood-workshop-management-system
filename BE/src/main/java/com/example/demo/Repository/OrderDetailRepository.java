@@ -1,17 +1,13 @@
 package com.example.demo.Repository;
 
-import com.example.demo.Dto.OrderDTO.OrderDetailDTO;
-import com.example.demo.Dto.UserDTO.UserUpdateDTO;
+import com.example.demo.Dto.OrderDTO.JobProductDTO;
 import com.example.demo.Entity.Orderdetails;
-import com.example.demo.Entity.Orders;
-import com.example.demo.Entity.Products;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
-import java.util.Optional;
 
 @Repository
 public interface OrderDetailRepository extends JpaRepository<Orderdetails,Integer> {
@@ -25,41 +21,19 @@ public interface OrderDetailRepository extends JpaRepository<Orderdetails,Intege
     @Query("SELECT od FROM Orderdetails od JOIN FETCH od.requestProduct rp WHERE od.order.orderId = 6") // Thêm điều kiện lọc nếu cần
     List<Orderdetails> getOrderDetailsWithRequestProduct();
 
-    @Query(value =
-            "SELECT new com.example.demo.Dto.OrderDTO.OrderDetailDTO(ui.code, p.requestProductId, p.requestProductName, p.description, p.price, p.status, u.quantity) " +
-                    "FROM Orderdetails u " +
-                    "INNER JOIN u.order ui " +
-                    "INNER JOIN u.requestProduct p " +
-                    "WHERE u.requestProduct.requestProductId IS NOT NULL ")
-    List<OrderDetailDTO> getRequestProductInOrderDetail();
-
-    @Query(value =
-            "SELECT new com.example.demo.Dto.OrderDTO.OrderDetailDTO(ui.code, p.requestProductId, p.requestProductName, p.description, p.price, p.status, u.quantity) " +
-                    "FROM Orderdetails u " +
-                    "INNER JOIN u.order ui " +
-                    "INNER JOIN u.requestProduct p " +
-                    "WHERE u.requestProduct.requestProductId IS NOT NULL AND u.order.code = :query")
-    List<OrderDetailDTO> getRequestProductInOrderDetailByCode(String query);
+//    @Query(value =
+//            "SELECT new com.example.demo.Dto.OrderDTO.OrderDetailDTO(ui.code, p.requestProductId, p.requestProductName, p.description, p.price, p.status, u.quantity) " +
+//                    "FROM Orderdetails u " +
+//                    "INNER JOIN u.order ui " +
+//                    "INNER JOIN u.requestProduct p " +
+//                    "WHERE u.requestProduct.requestProductId IS NOT NULL ")
+//    List<OrderDetailDTO> getRequestProductInOrderDetail();
+//
 
 
-    @Query(value = """
-        SELECT new com.example.demo.Dto.OrderDTO.OrderDetailDTO(
-            o.code, 
-            p.request_product_id, 
-            p.request_product_name, 
-            p.description, 
-            p.price,
-            sp,    // Giả sử bạn đã ánh xạ entity Status_Product với tên sp
-            od.quantity, 
-            u
-        )
-        FROM Orderdetails od 
-        INNER JOIN od.order o 
-        INNER JOIN od.requestProduct p 
-        INNER JOIN p.status sp
-        INNER JOIN od.jobs j 
-        INNER JOIN j.user u
-        """, nativeQuery = true)  // Chú ý: Sử dụng nativeQuery = true
-    List<OrderDetailDTO> getRequestProductInOrderDetailJob();
+
+
+
+
     
 }

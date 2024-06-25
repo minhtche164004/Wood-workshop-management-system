@@ -35,6 +35,7 @@ public class JobServiceImpl implements JobService {
     private Status_Job_Repository statusJobRepository;
 
 
+
     @Override
     public List<JobProductDTO> getListRequestProductJob() {
 List<JobProductDTO> orderdetailsList = jobRepository.getRequestProductInJob();
@@ -82,6 +83,8 @@ List<JobProductDTO> orderdetailsList = jobRepository.getRequestProductInJob();
         jobs.setCost(jobDTO.getCost());
         jobs.setJob_name(jobDTO.getJob_name());
         jobs.setTimeFinish(jobDTO.getFinish());
+        Jobs jobs_order_detail = jobRepository.getJobById(job_id);
+        jobs.setOrderdetails(jobs_order_detail.getOrderdetails());
         jobs.setTimeStart(jobDTO.getStart());
         Status_Job statusJob = statusJobRepository.findById(1); //set mac dinh la job dang thi cong
         jobs.setStatus(statusJob);

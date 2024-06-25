@@ -1,6 +1,7 @@
 import { Component, AfterViewInit, OnInit } from '@angular/core';
 import { ProductListService } from 'src/app/service/product/product-list.service';
 import { ToastrService } from 'ngx-toastr';
+import { WishlistService } from 'src/app/service/wishlist.service';
 declare var $: any; // Declare jQuery globally
 
 @Component({
@@ -10,7 +11,7 @@ declare var $: any; // Declare jQuery globally
 })
 export class HomepageComponent implements AfterViewInit, OnInit {
   products: any[] = [];
-  constructor(private productListService: ProductListService, private toastr: ToastrService) { }
+  constructor(private wishList: WishlistService,private productListService: ProductListService, private toastr: ToastrService) { }
   ngOnInit(): void {
     
     this.productListService.getAllProductCustomer().subscribe(
@@ -29,6 +30,20 @@ export class HomepageComponent implements AfterViewInit, OnInit {
       }
     );
   }
+  addToWishlist(productId: number) {
+    this.wishList.addWishlist(productId)
+      .subscribe(
+        (response) => {
+          console.log('Product added to wishlist:', response);
+          this.toastr.success('Sản phẩm đã được thêm vào yêu thích!', 'Thành công'); // Success message
+        },
+        (error) => {
+          console.error('Error adding product to wishlist:', error);
+          this.toastr.error('Đã có lỗi xảy ra, vui lòng thử lại!', 'Lỗi'); // Error message
+        }
+      );
+  }
+  
   
 
   ngAfterViewInit(): void {
@@ -37,7 +52,7 @@ export class HomepageComponent implements AfterViewInit, OnInit {
     this.initializeResponsiveNavbar();
     this.initializeCountdownTimer();
   }
-
+  
   private initializeSlickSliders() {
     $('.service-slider').slick({
       autoplay: true,
@@ -179,17 +194,5 @@ export class HomepageComponent implements AfterViewInit, OnInit {
 
     }, 1000);
   }
-  addToWishlist(productId: any) {
-    // Gọi service hoặc hàm xử lý logic để thêm sản phẩm vào danh sách yêu thích
-    this.productListService.addWishlist(productId).subscribe(
-      response => {
-        // Xử lý khi thành công
-        console.log('Đã thêm sản phẩm vào danh sách yêu thích');
-      },
-      error => {
-        // Xử lý khi lỗi
-        console.error('Lỗi khi thêm sản phẩm vào danh sách yêu thích', error);
-      }
-    );
-  }
+  
 }

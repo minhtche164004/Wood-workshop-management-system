@@ -44,7 +44,7 @@ public class CheckConditionsImpl implements CheckConditionService {
         return p.matcher(name).find();
     }
     public boolean checkInputName(String name) {
-        Pattern p = Pattern.compile("^[a-zA-ZÀ-ỹ\\s]+$"); // Chấp nhận cả dấu tiếng Việt và khoảng trắng
+        Pattern p = Pattern.compile("^[a-zA-ZÀ-ỹ0-9\\s]+$"); // Chấp nhận cả dấu tiếng Việt và khoảng trắng và số
         return p.matcher(name).find();
     }
 

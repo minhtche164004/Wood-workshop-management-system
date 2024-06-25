@@ -51,6 +51,7 @@ public class ProductController {
     @GetMapping("/getAllProductForCustomer")
     public ApiResponse<?> getAllProductForCustomer() {
         ApiResponse<List> apiResponse = new ApiResponse<>();
+
         String cacheKey = "all_products_customer";
         List<Products> products;
         String cachedData = jedis.get(cacheKey);
@@ -66,13 +67,14 @@ public class ProductController {
             jedis.expire(cacheKey, 1800);
         }
 
-        apiResponse.setResult(products);
+
         apiResponse.setResult(productService.GetAllProductForCustomer());
         return apiResponse;
     }
     @GetMapping("/getAllProductForAdmin")
     public ApiResponse<?> getAllProductForAdmin() {
         ApiResponse<List> apiResponse = new ApiResponse<>();
+
         String cacheKey = "all_products_admin";
         List<Products> products;
         String cachedData = jedis.get(cacheKey);
@@ -88,8 +90,8 @@ public class ProductController {
             jedis.set(cacheKey, jsonData);
             jedis.expire(cacheKey, 1200);
         }
-        apiResponse.setResult(products);
       apiResponse.setResult(productService.GetAllProductForAdmin());
+
         return apiResponse;
     }
 

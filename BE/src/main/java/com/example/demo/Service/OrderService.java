@@ -1,10 +1,10 @@
 package com.example.demo.Service;
 
-import com.example.demo.Dto.OrderDTO.OrderDetailWithJobStatusDTO;
 import com.example.demo.Dto.RequestDTO.RequestAllDTO;
 import com.example.demo.Dto.ProductDTO.*;
 import com.example.demo.Dto.RequestDTO.RequestDTO;
 import com.example.demo.Dto.OrderDTO.RequestOrder;
+import com.example.demo.Dto.RequestDTO.RequestEditDTO;
 import com.example.demo.Entity.*;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -15,8 +15,6 @@ import java.util.List;
 @Service
 public interface OrderService {
     Orders AddOrder(RequestOrder requestOrder);
-    RequestProducts AddNewProductRequest(RequestProductDTO requestProductDTO);
-    Requests AddNewRequest(RequestDTO requestDTO);
     List<RequestProducts> GetAllProductRequest();
     List<Requests> GetAllRequests();
     Requests getRequestById(int id);
@@ -30,6 +28,8 @@ public interface OrderService {
     List<Orders> FilterByStatus(int status_id);
     List<Orders> HistoryOrder();
     List<Orderdetails> getAllOrderDetail();
-//    List<Orderdetails> getOrderDetailByOrderId(int order_id);
-    List<OrderDetailWithJobStatusDTO> getOrderDetailByOrderId(int order_id);
+    RequestProducts AddNewProductRequest(RequestProductDTO requestProductDTO, MultipartFile[] multipartFiles);
+    Requests AddNewRequest(RequestDTO requestDTO, MultipartFile[] multipartFiles);
+    Requests EditRequest(int request_id, RequestEditDTO requestEditDTO,MultipartFile[] multipartFiles);
+
 }

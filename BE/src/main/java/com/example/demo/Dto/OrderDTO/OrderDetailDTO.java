@@ -33,4 +33,15 @@ public class OrderDetailDTO {
         this.statusProduct=statusProduct;
         this.quantity = quantity;
     }
+
+    public OrderDetailDTO(String code, int product_id, String product_name, String description, BigDecimal price, Status_Product statusProduct, int quantity, User user) {
+        this.code = code;
+        this.product_id = product_id;
+        this.product_name = product_name;
+        this.description = description;
+        this.price = price;
+        this.statusProduct = statusProduct;
+        this.quantity = quantity;
+        this.user = user;
+    }
 }

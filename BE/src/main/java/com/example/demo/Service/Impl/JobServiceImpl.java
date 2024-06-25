@@ -41,7 +41,7 @@ public class JobServiceImpl implements JobService {
 
     @Override
     public List<OrderDetailDTO> getListRequestProductJob() {
-List<OrderDetailDTO> orderdetailsList = orderDetailRepository.getRequestProductInOrderDetail();
+List<OrderDetailDTO> orderdetailsList = orderDetailRepository.getRequestProductInOrderDetailJob();
         return orderdetailsList;
     }
 

@@ -40,5 +40,26 @@ public interface OrderDetailRepository extends JpaRepository<Orderdetails,Intege
                     "INNER JOIN u.requestProduct p " +
                     "WHERE u.requestProduct.requestProductId IS NOT NULL AND u.order.code = :query")
     List<OrderDetailDTO> getRequestProductInOrderDetailByCode(String query);
+
+
+    @Query(value = """
+        SELECT new com.example.demo.Dto.OrderDTO.OrderDetailDTO(
+            o.code, 
+            p.request_product_id, 
+            p.request_product_name, 
+            p.description, 
+            p.price,
+            sp,    // Giả sử bạn đã ánh xạ entity Status_Product với tên sp
+            od.quantity, 
+            u
+        )
+        FROM Orderdetails od 
+        INNER JOIN od.order o 
+        INNER JOIN od.requestProduct p 
+        INNER JOIN p.status sp
+        INNER JOIN od.jobs j 
+        INNER JOIN j.user u
+        """, nativeQuery = true)  // Chú ý: Sử dụng nativeQuery = true
+    List<OrderDetailDTO> getRequestProductInOrderDetailJob();
     
 }

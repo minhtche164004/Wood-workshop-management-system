@@ -1,8 +1,12 @@
 package com.example.demo.Controllers;
 
+import com.example.demo.Entity.Jobs;
 import com.example.demo.Entity.Orders;
+import com.example.demo.Entity.Status_Job;
 import com.example.demo.Entity.Status_Order;
+import com.example.demo.Repository.JobRepository;
 import com.example.demo.Repository.OrderRepository;
+import com.example.demo.Repository.Status_Job_Repository;
 import com.example.demo.Repository.Status_Order_Repository;
 import com.example.demo.Service.VNPayService;
 import com.example.demo.Service.OrderService;
@@ -18,6 +22,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @org.springframework.stereotype.Controller
@@ -35,7 +40,11 @@ public class PaymentController {
     @Autowired
     private Status_Order_Repository status_Order_Repository;
     @Autowired
+    private Status_Job_Repository statusJobRepository;
+    @Autowired
     private OrderRepository orderRepository;
+    @Autowired
+    private JobRepository jobRepository;
 
 
     @GetMapping("")
@@ -85,7 +94,14 @@ public class PaymentController {
 
         if (paymentStatus == 1 && orders != null &&
                 new BigDecimal(totalPrice).compareTo(orders.getDeposite()) == 0) {
-            Status_Order statusOrder = status_Order_Repository.findById(1);
+            Status_Order statusOrder = status_Order_Repository.findById(2);
+
+            Status_Job statusJob = statusJobRepository.findById(3);
+            List<Jobs> jobsList = jobRepository.getJobByOrderDetailByOrderCode(orderInfo);
+            for(Jobs jobs : jobsList){
+                jobs.setStatus(statusJob);
+                jobRepository.save(jobs);
+            }
             orders.setStatus(statusOrder);
             orderRepository.save(orders);
             return ResponseEntity.ok("order success");

@@ -10,7 +10,7 @@ interface Province {
   name: string;
   districts: District[];
 }
-
+ 
 interface District {
   code: string;
   name: string;

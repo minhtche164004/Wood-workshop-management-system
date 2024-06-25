@@ -20,6 +20,9 @@ export class JobManagementComponent implements OnInit{
   selectedCategory: number = 0;
   ngOnInit(): void {
     this.loadProductRQForJob();
+    this.loadPosition1();
+    this.loadPosition2();
+    this.loadPosition3();
   }
   loadProductRQForJob(){
     this.jobService.getListProductRQ().subscribe(
@@ -96,4 +99,37 @@ export class JobManagementComponent implements OnInit{
     }
    
   }
+  loadPosition1() {
+    this.jobService.GetPosition1().subscribe(
+      (data) => {
+        console.log('Position 1 data:', data);
+      },
+      (error) => {
+        console.error('Error fetching Position 1 data:', error);
+      }
+    );
+  }
+
+  loadPosition2() {
+    this.jobService.GetPosition2().subscribe(
+      (data) => {
+        console.log('Position 2 data:', data);
+      },
+      (error) => {
+        console.error('Error fetching Position 2 data:', error);
+      }
+    );
+  }
+
+  loadPosition3() {
+    this.jobService.GetPosition3().subscribe(
+      (data) => {
+        console.log('Position 3 data:', data);
+      },
+      (error) => {
+        console.error('Error fetching Position 3 data:', error);
+      }
+    );
+  }
+
 }

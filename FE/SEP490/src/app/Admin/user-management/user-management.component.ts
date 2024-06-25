@@ -1,10 +1,32 @@
-import { Component, OnInit } from '@angular/core';
+
 import { ProductListService } from 'src/app/service/product/product-list.service';
 
+import { Component, OnInit } from '@angular/core';
+import { ProvincesService } from 'src/app/service/provinces.service';
+import { FormControl } from '@angular/forms';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { ToastrService } from 'ngx-toastr';
 
+import { FormBuilder, FormGroup, FormArray, Validators } from '@angular/forms';
 interface ApiResponse {
-  code: number;
+  code: number; 
   result: any[];
+}
+interface Province {
+  code: string;
+  name: string;
+  districts: District[];
+}
+ 
+interface District {
+  code: string;
+  name: string;
+  wards: Ward[];
+}
+
+interface Ward {
+  code: string;
+  name: string;
 }
 
 @Component({
@@ -18,11 +40,54 @@ export class UserManagementComponent implements OnInit {
   currentPage: number = 1;
   position: any[] = [];
   selectedCategory: any = null;
+    
+  provinces: Province[] = [];
+  districts: District[] = [];
+  wards: Ward[] = [];
+  provinceControl = new FormControl();
+  districtControl = new FormControl();
+  wardControl = new FormControl();
+  selectedProvince: any;
+  selectedDistrict: any;
 
-
-  constructor(private productListService: ProductListService) { }
+  constructor(private provincesService: ProvincesService,private productListService: ProductListService) { }
 
   ngOnInit(): void {
+
+    this.provincesService.getProvinces().subscribe((data: Province[]) => {
+      this.provinces = data;
+      console.log(this.provinces);
+    });
+
+
+    
+
+    this.provinceControl.valueChanges.subscribe(provinceName => {
+      console.log('provinceName:', provinceName);
+      this.selectedProvince = this.provinces.find(province => province.name === provinceName);
+      console.log('selectedProvince:', this.selectedProvince);
+      this.districts = this.selectedProvince ? this.selectedProvince.districts : [];
+    });
+
+    this.districtControl.valueChanges.subscribe(districtName => {
+      console.log('districtName:', districtName);
+      const selectedDistrict = this.districts.find(district => district.name === districtName);
+      console.log('selectedDistrict:', selectedDistrict);
+      this.wards = selectedDistrict ? selectedDistrict.wards : [];
+      this.wardControl.reset();
+    });
+
+
+
+
+
+
+  
+
+
+
+
+
     this.loginToken = localStorage.getItem('loginToken');
     this.loadPosition();
 

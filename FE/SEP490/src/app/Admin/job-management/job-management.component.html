@@ -19,11 +19,11 @@
                     <table class="table table-striped table-hover">
                     </table>
                     <div class="row">
-                        <div class="col-md-7"></div> <!-- Dummy column to push the search box to the right -->
-                        <div class="col-md-5 text-end">
+                        <div class="col-md-5"></div> <!-- Dummy column to push the search box to the right -->
+                        <div class="col-md-7 text-end">
                             <form>
                               <div class="input-group mb-3">
-                                <select [(ngModel)]="selectedCategory" name="category" class="form-select">
+                                <select [(ngModel)]="selectedCategory" name="category" class="form-select" >
                                   <option [ngValue]="0" disabled selected hidden>Sản phẩm theo yêu cầu</option>
                                   <option [ngValue]="1">Sản phẩm theo yêu cầu</option>
                                   <option [ngValue]="2">Sản phẩm có sẵn</option>

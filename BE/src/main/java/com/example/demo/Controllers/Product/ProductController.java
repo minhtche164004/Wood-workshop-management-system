@@ -67,7 +67,7 @@ public class ProductController {
             jedis.expire(cacheKey, 1800);
         }
 
-        apiResponse.setResult(products);
+
 
         apiResponse.setResult(productService.GetAllProductForCustomer());
         return apiResponse;
@@ -91,7 +91,6 @@ public class ProductController {
             jedis.set(cacheKey, jsonData);
             jedis.expire(cacheKey, 1200);
         }
-        apiResponse.setResult(products);
       apiResponse.setResult(productService.GetAllProductForAdmin());
 
         return apiResponse;

@@ -1,14 +1,13 @@
 package com.example.demo.Controllers.OrderController;
 
+import com.example.demo.Dto.ProductDTO.ProductEditDTO;
 import com.example.demo.Dto.RequestDTO.RequestAllDTO;
 import com.example.demo.Dto.ProductDTO.RequestProductAllDTO;
 import com.example.demo.Dto.ProductDTO.RequestProductDTO;
 import com.example.demo.Dto.RequestDTO.RequestDTO;
 import com.example.demo.Dto.OrderDTO.RequestOrder;
-import com.example.demo.Entity.Orders;
-import com.example.demo.Entity.RequestProducts;
-import com.example.demo.Entity.Requests;
-import com.example.demo.Entity.WishList;
+import com.example.demo.Dto.RequestDTO.RequestEditDTO;
+import com.example.demo.Entity.*;
 import com.example.demo.Response.ApiResponse;
 import com.example.demo.Service.*;
 import lombok.AllArgsConstructor;
@@ -79,32 +78,45 @@ private OrderService orderService;
         apiResponse.setResult("Xoá Sản Phẩm khỏi danh sách yêu thích thành công !");
         return apiResponse;
     }
-    @PostMapping(value = "/AddNewRequestProduct")
+    @PostMapping(value = "/AddNewRequestProduct", consumes = MediaType.MULTIPART_FORM_DATA_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ApiResponse<?> AddNewRequestProduct(
-            @RequestBody RequestProductDTO requestProductDTO
-
+            @RequestPart("productDTO") RequestProductDTO requestProductDTO,
+            @RequestPart("files") MultipartFile[] files
     ) {
         ApiResponse<RequestProducts> apiResponse = new ApiResponse<>();
-        apiResponse.setResult(orderService.AddNewProductRequest(requestProductDTO));
+        apiResponse.setResult(orderService.AddNewProductRequest(requestProductDTO, files));
         return apiResponse;
     }
     @PostMapping("/Approve_Reject_Request")
     public ApiResponse<?> Approve_Reject_Request(@RequestParam("id") int id,@RequestParam("status_id") int status_id) {
         ApiResponse<String> apiResponse = new ApiResponse<>();
         orderService.Approve_Reject_Request(id,status_id);
-        apiResponse.setResult("Chỉnh Đơn hàng thành công");
+        apiResponse.setResult("Chỉnh Yêu cầu đơn hàng thành công");
         return apiResponse;
     }
 
-    @PostMapping(value = "/AddNewRequest")
+    @PostMapping(value = "/AddNewRequest", consumes = MediaType.MULTIPART_FORM_DATA_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ApiResponse<?> AddNewRequest(
-            @RequestBody RequestDTO requestDTO
-
+            @RequestPart("requestDTO") RequestDTO requestDTO,
+            @RequestPart("files") MultipartFile[] files
     ) {
         ApiResponse<Requests> apiResponse = new ApiResponse<>();
-        apiResponse.setResult(orderService.AddNewRequest(requestDTO));
+        apiResponse.setResult(orderService.AddNewRequest(requestDTO, files));
         return apiResponse;
     }
+
+    @PutMapping(value = "/EditRequest", consumes = MediaType.MULTIPART_FORM_DATA_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ApiResponse<?> EditRequest(
+            @RequestParam(value="request_id") int request_id,
+            @RequestPart("productDTO") RequestEditDTO requestEditDTO,
+            @RequestPart("files") MultipartFile[] files
+    ) {
+        ApiResponse<Requests> apiResponse = new ApiResponse<>();
+        apiResponse.setResult(orderService.EditRequest(request_id,requestEditDTO,files));
+        return apiResponse;
+    }
+
+
     @GetMapping("GetAllOrder")
     public ApiResponse<?> GetAllOrder(){
         ApiResponse<List> apiResponse = new ApiResponse<>();
@@ -152,6 +164,12 @@ private OrderService orderService;
     public ApiResponse<?>  getAllOrderDetail() {
         ApiResponse<List> apiResponse = new ApiResponse<>();
         apiResponse.setResult(orderService.getAllOrderDetail());
+        return apiResponse;
+    }
+    @GetMapping("/getAllOrderDetailByOrderId")
+    public ApiResponse<?>  getAllOrderDetail(@RequestParam("orderId") int orderId) {
+        ApiResponse<List> apiResponse = new ApiResponse<>();
+        apiResponse.setResult(orderService.getOrderDetailByOrderId(orderId));
         return apiResponse;
     }
 }

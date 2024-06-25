@@ -24,12 +24,12 @@ public class RequestProductDTO {
     @DecimalMin(value = "0.0", inclusive = false, message = "PRICE_INVALID")
     private BigDecimal price;
 //    @Min(value = 0, message = "QUANTITY_INVALID")
-//    private Integer quantity;
+    private Integer quantity;
     @NotNull(message = "MUST_REQUIRED")
     private Date completionTime;
     @NotNull(message = "MUST_REQUIRED")
     private int request_id;
-    private List<String> files;
+//    private List<String> files;
 //    private int status_id;
 
 //    private String image;

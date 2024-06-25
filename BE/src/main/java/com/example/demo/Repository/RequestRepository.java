@@ -27,6 +27,11 @@ public interface RequestRepository extends JpaRepository<Requests,Integer> {
     @Query("UPDATE Requests u SET u.status.status_id = :status_id WHERE u.requestId = :requestId")
     void updateStatus(@Param("requestId") int requestId, @Param("status_id") int status_id);
 
+    @Transactional
+    @Modifying
+    @Query("update Requests u set u.description = ?2, u.requestDate=?3 where u.requestId = ?1")
+    void updateRequest(int requestId,String description,Date requestDate);
+
 
 //    @Transactional
 //    @Modifying

@@ -25,4 +25,7 @@ public interface UploadImageService {
 
     List<ProductImageDTO> uploadFile(MultipartFile[] multipartFiles, int product_id);
     Product_Thumbnail uploadFile_Thumnail(MultipartFile multipartFiles);
+
+    List<ProductImageDTO> uploadFileRequestProduct(MultipartFile[] multipartFiles, int requestProduct_id);
+    List<ProductImageDTO> uploadFileRequest(MultipartFile[] multipartFiles, int request_id);
 }

@@ -20,6 +20,7 @@ export class ProductListService {
 
   private apiUrl_findProduct = `${environment.apiUrl}api/auth/product`;
   private apiUrl_getProductByID = `${environment.apiUrl}api/auth/product/GetProductById`; // Assuming the correct endpoint
+  private apiUrl_GetAllOrder = `${environment.apiUrl}api/auth/order/GetAllOrder`; // Assuming the correct endpoint
 
   constructor(private http: HttpClient) { }
 
@@ -28,7 +29,14 @@ export class ProductListService {
     return this.http.get<any>(this.apiUrl).pipe(
       catchError(this.handleError)
     );
-  }getAllProductCustomer(): Observable<any> {
+  }
+  getAllOrder(): Observable<any> {
+    console.log(this.apiUrl_GetAllOrder)
+    return this.http.get<any>(this.apiUrl_GetAllOrder).pipe(
+      catchError(this.handleError)
+    );
+  }
+  getAllProductCustomer(): Observable<any> {
     console.log(this.apiUrlGetProduct)
     return this.http.get<any>(this.apiUrl).pipe(
       catchError(this.handleError)

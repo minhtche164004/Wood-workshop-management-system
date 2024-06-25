@@ -30,6 +30,8 @@ import { OrderRqDetailComponent } from './Admin/order-rq-detail/order-rq-detail.
 
 import { OrderRequiredComponent } from './order-required/order-required.component';
 import { CreateOrderComponent } from './create-order/create-order.component';
+import { OrderManagementComponent } from './Admin/order-management/order-management.component';
+import { ProductDetailComponent } from './features/product-detail/product-detail.component';
 
 
 
@@ -64,6 +66,8 @@ const routes: Routes = [
   { path: 'order_request_management', component: OrderRequestComponentComponent },
   { path: 'order_request_management/:id', component: OrderRequestComponentComponent },
   { path: 'orderRq_detail', component: OrderRqDetailComponent },
+  { path: 'order_management', component: OrderManagementComponent },
+  { path: 'product_details', component: ProductDetailComponent },
  
   { path: '', redirectTo: '/homepage', pathMatch: 'full' },
   { path: '**', redirectTo: '/homepage', pathMatch: 'full' },

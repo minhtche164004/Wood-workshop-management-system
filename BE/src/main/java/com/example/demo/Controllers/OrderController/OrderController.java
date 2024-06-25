@@ -15,6 +15,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.MediaType;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -58,6 +59,7 @@ private OrderService orderService;
         apiResponse.setResult(orderService.GetProductRequestById(id));
         return apiResponse;
     }
+    @PreAuthorize("hasAuthority('CUSTOMER')")
     @PostMapping("/AddWhiteList")
     public ApiResponse<?> AddWhiteList(@RequestParam("product_id") int product_id) {
         ApiResponse<WishList> apiResponse = new ApiResponse<>();

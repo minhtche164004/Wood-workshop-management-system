@@ -87,7 +87,10 @@ public class ProductController {
 //            jedis.expire(cacheKey, 1200);
 //        }
 //        apiResponse.setResult(products);
+
         apiResponse.setResult(productService.GetAllProductForAdmin());
+
+
         return apiResponse;
     }
 

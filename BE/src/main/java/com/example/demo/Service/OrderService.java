@@ -1,5 +1,6 @@
 package com.example.demo.Service;
 
+import com.example.demo.Dto.OrderDTO.OrderDetailWithJobStatusDTO;
 import com.example.demo.Dto.RequestDTO.RequestAllDTO;
 import com.example.demo.Dto.ProductDTO.*;
 import com.example.demo.Dto.RequestDTO.RequestDTO;
@@ -29,5 +30,6 @@ public interface OrderService {
     List<Orders> FilterByStatus(int status_id);
     List<Orders> HistoryOrder();
     List<Orderdetails> getAllOrderDetail();
-    List<Orderdetails> getOrderDetailByOrderId(int order_id);
+//    List<Orderdetails> getOrderDetailByOrderId(int order_id);
+    List<OrderDetailWithJobStatusDTO> getOrderDetailByOrderId(int order_id);
 }

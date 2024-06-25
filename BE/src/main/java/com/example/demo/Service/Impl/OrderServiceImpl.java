@@ -1,5 +1,6 @@
 package com.example.demo.Service.Impl;
 
+import com.example.demo.Dto.OrderDTO.OrderDetailWithJobStatusDTO;
 import com.example.demo.Dto.RequestDTO.RequestAllDTO;
 import com.example.demo.Dto.ProductDTO.RequestProductAllDTO;
 import com.example.demo.Dto.ProductDTO.RequestProductDTO;
@@ -406,12 +407,12 @@ public class OrderServiceImpl implements OrderService {
     }// Trả về đường dẫn tương đối hoặc đường dẫn ban đầu nếu không tìm thấy "/assets/"
 
     @Override
-    public List<Orderdetails> getOrderDetailByOrderId(int order_id) {
-        List<Orderdetails> orderdetailsList = orderDetailRepository.getOrderDetailByOrderId(order_id);
-        if(orderdetailsList.isEmpty()){
+    public List<OrderDetailWithJobStatusDTO> getOrderDetailByOrderId(int order_id) {
+        List<OrderDetailWithJobStatusDTO> results = orderDetailRepository.getOrderDetailWithJobStatusByOrderId(order_id);
+        if(results.isEmpty()){
             throw new AppException(ErrorCode.NOT_FOUND);
         }
-        return orderdetailsList;
+        return results;
     }
 
 }

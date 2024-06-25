@@ -51,43 +51,47 @@ public class ProductController {
     @GetMapping("/getAllProductForCustomer")
     public ApiResponse<?> getAllProductForCustomer() {
         ApiResponse<List> apiResponse = new ApiResponse<>();
-//        String cacheKey = "all_products_customer";
-//        List<Products> products;
-//        String cachedData = jedis.get(cacheKey);
-//        if (cachedData != null) {
-//            Type type = new TypeToken<List<Products>>() {
-//            }.getType();
-//            Gson gson = new GsonBuilder().setDateFormat("MMM dd, yyyy").create();
-//            products = gson.fromJson(cachedData, type);
-//        } else {
-//            products = productService.GetAllProductForCustomer();
-//            String jsonData = new Gson().toJson(products);
-//            jedis.set(cacheKey, jsonData);
-//            jedis.expire(cacheKey, 1800);
-//        }
-//        apiResponse.setResult(products);
+
+        String cacheKey = "all_products_customer";
+        List<Products> products;
+        String cachedData = jedis.get(cacheKey);
+        Gson gson = new GsonBuilder().setDateFormat("MMM dd, yyyy").create();
+        if (cachedData != null) {
+            Type type = new TypeToken<List<Products>>() {
+            }.getType();
+            products = gson.fromJson(cachedData, type);
+        } else {
+            products = productService.GetAllProductForCustomer();
+            String jsonData = gson.toJson(products);
+            jedis.set(cacheKey, jsonData);
+            jedis.expire(cacheKey, 1800);
+        }
+
+
         apiResponse.setResult(productService.GetAllProductForCustomer());
         return apiResponse;
     }
     @GetMapping("/getAllProductForAdmin")
     public ApiResponse<?> getAllProductForAdmin() {
         ApiResponse<List> apiResponse = new ApiResponse<>();
-//        String cacheKey = "all_products_admin";
-//        List<Products> products;
-//        String cachedData = jedis.get(cacheKey);
-//        if (cachedData != null) {
-//            Type type = new TypeToken<List<Products>>() {
-//            }.getType();
-//            Gson gson = new GsonBuilder().setDateFormat("MMM dd, yyyy").create();
-//            products = gson.fromJson(cachedData, type);
-//        } else {
-//            products = productService.GetAllProductForAdmin();
-//            String jsonData = new Gson().toJson(products);
-//            jedis.set(cacheKey, jsonData);
-//            jedis.expire(cacheKey, 1200);
-//        }
-//        apiResponse.setResult(products);
-        apiResponse.setResult(productService.GetAllProductForAdmin());
+
+        String cacheKey = "all_products_admin";
+        List<Products> products;
+        String cachedData = jedis.get(cacheKey);
+        Gson gson = new GsonBuilder().setDateFormat("MMM dd, yyyy").create();
+        if (cachedData != null) {
+            Type type = new TypeToken<List<Products>>() {
+            }.getType();
+
+            products = gson.fromJson(cachedData, type);
+        } else {
+            products = productService.GetAllProductForAdmin();
+            String jsonData = gson.toJson(products);
+            jedis.set(cacheKey, jsonData);
+            jedis.expire(cacheKey, 1200);
+        }
+      apiResponse.setResult(productService.GetAllProductForAdmin());
+
         return apiResponse;
     }
 
@@ -98,14 +102,15 @@ public class ProductController {
         String cacheKey = "all_products_by_status";
         List<Products> products;
         String cachedData = jedis.hget(cacheKey, id + "");
+        Gson gson = new GsonBuilder().setDateFormat("MMM dd, yyyy").create();
         if (cachedData != null) {
             Type type = new TypeToken<List<Products>>() {
             }.getType();
-            Gson gson = new GsonBuilder().setDateFormat("MMM dd, yyyy").create();
+
             products = gson.fromJson(cachedData, type);
         } else {
             products = productRepository.findByStatus(id);
-            String jsonData = new Gson().toJson(products);
+            String jsonData = gson.toJson(products);
             jedis.hset(cacheKey, id + "", jsonData);
             jedis.expire(cacheKey, 1800);
         }
@@ -120,14 +125,15 @@ public class ProductController {
         String cacheKey = "all_products_by_cate";
         List<Products> products;
         String cachedData = jedis.hget(cacheKey, id + "");
+        Gson gson = new GsonBuilder().setDateFormat("MMM dd, yyyy").create();
         if (cachedData != null) {
             Type type = new TypeToken<List<Products>>() {
             }.getType();
-            Gson gson = new GsonBuilder().setDateFormat("MMM dd, yyyy").create();
+
             products = gson.fromJson(cachedData, type);
         } else {
             products = productRepository.findByCategory(id);
-            String jsonData = new Gson().toJson(products);
+            String jsonData = gson.toJson(products);
             jedis.hset(cacheKey, id + "", jsonData);
             jedis.expire(cacheKey, 1800);
         }
@@ -181,14 +187,15 @@ public class ProductController {
         String cacheKey = "all_products_by_Name_Or_Code";
         List<Products> products;
         String cachedData = jedis.hget(cacheKey, key);
+        Gson gson = new GsonBuilder().setDateFormat("MMM dd, yyyy").create();
         if (cachedData != null) {
             Type type = new TypeToken<List<Products>>() {
             }.getType();
-            Gson gson = new GsonBuilder().setDateFormat("MMM dd, yyyy").create();
+
             products = gson.fromJson(cachedData, type);
         } else {
             products = productService.findProductByNameCode(key);
-            String jsonData = new Gson().toJson(products);
+            String jsonData = gson.toJson(products);
             jedis.hset(cacheKey, key, jsonData);
             jedis.expire(cacheKey, 1800);
         }
@@ -204,14 +211,15 @@ public class ProductController {
         String cacheKey = "all_categories";
         List<Categories> categories;
         String cachedData = jedis.get(cacheKey);
+        Gson gson = new GsonBuilder().setDateFormat("MMM dd, yyyy").create();
         if (cachedData != null) {
             Type type = new TypeToken<List<Categories>>() {
             }.getType();
-            Gson gson = new GsonBuilder().setDateFormat("MMM dd, yyyy").create();
+
             categories = gson.fromJson(cachedData, type);
         } else {
             categories = categoryRepository.findAll();
-            String jsonData = new Gson().toJson(categories);
+            String jsonData = gson.toJson(categories);
             jedis.set(cacheKey, jsonData);
             jedis.expire(cacheKey, 1800);
         }
@@ -226,14 +234,15 @@ public class ProductController {
         String cacheKey = "all_categories_name";
         List<CategoryNameDTO> categories;
         String cachedData = jedis.get(cacheKey);
+        Gson gson = new GsonBuilder().setDateFormat("MMM dd, yyyy").create();
         if (cachedData != null) {
             Type type = new TypeToken<List<CategoryNameDTO>>() {
             }.getType();
-            Gson gson = new GsonBuilder().setDateFormat("MMM dd, yyyy").create();
+
             categories = gson.fromJson(cachedData, type);
         } else {
             categories = categorySevice.GetListName();
-            String jsonData = new Gson().toJson(categories);
+            String jsonData =gson.toJson(categories);
             jedis.set(cacheKey, jsonData);
             jedis.expire(cacheKey, 1800);
         }

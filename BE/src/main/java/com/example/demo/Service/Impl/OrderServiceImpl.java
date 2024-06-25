@@ -57,7 +57,11 @@ public class OrderServiceImpl implements OrderService {
     @Autowired
     private Status_Product_Repository statusProduct;
     @Autowired
+    private JobRepository jobRepository;
+    @Autowired
     private Status_Product_Repository status_Product_Repository;
+    @Autowired
+    private Status_Job_Repository statusJobRepository;
 
     @Override
     public Orders AddOrder(RequestOrder requestOrder) {
@@ -120,6 +124,7 @@ public class OrderServiceImpl implements OrderService {
                     total = total.add(itemPrice.multiply(itemQuantity)); // Cộng dồn vào total
                     orderDetailRepository.save(orderdetail);
 
+
                 }
             }
             orders.setDeposite(total.multiply(BigDecimal.valueOf(0.2))); // 20% tiền cọc của tổng tiền đơn hàng
@@ -150,6 +155,19 @@ public class OrderServiceImpl implements OrderService {
                         BigDecimal itemQuantity = BigDecimal.valueOf(item.getQuantity());
                         total = total.add(itemPrice.multiply(itemQuantity)); // Cộng dồn vào total
                         orderDetailRepository.save(orderdetail);
+
+                        Jobs jobs = new Jobs();
+                        jobs.setRequestProducts(requestProducts);
+                        jobs.setQuantityProduct(orderdetail.getQuantity());
+                        Jobs lastJob = jobRepository.findJobsTop(dateString + "JB");
+                        int count1 = lastJob != null ? Integer.parseInt(lastJob.getCode().substring(8)) + 1 : 1;
+                        String code1 = dateString + "JB" + String.format("%03d", count1);
+                        jobs.setCode(code1);
+                        jobs.setJob_name("");
+                        jobs.setOrderdetails(orderdetail);
+                        jobs.setStatus(statusJobRepository.findById(14));
+                        jobRepository.save(jobs);
+
                     }
                 }
             orders.setDeposite(total.multiply(BigDecimal.valueOf(0.2))); // 20% tiền cọc của tổng tiền đơn hàng

@@ -1,6 +1,7 @@
 package com.example.demo.Repository;
 
 import com.example.demo.Entity.Jobs;
+import com.example.demo.Entity.Orderdetails;
 import com.example.demo.Entity.Products;
 import com.example.demo.Entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -37,6 +38,10 @@ public interface JobRepository extends JpaRepository<Jobs,Integer> {
 
     @Query(value = "SELECT p.* FROM jobs p WHERE p.code LIKE :prefix% ORDER BY p.code DESC LIMIT 1", nativeQuery = true)
     Jobs findJobsTop(@Param("prefix") String prefix);
+
+
+    @Query("SELECT u FROM Jobs u WHERE u.orderdetails.order.code = :query")
+    List<Jobs> getJobByOrderDetailByOrderCode(String query);
 
 
 }

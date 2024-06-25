@@ -166,4 +166,10 @@ private OrderService orderService;
         apiResponse.setResult(orderService.getAllOrderDetail());
         return apiResponse;
     }
+    @GetMapping("/getAllOrderDetailByOrderId")
+    public ApiResponse<?>  getAllOrderDetail(@RequestParam("orderId") int orderId) {
+        ApiResponse<List> apiResponse = new ApiResponse<>();
+        apiResponse.setResult(orderService.getOrderDetailByOrderId(orderId));
+        return apiResponse;
+    }
 }

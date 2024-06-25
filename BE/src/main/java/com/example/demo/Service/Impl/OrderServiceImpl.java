@@ -1,9 +1,7 @@
 package com.example.demo.Service.Impl;
 
-import com.example.demo.Dto.ProductDTO.Product_Thumbnail;
+import com.example.demo.Dto.OrderDTO.OrderDetailWithJobStatusDTO;
 import com.example.demo.Dto.RequestDTO.RequestAllDTO;
-import com.example.demo.Dto.RequestDTO.RequestEditDTO;
-import com.example.demo.Dto.RequestDTO.RequestUpdateDTO;
 import com.example.demo.Dto.ProductDTO.RequestProductAllDTO;
 import com.example.demo.Dto.ProductDTO.RequestProductDTO;
 import com.example.demo.Dto.OrderDTO.ProductItem;
@@ -15,20 +13,19 @@ import com.example.demo.Exception.ErrorCode;
 import com.example.demo.Repository.*;
 import com.example.demo.Service.CheckConditionService;
 import com.example.demo.Service.OrderService;
-import com.example.demo.Service.ProductService;
 import com.example.demo.Service.UploadImageService;
-import jakarta.persistence.EntityManager;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 
 @Service
 public class OrderServiceImpl implements OrderService {
@@ -66,8 +63,6 @@ public class OrderServiceImpl implements OrderService {
     private Status_Product_Repository status_Product_Repository;
     @Autowired
     private Status_Job_Repository statusJobRepository;
-    @Autowired
-    private EntityManager entityManager;
 
     @Override
     public Orders AddOrder(RequestOrder requestOrder) {
@@ -190,56 +185,40 @@ public class OrderServiceImpl implements OrderService {
     //Tạo Request
     //Tạo Request Product
     @Override
-    public Requests AddNewRequest(RequestDTO requestDTO, MultipartFile[] multipartFiles) {
-            Requests requests = new Requests();
-            UserDetails userDetails =(UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-            User user =userRepository.getUserByUsername(userDetails.getUsername());
-            //lấy thông tin thằng đang login
-            //   User user = userRepository.findById(requestDTO.getUser_id()).get();
-            requests.setUser(user);
-            Status_Request statusRequest =statusRequestRepository.findById(1).get();//nghĩa là request đang chờ phê duyệt
-            requests.setRequestDate(requestDTO.getRequestDate());
-            requests.setDescription(requestDTO.getDescription());
-            requests.setStatus(statusRequest);
-            requests.setAddress(requestDTO.getAddress());
-            requests.setFullname(requestDTO.getFullname());
-            requests.setPhoneNumber(requestDTO.getPhoneNumber());
-            requests.setResponse("");
-            requests.setCity_province(requestDTO.getCity_province());
-            requests.setDistrict(requestDTO.getDistrict());
-            requests.setWards(requestDTO.getWards());
-            LocalDate today = LocalDate.now();
-            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("ddMMyy");
-            String dateString = today.format(formatter);
-            Requests lastRequest = requestRepository.findRequestTop(dateString + "RQ");
-            int count = lastRequest != null ? Integer.parseInt(lastRequest.getCode().substring(8)) + 1 : 1;
-            String code = dateString + "RQ" + String.format("%03d", count);
-            requests.setCode(code);
-            if (!checkConditionService.checkInputName(requestDTO.getFullname())) {
-                throw new AppException(ErrorCode.INVALID_FORMAT_NAME);
-            }
+    public Requests AddNewRequest(RequestDTO requestDTO) {
+        Requests requests = new Requests();
+        UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        User user = userRepository.getUserByUsername(userDetails.getUsername());
+        //lấy thông tin thằng đang login
+        //   User user = userRepository.findById(requestDTO.getUser_id()).get();
+        requests.setUser(user);
+        Status_Request statusRequest = statusRequestRepository.findById(1).get();//nghĩa là request đang chờ phê duyệt
+        requests.setRequestDate(requestDTO.getRequestDate());
+        requests.setDescription(requestDTO.getDescription());
+        requests.setStatus(statusRequest);
+        requests.setAddress(requestDTO.getAddress());
+        requests.setFullname(requestDTO.getFullname());
+        requests.setPhoneNumber(requestDTO.getPhoneNumber());
+        requests.setResponse("");
+        requests.setCity_province(requestDTO.getCity_province());
+        requests.setDistrict(requestDTO.getDistrict());
+        requests.setWards(requestDTO.getWards());
+        LocalDate today = LocalDate.now();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("ddMMyy");
+        String dateString = today.format(formatter);
 
-            requests = requestRepository.save(requests);
-            uploadImageService.uploadFileRequest(multipartFiles, requests.getRequestId());
+        Requests lastRequest = requestRepository.findRequestTop(dateString + "RQ");
+        int count = lastRequest != null ? Integer.parseInt(lastRequest.getCode().substring(8)) + 1 : 1;
+        String code = dateString + "RQ" + String.format("%03d", count);
+        requests.setCode(code);
 
-            return requests;
+        if (!checkConditionService.checkInputName(requestDTO.getFullname())) {
+            throw new AppException(ErrorCode.INVALID_FORMAT_NAME);
         }
 
-    @Override
-    public Requests EditRequest(int request_id,RequestEditDTO requestEditDTO,MultipartFile[] multipartFiles) {
-        Requests requests = requestRepository.findById(request_id);
-        Date today = new Date();
-        if (multipartFiles != null &&
-                Arrays.stream(multipartFiles).anyMatch(file -> file != null && !file.isEmpty())) {
-            requestimagesRepository.deleteRequestImages(request_id); // Xóa những ảnh trước đó
-            uploadImageService.uploadFile(multipartFiles, requests.getRequestId());
-        }
-            requestRepository.updateRequest(request_id,
-                    requestEditDTO.getDescription(),
-                    today
-            );
-            entityManager.refresh(requests); // Làm mới đối tượng products
-            return requests;
+        requests = requestRepository.save(requests);
+        uploadImageService.uploadFile_Request(requestDTO.getFiles(), requests.getRequestId());
+        return requests;
     }
 
     @Override
@@ -259,42 +238,42 @@ public class OrderServiceImpl implements OrderService {
     }
 
     //Tạo Request Product
-        @Override
-        public RequestProducts AddNewProductRequest(RequestProductDTO requestProductDTO, MultipartFile[] multipartFiles) { //lấy từ request
-
-                RequestProducts requestProducts = new RequestProducts();
-                requestProducts.setRequestProductName(requestProductDTO.getRequestProductName());
-                requestProducts.setDescription(requestProductDTO.getDescription());
-                requestProducts.setPrice(requestProductDTO.getPrice());
-                requestProducts.setQuantity(requestProductDTO.getQuantity());
-                requestProducts.setCompletionTime(requestProductDTO.getCompletionTime());
-                Requests requests = requestRepository.findById(requestProductDTO.getRequest_id());
-                requestProducts.setRequests(requests);
-                if (!checkConditionService.checkInputName(requestProductDTO.getRequestProductName())) {
-                    throw new AppException(ErrorCode.INVALID_FORMAT_NAME);
-                }
+    @Override
+    public RequestProducts AddNewProductRequest(RequestProductDTO requestProductDTO) { //lấy từ request
+        RequestProducts requestProducts = new RequestProducts();
+        requestProducts.setRequestProductName(requestProductDTO.getRequestProductName());
+        requestProducts.setDescription(requestProductDTO.getDescription());
+        requestProducts.setPrice(requestProductDTO.getPrice());
+        requestProducts.setQuantity(0);
+        requestProducts.setCompletionTime(requestProductDTO.getCompletionTime());
+        Requests requests = requestRepository.findById(requestProductDTO.getRequest_id());
+        requestProducts.setRequests(requests);
+        Status_Product status = status_Product_Repository.findById(11); //set lúc đầu là chưa giao việc
+        requestProducts.setStatus(status);
+        if (!checkConditionService.checkInputName(requestProductDTO.getRequestProductName())) {
+            throw new AppException(ErrorCode.INVALID_FORMAT_NAME);
+        }
 //        if (requestProductRepository.countByRequestProductName(requestProductDTO.getRequestProductName()) > 0) {
 //            throw new AppException(ErrorCode.NAME_EXIST);
 //        }
-                if (!checkConditionService.checkInputQuantityInt(requestProductDTO.getQuantity())) {
-                    throw new AppException(ErrorCode.QUANTITY_INVALID);
-                }
-                if (!checkConditionService.checkInputPrice(requestProductDTO.getPrice())) {
-                    throw new AppException(ErrorCode.PRICE_INVALID);
-                }
-                requestProducts = requestProductRepository.save(requestProducts);
+//        if (!checkConditionService.checkInputQuantityInt(requestProductDTO.getQuantity())) {
+//            throw new AppException(ErrorCode.QUANTITY_INVALID);
+//        }
+        if (!checkConditionService.checkInputPrice(requestProductDTO.getPrice())) {
+            throw new AppException(ErrorCode.PRICE_INVALID);
+        }
+        requestProducts = requestProductRepository.save(requestProducts);
 //        //set ảnh thumbnail
 //        Product_Thumbnail t = uploadImageService.uploadFile_Thumnail(multipartFiles_thumbnal);
 //        requestProducts.setImage(t.getFullPath());
-                //set ảnh của product
-                RequestProducts requestProduct = requestProductRepository.findByName(requestProductDTO.getRequestProductName());
-                uploadImageService.uploadFileRequestProduct(multipartFiles, requestProduct.getRequestProductId());
-                return requestProducts;
-            }
+        //set ảnh của product
+        RequestProducts requestProduct = requestProductRepository.findByName(requestProductDTO.getRequestProductName());
+        uploadImageService.uploadFile_RequestProduct(requestProductDTO.getFiles(), requestProduct.getRequestProductId());
+        return requestProducts;
+    }
 
 
-
-            @Override
+    @Override
     public List<Requests> GetAllRequests() {
         List<Requests> request_list = requestRepository.findAll();
         if (request_list.isEmpty()) {
@@ -426,6 +405,16 @@ public class OrderServiceImpl implements OrderService {
         }
         return imagePath;
     }// Trả về đường dẫn tương đối hoặc đường dẫn ban đầu nếu không tìm thấy "/assets/"
+
+    @Override
+    public List<OrderDetailWithJobStatusDTO> getOrderDetailByOrderId(int order_id) {
+        List<OrderDetailWithJobStatusDTO> results = orderDetailRepository.getOrderDetailWithJobStatusByOrderId(order_id);
+        if(results.isEmpty()){
+            throw new AppException(ErrorCode.NOT_FOUND);
+        }
+        return results;
+    }
+
 }
 
 

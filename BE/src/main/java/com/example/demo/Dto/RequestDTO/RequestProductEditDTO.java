@@ -1,2 +1,4 @@
-package com.example.demo.Dto.RequestDTO;public class RequestProductEditDTO {
+package com.example.demo.Dto.RequestDTO;
+
+public class RequestProductEditDTO {
 }

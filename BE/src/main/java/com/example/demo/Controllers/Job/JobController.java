@@ -87,5 +87,12 @@ public class JobController {
         return apiResponse;
     }
 
+    @PutMapping("/acceptJob")
+    public ApiResponse<?> AcceptJob(@RequestParam("job_id") int job_id,@RequestParam("status_id") int status_id) {
+        ApiResponse<Jobs> apiResponse = new ApiResponse<>();
+        apiResponse.setResult(jobService.CreateJob_Log(job_id, status_id));
+        return apiResponse;
+    }
+
 
 }

@@ -77,7 +77,7 @@ public class OrderServiceImpl implements OrderService {
 
         Orders orders = new Orders();
         orders.setOrderDate(sqlCompletionTime);
-        Status_Order statusOrder = statusOrderRepository.findById(4);//tự set cho nó là 1
+        Status_Order statusOrder = statusOrderRepository.findById(1);//tự set cho nó là 1
         orders.setStatus(statusOrder);
         orders.setPaymentMethod(requestOrder.getPayment_method()); //1 là trả tiền trực tiếp, 2 là chuyển khoản
         orders.setAddress(requestOrder.getCusInfo().getAddress());
@@ -87,7 +87,7 @@ public class OrderServiceImpl implements OrderService {
         orders.setCity_province(requestOrder.getCusInfo().getAddress());
         orders.setDistrict(requestOrder.getCusInfo().getAddress());
         orders.setWards(requestOrder.getCusInfo().getAddress());
-        //
+        //luu thong tin nguoi dat
         UserInfor userInfor = new UserInfor();
         userInfor.setFullname(requestOrder.getCusInfo().getFullname());
         userInfor.setAddress(requestOrder.getCusInfo().getAddress());

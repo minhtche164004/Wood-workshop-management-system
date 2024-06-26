@@ -21,6 +21,8 @@ export class ProductListService {
   private apiUrl_findProduct = `${environment.apiUrl}api/auth/product`;
   private apiUrl_getProductByID = `${environment.apiUrl}api/auth/product/GetProductById`; // Assuming the correct endpoint
   private apiUrl_AddProduct = `${environment.apiUrl}api/auth/product/AddNewProduct`;
+  private apiUrl_UpdateProduct = `${environment.apiUrl}api/auth/product/AddNewProduct`;
+  
   constructor(private http: HttpClient) { }
   uploadProduct(productData: any, thumbnail: File, images: File[]): Observable<any> {
     const formData = new FormData();

@@ -20,10 +20,24 @@ export class ProductListService {
 
   private apiUrl_findProduct = `${environment.apiUrl}api/auth/product`;
   private apiUrl_getProductByID = `${environment.apiUrl}api/auth/product/GetProductById`; // Assuming the correct endpoint
-
-
-
+  private apiUrl_AddProduct = `${environment.apiUrl}api/auth/product/AddNewProduct`;
   constructor(private http: HttpClient) { }
+  uploadProduct(productData: any, thumbnail: File, images: File[]): Observable<any> {
+    const formData = new FormData();
+    formData.append('productDTO', new Blob([JSON.stringify(productData)], { type: 'application/json' }));
+    formData.append('file_thumbnail', thumbnail, thumbnail.name);
+    images.forEach(image => {
+      formData.append('files', image, image.name);
+    });
+
+    return this.http.post(this.apiUrl_AddProduct, formData, {
+      headers: {
+        'Accept': 'application/json'
+      }
+    });
+  }
+
+
 
   
   getProducts(): Observable<any> {

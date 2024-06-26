@@ -10,14 +10,15 @@
               <h2 style="margin-bottom: 0;">Quản lí Sản Phẩm</h2>
             </div>
             <div class="col-sm-7 text-end d-flex align-items-center justify-content-end">
-              <a href="#" class="btn btn-secondary btn-sm" data-toggle="modal" data-target="#addProductModal" style="font-size: 14px;">
+              <a href="#" class="btn btn-secondary btn-sm" data-toggle="modal" data-target="#addProductModal"
+                style="font-size: 14px;">
                 <i class="material-icons align-middle" style="font-size: 18px;">&#xE147;</i>
                 <span class="align-middle">Thêm Sản Phẩm</span>
               </a>
             </div>
           </div>
-          
-          
+
+
 
           <table class="table table-striped table-hover">
           </table>
@@ -29,7 +30,8 @@
                 <!-- product.component.html -->
                 <select [(ngModel)]="selectedCategory">
                   <option [ngValue]="0" disabled selected>Chọn danh mục sản phẩm</option>
-                  <option *ngFor="let category of categories" [ngValue]="category.categoryId">{{ category.categoryName }}</option>
+                  <option *ngFor="let category of categories" [ngValue]="category.categoryId">{{ category.categoryName
+                    }}</option>
                 </select>
                 <input type="text" class="form-control" placeholder="Tìm kiếm sản phẩm..." [(ngModel)]="searchKey">
                 <button class="btn search-button" type="button" (click)="searchProduct()">
@@ -61,31 +63,34 @@
 
           <tbody>
             <tr
-            *ngFor="let product of products | paginate: { itemsPerPage: 10, currentPage: currentPage }; let i = index">
-            <td>{{ i + 1 + (currentPage - 1) * 10 }}</td>
-            <td>{{ product.code }}</td>
-            <td class="action-buttons">
+              *ngFor="let product of products | paginate: { itemsPerPage: 10, currentPage: currentPage }; let i = index">
+              <td>{{ i + 1 + (currentPage - 1) * 10 }}</td>
+              <td>{{ product.code }}</td>
+              <td class="action-buttons">
 
-              <a href="#" class="settings" title="Chỉnh sửa" data-toggle="modal" data-target="#editProductModal" (click)="editProduct(product.id)">
-                <i class="fa-solid fa-pen-to-square"></i>
-              </a>
-              <a href="#" class="delete" title="Xóa" data-toggle="modal" data-target="#confirmDeleteModal" (click)="deleteProduct(product.id)">
-                <i class="fa-regular fa-trash-can"></i>
-              </a>
-              <a href="#" class="info" title="Chi tiết" data-toggle="modal" data-target="#productDetailModal" (click)="showProductDetails(product.id)">
-                <i class="fa-solid fa-ellipsis-vertical"></i>
-              </a>  
+                <a href="#" class="settings" title="Chỉnh sửa" data-toggle="modal" data-target="#editProductModal"
+                  (click)="editProduct(product.id)">
+                  <i class="fa-solid fa-pen-to-square"></i>
+                </a>
+                <a href="#" class="delete" title="Xóa" data-toggle="modal" data-target="#confirmDeleteModal"
+                  (click)="deleteProduct(product.id)">
+                  <i class="fa-regular fa-trash-can"></i>
+                </a>
+                <a href="#" class="info" title="Chi tiết" data-toggle="modal" data-target="#productDetailModal"
+                  (click)="showProductDetails(product.id)">
+                  <i class="fa-solid fa-ellipsis-vertical"></i>
+                </a>
 
-            </td>
-            <td><img class="img_product" [src]="product.image" alt="Ảnh đại diện"></td>
-            <td>{{ product.completionTime }}</td>
-            <td>{{ product.productName }}</td>
-            <td>{{ product.description }}</td>
-            <td>{{ product.categories.categoryName }}</td>
-            <td>{{ product.quantity }}</td>
-            <td>{{ product.price | number: '1.0-3' }}</td>
-          </tr>
-          
+              </td>
+              <td><img class="img_product" [src]="product.image" alt="Ảnh đại diện"></td>
+              <td>{{ product.completionTime }}</td>
+              <td>{{ product.productName }}</td>
+              <td>{{ product.description }}</td>
+              <td>{{ product.categories.categoryName }}</td>
+              <td>{{ product.quantity }}</td>
+              <td>{{ product.price | number: '1.0-3' }}</td>
+            </tr>
+
           </tbody>
         </table>
 
@@ -105,50 +110,34 @@
 
 
 <!-- Modal for Adding Product -->
-<div class="modal fade" id="addProductModal" tabindex="-1" role="dialog" aria-labelledby="addProductModalLabel"
-  aria-hidden="true">
+<div class="modal fade" id="addProductModal" tabindex="-1" role="dialog" aria-labelledby="addProductModalLabel" aria-hidden="true">
   <div class="modal-dialog modal-dialog-wide" role="document">
     <div class="modal-content">
-      
       <div class="modal-body">
-        <form (ngSubmit)="addProduct()" enctype="multipart/form-data">
+        <form [formGroup]="uploadForm" (ngSubmit)="onSubmit()">
           <div class="form-group">
             <label style="font-size: 16px;" for="productName">Tên sản phẩm</label>
-            <input  type="text" class="form-control" id="productName" 
-              [(ngModel)]="product_name" name="product_name">
+            <input type="text" class="form-control" id="productName" formControlName="product_name">
           </div>
           <div class="form-group">
             <label style="font-size: 16px;" for="productDescription">Mô tả</label>
-            <textarea class="form-control" id="productDescription" rows="3" 
-              [(ngModel)]="description" name="description"></textarea>
+            <textarea class="form-control" id="productDescription" rows="3" formControlName="description"></textarea>
           </div>
           <div class="form-group">
             <label style="font-size: 16px;" for="productCategory">Kiểu sản phẩm</label>
-            <select class="form-control" id="productCategory" [(ngModel)]="selectedCategory" name="category_id">
+            <select class="form-control" id="productCategory" formControlName="category_id">
               <option [ngValue]="null" disabled selected>Loại sản phẩm</option>
-              <option *ngFor="let category of categories" [ngValue]="category.categoryId">{{ category.categoryName }}
-              </option>
+              <option *ngFor="let category of categories" [ngValue]="category.categoryId">{{ category.categoryName }}</option>
             </select>
           </div>
-          <div class="form-row">
-            <div class="form-group col-md-6">
-              <label style="font-size: 16px;" for="productPrice">Thời gian hoàn thành</label>
-              <input type="date" class="form-control" id="productPrice"  name="completionTime">
-            </div>
-            <div class="form-group col-md-6">
-              <label style="font-size: 16px;" for="endDate">Ngày kết thúc bảo hành</label>
-              <input type="date" class="form-control" id="endDate"  name="endDate">
-            </div>
-          </div>
-          
           <div class="form-row">
             <div class="form-group col-md-6">
               <label style="font-size: 16px;" for="productPrice">Đơn giá</label>
-              <input type="number" class="form-control" id="productPrice" [(ngModel)]="price" name="price">
+              <input type="number" class="form-control" id="productPrice" formControlName="price">
             </div>
             <div class="form-group col-md-6">
               <label style="font-size: 16px;" for="selectedStatus">Tình trạng</label>
-              <select class="form-control" id="selectedStatus" [(ngModel)]="selectedStatus" name="selectedStatus">
+              <select class="form-control" id="selectedStatus" formControlName="selectedStatus">
                 <option [ngValue]="null" disabled selected>Chọn tình trạng</option>
                 <option [ngValue]="1">Vô hiệu</option>
                 <option [ngValue]="2">Kích hoạt</option>
@@ -157,142 +146,127 @@
               </select>
             </div>
           </div>
-
           <div class="form-group">
-            <label style="font-size: 16px;" for="selectedType">Tình trạng kinh doanh</label>
-            <select class="form-control" id="selectedType" [(ngModel)]="selectedType" name="selectedType">
+            <label style="font-size: 16px;" for="selectedType">Kiểu thanh toán</label>
+            <select class="form-control" id="selectedType" formControlName="type">
               <option [ngValue]="null" disabled selected>Chọn kiểu</option>
-              <option [ngValue]="0">Kiểu 0</option>
-              <option [ngValue]="1">Kiểu 1</option>
+              <option [ngValue]="0">Thanh toán trực tuyến</option>
+              <option [ngValue]="1">Thanh toán trực tiếp</option>
             </select>
           </div>
           <div class="form-row">
-          <div class="form-group col-md-6">
-            <label style="font-size: 16px;" for="productImages">Ảnh sản phẩm (Chọn nhiều)</label>
-            <input type="file" class="form-control-file" id="productImages" (change)="onFilesSelected($event)"
-              name="productImages" multiple>
-          </div>
-          <div class="form-group col-md-6">
-            <label style="font-size: 16px;" for="thumbnailImage">Ảnh Thumbnail</label>
-            <input type="file" class="form-control-file" id="thumbnailImage" (change)="onThumbnailSelected($event)"
-              name="thumbnailImage" multiple>
-          </div>
-        </div>
-
-        <div class="modal-footer d-flex justify-content-center">
-          <button type="button" class="btn btn-mau-do" data-dismiss="modal">Hủy</button>
-          <button type="submit" class="btn btn-primary">Lưu thay đổi</button>
-        </div>
-        
-        </form>
-
-
-
-      </div>
-    </div>
-  </div>
-  <!-- Modal for Editing Product -->
-
-  <div class="modal fade" id="editProductModal" tabindex="-1" role="dialog" aria-labelledby="editProductModalLabel"
-  aria-hidden="true">
-  <div class="modal-dialog modal-dialog-wide" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="editProductModalLabel">Chỉnh sửa sản phẩm</h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-      <div class="modal-body">
-        <form  enctype="multipart/form-data">
-
-          <div class="form-group">
-            <label style="font-size: 16px;" for="editProductName">Tên sản phẩm</label>
-            <input type="text" class="form-control" id="editProductName" 
-              name="editProductName">
-          </div>
-
-          <div class="form-group">
-            <label style="font-size: 16px;" for="editProductDescription">Mô tả</label>
-            <textarea class="form-control" id="editProductDescription" rows="3"
-  name="editProductDescription"></textarea>
-          </div>
-
-          <div class="form-group">
-            <label style="font-size: 16px;" for="editProductCategory">Kiểu sản phẩm</label>
-            <select class="form-control" id="editProductCategory"
-              name="editProductCategory">
-              <option [ngValue]="null" disabled selected>Loại sản phẩm</option>
-              <option *ngFor="let category of categories" [ngValue]="category.categoryId">{{ category.categoryName }}
-              </option>
-            </select>
-          </div>
-
-          <div class="form-row">
             <div class="form-group col-md-6">
-              <label style="font-size: 16px;" for="editProductCompletionTime">Thời gian hoàn thành</label>
-              <input type="date" class="form-control" id="editProductCompletionTime"
-              name="editProductCompletionTime">
+              <label style="font-size: 16px;" for="productImages">Ảnh sản phẩm (Chọn nhiều)</label>
+              <input type="file" class="form-control-file" id="productImages" multiple (change)="onImagesSelected($event)">
             </div>
             <div class="form-group col-md-6">
-              <label style="font-size: 16px;" for="editProductEndDate">Ngày kết thúc bảo hành</label>
-              <input type="date" class="form-control" id="editProductEndDate" 
-                name="editProductEndDate">
+              <label style="font-size: 16px;" for="thumbnailImage">Ảnh Thumbnail</label>
+              <input type="file" class="form-control-file" id="thumbnailImage" (change)="onThumbnailSelected($event)">
             </div>
           </div>
-
-          <div class="form-row">
-            <div class="form-group col-md-6">
-              <label style="font-size: 16px;" for="editProductPrice">Đơn giá</label>
-              <input type="number" class="form-control" id="editProductPrice" 
-                name="editProductPrice">
-            </div>
-            <div class="form-group col-md-6">
-              <label style="font-size: 16px;" for="editSelectedStatus">Tình trạng</label>
-              <select class="form-control" id="editSelectedStatus"
-                name="editSelectedStatus">
-                <option [ngValue]="null" disabled selected>Chọn tình trạng</option>
-                <option [ngValue]="1">Vô hiệu</option>
-                <option [ngValue]="2">Kích hoạt</option>
-                <option [ngValue]="3">Còn hàng</option>
-                <option [ngValue]="4">Hết hàng</option>
-              </select>
-            </div>
-          </div>
-
-          <div class="form-group">
-            <label style="font-size: 16px;" for="editSelectedType">Tình trạng kinh doanh</label>
-            <select class="form-control" id="editSelectedType" 
-              name="editSelectedType">
-              <option [ngValue]="null" disabled selected>Chọn kiểu</option>
-              <option [ngValue]="0">Kiểu 0</option>
-              <option [ngValue]="1">Kiểu 1</option>
-            </select>
-          </div>
-
-          <div class="form-row">
-            <div class="form-group col-md-6">
-              <label style="font-size: 16px;" for="editProductImages">Ảnh sản phẩm (Chọn nhiều)</label>
-              <input type="file" class="form-control-file" id="editProductImages" 
-                name="editProductImages" multiple>
-            </div>
-            <div class="form-group col-md-6">
-              <label style="font-size: 16px;" for="editThumbnailImage">Ảnh Thumbnail</label>
-              <input type="file" class="form-control-file" id="editThumbnailImage"
-                 name="editThumbnailImage" multiple>
-            </div>
-          </div>
-
           <div class="modal-footer d-flex justify-content-center">
             <button type="button" class="btn btn-mau-do" data-dismiss="modal">Hủy</button>
             <button type="submit" class="btn btn-primary">Lưu thay đổi</button>
           </div>
-
         </form>
       </div>
     </div>
   </div>
 </div>
+
+  <!-- Modal for Editing Product -->
+
+  <div class="modal fade" id="editProductModal" tabindex="-1" role="dialog" aria-labelledby="editProductModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog modal-dialog-wide" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="editProductModalLabel">Chỉnh sửa sản phẩm</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <form enctype="multipart/form-data">
+
+            <div class="form-group">
+              <label style="font-size: 16px;" for="editProductName">Tên sản phẩm</label>
+              <input type="text" class="form-control" id="editProductName" name="editProductName">
+            </div>
+
+            <div class="form-group">
+              <label style="font-size: 16px;" for="editProductDescription">Mô tả</label>
+              <textarea class="form-control" id="editProductDescription" rows="3"
+                name="editProductDescription"></textarea>
+            </div>
+
+            <div class="form-group">
+              <label style="font-size: 16px;" for="editProductCategory">Kiểu sản phẩm</label>
+              <select class="form-control" id="editProductCategory" name="editProductCategory">
+                <option [ngValue]="null" disabled selected>Loại sản phẩm</option>
+                <option *ngFor="let category of categories" [ngValue]="category.categoryId">{{ category.categoryName }}
+                </option>
+              </select>
+            </div>
+
+            <div class="form-row">
+              <div class="form-group col-md-6">
+                <label style="font-size: 16px;" for="editProductCompletionTime">Thời gian hoàn thành</label>
+                <input type="date" class="form-control" id="editProductCompletionTime" name="editProductCompletionTime">
+              </div>
+              <div class="form-group col-md-6">
+                <label style="font-size: 16px;" for="editProductEndDate">Ngày kết thúc bảo hành</label>
+                <input type="date" class="form-control" id="editProductEndDate" name="editProductEndDate">
+              </div>
+            </div>
+
+            <div class="form-row">
+              <div class="form-group col-md-6">
+                <label style="font-size: 16px;" for="editProductPrice">Đơn giá</label>
+                <input type="number" class="form-control" id="editProductPrice" name="editProductPrice">
+              </div>
+              <div class="form-group col-md-6">
+                <label style="font-size: 16px;" for="editSelectedStatus">Tình trạng</label>
+                <select class="form-control" id="editSelectedStatus" name="editSelectedStatus">
+                  <option [ngValue]="null" disabled selected>Chọn tình trạng</option>
+                  <option [ngValue]="1">Vô hiệu</option>
+                  <option [ngValue]="2">Kích hoạt</option>
+                  <option [ngValue]="3">Còn hàng</option>
+                  <option [ngValue]="4">Hết hàng</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label style="font-size: 16px;" for="editSelectedType">Tình trạng kinh doanh</label>
+              <select class="form-control" id="editSelectedType" name="editSelectedType">
+                <option [ngValue]="null" disabled selected>Chọn kiểu</option>
+                <option [ngValue]="0">Kiểu 0</option>
+                <option [ngValue]="1">Kiểu 1</option>
+              </select>
+            </div>
+
+            <div class="form-row">
+              <div class="form-group col-md-6">
+                <label style="font-size: 16px;" for="editProductImages">Ảnh sản phẩm (Chọn nhiều)</label>
+                <input type="file" class="form-control-file" id="editProductImages" name="editProductImages" multiple>
+              </div>
+              <div class="form-group col-md-6">
+                <label style="font-size: 16px;" for="editThumbnailImage">Ảnh Thumbnail</label>
+                <input type="file" class="form-control-file" id="editThumbnailImage" name="editThumbnailImage" multiple>
+              </div>
+            </div>
+
+            <div class="modal-footer d-flex justify-content-center">
+              <button type="button" class="btn btn-mau-do" data-dismiss="modal">Hủy</button>
+              <button type="submit" class="btn btn-primary">Lưu thay đổi</button>
+            </div>
+
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
   <!-- Modal for Delete Product -->
   <div class="modal fade" id="confirmDeleteModal" tabindex="-1" role="dialog" aria-labelledby="confirmDeleteModalLabel"
     aria-hidden="true">

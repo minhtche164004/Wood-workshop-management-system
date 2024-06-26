@@ -7,6 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
@@ -16,7 +17,7 @@ public interface ProductService {
 //    Products AddNewProduct(ProductAddDTO productAddDTO);
     List<Products> GetAllProductForCustomer();
     List<Products> GetAllProductForAdmin();
-    Products EditProduct(int id, ProductEditDTO productEditDTO,MultipartFile[] multipartFiles, MultipartFile multipartFiles_thumbnal);
+    Products EditProduct(int id, ProductEditDTO productEditDTO,MultipartFile[] multipartFiles, MultipartFile multipartFiles_thumbnal) throws Exception;
     //xuất nguyên liệu cho sản phẩm có sẵn
     ResponseEntity<ApiResponse<List<ProductSubMaterials>>> createExportMaterialProduct(int product_id, Map<Integer, Double> subMaterialQuantities);
 
@@ -31,6 +32,8 @@ public interface ProductService {
     ProductDTO_Show GetProductByIdWithImage(int id);
 
     Products UpdateStatusProduct(int product_id, int status_id);
+
+    void testdelete(String id) throws Exception;
 
 
 

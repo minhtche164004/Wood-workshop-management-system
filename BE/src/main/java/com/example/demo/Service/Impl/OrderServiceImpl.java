@@ -13,10 +13,7 @@ import com.example.demo.Entity.*;
 import com.example.demo.Exception.AppException;
 import com.example.demo.Exception.ErrorCode;
 import com.example.demo.Repository.*;
-import com.example.demo.Service.CheckConditionService;
-import com.example.demo.Service.OrderService;
-import com.example.demo.Service.ProductService;
-import com.example.demo.Service.UploadImageService;
+import com.example.demo.Service.*;
 import jakarta.persistence.EntityManager;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,6 +22,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -68,6 +66,8 @@ public class OrderServiceImpl implements OrderService {
     private Status_Job_Repository statusJobRepository;
     @Autowired
     private EntityManager entityManager;
+    @Autowired
+    CloudinaryService cloudinaryService;
 
     @Override
     public Orders AddOrder(RequestOrder requestOrder) {
@@ -226,11 +226,17 @@ public class OrderServiceImpl implements OrderService {
         }
 
     @Override
-    public Requests EditRequest(int request_id,RequestEditDTO requestEditDTO,MultipartFile[] multipartFiles) {
+    public Requests EditRequest(int request_id,RequestEditDTO requestEditDTO,MultipartFile[] multipartFiles) throws IOException {
         Requests requests = requestRepository.findById(request_id);
         Date today = new Date();
         if (multipartFiles != null &&
                 Arrays.stream(multipartFiles).anyMatch(file -> file != null && !file.isEmpty())) {
+            List<Requestimages> requestimagesList= requestimagesRepository.findRequestImageByRequestId(request_id);
+            for(Requestimages requestimages : requestimagesList){
+                String full_path= requestimages.getFullPath();
+                String id_image =cloudinaryService.extractPublicIdFromUrl(full_path);
+                cloudinaryService.deleteImage(id_image);
+            }
             requestimagesRepository.deleteRequestImages(request_id); // Xóa những ảnh trước đó
             uploadImageService.uploadFile(multipartFiles, requests.getRequestId());
         }
@@ -241,7 +247,6 @@ public class OrderServiceImpl implements OrderService {
             entityManager.refresh(requests); // Làm mới đối tượng products
             return requests;
     }
-
     @Override
     public Requests getRequestById(int id) {
         return requestRepository.findById(id);

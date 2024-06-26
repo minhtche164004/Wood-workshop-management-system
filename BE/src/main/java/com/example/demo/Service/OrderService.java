@@ -9,6 +9,7 @@ import com.example.demo.Entity.*;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.Date;
 import java.util.List;
 
@@ -30,6 +31,6 @@ public interface OrderService {
     List<Orderdetails> getAllOrderDetail();
     RequestProducts AddNewProductRequest(RequestProductDTO requestProductDTO, MultipartFile[] multipartFiles);
     Requests AddNewRequest(RequestDTO requestDTO, MultipartFile[] multipartFiles);
-    Requests EditRequest(int request_id, RequestEditDTO requestEditDTO,MultipartFile[] multipartFiles);
+    Requests EditRequest(int request_id, RequestEditDTO requestEditDTO,MultipartFile[] multipartFiles) throws IOException;
 
 }

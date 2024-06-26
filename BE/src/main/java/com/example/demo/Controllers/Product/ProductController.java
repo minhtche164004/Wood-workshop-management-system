@@ -12,6 +12,7 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 
@@ -19,9 +20,11 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import redis.clients.jedis.JedisPooled;
 
+import java.io.IOException;
 import java.lang.reflect.Type;
 import java.nio.file.Paths;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/auth/product/")
@@ -43,6 +46,8 @@ public class ProductController {
     private UploadImageService uploadImageService;
     @Autowired
     private WhiteListService whiteListService;
+    @Autowired
+    private CloudinaryService cloudinaryService;
     @Autowired
     private Status_Product_Repository statusProductRepository;
     private static final JedisPooled jedis = RedisConfig.getRedisInstance();
@@ -332,11 +337,21 @@ public class ProductController {
             @RequestPart("productDTO") ProductEditDTO productEditDTO,
             @RequestPart("files") MultipartFile[] files,
             @RequestPart("file_thumbnail") MultipartFile file_thumbnail
-    ) {
+    ) throws Exception {
         ApiResponse<Products> apiResponse = new ApiResponse<>();
 
         apiResponse.setResult(productService.EditProduct(productId,productEditDTO,files, file_thumbnail));
         return apiResponse;
+    }
+
+    @DeleteMapping("/deleteimages")
+    public ResponseEntity<?> deleteImage(@RequestParam("id") String id) {
+        try {
+            Map result = cloudinaryService.deleteImage(id);
+            return ResponseEntity.ok(result);
+        } catch (IOException e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error deleting image");
+        }
     }
 
     //edit chỗ status product thì chỉ cho chọn là hết hàng hay là còn hàng , nếu còn hàng thì show ra cho customer xem trên landingpage

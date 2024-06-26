@@ -7,6 +7,7 @@ import com.example.demo.Exception.ErrorCode;
 import com.example.demo.Repository.*;
 import com.example.demo.Response.ApiResponse;
 import com.example.demo.Service.CheckConditionService;
+import com.example.demo.Service.CloudinaryService;
 import com.example.demo.Service.ProductService;
 import com.example.demo.Service.UploadImageService;
 import jakarta.persistence.EntityManager;
@@ -17,6 +18,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
@@ -48,6 +50,8 @@ public class ProductServiceImpl implements ProductService {
     private RequestProductRepository requestProductRepository;
     @Autowired
     private Status_Product_Repository statusProductRepository;
+    @Autowired
+    CloudinaryService cloudinaryService;
 //    @Override
 //    public Products AddNewProduct(ProductAddDTO productAddDTO){
 //        Products products = new Products();
@@ -196,20 +200,40 @@ public class ProductServiceImpl implements ProductService {
 
                 return products;
             }
+    @Transactional
+    @Override
+    public void testdelete(String id) throws Exception {
+
+         //   cloudinaryService.delete(id);
+//            uploadImageService.uploadFile_Thumnail(multipartFiles_thumbnal);
+
+        }
+
+
 
     @Transactional
     @Override
-    public Products EditProduct(int id, ProductEditDTO productEditDTO,MultipartFile[] multipartFiles, MultipartFile multipartFiles_thumbnal) {
+    public Products EditProduct(int id, ProductEditDTO productEditDTO,MultipartFile[] multipartFiles, MultipartFile multipartFiles_thumbnal) throws IOException {
         Products products = productRepository.findById(id);
         String thumbnailPath = products.getImage(); // Lấy đường dẫn thumbnail hiện tại
 
         if (multipartFiles_thumbnal != null && !multipartFiles_thumbnal.isEmpty()) {
             //set ảnh thumbnail
+            String id_image = cloudinaryService.extractPublicIdFromUrl(thumbnailPath);
+            cloudinaryService.deleteImage(id_image);
             Product_Thumbnail t = uploadImageService.uploadFile_Thumnail(multipartFiles_thumbnal);
             thumbnailPath = t.getFullPath(); // Cập nhật nếu có ảnh mới
+
+
         }
         if (multipartFiles != null &&
                 Arrays.stream(multipartFiles).anyMatch(file -> file != null && !file.isEmpty())) {
+            List<Productimages> productimages= productImageRepository.findImageByProductId(id);
+            for(Productimages productimages1 : productimages){
+                String full_path= productimages1.getFullPath();
+                String id_image =cloudinaryService.extractPublicIdFromUrl(full_path);
+                cloudinaryService.deleteImage(id_image);
+            }
             productImageRepository.deleteProductImages(id); // Xóa những ảnh trước đó
             uploadImageService.uploadFile(multipartFiles, products.getProductId());
 
@@ -226,7 +250,7 @@ public class ProductServiceImpl implements ProductService {
                 productEditDTO.getProduct_name(),
                 productEditDTO.getDescription(),
                 productEditDTO.getPrice(),
-               productEditDTO.getStatus_id(),
+                productEditDTO.getStatus_id(),
                 productEditDTO.getCategory_id(),
                 productEditDTO.getType(),
                 thumbnailPath, // Sử dụng thumbnailPath đã cập nhật
@@ -234,8 +258,9 @@ public class ProductServiceImpl implements ProductService {
                 productEditDTO.getEnddateWarranty()
         );
         entityManager.refresh(products); // Làm mới đối tượng products
-return products;
+        return products;
     }
+
 
     @Transactional
     @Override
@@ -295,8 +320,6 @@ return products;
         }
         return imagePath;
     }// Trả về đường dẫn tương đối hoặc đường dẫn ban đầu nếu không tìm thấy "/assets/"
-
-
 
 
     //này là dành cho trang homepage

@@ -18,6 +18,7 @@ import java.util.Optional;
 @EnableJpaRepositories
 public interface ProductRepository extends JpaRepository<Products, Integer> {
     List<Products> findAll();
+
     @Query(value = "SELECT p.* FROM products p WHERE p.code LIKE :prefix% ORDER BY p.code DESC LIMIT 1", nativeQuery = true)
     Products findProductTop(@Param("prefix") String prefix);
 
@@ -62,8 +63,29 @@ public interface ProductRepository extends JpaRepository<Products, Integer> {
     @Modifying
     @Query("update Products u set u.productName = ?2,u.description=?3,u.price=?4,u.status.status_id=?5," +
             "u.categories.categoryId=?6,u.type=?7,u.image=?8,u.completionTime=?9, u.enddateWarranty=?10 where u.productId = ?1")
-    void updateProduct(int productId, String productName, String description, BigDecimal price,int status_id, int categoryId, int type, String image, Date completionTime,Date enddateWarranty);
+    void updateProduct(int productId, String productName, String description, BigDecimal price, int status_id, int categoryId, int type, String image, Date completionTime, Date enddateWarranty);
 
+    @Query("SELECT p FROM Products p WHERE " +
+            "(p.productName LIKE %:search% OR :search IS NULL) AND " +
+            "(p.categories.categoryId = :categoryId OR :categoryId IS NULL) AND " +
+            "(p.price >= :minPrice OR :minPrice IS NULL) AND " +
+            "(p.price <= :maxPrice OR :maxPrice IS NULL) AND  p.status.status_id = 2 ")
+    List<Products> filterProductsForCus(@Param("search") String search,
+                                        @Param("categoryId") Integer categoryId,
+                                        @Param("minPrice") BigDecimal minPrice,
+                                        @Param("maxPrice") BigDecimal maxPrice);
+
+    @Query("SELECT p FROM Products p WHERE " +
+            "(p.productName LIKE %:search% OR :search IS NULL) AND " +
+            "(p.categories.categoryId = :categoryId OR :categoryId IS NULL) AND " +
+            "(p.status.status_id = :statusId OR :statusId IS NULL) AND " +
+            "(p.price >= :minPrice OR :minPrice IS NULL) AND " +
+            "(p.price <= :maxPrice OR :maxPrice IS NULL)")
+    List<Products> filterProductsForAdmin(@Param("search") String search,
+                                          @Param("categoryId") Integer categoryId,
+                                          @Param("statusId") Integer statusId,
+                                          @Param("minPrice") BigDecimal minPrice,
+                                          @Param("maxPrice") BigDecimal maxPrice);
 
 
 }

@@ -51,9 +51,12 @@
                             <th>Loại sản phẩm</th>
 
                             <th>Số lượng</th>
-                            <th>Đơn giá</th>
+                            <th>Đơn giá (vnd)</th>
                             <th>Trạng thái</th>
+                            <th>Nhân viên</th>
                             <th>Giao việc</th>
+                            <th>Lỗi</th>
+                            
                         </tr>
                     </thead>
 
@@ -81,11 +84,15 @@
                             <td>{{ product.description }}</td>
                             <td>{{ product.quantity }}</td>
                             <td>{{ product.price | number: '1.0-3' }}</td>
+                            <td>{{ product.statusJob.status_name }}</td>
                             <td>
                                 <button style="margin-left: -10px; size: 15px;" data-toggle="modal" data-target="#assignJobModal" (click)="manageJob(product.productId)"
-                                    class="btn btn-outline-primary btn-sm">{{ product.statusProduct.status_name
+                                    class="btn btn-outline-primary btn-sm">{{ product.statusJob.status_name
                                     }}</button>
                             </td>
+                            
+                            <td>{{ product.user.username }}</td>
+
                         </tr>
                     </tbody>
                 </table>

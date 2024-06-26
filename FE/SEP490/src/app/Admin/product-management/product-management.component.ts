@@ -1,11 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { ProductListService } from 'src/app/service/product/product-list.service';
 import { ToastrService } from 'ngx-toastr';
-import { HttpHeaders } from '@angular/common/http';
-import { MessageService } from 'primeng/api';
+import { FormBuilder, FormGroup } from '@angular/forms';
 
-
-interface Category{
+interface Category {
   categoryId: number;
   categoryName: string;
 }
@@ -15,9 +13,10 @@ interface Category{
   templateUrl: './product-management.component.html',
   styleUrls: ['./product-management.component.scss']
 })
-
 export class ProductManagementComponent implements OnInit {
-
+  uploadForm: FormGroup;
+  selectedThumbnail: File | null = null;
+  selectedImages: File[] = [];
   categories: Category[] = [];
   loginToken: string | null = null;
   products: any[] = [];
@@ -25,14 +24,23 @@ export class ProductManagementComponent implements OnInit {
   searchKey: string = '';
   selectedCategory: number = 0;
   selectedStatus: any = null;
-  product_name: string = '';
-  description: string = '';
-  quantity: number = 0;
-  price: number = 0;
   selectedType: number = 0;
   productImages: File[] = [];
   thumbnailImage: File | null = null;
-  constructor(private productListService: ProductListService, private toastr: ToastrService) { }
+
+  constructor(
+    private fb: FormBuilder,
+    private productListService: ProductListService,
+    private toastr: ToastrService
+  ) {
+    this.uploadForm = this.fb.group({
+      product_name: [''],
+      description: [''],
+      price: [0],
+      category_id: [0],
+      type: [0]
+    });
+  }
 
   ngOnInit(): void {
     this.loginToken = localStorage.getItem('loginToken');
@@ -59,16 +67,14 @@ export class ProductManagementComponent implements OnInit {
       console.error('No loginToken found in localStorage.');
     }
   }
+
   loadCategories(): void {
     this.productListService.getAllCategories().subscribe(
       (data: any) => {
         if (data.code === 1000) {
           this.categories = data.result as Category[];
 
-          // Log categories to console for verification
           console.log('Categories:', this.categories);
-
-          // Iterate through categories and log ID and name
           this.categories.forEach(category => {
             console.log(`Category ID: ${category.categoryId}, Category Name: ${category.categoryName}`);
           });
@@ -81,17 +87,15 @@ export class ProductManagementComponent implements OnInit {
       }
     );
   }
- onCategoryChange(selectedValue: string) {
-    // Parse the selected value (if necessary)
-    const categoryId = parseInt(selectedValue, 10); // Assuming it's a number
 
-    // Use the categoryId to perform actions or update data
+  onCategoryChange(selectedValue: string) {
+    const categoryId = parseInt(selectedValue, 10);
     console.log("Selected category ID:", categoryId);
-    // You can perform other actions based on the categoryId
   }
+
   searchProduct(): void {
     console.log("Thực hiện tìm kiếm sản phẩm: ", this.searchKey);
-   
+
     if (this.searchKey && this.selectedCategory == null) {
       this.productListService.findProductByNameOrCode(this.searchKey)
         .subscribe(
@@ -101,17 +105,16 @@ export class ProductManagementComponent implements OnInit {
               console.log('Tìm kiếm thành công:', this.products);
               this.toastr.success('Tìm kiếm sản phẩm thành công!', 'Thành công');
             } else if (data.code === 1015) {
-              this.products = []; // Clear previous results
+              this.products = [];
               console.error('Tìm kiếm không thành công:', data);
               this.toastr.error('Không tìm thấy sản phẩm!', 'Tìm kiếm thất bại');
             } 
           }
         );
-    } else if (this.selectedCategory != null){
+    } else if (this.selectedCategory != null) {
       console.log("Tìm theo loại: ", this.selectedCategory);
       this.productListService.findProductByCategory(this.selectedCategory)
         .subscribe(
-        
           (data) => {
             console.log("Category: ", this.selectedCategory)
             if (data.code === 1000) {
@@ -119,7 +122,7 @@ export class ProductManagementComponent implements OnInit {
               console.log('Tìm kiếm thành công:', this.products);
               this.toastr.success('Tìm kiếm sản phẩm theo kiểu thành công!', 'Thành công');
             } else if (data.code === 1015) {
-              this.products = []; // Clear previous results
+              this.products = [];
               console.error('Tìm kiếm không thành công:', data);
               this.toastr.error('Không tìm thấy sản phẩm!', 'Tìm kiếm thất bại');
             } 
@@ -146,7 +149,6 @@ export class ProductManagementComponent implements OnInit {
 
   onFilesSelected(event: any) {
     if (event.target.files.length > 0) {
-      // Lưu danh sách các file vào một mảng
       this.productImages = [];
       for (let i = 0; i < event.target.files.length; i++) {
         const file = event.target.files[i];
@@ -155,76 +157,106 @@ export class ProductManagementComponent implements OnInit {
     }
   }
 
-  onThumbnailSelected(event: any) {
-    if (event.target.files && event.target.files.length > 0) {
-      this.thumbnailImage = event.target.files[0];
+  onThumbnailSelected(event: any): void {
+    this.selectedThumbnail = event.target.files[0];
+  }
+
+  onImagesSelected(event: any): void {
+    this.selectedImages = Array.from(event.target.files);
+  }
+
+  onSubmit(): void {
+    if (this.uploadForm.valid && this.selectedThumbnail && this.selectedImages.length) {
+      const productData = this.uploadForm.value;
+      console.log('Form Data:', productData);
+      console.log('Selected Thumbnail:', this.selectedThumbnail);
+      console.log('Selected Images:', this.selectedImages);
+
+      this.productListService.uploadProduct(productData, this.selectedThumbnail, this.selectedImages)
+        .subscribe(
+          response => {
+            
+            this.toastr.success('Tạo sản phẩm thành công!', 'Thành công');
+            this.ngOnInit();
+          },
+          error => {
+            
+            this.toastr.error('Tạo sản phẩm bị lỗi!', 'Lỗi');
+          }
+        );
     }
   }
 
-  addProduct(): void {
-    if (!this.productImages || this.productImages.length === 0 || !this.thumbnailImage) {
-      this.toastr.error('Vui lòng chọn cả ảnh sản phẩm và ảnh thumbnail!', 'Lỗi');
-      return;
-    }
-
-    const productDTO = {
-      product_name: this.product_name,
-      description: this.description,
-      quantity: this.quantity,
-      price: this.price,
-      status_id: this.selectedStatus,
-      enddateWarranty: new Date().toISOString(),
-      completionTime: new Date().toISOString(),
-      category_id: this.selectedCategory,
-      type: this.selectedType
-    };
-   
-    const requestData = {
-      productDTO: productDTO,
-      productImages: this.productImages,
-      thumbnailImage: this.thumbnailImage
-    };
-   
-    const headers = {
-      headers: {
-        Authorization: `Bearer ${this.loginToken}`,
-        'Content-Type': 'application/json'
-      }
-    };
-    console.log("Add product request:", JSON.stringify(requestData)); // In ra giá trị của requestData
-
-    this.productListService.addNewProduct(requestData)
-      .subscribe(
-        (response) => {
-          this.toastr.success('Sản phẩm đã được thêm thành công!', 'Thành công');
-        },
-        (error) => {
-          console.log("add product request: " + requestData)
-          console.error('Lỗi khi thêm sản phẩm:', error);
-          this.toastr.error('Đã xảy ra lỗi khi thêm sản phẩm!', 'Lỗi');
+  reloadProducts(): void {
+    this.productListService.getProducts().subscribe(
+      (data) => {
+        if (data.code === 1000) {
+          this.products = data.result;
+          console.log('Danh sách sản phẩm:', this.products);
+        } else {
+          console.error('Failed to fetch products:', data);
+          this.toastr.error('Không thể lấy danh sách sản phẩm!', 'Lỗi');
         }
-      );
+      },
+      (error) => {
+        console.error('Error fetching products:', error);
+        this.toastr.error('Có lỗi xảy ra!', 'Lỗi');
+      }
+    );
   }
-  
+
   editProduct(productId: number) {
-    // Fetch product details by ID for editing
     this.productListService.getProductById(productId)
       .subscribe(product => {
         // Populate edit modal form with retrieved product data
-        // ...
+        this.uploadForm.patchValue({
+          product_name: product.product_name,
+          description: product.description,
+          price: product.price,
+          category_id: product.category_id,
+          type: product.type
+        });
+        this.selectedStatus = product.status;
+        this.selectedType = product.type;
       });
   }
-  
-  deleteProduct(productId: number) {
-    
+
+  onEditSubmit(): void {
+    if (this.uploadForm.valid) {
+      const productData = this.uploadForm.value;
+      console.log('Form Data for Edit:', productData);
+
+      const updatedProduct = {
+        ...productData,
+        status: this.selectedStatus,
+        type: this.selectedType,
+        thumbnail: this.selectedThumbnail,
+        images: this.selectedImages
+      };
+
+    //   this.productListService.updateProduct(updatedProduct)
+    //     .subscribe(
+    //       response => {
+    //         console.log('Update successful', response);
+    //         this.toastr.success('Cập nhật sản phẩm thành công!', 'Thành công');
+    //         this.reloadProducts();
+    //       },
+    //       error => {
+    //         console.error('Update error', error);
+    //         this.toastr.error('Cập nhật sản phẩm bị lỗi!', 'Lỗi');
+    //       }
+    //     );
+     }
   }
-  
+
+  deleteProduct(productId: number) {
+    // Implement delete logic
+  }
+
   showProductDetails(productId: number) {
-    // Fetch product details by ID for displaying in modal
     this.productListService.getProductById(productId)
       .subscribe(product => {
         // Update modal content with retrieved product data
-        // ...
       });
   }
 }

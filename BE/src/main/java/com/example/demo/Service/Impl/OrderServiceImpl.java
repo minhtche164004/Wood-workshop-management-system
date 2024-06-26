@@ -1,5 +1,6 @@
 package com.example.demo.Service.Impl;
 
+import com.example.demo.Dto.OrderDTO.OrderDetailWithJobStatusDTO;
 import com.example.demo.Dto.ProductDTO.Product_Thumbnail;
 import com.example.demo.Dto.RequestDTO.RequestAllDTO;
 import com.example.demo.Dto.RequestDTO.RequestEditDTO;
@@ -139,91 +140,91 @@ public class OrderServiceImpl implements OrderService {
         }
         if (requestOrder.getSpecial_order() == 1) {//là hàng có sẵn
 
-                BigDecimal total = BigDecimal.ZERO; // Khởi tạo total là 0
-                List<ProductItem> requestProductItems = requestOrder.getOrderDetail().getProductItems();
+            BigDecimal total = BigDecimal.ZERO; // Khởi tạo total là 0
+            List<ProductItem> requestProductItems = requestOrder.getOrderDetail().getProductItems();
 
-                // Kiểm tra nếu danh sách sản phẩm không rỗng
-                if (requestProductItems != null && !requestProductItems.isEmpty()) {
-                    for (ProductItem item : requestProductItems) { // Duyệt qua từng sản phẩm
-                        RequestProducts requestProducts = requestProductRepository.findById(item.getId());
-                        Orderdetails orderdetail= new Orderdetails();
-                        orderdetail.setOrder(orders);
-                        orderdetail.setRequestProduct(requestProductRepository.findById(item.getId()));
-                        orderdetail.setQuantity(item.getQuantity()); //set quantity
-                        orderdetail.setUnitPrice(item.getPrice()); //set unit price
+            // Kiểm tra nếu danh sách sản phẩm không rỗng
+            if (requestProductItems != null && !requestProductItems.isEmpty()) {
+                for (ProductItem item : requestProductItems) { // Duyệt qua từng sản phẩm
+                    RequestProducts requestProducts = requestProductRepository.findById(item.getId());
+                    Orderdetails orderdetail= new Orderdetails();
+                    orderdetail.setOrder(orders);
+                    orderdetail.setRequestProduct(requestProductRepository.findById(item.getId()));
+                    orderdetail.setQuantity(item.getQuantity()); //set quantity
+                    orderdetail.setUnitPrice(item.getPrice()); //set unit price
 //                        if(orderdetail.getRequestProduct().getQuantity() < item.getQuantity()){
 //                            throw new AppException(ErrorCode.OUT_OF_STOCK);
 //                        }
-                        requestProducts.setQuantity(requestProducts.getQuantity() - item.getQuantity());
-                        requestProductRepository.save(requestProducts);
-                        orderdetail.setProduct(null); //set product null
-                        BigDecimal itemPrice = item.getPrice();
-                        BigDecimal itemQuantity = BigDecimal.valueOf(item.getQuantity());
-                        total = total.add(itemPrice.multiply(itemQuantity)); // Cộng dồn vào total
-                        orderDetailRepository.save(orderdetail);
+                    requestProducts.setQuantity(requestProducts.getQuantity() - item.getQuantity());
+                    requestProductRepository.save(requestProducts);
+                    orderdetail.setProduct(null); //set product null
+                    BigDecimal itemPrice = item.getPrice();
+                    BigDecimal itemQuantity = BigDecimal.valueOf(item.getQuantity());
+                    total = total.add(itemPrice.multiply(itemQuantity)); // Cộng dồn vào total
+                    orderDetailRepository.save(orderdetail);
 
-                        Jobs jobs = new Jobs();
-                        jobs.setRequestProducts(requestProducts);
-                        jobs.setQuantityProduct(orderdetail.getQuantity());
-                        Jobs lastJob = jobRepository.findJobsTop(dateString + "JB");
-                        int count1 = lastJob != null ? Integer.parseInt(lastJob.getCode().substring(8)) + 1 : 1;
-                        String code1 = dateString + "JB" + String.format("%03d", count1);
-                        jobs.setCode(code1);
-                        jobs.setJob_name("");
-                        jobs.setOrderdetails(orderdetail);
-                        jobs.setJob_log(false);
-                        jobs.setStatus(statusJobRepository.findById(14));
-                        jobRepository.save(jobs);
+                    Jobs jobs = new Jobs();
+                    jobs.setRequestProducts(requestProducts);
+                    jobs.setQuantityProduct(orderdetail.getQuantity());
+                    Jobs lastJob = jobRepository.findJobsTop(dateString + "JB");
+                    int count1 = lastJob != null ? Integer.parseInt(lastJob.getCode().substring(8)) + 1 : 1;
+                    String code1 = dateString + "JB" + String.format("%03d", count1);
+                    jobs.setCode(code1);
+                    jobs.setJob_name("");
+                    jobs.setOrderdetails(orderdetail);
+                    jobs.setJob_log(false);
+                    jobs.setStatus(statusJobRepository.findById(14));
+                    jobRepository.save(jobs);
 
-                    }
                 }
-            orders.setDeposite(total.multiply(BigDecimal.valueOf(0.2))); // 20% tiền cọc của tổng tiền đơn hàng
-                orders.setTotalAmount(total);
-                orders.setSpecialOrder(true);
             }
-
-            orderRepository.save(orders);
-
-            return orders;
+            orders.setDeposite(total.multiply(BigDecimal.valueOf(0.2))); // 20% tiền cọc của tổng tiền đơn hàng
+            orders.setTotalAmount(total);
+            orders.setSpecialOrder(true);
         }
+
+        orderRepository.save(orders);
+
+        return orders;
+    }
 
     //Tạo Request
     //Tạo Request Product
     @Override
     public Requests AddNewRequest(RequestDTO requestDTO, MultipartFile[] multipartFiles) {
-            Requests requests = new Requests();
-            UserDetails userDetails =(UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-            User user =userRepository.getUserByUsername(userDetails.getUsername());
-            //lấy thông tin thằng đang login
-            //   User user = userRepository.findById(requestDTO.getUser_id()).get();
-            requests.setUser(user);
-            Status_Request statusRequest =statusRequestRepository.findById(1).get();//nghĩa là request đang chờ phê duyệt
-            requests.setRequestDate(requestDTO.getRequestDate());
-            requests.setDescription(requestDTO.getDescription());
-            requests.setStatus(statusRequest);
-            requests.setAddress(requestDTO.getAddress());
-            requests.setFullname(requestDTO.getFullname());
-            requests.setPhoneNumber(requestDTO.getPhoneNumber());
-            requests.setResponse("");
-            requests.setCity_province(requestDTO.getCity_province());
-            requests.setDistrict(requestDTO.getDistrict());
-            requests.setWards(requestDTO.getWards());
-            LocalDate today = LocalDate.now();
-            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("ddMMyy");
-            String dateString = today.format(formatter);
-            Requests lastRequest = requestRepository.findRequestTop(dateString + "RQ");
-            int count = lastRequest != null ? Integer.parseInt(lastRequest.getCode().substring(8)) + 1 : 1;
-            String code = dateString + "RQ" + String.format("%03d", count);
-            requests.setCode(code);
-            if (!checkConditionService.checkInputName(requestDTO.getFullname())) {
-                throw new AppException(ErrorCode.INVALID_FORMAT_NAME);
-            }
-
-            requests = requestRepository.save(requests);
-            uploadImageService.uploadFileRequest(multipartFiles, requests.getRequestId());
-
-            return requests;
+        Requests requests = new Requests();
+        UserDetails userDetails =(UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        User user =userRepository.getUserByUsername(userDetails.getUsername());
+        //lấy thông tin thằng đang login
+        //   User user = userRepository.findById(requestDTO.getUser_id()).get();
+        requests.setUser(user);
+        Status_Request statusRequest =statusRequestRepository.findById(1).get();//nghĩa là request đang chờ phê duyệt
+        requests.setRequestDate(requestDTO.getRequestDate());
+        requests.setDescription(requestDTO.getDescription());
+        requests.setStatus(statusRequest);
+        requests.setAddress(requestDTO.getAddress());
+        requests.setFullname(requestDTO.getFullname());
+        requests.setPhoneNumber(requestDTO.getPhoneNumber());
+        requests.setResponse("");
+        requests.setCity_province(requestDTO.getCity_province());
+        requests.setDistrict(requestDTO.getDistrict());
+        requests.setWards(requestDTO.getWards());
+        LocalDate today = LocalDate.now();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("ddMMyy");
+        String dateString = today.format(formatter);
+        Requests lastRequest = requestRepository.findRequestTop(dateString + "RQ");
+        int count = lastRequest != null ? Integer.parseInt(lastRequest.getCode().substring(8)) + 1 : 1;
+        String code = dateString + "RQ" + String.format("%03d", count);
+        requests.setCode(code);
+        if (!checkConditionService.checkInputName(requestDTO.getFullname())) {
+            throw new AppException(ErrorCode.INVALID_FORMAT_NAME);
         }
+
+        requests = requestRepository.save(requests);
+        uploadImageService.uploadFileRequest(multipartFiles, requests.getRequestId());
+
+        return requests;
+    }
 
     @Override
     public Requests EditRequest(int request_id,RequestEditDTO requestEditDTO,MultipartFile[] multipartFiles) throws IOException {
@@ -240,12 +241,12 @@ public class OrderServiceImpl implements OrderService {
             requestimagesRepository.deleteRequestImages(request_id); // Xóa những ảnh trước đó
             uploadImageService.uploadFile(multipartFiles, requests.getRequestId());
         }
-            requestRepository.updateRequest(request_id,
-                    requestEditDTO.getDescription(),
-                    today
-            );
-            entityManager.refresh(requests); // Làm mới đối tượng products
-            return requests;
+        requestRepository.updateRequest(request_id,
+                requestEditDTO.getDescription(),
+                today
+        );
+        entityManager.refresh(requests); // Làm mới đối tượng products
+        return requests;
     }
     @Override
     public Requests getRequestById(int id) {
@@ -264,42 +265,42 @@ public class OrderServiceImpl implements OrderService {
     }
 
     //Tạo Request Product
-        @Override
-        public RequestProducts AddNewProductRequest(RequestProductDTO requestProductDTO, MultipartFile[] multipartFiles) { //lấy từ request
+    @Override
+    public RequestProducts AddNewProductRequest(RequestProductDTO requestProductDTO, MultipartFile[] multipartFiles) { //lấy từ request
 
-                RequestProducts requestProducts = new RequestProducts();
-                requestProducts.setRequestProductName(requestProductDTO.getRequestProductName());
-                requestProducts.setDescription(requestProductDTO.getDescription());
-                requestProducts.setPrice(requestProductDTO.getPrice());
-                requestProducts.setQuantity(requestProductDTO.getQuantity());
-                requestProducts.setCompletionTime(requestProductDTO.getCompletionTime());
-                Requests requests = requestRepository.findById(requestProductDTO.getRequest_id());
-                requestProducts.setRequests(requests);
-                if (!checkConditionService.checkInputName(requestProductDTO.getRequestProductName())) {
-                    throw new AppException(ErrorCode.INVALID_FORMAT_NAME);
-                }
+        RequestProducts requestProducts = new RequestProducts();
+        requestProducts.setRequestProductName(requestProductDTO.getRequestProductName());
+        requestProducts.setDescription(requestProductDTO.getDescription());
+        requestProducts.setPrice(requestProductDTO.getPrice());
+        requestProducts.setQuantity(requestProductDTO.getQuantity());
+        requestProducts.setCompletionTime(requestProductDTO.getCompletionTime());
+        Requests requests = requestRepository.findById(requestProductDTO.getRequest_id());
+        requestProducts.setRequests(requests);
+        if (!checkConditionService.checkInputName(requestProductDTO.getRequestProductName())) {
+            throw new AppException(ErrorCode.INVALID_FORMAT_NAME);
+        }
 //        if (requestProductRepository.countByRequestProductName(requestProductDTO.getRequestProductName()) > 0) {
 //            throw new AppException(ErrorCode.NAME_EXIST);
 //        }
-                if (!checkConditionService.checkInputQuantityInt(requestProductDTO.getQuantity())) {
-                    throw new AppException(ErrorCode.QUANTITY_INVALID);
-                }
-                if (!checkConditionService.checkInputPrice(requestProductDTO.getPrice())) {
-                    throw new AppException(ErrorCode.PRICE_INVALID);
-                }
-                requestProducts = requestProductRepository.save(requestProducts);
+        if (!checkConditionService.checkInputQuantityInt(requestProductDTO.getQuantity())) {
+            throw new AppException(ErrorCode.QUANTITY_INVALID);
+        }
+        if (!checkConditionService.checkInputPrice(requestProductDTO.getPrice())) {
+            throw new AppException(ErrorCode.PRICE_INVALID);
+        }
+        requestProducts = requestProductRepository.save(requestProducts);
 //        //set ảnh thumbnail
 //        Product_Thumbnail t = uploadImageService.uploadFile_Thumnail(multipartFiles_thumbnal);
 //        requestProducts.setImage(t.getFullPath());
-                //set ảnh của product
-                RequestProducts requestProduct = requestProductRepository.findByName(requestProductDTO.getRequestProductName());
-                uploadImageService.uploadFileRequestProduct(multipartFiles, requestProduct.getRequestProductId());
-                return requestProducts;
-            }
+        //set ảnh của product
+        RequestProducts requestProduct = requestProductRepository.findByName(requestProductDTO.getRequestProductName());
+        uploadImageService.uploadFileRequestProduct(multipartFiles, requestProduct.getRequestProductId());
+        return requestProducts;
+    }
 
 
 
-            @Override
+    @Override
     public List<Requests> GetAllRequests() {
         List<Requests> request_list = requestRepository.findAll();
         if (request_list.isEmpty()) {
@@ -431,6 +432,13 @@ public class OrderServiceImpl implements OrderService {
         }
         return imagePath;
     }// Trả về đường dẫn tương đối hoặc đường dẫn ban đầu nếu không tìm thấy "/assets/"
+
+    @Override
+    public List<OrderDetailWithJobStatusDTO> getOrderDetailByOrderId(int order_id) {
+        List<OrderDetailWithJobStatusDTO> results = orderDetailRepository.getOrderDetailWithJobStatusByOrderId(order_id);
+        if(results.isEmpty()){
+            throw new AppException(ErrorCode.NOT_FOUND);
+        }
+        return results;
+    }
 }
-
-

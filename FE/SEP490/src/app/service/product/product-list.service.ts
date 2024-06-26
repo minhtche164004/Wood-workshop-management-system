@@ -23,6 +23,8 @@ export class ProductListService {
   private apiUrl_GetAllOrder = `${environment.apiUrl}api/auth/order/GetAllOrder`; // Assuming the correct endpoint
 
 
+  private apiUrl_AllRole = `${environment.apiUrl}api/auth/admin/GetAllRole`; // Assuming the correct endpoint
+
 
   constructor(private http: HttpClient) { }
 
@@ -84,7 +86,10 @@ export class ProductListService {
   getAllPosition(): Observable<any[]> {
     return this.http.get<any[]>(this.apiUrl_Position);
   }
-
+  getAllRole(): Observable<any[]> {
+    return this.http.get<any[]>(this.apiUrl_AllRole);
+  }
+  
   getProductById(productId: number): Observable<any> {
     const url = `${this.apiUrl_getProductByID}?product_id=${productId}`;
     return this.http.get<any>(url);

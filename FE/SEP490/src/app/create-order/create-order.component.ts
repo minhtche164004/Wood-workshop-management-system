@@ -5,12 +5,34 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { ToastrService } from 'ngx-toastr';
 
 import { FormBuilder, FormGroup, FormArray, Validators } from '@angular/forms';
+interface CustomerInfo {
+  userid: number;
+  fullname: string;
+  address: string;
+  city_province: string;
+  district: string;
+  wards: string;
+  phone: string;
+}
+interface ReceiveInfo {
+  fullname: string;
+  address: string;
+  city_province: string;
+  district: string;
+  wards: string;
+  phone: string;
+}
+interface ProductItem {
+  id: number;
+  quantity: number;
+  price: number;
+}
 interface Province {
   code: string;
   name: string;
   districts: District[];
 }
- 
+
 interface District {
   code: string;
   name: string;

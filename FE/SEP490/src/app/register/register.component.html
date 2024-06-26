@@ -20,7 +20,7 @@
                 <label for="checkPass">Xác nhận mật khẩu</label>
                 <input type="password" id="checkPass" name="checkPass" [(ngModel)]="checkPass" required>
             </div>
-
+ 
             <div class="input-container">
                 <label for="email">Email</label>
                 <input type="email" id="email" name="email" [(ngModel)]="email" required>
@@ -36,7 +36,7 @@
                 <input type="text" id="fullname" name="fullname" [(ngModel)]="fullname" required>
             </div>
 
-            <div class="row">
+            <div class="row" style="justify-content: center;">
                 <div class="input-container col-md-4">
                     <label for="province">Tỉnh / Thành Phố</label>
                     <select id="province" [formControl]="provinceControl" required>

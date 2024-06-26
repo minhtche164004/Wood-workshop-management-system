@@ -252,28 +252,7 @@
                                                                     </div>
                                                                 </div>
                                                             </div>
-                                                            <div class="container">
-                                                                <form [formGroup]="productForm">
-                                                                    <div formArrayName="items">
-                                                                        <div *ngFor="let item of items.controls; let i = index" [formGroupName]="i" class="row mb-3">
-                                                                            <div class="col-md-6 mb-3">
-                                                                                <div class="form-group">
-                                                                                    <label>Số lượng</label>
-                                                                                    <input class="form-control" formControlName="quantity" type="text" placeholder="Nhập số lượng">
-                                                                                </div>
-                                                                            </div>
-                                                                            <div class="col-md-6 mb-3">
-                                                                                <div class="form-group">
-                                                                                    <label>Giá</label>
-                                                                                    <input class="form-control" formControlName="price" type="text" placeholder="Nhập giá">
-                                                                                </div>
-                                                                            </div>
-                                                                        </div>
-                                                                    </div>
-                                                               
-                                                                </form>
-                                                                
-                                                            </div>
+                               
 
                                                         </div>
 

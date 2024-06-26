@@ -92,8 +92,7 @@ public class PaymentController {
 
         Orders orders = orderRepository.findByCode(orderInfo);
 
-        if (paymentStatus == 1 && orders != null &&
-                new BigDecimal(totalPrice).compareTo(orders.getDeposite()) == 0) {
+        if (paymentStatus == 1 && orders != null ) {
             Status_Order statusOrder = status_Order_Repository.findById(2);
 
             Status_Job statusJob = statusJobRepository.findById(3);

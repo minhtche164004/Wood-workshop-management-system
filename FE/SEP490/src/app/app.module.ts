@@ -101,6 +101,7 @@ import { JobDetailComponent } from './Admin/job-detail/job-detail.component';
 
     JobManagementComponent,
     JobDetailComponent,
+    
 
   
 

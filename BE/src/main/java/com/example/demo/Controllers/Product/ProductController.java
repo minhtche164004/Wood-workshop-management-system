@@ -20,6 +20,7 @@ import org.springframework.web.multipart.MultipartFile;
 import redis.clients.jedis.JedisPooled;
 
 import java.lang.reflect.Type;
+import java.math.BigDecimal;
 import java.nio.file.Paths;
 import java.util.List;
 
@@ -372,6 +373,31 @@ public class ProductController {
         ApiResponse<List> apiResponse = new ApiResponse<>();
         apiResponse.setResult(statusProductRepository.GetListStatusType0());
         return apiResponse;
+    }
+
+
+    // neu input cua sortDirection la asc thi la sap xep tang dan` va desc la giam dan
+    @GetMapping("/getMultiFillterProductForCustomer")
+    public ResponseEntity<?> getAllProductForCustomer(
+            @RequestParam(required = false) String search,
+            @RequestParam(required = false) Integer categoryId,
+            @RequestParam(required = false) BigDecimal minPrice,
+            @RequestParam(required = false) BigDecimal maxPrice,
+            @RequestParam(required = false) String sortDirection){
+        List<Products> products = productService.GetAllProductForCustomer(search, categoryId, minPrice, maxPrice, sortDirection);
+        return ResponseEntity.ok(products);
+    }
+
+    @GetMapping("/getMultiFillterProductForAdmin")
+    public ResponseEntity<?> getAllProductForAdmin(
+            @RequestParam(required = false) String search,
+            @RequestParam(required = false) Integer categoryId,
+            @RequestParam(required = false) Integer statusId,
+            @RequestParam(required = false) BigDecimal minPrice,
+            @RequestParam(required = false) BigDecimal maxPrice,
+            @RequestParam(required = false) String sortDirection){
+        List<Products> products = productService.filterProductsForAdmin(search, categoryId, statusId, minPrice, maxPrice, sortDirection);
+        return ResponseEntity.ok(products);
     }
 
 }

@@ -126,7 +126,7 @@
                                       <p style="margin-left: 15px;">
                                           <strong>Tên nhân viên:</strong> {{ selectedProduct.user?.username }}
                                       </p>
-                                      <div *ngIf="selectedProduct?.statusJob?.type === 2">
+                                      <div>
                                         <h5>Danh sách nhân viên (Position 1):</h5>
                                         <select>
                                           <option value="" disabled selected>Chọn nhân viên</option>
@@ -135,7 +135,7 @@
                                         </select>
                                       </div>
                                       
-                                      <div *ngIf="selectedProduct?.statusJob?.type === 3">
+                                      <div >
                                         <h5>Danh sách nhân viên (Position 2):</h5>
                                         <select>
                                           <option value="" disabled selected>Chọn nhân viên</option>
@@ -144,7 +144,7 @@
                                         </select>
                                       </div>
                                       
-                                      <div *ngIf="selectedProduct?.statusJob?.type === 4">
+                                      <div>
                                         <h5>Danh sách nhân viên (Position 3):</h5>
                                         <select>
                                           <option value="" disabled selected>Chọn nhân viên</option>

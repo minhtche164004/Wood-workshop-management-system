@@ -26,8 +26,8 @@ public class ProductAddDTO {
     @DecimalMin(value = "0.0", inclusive = false, message = "PRICE_INVALID") // Giá trị tối thiểu lớn hơn 0
     private BigDecimal price;
 //    private int status_id;
-    private Date enddateWarranty;
-    private Date completionTime;
+//    private Date enddateWarranty;
+//    private Date completionTime;
     //   @NotNull(message = "MUST_REQUIRED")
 //   private String images;
     @NotNull(message = "MUST_REQUIRED")

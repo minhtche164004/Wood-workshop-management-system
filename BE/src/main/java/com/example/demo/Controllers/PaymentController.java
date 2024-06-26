@@ -89,13 +89,13 @@ public class PaymentController {
         String paymentTime = request.getParameter("vnp_PayDate");
         String transactionId = request.getParameter("vnp_TransactionNo");
         String totalPrice = request.getParameter("vnp_Amount");
-
         Orders orders = orderRepository.findByCode(orderInfo);
 
-        if (paymentStatus == 1 && orders != null ) {
-            Status_Order statusOrder = status_Order_Repository.findById(2);
+        BigDecimal totalPriceAsBigDecimal = new BigDecimal(totalPrice).divide(new BigDecimal(100));
 
-            Status_Job statusJob = statusJobRepository.findById(3);
+        if (paymentStatus == 1 && orders != null && totalPriceAsBigDecimal.compareTo(orders.getDeposite()) == 0) {
+            Status_Order statusOrder = status_Order_Repository.findById(2); // 2 la status order da thanh toan dat coc
+            Status_Job statusJob = statusJobRepository.findById(3); // 3 la status job sau khi dat coc thi set status la chua giao viec
             List<Jobs> jobsList = jobRepository.getJobByOrderDetailByOrderCode(orderInfo);
             for(Jobs jobs : jobsList){
                 jobs.setStatus(statusJob);

@@ -1,5 +1,6 @@
 package com.example.demo.Service;
 
+import com.example.demo.Controllers.Authentication.ChangePassDTO;
 import com.example.demo.Dto.UserDTO.*;
 import com.example.demo.Entity.User;
 import com.example.demo.Jwt.JwtAuthenticationResponse;
@@ -49,6 +50,6 @@ public interface UserService {
     UserDTO EditUser(int id,UserDTO userDTO);
     List<User> getAllEmployee();
 
-    void changePass(String old_pass,String new_pass, String check_pass);
+    void changePass(ChangePassDTO changePassDTO);
 
 }

@@ -1,5 +1,6 @@
 package com.example.demo.Service.Impl;
 
+import com.example.demo.Controllers.Authentication.ChangePassDTO;
 import com.example.demo.Dto.UserDTO.*;
 import com.example.demo.Entity.*;
 import com.example.demo.Jwt.UserDetailsServiceImpl;
@@ -176,6 +177,22 @@ public class UserServiceImpl implements UserService {
         return jwtAuthenticationResponse;
     }
 
+    @Override
+    public void changePass(ChangePassDTO changePassDTO) {
+        UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        String username = userDetails.getUsername();
+        User user = userRepository.getUserByUsername(username);
+        if (!passwordEncoder.matches(changePassDTO.getOld_pass(),user.getPassword())) {
+            throw new AppException(ErrorCode.WRONG_PASS);
+        }
+        if (!changePassDTO.getCheck_pass().equals(changePassDTO.getNew_pass())){
+            throw new AppException(ErrorCode.NOT_MATCH_PASS);
+        }
+        String pass = passwordEncoder.encode(changePassDTO.getNew_pass());
+        userRepository.updatePassword(user.getEmail(),pass);
+    }
+
+
 
 
 
@@ -345,19 +362,6 @@ userRepository.save(user);
         return list;
     }
 
-    @Override
-    public void changePass(String old_pass,String new_pass, String check_pass) {
-        UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        String username = userDetails.getUsername();
-        User user = userRepository.getUserByUsername(username);
-        if (!passwordEncoder.matches(user.getPassword(),old_pass)) {
-            throw new AppException(ErrorCode.WRONG_PASS);
-        }
-        if (!new_pass.equals(check_pass)){
-            throw new AppException(ErrorCode.NOT_MATCH_PASS);
-        }
-        userRepository.updatePassword(user.getEmail(),new_pass);
-    }
 
     @Transactional
     //Đảm bảo tính toàn vẹn dữ liệu, nếu có lỗi thì tất cả các thao tác sẽ được rollback (hoàn tác)

@@ -1,5 +1,6 @@
 package com.example.demo.Controllers.User;
 
+import com.example.demo.Controllers.Authentication.ChangePassDTO;
 import com.example.demo.Dto.UserDTO.UpdateProfileDTO;
 import com.example.demo.Dto.UserDTO.UserDTO;
 import com.example.demo.Repository.UserRepository;
@@ -29,9 +30,9 @@ public class UserController {
     }
 
     @PutMapping("/ChangePass")
-    public ApiResponse<?> ChangePass(@RequestBody String old_pass,@RequestBody String new_pass,@RequestBody String check_pass){
+    public ApiResponse<?> ChangePass(@RequestBody ChangePassDTO changePassDTO){
         ApiResponse<String> apiResponse= new ApiResponse<>();
-        userService.changePass(old_pass,new_pass,check_pass);
+        userService.changePass(changePassDTO);
         apiResponse.setResult("Đổi mật khẩu thành công");
         return apiResponse;
     }

@@ -48,4 +48,7 @@ public interface UserService {
     List<UserDTO> FilterByRole(int roleId);
     UserDTO EditUser(int id,UserDTO userDTO);
     List<User> getAllEmployee();
+
+    void changePass(String old_pass,String new_pass, String check_pass);
+
 }

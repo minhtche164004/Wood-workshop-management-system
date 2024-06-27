@@ -323,6 +323,8 @@ userRepository.save(user);
         user.getUserInfor().setPhoneNumber(userDTO.getPhoneNumber());
         user.getUserInfor().setAddress(userDTO.getAddress());
         user.getUserInfor().setFullname(userDTO.getFullname());
+        user.getUserInfor().setBank_number(userDTO.getBank_number());
+        user.getUserInfor().setBank_name(userDTO.getBank_name());
         Position position = positionRepository.findByName(userDTO.getPosition_name());
         user.setPosition(position);
         Status_User statusUser = statusRepository.findByName(userDTO.getStatus_name());
@@ -332,7 +334,6 @@ userRepository.save(user);
         userRepository.save(user);
         entityManager.refresh(user); // Làm mới đối tượng
         return modelMapper.map(user, UserDTO.class);
-
     }
 
     @Override
@@ -344,6 +345,19 @@ userRepository.save(user);
         return list;
     }
 
+    @Override
+    public void changePass(String old_pass,String new_pass, String check_pass) {
+        UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        String username = userDetails.getUsername();
+        User user = userRepository.getUserByUsername(username);
+        if (!passwordEncoder.matches(user.getPassword(),old_pass)) {
+            throw new AppException(ErrorCode.WRONG_PASS);
+        }
+        if (!new_pass.equals(check_pass)){
+            throw new AppException(ErrorCode.NOT_MATCH_PASS);
+        }
+        userRepository.updatePassword(user.getEmail(),new_pass);
+    }
 
     @Transactional
     //Đảm bảo tính toàn vẹn dữ liệu, nếu có lỗi thì tất cả các thao tác sẽ được rollback (hoàn tác)

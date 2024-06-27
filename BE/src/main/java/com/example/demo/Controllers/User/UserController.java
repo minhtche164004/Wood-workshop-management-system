@@ -27,6 +27,15 @@ public class UserController {
         apiResponse.setResult(userService.UpdateProfile(updateProfileDTO));
         return apiResponse;
     }
+
+    @PutMapping("/ChangePass")
+    public ApiResponse<?> ChangePass(@RequestBody String old_pass,@RequestBody String new_pass,@RequestBody String check_pass){
+        ApiResponse<String> apiResponse= new ApiResponse<>();
+        userService.changePass(old_pass,new_pass,check_pass);
+        apiResponse.setResult("Đổi mật khẩu thành công");
+        return apiResponse;
+    }
+
 //View Profile
     @GetMapping("/ViewProfile")
     public ApiResponse<?> ViewProfile(){

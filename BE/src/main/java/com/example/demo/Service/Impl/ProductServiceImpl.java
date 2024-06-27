@@ -52,6 +52,15 @@ public class ProductServiceImpl implements ProductService {
     private Status_Product_Repository statusProductRepository;
     @Autowired
     CloudinaryService cloudinaryService;
+    @Autowired
+    private OrderDetailRepository orderDetailRepository;
+    @Autowired
+    private JobRepository jobRepository;
+    @Autowired
+    private ProcessproducterrorRepository processproducterrorRepository;
+    @Autowired
+    private WishListRepository wishListRepository;
+
 //    @Override
 //    public Products AddNewProduct(ProductAddDTO productAddDTO){
 //        Products products = new Products();
@@ -200,14 +209,7 @@ public class ProductServiceImpl implements ProductService {
 
                 return products;
             }
-    @Transactional
-    @Override
-    public void testdelete(String id) throws Exception {
 
-         //   cloudinaryService.delete(id);
-//            uploadImageService.uploadFile_Thumnail(multipartFiles_thumbnal);
-
-        }
 
 
 
@@ -239,11 +241,6 @@ public class ProductServiceImpl implements ProductService {
 
 
         }
-//        // Kiểm tra tên sản phẩm trước khi cập nhật
-//        if (!productEditDTO.getProduct_name().equals(products.getProductName()) &&
-//                productRepository.findByName(productEditDTO.getProduct_name()) != null) {
-//            throw new AppException(ErrorCode.NAME_EXIST);
-//        }
         //ko đc chỉnh sửa quantity
         validateProductEditDTO(productEditDTO);
         productRepository.updateProduct(id,
@@ -254,13 +251,11 @@ public class ProductServiceImpl implements ProductService {
                 productEditDTO.getCategory_id(),
                 productEditDTO.getType(),
                 thumbnailPath, // Sử dụng thumbnailPath đã cập nhật
-                productEditDTO.getCompletionTime(),
                 productEditDTO.getEnddateWarranty()
         );
         entityManager.refresh(products); // Làm mới đối tượng products
         return products;
     }
-
 
     @Transactional
     @Override
@@ -269,6 +264,26 @@ public class ProductServiceImpl implements ProductService {
         return productRepository.findById(product_id);
     }
 
+    @Override
+    public void DeleteProduct(int product_id) {
+        Products product = productRepository.findById(product_id);
+        if(product == null){
+            throw new AppException(ErrorCode.NOT_FOUND);
+        }
+        // Kiểm tra các ràng buộc
+        if (orderDetailRepository.getOrderDetailByProductId(product_id).isEmpty() &&
+                jobRepository.getJobByProductId(product_id).isEmpty() &&
+                productImageRepository.findImageByProductId(product_id).isEmpty() &&
+                processproducterrorRepository.getProcessproducterrorByProductId(product_id).isEmpty() &&
+                wishListRepository.findByProductID(product_id).isEmpty() &&
+                productSubMaterialsRepository.findByProductID(product_id).isEmpty()) {
+            // Không có ràng buộc nào, có thể xóa sản phẩm
+            productRepository.delete(product);
+        } else {
+            // Có ràng buộc, không thể xóa sản phẩm
+            throw new AppException(ErrorCode.PRODUCT_HAS_RELATIONSHIPS); // Hoặc một mã lỗi phù hợp
+        }
+    }
 
 
 

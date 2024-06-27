@@ -33,7 +33,9 @@ public interface ProductService {
 
     Products UpdateStatusProduct(int product_id, int status_id);
 
-    void testdelete(String id) throws Exception;
+    void DeleteProduct(int product_id);
+
+
 
 
 

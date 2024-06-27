@@ -15,7 +15,7 @@ import java.util.Date;
 @NoArgsConstructor
 public class JobDTO {
 
-    private User employee;
+//    private User employee;
     private String job_name;
     private Integer quantity_product;
    // private Categories categories;

@@ -355,6 +355,15 @@ public class ProductController {
         }
     }
 
+    @DeleteMapping("/deleteProduct")
+    public ApiResponse<?> deleteProduct(@RequestParam("id") int product_id) {
+      ApiResponse<String> apiResponse = new ApiResponse<>();
+      productService.DeleteProduct(product_id);
+      apiResponse.setResult("Xoá thành công");
+      return apiResponse;
+    }
+
+
     //edit chỗ status product thì chỉ cho chọn là hết hàng hay là còn hàng , nếu còn hàng thì show ra cho customer xem trên landingpage
 //    @PutMapping(value = "/EditProduct")
 //    public ApiResponse<?> EditProduct(

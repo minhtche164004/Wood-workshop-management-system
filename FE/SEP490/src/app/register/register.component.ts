@@ -25,7 +25,7 @@ interface Ward {
   code: string;
   name: string;
 }
-
+ 
 interface RegistrationRequest {
   username: string;
   password: string;

@@ -257,6 +257,7 @@ export class ProductManagementComponent implements OnInit {
     this.productListService.getProductById(productId)
       .subscribe(product => {
         // Update modal content with retrieved product data
+
       });
   }
 }

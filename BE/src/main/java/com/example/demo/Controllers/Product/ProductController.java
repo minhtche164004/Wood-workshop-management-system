@@ -77,6 +77,26 @@ public class ProductController {
     public ApiResponse<?> getAllProductForAdmin() {
         ApiResponse<List> apiResponse = new ApiResponse<>();
 
+//        String cacheKey = "all_products_admin";
+//        List<Products> products;
+//        String cachedData = jedis.get(cacheKey);
+//        if (cachedData != null) {
+//            Type type = new TypeToken<List<Products>>() {
+//            }.getType();
+//            Gson gson = new GsonBuilder().setDateFormat("MMM dd, yyyy").create();
+//            products = gson.fromJson(cachedData, type);
+//        } else {
+//            products = productService.GetAllProductForAdmin();
+//            String jsonData = new Gson().toJson(products);
+//            jedis.set(cacheKey, jsonData);
+//            jedis.expire(cacheKey, 1200);
+//        }
+//        apiResponse.setResult(products);
+
+        apiResponse.setResult(productService.GetAllProductForAdmin());
+
+
+
         String cacheKey = "all_products_admin";
         List<Products> products;
         String cachedData = jedis.get(cacheKey);
@@ -93,6 +113,7 @@ public class ProductController {
             jedis.expire(cacheKey, 1200);
         }
       apiResponse.setResult(productService.GetAllProductForAdmin());
+
 
         return apiResponse;
     }

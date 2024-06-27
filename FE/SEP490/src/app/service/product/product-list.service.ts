@@ -20,16 +20,16 @@ export class ProductListService {
 
   private apiUrl_findProduct = `${environment.apiUrl}api/auth/product`;
   private apiUrl_getProductByID = `${environment.apiUrl}api/auth/product/GetProductById`; // Assuming the correct endpoint
-<<<<<<< HEAD
+
   private apiUrl_GetAllOrder = `${environment.apiUrl}api/auth/order/GetAllOrder`; // Assuming the correct endpoint
 
 
   private apiUrl_AllRole = `${environment.apiUrl}api/auth/admin/GetAllRole`; // Assuming the correct endpoint
 
 
-=======
+
   private apiUrl_AddProduct = `${environment.apiUrl}api/auth/product/AddNewProduct`;
->>>>>>> ef845a8107466baf1ad7c5879d425bbb758c0c9b
+
   constructor(private http: HttpClient) { }
   uploadProduct(productData: any, thumbnail: File, images: File[]): Observable<any> {
     const formData = new FormData();

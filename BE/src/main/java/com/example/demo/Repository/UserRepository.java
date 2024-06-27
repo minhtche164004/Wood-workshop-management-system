@@ -18,6 +18,8 @@ import java.util.Optional;
 @EnableJpaRepositories
 public interface UserRepository extends JpaRepository<User,Integer> {
     User getUserByUsername(String username);
+    @Query("SELECT u FROM User u WHERE u.userInfor.phoneNumber = :phone")
+    Optional<User> findByPhone(String phone);
     int countByEmail(String email);
     int countByUsername(String username);
     Optional<User> findByUsername(String username);

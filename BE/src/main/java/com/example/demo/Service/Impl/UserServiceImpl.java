@@ -198,6 +198,9 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void checkConditions(RegisterDTO userDTO) { //check các điều kiện cho form Register
+        if (!checkConditionService.checkPhone(userDTO.getPhoneNumber())) {
+            throw new AppException(ErrorCode.PHONE_EXISTED);
+        }
         if (!checkConditionService.checkEmail(userDTO.getEmail())) {
             throw new AppException(ErrorCode.WRONG_FORMAT_EMAIL);
         }

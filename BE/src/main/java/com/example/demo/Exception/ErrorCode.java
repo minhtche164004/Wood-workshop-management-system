@@ -22,6 +22,7 @@ public enum ErrorCode {
     INVALID_FORMAT_PHONE_NUMBER(1017,"Sai Format số điện thoại",HttpStatus.BAD_REQUEST),
     INVALID_FORMAT_NAME(1018,"Sai Format của Đặt Tên",HttpStatus.BAD_REQUEST),
     USERNAME_EXISTED(1019,"Username Đã Tồn Tại",HttpStatus.BAD_REQUEST),
+    PHONE_EXISTED(1031," Số điện thoại này đã được sử dụng",HttpStatus.BAD_REQUEST),
     //-----------------------------------
 
     //------------------Exception của Xác thực , Phân quyền )----------
@@ -56,6 +57,7 @@ public enum ErrorCode {
     PRICE_INVALID(1023,"Giá tiền phải lớn hơn 0 , nhập sai định dạng ",HttpStatus.BAD_REQUEST),
     QUANTITY_INVALID(1024,"Số lượng phải là số nguyên và lớn hơn 0 , nhập sai định dạng ",HttpStatus.BAD_REQUEST),
     PHONE_INVALID(1025," nhập sai định dạng số điện thoại ",HttpStatus.BAD_REQUEST),
+
 
 
 

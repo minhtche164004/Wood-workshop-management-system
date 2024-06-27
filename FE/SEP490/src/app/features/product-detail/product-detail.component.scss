@@ -1,11 +1,11 @@
 .icon-hover:hover {
-    border-color: #3b71ca !important;
+    border-color: #C89551 !important;
     background-color: white !important;
-    color: #3b71ca !important;
+    color: #C89551 !important;
   }
   
   .icon-hover:hover i {
-    color: #3b71ca !important;
+    color: #C89551 !important;
   }
   .custom-border {
     border: 2px solid black;
@@ -33,4 +33,8 @@ font-size: 16px;
   border-radius: 0.5rem;
   width: 100px;
   height: 100px;
+}
+.custom-background {
+  background-color: #C89551 !important; /* Màu nền */
+  color: white; /* Đổi màu chữ nếu cần */
 }

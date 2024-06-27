@@ -18,7 +18,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
@@ -61,105 +63,12 @@ public class ProductServiceImpl implements ProductService {
     @Autowired
     private WishListRepository wishListRepository;
 
-//    @Override
-//    public Products AddNewProduct(ProductAddDTO productAddDTO){
-//        Products products = new Products();
-//        // Chuyển đổi completion_time sang java.sql.Date
-//        LocalDate currentDate = LocalDate.now();
-//        java.sql.Date sqlCompletionTime = java.sql.Date.valueOf(currentDate); // Chuyển đổi sang java.sql.Date
-//        products.setCompletionTime(sqlCompletionTime);
-//
-//        // Tính toán EndDateWarranty (2 năm sau thời điểm hiện tại)
-//        LocalDate endDateWarranty = currentDate.plusYears(2);
-//        java.sql.Date sqlEndDateWarranty = java.sql.Date.valueOf(endDateWarranty);
-//        products.setEnddateWarranty(sqlEndDateWarranty);
-//
-//        products.setProductName(productAddDTO.getProduct_name());
-//        products.setDescription(productAddDTO.getDescription());
-//        products.setPrice(productAddDTO.getPrice());
-//
-//        Status_Product status = statusRepository.findById(11); // set la luc tao moi product thi status la chua thuc hien
-//        products.setStatus(status);
-//        Categories categories = categoryRepository.findById(productAddDTO.getCategory_id());
-//        products.setCategories(categories);
-//        products.setType(productAddDTO.getType());
-//
-////        products.setQuantity(productDTO1.getQuantity());
-////        if (productRepository.countByProductName(productDTO1.getProduct_name()) > 0) {
-////            throw new AppException(ErrorCode.NAME_EXIST);
-////        }
-//        products.setQuantity(0);//tạo mới product thì quantity mặc định là 0
-//        validateProductDTO1(productAddDTO);
-//        LocalDate today = LocalDate.now();
-//        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("ddMMyy");
-//        String dateString = today.format(formatter);
-//
-//        Products lastProduct = productRepository.findProductTop(dateString + "PD");
-//        int count = lastProduct != null ? Integer.parseInt(lastProduct.getCode().substring(8)) + 1 : 1;
-//        String code = dateString + "PD" + String.format("%03d", count);
-//        products.setCode(code);
-//        //set ảnh thumbnail
-//        Product_Thumbnail t = uploadImageService.uploadFile_Thumnail(productAddDTO.getFile_thumbnail());
-//        products.setImage(t.getFullPath());
-//        products = productRepository.save(products);
-//        //set ảnh của product
-//        Products product = productRepository.findByName(productAddDTO.getProduct_name());
-//        uploadImageService.uploadFile(productAddDTO.getFiles(), product.getProductId());
-//        return products;
-//    }
 
-
-//    @Override
-//    public Products AddNewProduct(ProductDTO productDTO, MultipartFile[] multipartFiles, MultipartFile multipartFiles_thumbnal) {
-//        Products products = new Products();
-//        // Chuyển đổi completion_time sang java.sql.Date
-//        LocalDate currentDate = LocalDate.now();
-//        java.sql.Date sqlCompletionTime = java.sql.Date.valueOf(currentDate); // Chuyển đổi sang java.sql.Date
-//        products.setCompletionTime(sqlCompletionTime);
-//
-//        // Tính toán EndDateWarranty (2 năm sau thời điểm hiện tại)
-//        LocalDate endDateWarranty = currentDate.plusYears(2);
-//        java.sql.Date sqlEndDateWarranty = java.sql.Date.valueOf(endDateWarranty);
-//        products.setEnddateWarranty(sqlEndDateWarranty);
-//
-//        products.setProductName(productDTO.getProduct_name());
-//        products.setDescription(productDTO.getDescription());
-//        products.setPrice(productDTO.getPrice());
-//
-//        Status_Product status = statusRepository.findById(productDTO.getStatus_id());
-//        products.setStatus(status);
-//        Categories categories = categoryRepository.findById(productDTO.getCategory_id());
-//        products.setCategories(categories);
-//        products.setType(productDTO.getType());
-//
-//        products.setQuantity(productDTO.getQuantity());
-//        if (productRepository.countByProductName(productDTO.getProduct_name()) > 0) {
-//            throw new AppException(ErrorCode.NAME_EXIST);
-//        }
-//
-//        validateProductDTO(productDTO);
-//        LocalDate today = LocalDate.now();
-//        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("ddMMyy");
-//        String dateString = today.format(formatter);
-//
-//        Products lastProduct = productRepository.findProductTop(dateString + "PD");
-//        int count = lastProduct != null ? Integer.parseInt(lastProduct.getCode().substring(8)) + 1 : 1;
-//        String code = dateString + "PD" + String.format("%03d", count);
-//        products.setCode(code);
-//        //set ảnh thumbnail
-//        Product_Thumbnail t = uploadImageService.uploadFile_Thumnail(multipartFiles_thumbnal);
-//        products.setImage(t.getFullPath());
-//        products = productRepository.save(products);
-//        //set ảnh của product
-//        Products product = productRepository.findByName(productDTO.getProduct_name());
-//        uploadImageService.uploadFile(multipartFiles, product.getProductId());
-//        return products;
-//    }
 
     @Override
     public Products AddNewProduct(ProductAddDTO productAddDTO, MultipartFile[] multipartFiles, MultipartFile multipartFiles_thumbnal) {
 
-            Products products = new Products();
+        Products products = new Products();
         // Chuyển đổi completion_time sang java.sql.Date
         LocalDate currentDate = LocalDate.now();
         java.sql.Date sqlCompletionTime = java.sql.Date.valueOf(currentDate); // Chuyển đổi sang java.sql.Date
@@ -170,51 +79,52 @@ public class ProductServiceImpl implements ProductService {
         java.sql.Date sqlEndDateWarranty = java.sql.Date.valueOf(endDateWarranty);
         products.setEnddateWarranty(sqlEndDateWarranty);
 
-            products.setProductName(productAddDTO.getProduct_name());
-            products.setDescription(productAddDTO.getDescription());
-            products.setPrice(productAddDTO.getPrice());
+        products.setProductName(productAddDTO.getProduct_name());
+        products.setDescription(productAddDTO.getDescription());
+        products.setPrice(productAddDTO.getPrice());
 
 
-            Status_Product status = statusProductRepository.findById(2);//tuc la kich hoạt
-            products.setStatus(status);
-            Categories categories = categoryRepository.findById(productAddDTO.getCategory_id());
+        Status_Product status = statusProductRepository.findById(2);//tuc la kich hoạt
+        products.setStatus(status);
+        Categories categories = categoryRepository.findById(productAddDTO.getCategory_id());
 
-            products.setCategories(categories);
-            products.setType(productAddDTO.getType());
+        products.setCategories(categories);
+        products.setType(productAddDTO.getType());
 
 
-            products.setQuantity(0);
+        products.setQuantity(0);
 //            if (productRepository.countByProductName(productAddDTO.getProduct_name()) > 0) {
 //                    throw new AppException(ErrorCode.NAME_EXIST);
 //                }
 
         validateProductDTO1(productAddDTO);
 
-                LocalDate today = LocalDate.now();
-                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("ddMMyy");
-                String dateString = today.format(formatter);
+        LocalDate today = LocalDate.now();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("ddMMyy");
+        String dateString = today.format(formatter);
 
         Products lastProduct = productRepository.findProductTop(dateString + "PD");
         int count = lastProduct != null ? Integer.parseInt(lastProduct.getCode().substring(8)) + 1 : 1;
         String code = dateString + "PD" + String.format("%03d", count);
 
-                products.setCode(code);
-                //set ảnh thumbnail
-                Product_Thumbnail t = uploadImageService.uploadFile_Thumnail(multipartFiles_thumbnal);
-                products.setImage(t.getFullPath());
-                products = productRepository.save(products);
-                //set ảnh của product
-                Products product = productRepository.findByCode(products.getCode());
-                uploadImageService.uploadFile(multipartFiles, product.getProductId());
+        products.setCode(code);
+        //set ảnh thumbnail
+        Product_Thumbnail t = uploadImageService.uploadFile_Thumnail(multipartFiles_thumbnal);
+        products.setImage(t.getFullPath());
+        products = productRepository.save(products);
+        //set ảnh của product
+        Products product = productRepository.findByCode(products.getCode());
+        uploadImageService.uploadFile(multipartFiles, product.getProductId());
 
-                return products;
-            }
+        return products;
+    }
 
 
 
 
     @Transactional
     @Override
+
     public Products EditProduct(int id, ProductEditDTO productEditDTO,MultipartFile[] multipartFiles, MultipartFile multipartFiles_thumbnal) throws IOException {
         Products products = productRepository.findById(id);
         String thumbnailPath = products.getImage(); // Lấy đường dẫn thumbnail hiện tại
@@ -259,8 +169,8 @@ public class ProductServiceImpl implements ProductService {
 
     @Transactional
     @Override
-    public  Products UpdateStatusProduct(int product_id, int status_id){
-        productRepository.updateStatus(product_id,status_id);
+    public Products UpdateStatusProduct(int product_id, int status_id) {
+        productRepository.updateStatus(product_id, status_id);
         return productRepository.findById(product_id);
     }
 
@@ -285,17 +195,15 @@ public class ProductServiceImpl implements ProductService {
         }
     }
 
-
-
     @Override
     public ProductDTO_Show GetProductByIdWithImage(int id) {
         List<Productimages> productimagesList = productImageRepository.findImageByProductId(id);
         Products products = productRepository.findById(id);
-        if(products == null){
+        if (products == null) {
             throw new AppException(ErrorCode.NOT_FOUND);
         }
         ProductDTO_Show productDTOShow = new ProductDTO_Show();
-        if(productimagesList == null){
+        if (productimagesList == null) {
             productDTOShow.setImageList(null);
         }
         productDTOShow.setProductId(products.getProductId());
@@ -310,12 +218,12 @@ public class ProductServiceImpl implements ProductService {
         productDTOShow.setStatus(products.getStatus());
         productDTOShow.setCategories(products.getCategories());
         List<Productimages> processedImages = new ArrayList<>(); // Danh sách mới
-        for(Productimages productimages : productimagesList){
+        for (Productimages productimages : productimagesList) {
             productimages.setFullPath(getAddressLocalComputer(productimages.getFullPath()));
             processedImages.add(productimages); // Thêm vào danh sách mới
         }
-       List<String> list = productSubMaterialsRepository.GetSubNameByProductId(id);
-        if(list.isEmpty()){
+        List<String> list = productSubMaterialsRepository.GetSubNameByProductId(id);
+        if (list.isEmpty()) {
             productDTOShow.setSub_material_name(null);
         }
         productDTOShow.setSub_material_name(list);
@@ -335,6 +243,67 @@ public class ProductServiceImpl implements ProductService {
         }
         return imagePath;
     }// Trả về đường dẫn tương đối hoặc đường dẫn ban đầu nếu không tìm thấy "/assets/"
+
+    @Override
+    public List<Products> filterProductForCustomer(String search, Integer categoryId, BigDecimal minPrice, BigDecimal maxPrice, String sortDirection) {
+        List<Products> productList = new ArrayList<>();
+
+        if (search != null || categoryId != null || minPrice != null || maxPrice != null) {
+            productList = productRepository.filterProductsForCus(search, categoryId, minPrice, maxPrice);
+        } else {
+            productList = productRepository.ViewProductLandingPage();
+        }
+
+        if (productList.isEmpty()) {
+            throw new AppException(ErrorCode.NOT_FOUND);
+        }
+
+        for (Products product : productList) {
+            product.setImage(getAddressLocalComputer(product.getImage())); // Cập nhật lại đường dẫn ảnh
+        }
+
+        // Sắp xếp danh sách sản phẩm theo giá
+        if (sortDirection != null) {
+            if (sortDirection.equals("asc")) {
+                productList.sort(Comparator.comparing(Products::getPrice));
+            } else if (sortDirection.equals("desc")) {
+                productList.sort(Comparator.comparing(Products::getPrice).reversed());
+            }
+        }
+
+        return productList;
+    }
+
+    @Override
+    public List<Products> filterProductsForAdmin(String search, Integer categoryId, Integer statusId, BigDecimal minPrice, BigDecimal maxPrice, String sortDirection) {
+        List<Products> productList = new ArrayList<>();
+
+        if (search != null || categoryId != null || minPrice != null || maxPrice != null) {
+            productList = productRepository.filterProductsForCus(search, categoryId, minPrice, maxPrice);
+        } else {
+            productList = productRepository.ViewProductLandingPage();
+        }
+
+        if (productList.isEmpty()) {
+            throw new AppException(ErrorCode.NOT_FOUND);
+        }
+
+        for (Products product : productList) {
+            product.setImage(getAddressLocalComputer(product.getImage())); // Cập nhật lại đường dẫn ảnh
+        }
+
+        // Sắp xếp danh sách sản phẩm theo giá
+        if (sortDirection != null) {
+            if (sortDirection.equals("asc")) {
+                productList.sort(Comparator.comparing(Products::getPrice));
+            } else if (sortDirection.equals("desc")) {
+                productList.sort(Comparator.comparing(Products::getPrice).reversed());
+            }
+        }
+
+        return productList;
+    }
+
 
 
     //này là dành cho trang homepage
@@ -365,9 +334,9 @@ public class ProductServiceImpl implements ProductService {
 
 
     @Override
-    public Products GetProductById(int product_id){
+    public Products GetProductById(int product_id) {
         Products products = productRepository.findById(product_id);
-      //  String projectDir = Paths.get("").toAbsolutePath().toString().replace("\\", "/");
+        //  String projectDir = Paths.get("").toAbsolutePath().toString().replace("\\", "/");
         products.setImage(getAddressLocalComputer(products.getImage()));
 
         return products;
@@ -377,10 +346,10 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public List<Products> findProductByNameCode(String key) {
         List<Products> productsList = productRepository.findProductByNameCode(key);
-        if(productsList.size() ==0){
+        if (productsList.size() == 0) {
             throw new AppException(ErrorCode.NOT_FOUND);
         }
-        for(Products products :productsList) {
+        for (Products products : productsList) {
 
             //  String projectDir = Paths.get("").toAbsolutePath().toString().replace("\\", "/");
             products.setImage(getAddressLocalComputer(products.getImage()));
@@ -388,7 +357,6 @@ public class ProductServiceImpl implements ProductService {
         }
         return productsList;
     }
-
 
 
     // Hàm kiểm tra điều kiện đầu vào
@@ -403,6 +371,7 @@ public class ProductServiceImpl implements ProductService {
             throw new AppException(ErrorCode.PRICE_INVALID);
         }
     }
+
     private void validateProductDTO1(ProductAddDTO productAddDTO) {
         if (!checkConditionService.checkInputName(productAddDTO.getProduct_name())) {
             throw new AppException(ErrorCode.INVALID_FORMAT_NAME);
@@ -501,4 +470,5 @@ public class ProductServiceImpl implements ProductService {
         }
     }
     //Đơn tạo đơn xuất vật liệu cho Employee
+
 }

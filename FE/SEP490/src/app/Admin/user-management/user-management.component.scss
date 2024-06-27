@@ -352,3 +352,26 @@ option[value="option3"] {
   height: 20px; /* điều chỉnh kích thước theo ý muốn */
 }
 
+.form-group label {
+  font-size: 1.3em; /* Tăng kích thước font của nhãn */
+  font-weight: bold; /* Tạo chữ đậm cho nhãn */
+}
+.bg-primary {
+  background-color: #20EC4D !important;
+}
+
+.btn-primary {
+  background-color: #20EC4D;
+  border-color: #20EC4D;
+}
+.btn-mau-do {
+  /* CSS cụ thể cho nút màu đỏ */
+  background: #CC4949;
+  color: white;
+  /* Các thuộc tính khác */
+}
+
+.readonly-select select {
+  background-color: #e9ecef;
+  cursor: not-allowed;
+}

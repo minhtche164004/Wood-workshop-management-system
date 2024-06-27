@@ -20,7 +20,21 @@ export class ProductListService {
 
   private apiUrl_findProduct = `${environment.apiUrl}api/auth/product`;
   private apiUrl_getProductByID = `${environment.apiUrl}api/auth/product/GetProductById`; // Assuming the correct endpoint
+
+  private apiUrl_GetAllOrder = `${environment.apiUrl}api/auth/order/GetAllOrder`; // Assuming the correct endpoint
+
+
+  private apiUrl_AllRole = `${environment.apiUrl}api/auth/admin/GetAllRole`; // Assuming the correct endpoint
+
+
+
   private apiUrl_AddProduct = `${environment.apiUrl}api/auth/product/AddNewProduct`;
+<<<<<<< HEAD
+
+=======
+  private apiUrl_UpdateProduct = `${environment.apiUrl}api/auth/product/AddNewProduct`;
+  
+>>>>>>> 7e73da0cf4734a4e6962191a8be26af35f0b453f
   constructor(private http: HttpClient) { }
   uploadProduct(productData: any, thumbnail: File, images: File[]): Observable<any> {
     const formData = new FormData();
@@ -46,6 +60,14 @@ export class ProductListService {
       catchError(this.handleError)
     );
   }
+
+  getAllOrder(): Observable<any> {
+    console.log(this.apiUrl_GetAllOrder)
+    return this.http.get<any>(this.apiUrl_GetAllOrder).pipe(
+      catchError(this.handleError)
+    );
+  }
+
   getAllProductCustomer(): Observable<any> {
     console.log(this.apiUrlGetProduct)
     return this.http.get<any>(this.apiUrlGetProduct).pipe(
@@ -89,7 +111,10 @@ export class ProductListService {
   getAllPosition(): Observable<any[]> {
     return this.http.get<any[]>(this.apiUrl_Position);
   }
-
+  getAllRole(): Observable<any[]> {
+    return this.http.get<any[]>(this.apiUrl_AllRole);
+  }
+  
   getProductById(productId: number): Observable<any> {
     const url = `${this.apiUrl_getProductByID}?product_id=${productId}`;
     return this.http.get<any>(url);

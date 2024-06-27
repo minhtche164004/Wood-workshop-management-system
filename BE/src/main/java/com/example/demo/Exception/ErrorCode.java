@@ -67,6 +67,7 @@ public enum ErrorCode {
     //Exception của Order
     OUT_OF_STOCK(1029,"Sản phẩm đã hết hàng",HttpStatus.BAD_REQUEST),
 
+    PRODUCT_HAS_RELATIONSHIPS(1030,"Không thể xoá sản phẩm do sản phẩm đang được sử dụng ở các chức năng khác",HttpStatus.BAD_REQUEST)
     // OTP_EXPIRED(1013,"OTP has expired! A new OTP has been sent to your email",HttpStatus.EXPECTATION_FAILED),
     ;
 

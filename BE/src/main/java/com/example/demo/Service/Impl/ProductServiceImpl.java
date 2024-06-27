@@ -7,6 +7,7 @@ import com.example.demo.Exception.ErrorCode;
 import com.example.demo.Repository.*;
 import com.example.demo.Response.ApiResponse;
 import com.example.demo.Service.CheckConditionService;
+import com.example.demo.Service.CloudinaryService;
 import com.example.demo.Service.ProductService;
 import com.example.demo.Service.UploadImageService;
 import jakarta.persistence.EntityManager;
@@ -17,6 +18,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+
+import java.io.IOException;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -49,100 +52,18 @@ public class ProductServiceImpl implements ProductService {
     private RequestProductRepository requestProductRepository;
     @Autowired
     private Status_Product_Repository statusProductRepository;
-//    @Override
-//    public Products AddNewProduct(ProductAddDTO productAddDTO){
-//        Products products = new Products();
-//        // Chuyển đổi completion_time sang java.sql.Date
-//        LocalDate currentDate = LocalDate.now();
-//        java.sql.Date sqlCompletionTime = java.sql.Date.valueOf(currentDate); // Chuyển đổi sang java.sql.Date
-//        products.setCompletionTime(sqlCompletionTime);
-//
-//        // Tính toán EndDateWarranty (2 năm sau thời điểm hiện tại)
-//        LocalDate endDateWarranty = currentDate.plusYears(2);
-//        java.sql.Date sqlEndDateWarranty = java.sql.Date.valueOf(endDateWarranty);
-//        products.setEnddateWarranty(sqlEndDateWarranty);
-//
-//        products.setProductName(productAddDTO.getProduct_name());
-//        products.setDescription(productAddDTO.getDescription());
-//        products.setPrice(productAddDTO.getPrice());
-//
-//        Status_Product status = statusRepository.findById(11); // set la luc tao moi product thi status la chua thuc hien
-//        products.setStatus(status);
-//        Categories categories = categoryRepository.findById(productAddDTO.getCategory_id());
-//        products.setCategories(categories);
-//        products.setType(productAddDTO.getType());
-//
-////        products.setQuantity(productDTO1.getQuantity());
-////        if (productRepository.countByProductName(productDTO1.getProduct_name()) > 0) {
-////            throw new AppException(ErrorCode.NAME_EXIST);
-////        }
-//        products.setQuantity(0);//tạo mới product thì quantity mặc định là 0
-//        validateProductDTO1(productAddDTO);
-//        LocalDate today = LocalDate.now();
-//        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("ddMMyy");
-//        String dateString = today.format(formatter);
-//
-//        Products lastProduct = productRepository.findProductTop(dateString + "PD");
-//        int count = lastProduct != null ? Integer.parseInt(lastProduct.getCode().substring(8)) + 1 : 1;
-//        String code = dateString + "PD" + String.format("%03d", count);
-//        products.setCode(code);
-//        //set ảnh thumbnail
-//        Product_Thumbnail t = uploadImageService.uploadFile_Thumnail(productAddDTO.getFile_thumbnail());
-//        products.setImage(t.getFullPath());
-//        products = productRepository.save(products);
-//        //set ảnh của product
-//        Products product = productRepository.findByName(productAddDTO.getProduct_name());
-//        uploadImageService.uploadFile(productAddDTO.getFiles(), product.getProductId());
-//        return products;
-//    }
+    @Autowired
+    CloudinaryService cloudinaryService;
+    @Autowired
+    private OrderDetailRepository orderDetailRepository;
+    @Autowired
+    private JobRepository jobRepository;
+    @Autowired
+    private ProcessproducterrorRepository processproducterrorRepository;
+    @Autowired
+    private WishListRepository wishListRepository;
 
 
-//    @Override
-//    public Products AddNewProduct(ProductDTO productDTO, MultipartFile[] multipartFiles, MultipartFile multipartFiles_thumbnal) {
-//        Products products = new Products();
-//        // Chuyển đổi completion_time sang java.sql.Date
-//        LocalDate currentDate = LocalDate.now();
-//        java.sql.Date sqlCompletionTime = java.sql.Date.valueOf(currentDate); // Chuyển đổi sang java.sql.Date
-//        products.setCompletionTime(sqlCompletionTime);
-//
-//        // Tính toán EndDateWarranty (2 năm sau thời điểm hiện tại)
-//        LocalDate endDateWarranty = currentDate.plusYears(2);
-//        java.sql.Date sqlEndDateWarranty = java.sql.Date.valueOf(endDateWarranty);
-//        products.setEnddateWarranty(sqlEndDateWarranty);
-//
-//        products.setProductName(productDTO.getProduct_name());
-//        products.setDescription(productDTO.getDescription());
-//        products.setPrice(productDTO.getPrice());
-//
-//        Status_Product status = statusRepository.findById(productDTO.getStatus_id());
-//        products.setStatus(status);
-//        Categories categories = categoryRepository.findById(productDTO.getCategory_id());
-//        products.setCategories(categories);
-//        products.setType(productDTO.getType());
-//
-//        products.setQuantity(productDTO.getQuantity());
-//        if (productRepository.countByProductName(productDTO.getProduct_name()) > 0) {
-//            throw new AppException(ErrorCode.NAME_EXIST);
-//        }
-//
-//        validateProductDTO(productDTO);
-//        LocalDate today = LocalDate.now();
-//        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("ddMMyy");
-//        String dateString = today.format(formatter);
-//
-//        Products lastProduct = productRepository.findProductTop(dateString + "PD");
-//        int count = lastProduct != null ? Integer.parseInt(lastProduct.getCode().substring(8)) + 1 : 1;
-//        String code = dateString + "PD" + String.format("%03d", count);
-//        products.setCode(code);
-//        //set ảnh thumbnail
-//        Product_Thumbnail t = uploadImageService.uploadFile_Thumnail(multipartFiles_thumbnal);
-//        products.setImage(t.getFullPath());
-//        products = productRepository.save(products);
-//        //set ảnh của product
-//        Products product = productRepository.findByName(productDTO.getProduct_name());
-//        uploadImageService.uploadFile(multipartFiles, product.getProductId());
-//        return products;
-//    }
 
     @Override
     public Products AddNewProduct(ProductAddDTO productAddDTO, MultipartFile[] multipartFiles, MultipartFile multipartFiles_thumbnal) {
@@ -198,29 +119,38 @@ public class ProductServiceImpl implements ProductService {
         return products;
     }
 
+
+
+
     @Transactional
     @Override
-    public Products EditProduct(int id, ProductEditDTO productEditDTO, MultipartFile[] multipartFiles, MultipartFile multipartFiles_thumbnal) {
+
+    public Products EditProduct(int id, ProductEditDTO productEditDTO,MultipartFile[] multipartFiles, MultipartFile multipartFiles_thumbnal) throws IOException {
         Products products = productRepository.findById(id);
         String thumbnailPath = products.getImage(); // Lấy đường dẫn thumbnail hiện tại
 
         if (multipartFiles_thumbnal != null && !multipartFiles_thumbnal.isEmpty()) {
             //set ảnh thumbnail
+            String id_image = cloudinaryService.extractPublicIdFromUrl(thumbnailPath);
+            cloudinaryService.deleteImage(id_image);
             Product_Thumbnail t = uploadImageService.uploadFile_Thumnail(multipartFiles_thumbnal);
             thumbnailPath = t.getFullPath(); // Cập nhật nếu có ảnh mới
+
+
         }
         if (multipartFiles != null &&
                 Arrays.stream(multipartFiles).anyMatch(file -> file != null && !file.isEmpty())) {
+            List<Productimages> productimages= productImageRepository.findImageByProductId(id);
+            for(Productimages productimages1 : productimages){
+                String full_path= productimages1.getFullPath();
+                String id_image =cloudinaryService.extractPublicIdFromUrl(full_path);
+                cloudinaryService.deleteImage(id_image);
+            }
             productImageRepository.deleteProductImages(id); // Xóa những ảnh trước đó
             uploadImageService.uploadFile(multipartFiles, products.getProductId());
 
 
         }
-//        // Kiểm tra tên sản phẩm trước khi cập nhật
-//        if (!productEditDTO.getProduct_name().equals(products.getProductName()) &&
-//                productRepository.findByName(productEditDTO.getProduct_name()) != null) {
-//            throw new AppException(ErrorCode.NAME_EXIST);
-//        }
         //ko đc chỉnh sửa quantity
         validateProductEditDTO(productEditDTO);
         productRepository.updateProduct(id,
@@ -231,7 +161,6 @@ public class ProductServiceImpl implements ProductService {
                 productEditDTO.getCategory_id(),
                 productEditDTO.getType(),
                 thumbnailPath, // Sử dụng thumbnailPath đã cập nhật
-                productEditDTO.getCompletionTime(),
                 productEditDTO.getEnddateWarranty()
         );
         entityManager.refresh(products); // Làm mới đối tượng products
@@ -245,6 +174,26 @@ public class ProductServiceImpl implements ProductService {
         return productRepository.findById(product_id);
     }
 
+    @Override
+    public void DeleteProduct(int product_id) {
+        Products product = productRepository.findById(product_id);
+        if(product == null){
+            throw new AppException(ErrorCode.NOT_FOUND);
+        }
+        // Kiểm tra các ràng buộc
+        if (orderDetailRepository.getOrderDetailByProductId(product_id).isEmpty() &&
+                jobRepository.getJobByProductId(product_id).isEmpty() &&
+                productImageRepository.findImageByProductId(product_id).isEmpty() &&
+                processproducterrorRepository.getProcessproducterrorByProductId(product_id).isEmpty() &&
+                wishListRepository.findByProductID(product_id).isEmpty() &&
+                productSubMaterialsRepository.findByProductID(product_id).isEmpty()) {
+            // Không có ràng buộc nào, có thể xóa sản phẩm
+            productRepository.delete(product);
+        } else {
+            // Có ràng buộc, không thể xóa sản phẩm
+            throw new AppException(ErrorCode.PRODUCT_HAS_RELATIONSHIPS); // Hoặc một mã lỗi phù hợp
+        }
+    }
 
     @Override
     public ProductDTO_Show GetProductByIdWithImage(int id) {
@@ -296,7 +245,7 @@ public class ProductServiceImpl implements ProductService {
     }// Trả về đường dẫn tương đối hoặc đường dẫn ban đầu nếu không tìm thấy "/assets/"
 
     @Override
-    public List<Products> GetAllProductForCustomer(String search, Integer categoryId, BigDecimal minPrice, BigDecimal maxPrice, String sortDirection) {
+    public List<Products> filterProductForCustomer(String search, Integer categoryId, BigDecimal minPrice, BigDecimal maxPrice, String sortDirection) {
         List<Products> productList = new ArrayList<>();
 
         if (search != null || categoryId != null || minPrice != null || maxPrice != null) {
@@ -354,6 +303,7 @@ public class ProductServiceImpl implements ProductService {
 
         return productList;
     }
+
 
 
     //này là dành cho trang homepage
@@ -520,6 +470,5 @@ public class ProductServiceImpl implements ProductService {
         }
     }
     //Đơn tạo đơn xuất vật liệu cho Employee
-
 
 }

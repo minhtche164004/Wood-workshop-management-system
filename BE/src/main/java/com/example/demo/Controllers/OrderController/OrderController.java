@@ -18,6 +18,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.Date;
 import java.util.List;
 
@@ -110,7 +111,7 @@ private OrderService orderService;
             @RequestParam(value="request_id") int request_id,
             @RequestPart("productDTO") RequestEditDTO requestEditDTO,
             @RequestPart("files") MultipartFile[] files
-    ) {
+    ) throws IOException {
         ApiResponse<Requests> apiResponse = new ApiResponse<>();
         apiResponse.setResult(orderService.EditRequest(request_id,requestEditDTO,files));
         return apiResponse;

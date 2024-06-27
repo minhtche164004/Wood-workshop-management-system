@@ -7,6 +7,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+
+import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
@@ -17,7 +19,7 @@ public interface ProductService {
 //    Products AddNewProduct(ProductAddDTO productAddDTO);
     List<Products> GetAllProductForCustomer();
     List<Products> GetAllProductForAdmin();
-    Products EditProduct(int id, ProductEditDTO productEditDTO,MultipartFile[] multipartFiles, MultipartFile multipartFiles_thumbnal);
+    Products EditProduct(int id, ProductEditDTO productEditDTO,MultipartFile[] multipartFiles, MultipartFile multipartFiles_thumbnal) throws Exception;
     //xuất nguyên liệu cho sản phẩm có sẵn
     ResponseEntity<ApiResponse<List<ProductSubMaterials>>> createExportMaterialProduct(int product_id, Map<Integer, Double> subMaterialQuantities);
 
@@ -33,7 +35,14 @@ public interface ProductService {
 
     Products UpdateStatusProduct(int product_id, int status_id);
 
-    public List<Products> GetAllProductForCustomer(String search, Integer categoryId, BigDecimal minPrice, BigDecimal maxPrice, String sortDirection);
+
+    void DeleteProduct(int product_id);
+
+
+
+
+    public List<Products> filterProductForCustomer(String search, Integer categoryId, BigDecimal minPrice, BigDecimal maxPrice, String sortDirection);
+
 
     public List<Products> filterProductsForAdmin(String search, Integer categoryId, Integer statusId, BigDecimal minPrice, BigDecimal maxPrice, String sortDirection);
 

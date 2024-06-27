@@ -46,6 +46,9 @@ public interface JobRepository extends JpaRepository<Jobs,Integer> {
     @Query("SELECT u FROM Jobs u WHERE u.jobId = :query")
     Jobs getJobById(int query);
 
+    @Query("SELECT u FROM Jobs u WHERE u.product.productId = :query")
+    List<Jobs> getJobByProductId(int query);
+
     @Transactional
     @Modifying
     @Query("update Jobs u set u.status.status_id = ?2" +

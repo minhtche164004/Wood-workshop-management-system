@@ -1,6 +1,7 @@
 package com.example.demo.Repository;
 
 import com.example.demo.Entity.Product_Requestimages;
+import com.example.demo.Entity.Productimages;
 import com.example.demo.Entity.Requestimages;
 import jakarta.transaction.Transactional;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -23,5 +24,8 @@ public interface RequestimagesRepository extends JpaRepository<Requestimages,Int
     @Modifying
     @Query("DELETE FROM Requestimages p WHERE p.requests.requestId = :requestId")
     void deleteRequestImages(@Param("requestId") int requestId);
+
+    @Query("SELECT p FROM Requestimages p WHERE p.requests.requestId = :requestId")
+    List<Requestimages> findRequestImageByRequestId(@Param("requestId") int requestId);
 
 }

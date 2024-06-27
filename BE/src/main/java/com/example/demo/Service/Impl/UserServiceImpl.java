@@ -1,6 +1,6 @@
 package com.example.demo.Service.Impl;
 
-import com.example.demo.Controllers.Authentication.ChangePassDTO;
+import com.example.demo.Dto.UserDTO.ChangePassDTO;
 import com.example.demo.Dto.UserDTO.*;
 import com.example.demo.Entity.*;
 import com.example.demo.Jwt.UserDetailsServiceImpl;

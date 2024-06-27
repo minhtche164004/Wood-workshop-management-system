@@ -1,6 +1,6 @@
 package com.example.demo.Controllers.User;
 
-import com.example.demo.Controllers.Authentication.ChangePassDTO;
+import com.example.demo.Dto.UserDTO.ChangePassDTO;
 import com.example.demo.Dto.UserDTO.UpdateProfileDTO;
 import com.example.demo.Dto.UserDTO.UserDTO;
 import com.example.demo.Repository.UserRepository;
@@ -8,9 +8,6 @@ import com.example.demo.Response.ApiResponse;
 import com.example.demo.Service.UserService;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 @RestController

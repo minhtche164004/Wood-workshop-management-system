@@ -1,4 +1,4 @@
-package com.example.demo.Controllers.Authentication;
+package com.example.demo.Dto.UserDTO;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

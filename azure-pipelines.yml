@@ -11,7 +11,7 @@ pr: none
 variables:
   # Container registry service connection established during pipeline creation
   dockerRegistryServiceConnection: '8404482f-95d0-439e-aebe-0961fa07a0ef'
-  imageRepository: 'minhtchewoodworkshopmanagementsystem'
+  imageRepository: 'fe'
   containerRegistry: 'dogosydungfe.azurecr.io'
   dockerfilePath: '$(Build.SourcesDirectory)/FE/SEP490/Dockerfile'
   tag: 'latest'

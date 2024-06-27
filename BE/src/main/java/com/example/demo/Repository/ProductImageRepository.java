@@ -1,6 +1,8 @@
 package com.example.demo.Repository;
 
 import com.example.demo.Entity.Productimages;
+import com.example.demo.Entity.Products;
+import com.example.demo.Entity.SubMaterials;
 import jakarta.transaction.Transactional;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
@@ -30,4 +32,8 @@ public interface ProductImageRepository extends JpaRepository<Productimages, Int
     @Modifying
     @Query("DELETE FROM Productimages p WHERE p.product.productId = :productId")
     void deleteProductImages(@Param("productId") int productId);
+
+
+    @Query(value = "SELECT p.* FROM Productimages p WHERE p.code LIKE :prefix% ORDER BY p.code DESC LIMIT 1", nativeQuery = true)
+    Productimages findProductimagesTop(@Param("prefix") String prefix);
 }

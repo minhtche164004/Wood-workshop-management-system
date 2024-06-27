@@ -26,6 +26,7 @@ public class CloudinaryController {
         ApiResponse<Products> apiResponse = new ApiResponse<>();
 //        apiResponse.setResult(productService.AddNewProduct(productAddDTO, files, file_thumbnail));
         Map result = cloudinaryService.upload(file_thumbnail, "product_images");
+
         System.out.println(result.get("url"));
         return apiResponse;
     }

@@ -16,6 +16,10 @@ public interface OrderDetailRepository extends JpaRepository<Orderdetails, Integ
     @Query("SELECT u FROM Orderdetails u WHERE u.order.orderId = :query")
     List<Orderdetails> getOrderDetailByOrderId(int query);
 
+    @Query("SELECT u FROM Orderdetails u WHERE u.product.productId = :query")
+    List<Orderdetails> getOrderDetailByProductId(int query);
+
+
 @Query("SELECT new com.example.demo.Dto.OrderDTO.OrderDetailWithJobStatusDTO(od, j.status, " +
        "(CASE " +
        "   WHEN o.specialOrder = false THEN p.productName " +

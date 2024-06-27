@@ -7,12 +7,12 @@ import com.example.demo.Exception.AppException;
 import com.example.demo.Exception.ErrorCode;
 import com.example.demo.Repository.*;
 import com.example.demo.Service.JobService;
+import jakarta.persistence.EntityManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -33,6 +33,8 @@ public class JobServiceImpl implements JobService {
     private Status_Product_Repository statusProductRepository;
     @Autowired
     private Status_Job_Repository statusJobRepository;
+    @Autowired
+    private EntityManager entityManager;
 
 
     @Override
@@ -96,33 +98,7 @@ public class JobServiceImpl implements JobService {
         jobs.setCode(code);
         jobs.setJob_log(false);
         jobRepository.save(jobs);
-        //nếu là giao việc thành công thì sẽ chuyển trạng thái của sản phẩm
-//        if(status_id == 3 && products ==null){//chưa giao việc  -> phân đang làm mộc
-//            requestProducts.setStatus(statusProductRepository.findById(4));
-//            requestProductRepository.save(requestProducts);
-//        }
-//        if(status_id == 3 && requestProducts == null){
-//            products.setStatus(statusProductRepository.findById(4));
-//            productRepository.save(products);
-//        }
-//
-//        if(status_id == 6 && products ==null){// đã làm mộc xong ->  phân đang đánh nhám(tức là công đoạn đang làm mộc đã xong)
-//            requestProducts.setStatus(statusProductRepository.findById(7));
-//            requestProductRepository.save(requestProducts);
-//        }
-//        if(status_id == 6 && requestProducts == null){
-//            products.setStatus(statusProductRepository.findById(7));
-//            productRepository.save(products);
-//        }
-//
-//        if(status_id == 9 && products ==null){//đã đánh nhám xong -> phân đang sơn(tức là công đoạn đang đánh nhám đã xong)
-//            requestProducts.setStatus(statusProductRepository.findById(10));
-//            requestProductRepository.save(requestProducts);
-//        }
-//        if(status_id == 9 && requestProducts == null){
-//            products.setStatus(statusProductRepository.findById(10));
-//            productRepository.save(products);
-//        }
+
         return jobs;
     }
 
@@ -160,6 +136,20 @@ public class JobServiceImpl implements JobService {
         jobRepository.save(waitNextJob);
 
         return jobs_log;
+    }
+
+    @Override
+    public Jobs EditJobs(JobDTO jobDTO, int job_id) {
+        Jobs jobs = jobRepository.getJobById(job_id);
+        jobs.setJob_name(jobDTO.getJob_name());
+        jobs.setCost(jobDTO.getCost());
+        jobs.setDescription(jobDTO.getDescription());
+        jobs.setQuantityProduct(jobDTO.getQuantity_product());
+        jobs.setTimeFinish(jobDTO.getFinish());
+        jobs.setTimeStart(jobDTO.getStart());
+        jobRepository.save(jobs);
+        entityManager.refresh(jobs);
+        return jobs;
     }
 
 }

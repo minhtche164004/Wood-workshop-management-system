@@ -1,11 +1,16 @@
 package com.example.demo.Controllers.SubMaterialController;
 
+import com.example.demo.Dto.ProductDTO.CreateExportMaterialProductRequest;
 import com.example.demo.Dto.ProductDTO.ProductDTO;
+import com.example.demo.Dto.ProductDTO.QuantityTotalDTO;
 import com.example.demo.Dto.SubMaterialDTO.SubMaterialDTO;
 import com.example.demo.Dto.SubMaterialDTO.UpdateSubDTO;
+import com.example.demo.Entity.ProductSubMaterials;
 import com.example.demo.Entity.Products;
+import com.example.demo.Entity.RequestProductsSubmaterials;
 import com.example.demo.Entity.SubMaterials;
 import com.example.demo.Response.ApiResponse;
+import com.example.demo.Service.ProductService;
 import com.example.demo.Service.SubMaterialService;
 import io.jsonwebtoken.io.IOException;
 import jakarta.persistence.EntityNotFoundException;
@@ -111,5 +116,41 @@ public class SubMaterialController {
         } catch (IOException ex) {
             throw new RuntimeException("Error: " + ex.getMessage());
         }
+    }
+
+    @GetMapping("/getProductSubMaterialByProductId")
+    public ApiResponse<?> getProductSubMaterialByProductId(@RequestParam("id") int id) {
+        ApiResponse<List> apiResponse = new ApiResponse<>();
+        apiResponse.setResult(subMaterialService.getProductSubMaterialByProductId(id));
+        return apiResponse;
+    }
+
+    @GetMapping("/getRequestProductSubMaterialByRequestProductId")
+    public ApiResponse<?> getRequestProductSubMaterialByRequestProductId(@RequestParam("id") int id) {
+        ApiResponse<List> apiResponse = new ApiResponse<>();
+        apiResponse.setResult(subMaterialService.getRequestProductSubMaterialByRequestProductId(id));
+        return apiResponse;
+    }
+    //xuất đơn nguyên vật liệu cho product có sẵn
+    // public ResponseEntity<ApiResponse<List<ProductSubMaterials>>> createExportMaterialProduct(@RequestBody CreateExportMaterialProductRequest request) {
+    @PostMapping("/createExportMaterialProduct")
+    public List<ProductSubMaterials> createExportMaterialProduct(@RequestBody CreateExportMaterialProductRequest request) {
+        return subMaterialService.createExportMaterialProduct(request.getProductId(), request.getSubMaterialQuantities());
+    }
+
+    //xuất đơn vật liệu cho đơn hàng đặt theo yêu cầu , request product
+    @PostMapping("/createExportMaterialProductRequest")
+    public List<RequestProductsSubmaterials> createExportMaterialProductRequest(@RequestBody CreateExportMaterialProductRequest request) {
+        return subMaterialService.createExportMaterialProductRequest(request.getProductId(), request.getSubMaterialQuantities());
+    }
+
+    @PostMapping("/createExportMaterialProductTotalJob")
+    public ResponseEntity<ApiResponse<List<String>>> createExportMaterialProductTotalJob(@RequestParam("id") int id , @RequestBody QuantityTotalDTO quantityTotalDTO) {
+        return subMaterialService.createExportMaterialProductTotalJob(id,quantityTotalDTO);
+    }
+
+    @PostMapping("/createExportMaterialRequestTotalJob")
+    public ResponseEntity<ApiResponse<List<String>>> createExportMaterialRequestTotalJob(@RequestParam("id") int id , @RequestBody QuantityTotalDTO quantityTotalDTO) {
+        return subMaterialService.createExportMaterialRequestTotalJob(id,quantityTotalDTO);
     }
 }

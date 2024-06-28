@@ -80,7 +80,8 @@ public class UserServiceImpl implements UserService {
                 "",
                 userDTO.getCity(),
                 userDTO.getDistrict(),
-                userDTO.getWards()
+                userDTO.getWards(),
+                1
         );
         informationUserRepository.save(userInfor);
         User user = new User(
@@ -131,7 +132,8 @@ public class UserServiceImpl implements UserService {
                 userDTO.getBank_number(),
                 userDTO.getCity(),
                 userDTO.getDistrict(),
-                userDTO.getWards()
+                userDTO.getWards(),
+                1 //register thì cho has_Account là 1 , nghĩa là đã có account
 
         );
         informationUserRepository.save(userInfor);

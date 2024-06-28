@@ -100,4 +100,11 @@ public class JobController {
         apiResponse.setResult(jobService.EditJobs(jobDTO,job_id));
         return apiResponse;
     }
+
+    @GetMapping("/getAllJob")
+    public ApiResponse<?> getAllJob() {
+        ApiResponse<List> apiResponse = new ApiResponse<>();
+        apiResponse.setResult(jobService.GetAllJob());
+        return apiResponse;
+    }
 }

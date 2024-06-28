@@ -39,17 +39,11 @@ public class ProductServiceImpl implements ProductService {
     @Autowired
     private UploadImageService uploadImageService;
     @Autowired
-    private SubMaterialsRepository subMaterialsRepository;
-    @Autowired
     private ProductSubMaterialsRepository productSubMaterialsRepository;
-    @Autowired
-    private RequestProductsSubmaterialsRepository requestProductsSubmaterialsRepository;
     @Autowired
     private ProductImageRepository productImageRepository;
     @Autowired
     private EntityManager entityManager;
-    @Autowired
-    private RequestProductRepository requestProductRepository;
     @Autowired
     private Status_Product_Repository statusProductRepository;
     @Autowired
@@ -188,12 +182,17 @@ public class ProductServiceImpl implements ProductService {
                 wishListRepository.findByProductID(product_id).isEmpty() &&
                 productSubMaterialsRepository.findByProductID(product_id).isEmpty()) {
             // Không có ràng buộc nào, có thể xóa sản phẩm
+            productSubMaterialsRepository.deleteAll(productSubMaterialsRepository.findByProductID(product_id));
             productRepository.delete(product);
+
         } else {
             // Có ràng buộc, không thể xóa sản phẩm
             throw new AppException(ErrorCode.PRODUCT_HAS_RELATIONSHIPS); // Hoặc một mã lỗi phù hợp
         }
     }
+
+
+
 
     @Override
     public ProductDTO_Show GetProductByIdWithImage(int id) {
@@ -397,78 +396,5 @@ public class ProductServiceImpl implements ProductService {
     }
 
 
-    //Đơn xuất vật liệu(Tạo đơn xuất vật liệu cho sản phẩm  UC_30)
-    //manger list ra 1 danh sách các sản phẩm có trong đơn hàng , manager chọn vào xuất nguyên vật liệu cho product có trong đơn hàng(list order detail)
-    //nếu xuất đơn mà ko đủ quantity thì sẽ hiển thị thông báo lỗi -> người dùng vào nhập thêo sub_material, bấm xuất lại đơn .
-    @Transactional
-    @Override
-    public ResponseEntity<ApiResponse<List<ProductSubMaterials>>> createExportMaterialProduct(int productId, Map<Integer, Double> subMaterialQuantities) {
-        Products product = productRepository.findById(productId);
-
-        List<ProductSubMaterials> productSubMaterialsList = new ArrayList<>();
-        Map<String, String> errors = new HashMap<>(); //hashmap cho error
-
-        for (Map.Entry<Integer, Double> entry : subMaterialQuantities.entrySet()) {
-            int subMaterialId = entry.getKey();
-            double quantity = entry.getValue();
-            SubMaterials subMaterial = subMaterialsRepository.findById1(subMaterialId);
-
-            double currentQuantity = subMaterial.getQuantity();
-            if (quantity > currentQuantity) {
-                errors.put(subMaterial.getSubMaterialName(), "Không đủ số lượng");
-                continue;
-            }
-
-            subMaterial.setQuantity(currentQuantity - quantity);
-            subMaterialsRepository.save(subMaterial);
-
-            ProductSubMaterials productSubMaterial = new ProductSubMaterials(subMaterial, product, quantity);
-            productSubMaterialsList.add(productSubMaterial);
-        }
-        ApiResponse<List<ProductSubMaterials>> apiResponse = new ApiResponse<>();
-        if (!errors.isEmpty()) {
-            apiResponse.setError(1028, errors);
-            return ResponseEntity.badRequest().body(apiResponse);
-        } else {
-            apiResponse.setResult(productSubMaterialsRepository.saveAll(productSubMaterialsList));
-            return ResponseEntity.ok(apiResponse);
-        }
-    }
-
-    @Transactional
-    @Override
-    public ResponseEntity<ApiResponse<List<RequestProductsSubmaterials>>> createExportMaterialProductRequest(int request_product_id, Map<Integer, Double> subMaterialQuantities) {
-        RequestProducts requestProducts = requestProductRepository.findById(request_product_id);
-
-        List<RequestProductsSubmaterials> requestProductsSubmaterialsList = new ArrayList<>();
-        Map<String, String> errors = new HashMap<>(); //hashmap cho error
-
-        for (Map.Entry<Integer, Double> entry : subMaterialQuantities.entrySet()) {
-            int subMaterialId = entry.getKey();
-            double quantity = entry.getValue();
-            SubMaterials subMaterial = subMaterialsRepository.findById1(subMaterialId);
-
-            double currentQuantity = subMaterial.getQuantity();
-            if (quantity > currentQuantity) {
-                errors.put(subMaterial.getSubMaterialName(), "Không đủ số lượng");
-                continue;
-            }
-
-            subMaterial.setQuantity(currentQuantity - quantity);
-            subMaterialsRepository.save(subMaterial);
-
-            RequestProductsSubmaterials requestProductsSubmaterials = new RequestProductsSubmaterials(subMaterial, requestProducts, quantity);
-            requestProductsSubmaterialsList.add(requestProductsSubmaterials);
-        }
-        ApiResponse<List<RequestProductsSubmaterials>> apiResponse = new ApiResponse<>();
-        if (!errors.isEmpty()) {
-            apiResponse.setError(1028, errors);
-            return ResponseEntity.badRequest().body(apiResponse);
-        } else {
-            apiResponse.setResult(requestProductsSubmaterialsRepository.saveAll(requestProductsSubmaterialsList));
-            return ResponseEntity.ok(apiResponse);
-        }
-    }
-    //Đơn tạo đơn xuất vật liệu cho Employee
 
 }

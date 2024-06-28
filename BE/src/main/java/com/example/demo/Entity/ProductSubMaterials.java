@@ -20,12 +20,12 @@ public class ProductSubMaterials {
     @Column(name = "product_sub_material_id")
     private int productSubMaterialId;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne()
 
     @JoinColumn(name = "sub_material_id", referencedColumnName = "sub_material_id") // Chỉ rõ tên cột liên kết ở cả 2 bảng
     private SubMaterials subMaterial;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne()
 
     @JoinColumn(name = "product_id", referencedColumnName = "product_id")
     private Products product;

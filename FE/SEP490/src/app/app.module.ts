@@ -52,6 +52,10 @@ import { OrderManagementComponent } from './Admin/order-management/order-managem
 
 import { JobManagementComponent } from './Admin/job-management/job-management.component';
 import { JobDetailComponent } from './Admin/job-detail/job-detail.component';
+import { AboutUsComponent } from './about-us/about-us.component';
+import { ContactComponent } from './contact/contact.component';
+import { EmployeeJobComponent } from './employee-job/employee-job.component';
+import { SubSubmaterialProductComponent } from './sub-submaterial-product/sub-submaterial-product.component';
 
 
 
@@ -101,6 +105,10 @@ import { JobDetailComponent } from './Admin/job-detail/job-detail.component';
 
     JobManagementComponent,
     JobDetailComponent,
+    AboutUsComponent,
+    ContactComponent,
+    EmployeeJobComponent,
+    SubSubmaterialProductComponent,
     
 
   

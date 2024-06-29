@@ -20,8 +20,8 @@ export class HeaderComponent {
     // Xóa token đăng nhập khỏi local storage
     localStorage.removeItem('loginToken');
     console.log('Token sau khi logout:', localStorage.getItem('loginToken'));
-    this.router.navigateByUrl('/register');
-    
+    this.router.navigateByUrl('/homepage');
+  
   }
   isLoggedIn(): boolean {
     return this.authService.isLoggedIn();

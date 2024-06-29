@@ -22,19 +22,15 @@ import { SupplierManagementComponent } from './supplier-management/supplier-mana
 import { OrderDetailManagementComponent } from './Admin/order-detail-management/order-detail-management.component';
 import { OrderRequestComponentComponent } from './Admin/order-request-component/order-request-component.component';
 import { OrderRqDetailComponent } from './Admin/order-rq-detail/order-rq-detail.component';
-
 import { OrderRequiredComponent } from './order-required/order-required.component';
 import { CreateOrderComponent } from './create-order/create-order.component';
-
 import { OrderManagementComponent } from './Admin/order-management/order-management.component';
 import { ProductDetailComponent } from './features/product-detail/product-detail.component';
-
 import { JobManagementComponent } from './Admin/job-management/job-management.component';
 import { JobDetailComponent } from './Admin/job-detail/job-detail.component';
-
-
-
-
+import { ContactComponent } from './contact/contact.component';
+import { AboutUsComponent } from './about-us/about-us.component';
+import { EmployeeJobComponent } from './employee-job/employee-job.component';
 
 
 const routes: Routes = [
@@ -64,14 +60,13 @@ const routes: Routes = [
   { path: 'order_request_management', component: OrderRequestComponentComponent },
   { path: 'order_request_management/:id', component: OrderRequestComponentComponent },
   { path: 'orderRq_detail', component: OrderRqDetailComponent },
-
+  { path: 'contact', component: ContactComponent },
+  { path: 'about-us', component:  AboutUsComponent},
   { path: 'order_management', component: OrderManagementComponent },
   { path: 'product_details', component: ProductDetailComponent },
- 
-
   { path: 'job_management', component: JobManagementComponent },
   { path: 'job_detail', component: JobDetailComponent },
-
+  { path: 'employee-job', component: EmployeeJobComponent },
   { path: '', redirectTo: '/homepage', pathMatch: 'full' },
   { path: '**', redirectTo: '/homepage', pathMatch: 'full' },
 

@@ -7,7 +7,7 @@
                 <div class="table-title">
                     <div class="row" >
                         <div class="col-sm-5">
-                            <h2>Quản lí Sản Xuất</h2>
+                            <h2>Quản lí Vật liệu sản xuất sản phẩm</h2>
                         </div>
                         <div class="col-sm-7 text-end" style="text-align: center;">
                             <a href="#" class="btn btn-secondary" data-toggle="modal" data-target="#addProductModal">
@@ -23,15 +23,15 @@
                         <div class="col-md-6 text-end">
                             <form>
                               <div class="input-group mb-3">
-                                <select [(ngModel)]="selectedCategory" name="category" class="form-select" >
+                                <!-- <select [(ngModel)]="selectedCategory" name="category" class="form-select" >
                                   <option [ngValue]="0" disabled selected hidden>Sản phẩm theo yêu cầu</option>
                                   <option [ngValue]="1">Sản phẩm theo yêu cầu</option>
                                   <option [ngValue]="2">Sản phẩm có sẵn</option>
-                                </select>
-                                <input type="text" class="form-control" placeholder="Tìm kiếm sản phẩm..." [(ngModel)]="searchKey" name="search">
+                                </select> -->
+                                <!-- <input type="text" class="form-control" placeholder="Tìm kiếm sản phẩm..." [(ngModel)]="searchKey" name="search">
                                 <button class="btn search-button" type="submit" (click)="onSearch()">
                                   <i class="fa fa-search"></i>
-                                </button>
+                                </button> -->
                               </div>
                             </form>
                           </div>
@@ -59,7 +59,7 @@
                         </tr>
                     </thead>
 
-                    <tbody>
+                    <!-- <tbody>
                         <tr
                             *ngFor="let product of productRQs | paginate: { itemsPerPage: 10, currentPage: currentPage }; let i = index">
                             <td>{{ i + 1 + (currentPage - 1) * 10 }}</td>
@@ -93,16 +93,16 @@
                             <td></td>
 
                         </tr>
-                    </tbody>
+                    </tbody> -->
                 </table>
 
-                <pagination-controls style="justify-content: right; display: flex;"
+                <!-- <pagination-controls style="justify-content: right; display: flex;"
                     (pageChange)="currentPage = $event"></pagination-controls>
                 <div class="clearfix" style="justify-content: right; display: flex;">
                     <div class="hint-text">Showing <b>{{ (currentPage - 1) * 10 + 1 }}</b> to <b>{{ currentPage * 10
                             > productRQs.length ? productRQs.length : currentPage * 10 }}</b> out of <b>{{
                             productRQs.length }}</b> entries</div>
-                </div>
+                </div> -->
 
             </div>
         </div>
@@ -124,14 +124,15 @@
                                   <section class="customer-info mb-4">
                                       <h5>Thông tin nhân viên</h5>
                                       <p style="margin-left: 15px;">
-                                          <strong>Tên nhân viên:</strong> {{ selectedProduct.user?.username }}
+                                          <strong>Tên nhân viên:</strong> 
+                                          <!-- {{ selectedProduct.user?.username }} -->
                                       </p>
                                       <div>
                                         <h5>Danh sách nhân viên (Position 1):</h5>
                                         <select>
                                           <option value="" disabled selected>Chọn nhân viên</option>
                                           <option value="none" disabled>Không chọn</option>
-                                          <option *ngFor="let employee of position1Employees" [ngValue]="employee.userId">{{ employee.username }}</option>
+                                          <!-- <option *ngFor="let employee of position1Employees" [ngValue]="employee.userId">{{ employee.username }}</option> -->
                                         </select>
                                       </div>
                                       
@@ -140,7 +141,7 @@
                                         <select>
                                           <option value="" disabled selected>Chọn nhân viên</option>
                                           <option value="none" disabled>Không chọn</option>
-                                          <option *ngFor="let employee of position2Employees" [ngValue]="employee.userId">{{ employee.username }}</option>
+                                          <!-- <option *ngFor="let employee of position2Employees" [ngValue]="employee.userId">{{ employee.username }}</option> -->
                                         </select>
                                       </div>
                                       
@@ -149,16 +150,16 @@
                                         <select>
                                           <option value="" disabled selected>Chọn nhân viên</option>
                                           <option value="none" disabled>Không chọn</option>
-                                          <option *ngFor="let employee of position3Employees" [ngValue]="employee.userId">{{ employee.username }}</option>
+                                          <!-- <option *ngFor="let employee of position3Employees" [ngValue]="employee.userId">{{ employee.username }}</option> -->
                                         </select>
                                       </div>
                                       
-                                      <p style="margin-left: 15px;">
+                                      <!-- <p style="margin-left: 15px;">
                                           <strong>Số lượng:</strong> {{ selectedProduct.quantity }}
                                       </p>
                                       <p style="margin-left: 15px;">
                                           <strong>Giá công khoán:</strong> {{ selectedProduct.price | number: '1.0-3' }}
-                                      </p>
+                                      </p> -->
                                       <p style="margin-left: 15px;">
                                           <strong>Thời gian bắt đầu công việc:</strong> <!-- thêm thời gian bắt đầu nếu có -->
                                       </p>
@@ -168,20 +169,17 @@
                               <div class="col-md-5">
                                   <section class="order-summary mb-4">
                                       <h5>Mô tả việc làm</h5>
-                                      <p style="margin-left: 15px;">
+                                      <!-- <p style="margin-left: 15px;">
                                           <strong>Mã đơn hàng:</strong> {{ selectedProduct.code }}
                                       </p>
                                       <p style="margin-left: 15px;">
                                           <strong>Tên công việc:</strong> {{ selectedProduct.product_name }}
-                                      </p>
+                                      </p> -->
                                       <p style="margin-left: 15px;">
                                           <strong>Thời gian yêu cầu hoàn thành công việc:</strong> <!-- thêm thời gian yêu cầu hoàn thành nếu có -->
                                       </p>
                                   </section>
                               </div>
-                          </div>
-                          <div>
-                            <h1></h1>
                           </div>
                           <div class="customer-info">
                               <h5>Mô tả chi tiết yêu cầu việc làm</h5>
@@ -192,7 +190,7 @@
               </div>
           </div>
           <div class="modal-footer">
-              <button type="button" class="btn btn-primary" (click)="assignJob()">Tạo việc</button>
+              <!-- <button type="button" class="btn btn-primary" (click)="assignJob()">Tạo việc</button> -->
               <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
           </div>
       </div>

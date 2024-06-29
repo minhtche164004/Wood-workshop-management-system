@@ -28,14 +28,14 @@ public interface SubMaterialService {
 
 
     List<ProductSubMaterials> createExportMaterialProduct(int product_id, Map<Integer, Double> subMaterialQuantities);
-    ResponseEntity<ApiResponse<List<String>>> createExportMaterialProductTotalJob(int product_id,int mate_id, QuantityTotalDTO quantityTotalDTO);
-    ResponseEntity<ApiResponse<List<String>>> createExportMaterialRequestTotalJob(int product_id,int mate_id,QuantityTotalDTO quantityTotalDTO);
+    ResponseEntity<ApiResponse<List<String>>> createExportMaterialProductTotalJob(int product_id,int mate_id, QuantityTotalDTO quantityTotalDTO,int emp_id);
+    ResponseEntity<ApiResponse<List<String>>> createExportMaterialRequestTotalJob(int product_id,int mate_id,QuantityTotalDTO quantityTotalDTO,int emp_id);
     //xuất nguyên liệu cho sản phẩm  theo yêu cầu
     List<RequestProductsSubmaterials> createExportMaterialProductRequest(int request_product_id, Map<Integer, Double> subMaterialQuantities);
     List<Product_SubmaterialDTO> getProductSubMaterialByProductId(int id,int material_id);
     List<ReProduct_SubmaterialDTO> getRequestProductSubMaterialByRequestProductId(int id,int material_id);
 
-    List<Employeematerials> createEMaterial(int emp_id,int mate_id,int product_id);
+   // List<Employeematerials> createEMaterial(int emp_id,int mate_id,int product_id);
     List<Employeematerials> getAllEmpMate();
 
     List<Employeematerials> findEmployeematerialsByName(String key);

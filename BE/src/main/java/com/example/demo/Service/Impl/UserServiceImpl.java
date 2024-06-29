@@ -247,7 +247,9 @@ public class UserServiceImpl implements UserService {
         if (userList.isEmpty()) {
             throw new AppException(ErrorCode.NOT_FOUND);
         }
+
         return userList.stream()
+                .filter(user -> user.getUserId() != null) // Chỉ ánh xạ những user có userId khác null
                 .map(user -> modelMapper.map(user, UserDTO.class))
                 .collect(Collectors.toList());
     }
@@ -347,6 +349,9 @@ userRepository.save(user);
         user.getUserInfor().setFullname(userDTO.getFullname());
         user.getUserInfor().setBank_number(userDTO.getBank_number());
         user.getUserInfor().setBank_name(userDTO.getBank_name());
+        user.getUserInfor().setDistrict(userDTO.getDistrict());
+        user.getUserInfor().setWards(userDTO.getWards());
+        user.getUserInfor().setCity_province(userDTO.getCity_province());
         Position position = positionRepository.findByName(userDTO.getPosition_name());
         user.setPosition(position);
         Status_User statusUser = statusRepository.findByName(userDTO.getStatus_name());

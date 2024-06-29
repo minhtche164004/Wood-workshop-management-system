@@ -34,6 +34,8 @@ public class AdminController {
     private PositionService positionService;
     @Autowired
     private RoleRepository roleRepository;
+    @Autowired
+    private UserRepository userRepository;
 
     private static final JedisPooled jedis = RedisConfig.getRedisInstance();
 
@@ -67,6 +69,7 @@ public class AdminController {
     public ApiResponse<?> getAllUser() {
         ApiResponse<List> apiResponse = new ApiResponse<>();
         String cacheKey = "all_users";
+//        jedis.del(cacheKey);
         List<UserDTO> users;
         String cachedData = jedis.get(cacheKey);
         if (cachedData != null) {
@@ -82,6 +85,7 @@ public class AdminController {
         apiResponse.setResult(users);
         return apiResponse;
     }
+
 
     @GetMapping("/GetAllRole")
     public ApiResponse<?> GetAllRole() {

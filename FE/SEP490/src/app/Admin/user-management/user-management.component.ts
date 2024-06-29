@@ -34,7 +34,7 @@ interface EditUserRequest {
   phoneNumber: string;
   address: string;
   fullname: string;
-  status_name: string ;
+  status_name: string;
   position_name: string;
   bank_name: string;
   role_name: string;
@@ -76,7 +76,7 @@ interface Ward {
 })
 export class UserManagementComponent implements OnInit {
 
-  
+
 
 
 
@@ -105,8 +105,7 @@ export class UserManagementComponent implements OnInit {
   selectDistricts: any = null;
   selectWards: any = null;
   selectedUser: any;
-    userData: any = {};
-
+  userData: any = {};
 
   selectedProvince: any;
   selectedDistrict: any;
@@ -155,6 +154,8 @@ export class UserManagementComponent implements OnInit {
     });
   }
 
+  isUserDataLoaded: boolean = false;
+
   ngOnInit(): void {
     this.userData = {
       username: '',
@@ -170,8 +171,6 @@ export class UserManagementComponent implements OnInit {
       city_province: '',
       district: '',
       wards: '',
-  
-  
     };
     this.role = []; // Initialize with your roles data
     this.position = []; // Initialize with your positions data
@@ -210,19 +209,26 @@ export class UserManagementComponent implements OnInit {
       this.wards = selectedDistrict ? selectedDistrict.wards : [];
       this.addAccountForm.get('wards')?.reset();
     });
+
+    // khi load trang cai nay` no ghi de` vao` gia tri user nen bi loi~
     this.editUserForm.get('city')?.valueChanges.subscribe(provinceName => {
       const selectedProvince = this.provinces.find(province => province.name === provinceName);
       this.districts = selectedProvince ? selectedProvince.districts : [];
-      this.editUserForm.get('district')?.reset();
-      this.editUserForm.get('wards')?.reset();
+      if (!selectedProvince || this.editUserForm.get('district')?.value) {
+        this.editUserForm.get('district')?.reset();
+        this.editUserForm.get('wards')?.reset();
+      }
     });
-
+    
     this.editUserForm.get('district')?.valueChanges.subscribe(districtName => {
       const selectedDistrict = this.districts.find(district => district.name === districtName);
       this.wards = selectedDistrict ? selectedDistrict.wards : [];
-      this.editUserForm.get('wards')?.reset();
+      if (!selectedDistrict || this.editUserForm.get('wards')?.value) {
+        this.editUserForm.get('wards')?.reset();
+      }
     });
   }
+
   loadAllRole(): void {
     this.productListService.getAllRole().subscribe(
       (data: any) => {
@@ -261,14 +267,14 @@ export class UserManagementComponent implements OnInit {
     if (this.selectedRole != 4) {
       this.isPositionEnabled = false;
 
-   
+
     } else {
       this.isPositionEnabled = true;
-    
 
+
+    }
   }
-}
-  
+
   loadPosition(): void {
     this.productListService.getAllPosition().subscribe(
       (data: any) => {
@@ -306,7 +312,7 @@ export class UserManagementComponent implements OnInit {
   }
 
   AddNewAccount(): void {
-   
+
     const addNewAccountRequest: AddNewAccount = this.addAccountForm.value;
     console.log('Request Data:', addNewAccountRequest);
     this.http.post<any>(this.apiUrl_AddNewAccount, addNewAccountRequest, { withCredentials: true })
@@ -346,17 +352,12 @@ export class UserManagementComponent implements OnInit {
     this.editUserForm.get('district')?.setValue(user.district);
     this.editUserForm.get('wards')?.setValue(user.wards);
 
-
-
   }
 
   getUserData(user_id: string): void {
     this.authenListService.getUserById(user_id).subscribe(
       (data) => {
         this.userData = data.result;
-        console.log('User data:', data.result);
-        console.log('User district:', this.userData.district);
-
       },
       (error) => {
         console.error('Error fetching user data:', error);
@@ -390,10 +391,10 @@ export class UserManagementComponent implements OnInit {
       this.toastr.error('Please fill all required fields correctly.');
       return;
     }
-  
+
     const editUserRequest: EditUserRequest = this.editUserForm.value;
     const userId = this.userData.userId; // Lấy userId từ userData
-  
+
     this.authenListService.editUserById(userId, editUserRequest).subscribe(
       () => {
         this.toastr.success('User updated successfully.');
@@ -405,6 +406,6 @@ export class UserManagementComponent implements OnInit {
       }
     );
   }
-  
-  
+
+
 }

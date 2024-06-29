@@ -231,11 +231,9 @@ export class UserManagementComponent implements OnInit {
     // Implement your logic when role selection changes
     // Example condition:
     if (this.selectedRole != 4) {
-      this.isPositionEnabled = true;
-      this.position = []; // Update with positions relevant to selected role
-    } else {
       this.isPositionEnabled = false;
-      this.selectedPosition = null; // Reset selected position if needed
+    } else {
+      this.isPositionEnabled = true;
     }
   }
   loadPosition(): void {

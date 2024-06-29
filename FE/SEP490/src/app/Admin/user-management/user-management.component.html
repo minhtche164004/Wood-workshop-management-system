@@ -23,7 +23,7 @@
             <div class="col-md-5 text-end">
               <div class="input-group mb-3">
                 <!-- product.component.html -->
-                <select [(ngModel)]="selectedCategory">
+                <select [ngModel]="selectedCategory">
                   <option value="null" disabled selected>Phân quyền</option>
                   <option *ngFor="let ps of position" [value]="ps.position_id">{{ ps.position_name }}</option>
                 </select>
@@ -148,26 +148,34 @@
             <div class="form-group col-md-6">
               <label for="role">Vai Trò</label>
               <select [(ngModel)]="selectedRole" formControlName="role" class="form-control form-control-lg" id="role"
-                      (change)="onRoleChange()">
+                (change)="onRoleChange()">
                 <option [ngValue]="null" disabled selected>Chọn Vai Trò</option>
                 <option *ngFor="let rol of role" [ngValue]="rol.roleId">
                   {{ rol.roleName }}
                 </option>
               </select>
             </div>
-          
+
             <div class="form-group col-md-6">
               <label for="position">Vị Trí</label>
-              <select [(ngModel)]="selectedPosition" formControlName="position" class="form-control form-control-lg"
-                      id="position" [disabled]="!isPositionEnabled">
-                <option [ngValue]="null" disabled selected>Chọn Vị Trí</option>
-                <option *ngFor="let pos of position" [ngValue]="pos.position_id">
-                  {{ pos.position_name }}
-                </option>
-              </select>
+              <div *ngIf="isPositionEnabled">
+                <select [(ngModel)]="selectedPosition" formControlName="position" class="form-control form-control-lg"
+                  id="position">
+                  <option [ngValue]="null" disabled selected>Chọn Vị Trí</option>
+                  <option *ngFor="let pos of position" [ngValue]="pos.position_id">
+                    {{ pos.position_name }}
+                  </option>
+                </select>
+              </div>
+              <div *ngIf="!isPositionEnabled">
+                <select disabled class="form-control form-control-lg" id="position">
+                  <option [ngValue]="null" disabled selected>Chọn Vị Trí</option>
+                </select>
+              </div>
+
             </div>
           </div>
-          
+
 
 
 

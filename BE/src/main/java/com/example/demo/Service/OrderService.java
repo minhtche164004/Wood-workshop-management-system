@@ -51,4 +51,5 @@ public interface OrderService {
     Requests EditRequest(int request_id, RequestEditDTO requestEditDTO,MultipartFile[] multipartFiles) throws IOException;
 
     public List<OrderDetailWithJobStatusDTO> getOrderDetailByOrderId(int order_id);
+
 }

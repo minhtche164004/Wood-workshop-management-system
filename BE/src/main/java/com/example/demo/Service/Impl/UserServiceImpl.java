@@ -1,5 +1,6 @@
 package com.example.demo.Service.Impl;
 
+import com.example.demo.Dto.UserDTO.ChangePassDTO;
 import com.example.demo.Dto.UserDTO.*;
 import com.example.demo.Entity.*;
 import com.example.demo.Jwt.UserDetailsServiceImpl;
@@ -79,7 +80,8 @@ public class UserServiceImpl implements UserService {
                 "",
                 userDTO.getCity(),
                 userDTO.getDistrict(),
-                userDTO.getWards()
+                userDTO.getWards(),
+                1
         );
         informationUserRepository.save(userInfor);
         User user = new User(
@@ -130,7 +132,8 @@ public class UserServiceImpl implements UserService {
                 userDTO.getBank_number(),
                 userDTO.getCity(),
                 userDTO.getDistrict(),
-                userDTO.getWards()
+                userDTO.getWards(),
+                1 //register thì cho has_Account là 1 , nghĩa là đã có account
 
         );
         informationUserRepository.save(userInfor);
@@ -176,11 +179,30 @@ public class UserServiceImpl implements UserService {
         return jwtAuthenticationResponse;
     }
 
+    @Override
+    public void changePass(ChangePassDTO changePassDTO) {
+        UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        String username = userDetails.getUsername();
+        User user = userRepository.getUserByUsername(username);
+        if (!passwordEncoder.matches(changePassDTO.getOld_pass(),user.getPassword())) {
+            throw new AppException(ErrorCode.WRONG_PASS);
+        }
+        if (!changePassDTO.getCheck_pass().equals(changePassDTO.getNew_pass())){
+            throw new AppException(ErrorCode.NOT_MATCH_PASS);
+        }
+        String pass = passwordEncoder.encode(changePassDTO.getNew_pass());
+        userRepository.updatePassword(user.getEmail(),pass);
+    }
+
+
 
 
 
     @Override
     public void checkConditions(RegisterDTO userDTO) { //check các điều kiện cho form Register
+        if (!checkConditionService.checkPhone(userDTO.getPhoneNumber())) {
+            throw new AppException(ErrorCode.PHONE_EXISTED);
+        }
         if (!checkConditionService.checkEmail(userDTO.getEmail())) {
             throw new AppException(ErrorCode.WRONG_FORMAT_EMAIL);
         }
@@ -323,6 +345,8 @@ userRepository.save(user);
         user.getUserInfor().setPhoneNumber(userDTO.getPhoneNumber());
         user.getUserInfor().setAddress(userDTO.getAddress());
         user.getUserInfor().setFullname(userDTO.getFullname());
+        user.getUserInfor().setBank_number(userDTO.getBank_number());
+        user.getUserInfor().setBank_name(userDTO.getBank_name());
         Position position = positionRepository.findByName(userDTO.getPosition_name());
         user.setPosition(position);
         Status_User statusUser = statusRepository.findByName(userDTO.getStatus_name());
@@ -332,7 +356,6 @@ userRepository.save(user);
         userRepository.save(user);
         entityManager.refresh(user); // Làm mới đối tượng
         return modelMapper.map(user, UserDTO.class);
-
     }
 
     @Override

@@ -8,6 +8,10 @@ import com.example.demo.Dto.RequestDTO.RequestDTO;
 import com.example.demo.Dto.OrderDTO.RequestOrder;
 import com.example.demo.Dto.RequestDTO.RequestEditDTO;
 import com.example.demo.Entity.*;
+
+import com.example.demo.Repository.OrderRepository;
+import com.example.demo.Repository.Status_Order_Repository;
+
 import com.example.demo.Response.ApiResponse;
 import com.example.demo.Service.*;
 import lombok.AllArgsConstructor;
@@ -18,6 +22,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.Date;
 import java.util.List;
 
@@ -25,12 +30,18 @@ import java.util.List;
 @RequestMapping("/api/auth/order/")
 @AllArgsConstructor
 public class OrderController {
-@Autowired
-private OrderService orderService;
+    @Autowired
+    private UserInforService userInforService;
+    @Autowired
+    private OrderService orderService;
+    @Autowired
+    private Status_Order_Repository statusOrderRepository;
     @Autowired
     private ProductService productService;
     @Autowired
     private WhiteListService whiteListService;
+    private final OrderRepository orderRepository;
+
 
     @GetMapping("/GetAllProductRequest")
     public ApiResponse<?> GetAllProductRequest() {
@@ -110,7 +121,7 @@ private OrderService orderService;
             @RequestParam(value="request_id") int request_id,
             @RequestPart("productDTO") RequestEditDTO requestEditDTO,
             @RequestPart("files") MultipartFile[] files
-    ) {
+    ) throws IOException {
         ApiResponse<Requests> apiResponse = new ApiResponse<>();
         apiResponse.setResult(orderService.EditRequest(request_id,requestEditDTO,files));
         return apiResponse;
@@ -160,6 +171,13 @@ private OrderService orderService;
         return apiResponse;
     }
 
+    @GetMapping("/getStatusOrder")
+    public ApiResponse<?>  getStatusOrder() {
+        ApiResponse<List> apiResponse = new ApiResponse<>();
+        apiResponse.setResult(statusOrderRepository.findAll());
+        return apiResponse;
+    }
+
     @GetMapping("/getAllOrderDetail")
     public ApiResponse<?>  getAllOrderDetail() {
         ApiResponse<List> apiResponse = new ApiResponse<>();
@@ -172,4 +190,17 @@ private OrderService orderService;
         apiResponse.setResult(orderService.getOrderDetailByOrderId(orderId));
         return apiResponse;
     }
+    @GetMapping("/getListPhoneNumber")
+    public ApiResponse<?>  getListPhoneNumber() {
+        ApiResponse<List> apiResponse = new ApiResponse<>();
+        apiResponse.setResult(userInforService.listPhoneNumberHasAccount());
+        return apiResponse;
+    }
+    @GetMapping("/getInfoUserByPhoneNumber")
+    public ApiResponse<?>  getInfoUserByPhoneNumber(@RequestParam("phoneNumber") String phoneNumber){
+        ApiResponse apiResponse = new ApiResponse<>();
+        apiResponse.setResult(userInforService.getUserInforByPhoneNumber(phoneNumber));
+        return apiResponse;
+    }
+
 }

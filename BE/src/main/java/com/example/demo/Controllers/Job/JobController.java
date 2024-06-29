@@ -53,24 +53,24 @@ public class JobController {
         return apiResponse;
     }
 
-    @GetMapping("/findUsersWithPosition1AndLessThan3Jobs")
-    public ApiResponse<?> findUsersWithPosition1AndLessThan3Jobs() {
-        ApiResponse<List> apiResponse = new ApiResponse<>();
-        apiResponse.setResult(jobRepository.findUsersWithPosition1AndLessThan3Jobs());
-        return apiResponse;
-    }
+//    @GetMapping("/findUsersWithPosition1AndLessThan3Jobs")
+//    public ApiResponse<?> findUsersWithPosition1AndLessThan3Jobs() {
+//        ApiResponse<List> apiResponse = new ApiResponse<>();
+//        apiResponse.setResult(jobRepository.findUsersWithPositionAndLessThan3Jobs());
+//        return apiResponse;
+//    }
+//
+//    @GetMapping("/findUsersWithPosition2AndLessThan3Jobs")
+//    public ApiResponse<?> findUsersWithPosition2AndLessThan3Jobs() {
+//        ApiResponse<List> apiResponse = new ApiResponse<>();
+//        apiResponse.setResult(jobRepository.findUsersWithPositionAndLessThan3Jobs());
+//        return apiResponse;
+//    }
 
-    @GetMapping("/findUsersWithPosition2AndLessThan3Jobs")
-    public ApiResponse<?> findUsersWithPosition2AndLessThan3Jobs() {
+    @GetMapping("/findUsersWithPositionAndLessThan3Jobs")
+    public ApiResponse<?> findUsersWithPosition3AndLessThan3Jobs(@RequestParam("type") int type) {
         ApiResponse<List> apiResponse = new ApiResponse<>();
-        apiResponse.setResult(jobRepository.findUsersWithPosition2AndLessThan3Jobs());
-        return apiResponse;
-    }
-
-    @GetMapping("/findUsersWithPosition3AndLessThan3Jobs")
-    public ApiResponse<?> findUsersWithPosition3AndLessThan3Jobs() {
-        ApiResponse<List> apiResponse = new ApiResponse<>();
-        apiResponse.setResult(jobRepository.findUsersWithPosition3AndLessThan3Jobs());
+        apiResponse.setResult(jobRepository.findUsersWithPositionAndLessThan3Jobs(type));
         return apiResponse;
     }
     @GetMapping("/getListStatusJobByType")
@@ -81,7 +81,7 @@ public class JobController {
     }
 
     @PostMapping("/CreateJobs")
-    public ApiResponse<?> CreateJobs(@RequestBody JobDTO jobDTO , @RequestParam("user_id") int user_id, @RequestParam("p_id") int p_id,@RequestParam("status_id") int status_id,@RequestParam("job_id") int job_id) {
+    public ApiResponse<?> CreateJobs(@RequestBody JobDTO jobDTO , @RequestParam("user_id") int user_id, @RequestParam("p_id") int p_id, @RequestParam("status_id") int status_id, @RequestParam("job_id") int job_id) {
         ApiResponse<Jobs> apiResponse = new ApiResponse<>();
         apiResponse.setResult(jobService.CreateJob(jobDTO,user_id,p_id,status_id,job_id));
         return apiResponse;
@@ -94,5 +94,17 @@ public class JobController {
         return apiResponse;
     }
 
+    @PutMapping("/EditJob")
+    public ApiResponse<?> EditJob(@RequestParam("job_id") int job_id,@RequestBody JobDTO jobDTO) {
+        ApiResponse<Jobs> apiResponse = new ApiResponse<>();
+        apiResponse.setResult(jobService.EditJobs(jobDTO,job_id));
+        return apiResponse;
+    }
 
+    @GetMapping("/getAllJob")
+    public ApiResponse<?> getAllJob() {
+        ApiResponse<List> apiResponse = new ApiResponse<>();
+        apiResponse.setResult(jobService.GetAllJob());
+        return apiResponse;
+    }
 }

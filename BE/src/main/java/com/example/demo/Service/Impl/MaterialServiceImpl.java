@@ -36,7 +36,8 @@ public class MaterialServiceImpl implements MaterialService {
     @Override
     public Materials AddNewMaterial(MaterialDTO materialDTO) {
         Materials materials = new Materials(
-             materialDTO.getMaterialName()
+             materialDTO.getMaterialName(),
+                materialDTO.getType()
         );
         if (!checkConditionService.checkInputName(materialDTO.getMaterialName())) {
             throw new AppException(ErrorCode.INVALID_FORMAT_NAME);
@@ -57,7 +58,7 @@ public class MaterialServiceImpl implements MaterialService {
 
     @Override
     public Materials EditMaterial(int id,MaterialDTO materialDTO){
-        materialRepository.updateMaterial(id, materialDTO.getMaterialName());
+        materialRepository.updateMaterial(id, materialDTO.getMaterialName(), materialDTO.getType());
        return materialRepository.findById1(id);
     }
 //    @Override

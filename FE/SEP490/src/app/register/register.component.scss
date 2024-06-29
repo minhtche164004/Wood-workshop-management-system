@@ -45,8 +45,8 @@ a {
 
 button {
     border-radius: 20px;
-    border: 1px solid #20EC4D;
-    background-color: #20EC4D;
+    border: 1px solid #EC2020;
+    background-color: #EC2020;
     color: #FFFFFF;
     font-size: 12px;
     font-weight: bold;
@@ -101,6 +101,7 @@ form {
     padding: 0 50px;
     height: 91%;
     text-align: center;
+    margin: 0 auto; /* Canh giữa form */
 }
 
 input, select {
@@ -189,9 +190,9 @@ select {
 }
 
 .overlay {
-    background: #20EC4D;
-    background: -webkit-linear-gradient(to right, #FF4B2B, #FF416C);
-    background: linear-gradient(to right, #FF4B2B, #FF416C);
+    background: #EC2020;
+    background: -webkit-linear-gradient(to right, #EC2020, #EC2020);
+    background: linear-gradient(to right, #EC2020, #EC2020);
     background-repeat: no-repeat;
     background-size: cover;
     background-position: 0 0;
@@ -320,4 +321,9 @@ footer a {
 .input-container input, .input-container select {
     background-color: #eee;
     border: none;
+}
+label {
+    width: 150px; /* Chiều rộng cố định cho label */
+    margin-right: 10px; /* Khoảng cách giữa label và input */
+    text-align: left; /* Canh phải text trong label */
 }

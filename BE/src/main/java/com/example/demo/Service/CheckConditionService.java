@@ -16,6 +16,7 @@ public interface CheckConditionService {
     boolean checkUserbyEmail(String email);
 
     boolean checkEmail(String email);
+    boolean checkPhone(String phone);
 
     boolean checkName(String name);
 

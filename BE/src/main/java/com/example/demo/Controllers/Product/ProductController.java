@@ -12,6 +12,7 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 
@@ -19,10 +20,12 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import redis.clients.jedis.JedisPooled;
 
+import java.io.IOException;
 import java.lang.reflect.Type;
 import java.math.BigDecimal;
 import java.nio.file.Paths;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/auth/product/")
@@ -44,6 +47,8 @@ public class ProductController {
     private UploadImageService uploadImageService;
     @Autowired
     private WhiteListService whiteListService;
+    @Autowired
+    private CloudinaryService cloudinaryService;
     @Autowired
     private Status_Product_Repository statusProductRepository;
     private static final JedisPooled jedis = RedisConfig.getRedisInstance();
@@ -67,16 +72,12 @@ public class ProductController {
             jedis.set(cacheKey, jsonData);
             jedis.expire(cacheKey, 1800);
         }
-
-
-
         apiResponse.setResult(products);
         return apiResponse;
     }
     @GetMapping("/getAllProductForAdmin")
     public ApiResponse<?> getAllProductForAdmin() {
         ApiResponse<List> apiResponse = new ApiResponse<>();
-
         String cacheKey = "all_products_admin";
         List<Products> products;
         String cachedData = jedis.get(cacheKey);
@@ -93,6 +94,7 @@ public class ProductController {
             jedis.expire(cacheKey, 1200);
         }
       apiResponse.setResult(products);
+
 
         return apiResponse;
     }
@@ -334,12 +336,31 @@ public class ProductController {
             @RequestPart("productDTO") ProductEditDTO productEditDTO,
             @RequestPart("files") MultipartFile[] files,
             @RequestPart("file_thumbnail") MultipartFile file_thumbnail
-    ) {
+    ) throws Exception {
         ApiResponse<Products> apiResponse = new ApiResponse<>();
 
         apiResponse.setResult(productService.EditProduct(productId,productEditDTO,files, file_thumbnail));
         return apiResponse;
     }
+
+    @DeleteMapping("/deleteimages")
+    public ResponseEntity<?> deleteImage(@RequestParam("id") String id) {
+        try {
+            Map result = cloudinaryService.deleteImage(id);
+            return ResponseEntity.ok(result);
+        } catch (IOException e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error deleting image");
+        }
+    }
+
+    @DeleteMapping("/deleteProduct")
+    public ApiResponse<?> deleteProduct(@RequestParam("id") int product_id) {
+      ApiResponse<String> apiResponse = new ApiResponse<>();
+      productService.DeleteProduct(product_id);
+      apiResponse.setResult("Xoá thành công");
+      return apiResponse;
+    }
+
 
     //edit chỗ status product thì chỉ cho chọn là hết hàng hay là còn hàng , nếu còn hàng thì show ra cho customer xem trên landingpage
 //    @PutMapping(value = "/EditProduct")
@@ -356,17 +377,7 @@ public class ProductController {
 //        return apiResponse;
 //    }
 
-    //xuất đơn nguyên vật liệu cho product có sẵn
-    @PostMapping("/createExportMaterialProduct")
-    public ResponseEntity<ApiResponse<List<ProductSubMaterials>>> createExportMaterialProduct(@RequestBody CreateExportMaterialProductRequest request) {
-        return productService.createExportMaterialProduct(request.getProductId(), request.getSubMaterialQuantities());
-    }
 
-    //xuất đơn vật liệu cho đơn hàng đặt theo yêu cầu , request product
-    @PostMapping("/createExportMaterialProductRequest")
-    public ResponseEntity<ApiResponse<List<RequestProductsSubmaterials>>> createExportMaterialProductRequest(@RequestBody CreateExportMaterialProductRequest request) {
-        return productService.createExportMaterialProductRequest(request.getProductId(), request.getSubMaterialQuantities());
-    }
 
     @GetMapping("/GetStatusProduct")
     public ApiResponse<?> GetAllStatusProduct() {
@@ -374,6 +385,8 @@ public class ProductController {
         apiResponse.setResult(statusProductRepository.GetListStatusType0());
         return apiResponse;
     }
+
+
 
 
     // neu input cua sortDirection la asc thi la sap xep tang dan` va desc la giam dan
@@ -384,7 +397,7 @@ public class ProductController {
             @RequestParam(required = false) BigDecimal minPrice,
             @RequestParam(required = false) BigDecimal maxPrice,
             @RequestParam(required = false) String sortDirection){
-        List<Products> products = productService.GetAllProductForCustomer(search, categoryId, minPrice, maxPrice, sortDirection);
+        List<Products> products = productService.filterProductForCustomer(search, categoryId, minPrice, maxPrice, sortDirection);
         return ResponseEntity.ok(products);
     }
 

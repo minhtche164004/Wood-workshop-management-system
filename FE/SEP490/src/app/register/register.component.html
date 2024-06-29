@@ -20,7 +20,7 @@
                 <label for="checkPass">Xác nhận mật khẩu</label>
                 <input type="password" id="checkPass" name="checkPass" [(ngModel)]="checkPass" required>
             </div>
-
+ 
             <div class="input-container">
                 <label for="email">Email</label>
                 <input type="email" id="email" name="email" [(ngModel)]="email" required>
@@ -36,7 +36,7 @@
                 <input type="text" id="fullname" name="fullname" [(ngModel)]="fullname" required>
             </div>
 
-            <div class="row">
+            <div class="row" style="justify-content: center;">
                 <div class="input-container col-md-4">
                     <label for="province">Tỉnh / Thành Phố</label>
                     <select id="province" [formControl]="provinceControl" required>
@@ -77,15 +77,15 @@
     <div class="form-container sign-in-container">
         <form>
             <h1 style="margin-bottom: 50px;">Đăng nhập</h1>
-
+            <label style="margin-right: 350px;" for="loginUsername">Tên đăng nhập</label>
             <div class="input-container">
-                <label for="loginUsername">Tên đăng nhập</label>
-                <input type="text" id="loginUsername" [(ngModel)]="loginObj.username" name="username" required />
+              
+                <input type="text" id="loginUsername" [(ngModel)]="loginObj.username" name="username" required placeholder="Tên đăng nhập" />
             </div>
-
+            <label  style="margin-right: 350px;" for="loginPassword">Mật khẩu</label>
             <div class="input-container">
-                <label for="loginPassword">Mật khẩu</label>
-                <input type="password" id="loginPassword" [(ngModel)]="loginObj.password" name="password" required />
+              
+                <input type="password" id="loginPassword" [(ngModel)]="loginObj.password" name="password" required placeholder="Mật khẩu" required />
             </div>
 
             <a routerLink="/verifyMail">Quên mật khẩu của bạn?</a>

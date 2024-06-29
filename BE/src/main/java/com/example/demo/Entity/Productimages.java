@@ -39,4 +39,5 @@ public class Productimages implements Serializable {
     @JoinColumn(name = "product_id")
     private Products product;
 
+
 }

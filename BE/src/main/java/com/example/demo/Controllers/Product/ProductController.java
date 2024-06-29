@@ -70,7 +70,7 @@ public class ProductController {
 
 
 
-        apiResponse.setResult(productService.GetAllProductForCustomer());
+        apiResponse.setResult(products);
         return apiResponse;
     }
     @GetMapping("/getAllProductForAdmin")
@@ -92,7 +92,7 @@ public class ProductController {
             jedis.set(cacheKey, jsonData);
             jedis.expire(cacheKey, 1200);
         }
-      apiResponse.setResult(productService.GetAllProductForAdmin());
+      apiResponse.setResult(products);
 
         return apiResponse;
     }

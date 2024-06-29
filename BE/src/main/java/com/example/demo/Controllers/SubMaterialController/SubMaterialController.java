@@ -1,5 +1,6 @@
 package com.example.demo.Controllers.SubMaterialController;
 
+//import com.example.demo.Dto.JobDTO.Employee_MaterialDTO;
 import com.example.demo.Dto.ProductDTO.CreateExportMaterialProductRequest;
 import com.example.demo.Dto.ProductDTO.ProductDTO;
 import com.example.demo.Dto.ProductDTO.QuantityTotalDTO;
@@ -119,16 +120,16 @@ public class SubMaterialController {
     }
 
     @GetMapping("/getProductSubMaterialByProductId")
-    public ApiResponse<?> getProductSubMaterialByProductId(@RequestParam("id") int id) {
+    public ApiResponse<?> getProductSubMaterialByProductId(@RequestParam("id") int id,@RequestParam("mate_id") int mate_id) {
         ApiResponse<List> apiResponse = new ApiResponse<>();
-        apiResponse.setResult(subMaterialService.getProductSubMaterialByProductId(id));
+        apiResponse.setResult(subMaterialService.getProductSubMaterialByProductId(id,mate_id));
         return apiResponse;
     }
 
     @GetMapping("/getRequestProductSubMaterialByRequestProductId")
-    public ApiResponse<?> getRequestProductSubMaterialByRequestProductId(@RequestParam("id") int id) {
+    public ApiResponse<?> getRequestProductSubMaterialByRequestProductId(@RequestParam("id") int id,@RequestParam("mate_id") int mate_id) {
         ApiResponse<List> apiResponse = new ApiResponse<>();
-        apiResponse.setResult(subMaterialService.getRequestProductSubMaterialByRequestProductId(id));
+        apiResponse.setResult(subMaterialService.getRequestProductSubMaterialByRequestProductId(id,mate_id));
         return apiResponse;
     }
     //xuất đơn nguyên vật liệu cho product có sẵn
@@ -145,12 +146,41 @@ public class SubMaterialController {
     }
 
     @PostMapping("/createExportMaterialProductTotalJob")
-    public ResponseEntity<ApiResponse<List<String>>> createExportMaterialProductTotalJob(@RequestParam("id") int id , @RequestBody QuantityTotalDTO quantityTotalDTO) {
-        return subMaterialService.createExportMaterialProductTotalJob(id,quantityTotalDTO);
+    public ResponseEntity<ApiResponse<List<String>>> createExportMaterialProductTotalJob(@RequestParam("id") int id ,@RequestParam("mate_id") int mate_id, @RequestBody QuantityTotalDTO quantityTotalDTO
+    ,@RequestParam("emp_id") int emp_id) {
+        return subMaterialService.createExportMaterialProductTotalJob(id,mate_id,quantityTotalDTO,emp_id);
     }
 
     @PostMapping("/createExportMaterialRequestTotalJob")
-    public ResponseEntity<ApiResponse<List<String>>> createExportMaterialRequestTotalJob(@RequestParam("id") int id , @RequestBody QuantityTotalDTO quantityTotalDTO) {
-        return subMaterialService.createExportMaterialRequestTotalJob(id,quantityTotalDTO);
+    public ResponseEntity<ApiResponse<List<String>>> createExportMaterialRequestTotalJob(@RequestParam("id") int id ,@RequestParam("mate_id") int mate_id, @RequestBody QuantityTotalDTO quantityTotalDTO
+            ,@RequestParam("emp_id") int emp_id) {
+        return subMaterialService.createExportMaterialRequestTotalJob(id,mate_id,quantityTotalDTO,emp_id);
     }
+
+//    @PostMapping("/CreateEMaterial")
+//    public ApiResponse<?> CreateEMaterial(@RequestParam("product_id") int product_id ,@RequestParam("mate_id") int mate_id,@RequestParam("emp_id") int emp_id) {
+//        ApiResponse<List> apiResponse = new ApiResponse<>();
+//        apiResponse.setResult(subMaterialService.createEMaterial(emp_id, mate_id,product_id));
+//        return apiResponse;
+//    }
+    @GetMapping("/getAllEmpMate")
+    public ApiResponse<?> getAllEmpMate() {
+        ApiResponse<List> apiResponse = new ApiResponse<>();
+        apiResponse.setResult(subMaterialService.getAllEmpMate());
+        return apiResponse;
+    }
+
+    @GetMapping("/findEmployeematerialsByNameEmployee")
+    public ApiResponse<?> findEmployeematerialsByName(@RequestParam("key") String key) {
+        ApiResponse<List> apiResponse = new ApiResponse<>();
+        apiResponse.setResult(subMaterialService.findEmployeematerialsByName(key));
+        return apiResponse;
+    }
+
+//    @GetMapping("/filterEmployeematerials")
+//    public ApiResponse<?> filterEmployeematerialsByMaterialType(@RequestParam("mate_id") int mate_id) {
+//        ApiResponse<List> apiResponse = new ApiResponse<>();
+//        apiResponse.setResult(subMaterialService.filterEmployeematerialsByMaterialType(mate_id));
+//        return apiResponse;
+//    }
 }

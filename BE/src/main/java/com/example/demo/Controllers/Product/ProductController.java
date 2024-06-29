@@ -72,7 +72,6 @@ public class ProductController {
             jedis.set(cacheKey, jsonData);
             jedis.expire(cacheKey, 1800);
         }
-
         apiResponse.setResult(products);
         return apiResponse;
     }

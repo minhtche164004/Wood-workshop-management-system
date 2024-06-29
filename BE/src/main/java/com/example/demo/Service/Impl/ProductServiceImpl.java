@@ -175,7 +175,7 @@ public class ProductServiceImpl implements ProductService {
             throw new AppException(ErrorCode.NOT_FOUND);
         }
         // Kiểm tra các ràng buộc
-        if (orderDetailRepository.getOrderDetailByProductId(product_id).isEmpty() &&
+            if (orderDetailRepository.getOrderDetailByProductId(product_id).isEmpty() &&
                 jobRepository.getJobByProductId(product_id).isEmpty() &&
                 productImageRepository.findImageByProductId(product_id).isEmpty() &&
                 processproducterrorRepository.getProcessproducterrorByProductId(product_id).isEmpty() &&

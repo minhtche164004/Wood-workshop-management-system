@@ -53,6 +53,17 @@
     width: 50%; // Adjust the width of the search bar
   }
   
+    .icon-buy {
+      color: black; // Màu mặc định là đen
+      transition: color 0.3s ease; // Hiệu ứng chuyển đổi màu
+    }
+      .icon-buy:hover {
+        color: #8B4513; // Màu khi di chuột qua là nâu
+      }
+    
+  
+    
+  
   /* New styles for buttons with gradient background */
   .header-button {
     font-size: 18px; // Increased font size for buttons

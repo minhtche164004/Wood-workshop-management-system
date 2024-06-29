@@ -75,6 +75,20 @@ public class OrderServiceImpl implements OrderService {
         LocalDate currentDate = LocalDate.now();
         java.sql.Date sqlCompletionTime = java.sql.Date.valueOf(currentDate); // Chuyển đổi sang java.sql.Date
 
+        UserInfor userInfor;
+        boolean userIsExists = informationUserRepository.existsById(requestOrder.getCusInfo().getUserid());
+        if (!userIsExists) {
+            // Nếu không tìm thấy thông tin người dùng thi tao moi
+            userInfor = new UserInfor();
+            userInfor.setFullname(requestOrder.getCusInfo().getFullname());
+            userInfor.setAddress(requestOrder.getCusInfo().getAddress());
+            userInfor.setPhoneNumber(requestOrder.getCusInfo().getPhone());
+            informationUserRepository.save(userInfor);
+        } else {
+            userInfor = informationUserRepository.findById(requestOrder.getCusInfo().getUserid()).get();
+        }
+
+
         Orders orders = new Orders();
         orders.setOrderDate(sqlCompletionTime);
         Status_Order statusOrder = statusOrderRepository.findById(1);//tự set cho nó là 1
@@ -87,13 +101,8 @@ public class OrderServiceImpl implements OrderService {
         orders.setCity_province(requestOrder.getCusInfo().getAddress());
         orders.setDistrict(requestOrder.getCusInfo().getAddress());
         orders.setWards(requestOrder.getCusInfo().getAddress());
-        //luu thong tin nguoi dat
-        UserInfor userInfor = new UserInfor();
-        userInfor.setFullname(requestOrder.getCusInfo().getFullname());
-        userInfor.setAddress(requestOrder.getCusInfo().getAddress());
-        userInfor.setPhoneNumber(requestOrder.getCusInfo().getPhone());
 
-        informationUserRepository.save(userInfor);
+
         orders.setUserInfor(userInfor);
         LocalDate today = LocalDate.now();
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("ddMMyy");
@@ -120,7 +129,7 @@ public class OrderServiceImpl implements OrderService {
                     orderdetail.setProduct(productRepository.findById(item.getId()));
                     orderdetail.setQuantity(item.getQuantity()); //set quantity
                     orderdetail.setUnitPrice(item.getPrice()); //set unit price
-                    if(orderdetail.getProduct().getQuantity() < item.getQuantity()){
+                    if (orderdetail.getProduct().getQuantity() < item.getQuantity()) {
                         throw new AppException(ErrorCode.OUT_OF_STOCK);
                     }
                     product.setQuantity(product.getQuantity() - item.getQuantity());
@@ -147,7 +156,7 @@ public class OrderServiceImpl implements OrderService {
             if (requestProductItems != null && !requestProductItems.isEmpty()) {
                 for (ProductItem item : requestProductItems) { // Duyệt qua từng sản phẩm
                     RequestProducts requestProducts = requestProductRepository.findById(item.getId());
-                    Orderdetails orderdetail= new Orderdetails();
+                    Orderdetails orderdetail = new Orderdetails();
                     orderdetail.setOrder(orders);
                     orderdetail.setRequestProduct(requestProductRepository.findById(item.getId()));
                     orderdetail.setQuantity(item.getQuantity()); //set quantity
@@ -193,12 +202,12 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public Requests AddNewRequest(RequestDTO requestDTO, MultipartFile[] multipartFiles) {
         Requests requests = new Requests();
-        UserDetails userDetails =(UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        User user =userRepository.getUserByUsername(userDetails.getUsername());
+        UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        User user = userRepository.getUserByUsername(userDetails.getUsername());
         //lấy thông tin thằng đang login
         //   User user = userRepository.findById(requestDTO.getUser_id()).get();
         requests.setUser(user);
-        Status_Request statusRequest =statusRequestRepository.findById(1).get();//nghĩa là request đang chờ phê duyệt
+        Status_Request statusRequest = statusRequestRepository.findById(1).get();//nghĩa là request đang chờ phê duyệt
         requests.setRequestDate(requestDTO.getRequestDate());
         requests.setDescription(requestDTO.getDescription());
         requests.setStatus(statusRequest);
@@ -227,7 +236,7 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public Requests EditRequest(int request_id,RequestEditDTO requestEditDTO,MultipartFile[] multipartFiles) {
+    public Requests EditRequest(int request_id, RequestEditDTO requestEditDTO, MultipartFile[] multipartFiles) {
         Requests requests = requestRepository.findById(request_id);
         Date today = new Date();
         if (multipartFiles != null &&
@@ -292,7 +301,6 @@ public class OrderServiceImpl implements OrderService {
         uploadImageService.uploadFileRequestProduct(multipartFiles, requestProduct.getRequestProductId());
         return requestProducts;
     }
-
 
 
     @Override
@@ -406,7 +414,7 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public List<Orderdetails> getAllOrderDetail() {
         List<Orderdetails> orderdetailsList = orderDetailRepository.findAll();
-        if(orderdetailsList.isEmpty()){
+        if (orderdetailsList.isEmpty()) {
             throw new AppException(ErrorCode.NOT_FOUND);
         }
         return orderdetailsList;
@@ -431,9 +439,10 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public List<OrderDetailWithJobStatusDTO> getOrderDetailByOrderId(int order_id) {
         List<OrderDetailWithJobStatusDTO> results = orderDetailRepository.getOrderDetailWithJobStatusByOrderId(order_id);
-        if(results.isEmpty()){
+        if (results.isEmpty()) {
             throw new AppException(ErrorCode.NOT_FOUND);
         }
         return results;
     }
+
 }

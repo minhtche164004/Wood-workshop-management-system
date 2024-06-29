@@ -50,4 +50,5 @@ public interface OrderService {
     Requests EditRequest(int request_id, RequestEditDTO requestEditDTO, MultipartFile[] multipartFiles);
 
     public List<OrderDetailWithJobStatusDTO> getOrderDetailByOrderId(int order_id);
+
 }

@@ -8,6 +8,8 @@ import com.example.demo.Dto.RequestDTO.RequestDTO;
 import com.example.demo.Dto.OrderDTO.RequestOrder;
 import com.example.demo.Dto.RequestDTO.RequestEditDTO;
 import com.example.demo.Entity.*;
+import com.example.demo.Repository.OrderDetailRepository;
+import com.example.demo.Repository.OrderRepository;
 import com.example.demo.Response.ApiResponse;
 import com.example.demo.Service.*;
 import lombok.AllArgsConstructor;
@@ -25,12 +27,16 @@ import java.util.List;
 @RequestMapping("/api/auth/order/")
 @AllArgsConstructor
 public class OrderController {
-@Autowired
-private OrderService orderService;
+    @Autowired
+    private UserInforService userInforService;
+    @Autowired
+    private OrderService orderService;
     @Autowired
     private ProductService productService;
     @Autowired
     private WhiteListService whiteListService;
+    private final OrderRepository orderRepository;
+    private final OrderDetailRepository orderDetailRepository;
 
     @GetMapping("/GetAllProductRequest")
     public ApiResponse<?> GetAllProductRequest() {
@@ -172,4 +178,17 @@ private OrderService orderService;
         apiResponse.setResult(orderService.getOrderDetailByOrderId(orderId));
         return apiResponse;
     }
+    @GetMapping("/getListPhoneNumber")
+    public ApiResponse<?>  getListPhoneNumber() {
+        ApiResponse<List> apiResponse = new ApiResponse<>();
+        apiResponse.setResult(userInforService.listPhoneNumber());
+        return apiResponse;
+    }
+    @GetMapping("/getInfoUserByPhoneNumber")
+    public ApiResponse<?>  getInfoUserByPhoneNumber(@RequestParam("phoneNumber") String phoneNumber){
+        ApiResponse apiResponse = new ApiResponse<>();
+        apiResponse.setResult(userInforService.getUserInforByPhoneNumber(phoneNumber));
+        return apiResponse;
+    }
+
 }

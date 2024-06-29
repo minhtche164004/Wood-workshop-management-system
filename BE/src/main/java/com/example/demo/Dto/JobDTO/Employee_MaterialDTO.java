@@ -9,6 +9,10 @@ import lombok.NoArgsConstructor;
 @Data
 public class Employee_MaterialDTO {
     private int emp_id;
-    private int product_sub_material_id;
-    private int request_product_submaterial_id;
+    private String emp_name;
+    private String  position_name;
+    private String  sub_material_id;
+    private String sub_material_name;
+    private double quantity;
+
 }

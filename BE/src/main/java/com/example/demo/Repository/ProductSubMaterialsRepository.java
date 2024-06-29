@@ -19,6 +19,9 @@ public interface ProductSubMaterialsRepository extends JpaRepository<ProductSubM
     @Query("SELECT u.subMaterial.subMaterialName FROM ProductSubMaterials u WHERE u.product.productId = :query")
     List<String> GetSubNameByProductId(int query);
 
+    @Query("SELECT u FROM ProductSubMaterials u WHERE u.product.productId = :query AND u.subMaterial.material.materialId = :mate_id")
+    List<ProductSubMaterials> findByProductIDAndMate(int query,int mate_id);
+
     @Query("SELECT u FROM ProductSubMaterials u WHERE u.product.productId = :query")
     List<ProductSubMaterials> findByProductID(int query);
 
@@ -29,8 +32,8 @@ public interface ProductSubMaterialsRepository extends JpaRepository<ProductSubM
     @Query("SELECT new com.example.demo.Dto.SubMaterialDTO.Product_SubmaterialDTO(j.productSubMaterialId, sub.subMaterialName,sub.subMaterialId,j.quantity, m.type) " +
             "FROM ProductSubMaterials j " +
             "LEFT JOIN j.subMaterial sub " +
-            "LEFT JOIN sub.material m WHERE j.product.productId= :productId")
-    List<Product_SubmaterialDTO> getProductSubMaterialByProductId(int productId);
+            "LEFT JOIN sub.material m WHERE j.product.productId= :productId AND j.subMaterial.material.materialId = :materialId")
+    List<Product_SubmaterialDTO> getProductSubMaterialByProductIdAndTypeMate(int productId,int materialId);
 
 
 }

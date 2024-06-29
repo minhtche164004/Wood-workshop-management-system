@@ -358,27 +358,11 @@ export class UserManagementComponent implements OnInit {
     this.authenListService.getUserById(user_id).subscribe(
       (data) => {
         this.userData = data.result;
-        console.log('User data:', data.result);
-        console.log('User district:', this.userData.district);
-
       },
       (error) => {
         console.error('Error fetching user data:', error);
       }
     );
-
-    // this.editUserForm.get('city')?.valueChanges.subscribe(provinceName => {
-    //   const selectedProvince = this.provinces.find(province => province.name === provinceName);
-    //   this.districts = selectedProvince ? selectedProvince.districts : [];
-    //   this.editUserForm.get('district')?.reset();
-    //   this.editUserForm.get('wards')?.reset();
-    // });
-
-    // this.editUserForm.get('district')?.valueChanges.subscribe(districtName => {
-    //   const selectedDistrict = this.districts.find(district => district.name === districtName);
-    //   this.wards = selectedDistrict ? selectedDistrict.wards : [];
-    //   this.editUserForm.get('wards')?.reset();
-    // });
   }
 
   onProvinceChange() {

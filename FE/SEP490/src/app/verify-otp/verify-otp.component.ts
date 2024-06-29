@@ -40,7 +40,7 @@ export class VerifyOtpComponent {
       (response: any) => {
         console.log('OTP verified successfully', response);
         this.toastr.success('Xác minh OTP thành công! Bạn có thể đăng nhập ngay bây giờ', 'Thành công');
-        this.router.navigate(['/register']); // Navigate to registration page on success
+        this.router.navigate(['/login']); // Navigate to registration page on success
       
       },
       (error) => {

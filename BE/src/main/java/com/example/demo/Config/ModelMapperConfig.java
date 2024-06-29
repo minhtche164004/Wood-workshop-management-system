@@ -17,6 +17,12 @@ public class ModelMapperConfig {
         modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT); // Áp dụng chiến lược khớp chính xác
 
         modelMapper.typeMap(User.class, UserDTO.class)
+                .addMapping(src -> src.getUserInfor().getBank_number(), UserDTO::setBank_number)
+                .addMapping(src -> src.getUserInfor().getBank_name(), UserDTO::setBank_name)
+                .addMapping(src -> src.getUserInfor().getWards(), UserDTO::setWards)
+                .addMapping(src -> src.getUserInfor().getDistrict(), UserDTO::setDistrict)
+                .addMapping(src -> src.getUserInfor().getCity_province(), UserDTO::setCity_province)
+                .addMapping(User::getUserId, UserDTO::setUserId)
                 .addMapping(src -> src.getUserInfor().getFullname(), UserDTO::setFullname)
                 .addMapping(User::getUsername, UserDTO::setUsername)
                 .addMapping(User::getEmail, UserDTO::setEmail)

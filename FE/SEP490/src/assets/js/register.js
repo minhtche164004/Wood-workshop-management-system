@@ -125,7 +125,7 @@ function Register() {
         }
         let myJSON = JSON.stringify(req);
         $.ajax({
-            url: '/api/auth/register',
+            url: '/api/auth/login',
             type: 'POST',
             data: myJSON,
             contentType: "application/json; charset=utf-8",

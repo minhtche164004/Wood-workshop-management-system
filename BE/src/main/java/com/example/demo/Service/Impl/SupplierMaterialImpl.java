@@ -3,10 +3,14 @@ package com.example.demo.Service.Impl;
 import com.example.demo.Dto.SubMaterialDTO.SubMaterialNameDTO;
 import com.example.demo.Dto.SupplierDTO.SupplierMaterialDTO;
 import com.example.demo.Dto.SupplierDTO.SupplierNameDTO;
+import com.example.demo.Entity.ProductSubMaterials;
+import com.example.demo.Entity.RequestProductsSubmaterials;
 import com.example.demo.Entity.SubMaterials;
 import com.example.demo.Entity.Suppliermaterial;
 import com.example.demo.Exception.AppException;
 import com.example.demo.Exception.ErrorCode;
+import com.example.demo.Repository.ProductSubMaterialsRepository;
+import com.example.demo.Repository.RequestProductsSubmaterialsRepository;
 import com.example.demo.Repository.SubMaterialsRepository;
 import com.example.demo.Repository.SuppliermaterialRepository;
 import com.example.demo.Service.CheckConditionService;
@@ -28,6 +32,10 @@ public class SupplierMaterialImpl implements SupplierMaterialService {
 private SuppliermaterialRepository suppliermaterialRepository;
 @Autowired
 private SubMaterialsRepository subMaterialsRepository;
+    @Autowired
+    private RequestProductsSubmaterialsRepository requestProductsSubmaterialsRepository;
+    @Autowired
+    private ProductSubMaterialsRepository productSubMaterialsRepository;
 @Autowired
 private ModelMapper modelMapper;
     @Autowired
@@ -90,6 +98,28 @@ suppliermaterialRepository.save(suppliermaterial);
             throw  new AppException(ErrorCode.NOT_FOUND);
         }
         return suppliermaterialList;
+    }
+
+    @Override
+    public void DeleteSupplier(int id) {
+       // xoá nhà cung cấp vật liệu thì những vật liệu có liên quan đến nhà cung cấp này cũng phải xoá
+        //nếu hệ thống đang sử dụng nguyên liệu được cung cấp từ nhà cung cấp này thì ko thể xoá nhà cung cấp
+        Suppliermaterial suppliermaterial = suppliermaterialRepository.findById(id);
+        SubMaterials subMaterial = suppliermaterial.getSubMaterial();
+
+        if (subMaterial == null) { // Xử lý trường hợp không tìm thấy SubMaterials
+            suppliermaterialRepository.delete(suppliermaterial);
+            return;
+        }
+        // Kiểm tra xem có request hoặc product nào sử dụng nguyên liệu phụ này không
+        boolean isSubMaterialInUse = !requestProductsSubmaterialsRepository.findBySubMaterialId(subMaterial.getSubMaterialId()).isEmpty() ||
+                !productSubMaterialsRepository.findBySubMaterialId(subMaterial.getSubMaterialId()).isEmpty();
+        if (isSubMaterialInUse) {
+            throw new AppException(ErrorCode.SUPPLIER_HAS_RELATIONSHIPS); // Không thể xóa nếu nguyên liệu phụ đang được sử dụng
+        } else {
+            suppliermaterialRepository.delete(suppliermaterial);
+            subMaterialsRepository.delete(subMaterial); // Nếu nguyên liệu phụ không được sử dụng thì xóa
+        }
     }
 
 

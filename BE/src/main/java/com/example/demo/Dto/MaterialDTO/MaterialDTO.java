@@ -13,4 +13,6 @@ import java.io.Serializable;
 public class MaterialDTO implements Serializable {
     @NotNull(message = "MUST_REQUIRED")
     private String materialName;
+    @NotNull(message = "MUST_REQUIRED")
+    private String type;
 }

@@ -23,4 +23,6 @@ public interface JobService {
     Jobs CreateJob_Log(int job_id,int status_id);
 
     Jobs EditJobs(JobDTO jobDTO,int job_id);
+
+    List<Jobs> GetAllJob();
 }

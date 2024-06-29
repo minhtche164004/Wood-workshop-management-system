@@ -31,6 +31,7 @@ export class ProductListService {
   private apiUrl_AddProduct = `${environment.apiUrl}api/auth/product/AddNewProduct`;
 
   private apiUrl_UpdateProduct = `${environment.apiUrl}api/auth/product/AddNewProduct`;
+  
 
   constructor(private http: HttpClient) { }
   uploadProduct(productData: any, thumbnail: File, images: File[]): Observable<any> {

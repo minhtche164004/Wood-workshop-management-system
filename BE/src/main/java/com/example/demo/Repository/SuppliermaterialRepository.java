@@ -24,6 +24,9 @@ public interface SuppliermaterialRepository extends JpaRepository<Suppliermateri
     @Query("SELECT u FROM Suppliermaterial u WHERE u.supplierName = :query")
     Suppliermaterial findByName(String query);
 
+//    @Query("SELECT u. FROM Suppliermaterial u WHERE u.supplierName = :query")
+//    SubMaterials findBSubMaterialsBySupplierId(String query);
+
 
     @Query("SELECT u FROM Suppliermaterial u  WHERE u.supplierName LIKE CONCAT('%', :keyword, '%')")
     List<Suppliermaterial> SearchSupplierByName(@Param("keyword") String keyword);

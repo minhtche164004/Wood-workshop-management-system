@@ -25,7 +25,6 @@ public interface SubMaterialsRepository extends JpaRepository<SubMaterials,Integ
     @Query("SELECT u FROM SubMaterials u WHERE u.material.materialId = :query")
     List<SubMaterials> findSubMaterialIdByMaterial(int query);
 
-
     List<SubMaterials> findAll();
     int countBySubMaterialName(String SubMaterialName);
 
@@ -49,6 +48,8 @@ public interface SubMaterialsRepository extends JpaRepository<SubMaterials,Integ
     @Query("update SubMaterials u set u.subMaterialName = ?2,u.description=?3,u.quantity=?4,u.unitPrice=?5" +
             " where u.subMaterialId = ?1")
     void updateSubMaterials(int productId, String subMaterialName, String description, Double quantity, BigDecimal unitPrice);
+
+
 
 
 

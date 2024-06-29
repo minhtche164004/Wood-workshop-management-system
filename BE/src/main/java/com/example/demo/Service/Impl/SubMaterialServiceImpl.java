@@ -1,22 +1,21 @@
 package com.example.demo.Service.Impl;
 
+//import com.example.demo.Dto.JobDTO.Employee_MaterialDTO;
 import com.example.demo.Dto.MaterialDTO.MaterialDTO;
-import com.example.demo.Dto.SubMaterialDTO.SubMaterialDTO;
-import com.example.demo.Dto.SubMaterialDTO.SubMaterialNameDTO;
-import com.example.demo.Dto.SubMaterialDTO.UpdateSubDTO;
-import com.example.demo.Entity.Materials;
-import com.example.demo.Entity.Products;
-import com.example.demo.Entity.SubMaterials;
+import com.example.demo.Dto.ProductDTO.QuantityTotalDTO;
+import com.example.demo.Dto.SubMaterialDTO.*;
+import com.example.demo.Entity.*;
 import com.example.demo.Exception.AppException;
 import com.example.demo.Exception.ErrorCode;
-import com.example.demo.Repository.MaterialRepository;
-import com.example.demo.Repository.SubMaterialsRepository;
+import com.example.demo.Repository.*;
+import com.example.demo.Response.ApiResponse;
 import com.example.demo.Service.CheckConditionService;
 import com.example.demo.Service.SubMaterialService;
 import jakarta.persistence.LockModeType;
 import jakarta.transaction.Transactional;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -24,10 +23,7 @@ import java.io.IOException;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
@@ -43,6 +39,21 @@ public class SubMaterialServiceImpl implements SubMaterialService {
   
     @Autowired
     private CheckConditionService checkConditionService;
+
+    @Autowired
+    private RequestProductsSubmaterialsRepository requestProductsSubmaterialsRepository;
+    @Autowired
+    private RequestProductRepository requestProductRepository;
+    @Autowired
+    private ProductRepository productRepository;
+    @Autowired
+    private ProductSubMaterialsRepository productSubMaterialsRepository;
+    @Autowired
+    private Employee_Material_Repository employeeMaterialRepository;
+
+    @Autowired
+    private UserRepository userRepository;
+
 
     @Override
     public List<SubMaterials> getAll() {
@@ -175,6 +186,188 @@ public class SubMaterialServiceImpl implements SubMaterialService {
         , updateSubDTO.getQuantity(),updateSubDTO.getUnit_price());
         return modelMapper.map(subMaterials,UpdateSubDTO.class);
     }
+
+    @Override
+    public List<Product_SubmaterialDTO> getProductSubMaterialByProductId(int id,int material_id) {
+        List<Product_SubmaterialDTO> productSubMaterialsList = productSubMaterialsRepository.getProductSubMaterialByProductIdAndTypeMate(id,material_id);
+        if(productSubMaterialsList == null){
+            throw new AppException(ErrorCode.NOT_FOUND);
+        }
+        return productSubMaterialsList;
+    }
+
+    @Override
+    public List<ReProduct_SubmaterialDTO> getRequestProductSubMaterialByRequestProductId(int id,int material_id) {
+        List<ReProduct_SubmaterialDTO> requestProductsSubmaterialsList = requestProductsSubmaterialsRepository.getRequestProductSubMaterialByProductIdAndTypeMate(id,material_id);
+        if(requestProductsSubmaterialsList == null){
+            throw new AppException(ErrorCode.NOT_FOUND);
+        }
+        return requestProductsSubmaterialsList;
+    }
+
+    @Override
+    public List<Employeematerials> createEMaterial(int emp_id, int mate_id, int product_id) {
+        List<Employeematerials> employeeMaterialsList = new ArrayList<>();
+        User user = userRepository.findByIdCheck(emp_id);
+
+        List<RequestProductsSubmaterials> requestProductsSubmaterialsList = requestProductsSubmaterialsRepository.findByRequestProductIDAndMate(product_id, mate_id);
+        List<ProductSubMaterials> productSubMaterialsList = productSubMaterialsRepository.findByProductIDAndMate(product_id, mate_id);
+
+        // Nếu requestProductsSubmaterialsList KHÔNG trống (có dữ liệu)
+        if (!requestProductsSubmaterialsList.isEmpty()) {
+            for (RequestProductsSubmaterials requestProductsSubmaterials : requestProductsSubmaterialsList) {
+                Employeematerials employeeMaterials = new Employeematerials();
+                employeeMaterials.setRequestProductsSubmaterials(requestProductsSubmaterials);
+                employeeMaterials.setEmployee(user);
+
+                // Lưu từng đối tượng và thêm vào danh sách kết quả
+                employeeMaterialsList.add(employeeMaterialRepository.save(employeeMaterials));
+            }
+        }
+
+        // Nếu productSubMaterialsList KHÔNG trống (có dữ liệu)
+        if (!productSubMaterialsList.isEmpty()) {
+            for (ProductSubMaterials productSubMaterials : productSubMaterialsList) {
+                Employeematerials employeeMaterials = new Employeematerials();
+                employeeMaterials.setProductSubMaterial(productSubMaterials);
+                employeeMaterials.setEmployee(user);
+
+                // Lưu từng đối tượng và thêm vào danh sách kết quả
+                employeeMaterialsList.add(employeeMaterialRepository.save(employeeMaterials));
+            }
+        }
+
+        return employeeMaterialsList;
+    }
+
+    @Override
+    public List<Employeematerials> getAllEmpMate() {
+        List<Employeematerials> employeematerialsList = employeeMaterialRepository.findAll();
+        if(employeematerialsList == null){
+            throw new AppException(ErrorCode.NOT_FOUND);
+        }
+        return employeematerialsList;
+    }
+
+    @Override
+    public List<Employeematerials> findEmployeematerialsByName(String key) {
+        List<Employeematerials> employeematerialsList = employeeMaterialRepository.findEmployeematerialsByName(key);
+        if(employeematerialsList == null){
+            throw new AppException(ErrorCode.NOT_FOUND);
+        }
+        return employeematerialsList;
+    }
+
+//    @Override
+//    public List<Employeematerials> filterEmployeematerialsByMaterialType(int materialId) {
+//        List<Employeematerials> employeematerialsList = employeeMaterialRepository.filterEmployeematerialsByMaterialType(materialId);
+//        if(employeematerialsList == null){
+//            throw new AppException(ErrorCode.NOT_FOUND);
+//        }
+//        return employeematerialsList;
+//    }
+
+    @Transactional
+    @Override
+    public List<ProductSubMaterials> createExportMaterialProduct(int productId, Map<Integer, Double> subMaterialQuantities) {
+        Products product = productRepository.findById(productId);
+        List<ProductSubMaterials> productSubMaterialsList = new ArrayList<>();
+        for (Map.Entry<Integer, Double> entry : subMaterialQuantities.entrySet()) {
+            int subMaterialId = entry.getKey();
+            double quantity = entry.getValue();
+            SubMaterials subMaterial = subMaterialsRepository.findById1(subMaterialId);
+            ProductSubMaterials productSubMaterial = new ProductSubMaterials(subMaterial, product, quantity);
+            productSubMaterialsList.add(productSubMaterial);
+        }
+        productSubMaterialsRepository.saveAll(productSubMaterialsList);
+        return productSubMaterialsList;
+    }
+    @Transactional
+    @Override
+    public ResponseEntity<ApiResponse<List<String>>> createExportMaterialProductTotalJob(int productId,int mate_id, QuantityTotalDTO quantityTotalDTO) {
+       // int mate_id la bắt theo ví dụ thằng thựo mộc thì mate_id sẽ là mộc , tức là 1
+        //lấy các ProductSubMaterials tạo nên product có id kia
+        List<ProductSubMaterials> productSubMaterialsList = productSubMaterialsRepository.findByProductIDAndMate(productId,mate_id);
+        Map<String, String> errors = new HashMap<>(); //hashmap cho error
+        //vòng lặp này để kiểm tra số lượng
+        for (ProductSubMaterials productSubMaterials : productSubMaterialsList) {
+            //int quantity_product là số lượng product phải làm có trong 1 job --> quantity nhận được sẽ bằng quantity dự tính cảu 1 cái x quantity_product
+            double quantity = quantityTotalDTO.getQuantity_product() * productSubMaterials.getQuantity();
+            SubMaterials subMaterial = productSubMaterials.getSubMaterial();
+            double currentQuantity = subMaterial.getQuantity();
+            if (quantity > currentQuantity) {
+                errors.put(subMaterial.getSubMaterialName(), "Không đủ số lượng");
+                //continue;
+            }
+        }
+        ApiResponse<List<String>> apiResponse = new ApiResponse<>();
+        if (!errors.isEmpty()) {
+            apiResponse.setError(1028, errors);
+            return ResponseEntity.badRequest().body(apiResponse);
+        } else {
+            // Vòng lặp thứ hai: Cập nhật số lượng nếu tất cả đều đủ
+            for (ProductSubMaterials productSubMaterials : productSubMaterialsList) {
+                double quantity = quantityTotalDTO.getQuantity_product() * productSubMaterials.getQuantity();
+                SubMaterials subMaterial = productSubMaterials.getSubMaterial();
+                double currentQuantity = subMaterial.getQuantity();
+                subMaterial.setQuantity(currentQuantity - quantity);
+                subMaterialsRepository.save(subMaterial);
+            }
+            apiResponse.setResult(Collections.singletonList("Xuất đơn nguyên vật liệu cho đơn hàng thành công"));
+            return ResponseEntity.ok(apiResponse);
+        }
+    }
+    @Transactional
+    @Override
+    public ResponseEntity<ApiResponse<List<String>>> createExportMaterialRequestTotalJob(int productId,int mate_id,  QuantityTotalDTO quantityTotalDTO) {
+        //lấy các ProductSubMaterials tạo nên product có id kia
+        List<RequestProductsSubmaterials> requestProductsSubmaterialsList = requestProductsSubmaterialsRepository.findByRequestProductIDAndMate(productId,mate_id);
+        Map<String, String> errors = new HashMap<>(); //hashmap cho error
+        //vòng lặp này để kiểm tra số lượng
+        for (RequestProductsSubmaterials requestProductsSubmaterials : requestProductsSubmaterialsList) {
+            //int quantity_product là số lượng product phải làm có trong 1 job --> quantity nhận được sẽ bằng quantity dự tính cảu 1 cái x quantity_product
+            double quantity = quantityTotalDTO.getQuantity_product() * requestProductsSubmaterials.getQuantity();
+            SubMaterials subMaterial = requestProductsSubmaterials.getSubMaterial();
+            double currentQuantity = subMaterial.getQuantity();
+            if (quantity > currentQuantity) {
+                errors.put(subMaterial.getSubMaterialName(), "Không đủ số lượng");
+                //continue;
+            }
+        }
+        ApiResponse<List<String>> apiResponse = new ApiResponse<>();
+        if (!errors.isEmpty()) {
+            apiResponse.setError(1028, errors);
+            return ResponseEntity.badRequest().body(apiResponse);
+        } else {
+            // Vòng lặp thứ hai: Cập nhật số lượng nếu tất cả đều đủ
+            for (RequestProductsSubmaterials requestProductsSubmaterials : requestProductsSubmaterialsList) {
+                double quantity = quantityTotalDTO.getQuantity_product() * requestProductsSubmaterials.getQuantity();
+                SubMaterials subMaterial = requestProductsSubmaterials.getSubMaterial();
+                double currentQuantity = subMaterial.getQuantity();
+                subMaterial.setQuantity(currentQuantity - quantity);
+                subMaterialsRepository.save(subMaterial);
+            }
+            apiResponse.setResult(Collections.singletonList("Xuất đơn nguyên vật liệu cho đơn hàng thành công"));
+            return ResponseEntity.ok(apiResponse);
+        }
+    }
+
+    @Transactional
+    @Override
+    public List<RequestProductsSubmaterials> createExportMaterialProductRequest(int request_product_id, Map<Integer, Double> subMaterialQuantities) {
+        RequestProducts requestProducts = requestProductRepository.findById(request_product_id);
+        List<RequestProductsSubmaterials> requestProductsSubmaterialsList = new ArrayList<>();
+        for (Map.Entry<Integer, Double> entry : subMaterialQuantities.entrySet()) {
+            int subMaterialId = entry.getKey();
+            double quantity = entry.getValue();
+            SubMaterials subMaterial = subMaterialsRepository.findById1(subMaterialId);
+            RequestProductsSubmaterials requestProductsSubmaterials = new RequestProductsSubmaterials(subMaterial, requestProducts, quantity);
+            requestProductsSubmaterialsList.add(requestProductsSubmaterials);
+        }
+        requestProductsSubmaterialsRepository.saveAll(requestProductsSubmaterialsList);
+        return  requestProductsSubmaterialsList;
+    }
+
 
 
 //    public Boolean checkSubMaterialName(String name) {

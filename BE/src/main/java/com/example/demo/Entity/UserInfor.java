@@ -47,6 +47,9 @@ public class UserInfor {
     @Column(name = "wards")
     private String wards;
 
+    @Column(name = "has_Account")
+    private Integer has_Account;  //1 là đã có account , 0 là chưa có
+
 
 //    public UserInfor(String fullname, String phoneNumber, String address) {
 //        this.fullname = fullname;
@@ -54,7 +57,7 @@ public class UserInfor {
 //        this.address = address;
 //    }
 
-    public UserInfor(String phoneNumber, String fullname, String address, String bank_name, String bank_number, String city_province, String district, String wards) {
+    public UserInfor(String phoneNumber, String fullname, String address, String bank_name, String bank_number, String city_province, String district, String wards,Integer has_Account) {
         this.phoneNumber = phoneNumber;
         this.fullname = fullname;
         this.address = address;
@@ -63,5 +66,6 @@ public class UserInfor {
         this.city_province = city_province;
         this.district = district;
         this.wards = wards;
+        this.has_Account=has_Account;
     }
 }

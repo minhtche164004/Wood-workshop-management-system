@@ -20,19 +20,19 @@ public interface OrderDetailRepository extends JpaRepository<Orderdetails, Integ
     List<Orderdetails> getOrderDetailByProductId(int query);
 
 
-@Query("SELECT new com.example.demo.Dto.OrderDTO.OrderDetailWithJobStatusDTO(od, j.status, " +
-       "(CASE " +
-       "   WHEN o.specialOrder = false THEN p.productName " +
-       "   WHEN o.specialOrder = true THEN rp.requestProductName " +
-       "END)) " +
-       "FROM Orderdetails od " +
-       "JOIN od.order o " +
-       "JOIN Jobs j ON od.orderDetailId = j.orderdetails.orderDetailId " +
-       "JOIN Status_Job sj ON j.jobId = sj.status_id " +
-       "LEFT JOIN Products p ON od.product.productId = p.productId " +
-       "LEFT JOIN RequestProducts rp ON od.requestProduct.requestProductId = rp.requestProductId " +
-       "WHERE od.order.orderId = :order_id AND j.job_log = false")
-List<OrderDetailWithJobStatusDTO> getOrderDetailWithJobStatusByOrderId(@Param("order_id") int order_id);
+    @Query("SELECT new com.example.demo.Dto.OrderDTO.OrderDetailWithJobStatusDTO(od, j.status, " +
+            "(CASE " +
+            "   WHEN o.specialOrder = false THEN p.productName " +
+            "   WHEN o.specialOrder = true THEN rp.requestProductName " +
+            "END)) " +
+            "FROM Orderdetails od " +
+            "JOIN od.order o " +
+            "JOIN Jobs j ON od.orderDetailId = j.orderdetails.orderDetailId " +
+            "JOIN Status_Job sj ON j.jobId = sj.status_id " +
+            "LEFT JOIN Products p ON od.product.productId = p.productId " +
+            "LEFT JOIN RequestProducts rp ON od.requestProduct.requestProductId = rp.requestProductId " +
+            "WHERE od.order.orderId = :order_id AND j.job_log = false")
+    List<OrderDetailWithJobStatusDTO> getOrderDetailWithJobStatusByOrderId(@Param("order_id") int order_id);
 //    @Query("SELECT u FROM Orderdetails u WHERE u.product.productId = :query")
 //    List<Orderdetails> getOrderDetailsInByProductId(int query);
 

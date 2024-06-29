@@ -27,6 +27,12 @@ public class CheckConditionsImpl implements CheckConditionService {
         Pattern p = Pattern.compile("^[a-zA-Z][a-zA-Z0-9]+@[a-zA-Z]+(\\.[a-zA-Z]+)+$");
         return p.matcher(email).find();
     }
+
+    @Override
+    public boolean checkPhone(String phone) {
+        return !userRepository.findByPhone(phone).isPresent();
+    }
+
     public boolean checkName(String name) {
         Pattern p = Pattern.compile("^[a-zA-Z0-9 ]+$");
         return p.matcher(name).find();

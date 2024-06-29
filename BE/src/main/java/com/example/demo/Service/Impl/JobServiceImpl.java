@@ -152,6 +152,15 @@ public class JobServiceImpl implements JobService {
         return jobs;
     }
 
+    @Override
+    public List<Jobs> GetAllJob() {
+        List<Jobs> jobsList = jobRepository.findAll();
+        if(jobsList == null ){
+            throw new AppException(ErrorCode.NOT_FOUND);
+        }
+        return jobsList;
+    }
+
 }
 
 //note : co ne de status cua thang product luc add no la chua thuc hien

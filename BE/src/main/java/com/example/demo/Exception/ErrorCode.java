@@ -22,6 +22,7 @@ public enum ErrorCode {
     INVALID_FORMAT_PHONE_NUMBER(1017,"Sai Format số điện thoại",HttpStatus.BAD_REQUEST),
     INVALID_FORMAT_NAME(1018,"Sai Format của Đặt Tên",HttpStatus.BAD_REQUEST),
     USERNAME_EXISTED(1019,"Username Đã Tồn Tại",HttpStatus.BAD_REQUEST),
+    PHONE_EXISTED(1031," Số điện thoại này đã được sử dụng",HttpStatus.BAD_REQUEST),
     //-----------------------------------
 
     //------------------Exception của Xác thực , Phân quyền )----------
@@ -60,6 +61,7 @@ public enum ErrorCode {
 
 
 
+
     FILE_EXCEL_INVALID(1025,"Sai định dạng file",HttpStatus.BAD_REQUEST),
     IMAGE_INVALID(1026, "Lỗi ảnh truyền vào , hãy thử lại",HttpStatus.BAD_REQUEST),
 
@@ -67,7 +69,8 @@ public enum ErrorCode {
     //Exception của Order
     OUT_OF_STOCK(1029,"Sản phẩm đã hết hàng",HttpStatus.BAD_REQUEST),
 
-    PRODUCT_HAS_RELATIONSHIPS(1030,"Không thể xoá sản phẩm do sản phẩm đang được sử dụng ở các chức năng khác",HttpStatus.BAD_REQUEST)
+    PRODUCT_HAS_RELATIONSHIPS(1030,"Không thể xoá sản phẩm do sản phẩm đang được sử dụng ở các chức năng khác",HttpStatus.BAD_REQUEST),
+    SUPPLIER_HAS_RELATIONSHIPS(1032,"Không thể xoá nhà cung cấp này  do vật liệu từ họ đang được sử dụng cho đơn hàng",HttpStatus.BAD_REQUEST)
     // OTP_EXPIRED(1013,"OTP has expired! A new OTP has been sent to your email",HttpStatus.EXPECTATION_FAILED),
     ;
 

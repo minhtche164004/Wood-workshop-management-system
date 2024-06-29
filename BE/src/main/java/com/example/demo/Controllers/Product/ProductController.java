@@ -378,17 +378,7 @@ public class ProductController {
 //        return apiResponse;
 //    }
 
-    //xuất đơn nguyên vật liệu cho product có sẵn
-    @PostMapping("/createExportMaterialProduct")
-    public ResponseEntity<ApiResponse<List<ProductSubMaterials>>> createExportMaterialProduct(@RequestBody CreateExportMaterialProductRequest request) {
-        return productService.createExportMaterialProduct(request.getProductId(), request.getSubMaterialQuantities());
-    }
 
-    //xuất đơn vật liệu cho đơn hàng đặt theo yêu cầu , request product
-    @PostMapping("/createExportMaterialProductRequest")
-    public ResponseEntity<ApiResponse<List<RequestProductsSubmaterials>>> createExportMaterialProductRequest(@RequestBody CreateExportMaterialProductRequest request) {
-        return productService.createExportMaterialProductRequest(request.getProductId(), request.getSubMaterialQuantities());
-    }
 
     @GetMapping("/GetStatusProduct")
     public ApiResponse<?> GetAllStatusProduct() {
@@ -396,6 +386,8 @@ public class ProductController {
         apiResponse.setResult(statusProductRepository.GetListStatusType0());
         return apiResponse;
     }
+
+
 
 
     // neu input cua sortDirection la asc thi la sap xep tang dan` va desc la giam dan

@@ -24,6 +24,9 @@ public class Materials {
     @Column(name = "material_name")
     private String materialName;
 
+    @Column(name = "type")
+    private String type;
+
 //    @OneToMany(mappedBy = "material", cascade = CascadeType.ALL)
 //    @JsonIgnore
 //    private List<SubMaterials> subMaterials;
@@ -32,7 +35,9 @@ public class Materials {
 //    @JsonIgnore
 //    private List<User> employees;
 
-    public Materials(String materialName) {
+
+    public Materials(String materialName, String type) {
         this.materialName = materialName;
+        this.type = type;
     }
 }

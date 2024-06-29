@@ -8,7 +8,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 
-import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
@@ -21,11 +20,7 @@ public interface ProductService {
     List<Products> GetAllProductForAdmin();
     Products EditProduct(int id, ProductEditDTO productEditDTO,MultipartFile[] multipartFiles, MultipartFile multipartFiles_thumbnal) throws Exception;
     //xuất nguyên liệu cho sản phẩm có sẵn
-    ResponseEntity<ApiResponse<List<ProductSubMaterials>>> createExportMaterialProduct(int product_id, Map<Integer, Double> subMaterialQuantities);
 
-    //xuất nguyên liệu cho sản phẩm  theo yêu cầu
-
-    ResponseEntity<ApiResponse<List<RequestProductsSubmaterials>>> createExportMaterialProductRequest(int request_product_id, Map<Integer, Double> subMaterialQuantities);
 
      Products GetProductById(int product_id);
 
@@ -37,6 +32,8 @@ public interface ProductService {
 
 
     void DeleteProduct(int product_id);
+
+
 
 
 

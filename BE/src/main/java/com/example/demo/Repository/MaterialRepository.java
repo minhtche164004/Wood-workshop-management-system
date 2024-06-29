@@ -25,7 +25,7 @@ public interface MaterialRepository extends JpaRepository<Materials,Integer> {
 
     @Transactional
     @Modifying
-    @Query("update Materials  u set u.materialName=?2 where u.materialId=?1")
-    void updateMaterial(int materialId,String materialName);
+    @Query("update Materials  u set u.materialName=?2, u.type=?3 where u.materialId=?1")
+    void updateMaterial(int materialId,String materialName,String type);
 
 }

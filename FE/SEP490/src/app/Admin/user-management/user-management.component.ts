@@ -260,12 +260,14 @@ export class UserManagementComponent implements OnInit {
   onRoleChange() {
     if (this.selectedRole != 4) {
       this.isPositionEnabled = false;
+
    
     } else {
       this.isPositionEnabled = true;
     
-    }
+
   }
+}
   
   loadPosition(): void {
     this.productListService.getAllPosition().subscribe(

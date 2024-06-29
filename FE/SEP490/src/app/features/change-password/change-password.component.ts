@@ -12,22 +12,6 @@ export class ChangePasswordComponent implements OnInit {
   constructor(private formBuilder: FormBuilder) {}
 
   ngOnInit(): void {
-    this.formGroup = this.formBuilder.group({
-      input1: '',
-      input2: ''
-    });
-  
-    // Đồng bộ giá trị của input 1 và input 2
-    this.formGroup.get('input1')!.valueChanges.subscribe(value => {
-      this.formGroup.patchValue({
-        input2: value
-      });
-    });
-  
-    this.formGroup.get('input2')!.valueChanges.subscribe(value => {
-      this.formGroup.patchValue({
-        input1: value
-      });
-    });
+ 
 }
 }

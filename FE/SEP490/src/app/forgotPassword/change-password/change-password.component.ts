@@ -70,7 +70,7 @@ export class ChangePasswordComponent implements OnInit {
         if (response.includes('Password has been changed!')) {
           this.errorMessage = '';
           this.toastr.success('Mật khẩu đã được thay đổi thành công!', 'Thành công');
-          this.router.navigate(['/register']);
+          this.router.navigate(['/login']);
         } else {
           console.error('Phản hồi không mong muốn từ máy chủ:', response);
           this.errorMessage = 'Đã xảy ra lỗi không mong muốn. Vui lòng thử lại.';

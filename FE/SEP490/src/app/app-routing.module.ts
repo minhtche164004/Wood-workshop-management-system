@@ -40,7 +40,7 @@ import { JobDetailComponent } from './Admin/job-detail/job-detail.component';
 const routes: Routes = [
   { path: 'homepage', component: HomepageComponent },
   { path: 'api-province', component: ApiProvinceComponent },
-  { path: 'register', component: RegisterComponent },
+  { path: 'login', component: RegisterComponent },
   { path: 'otp', component: VerifyOtpComponent },
   { path: 'admin', component: PageAdminComponent },
   { path: 'verifyMail', component: VerifyMailComponent },

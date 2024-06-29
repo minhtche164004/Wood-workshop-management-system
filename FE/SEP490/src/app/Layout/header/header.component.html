@@ -96,7 +96,7 @@
                             <a class="icon-user" href="" data-bs-toggle="modal" data-bs-target="#exampleModal"><i class="fas fa-user-alt"></i></a>
                             <div class="dropdown-content">
                               <ng-container *ngIf="isLogout(); else loggedInLinks">
-                                <a routerLink="/register">Login</a>                      
+                                <a routerLink="/login">Login</a>                      
                               </ng-container>
                               <ng-template #loggedInLinks>
                                 <a routerLink="/profile">Profile</a>

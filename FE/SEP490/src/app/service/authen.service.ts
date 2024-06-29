@@ -15,8 +15,9 @@ export class AuthenListService {
   constructor(private http: HttpClient) { }
   isLoggedIn(): boolean {
     const token = localStorage.getItem('loginToken');
-    return !!token; // Trả về true nếu tồn tại token trong localStorage, ngược lại false
+    return token !== null; // Trả về true nếu tồn tại token trong localStorage, ngược lại false
   }
+  
 
   getUserById(user_id: string): Observable<any> {
     const url = `${this.apiUrl_GetById}?user_id=${user_id}`;

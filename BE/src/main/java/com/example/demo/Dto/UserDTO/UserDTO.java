@@ -1,5 +1,6 @@
 package com.example.demo.Dto.UserDTO;
 
+import jakarta.persistence.Column;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -27,12 +28,17 @@ public class UserDTO implements Serializable {
     @NotNull(message = "MUST_REQUIRED")
     private String role_name;
 
-    public UserDTO(String email, String username, String phoneNumber, String address, String fullname) {
+    private String bank_name;
+    private String bank_number;
+
+    public UserDTO(String email, String username, String phoneNumber, String address, String fullname,String bank_name,String bank_number) {
         this.email = email;
         this.username = username;
         this.phoneNumber = phoneNumber;
         this.address = address;
         this.fullname = fullname;
+        this.bank_name =bank_name;
+        this.bank_number=bank_number;
     }
 }
 

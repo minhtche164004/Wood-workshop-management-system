@@ -18,6 +18,8 @@ import java.util.Optional;
 @EnableJpaRepositories
 public interface UserRepository extends JpaRepository<User,Integer> {
     User getUserByUsername(String username);
+    @Query("SELECT u FROM User u WHERE u.userInfor.phoneNumber = :phone")
+    Optional<User> findByPhone(String phone);
     int countByEmail(String email);
     int countByUsername(String username);
     Optional<User> findByUsername(String username);
@@ -31,6 +33,13 @@ public interface UserRepository extends JpaRepository<User,Integer> {
     @Modifying
     @Query("update User u set u.password = ?2 where u.email = ?1")
     void updatePassword(String email, String password);
+
+//    @Transactional
+//    @Modifying
+//    @Query("update User u set u.password = ?2 where u.username = ?1")
+//    void ChangePassword(String username, String password);
+
+
 
     @Transactional
     @Modifying

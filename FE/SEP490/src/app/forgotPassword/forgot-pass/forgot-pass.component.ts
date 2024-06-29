@@ -4,12 +4,12 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { environment } from 'src/app/environments/environment';
 
-@Component({
-  selector: 'app-change-password',
-  templateUrl: './change-password.component.html',
-  styleUrls: ['./change-password.component.scss']
+@Component({ 
+  selector: 'app-forgot-pass',
+  templateUrl: './forgot-pass.component.html',
+  styleUrls: ['./forgot-pass.component.scss']
 })
-export class ChangePasswordComponent implements OnInit {
+export class ForgotPassComponent implements OnInit {
   isLoading = false;
   email: string = '';
   password: string = '';
@@ -64,7 +64,7 @@ export class ChangePasswordComponent implements OnInit {
       `${this.baseUrl}/changePassword/${encodeURIComponent(this.email)}`,
       payload,
       options
-    ).subscribe(
+    ).subscribe( 
       (response) => {
         console.log('Đổi mật khẩu thành công', response);
         if (response.includes('Password has been changed!')) {

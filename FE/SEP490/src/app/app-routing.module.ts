@@ -10,7 +10,7 @@ import { PageAdminComponent } from './Admin/page-admin/page-admin.component';
 import { UserManagementComponent } from './Admin/user-management/user-management.component';
 import { PaymentSalaryComponent } from './payment-salary/payment-salary.component';
 import { VerifyMailComponent } from './forgotPassword/verify-mail/verify-mail.component';
-import { ChangePasswordComponent } from './forgotPassword/change-password/change-password.component';
+
 import { ApiProvinceComponent } from './api-province/api-province.component';
 import { ProductListComponent } from './product-list/product-list.component';
 import { VerifyOtpMailComponent } from './forgotPassword/verify-otp-mail/verify-otp-mail.component';
@@ -31,6 +31,8 @@ import { ProductDetailComponent } from './features/product-detail/product-detail
 
 import { JobManagementComponent } from './Admin/job-management/job-management.component';
 import { JobDetailComponent } from './Admin/job-detail/job-detail.component';
+import { ForgotPassComponent } from './forgotPassword/forgot-pass/forgot-pass.component';
+import { ChangePasswordComponent } from './features/change-password/change-password.component';
 
 
 
@@ -45,11 +47,11 @@ const routes: Routes = [
   { path: 'admin', component: PageAdminComponent },
   { path: 'verifyMail', component: VerifyMailComponent },
   { path: 'verifyOtp', component: VerifyOtpMailComponent },
-  { path: 'change_pass', component: ChangePasswordComponent },
+  { path: 'change_pass', component: ForgotPassComponent },
   { path: 'user_management', component: UserManagementComponent },
   { path: 'payment-salary', component: PaymentSalaryComponent },
   { path: 'verifyOtp/:email', component: VerifyOtpMailComponent },  // Route with email as a parameter
-  { path: 'change_pass/:email', component: ChangePasswordComponent },  // Route with email as a parameter
+  { path: 'change_pass/:email', component: ForgotPassComponent },  // Route with email as a parameter
   { path: 'product', component: ProductComponent }, // Add route for ProductComponent
   { path: 'productsList', component: ProductListComponent },
   { path: 'product_management', component: ProductManagementComponent },
@@ -64,14 +66,11 @@ const routes: Routes = [
   { path: 'order_request_management', component: OrderRequestComponentComponent },
   { path: 'order_request_management/:id', component: OrderRequestComponentComponent },
   { path: 'orderRq_detail', component: OrderRqDetailComponent },
-
   { path: 'order_management', component: OrderManagementComponent },
   { path: 'product_details', component: ProductDetailComponent },
- 
-
   { path: 'job_management', component: JobManagementComponent },
   { path: 'job_detail', component: JobDetailComponent },
-
+  { path: 'changePassWord', component: ChangePasswordComponent },
   { path: '', redirectTo: '/homepage', pathMatch: 'full' },
   { path: '**', redirectTo: '/homepage', pathMatch: 'full' },
 

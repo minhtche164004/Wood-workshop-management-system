@@ -1,6 +1,6 @@
 
 
-import { Component, OnInit } from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { ProvincesService } from 'src/app/service/provinces.service';
 import { ProductListService } from 'src/app/service/product/product-list.service';
 import { FormControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
@@ -20,6 +20,8 @@ interface AddNewAccount {
   status: number;
   position: number;
   role: number;
+  bank_name: string,
+  bank_number: string,
   city: string;
   district: string;
   wards: string;
@@ -46,7 +48,7 @@ interface Role {
 }
 
 interface ApiResponse {
-  code: number; 
+  code: number;
   result: any[];
 }
 
@@ -72,6 +74,7 @@ interface Ward {
   styleUrls: ['./user-management.component.scss']
 })
 export class UserManagementComponent implements OnInit {
+  @ViewChild('closeButton') closeButton: ElementRef | undefined;
   private apiUrl_AddNewAccount = `${environment.apiUrl}api/auth/admin/AddNewAccount`; // URL của backend
   private apiUrl_EditUser = `${environment.apiUrl}api/auth/admin/EditUser`;
   addAccountForm: FormGroup;
@@ -87,48 +90,57 @@ export class UserManagementComponent implements OnInit {
   currentPage: number = 1;
   userId: number = 1;
   selectedCategory: any = null;
+  selectedRole: any = null; // Assuming selectedRole should be a boolean
 
+  selectedPosition: any = null;
 
-  constructor(  private provincesService: ProvincesService,
+  isPositionEnabled: boolean = false;
+  constructor(private provincesService: ProvincesService,
     private productListService: ProductListService,
     private fb: FormBuilder,
     private http: HttpClient,
     private toastr: ToastrService,
     private router: Router) {
-      this.addAccountForm = this.fb.group({
-        username: ['', Validators.required],
-        password: ['', Validators.required],
-        checkPass: ['', Validators.required],
-        email: ['', [Validators.required, Validators.email]],
-        phoneNumber: ['', Validators.required],
-        address: ['', Validators.required],
-        fullname: ['', Validators.required],
-        status: [0],
-        position: ['', Validators.required],
-        role: ['', Validators.required],
-        city: ['', Validators.required],
-        district: ['', Validators.required],
-        wards: ['', Validators.required]
-      });
-      this.editUserForm = this.fb.group({
-        user_id: [this.userId],
-        username: ['', Validators.required],
-        password: ['', Validators.required],
-        checkPass: ['', Validators.required],
-        email: ['', [Validators.required, Validators.email]],
-        phoneNumber: ['', Validators.required],
-        address: ['', Validators.required],
-        fullname: ['', Validators.required],
-        status: [0],
-        position: ['', Validators.required],
-        role: ['', Validators.required],
-        city: ['', Validators.required],
-        district: ['', Validators.required],
-        wards: ['', Validators.required]
-      });
-    }
+    this.addAccountForm = this.fb.group({
+      username: ['', Validators.required],
+      password: ['', Validators.required],
+      checkPass: ['', Validators.required],
+      email: ['', [Validators.required, Validators.email]],
+      phoneNumber: ['', Validators.required],
+      address: ['', Validators.required],
+      fullname: ['', Validators.required],
+      status: [0],
+      position: ['', Validators.required],
+      role: ['', Validators.required],
+      bank_name: ['', Validators.required],
+      bank_number: ['', Validators.required],
+      city: ['', Validators.required],
+      district: ['', Validators.required],
+      wards: ['', Validators.required]
+    });
+    this.editUserForm = this.fb.group({
+      user_id: [this.userId],
+      username: ['', Validators.required],
+      password: ['', Validators.required],
+      checkPass: ['', Validators.required],
+      email: ['', [Validators.required, Validators.email]],
+      phoneNumber: ['', Validators.required],
+      address: ['', Validators.required],
+      fullname: ['', Validators.required],
+      status: [0],
+      position: ['', Validators.required],
+      role: ['', Validators.required],
+      bank_name: ['', Validators.required],
+      bank_number: ['', Validators.required],
+      city: ['', Validators.required],
+      district: ['', Validators.required],
+      wards: ['', Validators.required]
+    });
+  }
 
   ngOnInit(): void {
+    this.role = []; // Initialize with your roles data
+    this.position = []; // Initialize with your positions data
     this.loginToken = localStorage.getItem('loginToken');
     this.loadAllRole();
     this.loadProvinces();
@@ -195,6 +207,37 @@ export class UserManagementComponent implements OnInit {
       }
     );
   }
+  loadAllRoleEmployee(): void {
+    this.productListService.getAllRole().subscribe(
+      (data: any) => {
+        if (data.code === 1000) {
+          this.role = data.result as Role[];
+
+          // Filter roles based on roleId == 4
+          this.role = this.role.filter(role => role.roleId === 4);
+
+          // Now this.role will contain only roles where roleId == 4
+          console.log('Filtered roles:', this.role);
+        } else {
+          console.error('Invalid data returned:', data);
+        }
+      },
+      (error) => {
+        console.error('Error fetching roles:', error);
+      }
+    );
+  }
+  onRoleChange() {
+    // Implement your logic when role selection changes
+    // Example condition:
+    if (this.selectedRole != 4) {
+      this.isPositionEnabled = true;
+      this.position = []; // Update with positions relevant to selected role
+    } else {
+      this.isPositionEnabled = false;
+      this.selectedPosition = null; // Reset selected position if needed
+    }
+  }
   loadPosition(): void {
     this.productListService.getAllPosition().subscribe(
       (data: any) => {
@@ -258,8 +301,10 @@ export class UserManagementComponent implements OnInit {
     this.http.post<any>(this.apiUrl_AddNewAccount, addNewAccountRequest, { withCredentials: true })
       .subscribe(
         () => {
-          this.toastr.success('Registration successful. Check your email for OTP.');
-          this.router.navigate(['/user_management']);
+          this.toastr.success('Thêm tài khoản người dùng thành công.');
+          if (this.closeButton) {
+            this.closeButton.nativeElement.click(); // Gọi hành động đóng modal
+          }
         },
         (error: any) => {
           console.error('Registration failed', error);
@@ -277,6 +322,9 @@ export class UserManagementComponent implements OnInit {
       status: user.status,
       position: user.position,
       role: user.role,
+      bank_name: user.bank_name,
+      bank_number: user.bank_number,
+
       city: user.city,
       district: user.district,
       wards: user.wards
@@ -286,16 +334,13 @@ export class UserManagementComponent implements OnInit {
     this.editUserForm.get('district')?.setValue(user.district);
     this.editUserForm.get('wards')?.setValue(user.wards);
 
-    // Enable/disable position dropdown based on selected role
-    this.isPositionDisabled = user.role !== 2; // Assuming 2 is the roleId for 'Employee'
+
+
   }
-  onRoleChange() {
-    const selectedRole = this.editUserForm.get('role')?.value;
-    this.isPositionDisabled = selectedRole !== 2; // Assuming 2 is the roleId for 'Employee'
-    if (this.isPositionDisabled) {
-      this.editUserForm.get('position')?.reset();
-    }
-  }
+
+
+
+
   EditUser(): void {
     if (this.editUserForm.invalid) {
       this.toastr.error('Please fill all required fields correctly.');

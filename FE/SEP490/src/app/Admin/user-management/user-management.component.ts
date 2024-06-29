@@ -8,6 +8,7 @@ import { HttpClient } from '@angular/common/http';
 import { ToastrService } from 'ngx-toastr';
 import { environment } from 'src/app/environments/environment'; // Ensure this is the correct path
 import { Router } from '@angular/router';
+import { AuthenListService } from 'src/app/service/authen.service';
 
 interface AddNewAccount {
   username: string;
@@ -27,17 +28,17 @@ interface AddNewAccount {
   wards: string;
 }
 interface EditUserRequest {
-  user_id: number;
+  userId: number;
   username: string;
-  password: string;
-  checkPass: string;
   email: string;
   phoneNumber: string;
   address: string;
   fullname: string;
-  status: number;
-  position: number;
-  role: number;
+  status_name: string ;
+  position_name: string;
+  bank_name: string;
+  role_name: string;
+  bank_number: string;
   city: string;
   district: string;
   wards: string;
@@ -74,6 +75,12 @@ interface Ward {
   styleUrls: ['./user-management.component.scss']
 })
 export class UserManagementComponent implements OnInit {
+
+  
+
+
+
+
   @ViewChild('closeButton') closeButton: ElementRef | undefined;
   private apiUrl_AddNewAccount = `${environment.apiUrl}api/auth/admin/AddNewAccount`; // URL của backend
   private apiUrl_EditUser = `${environment.apiUrl}api/auth/admin/EditUser`;
@@ -91,12 +98,22 @@ export class UserManagementComponent implements OnInit {
   userId: number = 1;
   selectedCategory: any = null;
   selectedRole: any = null; // Assuming selectedRole should be a boolean
-
   selectedPosition: any = null;
-
   isPositionEnabled: boolean = false;
+
+  selectProvince: any = null;
+  selectDistricts: any = null;
+  selectWards: any = null;
+  selectedUser: any;
+    userData: any = {};
+
+
+  selectedProvince: any;
+  selectedDistrict: any;
+
   constructor(private provincesService: ProvincesService,
     private productListService: ProductListService,
+    private authenListService: AuthenListService,
     private fb: FormBuilder,
     private http: HttpClient,
     private toastr: ToastrService,
@@ -139,6 +156,23 @@ export class UserManagementComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.userData = {
+      username: '',
+      email: '',
+      phoneNumber: '',
+      address: '',
+      fullname: '',
+      status_name: '',
+      position_name: '',
+      role_name: '',
+      bank_name: '',
+      bank_number: '',
+      city_province: '',
+      district: '',
+      wards: '',
+  
+  
+    };
     this.role = []; // Initialize with your roles data
     this.position = []; // Initialize with your positions data
     this.loginToken = localStorage.getItem('loginToken');
@@ -152,11 +186,7 @@ export class UserManagementComponent implements OnInit {
         (data: ApiResponse) => {
           if (data.code === 1000) {
             this.user = data.result;
-
-
-
             console.log('Danh sách người dùng:', this.user);
-
           } else {
             console.error('Failed to fetch products:', data);
           }
@@ -228,16 +258,15 @@ export class UserManagementComponent implements OnInit {
     );
   }
   onRoleChange() {
-    // Implement your logic when role selection changes
-    // Example condition:
     if (this.selectedRole != 4) {
-      this.isPositionEnabled = true;
-      this.position = []; // Update with positions relevant to selected role
-    } else {
       this.isPositionEnabled = false;
-      this.selectedPosition = null; // Reset selected position if needed
+   
+    } else {
+      this.isPositionEnabled = true;
+    
     }
   }
+  
   loadPosition(): void {
     this.productListService.getAllPosition().subscribe(
       (data: any) => {
@@ -273,31 +302,11 @@ export class UserManagementComponent implements OnInit {
       }
     );
   }
-  loadUserData(): void {
-    // Replace with your service method to fetch user data by user_id
-    this.http.get<ApiResponse>(`http://localhost:8080/api/auth/admin/GetUserById?user_id=${this.userId}`)
-      .subscribe(
-        (userData) => {
-          if (userData.code === 1000) {
-            const user = userData.result; // Assuming user data is fetched properly
-            this.populateForm(user);
-          } else {
-            console.error('Failed to fetch user data:', userData);
-          }
-        },
-        (error) => {
-          console.error('Error fetching user data:', error);
-        }
-      );
-  }
+
   AddNewAccount(): void {
-    if (this.addAccountForm.invalid) {
-      this.toastr.error('Please fill all required fields correctly.');
-      return;
-    }
-
+   
     const addNewAccountRequest: AddNewAccount = this.addAccountForm.value;
-
+    console.log('Request Data:', addNewAccountRequest);
     this.http.post<any>(this.apiUrl_AddNewAccount, addNewAccountRequest, { withCredentials: true })
       .subscribe(
         () => {
@@ -305,6 +314,7 @@ export class UserManagementComponent implements OnInit {
           if (this.closeButton) {
             this.closeButton.nativeElement.click(); // Gọi hành động đóng modal
           }
+          this.addAccountForm.reset(); // Reset the form after successful addition
         },
         (error: any) => {
           console.error('Registration failed', error);
@@ -338,27 +348,61 @@ export class UserManagementComponent implements OnInit {
 
   }
 
+  getUserData(user_id: string): void {
+    this.authenListService.getUserById(user_id).subscribe(
+      (data) => {
+        this.userData = data.result;
+        console.log('User data:', data.result);
+        console.log('User district:', this.userData.district);
 
+      },
+      (error) => {
+        console.error('Error fetching user data:', error);
+      }
+    );
+  }
 
+  onProvinceChange() {
+    const selectedProvinceName = this.userData.city_province; // assuming 'city' is bound to ngModel of the province dropdown
+    this.selectedProvince = this.provinces.find(province => province.name === selectedProvinceName);
 
+    // Update districts based on the selected province
+    this.districts = this.selectedProvince ? this.selectedProvince.districts : [];
+
+    // Reset selected district and ward
+    this.userData.district = ''; // reset selected district in the model
+    this.userData.wards = ''; // reset selected ward in the model
+  }
+
+  onDistrictChange() {
+    const selectedDistrictName = this.userData.district; // assuming 'city' is bound to ngModel of the province dropdown
+    this.selectedDistrict = this.districts.find(district => district.name === selectedDistrictName);
+
+    // Update districts based on the selected province
+    this.wards = this.selectedDistrict ? this.selectedDistrict.wards : [];
+
+    this.userData.wards = ''; // reset selected ward in the model
+  }
   EditUser(): void {
     if (this.editUserForm.invalid) {
       this.toastr.error('Please fill all required fields correctly.');
       return;
     }
-
+  
     const editUserRequest: EditUserRequest = this.editUserForm.value;
-
-    this.http.post<any>(`${this.apiUrl_EditUser}?user_id=${editUserRequest.user_id}`, editUserRequest)
-      .subscribe(
-        () => {
-          this.toastr.success('User updated successfully.');
-          this.router.navigate(['/users']); // Navigate to users list or profile page
-        },
-        (error: any) => {
-          console.error('User update failed', error);
-          this.toastr.error('User update failed. Please try again.');
-        }
-      );
+    const userId = this.userData.userId; // Lấy userId từ userData
+  
+    this.authenListService.editUserById(userId, editUserRequest).subscribe(
+      () => {
+        this.toastr.success('User updated successfully.');
+        this.router.navigate(['/users']); // Navigate to users list or profile page
+      },
+      (error: any) => {
+        console.error('User update failed', error);
+        this.toastr.error('User update failed. Please try again.');
+      }
+    );
   }
+  
+  
 }

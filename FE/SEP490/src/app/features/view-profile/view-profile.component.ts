@@ -57,7 +57,7 @@ export class ViewProfileComponent implements OnInit {
       city: '',
       district: '',
       wards: '',
-      // Add more properties as needed
+  
     };
 
     // Assuming you receive data from an API call

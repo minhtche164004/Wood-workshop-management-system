@@ -11,6 +11,8 @@ import java.io.Serializable;
 @AllArgsConstructor
 @NoArgsConstructor
 public class UserDTO implements Serializable {
+    private Integer userId;
+
     @NotNull(message = "MUST_REQUIRED")
     private String username;
     @NotNull(message = "MUST_REQUIRED")
@@ -30,8 +32,11 @@ public class UserDTO implements Serializable {
 
     private String bank_name;
     private String bank_number;
-
-    public UserDTO(String email, String username, String phoneNumber, String address, String fullname,String bank_name,String bank_number) {
+    private String city_province;
+    private String district;
+    private String wards;
+    public UserDTO(Integer userId, String email, String username, String phoneNumber, String address, String fullname, String bank_name, String bank_number) {
+        this.userId=userId;
         this.email = email;
         this.username = username;
         this.phoneNumber = phoneNumber;

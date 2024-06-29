@@ -8,8 +8,10 @@ import com.example.demo.Dto.RequestDTO.RequestDTO;
 import com.example.demo.Dto.OrderDTO.RequestOrder;
 import com.example.demo.Dto.RequestDTO.RequestEditDTO;
 import com.example.demo.Entity.*;
-import com.example.demo.Repository.OrderDetailRepository;
+
 import com.example.demo.Repository.OrderRepository;
+import com.example.demo.Repository.Status_Order_Repository;
+
 import com.example.demo.Response.ApiResponse;
 import com.example.demo.Service.*;
 import lombok.AllArgsConstructor;
@@ -33,11 +35,13 @@ public class OrderController {
     @Autowired
     private OrderService orderService;
     @Autowired
+    private Status_Order_Repository statusOrderRepository;
+    @Autowired
     private ProductService productService;
     @Autowired
     private WhiteListService whiteListService;
     private final OrderRepository orderRepository;
-    private final OrderDetailRepository orderDetailRepository;
+
 
     @GetMapping("/GetAllProductRequest")
     public ApiResponse<?> GetAllProductRequest() {
@@ -164,6 +168,13 @@ public class OrderController {
     public ApiResponse<?>  historyOrder() {
         ApiResponse<List> apiResponse = new ApiResponse<>();
         apiResponse.setResult(orderService.HistoryOrder());
+        return apiResponse;
+    }
+
+    @GetMapping("/getStatusOrder")
+    public ApiResponse<?>  getStatusOrder() {
+        ApiResponse<List> apiResponse = new ApiResponse<>();
+        apiResponse.setResult(statusOrderRepository.findAll());
         return apiResponse;
     }
 

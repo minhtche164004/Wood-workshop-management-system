@@ -53,24 +53,24 @@ public class JobController {
         return apiResponse;
     }
 
-    @GetMapping("/findUsersWithPosition1AndLessThan3Jobs")
-    public ApiResponse<?> findUsersWithPosition1AndLessThan3Jobs() {
-        ApiResponse<List> apiResponse = new ApiResponse<>();
-        apiResponse.setResult(jobRepository.findUsersWithPosition1AndLessThan3Jobs());
-        return apiResponse;
-    }
+//    @GetMapping("/findUsersWithPosition1AndLessThan3Jobs")
+//    public ApiResponse<?> findUsersWithPosition1AndLessThan3Jobs() {
+//        ApiResponse<List> apiResponse = new ApiResponse<>();
+//        apiResponse.setResult(jobRepository.findUsersWithPositionAndLessThan3Jobs());
+//        return apiResponse;
+//    }
+//
+//    @GetMapping("/findUsersWithPosition2AndLessThan3Jobs")
+//    public ApiResponse<?> findUsersWithPosition2AndLessThan3Jobs() {
+//        ApiResponse<List> apiResponse = new ApiResponse<>();
+//        apiResponse.setResult(jobRepository.findUsersWithPositionAndLessThan3Jobs());
+//        return apiResponse;
+//    }
 
-    @GetMapping("/findUsersWithPosition2AndLessThan3Jobs")
-    public ApiResponse<?> findUsersWithPosition2AndLessThan3Jobs() {
+    @GetMapping("/findUsersWithPositionAndLessThan3Jobs")
+    public ApiResponse<?> findUsersWithPosition3AndLessThan3Jobs(@RequestParam("type") int type) {
         ApiResponse<List> apiResponse = new ApiResponse<>();
-        apiResponse.setResult(jobRepository.findUsersWithPosition2AndLessThan3Jobs());
-        return apiResponse;
-    }
-
-    @GetMapping("/findUsersWithPosition3AndLessThan3Jobs")
-    public ApiResponse<?> findUsersWithPosition3AndLessThan3Jobs() {
-        ApiResponse<List> apiResponse = new ApiResponse<>();
-        apiResponse.setResult(jobRepository.findUsersWithPosition3AndLessThan3Jobs());
+        apiResponse.setResult(jobRepository.findUsersWithPositionAndLessThan3Jobs(type));
         return apiResponse;
     }
     @GetMapping("/getListStatusJobByType")

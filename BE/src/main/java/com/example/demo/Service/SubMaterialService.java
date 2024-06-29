@@ -1,8 +1,10 @@
 package com.example.demo.Service;
 
+//import com.example.demo.Dto.JobDTO.Employee_MaterialDTO;
 import com.example.demo.Dto.MaterialDTO.MaterialDTO;
 import com.example.demo.Dto.ProductDTO.QuantityTotalDTO;
 import com.example.demo.Dto.SubMaterialDTO.*;
+import com.example.demo.Entity.Employeematerials;
 import com.example.demo.Entity.ProductSubMaterials;
 import com.example.demo.Entity.RequestProductsSubmaterials;
 import com.example.demo.Entity.SubMaterials;
@@ -26,11 +28,17 @@ public interface SubMaterialService {
 
 
     List<ProductSubMaterials> createExportMaterialProduct(int product_id, Map<Integer, Double> subMaterialQuantities);
-    ResponseEntity<ApiResponse<List<String>>> createExportMaterialProductTotalJob(int product_id, QuantityTotalDTO quantityTotalDTO);
-    ResponseEntity<ApiResponse<List<String>>> createExportMaterialRequestTotalJob(int product_id,QuantityTotalDTO quantityTotalDTO);
+    ResponseEntity<ApiResponse<List<String>>> createExportMaterialProductTotalJob(int product_id,int mate_id, QuantityTotalDTO quantityTotalDTO);
+    ResponseEntity<ApiResponse<List<String>>> createExportMaterialRequestTotalJob(int product_id,int mate_id,QuantityTotalDTO quantityTotalDTO);
     //xuất nguyên liệu cho sản phẩm  theo yêu cầu
     List<RequestProductsSubmaterials> createExportMaterialProductRequest(int request_product_id, Map<Integer, Double> subMaterialQuantities);
-    List<Product_SubmaterialDTO> getProductSubMaterialByProductId(int id);
-    List<ReProduct_SubmaterialDTO> getRequestProductSubMaterialByRequestProductId(int id);
+    List<Product_SubmaterialDTO> getProductSubMaterialByProductId(int id,int material_id);
+    List<ReProduct_SubmaterialDTO> getRequestProductSubMaterialByRequestProductId(int id,int material_id);
+
+    List<Employeematerials> createEMaterial(int emp_id,int mate_id,int product_id);
+    List<Employeematerials> getAllEmpMate();
+
+    List<Employeematerials> findEmployeematerialsByName(String key);
+//    List<Employeematerials> filterEmployeematerialsByMaterialType(int materialId);
 
 }

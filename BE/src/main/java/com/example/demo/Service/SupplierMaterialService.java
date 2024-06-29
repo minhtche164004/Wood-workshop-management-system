@@ -16,4 +16,5 @@ public interface SupplierMaterialService {
     List<SupplierNameDTO> GetListName();
     Suppliermaterial EditSupplier(int id,SupplierMaterialDTO supplierMaterialDTO);
     List<Suppliermaterial> SearchSupplierByName(String key);
+    void DeleteSupplier(int id);
 }

@@ -26,7 +26,7 @@ public class ProductEditDTO {
     private BigDecimal price;
     private int status_id;
     private Date enddateWarranty;
-    private Date completionTime;
+//    private Date completionTime;
     //   @NotNull(message = "MUST_REQUIRED")
 //   private String images;
     @NotNull(message = "MUST_REQUIRED")

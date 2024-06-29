@@ -1,9 +1,32 @@
 import { Component, OnInit } from '@angular/core';
-import { ProvincesService } from 'src/app/service/provinces.service'; 
+import { ProvincesService } from 'src/app/service/provinces.service';
 import { FormControl } from '@angular/forms';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { ToastrService } from 'ngx-toastr';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+
+import { FormBuilder, FormGroup, FormArray, Validators } from '@angular/forms';
+interface CustomerInfo {
+  userid: number;
+  fullname: string;
+  address: string;
+  city_province: string;
+  district: string;
+  wards: string;
+  phone: string;
+}
+interface ReceiveInfo {
+  fullname: string;
+  address: string;
+  city_province: string;
+  district: string;
+  wards: string;
+  phone: string;
+}
+interface ProductItem {
+  id: number;
+  quantity: number;
+  price: number;
+}
 interface Province {
   code: string;
   name: string;
@@ -27,21 +50,38 @@ interface Ward {
   styleUrls: ['./create-order.component.scss']
 })
 export class CreateOrderComponent implements OnInit {
-  input1Value: string = '';
-  input2Value: string = '';
-  onInput1Change() {
-    this.input2Value = this.input1Value;
-  }
+  productForm: FormGroup;
+
+
   provinces: Province[] = [];
   districts: District[] = [];
   wards: Ward[] = [];
-  provinceControl = new FormControl() ;
+  provinceControl = new FormControl();
   districtControl = new FormControl();
   wardControl = new FormControl();
   selectedProvince: any;
   selectedDistrict: any;
-  
-  constructor(private provincesService: ProvincesService ,private fb: FormBuilder) { }
+
+  constructor(private provincesService: ProvincesService, private fb: FormBuilder) {
+   
+    this.productForm = this.fb.group({
+      items: this.fb.array([])  // Khởi tạo FormArray trống
+    });
+
+  }
+
+  get items(): FormArray {
+    return this.productForm.get('items') as FormArray;
+  }
+
+  addItem(): void {
+    this.items.push(this.fb.group({
+      quantity: ['', Validators.required],
+      price: ['', Validators.required]
+    }));
+  }
+
+
   onFileSelected(event: any) {
     const selectedFile = event.target.files[0];
     // Xử lý logic khi đã chọn file, ví dụ như upload lên server
@@ -52,22 +92,24 @@ export class CreateOrderComponent implements OnInit {
       this.provinces = data;
       console.log(this.provinces);
     });
+    this.addItem();
 
+    
 
     this.provinceControl.valueChanges.subscribe(provinceName => {
       console.log('provinceName:', provinceName);
       this.selectedProvince = this.provinces.find(province => province.name === provinceName);
       console.log('selectedProvince:', this.selectedProvince);
       this.districts = this.selectedProvince ? this.selectedProvince.districts : [];
-  });
-  
-  this.districtControl.valueChanges.subscribe(districtName => {
+    });
+
+    this.districtControl.valueChanges.subscribe(districtName => {
       console.log('districtName:', districtName);
       const selectedDistrict = this.districts.find(district => district.name === districtName);
       console.log('selectedDistrict:', selectedDistrict);
       this.wards = selectedDistrict ? selectedDistrict.wards : [];
       this.wardControl.reset();
-  });
+    });
 
 
 

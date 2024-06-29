@@ -20,7 +20,7 @@
 
 
 
-          <table class="table table-striped table-hover">
+          <table  class="table table-striped table-hover">
           </table>
 
           <div class="row">
@@ -32,7 +32,7 @@
                   <option [ngValue]="0" disabled selected>Chọn danh mục sản phẩm</option>
                   <option *ngFor="let category of categories" [ngValue]="category.categoryId">{{ category.categoryName
                     }}</option>
-                </select>
+                </select> 
                 <input type="text" class="form-control" placeholder="Tìm kiếm sản phẩm..." [(ngModel)]="searchKey">
                 <button class="btn search-button" type="button" (click)="searchProduct()">
                   <i class="fa fa-search"></i>

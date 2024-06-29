@@ -1,12 +1,12 @@
 package com.example.demo.Service;
 
+import com.example.demo.Dto.UserDTO.ChangePassDTO;
 import com.example.demo.Dto.UserDTO.*;
 import com.example.demo.Entity.User;
 import com.example.demo.Jwt.JwtAuthenticationResponse;
 import com.example.demo.Jwt.RefreshTokenRequest;
 import com.example.demo.Request.LoginRequest;
 
-import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -48,4 +48,7 @@ public interface UserService {
     List<UserDTO> FilterByRole(int roleId);
     UserDTO EditUser(int id,UserDTO userDTO);
     List<User> getAllEmployee();
+
+    void changePass(ChangePassDTO changePassDTO);
+
 }

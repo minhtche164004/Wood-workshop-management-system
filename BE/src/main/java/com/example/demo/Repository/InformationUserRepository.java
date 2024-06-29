@@ -16,9 +16,9 @@ import java.util.Optional;
 @Repository
 @EnableJpaRepositories
 public interface InformationUserRepository extends JpaRepository<UserInfor, Integer> {
-    @Query("SELECT u FROM UserInfor u WHERE u.phoneNumber = :phoneNumber")
+    @Query("SELECT u FROM UserInfor u WHERE u.phoneNumber = :phoneNumber and u.has_Account = 1")
     UserInfor findUsersByPhoneNumber(@Param("phoneNumber") String phoneNumber);
 
-    @Query("SELECT u.phoneNumber FROM UserInfor u")
-    List<String> listPhoneNumber();
+    @Query("SELECT u.phoneNumber FROM UserInfor u WHERE u.has_Account = 1")
+    List<String> listPhoneNumberHasAccount();
 }

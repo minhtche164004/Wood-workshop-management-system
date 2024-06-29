@@ -51,4 +51,12 @@ public class SupplierMaterialController {
         apiResponse.setResult(supplierMaterialService.SearchSupplierByName(key));
         return apiResponse;
     }
+
+    @DeleteMapping("/DeleteSupplier")
+    public ApiResponse<?> DeleteSupplier(@RequestParam("id") int id){
+        ApiResponse<String> apiResponse = new ApiResponse<>();
+        supplierMaterialService.DeleteSupplier(id);
+        apiResponse.setResult("Xoá nhà cung cấp vật liệu thành công");
+        return apiResponse;
+    }
 }

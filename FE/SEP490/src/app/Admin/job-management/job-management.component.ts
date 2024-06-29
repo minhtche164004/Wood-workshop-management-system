@@ -13,18 +13,16 @@ export class JobManagementComponent implements OnInit {
   productRQs: any[] = [];
   currentPage: number = 1;
   searchKey: string = '';
+  selectedEmployee: number = 0;
   selectedCategory: number = 0;
   selectedProduct: any = {}; // Biến để lưu trữ sản phẩm được chọn
-  position1Employees: any[] = [];
-  position2Employees: any[] = [];
-  position3Employees: any[] = [];
+  positionEmployees: any[] = [];
+  type : any = {}
   constructor(private jobService: JobService, private toastr: ToastrService) { }
 
   ngOnInit(): void {
     this.loadProductRQForJob();
-    this.loadPosition1();
-    this.loadPosition2();
-    this.loadPosition3();
+    
   }
 
   loadProductRQForJob() {
@@ -49,8 +47,8 @@ export class JobManagementComponent implements OnInit {
     this.jobService.getListProduct().subscribe(
       (data) => {
         if (data.code === 1000) {
-          this.products = data.result;
-          console.log('Sp cho job:', this.products);
+          this.productRQs = data.result;
+          console.log('Sp cho job:', this.productRQs);
         } else {
           console.error('Failed to fetch products:', data);
           this.toastr.error('Không thể lấy danh sách sản phẩm!', 'Lỗi');
@@ -67,28 +65,17 @@ export class JobManagementComponent implements OnInit {
     this.loadProductRQForJob();
     this.selectedProduct = { ...product }; // Lưu trữ dữ liệu sản phẩm vào biến selectedProduct
     console.log("Sản phẩm được chọn để giao việc:", this.selectedProduct);
+    console.log("Type:", this.selectedProduct.statusJob.type);
     if (this.selectedProduct) {
       // Kiểm tra giá trị của type và gọi các hàm tương ứng
-      switch (this.selectedProduct.statusJob.type) {
-        case 4:
+      
           this.loadPosition3();
-          break;
-        case 3:
-          this.loadPosition2();
-          break;
-        case 2:
-          this.loadPosition1();
-          break;
-        default:
-          break;
-      }
+         
     }
   
 
   }
-  positon3(){
-      this.jobService.GetPosition3();
-  }
+
   assignJob(): void {
     console.log('Giao việc cho sản phẩm:', this.selectedProduct);
 
@@ -106,70 +93,30 @@ export class JobManagementComponent implements OnInit {
     // );
   }
 
-  getButtonClass(product: any): string {
-    if (product.type === 2) {
-      switch (product.statusId) {
-        case 7:
-        case 8:
-        case 9:
-          return 'btn-warning';  // Màu vàng
-        case 10:
-          return 'btn-success';  // Màu xanh lá
-        case 12:
-        case 13:
-        case 14:
-          return 'btn-primary';  // Màu xanh
-        case 15:
-          return 'btn-info';     // Màu xanh dương
-        default:
-          return 'btn-secondary'; // Mặc định màu xám
-      }
-    }
-    return 'btn-secondary'; // Mặc định màu xám nếu không thỏa điều kiện
-  }
-
-  onSearch(): void {
-    console.log('Thực hiện tìm kiếm: ', this.searchKey);
-    console.log('Category: ', this.selectedCategory);
-    if (this.selectedCategory == 1) {
+ 
+  onSearch(selectedCategory: number, searchKey: string): void {
+    console.log('Thực hiện tìm kiếm: ', searchKey);
+    console.log('Category: ', selectedCategory);
+  
+    if (selectedCategory == 1) {
       this.loadProductRQForJob();
-    } else if (this.selectedCategory == 2) {
-      this.loadProduct();
+    } else if (selectedCategory == 2) {
+      this.loadProduct()
     }
   }
 
-  loadPosition1() {
-    this.jobService.GetPosition1().subscribe(
-      (data) => {
-        this.position1Employees = data.result;
-        console.log('Position 1 data:', this.position1Employees);
-      },
-      (error) => {
-        console.error('Error fetching Position 1 data:', error);
-      }
-    );
-  }
-
-  loadPosition2() {
-    this.jobService.GetPosition2().subscribe(
-      (data) => {
-        this.position2Employees = data.result;
-        console.log('Position 2 data:', this.position2Employees);
-      },
-      (error) => {
-        console.error('Error fetching Position 2 data:', error);
-      }
-    );
-  }
+  
 
   loadPosition3() {
-    this.jobService.GetPosition3().subscribe(
+    this.type = this.selectedProduct.statusJob.type;
+    console.log('Type:', this.type);
+    this.jobService.GetPosition3(this.type).subscribe(
       (data) => {
-        this.position3Employees = data.result;
-        this.position3Employees.forEach(category => {
+        this.positionEmployees = data.result;
+        this.positionEmployees.forEach(category => {
           console.log(`Category ID: ${category.userId}, Category Name: ${category.username}`);
         });
-        console.log('Position 3 data:', this.position3Employees);
+        console.log('Position 3 data:', this.positionEmployees);
       },
       (error) => {
         console.error('Error fetching Position 3 data:', error);
@@ -177,4 +124,3 @@ export class JobManagementComponent implements OnInit {
     );
   }
 }
-

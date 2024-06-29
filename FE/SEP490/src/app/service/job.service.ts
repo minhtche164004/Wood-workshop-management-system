@@ -12,14 +12,23 @@ export class JobService {
   private apiGetListProduct=`${environment.apiUrl}api/auth/job/getListProductForJob`
   private apiSearchProductJob = `${environment.apiUrl}api/auth/product/findProductByNameorCode`
   private apiAddJob = `${environment.apiUrl}api/auth/job/CreateJobs`
-  private apiGetPosition3 = `${environment.apiUrl}api/auth/job/findUsersWithPosition3AndLessThan3Jobs`
+  private apiGetPosition3 = `${environment.apiUrl}api/auth/job/findUsersWithPositionAndLessThan3Jobs`
   private apiGetPosition2 = `${environment.apiUrl}api/auth/job/findUsersWithPosition2AndLessThan3Jobs`
   private apiGetPosition1 = `${environment.apiUrl}api/auth/job/findUsersWithPosition1AndLessThan3Jobs`
+  private apiGetStatusByType =`${environment.apiUrl}api/auth/job/getListStatusJobByType`
+
     // user_id={{$random.integer(100)}}&
     // p_id={{$random.integer(100)}}&
     // status_id={{$random.integer(100)}}`
 
   constructor(private http: HttpClient) { }
+
+  getStatusByType(type: number): Observable<any> {
+    console.log(this.apiGetStatusByType)
+    return this.http.get<any>(`${this.apiGetStatusByType}?type=${type}`).pipe(
+      catchError(this.handleError)
+    );
+  }
   GetPosition1(): Observable<any> {
     console.log(this.apiGetPosition1)
     return this.http.get<any>(this.apiGetPosition1).pipe(
@@ -32,9 +41,9 @@ export class JobService {
       catchError(this.handleError)
     );
   }
-  GetPosition3(): Observable<any> {
+  GetPosition3(type: any): Observable<any> {
     console.log(this.apiGetPosition3)
-    return this.http.get<any>(this.apiGetPosition3).pipe(
+    return this.http.get<any>(`${this.apiGetPosition3}?type=${type}`).pipe(
       catchError(this.handleError)
     );
   }

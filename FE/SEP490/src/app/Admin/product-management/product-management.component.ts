@@ -220,7 +220,7 @@ export class ProductManagementComponent implements OnInit {
         this.selectedType = product.type;
       });
   }
-
+ 
   onEditSubmit(): void {
     if (this.uploadForm.valid) {
       const productData = this.uploadForm.value;

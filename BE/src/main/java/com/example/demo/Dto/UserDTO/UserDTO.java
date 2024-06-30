@@ -10,7 +10,10 @@ import java.io.Serializable;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
+
 public class UserDTO implements Serializable {
+
+  //  @NotNull(message = "MUST_REQUIRED")
     private Integer userId;
 
     @NotNull(message = "MUST_REQUIRED")
@@ -26,17 +29,27 @@ public class UserDTO implements Serializable {
     @NotNull(message = "MUST_REQUIRED")
     private String status_name;
     @NotNull(message = "MUST_REQUIRED")
+    private String status_id;
+    @NotNull(message = "MUST_REQUIRED")
     private String position_name;
+    @NotNull(message = "MUST_REQUIRED")
+    private String position_id;
     @NotNull(message = "MUST_REQUIRED")
     private String role_name;
 
     private String bank_name;
     private String bank_number;
+
+
+
     private String city_province;
     private String district;
     private String wards;
-    public UserDTO(Integer userId, String email, String username, String phoneNumber, String address, String fullname, String bank_name, String bank_number) {
-        this.userId=userId;
+
+
+
+    public UserDTO( String email, String username, String phoneNumber, String address, String fullname, String bank_name, String bank_number) {
+       // this.userId=userId;
         this.email = email;
         this.username = username;
         this.phoneNumber = phoneNumber;

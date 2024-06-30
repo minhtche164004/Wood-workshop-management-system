@@ -161,6 +161,15 @@ public class ProductServiceImpl implements ProductService {
         return products;
     }
 
+    @Override
+    public List<Products> findByPriceRange(BigDecimal min, BigDecimal max) {
+        List<Products> productsList = productRepository.findByPriceRange(min,max);
+        if(productsList == null ){
+            throw new AppException(ErrorCode.NOT_FOUND);
+        }
+        return productsList;
+    }
+
     @Transactional
     @Override
     public Products UpdateStatusProduct(int product_id, int status_id) {

@@ -50,9 +50,10 @@
                 <a href="#" class="settings" title="Edit" data-toggle="modal" data-target="#editProductModal">
                   <i class="fa-solid fa-pen-to-square"></i>
                 </a>
-                <a href="#" class="delete" title="Delete" data-toggle="modal" data-target="#confirmDeleteModal">
+                <a href="#" class="delete" title="Delete" data-toggle="modal" data-target="#confirmDeleteModal" (click)="setDeleteId(supplier.supplierMaterial)">
                   <i class="fa-regular fa-trash-can"></i>
                 </a>
+                
                 <a href="#" class="info" title="Info" data-toggle="modal" data-target="#productDetailModal">
                   <i class="fa-solid fa-circle-info"></i>
                 </a>
@@ -131,7 +132,7 @@
             </div>
             <div class="modal-footer">
               <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-              <button type="button" class="btn btn-danger">Delete</button>
+              <button type="button" class="btn btn-danger" (click)="deleteSupplier()">Delete</button>
             </div>
           </div>
         </div>

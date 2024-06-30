@@ -32,6 +32,8 @@ export class SupplierManagementComponent implements OnInit{
   materials: any[] = [];
   selectedMaterial: any = null;
   materialControl = new FormControl();
+  deleteId: any; // variable to store supplierId to be deleted
+
   constructor(private supplierService: SupplierService, private materialService: MaterialService, private toastr: ToastrService) { }
 
   ngOnInit() {
@@ -80,9 +82,11 @@ export class SupplierManagementComponent implements OnInit{
   addSupplier(): void {
     
     const supplier: Supplier = {
-      sub_material_id: this.selectedMaterial, 
       supplierName: this.supplierName,
       phoneNumber: this.phoneNumber,
+      sub_material_id: this.selectedMaterial, 
+      
+      
     };
     console.log('Supplier Request:', supplier);
     this.supplierService.addNewSupplier(supplier)
@@ -106,8 +110,27 @@ export class SupplierManagementComponent implements OnInit{
 
 
   }
+  setDeleteId(supplierId: number) {
+    console.log('Set deleteId:', supplierId);
 
- 
+    this.deleteId = supplierId;
+  }
+
+    deleteSupplier() {
+      console.log('Delete supplier:', this.deleteId);
+
+    this.supplierService.deleteSupplier(this.deleteId).subscribe(
+      response => {
+        console.log('Supplier deleted successfully!', response);
+        this.toastr.success('Nhà cung cấp đã được xóa thành công!', 'Thành công');
+        this.ngOnInit(); // Refresh the list of suppliers
+      },
+      error => {
+        console.error('Error deleting supplier:', error);
+        // Xử lý lỗi (Implement error handling logic)
+      }
+    );
+  }
   loadMaterials(): void {
     this.materialService.getAllMaterial().subscribe(
       (data: any) => {
@@ -124,4 +147,5 @@ export class SupplierManagementComponent implements OnInit{
     );
 
   }
+  
 }

@@ -67,10 +67,8 @@ const routes: Routes = [
   { path: 'order_request_management', component: OrderRequestComponentComponent },
   { path: 'order_request_management/:id', component: OrderRequestComponentComponent },
   { path: 'orderRq_detail', component: OrderRqDetailComponent },
-
   { path: 'contact', component: ContactComponent },
   { path: 'about-us', component:  AboutUsComponent},
-
   { path: 'order_management', component: OrderManagementComponent },
   { path: 'product_details', component: ProductDetailComponent },
   { path: 'job_management', component: JobManagementComponent },

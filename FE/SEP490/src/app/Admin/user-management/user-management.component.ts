@@ -88,6 +88,8 @@ export class UserManagementComponent implements OnInit {
   editUserForm: FormGroup;
   provinces: Province[] = [];
   districts: District[] = [];
+  provinceControl = new FormControl();
+  districtControl = new FormControl();
   wards: Ward[] = [];
   role: Role[] = [];
   position: any[] = [];
@@ -97,6 +99,7 @@ export class UserManagementComponent implements OnInit {
   currentPage: number = 1;
   userId: number = 1;
   selectedCategory: any = null;
+  selectedRoleAdd: any = null; 
   selectedRole: any = null; // Assuming selectedRole should be a boolean
   selectedPosition: any = null;
   isPositionEnabled: boolean = false;
@@ -137,8 +140,6 @@ export class UserManagementComponent implements OnInit {
     this.editUserForm = this.fb.group({
       user_id: [this.userId],
       username: ['', Validators.required],
-      password: ['', Validators.required],
-      checkPass: ['', Validators.required],
       email: ['', [Validators.required, Validators.email]],
       phoneNumber: ['', Validators.required],
       address: ['', Validators.required],
@@ -264,7 +265,7 @@ export class UserManagementComponent implements OnInit {
     );
   }
   onRoleChange() {
-    if (this.selectedRole != 4) {
+    if (this.selectedRoleAdd !== 4) {
       this.isPositionEnabled = false;
 
 
@@ -274,6 +275,15 @@ export class UserManagementComponent implements OnInit {
 
     }
   }
+  onRoleChangeUpdate() {
+    if (this.userData.role_name !== 'EMPLOYEE' && this.selectedRoleAdd !== 4) {
+      this.isPositionEnabled = false;
+    } else {
+      this.isPositionEnabled = true;
+
+    }
+  }
+
 
   loadPosition(): void {
     this.productListService.getAllPosition().subscribe(
@@ -343,14 +353,14 @@ export class UserManagementComponent implements OnInit {
       bank_name: user.bank_name,
       bank_number: user.bank_number,
 
-      city: user.city,
+      city: user.city_province,
       district: user.district,
       wards: user.wards
     });
 
-    this.editUserForm.get('city')?.setValue(user.city); // Set initial values for dropdowns
-    this.editUserForm.get('district')?.setValue(user.district);
-    this.editUserForm.get('wards')?.setValue(user.wards);
+    // this.editUserForm.get('city')?.setValue(user.city_province); // Set initial values for dropdowns
+    // this.editUserForm.get('district')?.setValue(user.district);
+    // this.editUserForm.get('wards')?.setValue(user.wards);
 
   }
 
@@ -358,12 +368,16 @@ export class UserManagementComponent implements OnInit {
     this.authenListService.getUserById(user_id).subscribe(
       (data) => {
         this.userData = data.result;
+        console.log("User data:" ,data)
       },
       (error) => {
         console.error('Error fetching user data:', error);
       }
     );
+
+ 
   }
+ 
 
   onProvinceChange() {
     const selectedProvinceName = this.userData.city_province; // assuming 'city' is bound to ngModel of the province dropdown
@@ -387,10 +401,7 @@ export class UserManagementComponent implements OnInit {
     this.userData.wards = ''; // reset selected ward in the model
   }
   EditUser(): void {
-    if (this.editUserForm.invalid) {
-      this.toastr.error('Please fill all required fields correctly.');
-      return;
-    }
+
 
     const editUserRequest: EditUserRequest = this.editUserForm.value;
     const userId = this.userData.userId; // Lấy userId từ userData
@@ -398,7 +409,7 @@ export class UserManagementComponent implements OnInit {
     this.authenListService.editUserById(userId, editUserRequest).subscribe(
       () => {
         this.toastr.success('User updated successfully.');
-        this.router.navigate(['/users']); // Navigate to users list or profile page
+        this.router.navigate(['/user_management']); // Navigate to users list or profile page
       },
       (error: any) => {
         console.error('User update failed', error);

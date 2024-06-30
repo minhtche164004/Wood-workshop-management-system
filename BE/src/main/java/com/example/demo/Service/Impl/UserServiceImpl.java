@@ -320,7 +320,7 @@ userRepository.save(user);
     }
     @Transactional
     @Override
-    public UserDTO EditUser(int id, UserDTO userDTO){
+    public UserDTO EditUser(int id, EditUserDTO userDTO){
         Optional<User> userOptional = userRepository.findById(id);
         User user = userOptional.orElseThrow(() -> new AppException(ErrorCode.NOT_FOUND));
 //        if (!checkConditionService.checkAddress(userDTO.getAddress())) {

@@ -91,7 +91,10 @@
                 </table>
 
                 <pagination-controls style="justify-content: right; display: flex;"
-                    (pageChange)="currentPage = $event"></pagination-controls>
+                (pageChange)="currentPage = $event"
+                previousLabel="Trang trước"
+                nextLabel="Trang sau">
+              </pagination-controls>
                 <div class="clearfix" style="justify-content: right; display: flex;">
                     <div class="hint-text">Showing <b>{{ (currentPage - 1) * 10 + 1 }}</b> to <b>{{ currentPage * 10
                             > productRQs.length ? productRQs.length : currentPage * 10 }}</b> out of <b>{{
@@ -135,9 +138,7 @@
                                         <p style="margin-left: 15px;">
                                             <strong>Giá công khoán:</strong> {{ selectedProduct.price | number: '1.0-3' }}
                                         </p>
-                                        <p style="margin-left: 15px;">
-                                            <strong>Thời gian bắt đầu công việc:</strong> <!-- thêm thời gian bắt đầu nếu có -->
-                                        </p>
+                                      
                                     </section>
                                 </div>
                                 <div class="col-md-1 d-flex align-items-stretch" style="border-left: 2px solid #ddd; margin-left: 30px;"></div>

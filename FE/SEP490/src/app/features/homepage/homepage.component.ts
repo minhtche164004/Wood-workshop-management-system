@@ -2,6 +2,7 @@ import { Component, AfterViewInit, OnInit } from '@angular/core';
 import { ProductListService } from 'src/app/service/product/product-list.service';
 import { ToastrService } from 'ngx-toastr';
 import { WishlistService } from 'src/app/service/wishlist.service';
+import { Router } from '@angular/router';
 declare var $: any; // Declare jQuery globally
 
 @Component({
@@ -11,7 +12,10 @@ declare var $: any; // Declare jQuery globally
 })
 export class HomepageComponent implements AfterViewInit, OnInit {
   products: any[] = [];
-  constructor(private wishList: WishlistService,private productListService: ProductListService, private toastr: ToastrService) { }
+  constructor(private router: Router,private wishList: WishlistService,private productListService: ProductListService, private toastr: ToastrService) { }
+  viewProductDetails(productId: number) {
+    this.router.navigate(['/product_details', productId]);
+  }
   ngOnInit(): void {
     
     this.productListService.getAllProductCustomer().subscribe(

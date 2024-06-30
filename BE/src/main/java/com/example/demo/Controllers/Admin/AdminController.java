@@ -5,9 +5,7 @@ import com.example.demo.Dto.UserDTO.*;
 import com.example.demo.Entity.Position;
 import com.example.demo.Entity.Role;
 import com.example.demo.Entity.User;
-import com.example.demo.Repository.RoleRepository;
-import com.example.demo.Repository.Status_User_Repository;
-import com.example.demo.Repository.UserRepository;
+import com.example.demo.Repository.*;
 import com.example.demo.Response.ApiResponse;
 import com.example.demo.Service.PositionService;
 import com.example.demo.Service.UserService;
@@ -36,7 +34,15 @@ public class AdminController {
     private UserRepository userRepository;
 
     @Autowired
+    private Status_Job_Repository statusJobRepository;
+    @Autowired
     private Status_User_Repository statusUserRepository;
+    @Autowired
+    private Status_Product_Repository statusProductRepository;
+    @Autowired
+    private Status_Order_Repository statusOrderRepository;
+    @Autowired
+    private Status_Request_Repository statusRequestRepository;
 
     private static final JedisPooled jedis = RedisConfig.getRedisInstance();
 
@@ -98,7 +104,31 @@ public class AdminController {
     @GetMapping("/GetStatusUser")
     public ApiResponse<?> GetStatusUser() {
         ApiResponse<List> apiResponse = new ApiResponse<>();
-        apiResponse.setResult(statusUserRepository.getAllStatus_User());
+        apiResponse.setResult(statusUserRepository.getAllStatus());
+        return apiResponse;
+    }
+    @GetMapping("/GetStatusJob")
+    public ApiResponse<?> GetStatusJob() {
+        ApiResponse<List> apiResponse = new ApiResponse<>();
+        apiResponse.setResult(statusJobRepository.getAllStatus());
+        return apiResponse;
+    }
+    @GetMapping("/GetStatusOrder")
+    public ApiResponse<?> GetStatusOrder() {
+        ApiResponse<List> apiResponse = new ApiResponse<>();
+        apiResponse.setResult(statusOrderRepository.getAllStatus());
+        return apiResponse;
+    }
+    @GetMapping("/GetStatusProduct")
+    public ApiResponse<?> GetStatusProduct() {
+        ApiResponse<List> apiResponse = new ApiResponse<>();
+        apiResponse.setResult(statusProductRepository.getAllStatus());
+        return apiResponse;
+    }
+    @GetMapping("/GetStatusRequest")
+    public ApiResponse<?> GetStatusRequest() {
+        ApiResponse<List> apiResponse = new ApiResponse<>();
+        apiResponse.setResult(statusRequestRepository.getAllStatus());
         return apiResponse;
     }
 

@@ -24,7 +24,7 @@ public interface Status_User_Repository extends JpaRepository<Status_User, Integ
     @Query("UPDATE Status_User u SET u.status_name = :newName WHERE u.status_id = :id")
     void updateStatusName(@Param("newName") String newName, @Param("id") int id);
 
-    @Query("SELECT u.status_name FROM Status_User u")
-    List<Status_User> getAllStatus_User();
+    @Query("SELECT u FROM Status_User u")
+    List<Status_User> getAllStatus();
 
 }

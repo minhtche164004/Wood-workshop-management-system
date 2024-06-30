@@ -1,6 +1,6 @@
 
 
-import { Component, OnInit } from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { ProvincesService } from 'src/app/service/provinces.service';
 import { ProductListService } from 'src/app/service/product/product-list.service';
 import { FormControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
@@ -8,6 +8,7 @@ import { HttpClient } from '@angular/common/http';
 import { ToastrService } from 'ngx-toastr';
 import { environment } from 'src/app/environments/environment'; // Ensure this is the correct path
 import { Router } from '@angular/router';
+import { AuthenListService } from 'src/app/service/authen.service';
 
 interface AddNewAccount {
   username: string;
@@ -20,22 +21,24 @@ interface AddNewAccount {
   status: number;
   position: number;
   role: number;
+  bank_name: string,
+  bank_number: string,
   city: string;
   district: string;
   wards: string;
 }
 interface EditUserRequest {
-  user_id: number;
+  userId: number;
   username: string;
-  password: string;
-  checkPass: string;
   email: string;
   phoneNumber: string;
   address: string;
   fullname: string;
-  status: number;
-  position: number;
-  role: number;
+  status_name: string ;
+  position_name: string;
+  bank_name: string;
+  role_name: string;
+  bank_number: string;
   city: string;
   district: string;
   wards: string;
@@ -46,7 +49,7 @@ interface Role {
 }
 
 interface ApiResponse {
-  code: number; 
+  code: number;
   result: any[];
 }
 
@@ -72,6 +75,13 @@ interface Ward {
   styleUrls: ['./user-management.component.scss']
 })
 export class UserManagementComponent implements OnInit {
+
+  
+
+
+
+
+  @ViewChild('closeButton') closeButton: ElementRef | undefined;
   private apiUrl_AddNewAccount = `${environment.apiUrl}api/auth/admin/AddNewAccount`; // URL của backend
   private apiUrl_EditUser = `${environment.apiUrl}api/auth/admin/EditUser`;
   addAccountForm: FormGroup;
@@ -87,48 +97,84 @@ export class UserManagementComponent implements OnInit {
   currentPage: number = 1;
   userId: number = 1;
   selectedCategory: any = null;
+  selectedRole: any = null; // Assuming selectedRole should be a boolean
+  selectedPosition: any = null;
+  isPositionEnabled: boolean = false;
+
+  selectProvince: any = null;
+  selectDistricts: any = null;
+  selectWards: any = null;
+  selectedUser: any;
+    userData: any = {};
 
 
-  constructor(  private provincesService: ProvincesService,
+  selectedProvince: any;
+  selectedDistrict: any;
+
+  constructor(private provincesService: ProvincesService,
     private productListService: ProductListService,
+    private authenListService: AuthenListService,
     private fb: FormBuilder,
     private http: HttpClient,
     private toastr: ToastrService,
     private router: Router) {
-      this.addAccountForm = this.fb.group({
-        username: ['', Validators.required],
-        password: ['', Validators.required],
-        checkPass: ['', Validators.required],
-        email: ['', [Validators.required, Validators.email]],
-        phoneNumber: ['', Validators.required],
-        address: ['', Validators.required],
-        fullname: ['', Validators.required],
-        status: [0],
-        position: ['', Validators.required],
-        role: ['', Validators.required],
-        city: ['', Validators.required],
-        district: ['', Validators.required],
-        wards: ['', Validators.required]
-      });
-      this.editUserForm = this.fb.group({
-        user_id: [this.userId],
-        username: ['', Validators.required],
-        password: ['', Validators.required],
-        checkPass: ['', Validators.required],
-        email: ['', [Validators.required, Validators.email]],
-        phoneNumber: ['', Validators.required],
-        address: ['', Validators.required],
-        fullname: ['', Validators.required],
-        status: [0],
-        position: ['', Validators.required],
-        role: ['', Validators.required],
-        city: ['', Validators.required],
-        district: ['', Validators.required],
-        wards: ['', Validators.required]
-      });
-    }
+    this.addAccountForm = this.fb.group({
+      username: ['', Validators.required],
+      password: ['', Validators.required],
+      checkPass: ['', Validators.required],
+      email: ['', [Validators.required, Validators.email]],
+      phoneNumber: ['', Validators.required],
+      address: ['', Validators.required],
+      fullname: ['', Validators.required],
+      status: [0],
+      position: ['', Validators.required],
+      role: ['', Validators.required],
+      bank_name: ['', Validators.required],
+      bank_number: ['', Validators.required],
+      city: ['', Validators.required],
+      district: ['', Validators.required],
+      wards: ['', Validators.required]
+    });
+    this.editUserForm = this.fb.group({
+      user_id: [this.userId],
+      username: ['', Validators.required],
+      password: ['', Validators.required],
+      checkPass: ['', Validators.required],
+      email: ['', [Validators.required, Validators.email]],
+      phoneNumber: ['', Validators.required],
+      address: ['', Validators.required],
+      fullname: ['', Validators.required],
+      status: [0],
+      position: ['', Validators.required],
+      role: ['', Validators.required],
+      bank_name: ['', Validators.required],
+      bank_number: ['', Validators.required],
+      city: ['', Validators.required],
+      district: ['', Validators.required],
+      wards: ['', Validators.required]
+    });
+  }
 
   ngOnInit(): void {
+    this.userData = {
+      username: '',
+      email: '',
+      phoneNumber: '',
+      address: '',
+      fullname: '',
+      status_name: '',
+      position_name: '',
+      role_name: '',
+      bank_name: '',
+      bank_number: '',
+      city_province: '',
+      district: '',
+      wards: '',
+  
+  
+    };
+    this.role = []; // Initialize with your roles data
+    this.position = []; // Initialize with your positions data
     this.loginToken = localStorage.getItem('loginToken');
     this.loadAllRole();
     this.loadProvinces();
@@ -140,11 +186,7 @@ export class UserManagementComponent implements OnInit {
         (data: ApiResponse) => {
           if (data.code === 1000) {
             this.user = data.result;
-
-
-
             console.log('Danh sách người dùng:', this.user);
-
           } else {
             console.error('Failed to fetch products:', data);
           }
@@ -195,6 +237,38 @@ export class UserManagementComponent implements OnInit {
       }
     );
   }
+  loadAllRoleEmployee(): void {
+    this.productListService.getAllRole().subscribe(
+      (data: any) => {
+        if (data.code === 1000) {
+          this.role = data.result as Role[];
+
+          // Filter roles based on roleId == 4
+          this.role = this.role.filter(role => role.roleId === 4);
+
+          // Now this.role will contain only roles where roleId == 4
+          console.log('Filtered roles:', this.role);
+        } else {
+          console.error('Invalid data returned:', data);
+        }
+      },
+      (error) => {
+        console.error('Error fetching roles:', error);
+      }
+    );
+  }
+  onRoleChange() {
+    if (this.selectedRole != 4) {
+      this.isPositionEnabled = false;
+
+   
+    } else {
+      this.isPositionEnabled = true;
+    
+
+  }
+}
+  
   loadPosition(): void {
     this.productListService.getAllPosition().subscribe(
       (data: any) => {
@@ -230,36 +304,19 @@ export class UserManagementComponent implements OnInit {
       }
     );
   }
-  loadUserData(): void {
-    // Replace with your service method to fetch user data by user_id
-    this.http.get<ApiResponse>(`http://localhost:8080/api/auth/admin/GetUserById?user_id=${this.userId}`)
-      .subscribe(
-        (userData) => {
-          if (userData.code === 1000) {
-            const user = userData.result; // Assuming user data is fetched properly
-            this.populateForm(user);
-          } else {
-            console.error('Failed to fetch user data:', userData);
-          }
-        },
-        (error) => {
-          console.error('Error fetching user data:', error);
-        }
-      );
-  }
+
   AddNewAccount(): void {
-    if (this.addAccountForm.invalid) {
-      this.toastr.error('Please fill all required fields correctly.');
-      return;
-    }
-
+   
     const addNewAccountRequest: AddNewAccount = this.addAccountForm.value;
-
+    console.log('Request Data:', addNewAccountRequest);
     this.http.post<any>(this.apiUrl_AddNewAccount, addNewAccountRequest, { withCredentials: true })
       .subscribe(
         () => {
-          this.toastr.success('Registration successful. Check your email for OTP.');
-          this.router.navigate(['/user_management']);
+          this.toastr.success('Thêm tài khoản người dùng thành công.');
+          if (this.closeButton) {
+            this.closeButton.nativeElement.click(); // Gọi hành động đóng modal
+          }
+          this.addAccountForm.reset(); // Reset the form after successful addition
         },
         (error: any) => {
           console.error('Registration failed', error);
@@ -277,6 +334,9 @@ export class UserManagementComponent implements OnInit {
       status: user.status,
       position: user.position,
       role: user.role,
+      bank_name: user.bank_name,
+      bank_number: user.bank_number,
+
       city: user.city,
       district: user.district,
       wards: user.wards
@@ -286,34 +346,65 @@ export class UserManagementComponent implements OnInit {
     this.editUserForm.get('district')?.setValue(user.district);
     this.editUserForm.get('wards')?.setValue(user.wards);
 
-    // Enable/disable position dropdown based on selected role
-    this.isPositionDisabled = user.role !== 2; // Assuming 2 is the roleId for 'Employee'
+
+
   }
-  onRoleChange() {
-    const selectedRole = this.editUserForm.get('role')?.value;
-    this.isPositionDisabled = selectedRole !== 2; // Assuming 2 is the roleId for 'Employee'
-    if (this.isPositionDisabled) {
-      this.editUserForm.get('position')?.reset();
-    }
+
+  getUserData(user_id: string): void {
+    this.authenListService.getUserById(user_id).subscribe(
+      (data) => {
+        this.userData = data.result;
+        console.log('User data:', data.result);
+        console.log('User district:', this.userData.district);
+
+      },
+      (error) => {
+        console.error('Error fetching user data:', error);
+      }
+    );
+  }
+
+  onProvinceChange() {
+    const selectedProvinceName = this.userData.city_province; // assuming 'city' is bound to ngModel of the province dropdown
+    this.selectedProvince = this.provinces.find(province => province.name === selectedProvinceName);
+
+    // Update districts based on the selected province
+    this.districts = this.selectedProvince ? this.selectedProvince.districts : [];
+
+    // Reset selected district and ward
+    this.userData.district = ''; // reset selected district in the model
+    this.userData.wards = ''; // reset selected ward in the model
+  }
+
+  onDistrictChange() {
+    const selectedDistrictName = this.userData.district; // assuming 'city' is bound to ngModel of the province dropdown
+    this.selectedDistrict = this.districts.find(district => district.name === selectedDistrictName);
+
+    // Update districts based on the selected province
+    this.wards = this.selectedDistrict ? this.selectedDistrict.wards : [];
+
+    this.userData.wards = ''; // reset selected ward in the model
   }
   EditUser(): void {
     if (this.editUserForm.invalid) {
       this.toastr.error('Please fill all required fields correctly.');
       return;
     }
-
+  
     const editUserRequest: EditUserRequest = this.editUserForm.value;
-
-    this.http.post<any>(`${this.apiUrl_EditUser}?user_id=${editUserRequest.user_id}`, editUserRequest)
-      .subscribe(
-        () => {
-          this.toastr.success('User updated successfully.');
-          this.router.navigate(['/users']); // Navigate to users list or profile page
-        },
-        (error: any) => {
-          console.error('User update failed', error);
-          this.toastr.error('User update failed. Please try again.');
-        }
-      );
+    const userId = this.userData.userId; // Lấy userId từ userData
+  
+    this.authenListService.editUserById(userId, editUserRequest).subscribe(
+      () => {
+        this.toastr.success('User updated successfully.');
+        this.router.navigate(['/users']); // Navigate to users list or profile page
+      },
+      (error: any) => {
+        console.error('User update failed', error);
+        this.toastr.error('User update failed. Please try again.');
+      }
+    );
   }
+  
+  
 }

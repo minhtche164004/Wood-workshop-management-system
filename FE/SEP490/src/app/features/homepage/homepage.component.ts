@@ -39,7 +39,7 @@ export class HomepageComponent implements AfterViewInit, OnInit {
         },
         (error) => {
           console.error('Error adding product to wishlist:', error);
-          this.toastr.error('Đã có lỗi xảy ra, vui lòng thử lại!', 'Lỗi'); // Error message
+          this.toastr.warning('Vui lòng đăng nhập để thêm sản phẩm yêu thích!', 'Lỗi'); // Error message
         }
       );
   }

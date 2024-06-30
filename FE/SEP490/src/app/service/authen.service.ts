@@ -9,12 +9,40 @@ import { environment } from 'src/app/environments/environment'; // Đường d�
 export class AuthenListService {
   private apiUrl_ViewProfile = `${environment.apiUrl}api/auth/user/ViewProfile`;
   private apiUrl_UpdateProfile = `${environment.apiUrl}api/auth/user/UpdateProfile`;
-
+  private apiUrl_ChangePass = `${environment.apiUrl}api/auth/user/ChangePass`;
+  private apiUrl_GetById = `${environment.apiUrl}api/auth/admin/GetById`;
+  private apiUrl_EditUser = `${environment.apiUrl}api/auth/admin/EditUser`;
   constructor(private http: HttpClient) { }
   isLoggedIn(): boolean {
     const token = localStorage.getItem('loginToken');
     return !!token; // Trả về true nếu tồn tại token trong localStorage, ngược lại false
   }
+
+  getUserById(user_id: string): Observable<any> {
+    const url = `${this.apiUrl_GetById}?user_id=${user_id}`;
+    return this.http.get<any>(url).pipe(
+      catchError(this.handleError)
+    );
+  }
+  editUserById(user_id: string, userData: any): Observable<any> {
+    const token = localStorage.getItem('loginToken');
+    if (!token) {
+      return throwError(new Error('Login token not found in localStorage.'));
+    }
+
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${token}`,
+      'Content-Type': 'application/json'
+    });
+
+    const url = `${this.apiUrl_EditUser}?user_id=${user_id}`;
+    return this.http.put<any>(url, userData, { headers }).pipe(
+      catchError(this.handleError)
+    );
+  }
+
+
+
   getUserProfile(): Observable<any> {
     const token = localStorage.getItem('loginToken');
 
@@ -50,6 +78,29 @@ export class AuthenListService {
     );
   }
 
+
+  getChangePass(oldPassword: string, newPassword: string): Observable<any> {
+    const token = localStorage.getItem('loginToken');
+
+    if (!token) {
+      return throwError(new Error('Login token not found in localStorage.'));
+    }
+
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${token}`,
+      'Content-Type': 'application/json'
+    });
+
+    const body = {
+      old_pass: oldPassword,
+      new_pass: newPassword,
+      check_pass: newPassword // Assuming check_pass is for password confirmation
+    };
+
+    return this.http.put<any>(this.apiUrl_ChangePass, body, { headers }).pipe(
+      catchError(this.handleError)
+    );
+  }
   private handleError(error: HttpErrorResponse): Observable<never> {
     console.error('An error occurred:', error.message);
     return throwError(error);

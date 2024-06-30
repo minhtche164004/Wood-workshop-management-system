@@ -10,7 +10,7 @@ import { PageAdminComponent } from './Admin/page-admin/page-admin.component';
 import { UserManagementComponent } from './Admin/user-management/user-management.component';
 import { PaymentSalaryComponent } from './payment-salary/payment-salary.component';
 import { VerifyMailComponent } from './forgotPassword/verify-mail/verify-mail.component';
-import { ChangePasswordComponent } from './forgotPassword/change-password/change-password.component';
+
 import { ApiProvinceComponent } from './api-province/api-province.component';
 import { ProductListComponent } from './product-list/product-list.component';
 import { VerifyOtpMailComponent } from './forgotPassword/verify-otp-mail/verify-otp-mail.component';
@@ -22,34 +22,37 @@ import { SupplierManagementComponent } from './supplier-management/supplier-mana
 import { OrderDetailManagementComponent } from './Admin/order-detail-management/order-detail-management.component';
 import { OrderRequestComponentComponent } from './Admin/order-request-component/order-request-component.component';
 import { OrderRqDetailComponent } from './Admin/order-rq-detail/order-rq-detail.component';
-
 import { OrderRequiredComponent } from './order-required/order-required.component';
 import { CreateOrderComponent } from './create-order/create-order.component';
-
 import { OrderManagementComponent } from './Admin/order-management/order-management.component';
 import { ProductDetailComponent } from './features/product-detail/product-detail.component';
-
 import { JobManagementComponent } from './Admin/job-management/job-management.component';
 import { JobDetailComponent } from './Admin/job-detail/job-detail.component';
 
+import { ForgotPassComponent } from './forgotPassword/forgot-pass/forgot-pass.component';
+import { ChangePasswordComponent } from './features/change-password/change-password.component';
 
 
+
+import { ContactComponent } from './contact/contact.component';
+import { AboutUsComponent } from './about-us/about-us.component';
+import { EmployeeJobComponent } from './employee-job/employee-job.component';
 
 
 
 const routes: Routes = [
   { path: 'homepage', component: HomepageComponent },
   { path: 'api-province', component: ApiProvinceComponent },
-  { path: 'register', component: RegisterComponent },
+  { path: 'login', component: RegisterComponent },
   { path: 'otp', component: VerifyOtpComponent },
   { path: 'admin', component: PageAdminComponent },
   { path: 'verifyMail', component: VerifyMailComponent },
   { path: 'verifyOtp', component: VerifyOtpMailComponent },
-  { path: 'change_pass', component: ChangePasswordComponent },
+  { path: 'change_pass', component: ForgotPassComponent },
   { path: 'user_management', component: UserManagementComponent },
   { path: 'payment-salary', component: PaymentSalaryComponent },
   { path: 'verifyOtp/:email', component: VerifyOtpMailComponent },  // Route with email as a parameter
-  { path: 'change_pass/:email', component: ChangePasswordComponent },  // Route with email as a parameter
+  { path: 'change_pass/:email', component: ForgotPassComponent },  // Route with email as a parameter
   { path: 'product', component: ProductComponent }, // Add route for ProductComponent
   { path: 'productsList', component: ProductListComponent },
   { path: 'product_management', component: ProductManagementComponent },
@@ -65,12 +68,17 @@ const routes: Routes = [
   { path: 'order_request_management/:id', component: OrderRequestComponentComponent },
   { path: 'orderRq_detail', component: OrderRqDetailComponent },
 
+  { path: 'contact', component: ContactComponent },
+  { path: 'about-us', component:  AboutUsComponent},
+
   { path: 'order_management', component: OrderManagementComponent },
   { path: 'product_details', component: ProductDetailComponent },
- 
-
   { path: 'job_management', component: JobManagementComponent },
   { path: 'job_detail', component: JobDetailComponent },
+
+  { path: 'changePassWord', component: ChangePasswordComponent },
+
+  { path: 'employee-job', component: EmployeeJobComponent },
 
   { path: '', redirectTo: '/homepage', pathMatch: 'full' },
   { path: '**', redirectTo: '/homepage', pathMatch: 'full' },

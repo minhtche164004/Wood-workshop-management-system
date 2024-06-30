@@ -1,16 +1,3 @@
-
-
-
-
-
-
-
-
-
-
-
-
-
 <div class="header">
     <div class="top-header">
         <div class="container">
@@ -19,10 +6,7 @@
                     <div class="header-icon">
                         <ul class="d-flex">
                             <li class="icon"><a class="header_link" href=""><i class="fab fa-facebook-f"></i></a></li>
-                            <li class="icon"><a class="header_link" href=""><i class="fab fa-instagram"></i></a></li>
-                            <li class="icon"><a class="header_link" href=""><i class="fab fa-twitter"></i></a></li>
-                            <li class="icon"><a class="header_link" href=""><i class="fab fa-youtube"></i></a></li>
-                            <li class="icon"><a class="header_link" href=""><i class="fab fa-google-plus-g"></i></a></li>
+                             
                         </ul>
                     </div>
                 </div>
@@ -38,13 +22,13 @@
                             <li class="contact">
                                 <a class="header_link" href="" class="header-shop-phone">
                                     <i class="fas fa-phone"></i>
-                                    (+84)934 323 882
+                                    (+84)0948539479
                                 </a>
                             </li>
                             <li class="header_link" class="contact">
                                 <a href="" class="header-shop-support">
                                     <i class="fas fa-envelope"></i>
-                                    support.vn
+                                    anhvubui382@gmail.com
                                 </a>
                             </li>
                         </ul>
@@ -53,109 +37,67 @@
             </div>
         </div>
     </div>
-    <div class="main-menu">
-        <div class="container">
-            <div class="row">
-                <nav class="navbar navbar-expand-lg navbar-light">
-                    <div class="container-fluid">
-                        <div class="logo">
-                            <a href="index.html">
-                                <img src="assets/img/logo.png" alt="">
-                            </a>
-                        </div>
-                      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-                        <span class="navbar-toggler-icon"></span>
-                      </button>
-                      <div class="collapse navbar-collapse hide justify-content-center" id="navbarSupportedContent">
-                        <ul class="navbar-nav  mb-2 mb-lg-0 justify-content-center">
-                          <li class="nav-item">
-                            <a routerLink="/homepage" class="nav-link active" aria-current="page" >Trang chủ</a>
-                          </li>
-                          <li class="nav-item">
-                            <a routerLink="/product" class="nav-link active" aria-current="page">Sản phẩm</a>
-                          </li>
-                          <li class="nav-item">
-                            <a class="nav-link active" aria-current="page" href="allnews.html">Tin tức</a>
-                          </li>
-                          <li class="nav-item">
-                            <a class="nav-link active" aria-current="page" href="contact.html">Liên hệ</a>
-                          </li>
-                          <li class="nav-item">
-                            <a class="nav-link active" aria-current="page" href="about.html">Giới thiệu</a>
-                          </li>
-                        </ul>
-                      </div>
-                      <form class="d-flex ms-auto">
-                        <input class="form-control me-2" type="search" placeholder="Tìm kiếm..." aria-label="Search">
-                        <button class="btn btn-outline-success" type="submit">Tìm kiếm</button>
-                      </form>
-                      
-                      <ul class="icon-nav justify-content-end d-flex">
-                        
-                        <div class="dropdown">
-                            <a class="icon-user" href="" data-bs-toggle="modal" data-bs-target="#exampleModal"><i class="fas fa-user-alt"></i></a>
-                            <div class="dropdown-content">
-                              <ng-container *ngIf="isLogout(); else loggedInLinks">
-                                <a routerLink="/register">Login</a>                      
-                              </ng-container>
-                              <ng-template #loggedInLinks>
-                                <a routerLink="/profile">Profile</a>
-                                <a routerLink="/forgot">Forgot Password</a>
-                                <a (click)="onLogout()">Logout</a>
-                              </ng-template>
-                            </div>
-                          </div>
-                          
-                        <li>
-                            <a class="icon-buy" href="cart.html">
-                                <i class="fas fa-shopping-cart"></i>
-                                <div class="number-buy">0</div>
-                            </a>
-                        </li>
-                    </ul>
-                    </div>
-                </nav>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="index.html">
+                <img src="assets/img/logomain-removebg-preview.png"
+                    style="height: 100px; margin-left: 50px; margin-top: -20px;" class="logo">
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false"
+                aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse justify-content-center" id="navbarSupportedContent">
+                <ul class="navbar-nav mb-2 mb-lg-0 justify-content-center">
+                    <li class="nav-item">
+                        <a routerLink="/homepage" class="nav-link active" aria-current="page">Trang chủ</a>
+                    </li>
+                    <li class="nav-item">
+                        <a routerLink="/product" class="nav-link active" aria-current="page">Sản phẩm</a>
+                    </li>
+                    <li class="nav-item">
+                        <a routerLink="/contact" class="nav-link active" aria-current="page">Liên hệ</a>
+                    </li>
+                    <li class="nav-item">
+                        <a routerLink="/about-us" class="nav-link active" aria-current="page">Giới thiệu</a>
+                    </li>
+                </ul>
             </div>
+            <ul class="icon-nav d-flex justify-content-end" style="margin-right: 60px; margin-top: 2%;">
+                <div class="dropdown">
+                    <a class="icon-user" href="" data-bs-toggle="modal" data-bs-target="#exampleModal"><i class="fas fa-user-alt"></i></a>
+                    <div class="dropdown-content">
+                      <ng-container *ngIf="isLogout(); else loggedInLinks">
+                        <a routerLink="/login">Login</a>                      
+                      </ng-container>
+                      <ng-template #loggedInLinks>
+                        <a routerLink="/profile">Profile</a>
+                        <a routerLink="/forgot">Forgot Password</a>
+                        <a (click)="onLogout()">Logout</a>
+                      </ng-template>
+                    </div>
+                  </div>
+                  
+                <li>
+                    <a class="icon-buy" href="cart.html">
+                        <i class="fas fa-shopping-cart"></i>
+                        <div class="number-buy">0</div>
+                    </a>
+                </li>
+                
+            </ul>
         </div>
-    </div>
-    <div class="responsive-navbar text-center hide an">
+    </nav>   
+    <div class="container-fluid search-bar-container" style="margin-top: -2%;">
         <div class="row">
-            <div class="col-12">
-                <div class="search">
-                    <input type="text" placeholder="Tìm kiếm...">
-                    <i class="fas fa-search"></i>
-                </div>
-                <hr>
-                <div class="row">
-                    <div class="col-6 d-flex flex-column align-items-start res-left">
-                        <div class="res-home">
-                            <a routerLink="/homepage" routerLinkActive="active"><i class="fas fa-house-user"></i>Trang chủ</a>
-                          </div>
-                          <div class="resproducts">
-                            <a routerLink="/product" routerLinkActive="active"><i class="fas fa-cart-plus"></i>Sản phẩm</a>
-                          </div>
-                      
-                          
-                        <div class="res-contact">
-                            <a href=""><i class="fas fa-map-marker-alt"></i>Liên hệ</a>
-                        </div>
-                        <div class="res-about">
-                            <a href=""><i class="fas fa-address-card"></i>Giới thiệu</a>
-                        </div>
-                        <div class="about-us">
-                            <a href=""><i class="fab fa-themeisle"></i>Về chúng tôi</a>
-                        </div>
-                    </div>
-                    <div class="col-6 d-flex flex-column align-items-start res-right">
-                        <div class="love">
-                            <a href=""><i class="far fa-heart"></i>Yêu thích</a>
-                        </div>
-                        <div class="res-n">
-                            <a href=""><i class="far fa-newspaper"></i>Tin tức</a>
-                        </div>
-                    </div>
-                </div>
+            <div class="col-12 d-flex justify-content-center">
+                <form class="d-flex search-bar">
+                    <input class="form-control me-2 search-input" type="search" placeholder="Tìm kiếm sản phẩm ..."
+                        aria-label="Search">
+                    <button class="btn search-button" type="submit"><i
+                            class="fa-solid fa-magnifying-glass"></i></button>
+                </form>
             </div>
         </div>
     </div>
-</div>

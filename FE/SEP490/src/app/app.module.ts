@@ -18,7 +18,7 @@ import { UserManagementComponent } from './Admin/user-management/user-management
 import { DashboardComponent } from './Layout/dashboard/dashboard.component';
 import { PaymentSalaryComponent } from './payment-salary/payment-salary.component';
 import { VerifyMailComponent } from './forgotPassword/verify-mail/verify-mail.component';
-import { ChangePasswordComponent } from './forgotPassword/change-password/change-password.component';
+
 import { VerifyOtpMailComponent } from './forgotPassword/verify-otp-mail/verify-otp-mail.component';
 import { ApiProvinceComponent } from './api-province/api-province.component';
 import { ReactiveFormsModule } from '@angular/forms';
@@ -53,6 +53,15 @@ import { OrderManagementComponent } from './Admin/order-management/order-managem
 import { JobManagementComponent } from './Admin/job-management/job-management.component';
 import { JobDetailComponent } from './Admin/job-detail/job-detail.component';
 
+import { ForgotPassComponent } from './forgotPassword/forgot-pass/forgot-pass.component';
+import { ChangePasswordComponent } from './features/change-password/change-password.component';
+
+import { AboutUsComponent } from './about-us/about-us.component';
+import { ContactComponent } from './contact/contact.component';
+import { EmployeeJobComponent } from './employee-job/employee-job.component';
+import { SubSubmaterialProductComponent } from './sub-submaterial-product/sub-submaterial-product.component';
+
+
 
 
 
@@ -77,7 +86,7 @@ import { JobDetailComponent } from './Admin/job-detail/job-detail.component';
     DashboardComponent,
     PaymentSalaryComponent,
     VerifyMailComponent,
-    ChangePasswordComponent,
+    ForgotPassComponent,
     VerifyOtpMailComponent,
     ApiProvinceComponent,
     ProductListComponent,
@@ -98,9 +107,17 @@ import { JobDetailComponent } from './Admin/job-detail/job-detail.component';
     OrderRqDetailComponent,
 
     OrderManagementComponent,
-
+    ChangePasswordComponent,
     JobManagementComponent,
     JobDetailComponent,
+
+    ForgotPassComponent,
+
+    AboutUsComponent,
+    ContactComponent,
+    EmployeeJobComponent,
+    SubSubmaterialProductComponent,
+
     
 
   

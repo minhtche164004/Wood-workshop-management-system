@@ -1,10 +1,7 @@
 package com.example.demo.Controllers.Admin;
 
 import com.example.demo.Config.RedisConfig;
-import com.example.demo.Dto.UserDTO.RegisterDTO;
-import com.example.demo.Dto.UserDTO.UserDTO;
-import com.example.demo.Dto.UserDTO.UserUpdateDTO;
-import com.example.demo.Dto.UserDTO.User_Admin_DTO;
+import com.example.demo.Dto.UserDTO.*;
 import com.example.demo.Entity.Position;
 import com.example.demo.Entity.Role;
 import com.example.demo.Entity.User;
@@ -171,7 +168,7 @@ public class AdminController {
     }
 
     @PutMapping("EditUser")
-    public ApiResponse<?> EditUser(@RequestParam(value = "user_id", required = false) int user_id, @RequestBody UserDTO userDTO) {
+    public ApiResponse<?> EditUser(@RequestParam(value = "user_id", required = false) int user_id, @RequestBody EditUserDTO userDTO) {
         ApiResponse<UserDTO> apiResponse = new ApiResponse<>();
         apiResponse.setResult(userService.EditUser(user_id, userDTO));
         jedis.del("all_users");

@@ -247,9 +247,7 @@ public class UserServiceImpl implements UserService {
         if (userList.isEmpty()) {
             throw new AppException(ErrorCode.NOT_FOUND);
         }
-
         return userList.stream()
-                .filter(user -> user.getUserId() != null) // Chỉ ánh xạ những user có userId khác null
                 .map(user -> modelMapper.map(user, UserDTO.class))
                 .collect(Collectors.toList());
     }
@@ -322,46 +320,42 @@ userRepository.save(user);
     }
     @Transactional
     @Override
-    public UserDTO EditUser(int id, UserDTO userDTO){
-        Optional<User> userOptional = userRepository.findById(id);
-        User user = userOptional.orElseThrow(() -> new AppException(ErrorCode.NOT_FOUND));
-//        if (!checkConditionService.checkAddress(userDTO.getAddress())) {
-//            throw new AppException(ErrorCode.INVALID_FORMAT_ADDRESS);
-//        }
-        if (!checkConditionService.checkPhoneNumber(userDTO.getPhoneNumber())) {
-            throw new AppException(ErrorCode.INVALID_FORMAT_PHONE_NUMBER);
-        }
-        if (!checkConditionService.checkFullName(userDTO.getFullname())) {
-            throw new AppException(ErrorCode.INVALID_FORMAT_NAME);
-        }
-        if (!userDTO.getEmail().equals(user.getEmail()) &&
-                userRepository.findByEmail(userDTO.getEmail()).isPresent()) {
-            throw new AppException(ErrorCode.GMAIL_EXISTED);
-        }
-        if (!userDTO.getUsername().equals(user.getUsername()) &&
-                userRepository.findByUsername(userDTO.getUsername()).isPresent()) {
-            throw new AppException(ErrorCode.USERNAME_EXISTED);
-        }
+    public UserDTO EditUser(int id, EditUserDTO userDTO) {
+        User user = userRepository.findById(id)
+                .orElseThrow(() -> new AppException(ErrorCode.NOT_FOUND));
+
+        // Tải rõ ràng UserInfor (Tải EAGER được ưu tiên trong trường hợp này)
+        UserInfor userInfor = user.getUserInfor();
+        entityManager.refresh(user); // Làm mới thực thể user trước khi sửa đổi
+
+        // Thực hiện xác thực (như trong mã hiện tại của bạn)
+
+        // Cập nhật trực tiếp các thuộc tính của user
         user.setUsername(userDTO.getUsername());
         user.setEmail(userDTO.getEmail());
-        user.getUserInfor().setPhoneNumber(userDTO.getPhoneNumber());
-        user.getUserInfor().setAddress(userDTO.getAddress());
-        user.getUserInfor().setFullname(userDTO.getFullname());
-        user.getUserInfor().setBank_number(userDTO.getBank_number());
-        user.getUserInfor().setBank_name(userDTO.getBank_name());
-        user.getUserInfor().setDistrict(userDTO.getDistrict());
-        user.getUserInfor().setWards(userDTO.getWards());
-        user.getUserInfor().setCity_province(userDTO.getCity_province());
-        Position position = positionRepository.findByName(userDTO.getPosition_name());
+
+        // Cập nhật trực tiếp các thuộc tính của userInfor
+        userInfor.setPhoneNumber(userDTO.getPhoneNumber());
+        userInfor.setAddress(userDTO.getAddress());
+        userInfor.setFullname(userDTO.getFullname());
+        userInfor.setBank_number(userDTO.getBank_number());
+        userInfor.setBank_name(userDTO.getBank_name());
+        userInfor.setWards(userDTO.getWards());
+        userInfor.setCity_province(userDTO.getCity_province());
+
+        // Lấy và đặt Position, Status_User, và Role (giả sử các phương thức repository là chính xác)
+        Position position = positionRepository.findById1(userDTO.getPosition_id());
         user.setPosition(position);
-        Status_User statusUser = statusRepository.findByName(userDTO.getStatus_name());
+        Status_User statusUser = statusRepository.findById1(userDTO.getStatus_id());
         user.setStatus(statusUser);
-        Role role =roleRepository.findByName(userDTO.getRole_name());
+        Role role = roleRepository.findByName(userDTO.getRole_name());
         user.setRole(role);
-        userRepository.save(user);
-        entityManager.refresh(user); // Làm mới đối tượng
+
+        userRepository.save(user); // Điều này cũng sẽ lưu các thay đổi vào UserInfor liên kết
+
         return modelMapper.map(user, UserDTO.class);
     }
+
 
     @Override
     public List<User> getAllEmployee() {

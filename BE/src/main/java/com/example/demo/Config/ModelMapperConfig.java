@@ -17,6 +17,7 @@ public class ModelMapperConfig {
         modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT); // Áp dụng chiến lược khớp chính xác
 
         modelMapper.typeMap(User.class, UserDTO.class)
+
                 .addMapping(User::getUserId, UserDTO::setUserId)
                 .addMapping(src -> src.getUserInfor().getFullname(), UserDTO::setFullname)
                 .addMapping(User::getUsername, UserDTO::setUsername)

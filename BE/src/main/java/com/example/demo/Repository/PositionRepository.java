@@ -19,4 +19,7 @@ public interface PositionRepository extends JpaRepository<Position, Integer> {
     @Query("SELECT u.position_name FROM Position u") // Assuming the field is positionName
     List<String> getListName();
 
+    @Query("SELECT u FROM Position u WHERE u.position_id = :query")
+    Position findById1(int query);
+
 }

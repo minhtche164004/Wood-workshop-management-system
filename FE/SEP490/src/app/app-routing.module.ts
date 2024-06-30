@@ -75,6 +75,7 @@ const routes: Routes = [
   { path: 'job_detail', component: JobDetailComponent },
   { path: 'changePassWord', component: ChangePasswordComponent },
   { path: 'employee-job', component: EmployeeJobComponent },
+  { path: 'product-details/:id', component: ProductDetailComponent },
   { path: '', redirectTo: '/homepage', pathMatch: 'full' },
   { path: '**', redirectTo: '/homepage', pathMatch: 'full' },
 

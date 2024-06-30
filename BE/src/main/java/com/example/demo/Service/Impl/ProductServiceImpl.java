@@ -244,41 +244,69 @@ public class ProductServiceImpl implements ProductService {
     }// Trả về đường dẫn tương đối hoặc đường dẫn ban đầu nếu không tìm thấy "/assets/"
 
     @Override
-    public List<Products> filterProductForCustomer(String search, Integer categoryId, BigDecimal minPrice, BigDecimal maxPrice, String sortDirection) {
-        List<Products> productList = new ArrayList<>();
+//    public List<Products> filterProductForCustomer(String search, Integer categoryId, BigDecimal minPrice, BigDecimal maxPrice, String sortDirection) {
+//        List<Products> productList = new ArrayList<>();
+//
+//        if (search != null || categoryId != null || minPrice != null || maxPrice != null) {
+//            productList = productRepository.filterProductsForCus(search, categoryId, minPrice, maxPrice);
+//        } else {
+//            productList = productRepository.ViewProductLandingPage();
+//        }
+//
+//        if (productList.isEmpty()) {
+//            throw new AppException(ErrorCode.NOT_FOUND);
+//        }
+//
+//        for (Products product : productList) {
+//            product.setImage(getAddressLocalComputer(product.getImage())); // Cập nhật lại đường dẫn ảnh
+//        }
+//
+//        // Sắp xếp danh sách sản phẩm theo giá
+//        if (sortDirection != null) {
+//            if (sortDirection.equals("asc")) {
+//                productList.sort(Comparator.comparing(Products::getPrice));
+//            } else if (sortDirection.equals("desc")) {
+//                productList.sort(Comparator.comparing(Products::getPrice).reversed());
+//            }
+//        }
+//
+//        return productList;
+//    }
+    public List<Products> filterProductForCustomer(String search, List<Integer> categoryIds, BigDecimal minPrice, BigDecimal maxPrice, String sortDirection) {
+    List<Products> productList = new ArrayList<>();
 
-        if (search != null || categoryId != null || minPrice != null || maxPrice != null) {
-            productList = productRepository.filterProductsForCus(search, categoryId, minPrice, maxPrice);
-        } else {
-            productList = productRepository.ViewProductLandingPage();
-        }
-
-        if (productList.isEmpty()) {
-            throw new AppException(ErrorCode.NOT_FOUND);
-        }
-
-        for (Products product : productList) {
-            product.setImage(getAddressLocalComputer(product.getImage())); // Cập nhật lại đường dẫn ảnh
-        }
-
-        // Sắp xếp danh sách sản phẩm theo giá
-        if (sortDirection != null) {
-            if (sortDirection.equals("asc")) {
-                productList.sort(Comparator.comparing(Products::getPrice));
-            } else if (sortDirection.equals("desc")) {
-                productList.sort(Comparator.comparing(Products::getPrice).reversed());
-            }
-        }
-
-        return productList;
+    if (search != null || (categoryIds != null && !categoryIds.isEmpty()) || minPrice != null || maxPrice != null) {
+        productList = productRepository.filterProductsForCus(search, categoryIds, minPrice, maxPrice);
+    } else {
+        productList = productRepository.ViewProductLandingPage();
     }
+
+    if (productList.isEmpty()) {
+        throw new AppException(ErrorCode.NOT_FOUND);
+    }
+
+    for (Products product : productList) {
+        product.setImage(getAddressLocalComputer(product.getImage())); // Cập nhật lại đường dẫn ảnh
+    }
+
+    // Sắp xếp danh sách sản phẩm theo giá
+    if (sortDirection != null) {
+        if (sortDirection.equals("asc")) {
+            productList.sort(Comparator.comparing(Products::getPrice));
+        } else if (sortDirection.equals("desc")) {
+            productList.sort(Comparator.comparing(Products::getPrice).reversed());
+        }
+    }
+
+    return productList;
+}
 
     @Override
     public List<Products> filterProductsForAdmin(String search, Integer categoryId, Integer statusId, BigDecimal minPrice, BigDecimal maxPrice, String sortDirection) {
         List<Products> productList = new ArrayList<>();
 
         if (search != null || categoryId != null || minPrice != null || maxPrice != null) {
-            productList = productRepository.filterProductsForCus(search, categoryId, minPrice, maxPrice);
+            productList = productRepository.filterProductsForAdmin(search, categoryId, statusId, minPrice, maxPrice);
         } else {
             productList = productRepository.ViewProductLandingPage();
         }

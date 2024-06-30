@@ -46,7 +46,7 @@ public interface UserService {
     void changeStatusAccount(int id,int status_id);
     List<UserDTO> FilterByStatus(int status_id);
     List<UserDTO> FilterByRole(int roleId);
-    UserDTO EditUser(int id,UserDTO userDTO);
+    UserDTO EditUser(int id,EditUserDTO userDTO);
     List<User> getAllEmployee();
 
     void changePass(ChangePassDTO changePassDTO);

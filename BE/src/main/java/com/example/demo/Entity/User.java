@@ -24,12 +24,12 @@ public class User  {
     @Column(name = "email", nullable = false, length = 255)
     private String email;
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinColumn(name = "status_id")
     @JsonIgnore
     private Status_User status;
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne(cascade = CascadeType.ALL,fetch = FetchType.EAGER)
 //    @JsonIgnore
     @JoinColumn(name = "position_id")
     private Position position;
@@ -38,12 +38,12 @@ public class User  {
     @Temporal(TemporalType.DATE)
     private Date hireDate;
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne(cascade = CascadeType.ALL,fetch = FetchType.EAGER)
    @JsonIgnore
     @JoinColumn(name = "role_id")
     private Role role;
 
-    @OneToOne(cascade = CascadeType.ALL)// tức là khi tạo User thì infor cũng đc tạo
+    @OneToOne(cascade = CascadeType.ALL,fetch = FetchType.EAGER)// tức là khi tạo User thì infor cũng đc tạo
     @JsonIgnore
     @JoinColumn(name = "infor_id")
     private UserInfor userInfor;

@@ -17,12 +17,10 @@ public class ModelMapperConfig {
         modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT); // Áp dụng chiến lược khớp chính xác
 
         modelMapper.typeMap(User.class, UserDTO.class)
-                .addMapping(src -> src.getUserInfor().getBank_number(), UserDTO::setBank_number)
-                .addMapping(src -> src.getUserInfor().getBank_name(), UserDTO::setBank_name)
-                .addMapping(src -> src.getUserInfor().getWards(), UserDTO::setWards)
-                .addMapping(src -> src.getUserInfor().getDistrict(), UserDTO::setDistrict)
-                .addMapping(src -> src.getUserInfor().getCity_province(), UserDTO::setCity_province)
+
                 .addMapping(User::getUserId, UserDTO::setUserId)
+                .addMapping(src -> src.getStatus().getStatus_id(), UserDTO::setStatus_id)
+                .addMapping(src -> src.getPosition().getPosition_id(), UserDTO::setPosition_id)
                 .addMapping(src -> src.getUserInfor().getFullname(), UserDTO::setFullname)
                 .addMapping(User::getUsername, UserDTO::setUsername)
                 .addMapping(User::getEmail, UserDTO::setEmail)
@@ -30,12 +28,18 @@ public class ModelMapperConfig {
                 .addMapping(src -> src.getPosition().getPosition_name(), UserDTO::setPosition_name)
                 .addMapping(src -> src.getUserInfor().getAddress(), UserDTO::setAddress)
                 .addMapping(src -> src.getStatus().getStatus_name(), UserDTO::setStatus_name)
+                .addMapping(src -> src.getUserInfor().getBank_number(), UserDTO::setBank_number)
+                .addMapping(src -> src.getUserInfor().getBank_name(), UserDTO::setBank_name)
+                .addMapping(src -> src.getUserInfor().getWards(), UserDTO::setWards)
+                .addMapping(src -> src.getUserInfor().getDistrict(), UserDTO::setDistrict)
+                .addMapping(src -> src.getUserInfor().getCity_province(), UserDTO::setCity_province)
                 .addMapping(src -> src.getRole().getRoleName(), UserDTO::setRole_name);// Ánh xạ roleName
 
         modelMapper.typeMap(User.class, UpdateProfileDTO.class)
                 .addMapping(src -> src.getUserInfor().getBank_name(), UpdateProfileDTO::setBank_name)
                 .addMapping(src -> src.getUserInfor().getBank_number(), UpdateProfileDTO::setBank_number)
                 .addMapping(User::getUsername, UpdateProfileDTO::setUsername)
+
                 .addMapping(User::getEmail, UpdateProfileDTO::setEmail)
                 .addMapping(src -> src.getUserInfor().getFullname(), UpdateProfileDTO::setFullname)
                 .addMapping(src -> src.getUserInfor().getPhoneNumber(), UpdateProfileDTO::setPhoneNumber)

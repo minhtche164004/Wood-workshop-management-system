@@ -66,7 +66,7 @@ public class AdminController {
     public ApiResponse<?> getAllUser() {
         ApiResponse<List> apiResponse = new ApiResponse<>();
         String cacheKey = "all_users";
-//        jedis.del(cacheKey);
+        //jedis.del(cacheKey);
         List<UserDTO> users;
         String cachedData = jedis.get(cacheKey);
         if (cachedData != null) {

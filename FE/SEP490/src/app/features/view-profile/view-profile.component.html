@@ -1,11 +1,11 @@
 <app-header></app-header>
-<div class="container" style="margin-top: 160px;">
+<div class="container" style="margin-top: 180px;">
   <div class="main-body">
     <div class="row">
       <div class="col-lg-4">
         <div class="card">
           <div class="card-body text-center">
-            <img src="https://mcdn.coolmate.me/image/March2023/thay-ong-noi-meme-1440_806.jpg" alt="Admin" class="custom-avatar">
+            <img src="assets/img/logomain-removebg-preview.png" alt="Admin" class="custom-avatar">
             <div class="mt-3">
 
    
@@ -92,7 +92,7 @@
               <div class="col-sm-3 text-right text-secondary">
                 <button  class="btn btn-primary px-4 float-right " *ngIf="!isEditing" (click)="editProfile()">Chỉnh sửa</button>
                 <div *ngIf="isEditing" class="btn-group float-right">
-                  <button style="margin-left: 10px;" class="btn btn-primary" (click)="saveChanges()">Lưu thay đổi</button>
+                  <button style="margin-right: 10px;" class="btn btn-primary" (click)="saveChanges()">Lưu thay đổi</button>
                   <button class="btn btn-mau-do" (click)="cancelChanges()">Hủy bỏ</button>
                  
                 </div>

@@ -51,6 +51,9 @@ public interface ProductRepository extends JpaRepository<Products, Integer> {
             "u.code LIKE CONCAT('%', :keyword, '%')")
     List<Products> findProductByNameCode(@Param("keyword") String keyword);
 
+    @Query("SELECT p FROM Products p WHERE p.price BETWEEN :minPrice AND :maxPrice")
+    List<Products> findByPriceRange(@Param("minPrice") BigDecimal minPrice, @Param("maxPrice") BigDecimal maxPrice);
+
     @Transactional
     @Modifying
     @Query("update Products u set u.status.status_id = ?2" +

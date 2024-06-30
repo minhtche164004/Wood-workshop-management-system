@@ -21,6 +21,8 @@ public interface ProductService {
     Products EditProduct(int id, ProductEditDTO productEditDTO,MultipartFile[] multipartFiles, MultipartFile multipartFiles_thumbnal) throws Exception;
     //xuất nguyên liệu cho sản phẩm có sẵn
 
+    List<Products> findByPriceRange(BigDecimal min, BigDecimal max);
+
 
      Products GetProductById(int product_id);
 

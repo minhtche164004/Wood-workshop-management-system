@@ -16,7 +16,7 @@ import java.util.List;
 @EnableJpaRepositories
 public interface ProductSubMaterialsRepository extends JpaRepository<ProductSubMaterials,Integer> {
 
-    @Query("SELECT u.subMaterial.subMaterialName FROM ProductSubMaterials u WHERE u.product.productId = :query")
+    @Query("SELECT u.subMaterial.subMaterialName FROM ProductSubMaterials u WHERE u.product.productId = :query AND u.subMaterial.material.materialId IN (1, 2)")
     List<String> GetSubNameByProductId(int query);
 
     @Query("SELECT u FROM ProductSubMaterials u WHERE u.product.productId = :query AND u.subMaterial.material.materialId = :mate_id")

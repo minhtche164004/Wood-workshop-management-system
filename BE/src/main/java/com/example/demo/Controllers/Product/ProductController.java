@@ -163,6 +163,13 @@ public class ProductController {
         return apiResponse;
     }
 
+    @GetMapping("/findByPriceRange")
+    public ApiResponse<?> GetProductByIdWithImage(@RequestParam("min") BigDecimal min,@RequestParam("max") BigDecimal max) {
+        ApiResponse<List> apiResponse = new ApiResponse<>();
+        apiResponse.setResult(productService.findByPriceRange(min,max));
+        return apiResponse;
+    }
+
 //    @GetMapping("/GetRequestById")
 //    public ApiResponse<?> GetRequestById(@RequestParam("id") int id) {
 //        ApiResponse<Requests> apiResponse = new ApiResponse<>();

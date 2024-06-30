@@ -18,13 +18,38 @@ export class JobManagementComponent implements OnInit {
   selectedProduct: any = {}; // Biến để lưu trữ sản phẩm được chọn
   positionEmployees: any[] = [];
   type : any = {}
+  
   constructor(private jobService: JobService, private toastr: ToastrService) { }
 
   ngOnInit(): void {
     this.loadProductRQForJob();
-    
+    this.createNewJob();
   }
+  createNewJob() {
+    const user_id = 1; // Thay đổi giá trị tùy theo người dùng
+    const p_id = 1; // Thay đổi giá trị tùy theo sản phẩm
+    const status_id = 1; // Thay đổi giá trị tùy theo trạng thái
+    const job_id = 1; // Thay đổi giá trị tùy theo công việc
+    const jobData = {
+      job_name: 'New Job',
+      quantity_product: 10,
+      description: 'Description of the job',
+      finish: new Date(),
+      start: new Date(),
+      cost: 1000
+    };
 
+    this.jobService.addJob(user_id, p_id, status_id, job_id, jobData).subscribe(
+      response => {
+        console.log('Job created successfully!', response);
+        // Xử lý response hoặc thực hiện các hành động tiếp theo
+      },
+      error => {
+        console.error('Error creating job:', error);
+        // Xử lý lỗi
+      }
+    );
+  }
   loadProductRQForJob() {
     this.jobService.getListProductRQ().subscribe(
       (data) => {

@@ -27,7 +27,7 @@ import { CreateOrderComponent } from './create-order/create-order.component';
 import { OrderManagementComponent } from './Admin/order-management/order-management.component';
 import { ProductDetailComponent } from './features/product-detail/product-detail.component';
 import { JobManagementComponent } from './Admin/job-management/job-management.component';
-import { JobDetailComponent } from './Admin/job-detail/job-detail.component';
+
 
 import { ForgotPassComponent } from './forgotPassword/forgot-pass/forgot-pass.component';
 import { ChangePasswordComponent } from './features/change-password/change-password.component';
@@ -72,7 +72,6 @@ const routes: Routes = [
   { path: 'order_management', component: OrderManagementComponent },
   { path: 'product_details', component: ProductDetailComponent },
   { path: 'job_management', component: JobManagementComponent },
-  { path: 'job_detail', component: JobDetailComponent },
   { path: 'changePassWord', component: ChangePasswordComponent },
   { path: 'employee-job', component: EmployeeJobComponent },
   { path: 'product-details/:id', component: ProductDetailComponent },

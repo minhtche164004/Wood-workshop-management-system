@@ -10,125 +10,114 @@
         </div>
     </div>
     <div class="shop">
-        <div class="container">
-            <div class="row">
-                <div class="col-lg-3 col-12">
-                    <div class="filter">
-                        <div class="loaihang">
-                            <div class="accordion" id="accordionExample">
-                                <div class="accordion-item">
-                                    <h2 class="accordion-header" id="headingOne">
-                                        <button class="accordion-button" type="button" data-bs-toggle="collapse"
-                                            data-bs-target="#collapseOne" aria-expanded="true"
-                                            aria-controls="collapseOne">
-                                            Loại sản phẩm
-                                        </button>
-                                    </h2>
-                                    <div id="collapseOne" class="accordion-collapse collapse show"
-                                        aria-labelledby="headingOne" data-bs-parent="#accordionExample">
-                                        <div class="accordion-body">
-                                            <ul class="category-list">
-                                                <li class="all-sp">
-                                                  <input type="checkbox" name="category" id="all" value="0" >
-                                                  <label for="all">Tất cả</label>
-                                                </li>
-                                                <li *ngFor="let category of categories" style=" margin-top: -5x" class="{{ category.categoryName.toLowerCase() }}-check">
-                                                  <input style="margin-right: 5px;" type="checkbox" name="category" id="{{ category.categoryId }}" value="{{ category.categoryId }}" >
-                                                  <label for="{{ category.categoryId }}">{{ category.categoryName }}</label>
-                                                </li>
-                                              </ul>
-                                              
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="loctheogia">
-                            <div class="accordion accordion-flush" id="accordionFlushExample">
-                                <div class="accordion-item">
-                                    <h2 class="accordion-header" id="flush-headingOne">
-                                        <button class="accordion-button collapsed" type="button"
-                                            data-bs-toggle="collapse" data-bs-target="#flush-collapseOne"
-                                            aria-expanded="false" aria-controls="flush-collapseOne">
-                                            Mức giá
-                                        </button>
-                                    </h2>
-                                    <div id="flush-collapseOne" class="accordion-collapse collapse"
-                                        aria-labelledby="flush-headingOne" data-bs-parent="#accordionFlushExample">
-                                        <div class="accordion-body text-center">
-                                            <div class="ranger-slider">
-                                                <div id="slider-range"></div>
-                                                <div
-                                                    class="price-filter d-flex align-items-center justify-content-center">
-                                                    <p>Giá:</p><strong></strong> <span
-                                                        id="slider-range-value1"></span><span>-</span><strong></strong>
-                                                    <span id="slider-range-value2"></span>
-                                                </div>
+        
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-3 col-12">
+                        <div class="filter">
+                            <div class="loaihang">
+                                <div class="accordion" id="accordionExample">
+                                    <div class="accordion-item">
+                                        <h2 class="accordion-header" id="headingOne">
+                                            <button class="accordion-button" type="button" data-bs-toggle="collapse"
+                                                data-bs-target="#collapseOne" 
+                                                aria-controls="collapseOne">
+                                                Loại sản phẩm
+                                            </button>
+                                        </h2>
+                                        <div id="collapseOne" class="accordion-collapse collapse show"
+                                            aria-labelledby="headingOne" data-bs-parent="#accordionExample">
+                                            <div class="accordion-body">
+                                                <ul class="category-list">
+                                                    <li class="all-sp">
+                                                        <input type="checkbox" name="category" id="all" value="0" (change)="getProduct()">
+                                                        <label for="all">Tất cả</label>
+                                                    </li>
+                                                    <li *ngFor="let category of categories" style="margin-top: -5x"
+                                                        class="{{ category.categoryName.toLowerCase() }}-check">
+                                                        <input style="margin-right: 5px;" type="checkbox" name="category"
+                                                            id="{{ category.categoryId }}"
+                                                            value="{{ category.categoryId }}" (change)="searchProducts(category.categoryId)">
+                                                        <label for="{{ category.categoryId }}">{{ category.categoryName
+                                                            }}</label>
+                                                    </li>
+                                                </ul>
+
                                             </div>
-                                            <button class="button-filter">Lọc</button>
+                                           
                                         </div>
+                                        <!-- <p>Giá tiền:</p>
+                                        <input type="range">
+                                        <button type="submit"  class="button-filter">Lọc</button> -->
+
                                     </div>
                                 </div>
                             </div>
+
+                            
                         </div>
-                    </div>
 
-                </div>
-                <div class="col-lg-9 col-12">
-                    <div class="boloc d-flex">
-                        <p class="giacao"><i class="fas fa-sort-amount-up"></i>Giá cao</p>
-                        <p class="giathap"><i class="fas fa-sort-amount-down-alt"></i>Giá thấp</p>
-                        <p class="xemnhieu"><i class="fas fa-eye"></i>Xem nhiều</p>
                     </div>
+                    <div class="col-lg-9 col-12">
+                        <div class="boloc d-flex">
+                            <p class="giacao"><i class="fas fa-sort-amount-up"></i>Giá cao</p>
+                            <p class="giathap"><i class="fas fa-sort-amount-down-alt"></i>Giá thấp</p>
+                            <p class="xemnhieu"><i class="fas fa-eye"></i>Xem nhiều</p>
+                        </div>
 
-                    <div>
                         <div>
-                            <div class="row">
+                            <div>
+                                <div class="row">
 
-                                <div class="col-lg-4 col-md-6 col-12 nopadding"
-                                *ngFor="let product of products | paginate: { itemsPerPage: 9, currentPage: currentPage }; let i = index">
-                                    <div class="product">
-                                        <a style="text-decoration: none;" href="{{ product.productName }}">
-                                            <img src="{{ product.image }}" alt="" class="product-img">
-                                            <div class="product-info">
-                                                <p class="name-product text-center">{{ product.productName }}</p>
-                                                <p class="description"
-                                                    style="text-decoration: none; color: black; text-align: center;">{{
-                                                    product.description }}</p>
-                                                <div class="price-product text-center d-flex align-items-center">
-                                                    <p class="price">{{ product.price | number: '1.0-3' }} vnđ</p>
+                                    <div class="col-lg-4 col-md-6 col-12 nopadding"
+                                        *ngFor="let product of products | paginate: { itemsPerPage: 9, currentPage: currentPage }; let i = index">
+                                        <div class="product">
+                                            <a style="text-decoration: none;" href="{{ product.productName }}">
+                                                <img src="{{ product.image }}" alt="" class="product-img">
+                                                <div class="product-info">
+                                                    <p class="name-product text-center">{{ product.productName }}</p>
+                                                    <p class="description"
+                                                        style="text-decoration: none; color: black; text-align: center;">{{
+                                                        product.description }}</p>
+                                                    <div class="price-product text-center d-flex align-items-center">
+                                                        <p class="price">{{ product.price | number: '1.0-3' }}
+                                                            vnđ</p>
 
-                                                    <p class="root-price" *ngIf="product.rootPrice">{{ product.rootPrice
-                                                        |
-                                                        currency:'VND' }}</p>
+                                                        <p class="root-price"
+                                                            *ngIf="product.rootPrice">{{ product.rootPrice |
+                                                            currency:'VND' }}</p>
+                                                    </div>
+                                                    <div class="buttons d-flex ">
+                                                        <button class="addCart">
+                                                            Thêm vào danh sách yêu thích <i
+                                                                class="fa-solid fa-heart"></i>
+                                                        </button>
+                                                    </div>
                                                 </div>
-                                                <div class="buttons d-flex ">
-                                                    <button class="addCart">
-                                                        Thêm vào danh sách yêu thích <i class="fa-solid fa-heart"></i>
-                                                    </button>
-                                                </div>
-                                            </div>
-                                        </a>
+                                            </a>
                                         </div>
-                                </div>
+                                    </div>
 
+                                </div>
+                            </div>
+
+
+                        </div>
+                        <div class="pagination justify-content-center d-flex">
+                            <pagination-controls style="justify-content: right; display: flex;"
+                                (pageChange)="currentPage = $event"></pagination-controls>
+                            <div class="clearfix" style="justify-content: right; display: flex;">
+                                <div class="hint-text"> <br>Từ sản phẩm <b>{{ (currentPage - 1) * 9 + 1 }}</b> đến
+                                    <b>{{
+                                        currentPage * 9
+                                        > products.length ? products.length : currentPage * 9 }}</b> trong tổng số <b>{{
+                                        products.length }}</b> sản phẩm</div>
                             </div>
                         </div>
-
-                        
-                    </div>
-                    <div class="pagination justify-content-center d-flex">
-                        <pagination-controls style="justify-content: right; display: flex;"
-          (pageChange)="currentPage = $event"></pagination-controls>
-        <div class="clearfix" style="justify-content: right; display: flex;">
-          <div class="hint-text"> <br>Từ sản phẩm <b>{{ (currentPage - 1) * 9 + 1 }}</b> đến <b>{{ currentPage * 9
-              > products.length ? products.length : currentPage * 9 }}</b> trong tổng số <b>{{
-              products.length }}</b> sản phẩm</div>
-        </div>
                     </div>
                 </div>
             </div>
-        </div>
+        
     </div>
 
     <app-footer></app-footer>

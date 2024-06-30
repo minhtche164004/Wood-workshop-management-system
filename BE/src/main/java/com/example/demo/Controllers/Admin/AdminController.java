@@ -101,31 +101,31 @@ public class AdminController {
         return apiResponse;
     }
 
-    @GetMapping("/GetStatusUser")
+    @GetMapping("/GetAllStatusUser")
     public ApiResponse<?> GetStatusUser() {
         ApiResponse<List> apiResponse = new ApiResponse<>();
         apiResponse.setResult(statusUserRepository.getAllStatus());
         return apiResponse;
     }
-    @GetMapping("/GetStatusJob")
+    @GetMapping("/GetAllStatusJob")
     public ApiResponse<?> GetStatusJob() {
         ApiResponse<List> apiResponse = new ApiResponse<>();
         apiResponse.setResult(statusJobRepository.getAllStatus());
         return apiResponse;
     }
-    @GetMapping("/GetStatusOrder")
+    @GetMapping("/GetAllStatusOrder")
     public ApiResponse<?> GetStatusOrder() {
         ApiResponse<List> apiResponse = new ApiResponse<>();
         apiResponse.setResult(statusOrderRepository.getAllStatus());
         return apiResponse;
     }
-    @GetMapping("/GetStatusProduct")
+    @GetMapping("/GetAllStatusProduct")
     public ApiResponse<?> GetStatusProduct() {
         ApiResponse<List> apiResponse = new ApiResponse<>();
         apiResponse.setResult(statusProductRepository.getAllStatus());
         return apiResponse;
     }
-    @GetMapping("/GetStatusRequest")
+    @GetMapping("/GetAllStatusRequest")
     public ApiResponse<?> GetStatusRequest() {
         ApiResponse<List> apiResponse = new ApiResponse<>();
         apiResponse.setResult(statusRequestRepository.getAllStatus());

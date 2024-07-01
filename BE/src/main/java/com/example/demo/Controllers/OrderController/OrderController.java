@@ -83,7 +83,7 @@ public class OrderController {
         return apiResponse;
     }
     @DeleteMapping("/DeleteWhiteList")
-    public ApiResponse<?> DeleteWhiteList(@RequestParam("user_id") int user_id) {
+    public ApiResponse<?> DeleteWhiteList(@RequestParam("wistlist_id") int user_id) {
         ApiResponse<String> apiResponse = new ApiResponse<>();
         whiteListService.DeleteWhiteList(user_id);
         apiResponse.setResult("Xoá Sản Phẩm khỏi danh sách yêu thích thành công !");
@@ -200,6 +200,13 @@ public class OrderController {
     public ApiResponse<?>  getInfoUserByPhoneNumber(@RequestParam("phoneNumber") String phoneNumber){
         ApiResponse apiResponse = new ApiResponse<>();
         apiResponse.setResult(userInforService.getUserInforByPhoneNumber(phoneNumber));
+        return apiResponse;
+    }
+    @DeleteMapping("/deleteRequest")
+    public ApiResponse<?> deleteRequest(@RequestParam("requestId") int requestId){
+        ApiResponse apiResponse = new ApiResponse<>();
+        orderService.deleteRequestById(requestId);
+        apiResponse.setResult("Xoá yêu cầu thành công!!!");
         return apiResponse;
     }
 

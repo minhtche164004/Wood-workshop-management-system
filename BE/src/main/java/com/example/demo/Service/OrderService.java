@@ -52,4 +52,5 @@ public interface OrderService {
 
     public List<OrderDetailWithJobStatusDTO> getOrderDetailByOrderId(int order_id);
 
+    void deleteRequestById(int requestId);
 }

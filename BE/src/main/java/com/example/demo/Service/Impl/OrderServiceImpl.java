@@ -442,4 +442,9 @@ public class OrderServiceImpl implements OrderService {
         }
         return results;
     }
+
+    @Override
+    public void deleteRequestById(int requestId) {
+        requestRepository.deleteById(requestId);
+    }
 }

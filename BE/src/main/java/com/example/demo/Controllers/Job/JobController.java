@@ -2,16 +2,24 @@ package com.example.demo.Controllers.Job;
 
 import com.example.demo.Config.RedisConfig;
 import com.example.demo.Dto.JobDTO.JobDTO;
+import com.example.demo.Dto.OrderDTO.JobProductDTO;
 import com.example.demo.Entity.Jobs;
+import com.example.demo.Entity.Products;
+import com.example.demo.Entity.Status_Job;
+import com.example.demo.Entity.User;
 import com.example.demo.Repository.JobRepository;
 import com.example.demo.Repository.OrderDetailRepository;
 import com.example.demo.Response.ApiResponse;
 import com.example.demo.Service.JobService;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.reflect.TypeToken;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import redis.clients.jedis.JedisPooled;
 
+import java.lang.reflect.Type;
 import java.util.List;
 
 @RestController
@@ -29,6 +37,21 @@ public class JobController {
     @GetMapping("/getListProductRequestForJob")
     public ApiResponse<?> getListProductRequestForJob() {
         ApiResponse<List> apiResponse = new ApiResponse<>();
+//        String cacheKey = "all_products_request_job";
+//        List<JobProductDTO> jobProductDTOS;
+//        String cachedData = jedis.get(cacheKey);
+//        Gson gson = new GsonBuilder().setDateFormat("MMM dd, yyyy").create();
+//        if (cachedData != null) {
+//            Type type = new TypeToken<List<Status_Job>>() {
+//            }.getType();
+//
+//            jobProductDTOS = gson.fromJson(cachedData, type);
+//        } else {
+//            jobProductDTOS = jobService.getListRequestProductJob();
+//            String jsonData = gson.toJson(jobProductDTOS);
+//            jedis.set(cacheKey, jsonData);
+//            jedis.expire(cacheKey, 1200);
+//        }
         apiResponse.setResult(jobService.getListRequestProductJob());
         return apiResponse;
     }
@@ -36,21 +59,69 @@ public class JobController {
     @GetMapping("/getListProductForJob")
     public ApiResponse<?> getListProductForJob() {
         ApiResponse<List> apiResponse = new ApiResponse<>();
+//        String cacheKey = "all_products_job";
+//        List<JobProductDTO> jobProductDTOS;
+//        String cachedData = jedis.get(cacheKey);
+//        Gson gson = new GsonBuilder().setDateFormat("MMM dd, yyyy").create();
+//        if (cachedData != null) {
+//            Type type = new TypeToken<List<Status_Job>>() {
+//            }.getType();
+//
+//            jobProductDTOS = gson.fromJson(cachedData, type);
+//        } else {
+//            jobProductDTOS = jobService.getListProductJob();
+//            String jsonData = gson.toJson(jobProductDTOS);
+//            jedis.set(cacheKey, jsonData);
+//            jedis.expire(cacheKey, 1200);
+//        }
         apiResponse.setResult(jobService.getListProductJob());
         return apiResponse;
+
     }
 //
     @GetMapping("/getRequestProductInOrderDetailByCode")
     public ApiResponse<?> getRequestProductInOrderDetailByCode(@RequestParam("key") String key) {
         ApiResponse<List> apiResponse = new ApiResponse<>();
+//        String cacheKey = "all_request_products_inOrder_ByCode";
+//        List<JobProductDTO> jobProductDTOS;
+//        String cachedData = jedis.hget(cacheKey,key);
+//        Gson gson = new GsonBuilder().setDateFormat("MMM dd, yyyy").create();
+//        if (cachedData != null) {
+//            Type type = new TypeToken<List<Status_Job>>() {
+//            }.getType();
+//
+//            jobProductDTOS = gson.fromJson(cachedData, type);
+//        } else {
+//            jobProductDTOS = jobService.getRequestProductInOrderDetailByCode(key);
+//            String jsonData = gson.toJson(jobProductDTOS);
+//            jedis.set(cacheKey, jsonData);
+//            jedis.expire(cacheKey, 1200);
+//        }
         apiResponse.setResult(jobService.getRequestProductInOrderDetailByCode(key));
         return apiResponse;
+
     }
     @GetMapping("/getListProductJobByNameOrCodeProduct")
     public ApiResponse<?> getListProductJobByNameOrCode(@RequestParam("key") String key) {
         ApiResponse<List> apiResponse = new ApiResponse<>();
+//        String cacheKey = "all_products_job_byName_Code";
+//        List<JobProductDTO> jobProductDTOS;
+//        String cachedData = jedis.hget(cacheKey,key);
+//        Gson gson = new GsonBuilder().setDateFormat("MMM dd, yyyy").create();
+//        if (cachedData != null) {
+//            Type type = new TypeToken<List<Status_Job>>() {
+//            }.getType();
+//
+//            jobProductDTOS = gson.fromJson(cachedData, type);
+//        } else {
+//            jobProductDTOS = jobService.getListProductJobByNameOrCode(key);
+//            String jsonData = gson.toJson(jobProductDTOS);
+//            jedis.set(cacheKey, jsonData);
+//            jedis.expire(cacheKey, 1200);
+//        }
         apiResponse.setResult(jobService.getListProductJobByNameOrCode(key));
         return apiResponse;
+
     }
 
 //    @GetMapping("/findUsersWithPosition1AndLessThan3Jobs")
@@ -67,16 +138,48 @@ public class JobController {
 //        return apiResponse;
 //    }
 
+    //có 3 loại type là thợ mộc 1, thợ sơn 2, thợ đánh nhám 3
     @GetMapping("/findUsersWithPositionAndLessThan3Jobs")
-    public ApiResponse<?> findUsersWithPosition3AndLessThan3Jobs(@RequestParam("type") int type) {
+    public ApiResponse<?> findUsersWithPosition3AndLessThan3Jobs(@RequestParam("type") int type_) {
         ApiResponse<List> apiResponse = new ApiResponse<>();
-        apiResponse.setResult(jobRepository.findUsersWithPositionAndLessThan3Jobs(type));
+//        String cacheKey = "all_user_positions";
+//        List<User> userList;
+//        String cachedData = jedis.hget(cacheKey,type_ + "");
+//        Gson gson = new GsonBuilder().setDateFormat("MMM dd, yyyy").create();
+//        if (cachedData != null) {
+//            Type type = new TypeToken<List<Status_Job>>() {
+//            }.getType();
+//
+//            userList = gson.fromJson(cachedData, type);
+//        } else {
+//            userList = jobRepository.findUsersWithPositionAndLessThan3Jobs(type_);
+//            String jsonData = gson.toJson(userList);
+//            jedis.set(cacheKey, jsonData);
+//            jedis.expire(cacheKey, 1200);
+//        }
+        apiResponse.setResult(jobRepository.findUsersWithPositionAndLessThan3Jobs(type_));
         return apiResponse;
+
     }
     @GetMapping("/getListStatusJobByType")
-    public ApiResponse<?> getListStatusJobByType(@RequestParam("type") int type) {
+    public ApiResponse<?> getListStatusJobByType(@RequestParam("type") int type_) {
         ApiResponse<List> apiResponse = new ApiResponse<>();
-        apiResponse.setResult(jobRepository.findByStatusByType(type));
+        String cacheKey = "all_status_Job_ByType";
+        List<Status_Job> statusJobList;
+        String cachedData = jedis.hget(cacheKey, type_ + "");
+        Gson gson = new GsonBuilder().setDateFormat("MMM dd, yyyy").create();
+        if (cachedData != null) {
+            Type type = new TypeToken<List<Status_Job>>() {
+            }.getType();
+
+            statusJobList = gson.fromJson(cachedData, type);
+        } else {
+            statusJobList = jobRepository.findByStatusByType(type_);
+            String jsonData = gson.toJson(statusJobList);
+            jedis.set(cacheKey, jsonData);
+            jedis.expire(cacheKey, 1200);
+        }
+        apiResponse.setResult(statusJobList);
         return apiResponse;
     }
 
@@ -84,6 +187,13 @@ public class JobController {
     public ApiResponse<?> CreateJobs(@RequestBody JobDTO jobDTO , @RequestParam("user_id") int user_id, @RequestParam("p_id") int p_id, @RequestParam("status_id") int status_id, @RequestParam("job_id") int job_id) {
         ApiResponse<Jobs> apiResponse = new ApiResponse<>();
         apiResponse.setResult(jobService.CreateJob(jobDTO,user_id,p_id,status_id,job_id));
+        return apiResponse;
+    }
+
+    @PostMapping("/CreateProductForJobs")
+    public ApiResponse<?> CreateProductForJobs(@RequestParam("p_id") int p_id, @RequestParam("quantity") int quantity) {
+        ApiResponse<Jobs> apiResponse = new ApiResponse<>();
+        apiResponse.setResult(jobService.AddProductForJob(p_id,quantity));
         return apiResponse;
     }
 
@@ -99,12 +209,72 @@ public class JobController {
         ApiResponse<Jobs> apiResponse = new ApiResponse<>();
         apiResponse.setResult(jobService.EditJobs(jobDTO,job_id));
         return apiResponse;
+
     }
 
     @GetMapping("/getAllJob")
     public ApiResponse<?> getAllJob() {
         ApiResponse<List> apiResponse = new ApiResponse<>();
+//        String cacheKey = "all_job";
+//        List<Jobs> jobsList;
+//        String cachedData = jedis.get(cacheKey);
+//        Gson gson = new GsonBuilder().setDateFormat("MMM dd, yyyy").create();
+//        if (cachedData != null) {
+//            Type type = new TypeToken<List<Status_Job>>() {
+//            }.getType();
+//
+//            jobsList = gson.fromJson(cachedData, type);
+//        } else {
+//            jobsList = jobService.GetAllJob();
+//            String jsonData = gson.toJson(jobsList);
+//            jedis.set(cacheKey, jsonData);
+//            jedis.expire(cacheKey, 1200);
+//        }
         apiResponse.setResult(jobService.GetAllJob());
+        return apiResponse;
+    }
+    @GetMapping("/getListJobWasDone")
+    public ApiResponse<?> getJobWasDone() {
+        ApiResponse<List> apiResponse = new ApiResponse<>();
+//        String cacheKey = "all_job_was_done";
+//        jedis.del(cacheKey);
+//        List<Jobs> jobsList;
+//        String cachedData = jedis.get(cacheKey);
+//        Gson gson = new GsonBuilder().setDateFormat("MMM dd, yyyy").create();
+//        if (cachedData != null) {
+//            Type type = new TypeToken<List<Status_Job>>() {
+//            }.getType();
+//
+//            jobsList = gson.fromJson(cachedData, type);
+//        } else {
+//            jobsList = jobService.getJobWasDone();
+//            String jsonData = gson.toJson(jobsList);
+//            jedis.set(cacheKey, jsonData);
+//            jedis.expire(cacheKey, 1200);
+//        }
+        apiResponse.setResult(jobService.getJobWasDone());
+        return apiResponse;
+    }
+    @GetMapping("/filterJobWasDoneByEmployeeName")
+    public ApiResponse<?> filterJobWasDoneByEmployeeName(@RequestParam("key") String key) {
+        ApiResponse<List> apiResponse = new ApiResponse<>();
+//        String cacheKey = "all_job_was_done_by_Name_Code";
+//        List<Jobs> jobsList;
+//        String cachedData = jedis.hget(cacheKey,key);
+//        Gson gson = new GsonBuilder().setDateFormat("MMM dd, yyyy").create();
+//        if (cachedData != null) {
+//            Type type = new TypeToken<List<Status_Job>>() {
+//            }.getType();
+//
+//            jobsList = gson.fromJson(cachedData, type);
+//        } else {
+//            jobsList = jobService.filterJobWasDoneByEmployeeName(key);
+//            String jsonData = gson.toJson(jobsList);
+//            jedis.set(cacheKey, jsonData);
+//            jedis.expire(cacheKey, 1200);
+//        }
+        List<Jobs>jobsList = jobService.filterJobWasDoneByEmployeeName(key);
+        apiResponse.setResult(jobsList);
         return apiResponse;
     }
 }

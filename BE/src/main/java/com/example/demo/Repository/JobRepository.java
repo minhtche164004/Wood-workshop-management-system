@@ -49,6 +49,13 @@ public interface JobRepository extends JpaRepository<Jobs,Integer> {
     @Query("SELECT u FROM Jobs u WHERE u.product.productId = :query")
     List<Jobs> getJobByProductId(int query);
 
+    @Query("SELECT u FROM Jobs u WHERE u.job_log IS TRUE")
+    List<Jobs> getJobWasDone();
+
+    @Query("SELECT u FROM Jobs u WHERE (u.user.userInfor.fullname LIKE CONCAT('%', :keyword, '%')) AND u.job_log IS TRUE")
+    List<Jobs> filterJobWasDoneByEmployeeName(String keyword);
+
+
     @Transactional
     @Modifying
     @Query("update Jobs u set u.status.status_id = ?2" +
@@ -57,6 +64,7 @@ public interface JobRepository extends JpaRepository<Jobs,Integer> {
 
     @Query("SELECT u FROM Status_Job u WHERE u.type = :query")
     List<Status_Job> findByStatusByType(int query);
+
 
 
     @Query("SELECT new com.example.demo.Dto.OrderDTO.JobProductDTO(o.code, p.requestProductId, p.requestProductName, p.description, p.price, j.status, od.quantity, u) " +

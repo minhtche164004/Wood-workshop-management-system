@@ -25,4 +25,9 @@ public interface JobService {
     Jobs EditJobs(JobDTO jobDTO,int job_id);
 
     List<Jobs> GetAllJob();
+
+    Jobs AddProductForJob(int p_id, int quantity_product);
+
+    List<Jobs> getJobWasDone();
+    List<Jobs> filterJobWasDoneByEmployeeName(String keyword);
 }

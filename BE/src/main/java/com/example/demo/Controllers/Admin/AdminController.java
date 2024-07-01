@@ -6,6 +6,7 @@ import com.example.demo.Entity.Position;
 import com.example.demo.Entity.Role;
 import com.example.demo.Entity.User;
 import com.example.demo.Repository.RoleRepository;
+import com.example.demo.Repository.Status_User_Repository;
 import com.example.demo.Repository.UserRepository;
 import com.example.demo.Response.ApiResponse;
 import com.example.demo.Service.PositionService;
@@ -33,7 +34,8 @@ public class AdminController {
     private RoleRepository roleRepository;
     @Autowired
     private UserRepository userRepository;
-
+    @Autowired
+    private Status_User_Repository statusUserRepository;
     private static final JedisPooled jedis = RedisConfig.getRedisInstance();
 
     //    @GetMapping("/GetAllPositionName")
@@ -88,6 +90,12 @@ public class AdminController {
     public ApiResponse<?> GetAllRole() {
         ApiResponse<List> apiResponse = new ApiResponse<>();
         apiResponse.setResult(roleRepository.findAll());
+        return apiResponse;
+    }
+    @GetMapping("/GetStatusUser")
+    public ApiResponse<?> GetStatusUser() {
+        ApiResponse<List> apiResponse = new ApiResponse<>();
+        apiResponse.setResult(statusUserRepository.getAllStatusNames());
         return apiResponse;
     }
 

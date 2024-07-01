@@ -7,6 +7,8 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 @Repository
 public interface Status_User_Repository extends JpaRepository<Status_User, Integer> {
     @Query("SELECT u FROM Status_User u WHERE u.status_name = :query")
@@ -14,6 +16,7 @@ public interface Status_User_Repository extends JpaRepository<Status_User, Integ
 
     @Query("SELECT u FROM Status_User u WHERE u.status_id = :query")
     Status_User findById(int query);
+
     @Query("SELECT u FROM Status_User u WHERE u.status_id = :query")
     Status_User findById1(int query);
 
@@ -21,5 +24,9 @@ public interface Status_User_Repository extends JpaRepository<Status_User, Integ
     @Modifying
     @Query("UPDATE Status_User u SET u.status_name = :newName WHERE u.status_id = :id")
     void updateStatusName(@Param("newName") String newName, @Param("id") int id);
+
+
+    @Query("SELECT u.status_name FROM Status_User u")
+    List<String> getAllStatusNames();
 
 }

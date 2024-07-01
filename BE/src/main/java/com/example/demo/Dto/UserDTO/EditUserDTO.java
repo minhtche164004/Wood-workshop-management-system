@@ -1,5 +1,6 @@
 package com.example.demo.Dto.UserDTO;
 
+import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -19,19 +20,14 @@ public class EditUserDTO {
     private String address;
     @NotNull(message = "MUST_REQUIRED")
     private String fullname;
-    @NotNull(message = "MUST_REQUIRED")
-
-    private String status_name;
-    @NotNull(message = "MUST_REQUIRED")
-    private String position_name;
-    @NotNull(message = "MUST_REQUIRED")
-
-
+//    @NotNull(message = "MUST_REQUIRED")
     private Integer status_id;
     @NotNull(message = "MUST_REQUIRED")
     private Integer position_id;
+    //    @NotNull(message = "MUST_REQUIRED")
+//    private String role_name;
     @NotNull(message = "MUST_REQUIRED")
-    private String role_name;
+    private Integer role_id;
     private String bank_name;
     private String bank_number;
     private String city_province;
@@ -49,6 +45,4 @@ public class EditUserDTO {
         this.bank_name =bank_name;
         this.bank_number=bank_number;
     }
-
 }
-

@@ -60,6 +60,7 @@ import { AboutUsComponent } from './about-us/about-us.component';
 import { ContactComponent } from './contact/contact.component';
 import { EmployeeJobComponent } from './employee-job/employee-job.component';
 import { SubSubmaterialProductComponent } from './sub-submaterial-product/sub-submaterial-product.component';
+import { WishlistComponent } from './features/wishlist/wishlist.component';
 
 
 
@@ -117,6 +118,7 @@ import { SubSubmaterialProductComponent } from './sub-submaterial-product/sub-su
     ContactComponent,
     EmployeeJobComponent,
     SubSubmaterialProductComponent,
+    WishlistComponent,
 
     
 

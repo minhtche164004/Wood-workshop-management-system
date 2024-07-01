@@ -24,10 +24,18 @@ public class EditUserDTO {
     private Integer status_id;
     @NotNull(message = "MUST_REQUIRED")
     private Integer position_id;
-    //    @NotNull(message = "MUST_REQUIRED")
+
+
+//    @NotNull(message = "MUST_REQUIRED")
 //    private String role_name;
-    @NotNull(message = "MUST_REQUIRED")
+@NotNull(message = "MUST_REQUIRED")
     private Integer role_id;
+
+
+    @NotNull(message = "MUST_REQUIRED")
+    private String role_name;
+
+
     private String bank_name;
     private String bank_number;
     private String city_province;

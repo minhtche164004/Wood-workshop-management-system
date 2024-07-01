@@ -84,11 +84,14 @@
 
 
         <pagination-controls style="justify-content: right; display: flex;"
-          (pageChange)="currentPage = $event"></pagination-controls>
+        (pageChange)="currentPage = $event"
+        previousLabel="Trang trước"
+        nextLabel="Trang sau">
+      </pagination-controls>
         <div class="clearfix" style="justify-content: right; display: flex;">
-          <div class="hint-text">Showing <b>{{ (currentPage - 1) * 10 + 1 }}</b> to <b>{{ currentPage * 10
-              > user.length ? user.length : currentPage * 10 }}</b> out of <b>{{
-              user.length }}</b> entries</div>
+          <div class="hint-text">Hiển thị <b>{{ (currentPage - 1) * 10 + 1 }}</b> tới <b>{{ currentPage * 10
+              > user.length ? user.length : currentPage * 10 }}</b> trong tổng <b>{{
+              user.length }}</b> dữ liệu</div>
         </div>
 
 

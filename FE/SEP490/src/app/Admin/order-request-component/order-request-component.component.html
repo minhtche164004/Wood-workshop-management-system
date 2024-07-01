@@ -10,6 +10,7 @@
               <h2>Quản lí Sản Phẩm</h2>
             </div>
             <div class="col-sm-7 text-end" style="text-align: center;">
+              
               <a href="#" class="btn btn-secondary" data-toggle="modal" data-target="#addProductModal">
                 <i class="material-icons">&#xE147;</i> <span>Thêm Sản Phẩm</span>
               </a>
@@ -82,11 +83,14 @@
         </table>
 
         <pagination-controls style="justify-content: right; display: flex;"
-          (pageChange)="currentPage = $event"></pagination-controls>
+        (pageChange)="currentPage = $event"
+        previousLabel="Trang trước"
+        nextLabel="Trang sau">
+      </pagination-controls>
         <div class="clearfix" style="justify-content: right; display: flex;">
-          <div class="hint-text">Showing <b>{{ (currentPage - 1) * 10 + 1 }}</b> to <b>{{ currentPage * 10
-              > orderRq.length ? orderRq.length : currentPage * 10 }}</b> out of <b>{{
-              orderRq.length }}</b> entries</div>
+          <div class="hint-text">Hiển thị <b>{{ (currentPage - 1) * 10 + 1 }}</b> tới <b>{{ currentPage * 10
+              > orderRq.length ? orderRq.length : currentPage * 10 }}</b> trong tổng <b>{{
+              orderRq.length }}</b> dữ liệu</div>
         </div>
 
 

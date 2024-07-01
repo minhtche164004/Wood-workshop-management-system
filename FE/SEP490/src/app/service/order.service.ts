@@ -9,6 +9,7 @@ import { environment } from '../environments/environment';
 export class OrderService {
   private urlGetAllOrderDetail = `${environment.apiUrl}api/auth/order/GetAllOrder`
   private urlFilterStatus =`${environment.apiUrl}auth/order/filter-by-status`
+  private urlGetOrderStatus= `${environment.apiUrl}api/auth/order/getStatusOrder`
   constructor(private http: HttpClient) { }
 
   getAllOrderDetails(): Observable<any>{
@@ -18,6 +19,11 @@ export class OrderService {
   }
   filterByStatus(order: number): Observable<any>{
     return this.http.get<any>(`this.urlFilterStatus?status_id=${order}`).pipe(
+      catchError(this.handleError) 
+    );
+  }
+  getOrderStatus(): Observable<any>{
+    return this.http.get<any>(this.urlGetOrderStatus).pipe(
       catchError(this.handleError) 
     );
   }

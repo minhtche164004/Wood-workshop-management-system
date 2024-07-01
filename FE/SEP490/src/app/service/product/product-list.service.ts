@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { environment } from 'src/app/environments/environment';
@@ -26,7 +26,7 @@ export class ProductListService {
 
   private apiUrl_AllRole = `${environment.apiUrl}api/auth/admin/GetAllRole`; // Assuming the correct endpoint
 
-
+  private apiUrl_GetMultiProductForCustomer = `${environment.apiUrl}api/auth/product`; 
 
   private apiUrl_AddProduct = `${environment.apiUrl}api/auth/product/AddNewProduct`;
 
@@ -52,7 +52,40 @@ export class ProductListService {
   }
 
 
+  getMultiFilterProductForCustomer(search?: string, categoryId?: number, minPrice?: number, maxPrice?: number, sortDirection?: number): Observable<any> {
+   
+    let params = new HttpParams();
 
+    console.log('categoryId', categoryId);
+    console.log('search param', search);
+    // Add parameters only if they are provided
+    if (search !== undefined && search !== null) {
+      params = params.set('search', search);
+    }
+    if (categoryId !== undefined && categoryId !== null) {
+      params = params.set('categoryId', categoryId.toString());
+      console.log(params.get('categoryId'));
+    }
+    if (minPrice !== undefined && minPrice !== null) {
+      params = params.set('minPrice', minPrice.toString());
+    }
+    if (maxPrice !== undefined && maxPrice !== null) {
+      params = params.set('maxPrice', maxPrice.toString());
+    }
+    if (sortDirection !== undefined && sortDirection !== null) {
+      params = params.set('sortDirection', sortDirection.toString());
+    }
+    const apiUrl = `${this.apiUrl_GetMultiProductForCustomer}/getMultiFillterProductForCustomer`;
+    const apiWithParams = `${apiUrl}?${params.toString()}`;
+    console.log('API URL with params:', apiWithParams);
+    // Check if all parameters are null or undefined
+    if (search == null && categoryId == null && minPrice == null && maxPrice == null && sortDirection == null) {
+      return this.http.get(`${this.apiUrlGetProduct}`);
+    }
+    
+    return this.http.get(`${this.apiUrl_GetMultiProductForCustomer}/getMultiFillterProductForCustomer`, { params });
+
+  }
   
   getProducts(): Observable<any> {
     console.log(this.apiUrl)

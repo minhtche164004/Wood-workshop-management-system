@@ -51,7 +51,7 @@ import { OrderRqDetailComponent } from './Admin/order-rq-detail/order-rq-detail.
 import { OrderManagementComponent } from './Admin/order-management/order-management.component';
 
 import { JobManagementComponent } from './Admin/job-management/job-management.component';
-import { JobDetailComponent } from './Admin/job-detail/job-detail.component';
+
 
 import { ForgotPassComponent } from './forgotPassword/forgot-pass/forgot-pass.component';
 import { ChangePasswordComponent } from './features/change-password/change-password.component';
@@ -110,7 +110,7 @@ import { WishlistComponent } from './features/wishlist/wishlist.component';
     OrderManagementComponent,
     ChangePasswordComponent,
     JobManagementComponent,
-    JobDetailComponent,
+
 
     ForgotPassComponent,
 

@@ -16,7 +16,7 @@ export class JobService {
   private apiGetPosition2 = `${environment.apiUrl}api/auth/job/findUsersWithPosition2AndLessThan3Jobs`
   private apiGetPosition1 = `${environment.apiUrl}api/auth/job/findUsersWithPosition1AndLessThan3Jobs`
   private apiGetStatusByType =`${environment.apiUrl}api/auth/job/getListStatusJobByType`
-
+ 
     // user_id={{$random.integer(100)}}&
     // p_id={{$random.integer(100)}}&
     // status_id={{$random.integer(100)}}`
@@ -65,12 +65,13 @@ export class JobService {
   
   }
 
-  addJob(key: string, key2: string, key3: string){
-    console.log(this.apiGetListProductRQ)
-    return this.http.get<any>(`${this.apiAddJob}?user_id=${key}&p_id=${key2}&status_id=${key3}`).pipe(
+  addJob(user_id: number, p_id: number, status_id: number, job_id: number, jobData: any): Observable<any> {
+    const url = `${this.apiAddJob}?user_id=${user_id}&p_id=${p_id}&status_id=${status_id}&job_id=${job_id}`;
+    return this.http.post<any>(url, jobData).pipe(
       catchError(this.handleError)
     );
   }
+  
   private handleError(error: any) {
     let errorMessage = '';
     if (error.error instanceof ErrorEvent) {

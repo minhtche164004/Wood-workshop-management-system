@@ -191,7 +191,7 @@ public class JobController {
         String cachedData = jedis.get(cacheKey);
         Gson gson = new GsonBuilder().setDateFormat("MMM dd, yyyy").create();
         if (cachedData != null) {
-            Type type = new TypeToken<List<Status_Job>>() {
+            Type type = new TypeToken<List<JobDoneDTO>>() {
             }.getType();
 
             jobsList = gson.fromJson(cachedData, type);

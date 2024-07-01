@@ -70,6 +70,7 @@ public class OrderServiceImpl implements OrderService {
     @Autowired
     CloudinaryService cloudinaryService;
 
+
     @Override
     public Orders AddOrder(RequestOrder requestOrder) {
         LocalDate currentDate = LocalDate.now();
@@ -325,7 +326,7 @@ public class OrderServiceImpl implements OrderService {
         requestProductAllDTO.setDescription(requestProducts.getDescription());
         List<Product_Requestimages> processedImages = new ArrayList<>(); // Danh sách mới
         for (Product_Requestimages productRequestimages : productRequestimagesList) {
-            productRequestimages.setFullPath(getAddressLocalComputer(productRequestimages.getFullPath()));
+            productRequestimages.setFullPath(productRequestimages.getFullPath());
             processedImages.add(productRequestimages); // Thêm vào danh sách mới
         }
         requestProductAllDTO.setImagesList(processedImages); // Gán danh sách mới vào DTO
@@ -354,7 +355,7 @@ public class OrderServiceImpl implements OrderService {
         requestAllDTO.setDescription(requests.getDescription());
         List<Requestimages> processedImages = new ArrayList<>(); // Danh sách mới
         for (Requestimages requestimages : requestimagesList) {
-            requestimages.setFullPath(getAddressLocalComputer(requestimages.getFullPath()));
+            requestimages.setFullPath(requestimages.getFullPath());
             processedImages.add(requestimages); // Thêm vào danh sách mới
         }
         requestAllDTO.setImagesList(processedImages); // Gán danh sách mới vào DTO
@@ -422,16 +423,16 @@ public class OrderServiceImpl implements OrderService {
         return requestProductRepository.findAll();
     }
 
-    private String getAddressLocalComputer(String imagePath) {
-        int assetsIndex = imagePath.indexOf("/assets/");
-        if (assetsIndex != -1) {
-            imagePath = imagePath.substring(assetsIndex); // Cắt từ "/assets/"
-            if (imagePath.startsWith("/")) { // Kiểm tra xem có dấu "/" ở đầu không
-                imagePath = imagePath.substring(1); // Loại bỏ dấu "/" đầu tiên
-            }
-        }
-        return imagePath;
-    }// Trả về đường dẫn tương đối hoặc đường dẫn ban đầu nếu không tìm thấy "/assets/"
+//    private String getAddressLocalComputer(String imagePath) {
+//        int assetsIndex = imagePath.indexOf("/assets/");
+//        if (assetsIndex != -1) {
+//            imagePath = imagePath.substring(assetsIndex); // Cắt từ "/assets/"
+//            if (imagePath.startsWith("/")) { // Kiểm tra xem có dấu "/" ở đầu không
+//                imagePath = imagePath.substring(1); // Loại bỏ dấu "/" đầu tiên
+//            }
+//        }
+//        return imagePath;
+//    }// Trả về đường dẫn tương đối hoặc đường dẫn ban đầu nếu không tìm thấy "/assets/"
 
     @Override
     public List<OrderDetailWithJobStatusDTO> getOrderDetailByOrderId(int order_id) {

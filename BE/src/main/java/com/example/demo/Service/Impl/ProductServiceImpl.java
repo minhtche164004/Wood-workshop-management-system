@@ -83,7 +83,7 @@ public class ProductServiceImpl implements ProductService {
         Categories categories = categoryRepository.findById(productAddDTO.getCategory_id());
 
         products.setCategories(categories);
-        products.setType(productAddDTO.getType());
+        products.setType(0);
 
 
         products.setQuantity(0);

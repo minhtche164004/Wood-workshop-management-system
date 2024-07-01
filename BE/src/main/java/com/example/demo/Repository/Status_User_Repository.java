@@ -16,6 +16,7 @@ public interface Status_User_Repository extends JpaRepository<Status_User, Integ
 
     @Query("SELECT u FROM Status_User u WHERE u.status_id = :query")
     Status_User findById(int query);
+
     @Query("SELECT u FROM Status_User u WHERE u.status_id = :query")
     Status_User findById1(int query);
 
@@ -24,7 +25,13 @@ public interface Status_User_Repository extends JpaRepository<Status_User, Integ
     @Query("UPDATE Status_User u SET u.status_name = :newName WHERE u.status_id = :id")
     void updateStatusName(@Param("newName") String newName, @Param("id") int id);
 
+
+
+    @Query("SELECT u.status_name FROM Status_User u")
+    List<String> getAllStatusNames();
+
     @Query("SELECT u FROM Status_User u")
     List<Status_User> getAllStatus();
+
 
 }

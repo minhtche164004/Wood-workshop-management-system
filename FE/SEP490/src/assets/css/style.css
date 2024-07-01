@@ -177,7 +177,7 @@ img{
     background-image:  
          url('/assets/img/comment-logo.png');
     background-repeat: no-repeat;
-    background-size: 1350px 100%;
+    background-size: 1700px 100%;
     /* background: rgba(0, 0, 0, 0.7); */
     object-fit: cover;
 }
@@ -327,9 +327,9 @@ img{
     transition: opacity 0.6s ease;
 }
 
-.carousel-indicators .indicator:not(:last-child) {
+/* .carousel-indicators .indicator:not(:last-child) {
     margin-right: 30px;
-}
+} */
 
 .indicator .timmer {
     width: 100%;

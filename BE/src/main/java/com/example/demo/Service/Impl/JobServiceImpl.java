@@ -1,6 +1,7 @@
 package com.example.demo.Service.Impl;
 
 import com.example.demo.Dto.JobDTO.JobDTO;
+import com.example.demo.Dto.JobDTO.JobDoneDTO;
 import com.example.demo.Dto.OrderDTO.JobProductDTO;
 import com.example.demo.Entity.*;
 import com.example.demo.Exception.AppException;
@@ -41,18 +42,28 @@ public class JobServiceImpl implements JobService {
     @Override
     public List<JobProductDTO> getListRequestProductJob() {
         List<JobProductDTO> orderdetailsList = jobRepository.getRequestProductInJob();
+        if(orderdetailsList == null){
+            throw new AppException(ErrorCode.NOT_FOUND);
+        }
         return orderdetailsList;
     }
 
     @Override
     public List<JobProductDTO> getListProductJob() {
         List<JobProductDTO> orderdetailsList = jobRepository.getListProductJob();
+        if(orderdetailsList == null){
+            throw new AppException(ErrorCode.NOT_FOUND);
+        }
         return orderdetailsList;
+
     }
 
     @Override
     public List<JobProductDTO> getListProductJobByNameOrCode(String key) {
         List<JobProductDTO> orderdetailsList = jobRepository.getListProductJobByNameOrCodeProduct(key);
+        if(orderdetailsList == null){
+            throw new AppException(ErrorCode.NOT_FOUND);
+        }
         return orderdetailsList;
     }
 
@@ -179,14 +190,14 @@ public class JobServiceImpl implements JobService {
         return jobs;
     }
 
-    @Override
-    public List<Jobs> GetAllJob() {
-        List<Jobs> jobsList = jobRepository.findAll();
-        if(jobsList == null ){
-            throw new AppException(ErrorCode.NOT_FOUND);
-        }
-        return jobsList;
-    }
+//    @Override
+//    public List<Jobs> GetAllJob() {
+//        List<Jobs> jobsList = jobRepository.findAll();
+//        if(jobsList == null ){
+//            throw new AppException(ErrorCode.NOT_FOUND);
+//        }
+//        return jobsList;
+//    }
 
     //đây là api cho viẹc thêm product có sẵn vào lits job ,
     // thêm vào thì nó chưa đc giao việc , chưa có người nhận
@@ -220,8 +231,8 @@ public class JobServiceImpl implements JobService {
     }
 
     @Override
-    public List<Jobs> filterJobWasDoneByEmployeeName(String keyword) {
-        List<Jobs> jobsList = jobRepository.filterJobWasDoneByEmployeeName(keyword);
+    public List<JobDoneDTO> filterJobWasDoneByEmployeeName(String keyword) {
+        List<JobDoneDTO> jobsList = jobRepository.filterJobWasDoneByEmployeeName(keyword);
         if(jobsList == null ){
             throw new AppException(ErrorCode.NOT_FOUND);
         }

@@ -28,7 +28,7 @@ public class Jobs {
     private String job_name;
 
     @ManyToOne
-   //@JsonIgnore
+    @JsonIgnore
     @JoinColumn(name = "user_id")
     private User user;  // Liên kết với entity User
 
@@ -43,12 +43,13 @@ public class Jobs {
     private RequestProducts requestProducts;  // Liên kết với entity RequestProduct
 
     @ManyToOne
+    @JsonIgnore
     @JoinColumn(name = "order_detail_id") // Khóa ngoại tới OrderDetail
     private Orderdetails orderdetails;
 
 //nay la status của job (status_product có type=1 , là đang thi công hay đã hoàn thành)
     @ManyToOne(fetch = FetchType.EAGER)
-//    @JsonIgnore
+    @JsonIgnore
     @JoinColumn(name = "status_id")
     private Status_Job status;
 

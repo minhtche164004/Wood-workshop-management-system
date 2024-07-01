@@ -1,5 +1,5 @@
-@import url(https://fonts.googleapis.com/css?family=Raleway:400);
-@import url('https://fonts.googleapis.com/css2?family=Livvic&family=Open+Sans&family=Roboto:ital,wght@0,400;1,300&display=swap');
+/* @import url(https://fonts.googleapis.com/css?family=Raleway:400);
+@import url('https://fonts.googleapis.com/css2?family=Livvic&family=Open+Sans&family=Roboto:ital,wght@0,400;1,300&display=swap'); */
 *{
     box-sizing: border-box;
     margin: 0;
@@ -164,7 +164,7 @@ img{
     background-image:  
         url(../img/news/sofa.webp);
     background-repeat: no-repeat;
-    background-size: 1350px 100%;
+    background-size: 1700px 100%;
     /* background: rgba(0, 0, 0, 0.7); */
     object-fit: cover;
 }

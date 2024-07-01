@@ -37,6 +37,12 @@ import { ChangePasswordComponent } from './features/change-password/change-passw
 import { ContactComponent } from './contact/contact.component';
 import { AboutUsComponent } from './about-us/about-us.component';
 import { EmployeeJobComponent } from './employee-job/employee-job.component';
+import { BillComponent } from './bill/bill.component';
+import { MaterialManagementComponent } from './Admin/material-management/material-management.component';
+import { ReportManagementComponent } from './Admin/report-management/report-management.component';
+import { AdvancedBillManagementComponent } from './Admin/advanced-bill-management/advanced-bill-management.component';
+import { FeedbackDefectiveComponent } from './Admin/feedback-defective/feedback-defective.component';
+import { TotalSalaryComponent } from './Admin/total-salary/total-salary.component';
 
 
 
@@ -74,7 +80,13 @@ const routes: Routes = [
   { path: 'job_management', component: JobManagementComponent },
   { path: 'changePassWord', component: ChangePasswordComponent },
   { path: 'employee-job', component: EmployeeJobComponent },
+  { path: 'bill', component: BillComponent },
   { path: 'product-details/:id', component: ProductDetailComponent },
+  { path: 'material_management', component: MaterialManagementComponent },
+  { path: 'report_management', component: ReportManagementComponent },
+  { path: 'advanced_bill', component: AdvancedBillManagementComponent },
+  { path: 'feedback_defective', component: FeedbackDefectiveComponent },
+  { path: 'total_salary', component: TotalSalaryComponent },
   { path: '', redirectTo: '/homepage', pathMatch: 'full' },
   { path: '**', redirectTo: '/homepage', pathMatch: 'full' },
 

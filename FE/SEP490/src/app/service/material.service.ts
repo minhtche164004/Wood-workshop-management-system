@@ -1,20 +1,27 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpErrorResponse } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
+import { environment } from 'src/app/environments/environment';
 @Injectable({
   providedIn: 'root'
 })
 export class MaterialService {
 
-  private api_getAllMaterial = `http://localhost:8080/api/auth/getAll`;
-  private api_getAllSubMtr = `http://localhost:8080/api/auth/submaterial/getall`
-  private api_addsubMtr = `http://localhost:8080/api/auth/submaterial/AddNewSubMaterial`
+  private api_getAllMaterial = `${environment.apiUrl}api/auth/getAll`;
+  private api_getAllSubMtr = `${environment.apiUrl}api/auth/submaterial/getall`
+  private api_addsubMtr = `${environment.apiUrl}api/auth/submaterial/AddNewSubMaterial`
+  private api_editMaterial = `${environment.apiUrl}api/auth/EditMaterial`;
+
   constructor(private http: HttpClient) { }
   getAllMaterial(): Observable<any>{
     return this.http.get<any>(this.api_getAllMaterial).pipe(
       catchError(this.handleError) 
     );
+  }
+  updateMaterial(id: number, material: { materialName: string, type: string }): Observable<any> {
+    const url = `${this.api_editMaterial}?id=${id}`;
+    return this.http.put(url, material);
   }
   private handleError(error: HttpErrorResponse) {
     let errorMessage = '';

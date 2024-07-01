@@ -105,8 +105,10 @@
                         </div>
                         <div class="pagination justify-content-center d-flex">
                             <pagination-controls style="justify-content: right; display: flex;"
-                                (pageChange)="currentPage = $event"></pagination-controls>
-                            <div class="clearfix" style="justify-content: right; display: flex;">
+                            (pageChange)="currentPage = $event"
+                            previousLabel="Trang trước"
+                            nextLabel="Trang sau">
+                          </pagination-controls>
                                 <div class="hint-text"> <br>Từ sản phẩm <b>{{ (currentPage - 1) * 9 + 1 }}</b> đến
                                     <b>{{
                                         currentPage * 9
@@ -121,4 +123,4 @@
     </div>
 
     <app-footer></app-footer>
-</div>
+

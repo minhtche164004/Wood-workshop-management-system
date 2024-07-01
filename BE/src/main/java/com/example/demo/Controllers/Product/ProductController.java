@@ -416,8 +416,9 @@ public class ProductController {
             @RequestParam(required = false) BigDecimal minPrice,
             @RequestParam(required = false) BigDecimal maxPrice,
             @RequestParam(required = false) String sortDirection){
-        List<Products> products = productService.filterProductsForAdmin(search, categoryId, statusId, minPrice, maxPrice, sortDirection);
-        return ResponseEntity.ok(products);
+        ApiResponse<List> apiResponse = new ApiResponse<>();
+        apiResponse.setResult(productService.filterProductsForAdmin(search, categoryId, statusId, minPrice, maxPrice, sortDirection));
+        return ResponseEntity.ok(apiResponse);
     }
 
 }

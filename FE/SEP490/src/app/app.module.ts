@@ -67,6 +67,9 @@ import { AdvancedBillManagementComponent } from './Admin/advanced-bill-managemen
 import { FeedbackDefectiveComponent } from './Admin/feedback-defective/feedback-defective.component';
 import { TotalSalaryComponent } from './Admin/total-salary/total-salary.component';
 
+import { WishlistComponent } from './features/wishlist/wishlist.component';
+
+
 
 
 
@@ -123,12 +126,15 @@ import { TotalSalaryComponent } from './Admin/total-salary/total-salary.componen
     ContactComponent,
     EmployeeJobComponent,
     SubSubmaterialProductComponent,
+
     BillComponent,
     MaterialManagementComponent,
     ReportManagementComponent,
     AdvancedBillManagementComponent,
     FeedbackDefectiveComponent,
     TotalSalaryComponent,
+
+    WishlistComponent,
 
     
 

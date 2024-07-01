@@ -1,6 +1,7 @@
 package com.example.demo.Service;
 
 import com.example.demo.Dto.JobDTO.JobDTO;
+import com.example.demo.Dto.JobDTO.JobDoneDTO;
 import com.example.demo.Dto.OrderDTO.JobProductDTO;
 import com.example.demo.Entity.Jobs;
 import org.springframework.stereotype.Service;
@@ -24,5 +25,10 @@ public interface JobService {
 
     Jobs EditJobs(JobDTO jobDTO,int job_id);
 
-    List<Jobs> GetAllJob();
+//    List<Jobs> GetAllJob();
+
+    Jobs AddProductForJob(int p_id, int quantity_product);
+
+    List<Jobs> getJobWasDone();
+    List<JobDoneDTO> filterJobWasDoneByEmployeeName(String keyword);
 }

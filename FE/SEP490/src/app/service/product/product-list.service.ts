@@ -31,6 +31,8 @@ export class ProductListService {
   private apiUrl_AddProduct = `${environment.apiUrl}api/auth/product/AddNewProduct`;
 
   private apiUrl_UpdateProduct = `${environment.apiUrl}api/auth/product/AddNewProduct`;
+
+  private apiUrl_GetAllStatus = `${environment.apiUrl}api/auth/admin/GetStatusUser`;
   
 
   constructor(private http: HttpClient) { }
@@ -95,6 +97,12 @@ export class ProductListService {
   getAllOrder(): Observable<any> {
     console.log(this.apiUrl_GetAllOrder)
     return this.http.get<any>(this.apiUrl_GetAllOrder).pipe(
+      catchError(this.handleError)
+    );
+  }
+  getAllStatus(): Observable<any> {
+    console.log(this.apiUrl_GetAllStatus)
+    return this.http.get<any>(this.apiUrl_GetAllStatus).pipe(
       catchError(this.handleError)
     );
   }

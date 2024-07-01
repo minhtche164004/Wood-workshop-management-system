@@ -297,7 +297,7 @@
           <div class="form-row">
             <div class="form-group col-md-6">
               <label  for="role">Vai Trò </label>
-              <select [(ngModel)]="selectedPosition" [(ngModel)]="userData.role_name" formControlName="role_id" class="form-control form-control-lg"
+              <select [(ngModel)]="selectedRole" [(ngModel)]="userData.role_name" formControlName="role_id" class="form-control form-control-lg"
                 id="role" required>
                 <option [ngValue]="null" disabled selected>Chọn Vai Trò</option>
                 <option *ngFor="let rol of role" [ngValue]="rol.roleId">

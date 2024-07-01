@@ -61,6 +61,7 @@ import { ContactComponent } from './contact/contact.component';
 import { EmployeeJobComponent } from './employee-job/employee-job.component';
 import { SubSubmaterialProductComponent } from './sub-submaterial-product/sub-submaterial-product.component';
 import { WishlistComponent } from './features/wishlist/wishlist.component';
+import { TemplateComponent } from './features/template/template.component';
 
 
 
@@ -119,6 +120,7 @@ import { WishlistComponent } from './features/wishlist/wishlist.component';
     EmployeeJobComponent,
     SubSubmaterialProductComponent,
     WishlistComponent,
+    TemplateComponent,
 
     
 

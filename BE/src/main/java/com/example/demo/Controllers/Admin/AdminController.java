@@ -5,13 +5,13 @@ import com.example.demo.Dto.UserDTO.*;
 import com.example.demo.Entity.Position;
 import com.example.demo.Entity.Role;
 import com.example.demo.Entity.User;
-<<<<<<< HEAD
+
 import com.example.demo.Repository.RoleRepository;
 import com.example.demo.Repository.Status_User_Repository;
 import com.example.demo.Repository.UserRepository;
-=======
+
 import com.example.demo.Repository.*;
->>>>>>> 62fbeebbc9c7756a0384280cce8526695d348818
+
 import com.example.demo.Response.ApiResponse;
 import com.example.demo.Service.PositionService;
 import com.example.demo.Service.UserService;
@@ -38,15 +38,15 @@ public class AdminController {
     private RoleRepository roleRepository;
     @Autowired
     private UserRepository userRepository;
-<<<<<<< HEAD
+
     @Autowired
     private Status_User_Repository statusUserRepository;
-=======
+
 
     @Autowired
     private Status_Job_Repository statusJobRepository;
-    @Autowired
-    private Status_User_Repository statusUserRepository;
+
+
     @Autowired
     private Status_Product_Repository statusProductRepository;
     @Autowired
@@ -54,7 +54,7 @@ public class AdminController {
     @Autowired
     private Status_Request_Repository statusRequestRepository;
 
->>>>>>> 62fbeebbc9c7756a0384280cce8526695d348818
+
     private static final JedisPooled jedis = RedisConfig.getRedisInstance();
 
     //    @GetMapping("/GetAllPositionName")
@@ -111,12 +111,7 @@ public class AdminController {
         apiResponse.setResult(roleRepository.findAll());
         return apiResponse;
     }
-    @GetMapping("/GetStatusUser")
-    public ApiResponse<?> GetStatusUser() {
-        ApiResponse<List> apiResponse = new ApiResponse<>();
-        apiResponse.setResult(statusUserRepository.getAllStatusNames());
-        return apiResponse;
-    }
+
 
     @GetMapping("/GetAllStatusUser")
     public ApiResponse<?> GetStatusUser() {

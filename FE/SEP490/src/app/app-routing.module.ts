@@ -37,6 +37,8 @@ import { ChangePasswordComponent } from './features/change-password/change-passw
 import { ContactComponent } from './contact/contact.component';
 import { AboutUsComponent } from './about-us/about-us.component';
 import { EmployeeJobComponent } from './employee-job/employee-job.component';
+import { WishlistComponent } from './features/wishlist/wishlist.component';
+import { TemplateComponent } from './features/template/template.component';
 
 
 
@@ -75,6 +77,9 @@ const routes: Routes = [
   { path: 'changePassWord', component: ChangePasswordComponent },
   { path: 'employee-job', component: EmployeeJobComponent },
   { path: 'product-details/:id', component: ProductDetailComponent },
+  { path: 'wishlist', component: WishlistComponent },
+  { path: 'template', component: TemplateComponent },
+  
   { path: '', redirectTo: '/homepage', pathMatch: 'full' },
   { path: '**', redirectTo: '/homepage', pathMatch: 'full' },
 

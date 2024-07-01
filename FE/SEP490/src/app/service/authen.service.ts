@@ -12,6 +12,7 @@ export class AuthenListService {
   private apiUrl_ChangePass = `${environment.apiUrl}api/auth/user/ChangePass`;
   private apiUrl_GetById = `${environment.apiUrl}api/auth/admin/GetById`;
   private apiUrl_EditUser = `${environment.apiUrl}api/auth/admin/EditUser`;
+  private apiUrl_GetByIdWishList = `${environment.apiUrl}api/auth/order/GetWhiteListByUserID`;
   constructor(private http: HttpClient) { }
   isLoggedIn(): boolean {
     const token = localStorage.getItem('loginToken');
@@ -22,6 +23,19 @@ export class AuthenListService {
   getUserById(user_id: string): Observable<any> {
     const url = `${this.apiUrl_GetById}?user_id=${user_id}`;
     return this.http.get<any>(url).pipe(
+      catchError(this.handleError)
+    );
+  }
+  GetByIdWishList(user_id: string): Observable<any> {
+    const token = localStorage.getItem('loginToken');
+    if (!token) {
+      return throwError(new Error('Login token not found in localStorage.'));
+    }
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${token}`
+    });
+    const url = `${this.apiUrl_GetByIdWishList}?user_id=${user_id}`;
+    return this.http.get<any>(url, { headers }).pipe(
       catchError(this.handleError)
     );
   }

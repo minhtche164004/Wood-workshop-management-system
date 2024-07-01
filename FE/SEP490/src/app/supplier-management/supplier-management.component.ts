@@ -112,7 +112,6 @@ export class SupplierManagementComponent implements OnInit{
   }
   setDeleteId(supplierId: number) {
     console.log('Set deleteId:', supplierId);
-
     this.deleteId = supplierId;
   }
 

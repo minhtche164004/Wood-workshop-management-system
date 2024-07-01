@@ -78,6 +78,11 @@ export class UserManagementComponent implements OnInit {
   @ViewChild('closeButton') closeButton: ElementRef | undefined;
   private apiUrl_AddNewAccount = `${environment.apiUrl}api/auth/admin/AddNewAccount`; // URL của backend
 
+
+
+  private apiUrl_EditUser = `${environment.apiUrl}api/auth/admin/EditUser`;
+  private apiUrl_GetUserById = `${environment.apiUrl}api/auth/admin/GetUserById`;
+
   addAccountForm: FormGroup;
   editUserForm: FormGroup;
   provinces: Province[] = [];

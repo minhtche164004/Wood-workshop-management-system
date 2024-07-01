@@ -348,7 +348,7 @@ userRepository.save(user);
         user.setPosition(position);
         Status_User statusUser = statusRepository.findById1(userDTO.getStatus_id());
         user.setStatus(statusUser);
-        Role role = roleRepository.findByName(userDTO.getRole_name());
+        Role role = roleRepository.findByIdEdit(userDTO.getRole_id());
         user.setRole(role);
 
         userRepository.save(user); // Điều này cũng sẽ lưu các thay đổi vào UserInfor liên kết

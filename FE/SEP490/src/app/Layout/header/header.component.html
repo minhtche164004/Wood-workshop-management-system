@@ -92,8 +92,8 @@
     <div class="container-fluid search-bar-container" style="margin-top: -2%;">
         <div class="row">
             <div class="col-12 d-flex justify-content-center">
-                <form class="d-flex search-bar">
-                    <input class="form-control me-2 search-input" type="search" placeholder="Tìm kiếm sản phẩm ..."
+                <form class="d-flex search-bar" (ngSubmit)="onSearch()">
+                    <input class="form-control me-2 search-input" type="search" placeholder="Tìm kiếm sản phẩm ..." aria-label="Search" [(ngModel)]="searchKey" name="searchKey"
                         aria-label="Search">
                     <button class="btn search-button" type="submit"><i
                             class="fa-solid fa-magnifying-glass"></i></button>

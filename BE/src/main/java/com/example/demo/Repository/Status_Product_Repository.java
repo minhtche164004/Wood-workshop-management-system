@@ -1,6 +1,7 @@
 package com.example.demo.Repository;
 
 import com.example.demo.Entity.Status_Product;
+import com.example.demo.Entity.Status_Request;
 import com.example.demo.Entity.Status_User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
@@ -13,6 +14,9 @@ import java.util.List;
 @Repository
 
 public interface Status_Product_Repository extends JpaRepository<Status_Product, Integer> {
+    @Query("SELECT u FROM Status_Product u")
+    List<Status_Product> getAllStatus();
+
     @Query("SELECT u FROM Status_Product u WHERE u.status_name = :query")
     Status_Product findByName(String query);
 

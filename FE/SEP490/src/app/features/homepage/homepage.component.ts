@@ -12,6 +12,7 @@ declare var $: any; // Declare jQuery globally
 })
 export class HomepageComponent implements AfterViewInit, OnInit {
   products: any[] = [];
+  currentPage: number = 1;
   constructor(private router: Router,private wishList: WishlistService,private productListService: ProductListService, private toastr: ToastrService) { }
   viewProductDetails(productId: number) {
     this.router.navigate(['/product_details', productId]);

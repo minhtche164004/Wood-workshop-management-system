@@ -163,7 +163,7 @@ export class ProductManagementComponent implements OnInit {
 
   onImagesSelected(event: any): void {
     this.selectedImages = Array.from(event.target.files);
-  }
+  } 
 
   onSubmit(): void {
     if (this.uploadForm.valid && this.selectedThumbnail && this.selectedImages.length) {

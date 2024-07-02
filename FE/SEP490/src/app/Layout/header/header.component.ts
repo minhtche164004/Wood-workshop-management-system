@@ -1,19 +1,25 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { HttpClient, HttpErrorResponse } from '@angular/common/http'; 
-import { AuthenListService } from 'src/app/service/authen.service'; 
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
+import { AuthenListService } from 'src/app/service/authen.service';
 import { FormControl } from '@angular/forms';
 import { DataService } from 'src/app/service/data.service';
 import { ProductListService } from 'src/app/service/product/product-list.service';
 import { debounceTime, distinctUntilChanged, switchMap } from 'rxjs';
+interface ApiResponse {
+  code: number;
+  result: any[];
+}
+
 @Component({
   selector: 'app-header',
   templateUrl: './header.component.html',
   styleUrls: ['./header.component.scss']
 })
-export class HeaderComponent implements OnInit{
 
-  constructor(private dataService: DataService, private router: Router, private http: HttpClient,private authService: AuthenListService, private productListService: ProductListService) { } 
+export class HeaderComponent implements OnInit {
+
+  constructor(private dataService: DataService, private router: Router, private http: HttpClient, private authService: AuthenListService, private productListService: ProductListService) { }
   ngOnInit(): void {
     this.searchControl.valueChanges.pipe(
       debounceTime(300),
@@ -22,7 +28,10 @@ export class HeaderComponent implements OnInit{
     ).subscribe(products => {
       this.filteredProducts = products;
     });
+    this.loadAllUsers();
   }
+  
+  user: any[] = [];
   parentData: any;
   searchKey?: string = '';
   categoryId?: number;
@@ -32,6 +41,20 @@ export class HeaderComponent implements OnInit{
   products: any[] = [];
   searchControl = new FormControl();
   filteredProducts: any[] = [];
+  loadAllUsers(): void {
+    this.productListService.getAllUser().subscribe(
+      (response: ApiResponse) => {
+        if (response.code === 1000) {
+          this.user = response.result; // Lưu trữ dữ liệu người dùng vào biến users
+     
+        } 
+      },
+      (error) => {
+        console.error('Error fetching users:', error);
+      }
+    );
+  }
+
   onLogout(): void {
     // Lấy giá trị của token từ local storage
     const token = localStorage.getItem('loginToken');
@@ -43,7 +66,7 @@ export class HeaderComponent implements OnInit{
     console.log('Token sau khi logout:', localStorage.getItem('loginToken'));
 
     this.router.navigateByUrl('/login');
-    
+
 
   }
   isLoggedIn(): boolean {
@@ -54,7 +77,7 @@ export class HeaderComponent implements OnInit{
   }
   onSearch(): void {
     this.dataService.changeSearchKey(this.searchKey);
-    
+
     this.router.navigate(['/product']);
   }
   onOptionSelected(event: any) {

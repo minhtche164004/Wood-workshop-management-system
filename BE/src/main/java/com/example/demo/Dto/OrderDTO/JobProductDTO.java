@@ -11,7 +11,7 @@ import java.math.BigDecimal;
 //@AllArgsConstructor
 @NoArgsConstructor
 public class JobProductDTO {
-
+    private int job_id;
     private String code;
     private int product_id;
     private String product_name;
@@ -27,7 +27,8 @@ public class JobProductDTO {
     private String position_name;
 
 
-    public JobProductDTO(String code, int product_id, String product_name, String description, BigDecimal price, Status_Job statusJob, int quantity, int user_id, String user_name, int position_id, String position_name) {
+    public JobProductDTO(int job_id,String code, int product_id, String product_name, String description, BigDecimal price, Status_Job statusJob, int quantity, int user_id, String user_name, int position_id, String position_name) {
+        this.job_id=job_id;
         this.code = code;
         this.product_id = product_id;
         this.product_name = product_name;

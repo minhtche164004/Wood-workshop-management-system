@@ -28,4 +28,5 @@ public class RequestAllDTO {
     private String wards;
     private List<Requestimages> imagesList;
     private String code;
+    private String email;
 }

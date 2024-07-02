@@ -1,5 +1,8 @@
 package com.example.demo.Controllers.OrderController;
 
+import com.example.demo.Config.RedisConfig;
+import com.example.demo.Dto.OrderDTO.OrderDetailDTO;
+import com.example.demo.Dto.OrderDTO.OrderDetailWithJobStatusDTO;
 import com.example.demo.Dto.ProductDTO.ProductEditDTO;
 import com.example.demo.Dto.RequestDTO.RequestAllDTO;
 import com.example.demo.Dto.ProductDTO.RequestProductAllDTO;
@@ -14,6 +17,9 @@ import com.example.demo.Repository.Status_Order_Repository;
 
 import com.example.demo.Response.ApiResponse;
 import com.example.demo.Service.*;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.reflect.TypeToken;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -21,8 +27,10 @@ import org.springframework.http.MediaType;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import redis.clients.jedis.JedisPooled;
 
 import java.io.IOException;
+import java.lang.reflect.Type;
 import java.util.Date;
 import java.util.List;
 
@@ -30,6 +38,7 @@ import java.util.List;
 @RequestMapping("/api/auth/order/")
 @AllArgsConstructor
 public class OrderController {
+    private static final JedisPooled jedis = RedisConfig.getRedisInstance();
     @Autowired
     private UserInforService userInforService;
     @Autowired
@@ -83,9 +92,9 @@ public class OrderController {
         return apiResponse;
     }
     @DeleteMapping("/DeleteWhiteList")
-    public ApiResponse<?> DeleteWhiteList(@RequestParam("user_id") int user_id) {
+    public ApiResponse<?> DeleteWhiteList(@RequestParam("wishlist_id") int wishlist_id) {
         ApiResponse<String> apiResponse = new ApiResponse<>();
-        whiteListService.DeleteWhiteList(user_id);
+        whiteListService.DeleteWhiteList(wishlist_id);
         apiResponse.setResult("Xoá Sản Phẩm khỏi danh sách yêu thích thành công !");
         return apiResponse;
     }
@@ -116,22 +125,28 @@ public class OrderController {
         return apiResponse;
     }
 
-    @PutMapping(value = "/EditRequest", consumes = MediaType.MULTIPART_FORM_DATA_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ApiResponse<?> EditRequest(
-            @RequestParam(value="request_id") int request_id,
-            @RequestPart("productDTO") RequestEditDTO requestEditDTO,
-            @RequestPart("files") MultipartFile[] files
-    ) throws IOException {
-        ApiResponse<Requests> apiResponse = new ApiResponse<>();
-        apiResponse.setResult(orderService.EditRequest(request_id,requestEditDTO,files));
-        return apiResponse;
-    }
+//    @PutMapping(value = "/EditRequest", consumes = MediaType.MULTIPART_FORM_DATA_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+//    public ApiResponse<?> EditRequest(
+//            @RequestParam(value="request_id") int request_id,
+//            @RequestPart("productDTO") RequestEditDTO requestEditDTO,
+//            @RequestPart("files") MultipartFile[] files
+//    ) throws IOException {
+//        ApiResponse<Requests> apiResponse = new ApiResponse<>();
+//        apiResponse.setResult(orderService.EditRequest(request_id,requestEditDTO,files));
+//        return apiResponse;
+//    }
 
 
     @GetMapping("GetAllOrder")
     public ApiResponse<?> GetAllOrder(){
         ApiResponse<List> apiResponse = new ApiResponse<>();
         apiResponse.setResult(orderService.GetAllOrder());
+        return apiResponse;
+    }
+    @PutMapping("ManagerEditRequest")
+    public ApiResponse<?> ManagerEditRequest(@RequestParam("request_id") int request_id,@RequestBody RequestEditDTO requestEditDTO){
+        ApiResponse<Requests> apiResponse = new ApiResponse<>();
+        apiResponse.setResult(orderService.ManagerEditRequest(request_id,requestEditDTO));
         return apiResponse;
     }
     @GetMapping("FindOrderByNameorCode")
@@ -170,6 +185,12 @@ public class OrderController {
         apiResponse.setResult(orderService.HistoryOrder());
         return apiResponse;
     }
+    @GetMapping("/getOrderDetailById")
+    public ApiResponse<?>  getOrderDetailById(@RequestParam("id") int id) {
+        ApiResponse<OrderDetailDTO> apiResponse = new ApiResponse<>();
+        apiResponse.setResult(orderService.getOrderDetailById(id));
+        return apiResponse;
+    }
 
     @GetMapping("/getStatusOrder")
     public ApiResponse<?>  getStatusOrder() {
@@ -187,7 +208,22 @@ public class OrderController {
     @GetMapping("/getAllOrderDetailByOrderId")
     public ApiResponse<?>  getAllOrderDetail(@RequestParam("orderId") int orderId) {
         ApiResponse<List> apiResponse = new ApiResponse<>();
-        apiResponse.setResult(orderService.getOrderDetailByOrderId(orderId));
+        String cacheKey = "all_order_detail_by_order_id";
+        List<OrderDetailWithJobStatusDTO> products;
+        String cachedData = jedis.hget(cacheKey, orderId + "");
+        Gson gson = new GsonBuilder().setDateFormat("MMM dd, yyyy").create();
+        if (cachedData != null) {
+            Type type = new TypeToken<List<OrderDetailWithJobStatusDTO>>() {
+            }.getType();
+
+            products = gson.fromJson(cachedData, type);
+        } else {
+            products = orderService.getOrderDetailByOrderId(orderId);
+            String jsonData = gson.toJson(products);
+            jedis.hset(cacheKey, orderId + "", jsonData);
+            jedis.expire(cacheKey, 1800);
+        }
+        apiResponse.setResult(products);
         return apiResponse;
     }
     @GetMapping("/getListPhoneNumber")
@@ -200,6 +236,13 @@ public class OrderController {
     public ApiResponse<?>  getInfoUserByPhoneNumber(@RequestParam("phoneNumber") String phoneNumber){
         ApiResponse apiResponse = new ApiResponse<>();
         apiResponse.setResult(userInforService.getUserInforByPhoneNumber(phoneNumber));
+        return apiResponse;
+    }
+    @DeleteMapping("/deleteRequest")
+    public ApiResponse<?> deleteRequest(@RequestParam("requestId") int requestId){
+        ApiResponse apiResponse = new ApiResponse<>();
+        orderService.deleteRequestById(requestId);
+        apiResponse.setResult("Xoá yêu cầu thành công!!!");
         return apiResponse;
     }
 

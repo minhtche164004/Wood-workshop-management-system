@@ -4,6 +4,7 @@ import com.example.demo.Dto.JobDTO.JobDTO;
 import com.example.demo.Dto.JobDTO.JobDoneDTO;
 import com.example.demo.Dto.OrderDTO.JobProductDTO;
 import com.example.demo.Entity.Jobs;
+import com.example.demo.Entity.Status_Job;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -31,4 +32,5 @@ public interface JobService {
 
     List<Jobs> getJobWasDone();
     List<JobDoneDTO> filterJobWasDoneByEmployeeName(String keyword);
+    List<Status_Job> getAllStatusJob();
 }

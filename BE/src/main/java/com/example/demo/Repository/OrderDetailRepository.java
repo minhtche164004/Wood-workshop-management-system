@@ -1,6 +1,8 @@
 package com.example.demo.Repository;
 
+import com.example.demo.Dto.JobDTO.JobDoneDTO;
 import com.example.demo.Dto.OrderDTO.JobProductDTO;
+import com.example.demo.Dto.OrderDTO.OrderDetailDTO;
 import com.example.demo.Dto.OrderDTO.OrderDetailWithJobStatusDTO;
 import com.example.demo.Entity.Orderdetails;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -19,20 +21,49 @@ public interface OrderDetailRepository extends JpaRepository<Orderdetails, Integ
     @Query("SELECT u FROM Orderdetails u WHERE u.product.productId = :query")
     List<Orderdetails> getOrderDetailByProductId(int query);
 
+//    @Query("SELECT u FROM Orderdetails u WHERE u.orderDetailId = :query")
+//    Orderdetails getOrderDetailById(int query);
 
-    @Query("SELECT new com.example.demo.Dto.OrderDTO.OrderDetailWithJobStatusDTO(od, j.status, " +
-            "(CASE " +
-            "   WHEN o.specialOrder = false THEN p.productName " +
-            "   WHEN o.specialOrder = true THEN rp.requestProductName " +
-            "END)) " +
+
+    @Query("SELECT new com.example.demo.Dto.OrderDTO.OrderDetailDTO(" +
+            "od.orderDetailId, " +
+            "COALESCE(p.productId, 0), " +
+            "COALESCE(p.productName, ''), " +
+            "COALESCE(rp.requestProductId, 0), " +
+            "COALESCE(rp.requestProductName, ''), " +
+            "od.unitPrice, " +
+            "od.quantity " +
+            ") " +
             "FROM Orderdetails od " +
-            "JOIN od.order o " +
-            "JOIN Jobs j ON od.orderDetailId = j.orderdetails.orderDetailId " +
-            "JOIN Status_Job sj ON j.jobId = sj.status_id " +
-            "LEFT JOIN Products p ON od.product.productId = p.productId " +
-            "LEFT JOIN RequestProducts rp ON od.requestProduct.requestProductId = rp.requestProductId " +
-            "WHERE od.order.orderId = :order_id AND j.job_log = false")
-    List<OrderDetailWithJobStatusDTO> getOrderDetailWithJobStatusByOrderId(@Param("order_id") int order_id);
+            "LEFT JOIN od.product p " +
+            "LEFT JOIN od.requestProduct rp " +
+            "WHERE od.orderDetailId = :query")
+    OrderDetailDTO getOrderDetailById(int query);
+
+
+
+
+
+    @Query("SELECT new com.example.demo.Dto.OrderDTO.OrderDetailWithJobStatusDTO(" +
+            "od.orderDetailId, " +
+            "COALESCE(p.productId, 0), " +
+            "COALESCE(p.productName, ''), " +
+            "COALESCE(rp.requestProductId, 0), " +
+            "COALESCE(rp.requestProductName, ''), " +
+            "od.unitPrice, " +
+            "COALESCE(j.status.status_id, 0), " + // Sửa lại thành j.status.statusId
+            "COALESCE(s.status_name, ''), " +  // Sửa lại thành s.statusName
+            "od.quantity " +
+            ") " +
+            "FROM Orderdetails od " +
+            "LEFT JOIN od.product p " +
+            "LEFT JOIN od.requestProduct rp " +
+            "LEFT JOIN od.jobs j " +
+            "LEFT JOIN j.status s " + // Thêm LEFT JOIN với status_job
+            "WHERE od.order.orderId = :query")
+    List<OrderDetailWithJobStatusDTO> getAllOrderDetailByOrderId(int query);
+
+
 //    @Query("SELECT u FROM Orderdetails u WHERE u.product.productId = :query")
 //    List<Orderdetails> getOrderDetailsInByProductId(int query);
 

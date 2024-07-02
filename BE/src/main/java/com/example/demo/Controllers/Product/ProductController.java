@@ -3,6 +3,7 @@ package com.example.demo.Controllers.Product;
 import com.example.demo.Config.RedisConfig;
 import com.example.demo.Dto.Category.CategoryNameDTO;
 import com.example.demo.Dto.ProductDTO.*;
+import com.example.demo.Dto.SubMaterialDTO.SubMateProductDTO;
 import com.example.demo.Entity.*;
 import com.example.demo.Repository.*;
 import com.example.demo.Response.ApiResponse;
@@ -418,6 +419,29 @@ public class ProductController {
             @RequestParam(required = false) String sortDirection){
         List<Products> products = productService.filterProductsForAdmin(search, categoryId, statusId, minPrice, maxPrice, sortDirection);
         return ResponseEntity.ok(products);
+    }
+
+
+    @GetMapping("/getProductSubMaterialAndMaterialByProductId")
+    public ApiResponse<?> getProductSubMaterialAndMaterialByProductId(@RequestParam("id") int id) {
+        ApiResponse<List> apiResponse = new ApiResponse<>();
+        String cacheKey = "all_sub_mate_product";
+        List<SubMateProductDTO> products;
+        String cachedData = jedis.hget(cacheKey, id + "");
+        Gson gson = new GsonBuilder().setDateFormat("MMM dd, yyyy").create();
+        if (cachedData != null) {
+            Type type = new TypeToken<List<SubMateProductDTO>>() {
+            }.getType();
+
+            products = gson.fromJson(cachedData, type);
+        } else {
+            products = productService.getProductSubMaterialByProductIdDTO(id);
+            String jsonData = gson.toJson(products);
+            jedis.hset(cacheKey, id + "", jsonData);
+            jedis.expire(cacheKey, 1800);
+        }
+        apiResponse.setResult(products);
+        return apiResponse;
     }
 
 }

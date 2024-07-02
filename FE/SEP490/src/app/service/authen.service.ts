@@ -16,12 +16,21 @@ export class AuthenListService {
   private apiUrl_GetHistoryOrderCustomer = `${environment.apiUrl}api/auth/order/historyOrder`;
   private apiUrl_DeleteWhiteList = `${environment.apiUrl}api/auth/order/DeleteWhiteList`;
   private apiUrl_GetOrderDeTailById = `${environment.apiUrl}api/auth/order/getOrderDetailById`;
+
+
+  private apiUrl_NameATM = 'https://api.vietqr.io/v2/banks';
   constructor(private http: HttpClient) { }
   isLoggedIn(): boolean {
     const token = localStorage.getItem('loginToken');
     return token !== null; // Trả về true nếu tồn tại token trong localStorage, ngược lại false
   }
   
+  getNameATM(): Observable<any> {
+    const url = `${this.apiUrl_NameATM}`;
+    return this.http.get<any>(url).pipe(
+      catchError(this.handleError)
+    );
+  }
 
   getUserById(user_id: string): Observable<any> {
     const url = `${this.apiUrl_GetById}?user_id=${user_id}`;

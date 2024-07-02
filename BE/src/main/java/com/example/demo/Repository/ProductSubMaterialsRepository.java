@@ -36,14 +36,21 @@ public interface ProductSubMaterialsRepository extends JpaRepository<ProductSubM
             "LEFT JOIN sub.material m WHERE j.product.productId= :productId AND j.subMaterial.material.materialId = :materialId")
     List<Product_SubmaterialDTO> getProductSubMaterialByProductIdAndTypeMate(int productId,int materialId);
 
-
     @Query("SELECT new com.example.demo.Dto.SubMaterialDTO.SubMateProductDTO( " +
-            "CAST(m.materialId AS string), CAST(sub.subMaterialId AS string), m.type, sub.unitPrice, j.quantity) " +
+            "m.materialId ,sub.subMaterialId ,sub.subMaterialName, m.type, sub.unitPrice, j.quantity) " +
             "FROM ProductSubMaterials j " +
             "LEFT JOIN j.subMaterial sub " +
             "LEFT JOIN sub.material m " +
             "WHERE j.product.productId = :productId")
     List<SubMateProductDTO> getProductSubMaterialByProductIdDTO(int productId);
+
+//    @Query("SELECT new com.example.demo.Dto.SubMaterialDTO.SubMateProductDTO( " +
+//            "CAST(m.materialId AS string), CAST(sub.subMaterialId AS string),sub.subMaterialName, m.type, sub.unitPrice, j.quantity) " +
+//            "FROM ProductSubMaterials j " +
+//            "LEFT JOIN j.subMaterial sub " +
+//            "LEFT JOIN sub.material m " +
+//            "WHERE j.product.productId = :productId")
+//    List<SubMateProductDTO> getProductSubMaterialByProductIdDTO(int productId);
 
 
 

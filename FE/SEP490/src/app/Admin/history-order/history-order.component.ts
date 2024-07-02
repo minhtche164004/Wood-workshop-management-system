@@ -13,11 +13,22 @@ export class HistoryOrderComponent {
   history_order: any[] = [];
   loginToken: string | null = null;
   currentPage: number = 1;
+  orderData: any = {};
   constructor(private authenListService: AuthenListService) { }
   ngOnInit(): void {
-    
+    this.orderData = {
+      order_detail_id: '',
+      product_id: '',
+      product_name: '',
+      request_product_id: '',
+      request_product_name: '',
+      price: '',
+      quantity: '',
+     
+    };
    
     this.getHistoryOrder();
+    
   }
   getHistoryOrder(): void {
     this.loginToken = localStorage.getItem('loginToken');
@@ -39,5 +50,19 @@ export class HistoryOrderComponent {
     } else {
       console.error('No loginToken found in localStorage.');
     }
+  }
+
+
+  historyOrderDetail(orderId: string): void {
+    this.authenListService.getOrderDetailById(orderId).subscribe(
+      (data) => {
+        this.orderData = data.result;
+        console.log("Order data:", this.orderData.price)
+        
+      },
+      (error) => {
+        console.error('Error fetching user data:', error);
+      }
+    )
   }
 }

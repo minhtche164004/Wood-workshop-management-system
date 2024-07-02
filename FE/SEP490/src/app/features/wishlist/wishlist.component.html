@@ -5,124 +5,178 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sản phẩm yêu thích</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
     <style>
+        /* General Styles */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+
+        /* Header Styles */
+        header {
+            background-color: #C89551;
+            color: #fff;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        header h1 {
+            margin: 0;
+            font-size: 32px;
+        }
+
+        header .fa-heart {
+            color: red;
+            margin-left: 10px;
+            font-size: 24px;
+        }
+
+        /* Product Container Styles */
         .product-container {
             display: grid;
-            grid-template-columns: repeat(3, 1fr);
+            grid-template-columns: repeat(2, 1fr);
             grid-gap: 40px;
+            padding: 40px;
         }
 
         .product {
             border: 1px solid #ccc;
-            padding: 10px;
+            padding: 20px;
             text-align: center;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease;
+        }
+
+        .product:hover {
+            transform: translateY(-5px);
         }
 
         .product img {
-            width: 90%;
+            width: 100%;
             height: 300px;
             object-fit: cover;
+            margin-bottom: 20px;
         }
 
         .product h3 {
-            margin-top: 10px;
+            margin-top: 0;
+            font-size: 20px;
         }
 
         .product p {
-            margin-top: 5px;
+            margin-top: 10px;
+            font-size: 16px;
         }
 
         .product button {
-            margin-top: 10px;
             background-color: #ff6b6b;
-            color: white;
+            color: #fff;
             border: none;
-            padding: 5px 10px;
+            padding: 10px 20px;
             cursor: pointer;
+            font-size: 16px;
+            margin-top: 20px;
+            transition: background-color 0.3s ease;
         }
 
+        .product button:hover {
+            background-color: #e53935;
+        }
+
+        /* Pagination Styles */
         .pagination {
             display: flex;
-            justify-content: right;
-            margin-top: 20px;
+            justify-content: center;
+            margin-top: 40px;
         }
 
         .pagination a {
             color: #333;
-            padding: 5px 10px;
+            padding: 10px 20px;
             text-decoration: none;
             margin: 0 5px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            transition: background-color 0.3s ease;
         }
 
         .pagination a.active {
             background-color: #ff6b6b;
-            color: white;
+            color: #fff;
+            border-color: #ff6b6b;
         }
 
-        h1 {
+        .pagination a:hover {
+            background-color: #f2f2f2;
+        }
+
+        /* Footer Styles */
+        footer {
+            background-color: #333;
+            color: #fff;
+            padding: 20px;
             text-align: center;
-            margin-bottom: 10px;
-            font-size: 40px;
-            margin-top: 160px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        h1 .fas.fa-heart {
-            margin-left: 10px;
-            color: red;
-            font-size: 30px;
+            font-size: 14px;
         }
     </style>
 </head>
-<app-header></app-header>
 
 <body>
+    <app-header></app-header>
+    <header style="margin-top: 150px;">
+        <h1>Sản phẩm yêu thích <i class="fas fa-heart"></i></h1>
+    </header>
 
-
-    <h1 style="text-align: center; margin-bottom: 10px; font-size: 40px; margin-top: 160px;">Sản phẩm yêu thích <i
-            class="fas fa-heart"></i></h1>
     <div class="product-container">
-        
-<!-- 
-          <div *ngIf="wishlistItems.length > 0" class="product">
-            <div *ngFor="let item of wishlistItems">
-              <img src="https://mcdn.coolmate.me/image/March2023/thay-ong-noi-meme-1440_204.jpg" alt="Sản phẩm 1">
-              <h3>{{ item.productName }}</h3>
-           
-              <div class="actions">
-                <button class="delete-btn">
-                  <i class="fas fa-trash-alt"></i>
-                </button>
-              </div>
-            </div>
-          </div>
-          <div *ngIf="wishlistItems.length === 0">
-            <p>No items found in wishlist.</p>
-          </div> -->
-          
-        <div *ngFor="let item of wishlistItems" class="product">
+        <div *ngFor="let item of wishlistItems | paginate: { itemsPerPage: 4, currentPage: currentPage }; let i = index"
+            class="product">
             <img src="https://mcdn.coolmate.me/image/March2023/thay-ong-noi-meme-1440_204.jpg" alt="Sản phẩm 2">
+            <h3>{{ item.id }}</h3>
             <h3>{{ item.product.productName }}</h3>
             <p>{{ item.product.description }}</p>
             <p>{{ item.product.price | number: '1.0-3'}}</p>
             <div class="actions">
-                <button class="delete-btn">
-                    <i class="fas fa-trash-alt"></i>
+                <button class="delete" title="Delete" data-toggle="modal" data-target="#confirmDeleteModal"
+                    (click)="setDeleteId(item.id)">
+                    <i class="fas fa-trash-alt"></i> Xóa
                 </button>
             </div>
         </div>
-        
     </div>
+
     <div class="pagination">
-        <a href="#" class="active">1</a>
-        <a href="#">2</a>
-        <a href="#">3</a>
-        <a href="#">...</a>
-        <a href="#">Cuối</a>
+        <pagination-controls (pageChange)="currentPage = $event" previousLabel="Trang trước" nextLabel="Trang sau">
+        </pagination-controls>
     </div>
+
+    <div class="modal fade" id="confirmDeleteModal" tabindex="-1" role="dialog"
+        aria-labelledby="confirmDeleteModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="confirmDeleteModalLabel">Xác nhận muốn xóa</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    Bạn có chắc muốn xóa sản phẩm yêu thích này không ?
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-danger" (click)="deleteSupplier()">Delete</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer>
     <app-footer></app-footer>
+    </footer>>
 </body>
 
 </html>

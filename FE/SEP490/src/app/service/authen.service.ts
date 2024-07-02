@@ -14,6 +14,8 @@ export class AuthenListService {
   private apiUrl_EditUser = `${environment.apiUrl}api/auth/admin/EditUser`;
   private apiUrl_GetByIdWishList = `${environment.apiUrl}api/auth/order/GetWhiteListByUser`;
   private apiUrl_GetHistoryOrderCustomer = `${environment.apiUrl}api/auth/order/historyOrder`;
+  private apiUrl_DeleteWhiteList = `${environment.apiUrl}api/auth/order/DeleteWhiteList`;
+  private apiUrl_GetOrderDeTailById = `${environment.apiUrl}api/auth/order/getOrderDetailById`;
   constructor(private http: HttpClient) { }
   isLoggedIn(): boolean {
     const token = localStorage.getItem('loginToken');
@@ -27,6 +29,14 @@ export class AuthenListService {
       catchError(this.handleError)
     );
   }
+
+  getOrderDetailById(order_detail_id: string): Observable<any> {
+    const url = `${this.apiUrl_GetOrderDeTailById}?id=${order_detail_id}`;
+    return this.http.get<any>(url).pipe(
+      catchError(this.handleError)
+    );
+  }
+
 
   getHistoryOrderCustomer(): Observable<any> {
     const token = localStorage.getItem('loginToken');
@@ -64,7 +74,12 @@ export class AuthenListService {
       catchError(this.handleError)
     );
   }
-    
+  deleteWishList(wishlist_id: number): Observable<any> {
+    const url = `${this.apiUrl_DeleteWhiteList}?wishlist_id=${wishlist_id}`;
+    return this.http.delete<any>(url).pipe(
+      catchError(this.handleError)
+    );
+  }
   editUserById(user_id: string, userData: any): Observable<any> {
     const token = localStorage.getItem('loginToken');
     if (!token) {

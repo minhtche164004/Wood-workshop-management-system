@@ -217,8 +217,8 @@ public class OrderServiceImpl implements OrderService {
         requests.setPhoneNumber(requestDTO.getPhoneNumber());
         requests.setResponse("");
         requests.setCity_province(requestDTO.getCity_province());
-        requests.setDistrict(requestDTO.getDistrict());
-        requests.setWards(requestDTO.getWards());
+        requests.setDistrict(requestDTO.getDistrict_province());
+        requests.setWards(requestDTO.getWards_province());
 
         Requests lastRequest = requestRepository.findRequestTop(dateString + "RQ");
         int count = lastRequest != null ? Integer.parseInt(lastRequest.getCode().substring(8)) + 1 : 1;

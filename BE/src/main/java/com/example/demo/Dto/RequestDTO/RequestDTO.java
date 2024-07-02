@@ -29,8 +29,8 @@ public class RequestDTO {
     private String fullname;
     private String address;
     private String city_province;
-    private String district;
-    private String wards;
+    private String district_province;
+    private String wards_province;
     private List<String> files;
     private String email;
 }

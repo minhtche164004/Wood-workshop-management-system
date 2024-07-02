@@ -354,3 +354,14 @@
   }
   
   
+
+  .custom-modal-dialog {
+    max-width: 200%; /* Adjust the width as needed */
+  }
+  
+  .custom-modal-content {
+    min-height: 500vh; /* Adjust the height as needed */
+    max-height: 500vh; /* Prevent the modal from being too tall */
+    overflow-y: auto; /* Add scroll if content overflows */
+  }
+  

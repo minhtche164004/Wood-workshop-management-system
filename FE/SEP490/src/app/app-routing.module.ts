@@ -47,6 +47,7 @@ import { ReportManagementComponent } from './Admin/report-management/report-mana
 import { AdvancedBillManagementComponent } from './Admin/advanced-bill-management/advanced-bill-management.component';
 import { FeedbackDefectiveComponent } from './Admin/feedback-defective/feedback-defective.component';
 import { TotalSalaryComponent } from './Admin/total-salary/total-salary.component';
+import { AutoCompleteComponent } from './auto-complete/auto-complete.component';
 import { HistoryOrderComponent } from './Admin/history-order/history-order.component';
 
 
@@ -98,6 +99,7 @@ const routes: Routes = [
   { path: 'advanced_bill', component: AdvancedBillManagementComponent },
   { path: 'feedback_defective', component: FeedbackDefectiveComponent },
   { path: 'total_salary', component: TotalSalaryComponent },
+  { path: 'autoComplete', component: AutoCompleteComponent },
   { path: 'history_order', component: HistoryOrderComponent },
 
   { path: '', redirectTo: '/homepage', pathMatch: 'full' },

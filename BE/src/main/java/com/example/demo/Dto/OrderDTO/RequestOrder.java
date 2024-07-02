@@ -4,6 +4,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.Date;
+
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
@@ -13,5 +15,6 @@ public class RequestOrder {
     private ReceiveInfo receiveInfo;
     private OrderDetail orderDetail;
     private Integer payment_method;
+    private Date orderFinish;
 
 }

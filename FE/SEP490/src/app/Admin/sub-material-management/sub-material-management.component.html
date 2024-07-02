@@ -52,7 +52,7 @@
                         <th>Thao tác</th>
                         <th>Tên nguyên vật liệu</th>
                         <th>Mô tả nguyên vật liệu</th>
-                        <th>Số lượng trong kho</th>
+                        <th>Số lượng</th>
                         <th>Đơn giá</th>
                         
                       </tr>
@@ -74,7 +74,7 @@
                         </td>
                         <td>{{ product.subMaterialName }}</td>
                         <td>{{ product.description }}</td>
-                        <td>{{ product.quantity }}</td>
+                        <td style="text-align: center;">{{ product.quantity }}</td>
                        
                         <td>{{ product.unitPrice | number: '1.0-3'}}</td>
                         

@@ -66,9 +66,7 @@ import { ReportManagementComponent } from './Admin/report-management/report-mana
 import { AdvancedBillManagementComponent } from './Admin/advanced-bill-management/advanced-bill-management.component';
 import { FeedbackDefectiveComponent } from './Admin/feedback-defective/feedback-defective.component';
 import { TotalSalaryComponent } from './Admin/total-salary/total-salary.component';
-
-import { WishlistComponent } from './features/wishlist/wishlist.component';
-
+import { WishlistComponent } from './wishlist/wishlist.component';
 
 
 
@@ -104,41 +102,29 @@ import { WishlistComponent } from './features/wishlist/wishlist.component';
     ViewProfileComponent,
     SubMaterialManagementComponent,
     SupplierManagementComponent,
-
     ProductDetailComponent,
     CreateOrderComponent,
-
     TestUploadComponent,
     OrderDetailManagementComponent,
     OrderDetailComponent,
     ProcessProductManagementComponent,
     OrderRequestComponentComponent,
     OrderRqDetailComponent,
-
     OrderManagementComponent,
     ChangePasswordComponent,
     JobManagementComponent,
-
-
     ForgotPassComponent,
-
     AboutUsComponent,
     ContactComponent,
     EmployeeJobComponent,
     SubSubmaterialProductComponent,
-
     BillComponent,
     MaterialManagementComponent,
     ReportManagementComponent,
     AdvancedBillManagementComponent,
     FeedbackDefectiveComponent,
     TotalSalaryComponent,
-
     WishlistComponent,
-
-    
-
-  
 
   ],
   imports: [

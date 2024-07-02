@@ -15,10 +15,11 @@ export class JobManagementComponent implements OnInit {
   searchKey: string = '';
   selectedEmployee: number = 0;
   selectedCategory: number = 0;
+  selectedStatus: number = 0;
   selectedProduct: any = {}; // Biến để lưu trữ sản phẩm được chọn
   positionEmployees: any[] = [];
   type : any = {}
-  
+  statusType: any[] = [];
   constructor(private jobService: JobService, private toastr: ToastrService) { }
 
   ngOnInit(): void {
@@ -50,6 +51,22 @@ export class JobManagementComponent implements OnInit {
       }
     );
   }
+  loadStatusByType(type: number) {
+    console.log('Status Type:', type);
+    this.jobService.getStatusByType(type).subscribe(
+      (data) => {
+        if(data.code === 1000) {
+          this.statusType = data.result;
+          console.log('Status Type:', data.result);
+        }
+        console.log('Data:', data);
+      },
+      (error) => {
+        console.error('Error fetching data:', error);
+      }
+    );
+  }
+
   loadProductRQForJob() {
     this.jobService.getListProductRQ().subscribe(
       (data) => {

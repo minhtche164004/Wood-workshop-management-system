@@ -16,7 +16,7 @@ export class JobService {
   private apiGetPosition2 = `${environment.apiUrl}api/auth/job/findUsersWithPosition2AndLessThan3Jobs`
   private apiGetPosition1 = `${environment.apiUrl}api/auth/job/findUsersWithPosition1AndLessThan3Jobs`
   private apiGetStatusByType =`${environment.apiUrl}api/auth/job/getListStatusJobByType`
- 
+  
     // user_id={{$random.integer(100)}}&
     // p_id={{$random.integer(100)}}&
     // status_id={{$random.integer(100)}}`

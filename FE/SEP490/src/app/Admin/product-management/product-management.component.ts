@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ProductListService } from 'src/app/service/product/product-list.service';
 import { ToastrService } from 'ngx-toastr';
-import { FormArray, FormBuilder, FormGroup, Validators, FormsModule, FormControl} from '@angular/forms';
+import { FormArray, FormBuilder, FormGroup, Validators, FormsModule, FormControl } from '@angular/forms';
 import { concatMap } from 'rxjs/operators';
 
 interface Category {
@@ -30,9 +30,12 @@ interface MaterialItem {
   quantity: number;
 }
 interface SubMaterialItemOfProduct {
+  materialId: string;
   subMaterialId: string;
+  subMaterialName: string;
   quantity: number;
   unitPrice: number;
+  materialType: string;
 }
 @Component({
   selector: 'app-product-management',
@@ -58,12 +61,13 @@ export class ProductManagementComponent implements OnInit {
   materialForm: FormGroup;  // tao list material de luu vao bang
   materials: Material[] = [];
   subMaterials: SubMaterial[][] = [];
-  selectedMaterialId: string = "test";
+  selectedMaterialId: { [key: number]: string } = {};
   materialType: { [key: number]: string } = {};
   unitPriceSubMaterial: { [key: number]: number | string } = {};
-  selectedValues: { [key: string]: any } = {};
+  selectedSubMaterialId: { [key: string]: any } = {};
   editForm: FormGroup;
-  form: FormGroup;
+  formSubMaterialPerProduct: FormGroup;
+  subMaterialItemOfProduct: SubMaterialItemOfProduct[] = [];
   constructor(
     private fb: FormBuilder,
     private productListService: ProductListService,
@@ -88,19 +92,16 @@ export class ProductManagementComponent implements OnInit {
       image: ['']
     });
 
-
-
     this.materialForm = this.fb.group({
-      items: this.fb.array([])
+      items: this.fb.array([]),
     });
 
-    this.form = this.fb.group({
-      items: this.fb.array([])
-    });
-
-
+    this.formSubMaterialPerProduct = this.fb.group({
+      itemsEdit: this.fb.array([]),
+    });  
   }
 
+  //phan formGroup cua add productt
   get items(): FormArray {
     return this.materialForm.get('items') as FormArray;
   }
@@ -119,9 +120,51 @@ export class ProductManagementComponent implements OnInit {
     const items = this.materialForm.get('items') as FormArray;
     items.removeAt(index);
   }
+  //phan formGroup cua edit productt
 
-  get itemsEdit(): FormArray {
-    return this.materialForm.get('items') as FormArray;
+  populateFormWithData() {
+    const materialsData = [
+      { materialId: '2',subMaterialId: '15', subMaterialName: 'abc', materialType: "m3",unitPrice: 300000, quantity: 110,},
+      { materialId: '1',subMaterialId: '48', subMaterialName: 'axx', materialType: "lit",unitPrice: 20000, quantity: 100 },
+    ];
+    
+    // Reset the form and remove all items
+    this.formSubMaterialPerProduct.reset();
+    while (this.itemsEditArray.length !== 0) {
+      this.itemsEditArray.removeAt(0);
+    }
+    // Populate the form with data
+    this.selectedMaterialId = [] as any;
+    materialsData.forEach((materialItem, index) => {  
+      this.selectedMaterialId[index] = materialItem.materialId;
+      this.selectedSubMaterialId[index] = materialItem.subMaterialId;
+      this.onMaterialChangeFirstEdit(Number(this.selectedMaterialId[index]), index); 
+
+      this.fillMaterialItemEdit(materialItem);
+
+   });
+
+    console.log('Form populated with data:' ,this.formSubMaterialPerProduct.value);
+  }
+
+  onMaterialChangeFirstEdit(materialId: number, index: number){
+    this.loadSubMaterials(materialId, index);
+  }
+
+  get itemsEditArray(): FormArray {
+    return this.formSubMaterialPerProduct.get('itemsEdit') as FormArray;
+  }
+  
+  fillMaterialItemEdit(material: SubMaterialItemOfProduct) {
+    const itemFormGroup = this.fb.group({
+      materialId: [material.materialId],
+      subMaterialId: [material.subMaterialId],
+      subMaterialName: [material.subMaterialName],
+      materialType: [material.materialType],
+      quantity: [material.quantity],
+      unitPrice: [material.unitPrice]
+    });
+    this.itemsEditArray.push(itemFormGroup);
   }
 
   addItemEdit(): void {
@@ -131,20 +174,22 @@ export class ProductManagementComponent implements OnInit {
       price: [''],
       quantity: ['']
     });
-    this.items.push(item);
+    this.itemsEditArray.push(item);
   }
-
+  
   removeItemEdit(index: number) {
-    const items = this.materialForm.get('items') as FormArray;
-    items.removeAt(index);
+    if (this.itemsEditArray && this.itemsEditArray.length > index) {
+      this.itemsEditArray.removeAt(index);
+    }
   }
+  //
 
   ngOnInit(): void {
     this.loginToken = localStorage.getItem('loginToken');
     this.loadCategories();
     this.loadStatus();
     this.loadMaterials();
-    this.initForm();
+
 
     if (this.loginToken) {
       // console.log('Retrieved loginToken:', this.loginToken);
@@ -246,12 +291,12 @@ export class ProductManagementComponent implements OnInit {
   }
 
   onMaterialChange(event: Event, index: number) {
-    this.selectedValues[index] = Number((event.target as HTMLSelectElement).value);    // Gọi hàm để tải sub-materials dựa trên giá trị được chọn
-    const selectedMaterial = this.materials.find(material => material.materialId === this.selectedValues[index]);
+    this.selectedSubMaterialId[index] = Number((event.target as HTMLSelectElement).value);    // Gọi hàm để tải sub-materials dựa trên giá trị được chọn
+    const selectedMaterial = this.materials.find(material => material.materialId === this.selectedSubMaterialId[index]);
     this.materialType[index] = selectedMaterial ? selectedMaterial.type : '';
 
-    this.loadSubMaterials(this.selectedValues[index], index);
-    console.log('Selected MaterialId:', this.selectedValues[index], " selected index:" + index);
+    this.loadSubMaterials(this.selectedSubMaterialId[index], index);
+    // console.log('Selected MaterialId:', this.selectedSubMaterialId[index], " selected index:" + index);
   }
 
   loadSubMaterials(materialId: number, index: number): void {
@@ -267,8 +312,8 @@ export class ProductManagementComponent implements OnInit {
   }
 
   onSubMaterialChange(event: Event, index: number) {
-    this.selectedValues[index] = Number((event.target as HTMLSelectElement).value);
-    const selectedSubMaterial = this.subMaterials[index].find(subMaterial => subMaterial.subMaterialId === this.selectedValues[index]);
+    this.selectedSubMaterialId[index] = Number((event.target as HTMLSelectElement).value);
+    const selectedSubMaterial = this.subMaterials[index].find(subMaterial => subMaterial.subMaterialId === this.selectedSubMaterialId[index]);
     this.unitPriceSubMaterial[index] = selectedSubMaterial ? selectedSubMaterial.unitPrice : '';
     // console.log('Selected unitPriceSubMaterial: test', this.unitPriceSubMaterial);
   }
@@ -397,43 +442,47 @@ export class ProductManagementComponent implements OnInit {
         // console.log("productId la", this.editForm.value);
       });
 
+    this.populateFormWithData();
+
   }
 
 
-  initForm() {
-    this.productListService.getAllSubMaterialByMaterialIdProduct(1).subscribe({
-      next: (response) => {
-        console.log("Response result:", response.result);
+  // initForm() {
+  //   this.productListService.getAllSubMaterialByMaterialIdProduct(1).subscribe({
+  //     next: (response) => {
+  //       console.log("Response result:", response.result);
 
-        if (response && Array.isArray(response.result)) {
-          const itemFormGroups = response.result.map((item: SubMaterialItemOfProduct) => {
-            return this.fb.group({
-              subMaterialId: item.subMaterialId,
-              quantity: item.quantity,
-              unitPrice: item.unitPrice
+  //       if (response && Array.isArray(response.result)) {
+  //         const itemFormGroups = response.result.map((item: SubMaterialItemOfProduct) => {
+  //           return this.fb.group({
+  //             subMaterialId: item.subMaterialId,
+  //             quantity: item.quantity,
+  //             unitPrice: item.unitPrice
 
-              // Thêm các trường khác nếu cần
-            });
-          });
-          const formGroups = itemFormGroups.map((item: SubMaterialItemOfProduct) => {
-            return new FormGroup({
-              price: new FormControl(item.unitPrice),
-              materialType: new FormControl(item.subMaterialId),
-              quantity: new FormControl(item.quantity)
-            });
-          });
-          this.form = new FormGroup({
-            items: new FormArray(itemFormGroups)
-          });
-          console.log("form", this.form);
-          return true;
-        } else {
-          // Xử lý trường hợp response.result không tồn tại hoặc không phải là mảng
-          console.error('response.result không tồn tại hoặc không phải là một mảng');
-          return [];
-        }}
-      });
-  }
+  //             // Thêm các trường khác nếu cần
+  //           });
+  //         });
+  //         const formGroups = itemFormGroups.map((item: SubMaterialItemOfProduct) => {
+  //           return new FormGroup({
+  //             price: new FormControl(item.unitPrice),
+  //             materialType: new FormControl(item.subMaterialId),
+  //             quantity: new FormControl(item.quantity)
+  //           });
+  //         });
+  //         this.form = new FormGroup({
+  //           items: new FormArray(itemFormGroups)
+  //         });
+  //         console.log("form", this.form);
+  //         this.subMaterials = response.result;
+  //         return true;
+  //       } else {
+  //         // Xử lý trường hợp response.result không tồn tại hoặc không phải là mảng
+  //         console.error('response.result không tồn tại hoặc không phải là một mảng');
+  //         return [];
+  //       }
+  //     }
+  //   });
+  // }
 
 
   onFileSelected(event: any) {

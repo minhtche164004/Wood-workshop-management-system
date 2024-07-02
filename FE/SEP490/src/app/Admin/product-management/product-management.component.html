@@ -322,12 +322,12 @@
               <img id="blah" src="#" alt="image product" formControlName="image"/>
             </div>
           </div>
-          <!-- Mảng các vật liệu cần có trong product -->
+          <!-- Mảng các vật liệu cần có trong Edit product -->
           <hr>
           <label style="font-size: 16px;">Bảng ước tính nguyên vật liệu</label>
-          <form [formGroup]="form">
-            <div formArrayName="items">
-              <div *ngFor="let item of items.controls; let i = index" [formGroupName]="i" class="row mb-3">
+          <form [formGroup]="formSubMaterialPerProduct">
+            <div formArrayName="itemsEdit">
+              <div *ngFor="let item of itemsEditArray.controls; let i = index" [formGroupName]="i" class="row mb-3">
                 <!-- Thêm select cho materialId -->
                 <div class="col-md-2 mb-3">
                   <div class="form-group">
@@ -343,8 +343,8 @@
                 <div class="col-md-4 mb-3">
                   <div class="form-group">
                     <label for="subMaterialId-{{i}}">Vật liệu</label>
-                    <select id="subMaterialId-{{i}}" class="form-control" formControlName="subMaterialId"
-                      *ngIf="subMaterials[i]" (change)="onSubMaterialChange($event, i)">
+                    <select id="subMaterialId-{{i}}" class="form-control"  
+                      *ngIf="subMaterials[i]" (change)="onSubMaterialChange($event, i)" formControlName="subMaterialId">
                       <option *ngFor="let subMaterial of subMaterials[i]" [value]="subMaterial?.subMaterialId">{{
                         subMaterial?.subMaterialName
                         }}</option>
@@ -355,8 +355,8 @@
                 <div class="col-md-2 mb-2">
                   <div class="form-group">
                     <label for="price-{{i}}">Giá</label>
-                    <input id="price-{{i}}" class="form-control" formControlName="price" type="text"
-                      [value]="unitPriceSubMaterial[i]" readonly="">
+                    <input id="price-{{i}}" class="form-control" formControlName="unitPrice" type="text"
+                      [value]="unitPriceSubMaterial[i]" readonly="" >
                   </div>
                 </div>
                 <!-- Đơn vị vật liệu -->
@@ -364,7 +364,7 @@
                   <div class="form-group">
                     <label for="subMaterialId-{{i}}">Đơn vị</label>
                     <input id="price-{{i}}" class="form-control" formControlName="" type="text"
-                      [value]="materialType[i]" readonly="">
+                      [value]="materialType[i]" readonly="" formControlName="materialType">
                   </div>
                 </div>
                 <!-- Input cho số lượng -->

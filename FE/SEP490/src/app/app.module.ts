@@ -66,7 +66,13 @@ import { ReportManagementComponent } from './Admin/report-management/report-mana
 import { AdvancedBillManagementComponent } from './Admin/advanced-bill-management/advanced-bill-management.component';
 import { FeedbackDefectiveComponent } from './Admin/feedback-defective/feedback-defective.component';
 import { TotalSalaryComponent } from './Admin/total-salary/total-salary.component';
-import { WishlistComponent } from './wishlist/wishlist.component';
+
+
+import { WishlistComponent } from './features/wishlist/wishlist.component';
+import { TemplateComponent } from './features/template/template.component';
+import { HistoryOrderComponent } from './Admin/history-order/history-order.component';
+
+
 
 
 
@@ -125,6 +131,8 @@ import { WishlistComponent } from './wishlist/wishlist.component';
     FeedbackDefectiveComponent,
     TotalSalaryComponent,
     WishlistComponent,
+    TemplateComponent,
+    HistoryOrderComponent,
 
   ],
   imports: [

@@ -478,4 +478,15 @@ public class OrderServiceImpl implements OrderService {
         requestRepository.deleteById(requestId);
     }
 
+    @Override
+    public boolean checkOderDoneOrNot(int order_id) {
+        List<OrderDetailWithJobStatusDTO> results = orderDetailRepository.getAllOrderDetailByOrderId(order_id);
+        for (OrderDetailWithJobStatusDTO result : results) {
+            if (result.getStatus_job_id() != 13) {  //13 tức là sản phẩm của oderdetail đã hoàn thành
+                return false; // Ngay lập tức trả về false nếu tìm thấy job chưa hoàn thành
+            }
+        }
+        return true; // Chỉ trả về true nếu tất cả các job đều đã hoàn thành (status_id = 13)
+    }
+
 }

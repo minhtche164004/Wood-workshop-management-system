@@ -10,6 +10,7 @@ import com.example.demo.Entity.Status_Job;
 import com.example.demo.Entity.User;
 import com.example.demo.Repository.JobRepository;
 import com.example.demo.Repository.OrderDetailRepository;
+import com.example.demo.Repository.Status_Job_Repository;
 import com.example.demo.Response.ApiResponse;
 import com.example.demo.Service.JobService;
 import com.google.gson.Gson;
@@ -34,6 +35,9 @@ public class JobController {
     @Autowired
     private OrderDetailRepository orderDetailRepository;
     private static final JedisPooled jedis = RedisConfig.getRedisInstance();
+    @Autowired
+    private Status_Job_Repository status_Job_Repository;
+
     //màn hình quản lí tiến độ sản phẩm  request_product, filter cái request thì call đến api này
     @GetMapping("/getListProductRequestForJob")
     public ApiResponse<?> getListProductRequestForJob() {
@@ -242,6 +246,28 @@ public class JobController {
             jobsList = gson.fromJson(cachedData, type);
         } else {
             jobsList = jobService.filterJobWasDoneByEmployeeName(key);
+            String jsonData = gson.toJson(jobsList);
+            jedis.set(cacheKey, jsonData);
+            jedis.expire(cacheKey, 1200);
+        }
+        apiResponse.setResult(jobsList);
+        return apiResponse;
+    }
+
+    @GetMapping("/getAllStatusJob")
+    public ApiResponse<?> getAllStatusJob() {
+        ApiResponse<List> apiResponse = new ApiResponse<>();
+        String cacheKey = "all_job_was_done_by_Name_Code";
+        List<Status_Job> jobsList;
+        String cachedData = jedis.get(cacheKey);
+        Gson gson = new GsonBuilder().setDateFormat("MMM dd, yyyy").create();
+        if (cachedData != null) {
+            Type type = new TypeToken<List<Status_Job>>() {
+            }.getType();
+
+            jobsList = gson.fromJson(cachedData, type);
+        } else {
+            jobsList = status_Job_Repository.getAllStatus();
             String jsonData = gson.toJson(jobsList);
             jedis.set(cacheKey, jsonData);
             jedis.expire(cacheKey, 1200);

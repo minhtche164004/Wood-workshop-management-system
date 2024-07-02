@@ -68,5 +68,8 @@ public class Orders {
     @Column(name = "wards")
     private String wards;
 
+    @Column(name = "order_finish")
+    private Date orderFinish;
+
 
 }

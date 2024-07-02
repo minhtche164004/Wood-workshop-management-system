@@ -239,6 +239,11 @@ public class JobServiceImpl implements JobService {
         return jobsList;
     }
 
+    @Override
+    public List<Status_Job> getAllStatusJob() {
+        return statusJobRepository.getAllStatus();
+    }
+
 }
 
 //note : co ne de status cua thang product luc add no la chua thuc hien

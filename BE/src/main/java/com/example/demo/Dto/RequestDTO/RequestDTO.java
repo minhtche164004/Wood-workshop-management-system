@@ -19,8 +19,8 @@ public class RequestDTO {
 //    private Integer user_id;
     @NotNull(message = "MUST_REQUIRED")
     private Integer status_id;
-    @NotNull(message = "MUST_REQUIRED")
-    private Date requestDate;
+//    @NotNull(message = "MUST_REQUIRED")
+//    private Date requestDate;
 
     private String response;
     @NotNull(message = "MUST_REQUIRED")
@@ -32,4 +32,5 @@ public class RequestDTO {
     private String district;
     private String wards;
     private List<String> files;
+    private String email;
 }

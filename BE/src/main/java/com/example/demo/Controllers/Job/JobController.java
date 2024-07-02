@@ -4,12 +4,12 @@ import com.example.demo.Config.RedisConfig;
 import com.example.demo.Dto.JobDTO.JobDTO;
 import com.example.demo.Dto.JobDTO.JobDoneDTO;
 import com.example.demo.Dto.OrderDTO.JobProductDTO;
-import com.example.demo.Entity.Jobs;
-import com.example.demo.Entity.Products;
-import com.example.demo.Entity.Status_Job;
-import com.example.demo.Entity.User;
+import com.example.demo.Dto.ProductDTO.ProductErrorAllDTO;
+import com.example.demo.Dto.ProductDTO.ProductErrorDTO;
+import com.example.demo.Entity.*;
 import com.example.demo.Repository.JobRepository;
 import com.example.demo.Repository.OrderDetailRepository;
+import com.example.demo.Repository.ProcessproducterrorRepository;
 import com.example.demo.Repository.Status_Job_Repository;
 import com.example.demo.Response.ApiResponse;
 import com.example.demo.Service.JobService;
@@ -37,6 +37,8 @@ public class JobController {
     private static final JedisPooled jedis = RedisConfig.getRedisInstance();
     @Autowired
     private Status_Job_Repository status_Job_Repository;
+    @Autowired
+    private ProcessproducterrorRepository processproducterrorRepository;
 
     //màn hình quản lí tiến độ sản phẩm  request_product, filter cái request thì call đến api này
     @GetMapping("/getListProductRequestForJob")
@@ -273,6 +275,49 @@ public class JobController {
             jedis.expire(cacheKey, 1200);
         }
         apiResponse.setResult(jobsList);
+        return apiResponse;
+    }
+
+    @PostMapping("/CreateProductError")
+    public ApiResponse<?> CreateProductError(@RequestParam("job_id") int job_id, @RequestBody ProductErrorDTO productErrorDTO) {
+        ApiResponse<Processproducterror> apiResponse = new ApiResponse<>();
+        apiResponse.setResult(jobService.AddProductError(job_id,productErrorDTO));
+        return apiResponse;
+    }
+    @GetMapping("/getAllProductError")
+    public ApiResponse<?> getAllProductError() {
+        ApiResponse<List> apiResponse = new ApiResponse<>();
+        String cacheKey = "all_product_error";
+        List<ProductErrorAllDTO> jobsList;
+        String cachedData = jedis.get(cacheKey);
+        Gson gson = new GsonBuilder().setDateFormat("MMM dd, yyyy").create();
+        if (cachedData != null) {
+            Type type = new TypeToken<List<Processproducterror>>() {
+            }.getType();
+
+            jobsList = gson.fromJson(cachedData, type);
+        } else {
+            jobsList = jobService.getAllProductError();
+            String jsonData = gson.toJson(jobsList);
+            jedis.set(cacheKey, jsonData);
+            jedis.expire(cacheKey, 1200);
+        }
+        apiResponse.setResult(jobsList);
+        return apiResponse;
+    }
+
+    @DeleteMapping("/DeleteProductError")
+    public ApiResponse<?> DeleteProductError(@RequestParam("id") int id) {
+        ApiResponse<String> apiResponse = new ApiResponse<>();
+        processproducterrorRepository.delete(processproducterrorRepository.FindByIdProductErrorId(id));
+        apiResponse.setResult("Xoá sản phẩm khỏi danh sách sản phẩm lỗi thành công");
+        return apiResponse;
+    }
+
+    @GetMapping("/getAllProductErrorDetail")
+    public ApiResponse<?> getAllProductErrorDetail(@RequestParam("id") int id) {
+        ApiResponse<ProductErrorAllDTO> apiResponse = new ApiResponse<>();
+        apiResponse.setResult(jobService.getProductErrorDetailById(id));
         return apiResponse;
     }
 }

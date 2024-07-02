@@ -199,18 +199,18 @@ export class UserManagementComponent implements OnInit {
     } else {
       console.error('No loginToken found in localStorage.');
     }
-    this.addAccountForm.get('city')?.valueChanges.subscribe(provinceName => {
-      const selectedProvince = this.provinces.find(province => province.name === provinceName);
-      this.districts = selectedProvince ? selectedProvince.districts : [];
-      this.addAccountForm.get('district')?.reset();
-      this.addAccountForm.get('wards')?.reset();
-    });
+    // this.addAccountForm.get('city')?.valueChanges.subscribe(provinceName => {
+    //   const selectedProvince = this.provinces.find(province => province.name === provinceName);
+    //   this.districts = selectedProvince ? selectedProvince.districts : [];
+    //   this.addAccountForm.get('district')?.reset();
+    //   this.addAccountForm.get('wards')?.reset();
+    // });
 
-    this.addAccountForm.get('district')?.valueChanges.subscribe(districtName => {
-      const selectedDistrict = this.districts.find(district => district.name === districtName);
-      this.wards = selectedDistrict ? selectedDistrict.wards : [];
-      this.addAccountForm.get('wards')?.reset();
-    });
+    // this.addAccountForm.get('district')?.valueChanges.subscribe(districtName => {
+    //   const selectedDistrict = this.districts.find(district => district.name === districtName);
+    //   this.wards = selectedDistrict ? selectedDistrict.wards : [];
+    //   this.addAccountForm.get('wards')?.reset();
+    // });
 
     // khi load trang cai nay` no ghi de` vao` gia tri user nen bi loi~
     this.editUserForm.get('city_province')?.valueChanges.subscribe(provinceName => {
@@ -396,6 +396,8 @@ export class UserManagementComponent implements OnInit {
     this.authenListService.getUserById(user_id).subscribe(
       (data) => {
         this.userData = data.result;
+        this.selectedRole = this.role.find(role => role.roleName === this.userData.role_name)?.roleId;
+        this.selectedPosition = this.position.find(position => position.position_name === this.userData.position_name)?.position_id;
         console.log("User data:", data)
         console.log("User data:", this.userData.role_name)
       },
@@ -403,7 +405,6 @@ export class UserManagementComponent implements OnInit {
         console.error('Error fetching user data:', error);
       }
     );
-
 
   }
   onProvinceChange() {

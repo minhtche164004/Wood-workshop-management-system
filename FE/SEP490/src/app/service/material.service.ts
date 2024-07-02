@@ -47,7 +47,7 @@ export class MaterialService {
       catchError(this.handleError)
     );
   }
-  private api_searchSubMaterial = `http://localhost:8080/api/auth/submaterial/search`;
+  private api_searchSubMaterial = `${environment.apiUrl}api/auth/submaterial/search`;
   searchSubMaterial(searchKey: string): Observable<any> {
     return this.http.get<any>(`${this.api_searchSubMaterial}?q=${searchKey}`).pipe(
       catchError(this.handleError)

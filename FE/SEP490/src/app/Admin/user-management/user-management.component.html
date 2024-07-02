@@ -300,7 +300,7 @@
               <select [(ngModel)]="selectedRole" [(ngModel)]="userData.role_name" formControlName="role"
                 class="form-control form-control-lg" id="role" (change)="onRoleChangeUpdate()">
                 <option [ngValue]="null" disabled selected>Chọn Vai Trò</option>
-                <option *ngFor="let rol of role" [ngValue]="rol.roleName">
+                <option *ngFor="let rol of role" [ngValue]="rol.roleId">
                   {{ rol.roleName }}
                 </option>
               </select>
@@ -312,7 +312,7 @@
                 <select  [(ngModel)]="selectedPosition" [(ngModel)]="userData.position_name" formControlName="position"
                   class="form-control form-control-lg" id="position">
                   <option [ngValue]="null" disabled selected>Chọn Vị Trí</option>
-                  <option *ngFor="let pos of position" [ngValue]="pos.position_name">
+                  <option *ngFor="let pos of position" [ngValue]="pos.position_id">
                     {{ pos.position_name }}
                   </option>
                 </select>

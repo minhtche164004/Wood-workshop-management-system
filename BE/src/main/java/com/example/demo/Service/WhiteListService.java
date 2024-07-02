@@ -9,5 +9,5 @@ import java.util.List;
 public interface WhiteListService {
     WishList AddWhiteList(int product_id);
     void DeleteWhiteList(int id);
-    List<WishList> ViewWhiteList(int user_id);
+    List<WishList> ViewWhiteList();
 }

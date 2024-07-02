@@ -50,10 +50,10 @@ public class UploadImageServiceImpl implements UploadImageService {
     CloudinaryService cloudinaryService;
 
 
-    @Value("${upload.file.path}")
-    private String uploadPath;
-    @Value("${upload.file.extension}")
-    private String fileExtension;
+//    @Value("${upload.file.path}")
+//    private String uploadPath;
+//    @Value("${upload.file.extension}")
+//    private String fileExtension;
     private static final Logger logger = LoggerFactory.getLogger(UploadImageServiceImpl.class); // Sử dụng SLF4J Logger
 
 
@@ -88,28 +88,31 @@ public List<ProductImageDTO> uploadFileRequestProduct(MultipartFile[] multipartF
                             if (!allowedExtensions.contains(fileExtension.toLowerCase())) {
                                 throw new AppException(ErrorCode.IMAGE_INVALID);
                             }
+                            // Tải ảnh lên Cloudinary
+                            Map result = cloudinaryService.upload(file, "product_images");
+                            String cloudinaryUrl = (String) result.get("url"); // Lấy URL từ kết quả trả về
 
-                            // Đọc nội dung tệp tin thành mảng byte
-                            byte[] bytes = file.getBytes();
-
-                            // Tạo tên tệp mới để tránh trùng lặp
-                            var fileNameUpload = FilenameUtils.removeExtension(filename) + "_" + Calendar.getInstance().getTimeInMillis() + "." + fileExtension;
-
-                            // Ghi tệp tin vào thư mục upload với tên tệp mới
-
-                            String projectDir = Paths.get("").toAbsolutePath().toString().replace("\\", "/");
-                            Path projectDirPath = Paths.get(projectDir);
-                            Path parentDir = projectDirPath.getParent(); // Lấy thư mục cha
-                            String desiredPath = parentDir.toString(); // Chuyển đổi thành chuỗi
-                            String absoluteUploadPath = desiredPath + uploadPath;
-                            Path filePath = Paths.get(absoluteUploadPath, fileNameUpload);
-                            Files.write(filePath, bytes);
+//                            // Đọc nội dung tệp tin thành mảng byte
+//                            byte[] bytes = file.getBytes();
+//
+//                            // Tạo tên tệp mới để tránh trùng lặp
+//                            var fileNameUpload = FilenameUtils.removeExtension(filename) + "_" + Calendar.getInstance().getTimeInMillis() + "." + fileExtension;
+//
+//                            // Ghi tệp tin vào thư mục upload với tên tệp mới
+//
+//                            String projectDir = Paths.get("").toAbsolutePath().toString().replace("\\", "/");
+//                            Path projectDirPath = Paths.get(projectDir);
+//                            Path parentDir = projectDirPath.getParent(); // Lấy thư mục cha
+//                            String desiredPath = parentDir.toString(); // Chuyển đổi thành chuỗi
+//                            String absoluteUploadPath = desiredPath + uploadPath;
+//                            Path filePath = Paths.get(absoluteUploadPath, fileNameUpload);
+//                            Files.write(filePath, bytes);
                             // Tạo đối tượng Productimages để lưu thông tin ảnh vào cơ sở dữ liệu
                             Product_Requestimages fileUpload = new Product_Requestimages();
-                            fileUpload.setImage_name(fileNameUpload); // Tên tệp mới
+                            fileUpload.setImage_name(filename); // Tên tệp mới
                             fileUpload.setFileOriginalName(FilenameUtils.removeExtension(filename)); // Tên tệp gốc (không có phần mở rộng)
                             fileUpload.setExtension_name(fileExtension); // Phần mở rộng tệp tin
-                            fileUpload.setFullPath(uploadPath + fileNameUpload); // Đường dẫn đầy đủ đến tệp tin đã upload
+                            fileUpload.setFullPath(cloudinaryUrl); // Đường dẫn đầy đủ đến tệp tin đã upload
                             fileUpload.setRequestProducts(requestProducts); // Liên kết ảnh với sản phẩm
 
                             // Thêm đối tượng Productimages vào danh sách
@@ -177,27 +180,30 @@ public List<ProductImageDTO> uploadFileRequestProduct(MultipartFile[] multipartF
                                     throw new AppException(ErrorCode.IMAGE_INVALID);
                                 }
 
-                                // Đọc nội dung tệp tin thành mảng byte
-                                byte[] bytes = file.getBytes();
-
-                                // Tạo tên tệp mới để tránh trùng lặp
-                                var fileNameUpload = FilenameUtils.removeExtension(filename) + "_" + Calendar.getInstance().getTimeInMillis() + "." + fileExtension;
-
-                                // Ghi tệp tin vào thư mục upload với tên tệp mới
-                                String projectDir = Paths.get("").toAbsolutePath().toString().replace("\\", "/");
-                                Path projectDirPath = Paths.get(projectDir);
-                                Path parentDir = projectDirPath.getParent(); // Lấy thư mục cha
-                                String desiredPath = parentDir.toString(); // Chuyển đổi thành chuỗi
-                                String absoluteUploadPath = desiredPath + uploadPath;
-                                Path filePath = Paths.get(absoluteUploadPath, fileNameUpload);
-                                Files.write(filePath, bytes);
+                                // Tải ảnh lên Cloudinary
+                                Map result = cloudinaryService.upload(file, "product_images");
+                                String cloudinaryUrl = (String) result.get("url"); // Lấy URL từ kết quả trả về
+//                                // Đọc nội dung tệp tin thành mảng byte
+//                                byte[] bytes = file.getBytes();
+//
+//                                // Tạo tên tệp mới để tránh trùng lặp
+//                                var fileNameUpload = FilenameUtils.removeExtension(filename) + "_" + Calendar.getInstance().getTimeInMillis() + "." + fileExtension;
+//
+//                                // Ghi tệp tin vào thư mục upload với tên tệp mới
+//                                String projectDir = Paths.get("").toAbsolutePath().toString().replace("\\", "/");
+//                                Path projectDirPath = Paths.get(projectDir);
+//                                Path parentDir = projectDirPath.getParent(); // Lấy thư mục cha
+//                                String desiredPath = parentDir.toString(); // Chuyển đổi thành chuỗi
+//                                String absoluteUploadPath = desiredPath + uploadPath;
+//                                Path filePath = Paths.get(absoluteUploadPath, fileNameUpload);
+//                                Files.write(filePath, bytes);
 
                                 // Tạo đối tượng Requestimages để lưu thông tin ảnh vào cơ sở dữ liệu
                                 Requestimages fileUpload = new Requestimages();
-                                fileUpload.setImage_name(fileNameUpload);
+                                fileUpload.setImage_name(filename);
                                 fileUpload.setFileOriginalName(FilenameUtils.removeExtension(filename));
                                 fileUpload.setExtension_name(fileExtension);
-                                fileUpload.setFullPath(uploadPath + fileNameUpload);
+                                fileUpload.setFullPath(cloudinaryUrl);
                                 fileUpload.setRequests(request); // Liên kết ảnh với request
 
                                 // Thêm đối tượng Requestimages vào danh sách

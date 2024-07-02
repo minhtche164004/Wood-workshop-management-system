@@ -20,11 +20,13 @@ export class JobManagementComponent implements OnInit {
   positionEmployees: any[] = [];
   type : any = {}
   statusType: any[] = [];
+  statusOptions: any[] = [];
   constructor(private jobService: JobService, private toastr: ToastrService) { }
 
   ngOnInit(): void {
     this.loadProductRQForJob();
-    this.createNewJob();
+    this.loadStatusByType();
+
   }
   createNewJob() {
     const user_id = 1; // Thay đổi giá trị tùy theo người dùng
@@ -51,13 +53,13 @@ export class JobManagementComponent implements OnInit {
       }
     );
   }
-  loadStatusByType(type: number) {
-    console.log('Status Type:', type);
-    this.jobService.getStatusByType(type).subscribe(
+  loadStatusByType() {
+
+    this.jobService.getStatusByType().subscribe(
       (data) => {
         if(data.code === 1000) {
           this.statusType = data.result;
-          console.log('Status Type:', data.result);
+          console.log('Status Job Type:', data.result);
         }
         console.log('Data:', data);
       },
@@ -66,7 +68,26 @@ export class JobManagementComponent implements OnInit {
       }
     );
   }
+  isButtonDisabled(): boolean {
+    const selectedStatusId = this.selectedStatus; // Assuming selectedStatus is bound to ngModel
+    if (selectedStatusId === 10 || selectedStatusId === 7 || selectedStatusId === 4) {
+        return true; // Disable the button
+    }
+    return false; // Enable the button
+}
 
+  getStatusOptions(product: any) {
+    console.log('Product:', product);
+    this.jobService.getStatusJobByType(product.statusJob.type).subscribe(
+      (data) => {
+        console.log('Status Job:', data);
+        this.statusOptions = data; // Store the fetched data in the component property
+      },
+      (error) => {
+        console.error('Error fetching data:', error);
+      }
+    );
+  }
   loadProductRQForJob() {
     this.jobService.getListProductRQ().subscribe(
       (data) => {
@@ -104,10 +125,11 @@ export class JobManagementComponent implements OnInit {
   }
 
   manageJob(product: any): void {
-    this.loadProductRQForJob();
+  
     this.selectedProduct = { ...product }; // Lưu trữ dữ liệu sản phẩm vào biến selectedProduct
     console.log("Sản phẩm được chọn để giao việc:", this.selectedProduct);
     console.log("Type:", this.selectedProduct.statusJob.type);
+    console.log("employee: ", this.selectedProduct.user_name)
     if (this.selectedProduct) {
       // Kiểm tra giá trị của type và gọi các hàm tương ứng
       
@@ -118,21 +140,30 @@ export class JobManagementComponent implements OnInit {
 
   }
 
-  assignJob(): void {
-    console.log('Giao việc cho sản phẩm:', this.selectedProduct);
+  addNewJob() {
+    const user_id = 3; // Replace with actual user_id
+    const p_id = 3; // Replace with actual p_id
+    const status_id = 3; // Replace with actual status_id
+    const job_id = 3; // Replace with actual job_id
+    const jobData = {
+      job_name: 'string',
+      quantity_product: 0,
+      description: 'string',
+      finish: '2024-07-02T16:11:04.300Z',
+      start: '2024-07-02T16:11:04.300Z',
+      cost: 0
+    };
 
-    // Thực hiện gọi API hoặc các hành động khác để lưu thông tin công việc
-    // this.jobService.assignJob(this.selectedProduct).subscribe(
-    //   (response) => {
-    //     console.log('Kết quả giao việc:', response);
-    //     this.toastr.success('Giao việc thành công!', 'Thành công');
-    //     // Bạn có thể thực hiện thêm các hành động khác như làm mới danh sách sản phẩm
-    //   },
-    //   (error) => {
-    //     console.error('Error assigning job:', error);
-    //     this.toastr.error('Giao việc thất bại!', 'Lỗi');
-    //   }
-    // );
+    this.jobService.addJob(user_id, p_id, status_id, job_id, jobData).subscribe(
+      (response) => {
+        console.log('Thêm công việc thành công:', response);
+        // Xử lý logic sau khi thêm công việc thành công
+      },
+      (error) => {
+        console.error('Lỗi khi thêm công việc:', error);
+        // Xử lý lỗi khi thêm công việc
+      }
+    );
   }
 
  

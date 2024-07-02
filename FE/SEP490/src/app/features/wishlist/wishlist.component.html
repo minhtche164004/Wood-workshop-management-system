@@ -8,7 +8,7 @@
     <style>
         .product-container {
             display: grid;
-            grid-template-columns: repeat(4, 1fr);
+            grid-template-columns: repeat(3, 1fr);
             grid-gap: 40px;
         }
 
@@ -85,7 +85,7 @@
             class="fas fa-heart"></i></h1>
     <div class="product-container">
         
-
+<!-- 
           <div *ngIf="wishlistItems.length > 0" class="product">
             <div *ngFor="let item of wishlistItems">
               <img src="https://mcdn.coolmate.me/image/March2023/thay-ong-noi-meme-1440_204.jpg" alt="Sản phẩm 1">
@@ -100,85 +100,20 @@
           </div>
           <div *ngIf="wishlistItems.length === 0">
             <p>No items found in wishlist.</p>
-          </div>
+          </div> -->
           
-        <div class="product">
+        <div *ngFor="let item of wishlistItems" class="product">
             <img src="https://mcdn.coolmate.me/image/March2023/thay-ong-noi-meme-1440_204.jpg" alt="Sản phẩm 2">
-            <h3>Sản phẩm 2</h3>
-            <p>Mô tả sản phẩm 2</p>
-            <p>Giá Tiền</p>
+            <h3>{{ item.product.productName }}</h3>
+            <p>{{ item.product.description }}</p>
+            <p>{{ item.product.price | number: '1.0-3'}}</p>
             <div class="actions">
                 <button class="delete-btn">
                     <i class="fas fa-trash-alt"></i>
                 </button>
             </div>
         </div>
-        <div class="product">
-            <img src="https://mcdn.coolmate.me/image/March2023/thay-ong-noi-meme-1440_204.jpg" alt="Sản phẩm 3">
-            <h3>Sản phẩm 3</h3>
-            <p>Mô tả sản phẩm 3</p>
-            <p>Giá Tiền</p>
-            <div class="actions">
-                <button class="delete-btn">
-                    <i class="fas fa-trash-alt"></i>
-                </button>
-            </div>
-        </div>
-        <div class="product">
-            <img src="https://mcdn.coolmate.me/image/March2023/thay-ong-noi-meme-1440_204.jpg" alt="Sản phẩm 4">
-            <h3>Sản phẩm 4</h3>
-            <p>Mô tả sản phẩm 4</p>
-            <p>Giá Tiền</p>
-            <div class="actions">
-                <button class="delete-btn">
-                    <i class="fas fa-trash-alt"></i>
-                </button>
-            </div>
-        </div>
-        <div class="product">
-            <img src="https://mcdn.coolmate.me/image/March2023/thay-ong-noi-meme-1440_204.jpg" alt="Sản phẩm 3">
-            <h3>Sản phẩm 3</h3>
-            <p>Mô tả sản phẩm 3</p>
-            <p>Giá Tiền</p>
-            <div class="actions">
-                <button class="delete-btn">
-                    <i class="fas fa-trash-alt"></i>
-                </button>
-            </div>
-        </div>
-        <div class="product">
-            <img src="https://mcdn.coolmate.me/image/March2023/thay-ong-noi-meme-1440_204.jpg" alt="Sản phẩm 4">
-            <h3>Sản phẩm 4</h3>
-            <p>Mô tả sản phẩm 4</p>
-            <p>Giá Tiền</p>
-            <div class="actions">
-                <button class="delete-btn">
-                    <i class="fas fa-trash-alt"></i>
-                </button>
-            </div>
-        </div>
-        <div class="product">
-            <img src="https://mcdn.coolmate.me/image/March2023/thay-ong-noi-meme-1440_204.jpg" alt="Sản phẩm 3">
-            <h3>Sản phẩm 3</h3>
-            <p>Mô tả sản phẩm 3</p>
-            <p>Giá Tiền</p>
-            <div class="actions"> 
-                <button class="delete-btn">
-                    <i class="fas fa-trash-alt"></i>
-                </button>
-            </div>
-        </div>
-        <div class="product">
-            <img src="https://mcdn.coolmate.me/image/March2023/thay-ong-noi-meme-1440_204.jpg" alt="Sản phẩm 4">
-            <h3>Sản phẩm 4</h3>
-            <p>Mô tả sản phẩm 4</p>
-            <p>Giá Tiền</p>
-            <div class="actions">
-                <button class="delete-btn">
-                    <i class="fas fa-trash-alt"></i>
-                </button>
-            </div>
-        </div>
+        
     </div>
     <div class="pagination">
         <a href="#" class="active">1</a>

@@ -76,10 +76,10 @@ public class OrderController {
         apiResponse.setResult(whiteListService.AddWhiteList(product_id));
         return apiResponse;
     }
-    @GetMapping("/GetWhiteListByUserID")
-    public ApiResponse<?> GetWhiteListByUserID(@RequestParam("user_id") int user_id) {
+    @GetMapping("/GetWhiteListByUser")
+    public ApiResponse<?> GetWhiteListByUser() {
         ApiResponse<List> apiResponse = new ApiResponse<>();
-        apiResponse.setResult(whiteListService.ViewWhiteList(user_id));
+        apiResponse.setResult(whiteListService.ViewWhiteList());
         return apiResponse;
     }
     @DeleteMapping("/DeleteWhiteList")

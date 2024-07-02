@@ -60,8 +60,17 @@ import { AboutUsComponent } from './about-us/about-us.component';
 import { ContactComponent } from './contact/contact.component';
 import { EmployeeJobComponent } from './employee-job/employee-job.component';
 import { SubSubmaterialProductComponent } from './sub-submaterial-product/sub-submaterial-product.component';
+import { BillComponent } from './bill/bill.component';
+import { MaterialManagementComponent } from './Admin/material-management/material-management.component';
+import { ReportManagementComponent } from './Admin/report-management/report-management.component';
+import { AdvancedBillManagementComponent } from './Admin/advanced-bill-management/advanced-bill-management.component';
+import { FeedbackDefectiveComponent } from './Admin/feedback-defective/feedback-defective.component';
+import { TotalSalaryComponent } from './Admin/total-salary/total-salary.component';
+
 import { WishlistComponent } from './features/wishlist/wishlist.component';
 import { TemplateComponent } from './features/template/template.component';
+import { HistoryOrderComponent } from './Admin/history-order/history-order.component';
+
 
 
 
@@ -119,8 +128,17 @@ import { TemplateComponent } from './features/template/template.component';
     ContactComponent,
     EmployeeJobComponent,
     SubSubmaterialProductComponent,
+
+    BillComponent,
+    MaterialManagementComponent,
+    ReportManagementComponent,
+    AdvancedBillManagementComponent,
+    FeedbackDefectiveComponent,
+    TotalSalaryComponent,
+
     WishlistComponent,
     TemplateComponent,
+    HistoryOrderComponent,
 
     
 

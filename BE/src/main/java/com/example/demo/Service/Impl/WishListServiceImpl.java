@@ -46,8 +46,12 @@ public class WishListServiceImpl implements WhiteListService {
     }
 
     @Override
-    public List<WishList> ViewWhiteList(int user_id){
-    List<WishList> wishLists = wishListRepository.findByUserID(user_id);
+    public List<WishList> ViewWhiteList(){
+        UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        String username = userDetails.getUsername();
+        Optional<User> userOptional = userRepository.findByUsername(username);
+        User user = userOptional.orElseThrow(() -> new AppException(ErrorCode.NOT_FOUND));
+    List<WishList> wishLists = wishListRepository.findByUserID(user.getUserId());
     if(wishLists.size() ==0){
         throw new AppException(ErrorCode.NOT_FOUND);
         }

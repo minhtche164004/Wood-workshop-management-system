@@ -386,7 +386,7 @@ export class UserManagementComponent implements OnInit {
     //     this.editUserForm.patchValue({ wards: user.wards });  // Set initial ward (if necessary)
     //   }
     // }
-    this.editUserForm.get('city')?.setValue(user.city_province); // Set initial values for dropdowns
+    this.editUserForm.get('city_province')?.setValue(user.city_province); // Set initial values for dropdowns
     this.editUserForm.get('district')?.setValue(user.district);
     this.editUserForm.get('wards')?.setValue(user.wards);
 

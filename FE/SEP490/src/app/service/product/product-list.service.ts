@@ -33,6 +33,11 @@ export class ProductListService {
   private apiUrl_UpdateProduct = `${environment.apiUrl}api/auth/product/AddNewProduct`;
 
   private apiUrl_GetAllStatus = `${environment.apiUrl}api/auth/admin/GetStatusUser`;
+
+
+
+  
+  private apiUrl_AddProductRequired = `${environment.apiUrl}api/auth/order/AddNewRequest`;
   
 
   constructor(private http: HttpClient) { }
@@ -45,6 +50,17 @@ export class ProductListService {
     });
 
     return this.http.post(this.apiUrl_AddProduct, formData, {
+      headers: {
+        'Accept': 'application/json'
+      }
+    });
+  }
+
+  uploadProductRequired(productRequiredData: any, thumbnail: File): Observable<any> {
+    const formData = new FormData();
+    formData.append('productDTO', new Blob([JSON.stringify(productRequiredData)], { type: 'application/json' }));
+    formData.append('file_thumbnail', thumbnail, thumbnail.name);
+    return this.http.post(this.apiUrl_AddProductRequired, formData, {
       headers: {
         'Accept': 'application/json'
       }

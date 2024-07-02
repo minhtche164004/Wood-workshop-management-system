@@ -21,10 +21,13 @@ public class JobProductDTO {
 //    private int status_id;
     private Status_Job statusJob;
     private int quantity;
-    private User user;
+    private int user_id;
+    private String user_name;
+    private int position_id;
+    private String position_name;
 
 
-    public JobProductDTO(String code, int product_id, String product_name, String description, BigDecimal price, Status_Job statusJob, int quantity, User user) {
+    public JobProductDTO(String code, int product_id, String product_name, String description, BigDecimal price, Status_Job statusJob, int quantity, int user_id, String user_name, int position_id, String position_name) {
         this.code = code;
         this.product_id = product_id;
         this.product_name = product_name;
@@ -32,7 +35,9 @@ public class JobProductDTO {
         this.price = price;
         this.statusJob = statusJob;
         this.quantity = quantity;
-        this.user = user;
+        this.user_id = user_id;
+        this.user_name = user_name;
+        this.position_id = position_id;
+        this.position_name = position_name;
     }
-
 }

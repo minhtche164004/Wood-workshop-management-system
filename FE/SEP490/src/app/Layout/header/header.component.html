@@ -74,6 +74,8 @@
                       <ng-template #loggedInLinks>
                         <a routerLink="/profile">Thông tin cá nhân</a>
                         <a routerLink="/forgot">Đổi mật khẩu</a>
+                        <a routerLink="/history_order">Lịch sử đơn hàng</a>
+                        
                         <a (click)="onLogout()">Đăng xuất</a>
                       </ng-template>
                     </div>
@@ -94,10 +96,12 @@
         <div class="row">
             <div class="col-12 d-flex justify-content-center">
                 <form class="d-flex search-bar" (ngSubmit)="onSearch()">
-                    <input class="form-control me-2 search-input" type="search" placeholder="Tìm kiếm sản phẩm ..." aria-label="Search" [(ngModel)]="searchKey" name="searchKey"
+                    <input class="form-control me-2 search-input" style="height: 46px;" type="search" placeholder="Tìm kiếm sản phẩm ..." aria-label="Search" [(ngModel)]="searchKey" name="searchKey"
                         aria-label="Search">
-                    <button class="btn search-button" type="submit"><i
-                            class="fa-solid fa-magnifying-glass"></i></button>
+                        <button class="btn search-button"  type="submit">
+                            <i class="fa-solid fa-magnifying-glass" ></i>
+                          </button>
+                          
                 </form>
             </div>
         </div>

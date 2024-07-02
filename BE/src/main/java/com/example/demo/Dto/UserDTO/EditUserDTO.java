@@ -20,15 +20,15 @@ public class EditUserDTO {
     private String address;
     @NotNull(message = "MUST_REQUIRED")
     private String fullname;
-//    @NotNull(message = "MUST_REQUIRED")
+    //    @NotNull(message = "MUST_REQUIRED")
     private Integer status_id;
     @NotNull(message = "MUST_REQUIRED")
     private Integer position_id;
 
 
-//    @NotNull(message = "MUST_REQUIRED")
+    //    @NotNull(message = "MUST_REQUIRED")
 //    private String role_name;
-@NotNull(message = "MUST_REQUIRED")
+    @NotNull(message = "MUST_REQUIRED")
     private Integer role_id;
 
 

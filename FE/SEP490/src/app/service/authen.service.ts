@@ -12,7 +12,8 @@ export class AuthenListService {
   private apiUrl_ChangePass = `${environment.apiUrl}api/auth/user/ChangePass`;
   private apiUrl_GetById = `${environment.apiUrl}api/auth/admin/GetById`;
   private apiUrl_EditUser = `${environment.apiUrl}api/auth/admin/EditUser`;
-  private apiUrl_GetByIdWishList = `${environment.apiUrl}api/auth/order/GetWhiteListByUserID`;
+  private apiUrl_GetByIdWishList = `${environment.apiUrl}api/auth/order/GetWhiteListByUser`;
+  private apiUrl_GetHistoryOrderCustomer = `${environment.apiUrl}api/auth/order/historyOrder`;
   constructor(private http: HttpClient) { }
   isLoggedIn(): boolean {
     const token = localStorage.getItem('loginToken');
@@ -26,19 +27,44 @@ export class AuthenListService {
       catchError(this.handleError)
     );
   }
-  GetByIdWishList(user_id: string): Observable<any> {
+
+  getHistoryOrderCustomer(): Observable<any> {
     const token = localStorage.getItem('loginToken');
+
     if (!token) {
       return throwError(new Error('Login token not found in localStorage.'));
     }
+
     const headers = new HttpHeaders({
       'Authorization': `Bearer ${token}`
     });
-    const url = `${this.apiUrl_GetByIdWishList}?user_id=${user_id}`;
-    return this.http.get<any>(url, { headers }).pipe(
+
+    console.log("Authorization header:", headers.get('Authorization'));
+
+    return this.http.get<any>(this.apiUrl_GetHistoryOrderCustomer, { headers }).pipe(
       catchError(this.handleError)
     );
   }
+
+
+  GetByIdWishList(): Observable<any> {
+    const token = localStorage.getItem('loginToken');
+
+    if (!token) {
+      return throwError(new Error('Login token not found in localStorage.'));
+    }
+
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${token}`
+    });
+
+    console.log("Authorization header:", headers.get('Authorization'));
+
+    return this.http.get<any>(this.apiUrl_GetByIdWishList, { headers }).pipe(
+      catchError(this.handleError)
+    );
+  }
+    
   editUserById(user_id: string, userData: any): Observable<any> {
     const token = localStorage.getItem('loginToken');
     if (!token) {

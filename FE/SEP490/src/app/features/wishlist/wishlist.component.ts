@@ -13,10 +13,11 @@ export class WishlistComponent {
   }
 
   loadWishlist() {
-    const user_id = '50'; // Thay thế bằng user_id thích hợp của bạn
-    this.authenListService.GetByIdWishList(user_id).subscribe(
+    // Thay thế bằng user_id thích hợp của bạn
+    this.authenListService.GetByIdWishList().subscribe(
       (data) => {
         this.wishlistItems = data.result; // Lưu trữ dữ liệu nhận được từ API vào biến wishlistItems
+        console.log("Data WishList: " ,data)
       },
       (error) => {
         console.error('Failed to fetch wishlist:', error);

@@ -74,12 +74,14 @@
                       </a>
                     </td>
                     <td>{{ us?.orderDate | date:'dd/MM/yyyy' }}</td>
-                    <td>{{ us?.userInfor.fullname }}</td>
-                   
-                    <td>{{ us?.status.status_name }}</td>
+
+                    <td>{{ us?.status.status_name}}</td>                  
+                    <td [ngStyle]="{'color': us?.paymentMethod === 1 ? 'green' : (us?.paymentMethod === 0 ? 'red' : 'black')}">
+                      {{ us?.paymentMethod === 1 ? 'ONLINE' : (us?.paymentMethod === 0 ? 'OFFLINE' : '') }}
+                    </td>                              
+
+
                     <td>{{ us?.totalAmount | number : '1.0-3' }}</td>
-
-
                   </tr>
                 </tbody>
               </table>
@@ -103,8 +105,6 @@
       </div>
     </div>
   </div>
-
-
   <!-- Modal for Adding User -->
   <div class="modal fade" id="addProductModal" tabindex="-1" role="dialog" aria-labelledby="addProductModalLabel"
     aria-hidden="true">

@@ -1,12 +1,5 @@
 
-.dashboard-main {
-    color: #566787;
-    background: #f5f5f5;
-    font-family: 'Varela Round', sans-serif;
-    font-size: 13px;
-    padding: 5px 20px; // thêm khoảng cách cho responsive
-    margin-left: 17%;
-  }
+
   .table-container {
     overflow-x: auto;
   }
@@ -37,7 +30,7 @@
   
   .table-title {
     padding-bottom: 15px;
-    background: #299be4;
+    background: #C89551;
     color: #fff;
     padding: 16px 30px;
     margin: -20px -25px 10px;
@@ -80,6 +73,7 @@
     border-color: #e9e9e9;
     padding: 12px 15px;
     vertical-align: middle;
+    font-size: 16px;
   }
   
   table.table tr th:first-child {
@@ -118,11 +112,11 @@
   }
   
   table.table td a:hover {
-    color: #2196F3;
+    color: #C89551;
   }
   
   table.table td a.settings {
-    color: #2196F3;
+    color: #C89551;
   }
   
   table.table td a.delete {
@@ -186,11 +180,11 @@
   }	
   
   .pagination li.active a, .pagination li.active a.page-link {
-    background: #03A9F4;
+    background: #C89551;
   }
   
   .pagination li.active a:hover {        
-    background: #0397d6;
+    background: #C89551;
   }
   
   .pagination li.disabled i {
@@ -277,7 +271,7 @@
   }
   
   .table td {
-    max-width: 100px; /* Adjust this value as needed */
+    max-width: 300px; /* Adjust this value as needed */
   }
   
   .action-buttons a {
@@ -328,7 +322,7 @@
     border: 1px solid #ced4da;
     border-radius: 5px;
     background-color: #e3f2fd;
-    color: #0d6efd;
+    color: #C89551;
   }
   
   .table-title .input-group {
@@ -347,7 +341,7 @@
   .custom-avatar {
     border-radius: 50%;
     padding: 10px;
-    background-color: #007bff; /* màu xanh */
+    background-color: #C89551; /* màu xanh */
     width: 20px; /* điều chỉnh kích thước theo ý muốn */
     height: 20px; /* điều chỉnh kích thước theo ý muốn */
   }
@@ -359,4 +353,15 @@
     color: red;
   }
   
+  
+
+  .custom-modal-dialog {
+    max-width: 200%; /* Adjust the width as needed */
+  }
+  
+  .custom-modal-content {
+    min-height: 500vh; /* Adjust the height as needed */
+    max-height: 500vh; /* Prevent the modal from being too tall */
+    overflow-y: auto; /* Add scroll if content overflows */
+  }
   

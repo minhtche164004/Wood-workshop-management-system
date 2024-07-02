@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Đặt Hàng Theo Yêu Cầu</title>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+  <style>
+    body {
+      background-image: linear-gradient(to right, #141e30, #243b55);
+      color: #fff;
+    }
+    .form-control {
+      background-color: rgba(255, 255, 255, 0.1);
+      border-color: rgba(255, 255, 255, 0.2);
+      color: #fff;
+    }
+    .form-control:focus {
+      background-color: rgba(255, 255, 255, 0.2);
+      border-color: rgba(255, 255, 255, 0.4);
+      box-shadow: 0 0 0 0.2rem rgba(255, 255, 255, 0.25);
+    }
+    .btn-success {
+      background-color: #28a745;
+      border-color: #28a745;
+    }
+    .btn-danger {
+      background-color: #dc3545;
+      border-color: #dc3545;
+    }
+    .btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+    .custom-file-label::after {
+      background-color: rgba(255, 255, 255, 0.1);
+      border-color: rgba(255, 255, 255, 0.2);
+      color: #fff;
+    }
+  </style>
+</head>
+<body>
+    <div class="container my-5">
+      <h1 class="text-center mb-4 text-primary">Đặt Hàng Theo Yêu Cầu</h1>
+      <div class="row justify-content-center">
+        <div class="col-md-8">
+          <form>
+            <div class="form-group">
+              <label for="hoten">Họ tên khách hàng</label>
+              <input type="text" class="form-control" id="hoten" placeholder="Nhập họ tên khách hàng">
+            </div>
+            <div class="form-group">
+              <label for="sodienthoai">Số điện thoại</label>
+              <input type="tel" class="form-control" id="sodienthoai" placeholder="Nhập số điện thoại">
+            </div>
+            <div class="form-group">
+              <label for="email">Email</label>
+              <input type="email" class="form-control" id="email" placeholder="Nhập email">
+            </div>
+            <div class="form-group">
+              <label for="anhsanpham">Ảnh sản phẩm</label>
+              <div class="custom-file">
+                <input type="file" class="custom-file-input" id="anhsanpham">
+                <label class="custom-file-label" for="anhsanpham">Chọn ảnh sản phẩm</label>
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="diachi">Địa chỉ</label>
+              <select class="form-control" id="diachi">
+                <option value="">Chọn địa chỉ</option>
+                <option value="tinhthanhpho">Tỉnh/Thành phố</option>
+                <option value="quanhuyen">Quận/Huyện</option>
+                <option value="phuongxa">Phường/Xã</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="diachicuthe">Địa chỉ cụ thể</label>
+              <textarea class="form-control" id="diachicuthe" rows="3" placeholder="Nhập địa chỉ cụ thể"></textarea>
+            </div>
+            <div class="form-group">
+              <label for="motahang">Mô tả đơn hàng</label>
+              <textarea class="form-control" id="motahang" rows="3" placeholder="Nhập mô tả đơn hàng"></textarea>
+            </div>
+            <div class="d-flex justify-content-end">
+              <button type="submit" class="btn btn-success mr-2">Gửi</button>
+              <button type="button" class="btn btn-danger">Hủy bỏ</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script>
+      // Tạo hiệu ứng hover cho các nút
+      $('.btn').hover(
+        function() {
+          $(this).addClass('shadow-lg');
+        },
+        function() {
+          $(this).removeClass('shadow-lg');
+        }
+      );
+    </script>
+  </body>
+</html>

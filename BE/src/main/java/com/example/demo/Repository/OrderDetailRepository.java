@@ -5,6 +5,7 @@ import com.example.demo.Dto.OrderDTO.JobProductDTO;
 import com.example.demo.Dto.OrderDTO.OrderDetailDTO;
 import com.example.demo.Dto.OrderDTO.OrderDetailWithJobStatusDTO;
 import com.example.demo.Entity.Orderdetails;
+import com.example.demo.Entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -40,6 +41,13 @@ public interface OrderDetailRepository extends JpaRepository<Orderdetails, Integ
             "WHERE od.orderDetailId = :query")
     OrderDetailDTO getOrderDetailById(int query);
 
+
+
+    @Query("SELECT r.user.email FROM Orderdetails od " +
+            "LEFT JOIN od.requestProduct rp " +
+            "LEFT JOIN rp.requests r " +
+            "WHERE od.order.orderId = :orderId")
+    String getOrderDetailsByOrderIdForSendMail(@Param("orderId") int orderId);
 
 
 

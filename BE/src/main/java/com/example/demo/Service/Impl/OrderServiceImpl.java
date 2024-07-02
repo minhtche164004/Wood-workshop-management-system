@@ -14,6 +14,8 @@ import com.example.demo.Dto.OrderDTO.RequestOrder;
 import com.example.demo.Entity.*;
 import com.example.demo.Exception.AppException;
 import com.example.demo.Exception.ErrorCode;
+import com.example.demo.Mail.EmailService;
+import com.example.demo.Mail.MailBody;
 import com.example.demo.Repository.*;
 import com.example.demo.Service.*;
 import jakarta.persistence.EntityManager;
@@ -26,6 +28,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.math.BigDecimal;
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
@@ -71,6 +74,8 @@ public class OrderServiceImpl implements OrderService {
     private EntityManager entityManager;
     @Autowired
     CloudinaryService cloudinaryService;
+    @Autowired
+    private EmailService emailService;
 
 
 
@@ -479,14 +484,29 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public boolean checkOderDoneOrNot(int order_id) {
-        List<OrderDetailWithJobStatusDTO> results = orderDetailRepository.getAllOrderDetailByOrderId(order_id);
-        for (OrderDetailWithJobStatusDTO result : results) {
-            if (result.getStatus_job_id() != 13) {  //13 tức là sản phẩm của oderdetail đã hoàn thành
-                return false; // Ngay lập tức trả về false nếu tìm thấy job chưa hoàn thành
-            }
+    public void ChangeStatusOrder(int orderId, int status_id) {
+        //send mail cho những đơn hàng đặt theo yêu cầu , vì đơn hàng mau có sẵn thì mua luôn rồi, trả tiền luôn r cần đéo gì nữa mà phải theo dõi tình trạng đơn hàng
+        orderRepository.UpdateStatusOrder(orderId,status_id);
+        Status_Order statusOrder =statusOrderRepository.findById(status_id);
+        Orders orders = orderRepository.findById(orderId);
+        if(orders.getSpecialOrder() == true){
+            String email=orderDetailRepository.getOrderDetailsByOrderIdForSendMail(orderId);
+            String code = orders.getCode();
+            SimpleDateFormat dateFormatter = new SimpleDateFormat("dd/MM/yyyy");
+            String time_finish = dateFormatter.format(orders.getOrderFinish());
+            String time_start = dateFormatter.format(orders.getOrderDate());
+            String status_name=statusOrder.getStatus_name();
+                    MailBody mailBody = MailBody.builder()
+                    .to(email)
+                    .text("Đơn hàng có mã đơn hàng là : " + code + "\n" +
+                    "Có trạng thái: " + status_name + "\n" +
+                    "Với thời gian tạo đơn là: " + time_start + "\n" +
+                    "Và thời gian dự kiến hoàn thành là: " + time_finish)
+                    .subject("[Thông tin tiến độ của đơn hàng]")
+                    .build();
+            emailService.sendSimpleMessage(mailBody);
         }
-        return true; // Chỉ trả về true nếu tất cả các job đều đã hoàn thành (status_id = 13)
     }
+
 
 }

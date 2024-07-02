@@ -41,4 +41,5 @@ public interface JobService {
     Processproducterror AddProductError(int job_id,ProductErrorDTO productErrorDTO);
     List<ProductErrorAllDTO> getAllProductError();
     ProductErrorAllDTO getProductErrorDetailById(int query);
+   // boolean checkOderDoneOrNot(int order_id);
 }

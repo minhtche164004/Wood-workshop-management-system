@@ -246,4 +246,11 @@ public class OrderController {
         return apiResponse;
     }
 
+    @PutMapping("ChangeStatusOrder")
+    public ApiResponse<?> ChangeStatusOrder(@RequestParam("orderId") int orderId,@RequestParam("status_id") int status_id){
+        ApiResponse<String> apiResponse = new ApiResponse<>();
+        orderService.ChangeStatusOrder(orderId,status_id);
+        apiResponse.setResult("Sửa status của đơn hàng thành công");
+        return apiResponse;
+    }
 }

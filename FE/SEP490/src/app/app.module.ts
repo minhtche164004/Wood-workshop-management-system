@@ -54,7 +54,7 @@ import { AdvancedBillManagementComponent } from './Admin/advanced-bill-managemen
 import { FeedbackDefectiveComponent } from './Admin/feedback-defective/feedback-defective.component';
 import { TotalSalaryComponent } from './Admin/total-salary/total-salary.component';
 
-import { WishlistComponent } from './wishlist/wishlist.component';
+
 import { AutoCompleteComponent } from './auto-complete/auto-complete.component';
 import {AutocompleteLibModule} from 'angular-ng-autocomplete';
 

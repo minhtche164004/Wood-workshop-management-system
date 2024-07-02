@@ -32,8 +32,10 @@ export class ProductListService {
 
   private apiUrl_UpdateProduct = `${environment.apiUrl}api/auth/product/AddNewProduct`;
 
-  private apiUrl_GetAllStatus = `${environment.apiUrl}api/auth/admin/GetStatusUser`;
+  private apiUrl_GetAllStatus = `${environment.apiUrl}api/auth/admin/GetAllStatusUser`;
 
+
+   
 
 
   

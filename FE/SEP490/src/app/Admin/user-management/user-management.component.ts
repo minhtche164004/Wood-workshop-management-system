@@ -27,6 +27,11 @@ interface AddNewAccount {
   district: string;
   wards: string;
 }
+interface BankName {
+  id: number;
+  name: string;
+  
+}
 interface EditUserRequest {
   userId: number;
   username: string;
@@ -50,6 +55,11 @@ interface Role {
 
 interface ApiResponse {
   code: number;
+  result: any[];
+}
+
+interface ApiResponse1 {
+  code: string;
   result: any[];
 }
 
@@ -87,12 +97,15 @@ export class UserManagementComponent implements OnInit {
   editUserForm: FormGroup;
   provinces: Province[] = [];
   districts: District[] = [];
+  bankname: BankName[] = [];
+  
   provinceControl = new FormControl();
   districtControl = new FormControl();
   wards: Ward[] = [];
   role: Role[] = [];
   position: any[] = [];
   status: any[] = [];
+
   isPositionDisabled: boolean = true;
   user: any[] = [];
   loginToken: string | null = null;
@@ -102,6 +115,9 @@ export class UserManagementComponent implements OnInit {
   selectedRoleAdd: any = null;
   selectedRole: any = null; // Assuming selectedRole should be a boolean
   selectedPosition: any = null;
+  selectedStatus: any = null;
+  selectBankName: any = null;
+
   isPositionEnabled: boolean = false;
 
   selectProvince: any = null;
@@ -144,7 +160,7 @@ export class UserManagementComponent implements OnInit {
       phoneNumber: ['', Validators.required],
       address: ['', Validators.required],
       fullname: ['', Validators.required],
-      status_id: [0],
+      status_id: [],
       position_id: ['', Validators.required],
       role_id: ['', Validators.required],
       bank_name: ['', Validators.required],
@@ -181,6 +197,7 @@ export class UserManagementComponent implements OnInit {
     this.loadProvinces();
     this.loadPosition();
     this.loadStatus();
+    this.loadAllBankName();
     if (this.loginToken) {
       console.log('Retrieved loginToken:', this.loginToken);
       this.productListService.getAllUser().subscribe(
@@ -293,6 +310,7 @@ export class UserManagementComponent implements OnInit {
       (data: any) => {
         if (data.code === 1000) {
           this.position = data.result;
+          console.log("Position" ,data)
         } else {
           console.error('Invalid data returned:', data);
         }
@@ -307,7 +325,7 @@ export class UserManagementComponent implements OnInit {
       (data: any) => {
         if (data.code === 1000) {
           this.status = data.result;
-         
+          console.log("Status" ,data)
         } else {
           console.error('Invalid data returned:', data);
         }
@@ -329,6 +347,21 @@ export class UserManagementComponent implements OnInit {
       (data: ApiResponse) => {
         if (data.code === 1000) {
           // Handle users data here
+        } else {
+          console.error('Failed to fetch users:', data);
+        }
+      },
+      (error) => {
+        console.error('Error fetching users:', error);
+      }
+    );
+  }
+  loadAllBankName(): void {
+    this.authenListService.getNameATM().subscribe(
+      (data: ApiResponse1) => {
+        if (data.code === "00") {
+          this.bankname = data.result;
+          console.log("Status" ,data)
         } else {
           console.error('Failed to fetch users:', data);
         }
@@ -398,6 +431,7 @@ export class UserManagementComponent implements OnInit {
         this.userData = data.result;
         this.selectedRole = this.role.find(role => role.roleName === this.userData.role_name)?.roleId;
         this.selectedPosition = this.position.find(position => position.position_name === this.userData.position_name)?.position_id;
+        this.selectedStatus = this.status.find(sa => sa.status_name === this.userData.status_name)?.status_id ;
         console.log("User data:", data)
         console.log("User data:", this.userData.role_name)
       },

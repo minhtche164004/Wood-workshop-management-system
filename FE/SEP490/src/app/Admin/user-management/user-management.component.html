@@ -69,7 +69,7 @@
                       <i class="fa-solid fa-circle-info"></i>
                     </a>
                   </td>
-        
+
                   <td>{{ us.username }}</td>
                   <td>{{ us.address }}</td>
                   <td>{{ us.position_name }}</td>
@@ -83,11 +83,9 @@
         </div>
 
 
-        <pagination-controls style="justify-content: right; display: flex;"
-        (pageChange)="currentPage = $event"
-        previousLabel="Trang trước"
-        nextLabel="Trang sau">
-      </pagination-controls>
+        <pagination-controls style="justify-content: right; display: flex;" (pageChange)="currentPage = $event"
+          previousLabel="Trang trước" nextLabel="Trang sau">
+        </pagination-controls>
         <div class="clearfix" style="justify-content: right; display: flex;">
           <div class="hint-text">Hiển thị <b>{{ (currentPage - 1) * 10 + 1 }}</b> tới <b>{{ currentPage * 10
               > user.length ? user.length : currentPage * 10 }}</b> trong tổng <b>{{
@@ -153,8 +151,8 @@
           <div class="form-row">
             <div class="form-group col-md-6">
               <label for="role">Vai Trò</label>
-              <select [(ngModel)]="selectedRoleAdd" formControlName="role" class="form-control form-control-lg" id="role"
-                (change)="onRoleChange()">
+              <select [(ngModel)]="selectedRoleAdd" formControlName="role" class="form-control form-control-lg"
+                id="role" (change)="onRoleChange()">
                 <option [ngValue]="null" disabled selected>Chọn Vai Trò</option>
                 <option *ngFor="let rol of role" [ngValue]="rol.roleId">
                   {{ rol.roleName }}
@@ -185,11 +183,16 @@
 
           <div class="form-row">
             <div class="form-group col-md-6">
-              <label for="bankName">Tên ngân hàng</label>
-              <input *ngIf="isPositionEnabled" formControlName="bank_name" type="text"
-                class="form-control form-control-lg" id="bankName" placeholder="Tên ngân hàng">
-              <input readonly *ngIf="!isPositionEnabled" formControlName="bank_name" type="text"
-                class="form-control form-control-lg" id="bankName" placeholder="Tên ngân hàng">
+              <label for="bank_name">Tên Ngân Hàng</label>
+              <div>
+                <select [(ngModel)]="selectBankName" formControlName="bank_name" class="form-control form-control-lg"
+                  id="bank_name">
+                  <option [ngValue]="null" disabled selected>Chọn Ngân Hàng</option>
+                  <option *ngFor="let bank of bankname" [ngValue]="bank.id">
+                    {{ bank.name }}
+                  </option>
+                </select>
+              </div>
             </div>
 
 
@@ -297,19 +300,20 @@
           <div class="form-row">
             <div class="form-group col-md-6">
               <label for="role">Vai Trò</label>
-              <select [(ngModel)]="selectedRole" formControlName="role_id" class="form-control form-control-lg" id="role">
+              <select [(ngModel)]="selectedRole" formControlName="role_id" class="form-control form-control-lg"
+                id="role">
                 <option [ngValue]="null" disabled selected>Chọn Vai Trò</option>
                 <option *ngFor="let rol of role" [ngValue]="rol.roleId">
                   {{ rol.roleName }}
                 </option>
               </select>
             </div>
-            
 
-            <div class="form-group col-md-6" >
+
+            <div class="form-group col-md-6">
               <label for="position">Vị Trí</label>
-              <div >
-                <select  [(ngModel)]="selectedPosition" formControlName="position_id"
+              <div>
+                <select [(ngModel)]="selectedPosition" formControlName="position_id"
                   class="form-control form-control-lg" id="position">
                   <option [ngValue]="null" disabled selected>Chọn Vị Trí</option>
                   <option *ngFor="let pos of position" [ngValue]="pos.position_id">
@@ -317,27 +321,34 @@
                   </option>
                 </select>
               </div>
-        
-
             </div>
+
+            <div class="form-group col-md-6">
+              <label for="position">Trạng Thái</label>
+              <div>
+                <select [(ngModel)]="selectedStatus" formControlName="status_id" class="form-control form-control-lg"
+                  id="position">
+                  <option [ngValue]="null" disabled selected>Chọn Trạng Thái</option>
+                  <option *ngFor="let sa of status" [ngValue]="sa.status_id">
+                    {{ sa.status_name }}
+                  </option>
+                </select>
+              </div>
+            </div>
+
+
           </div>
-
-
           <div class="form-row">
             <div class="form-group col-md-6">
               <label for="bankName">Tên ngân hàng</label>
-              <input [(ngModel)]="userData.bank_name"  formControlName="bank_name" type="text"
+              <input [(ngModel)]="userData.bank_name" formControlName="bank_name" type="text"
                 class="form-control form-control-lg" id="bankName" placeholder="Tên ngân hàng">
-             
             </div>
-
-
-
             <div class="form-group col-md-6">
               <label for="fullname">Số tài khoản</label>
-              <input [(ngModel)]="userData.bank_number"formControlName="bank_number"
-                type="text" class="form-control form-control-lg" id="fullname" placeholder="Số tài khoản">
-             
+              <input [(ngModel)]="userData.bank_number" formControlName="bank_number" type="text"
+                class="form-control form-control-lg" id="fullname" placeholder="Số tài khoản">
+
             </div>
           </div>
           <label style="font-size: 1.3em; font-weight: bold;" for="role">Địa chỉ</label>
@@ -374,22 +385,21 @@
               </div>
             </div>
           </div>
-            <div class="row">
-              <div class="form-group col-md-12">
-                <label for="address">Địa Chỉ Cụ Thể</label>
-                <input formControlName="address" type="text" class="form-control form-control-lg" id="address"
-                  placeholder="Nhập địa chỉ cụ thể" [(ngModel)]="userData.address">
-              </div>
+          <div class="row">
+            <div class="form-group col-md-12">
+              <label for="address">Địa Chỉ Cụ Thể</label>
+              <input formControlName="address" type="text" class="form-control form-control-lg" id="address"
+                placeholder="Nhập địa chỉ cụ thể" [(ngModel)]="userData.address">
             </div>
           </div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-mau-do" data-dismiss="modal" #closeButton>Đóng</button>
-
-            <button type="submit" class="btn btn-primary">Lưu Thay Đổi</button>
-          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-mau-do" data-dismiss="modal" #closeButton>Đóng</button>
+          <button type="submit" class="btn btn-primary">Lưu Thay Đổi</button>
         </div>
       </div>
     </div>
+  </div>
 </form>
 
 <!-- Modal for Delete Product -->

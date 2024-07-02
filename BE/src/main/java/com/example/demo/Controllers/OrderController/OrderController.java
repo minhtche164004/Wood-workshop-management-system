@@ -238,5 +238,12 @@ public class OrderController {
         apiResponse.setResult(userInforService.getUserInforByPhoneNumber(phoneNumber));
         return apiResponse;
     }
+    @DeleteMapping("/deleteRequest")
+    public ApiResponse<?> deleteRequest(@RequestParam("requestId") int requestId){
+        ApiResponse apiResponse = new ApiResponse<>();
+        orderService.deleteRequestById(requestId);
+        apiResponse.setResult("Xoá yêu cầu thành công!!!");
+        return apiResponse;
+    }
 
 }

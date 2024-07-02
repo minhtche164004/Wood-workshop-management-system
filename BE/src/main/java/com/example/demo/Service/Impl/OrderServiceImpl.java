@@ -451,6 +451,7 @@ public class OrderServiceImpl implements OrderService {
         return results;
     }
 
+
     @Transactional
     @Override
     public Requests ManagerEditRequest(int request_id, RequestEditDTO requestEditDTO) {
@@ -466,9 +467,15 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public OrderDetailDTO getOrderDetailById(int id) {
         OrderDetailDTO orderDetailDTO = orderDetailRepository.getOrderDetailById(id);
-        if(orderDetailDTO == null){
+        if (orderDetailDTO == null) {
             throw new AppException(ErrorCode.NOT_FOUND);
         }
         return orderDetailDTO;
     }
+
+    @Override
+    public void deleteRequestById(int requestId) {
+        requestRepository.deleteById(requestId);
+    }
+
 }

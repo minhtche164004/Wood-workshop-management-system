@@ -32,6 +32,25 @@
     list-style: none;
     padding: 0;
   }
+  nav {
+    display: flex;
+    align-items: center;
+    justify-content: space-between; /* Ensures space between elements */
+  }
+  
+  nav .spacer {
+    flex-grow: 1; /* Takes up all available space */
+  }
+  
+  .profile {
+    margin-left: auto; /* Aligns to the right */
+  }
+  
+  .profile img {
+    border-radius: 50%; /* Makes the profile image circular */
+    width: 40px; /* Adjust the size as needed */
+    height: 40px;
+  }
   
   .sidebar nav ul li {
     margin: 20px 0;

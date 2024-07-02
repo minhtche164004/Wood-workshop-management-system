@@ -53,7 +53,11 @@ public interface OrderService {
 
     public List<OrderDetailWithJobStatusDTO> getOrderDetailByOrderId(int order_id);
 
+
     Requests ManagerEditRequest(int request_id, RequestEditDTO requestEditDTO);
     OrderDetailDTO getOrderDetailById(int id);
+
+
+    void deleteRequestById(int requestId);
 
 }

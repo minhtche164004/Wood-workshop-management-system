@@ -217,8 +217,8 @@ public class OrderServiceImpl implements OrderService {
         requests.setPhoneNumber(requestDTO.getPhoneNumber());
         requests.setResponse("");
         requests.setCity_province(requestDTO.getCity_province());
-        requests.setDistrict(requestDTO.getDistrict());
-        requests.setWards(requestDTO.getWards());
+        requests.setDistrict(requestDTO.getDistrict_province());
+        requests.setWards(requestDTO.getWards_province());
 
         Requests lastRequest = requestRepository.findRequestTop(dateString + "RQ");
         int count = lastRequest != null ? Integer.parseInt(lastRequest.getCode().substring(8)) + 1 : 1;
@@ -476,6 +476,17 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public void deleteRequestById(int requestId) {
         requestRepository.deleteById(requestId);
+    }
+
+    @Override
+    public boolean checkOderDoneOrNot(int order_id) {
+        List<OrderDetailWithJobStatusDTO> results = orderDetailRepository.getAllOrderDetailByOrderId(order_id);
+        for (OrderDetailWithJobStatusDTO result : results) {
+            if (result.getStatus_job_id() != 13) {  //13 tức là sản phẩm của oderdetail đã hoàn thành
+                return false; // Ngay lập tức trả về false nếu tìm thấy job chưa hoàn thành
+            }
+        }
+        return true; // Chỉ trả về true nếu tất cả các job đều đã hoàn thành (status_id = 13)
     }
 
 }

@@ -74,15 +74,19 @@
                       <ng-template #loggedInLinks>
                         <a routerLink="/profile">Thông tin cá nhân</a>
                         <a routerLink="/forgot">Đổi mật khẩu</a>
+                        <a routerLink="/order_rq">Đặt hàng theo yêu cầu</a>
+                        <a routerLink="/history_order">Lịch sử đơn hàng</a>
+                        
                         <a (click)="onLogout()">Đăng xuất</a>
                       </ng-template>
                     </div>
                   </div>
                   
                 <li>
-                    <a class="icon-buy" href="cart.html">
-                        <i class="fa-solid fa-heart"></i>
+                    <a class="icon-buy" href="/wishlist">
+                        <i  class="fa-solid fa-heart"></i>
                         <div class="number-buy">0</div>
+                       
                     </a>
                 </li>
                 

@@ -1,12 +1,38 @@
 
   body {
-    background: #f8f8f8;
+    background: #007bff;
+    width: 2000px;
   }
-
+  .card {
+    background: white; /* Card background color */
+    border: 1px solid #ddd; /* Card border */
+    border-radius: 8px; /* Rounded corners for the card */
+    box-shadow: 0 0 10px rgba(0,0,0,0.1); /* Card shadow */
+  }
+  
+  .btn {
+    padding: 10px;
+    border: none;
+  }
+  
+  .btn-mau-do {
+    background: #cc4949; /* Red button color */
+    color: white;
+  }
+  
+  .btn-primary {
+    padding: 10px;
+    background-color: #20ec4d; /* Green button color */
+    border-color: #20ec4d;
+  }
+  
+  .form-group label {
+    font-size: 14px;
+  }
   .header-bg {
     background-color: #007bff; /* Màu sắc nền header */
     padding: 20px 0; /* Khoảng cách lề trên và dưới */
-    margin-left: 100px; /* Khoảng cách lề trái */
+
   }
 
   .input-with-icon {

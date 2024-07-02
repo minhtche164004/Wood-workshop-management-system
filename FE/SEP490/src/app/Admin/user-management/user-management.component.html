@@ -272,7 +272,7 @@
             <div class="form-group col-md-6">
               <label for="username">Tên Đăng Nhập</label>
               <input formControlName="username" type="text" class="form-control form-control-lg" id="username"
-                placeholder="Nhập tên đăng nhập" [(ngModel)]="userData.username">
+                placeholder="Nhập tên đăng nhập"  >
 
             </div>
             <div class="form-group col-md-6">
@@ -297,8 +297,8 @@
           <div class="form-row">
             <div class="form-group col-md-6">
               <label for="role">Vai Trò</label>
-              <select [(ngModel)]="selectedRole" [(ngModel)]="userData.role_name" formControlName="role"
-                class="form-control form-control-lg" id="role" (change)="onRoleChangeUpdate()">
+              <select [(ngModel)]="selectedRole" [(ngModel)]="userData.role_name" formControlName="role_id"
+                class="form-control form-control-lg" id="role" >
                 <option [ngValue]="null" disabled selected>Chọn Vai Trò</option>
                 <option *ngFor="let rol of role" [ngValue]="rol.roleId">
                   {{ rol.roleName }}
@@ -308,8 +308,8 @@
 
             <div class="form-group col-md-6" >
               <label for="position">Vị Trí</label>
-              <div *ngIf="isPositionEnabled">
-                <select  [(ngModel)]="selectedPosition" [(ngModel)]="userData.position_name" formControlName="position"
+              <div >
+                <select  [(ngModel)]="selectedPosition" [(ngModel)]="userData.position_name" formControlName="position_id"
                   class="form-control form-control-lg" id="position">
                   <option [ngValue]="null" disabled selected>Chọn Vị Trí</option>
                   <option *ngFor="let pos of position" [ngValue]="pos.position_id">
@@ -317,71 +317,34 @@
                   </option>
                 </select>
               </div>
-              <div *ngIf="!isPositionEnabled">
-                <select  disabled class="form-control form-control-lg" id="position">
-                  <option [ngValue]="null" disabled selected>Chọn Vị Trí</option>
-                </select>
-              </div>
+        
 
             </div>
           </div>
-          <!-- <div class="form-row">
-            <div class="form-group col-md-6">
-              <label for="role">Vai Trò</label>
-              <select [(ngModel)]="selectedRole" [(ngModel)]="userData.role_name" formControlName="role" class="form-control form-control-lg" id="role"
-                (change)="onRoleChange()">
-                <option [ngValue]="null" disabled selected>Chọn Vai Trò</option>
-                <option *ngFor="let rol of role" [ngValue]="rol.roleId">
-                  {{ rol.roleName }}
-                </option>
-              </select>
-            </div>
 
-            <div class="form-group col-md-6">
-              <label for="position">Vị Trí</label>
-              <div *ngIf="isPositionEnabled">
-                <select [(ngModel)]="selectedPosition" [(ngModel)]="userData.position_name" formControlName="position" class="form-control form-control-lg"
-                  id="position">
-                  <option [ngValue]="null" disabled selected>Chọn Vị Trí</option>
-                  <option *ngFor="let pos of position" [ngValue]="pos.position_name">
-                    {{ pos.position_name }}
-                  </option>
-                </select>
-              </div>
-              <div *ngIf="!isPositionEnabled">
-                <select disabled class="form-control form-control-lg" id="position">
-                  <option [ngValue]="null" disabled selected>Chọn Vị Trí</option>
-                </select>
-              </div>
-
-            </div>
-          </div> -->
 
           <div class="form-row">
             <div class="form-group col-md-6">
               <label for="bankName">Tên ngân hàng</label>
-              <input [(ngModel)]="userData.bank_name" *ngIf="isPositionEnabled" formControlName="bank_name" type="text"
+              <input [(ngModel)]="userData.bank_name"  formControlName="bank_name" type="text"
                 class="form-control form-control-lg" id="bankName" placeholder="Tên ngân hàng">
-              <input [(ngModel)]="userData.bank_name" readonly *ngIf="!isPositionEnabled" formControlName="bank_name"
-                type="text" class="form-control form-control-lg" id="bankName" placeholder="Tên ngân hàng">
+             
             </div>
 
 
 
             <div class="form-group col-md-6">
               <label for="fullname">Số tài khoản</label>
-              <input [(ngModel)]="userData.bank_number" *ngIf="isPositionEnabled" formControlName="bank_number"
+              <input [(ngModel)]="userData.bank_number"formControlName="bank_number"
                 type="text" class="form-control form-control-lg" id="fullname" placeholder="Số tài khoản">
-              <input [(ngModel)]="userData.bank_number" readonly *ngIf="!isPositionEnabled"
-                formControlName="bank_number" type="text" class="form-control form-control-lg" id="fullname"
-                placeholder="Số tài khoản">
+             
             </div>
           </div>
           <label style="font-size: 1.3em; font-weight: bold;" for="role">Địa chỉ</label>
           <div class="row">
             <div class="col-md-4 mb-5">
               <div class="form-group">
-                <select [ngModel]="selectProvince" [(ngModel)]="userData.city_province" formControlName="city"
+                <select [ngModel]="selectProvince" [(ngModel)]="userData.city_province" formControlName="city_province"
                   class="form-control" required>
                   <option [ngValue]="null" disabled selected>Tỉnh / Thành Phố</option>
                   <option *ngFor="let province of provinces" [ngValue]="province.name">

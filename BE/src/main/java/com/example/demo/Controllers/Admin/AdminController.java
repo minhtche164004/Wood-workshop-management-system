@@ -46,6 +46,7 @@ public class AdminController {
     @Autowired
     private Status_Job_Repository statusJobRepository;
 
+
     @Autowired
     private Status_Product_Repository statusProductRepository;
     @Autowired
@@ -110,12 +111,7 @@ public class AdminController {
         apiResponse.setResult(roleRepository.findAll());
         return apiResponse;
     }
-//    @GetMapping("/GetStatusUser")
-//    public ApiResponse<?> GetStatusUser() {
-//        ApiResponse<List> apiResponse = new ApiResponse<>();
-//        apiResponse.setResult(statusUserRepository.getAllStatusNames());
-//        return apiResponse;
-//    }
+
 
     @GetMapping("/GetAllStatusUser")
     public ApiResponse<?> GetStatusUser() {

@@ -13,12 +13,12 @@ declare var $: any; // Declare jQuery globally
 export class HomepageComponent implements AfterViewInit, OnInit {
   products: any[] = [];
   currentPage: number = 1;
-  constructor(private router: Router,private wishList: WishlistService,private productListService: ProductListService, private toastr: ToastrService) { }
+  constructor(private router: Router, private wishList: WishlistService, private productListService: ProductListService, private toastr: ToastrService) { }
   viewProductDetails(productId: number) {
     this.router.navigate(['/product_details', productId]);
   }
   ngOnInit(): void {
-    
+
     this.productListService.getAllProductCustomer().subscribe(
       (data) => {
         if (data.code === 1000) {
@@ -35,12 +35,19 @@ export class HomepageComponent implements AfterViewInit, OnInit {
       }
     );
   }
-  addToWishlist(productId: number) {
+  addToWishlist(productId: number) {  
+    this.toastr.success('Thực hiện thêm sản phẩm', 'Thành công'); // Success message
+    console.log('Product ID:', productId);
     this.wishList.addWishlist(productId)
       .subscribe(
-        (response) => {
-          console.log('Product added to wishlist:', response);
-          this.toastr.success('Sản phẩm đã được thêm vào yêu thích!', 'Thành công'); // Success message
+        (data) => {
+          if (data.code === 1000) {
+            console.log('Product added to wishlist:');
+            this.toastr.success('Sản phẩm đã được thêm vào yêu thích!', 'Thành công'); // Success message
+
+          }else{
+            this.toastr.warning('Vui lòng đăng nhập để thêm sản phẩm yêu thích!', 'Lỗi'); // Error message
+          }
         },
         (error) => {
           console.error('Error adding product to wishlist:', error);
@@ -48,8 +55,8 @@ export class HomepageComponent implements AfterViewInit, OnInit {
         }
       );
   }
-  
-  
+
+
 
   ngAfterViewInit(): void {
     this.initializeSlickSliders();
@@ -57,7 +64,7 @@ export class HomepageComponent implements AfterViewInit, OnInit {
     this.initializeResponsiveNavbar();
     this.initializeCountdownTimer();
   }
-  
+
   private initializeSlickSliders() {
     $('.service-slider').slick({
       autoplay: true,
@@ -199,5 +206,5 @@ export class HomepageComponent implements AfterViewInit, OnInit {
 
     }, 1000);
   }
-  
+
 }

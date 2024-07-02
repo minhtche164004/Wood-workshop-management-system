@@ -19,6 +19,7 @@ public class RequestEditDTO {
 //    @NotNull(message = "MUST_REQUIRED")
 //    private Date requestDate;
 //    private String response;
-    private String description;
-    private List<String> files;
+    private int status_id;
+    private String response;
+//    private List<String> files;
 }

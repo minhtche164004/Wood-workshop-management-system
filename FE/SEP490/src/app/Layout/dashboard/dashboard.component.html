@@ -5,15 +5,10 @@
 	  <span style="text-decoration: none;" class="text">Quản Trị Viên</span>
 	</a>
 	<ul class="side-menu top">
-	  <li >
-		<a routerLink="/admin" routerLinkActive="active">
-		  <i class='bx bxs-dashboard' ></i>
-		  <span class="text">Bảng điều khiển</span>
-		</a>
-	  </li>
+	  
 	  <li>
 		<a routerLink="/user_management" routerLinkActive="active">
-		  <i class='bx bxs-shopping-bag-alt' ></i>
+			<i class='bx bxs-user-detail' ></i>
 		  <span  class="text">Quản lí người dùng</span>
 		</a>
 	  </li>
@@ -26,7 +21,7 @@
 
 	  <li>
 		<a routerLink="/create_order" routerLinkActive="active">
-		  <i class='bx bxs-doughnut-chart' ></i>
+			<i class='bx bxs-notepad' ></i>
 		  <span class="text">Tạo đơn hàng</span>
 		</a>
 	  </li>
@@ -51,15 +46,34 @@
 	  </li>
 	  <li>
 		<a href="/order_management" routerLinkActive="active">
-		  <i class='bx bxs-group' ></i>
+			<i class='bx bx-list-ul'></i>
 		  <span class="text"> Quản lý đơn đặt hàng</span>
 		</a>
 	  </li>
 	 
-	  <li>
-		<a href="/order_management" routerLinkActive="active">
+	  <!-- <li>
+		<a href="/history_order" routerLinkActive="active">
 		  <i class='bx bxs-group' ></i>
-		  <span class="text">Tra cứu lịch sử đơn đặt</span>
+		  <span class="text">Tra cứu lịch sử đơn đặt hàng</span>
+		</a>
+	  </li> -->
+	  <li>
+		<a href="/total_salary" routerLinkActive="active">
+			<i class='bx bxs-wallet' ></i>
+		  <span class="text">Tổng lương nhân viên</span>
+		</a>
+	  </li>
+	  <li>
+		<a href="/report_management" routerLinkActive="active">
+			<i class='bx bxs-notepad' ></i>
+		  <span class="text">Quản lý lỗi sản phẩm</span>
+		</a>
+	  </li>
+	  
+	  <li>
+		<a href="/advanced_bill" routerLinkActive="active">
+			<i class='bx bxs-notepad' ></i>
+		  <span class="text">Đơn ứng lương</span>
 		</a>
 	  </li>
 	</ul>
@@ -80,15 +94,12 @@
   </section>
   <!-- SIDEBAR -->
   <section id="content">
-  <nav>
-	<i (click)="addToggle()" class='bx bx-menu' ></i>
-	
-	<a href="#" class="notification">
-	  <i class='bx bxs-bell' ></i>
-	  <span class="num">8</span>
-	</a>
-	<a href="#" class="profile">
-	  <img src="https://secure.gravatar.com/avatar/d09eaad01aea86c51b4f892b4f8abf6f?s=100&d=wavatar&r=g">
-	</a>
-  </nav>
-</section>
+	<nav>
+	  
+	  <div class="spacer"></div>
+	  <a href="#" class="profile">
+		<img src="assets/img/logomain-removebg-preview.png">
+	  </a>
+	</nav>
+	<!-- Other content here -->
+  </section>

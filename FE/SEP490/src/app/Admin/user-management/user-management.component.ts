@@ -27,19 +27,24 @@ interface AddNewAccount {
   district: string;
   wards: string;
 }
+interface BankName {
+  id: number;
+  name: string;
+  
+}
 interface EditUserRequest {
   userId: number;
   username: string;
   email: string;
-  phoneNumber: string;
   address: string;
   fullname: string;
-  status_name: string;
-  position_name: string;
+  phoneNumber: string;
+  status_id: number;
+  position_id: number;
+  role_id: number;
   bank_name: string;
-  role_name: string;
   bank_number: string;
-  city: string;
+  city_province: string;
   district: string;
   wards: string;
 }
@@ -50,6 +55,11 @@ interface Role {
 
 interface ApiResponse {
   code: number;
+  result: any[];
+}
+
+interface ApiResponse1 {
+  code: string;
   result: any[];
 }
 
@@ -75,33 +85,39 @@ interface Ward {
   styleUrls: ['./user-management.component.scss']
 })
 export class UserManagementComponent implements OnInit {
-
-
-
-
-
-
   @ViewChild('closeButton') closeButton: ElementRef | undefined;
   private apiUrl_AddNewAccount = `${environment.apiUrl}api/auth/admin/AddNewAccount`; // URL của backend
+
+
+
   private apiUrl_EditUser = `${environment.apiUrl}api/auth/admin/EditUser`;
+  private apiUrl_GetUserById = `${environment.apiUrl}api/auth/admin/GetUserById`;
+
   addAccountForm: FormGroup;
   editUserForm: FormGroup;
   provinces: Province[] = [];
   districts: District[] = [];
+  bankname: BankName[] = [];
+  
   provinceControl = new FormControl();
   districtControl = new FormControl();
   wards: Ward[] = [];
   role: Role[] = [];
   position: any[] = [];
+  status: any[] = [];
+
   isPositionDisabled: boolean = true;
   user: any[] = [];
   loginToken: string | null = null;
   currentPage: number = 1;
   userId: number = 1;
   selectedCategory: any = null;
-  selectedRoleAdd: any = null; 
+  selectedRoleAdd: any = null;
   selectedRole: any = null; // Assuming selectedRole should be a boolean
   selectedPosition: any = null;
+  selectedStatus: any = null;
+  selectBankName: any = null;
+
   isPositionEnabled: boolean = false;
 
   selectProvince: any = null;
@@ -144,15 +160,16 @@ export class UserManagementComponent implements OnInit {
       phoneNumber: ['', Validators.required],
       address: ['', Validators.required],
       fullname: ['', Validators.required],
-      status: [0],
-      position: ['', Validators.required],
-      role: ['', Validators.required],
+      status_id: [],
+      position_id: ['', Validators.required],
+      role_id: ['', Validators.required],
       bank_name: ['', Validators.required],
       bank_number: ['', Validators.required],
-      city: ['', Validators.required],
+      city_province: ['', Validators.required],
       district: ['', Validators.required],
       wards: ['', Validators.required]
     });
+
   }
 
   isUserDataLoaded: boolean = false;
@@ -179,14 +196,15 @@ export class UserManagementComponent implements OnInit {
     this.loadAllRole();
     this.loadProvinces();
     this.loadPosition();
-
+    this.loadStatus();
+    this.loadAllBankName();
     if (this.loginToken) {
       console.log('Retrieved loginToken:', this.loginToken);
       this.productListService.getAllUser().subscribe(
         (data: ApiResponse) => {
           if (data.code === 1000) {
             this.user = data.result;
-            console.log('Danh sách người dùng:', this.user);
+          
           } else {
             console.error('Failed to fetch products:', data);
           }
@@ -198,21 +216,21 @@ export class UserManagementComponent implements OnInit {
     } else {
       console.error('No loginToken found in localStorage.');
     }
-    this.addAccountForm.get('city')?.valueChanges.subscribe(provinceName => {
-      const selectedProvince = this.provinces.find(province => province.name === provinceName);
-      this.districts = selectedProvince ? selectedProvince.districts : [];
-      this.addAccountForm.get('district')?.reset();
-      this.addAccountForm.get('wards')?.reset();
-    });
+    // this.addAccountForm.get('city')?.valueChanges.subscribe(provinceName => {
+    //   const selectedProvince = this.provinces.find(province => province.name === provinceName);
+    //   this.districts = selectedProvince ? selectedProvince.districts : [];
+    //   this.addAccountForm.get('district')?.reset();
+    //   this.addAccountForm.get('wards')?.reset();
+    // });
 
-    this.addAccountForm.get('district')?.valueChanges.subscribe(districtName => {
-      const selectedDistrict = this.districts.find(district => district.name === districtName);
-      this.wards = selectedDistrict ? selectedDistrict.wards : [];
-      this.addAccountForm.get('wards')?.reset();
-    });
+    // this.addAccountForm.get('district')?.valueChanges.subscribe(districtName => {
+    //   const selectedDistrict = this.districts.find(district => district.name === districtName);
+    //   this.wards = selectedDistrict ? selectedDistrict.wards : [];
+    //   this.addAccountForm.get('wards')?.reset();
+    // });
 
     // khi load trang cai nay` no ghi de` vao` gia tri user nen bi loi~
-    this.editUserForm.get('city')?.valueChanges.subscribe(provinceName => {
+    this.editUserForm.get('city_province')?.valueChanges.subscribe(provinceName => {
       const selectedProvince = this.provinces.find(province => province.name === provinceName);
       this.districts = selectedProvince ? selectedProvince.districts : [];
       if (!selectedProvince || this.editUserForm.get('district')?.value) {
@@ -220,7 +238,7 @@ export class UserManagementComponent implements OnInit {
         this.editUserForm.get('wards')?.reset();
       }
     });
-    
+
     this.editUserForm.get('district')?.valueChanges.subscribe(districtName => {
       const selectedDistrict = this.districts.find(district => district.name === districtName);
       this.wards = selectedDistrict ? selectedDistrict.wards : [];
@@ -228,6 +246,8 @@ export class UserManagementComponent implements OnInit {
         this.editUserForm.get('wards')?.reset();
       }
     });
+
+
   }
 
   loadAllRole(): void {
@@ -276,7 +296,7 @@ export class UserManagementComponent implements OnInit {
     }
   }
   onRoleChangeUpdate() {
-    if (this.userData.role_name !== 'EMPLOYEE' && this.selectedRoleAdd !== 4) {
+    if (this.userData.role_id !== 4) {
       this.isPositionEnabled = false;
     } else {
       this.isPositionEnabled = true;
@@ -290,6 +310,22 @@ export class UserManagementComponent implements OnInit {
       (data: any) => {
         if (data.code === 1000) {
           this.position = data.result;
+          console.log("Position" ,data)
+        } else {
+          console.error('Invalid data returned:', data);
+        }
+      },
+      (error) => {
+        console.error('Error fetching positions:', error);
+      }
+    );
+  }
+  loadStatus(): void {
+    this.productListService.getAllStatus().subscribe(
+      (data: any) => {
+        if (data.code === 1000) {
+          this.status = data.result;
+          console.log("Status" ,data)
         } else {
           console.error('Invalid data returned:', data);
         }
@@ -311,6 +347,21 @@ export class UserManagementComponent implements OnInit {
       (data: ApiResponse) => {
         if (data.code === 1000) {
           // Handle users data here
+        } else {
+          console.error('Failed to fetch users:', data);
+        }
+      },
+      (error) => {
+        console.error('Error fetching users:', error);
+      }
+    );
+  }
+  loadAllBankName(): void {
+    this.authenListService.getNameATM().subscribe(
+      (data: ApiResponse1) => {
+        if (data.code === "00") {
+          this.bankname = data.result;
+          console.log("Status" ,data)
         } else {
           console.error('Failed to fetch users:', data);
         }
@@ -357,10 +408,20 @@ export class UserManagementComponent implements OnInit {
       district: user.district,
       wards: user.wards
     });
-
-    // this.editUserForm.get('city')?.setValue(user.city_province); // Set initial values for dropdowns
-    // this.editUserForm.get('district')?.setValue(user.district);
-    // this.editUserForm.get('wards')?.setValue(user.wards);
+    // this.selectedProvince = this.provinces.find(province => province.name === user.city_province);
+    // if (this.selectedProvince) {
+    //   this.districts = this.selectedProvince.districts;
+    //   this.editUserForm.patchValue({ district: user.district });  // Set initial district
+    //   // Find the matching district based on district name (if necessary)
+    //   this.selectedDistrict = this.districts.find(district => district.name === user.district);
+    //   if (this.selectedDistrict) {
+    //     this.wards = this.selectedDistrict.wards;
+    //     this.editUserForm.patchValue({ wards: user.wards });  // Set initial ward (if necessary)
+    //   }
+    // }
+    this.editUserForm.get('city_province')?.setValue(user.city_province); // Set initial values for dropdowns
+    this.editUserForm.get('district')?.setValue(user.district);
+    this.editUserForm.get('wards')?.setValue(user.wards);
 
   }
 
@@ -368,44 +429,38 @@ export class UserManagementComponent implements OnInit {
     this.authenListService.getUserById(user_id).subscribe(
       (data) => {
         this.userData = data.result;
-        console.log("User data:" ,data)
+        this.selectedRole = this.role.find(role => role.roleName === this.userData.role_name)?.roleId;
+        this.selectedPosition = this.position.find(position => position.position_name === this.userData.position_name)?.position_id;
+        this.selectedStatus = this.status.find(sa => sa.status_name === this.userData.status_name)?.status_id ;
+        console.log("User data:", data)
+        console.log("User data:", this.userData.role_name)
       },
       (error) => {
         console.error('Error fetching user data:', error);
       }
     );
 
- 
   }
- 
-
   onProvinceChange() {
     const selectedProvinceName = this.userData.city_province; // assuming 'city' is bound to ngModel of the province dropdown
     this.selectedProvince = this.provinces.find(province => province.name === selectedProvinceName);
-
     // Update districts based on the selected province
     this.districts = this.selectedProvince ? this.selectedProvince.districts : [];
-
     // Reset selected district and ward
     this.userData.district = ''; // reset selected district in the model
     this.userData.wards = ''; // reset selected ward in the model
   }
-
   onDistrictChange() {
     const selectedDistrictName = this.userData.district; // assuming 'city' is bound to ngModel of the province dropdown
     this.selectedDistrict = this.districts.find(district => district.name === selectedDistrictName);
-
     // Update districts based on the selected province
     this.wards = this.selectedDistrict ? this.selectedDistrict.wards : [];
-
     this.userData.wards = ''; // reset selected ward in the model
   }
   EditUser(): void {
-
-
     const editUserRequest: EditUserRequest = this.editUserForm.value;
     const userId = this.userData.userId; // Lấy userId từ userData
-
+    console.log("Data: ", editUserRequest)
     this.authenListService.editUserById(userId, editUserRequest).subscribe(
       () => {
         this.toastr.success('User updated successfully.');

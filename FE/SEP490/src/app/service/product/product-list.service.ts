@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { environment } from 'src/app/environments/environment';
@@ -26,7 +26,7 @@ export class ProductListService {
 
   private apiUrl_AllRole = `${environment.apiUrl}api/auth/admin/GetAllRole`; // Assuming the correct endpoint
 
-
+  private apiUrl_GetMultiProductForCustomer = `${environment.apiUrl}api/auth/product`;
 
   private apiUrl_AddProduct = `${environment.apiUrl}api/auth/product/AddNewProduct`;
 
@@ -36,16 +36,20 @@ export class ProductListService {
   private getAllStatusProduct = `${environment.apiUrl}api/auth/product/GetStatusProduct`;  //sau lay api khac thay vao` api nay bi thieu
   private getAllMaterial = `${environment.apiUrl}api/auth/getAll`;  // lay cac vat lieu
   private getSubMaterialByMaterialId = `${environment.apiUrl}api/auth/submaterial/FilterByMaterial`;  // lay cac vat lieu con theo vat lieu cha 
-  
+  private apiUrl_GetAllStatus = `${environment.apiUrl}api/auth/admin/GetAllStatusUser`;
+
+
+  private apiUrl_AddProductRequired = `${environment.apiUrl}api/auth/order/AddNewRequest`;
+
   private api_UrlcreateExportMaterialProduct = `${environment.apiUrl}api/auth/submaterial/createExportMaterialProduct`;  // luu 1 san pham can bao nhieu vat lieu
- 
-  private api_UrlexportMaterialProductByProductId = `${environment.apiUrl}api/auth/submaterial/FilterByMaterial`;  // lay tat ca vat lieu can co de tao 1 san pham
+
+  private api_UrlexportMaterialProductByProductId = `${environment.apiUrl}api/auth/product/getProductSubMaterialAndMaterialByProductId`;  // lay tat ca vat lieu can co de tao 1 san pham
 
   constructor(private http: HttpClient) { }
   uploadProduct(productData: any, thumbnail: File, images: File[]): Observable<any> {
     const formData = new FormData();
     formData.append('productDTO', new Blob([JSON.stringify(productData)], { type: 'application/json' }));
-    formData.append('file_thumbnail', thumbnail, thumbnail.name);
+    formData.append('files', thumbnail, thumbnail.name);
     images.forEach(image => {
       formData.append('files', image, image.name);
     });
@@ -57,8 +61,66 @@ export class ProductListService {
     });
   }
 
+  uploadProductRequired(productRequiredData: any, images: File[]): Observable<any> {
+    const formData = new FormData();
+
+    formData.append('requestDTO', new Blob([JSON.stringify(productRequiredData)], { type: 'application/json' }));
+    images.forEach(image => {
+      formData.append('files', image, image.name);
+    });
+    const token = localStorage.getItem('loginToken');
+
+    if (!token) {
+      return throwError(new Error('Login token not found in localStorage.'));
+    }
+
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${token}`,
+      'Accept': 'application/json'
+    });
+
+    console.log("Authorization header:", headers.get('Authorization'));
+
+    return this.http.post(this.apiUrl_AddProductRequired, formData, { headers }).pipe(
+      catchError(this.handleError)
+    );
+  }
 
 
+  getMultiFilterProductForCustomer(search?: string, categoryId?: number, minPrice?: number, maxPrice?: number, sortDirection?: number): Observable<any> {
+
+    let params = new HttpParams();
+
+    console.log('categoryId', categoryId);
+    console.log('search param', search);
+    // Add parameters only if they are provided
+    if (search !== undefined && search !== null) {
+      params = params.set('search', search);
+    }
+    if (categoryId !== undefined && categoryId !== null) {
+      params = params.set('categoryId', categoryId.toString());
+      console.log(params.get('categoryId'));
+    }
+    if (minPrice !== undefined && minPrice !== null) {
+      params = params.set('minPrice', minPrice.toString());
+    }
+    if (maxPrice !== undefined && maxPrice !== null) {
+      params = params.set('maxPrice', maxPrice.toString());
+    }
+    if (sortDirection !== undefined && sortDirection !== null) {
+      params = params.set('sortDirection', sortDirection.toString());
+    }
+    const apiUrl = `${this.apiUrl_GetMultiProductForCustomer}/getMultiFillterProductForCustomer`;
+    const apiWithParams = `${apiUrl}?${params.toString()}`;
+    console.log('API URL with params:', apiWithParams);
+    // Check if all parameters are null or undefined
+    if (search == null && categoryId == null && minPrice == null && maxPrice == null && sortDirection == null) {
+      return this.http.get(`${this.apiUrlGetProduct}`);
+    }
+
+    return this.http.get(`${this.apiUrl_GetMultiProductForCustomer}/getMultiFillterProductForCustomer`, { params });
+
+  }
 
   getProducts(): Observable<any> {
     console.log(this.apiUrl)
@@ -70,6 +132,12 @@ export class ProductListService {
   getAllOrder(): Observable<any> {
     console.log(this.apiUrl_GetAllOrder)
     return this.http.get<any>(this.apiUrl_GetAllOrder).pipe(
+      catchError(this.handleError)
+    );
+  }
+  getAllStatus(): Observable<any> {
+    console.log(this.apiUrl_GetAllStatus)
+    return this.http.get<any>(this.apiUrl_GetAllStatus).pipe(
       catchError(this.handleError)
     );
   }
@@ -179,7 +247,8 @@ export class ProductListService {
     );
   }
   exportMaterialProductByProductId(productId: number): Observable<any> {
-    return this.http.post<any>(this.api_UrlcreateExportMaterialProduct, productId).pipe(
+    const url = `${this.api_UrlexportMaterialProductByProductId}?id=${productId}`;
+    return this.http.get<any>(url).pipe(
       catchError(this.handleError)
     );
   }

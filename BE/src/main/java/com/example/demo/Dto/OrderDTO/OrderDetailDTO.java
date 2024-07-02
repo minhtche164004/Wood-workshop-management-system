@@ -9,30 +9,27 @@ import lombok.NoArgsConstructor;
 import java.math.BigDecimal;
 
 @Data
-//@AllArgsConstructor
+
 @NoArgsConstructor
 public class OrderDetailDTO {
-
-    private String code;
+    private int order_detail_id;
     private int product_id;
     private String product_name;
-    private String description;
+    private int request_product_id;
+    private String request_product_name;
     private BigDecimal price;
-//    private String status_name;
-//    private int status_id;
-    private Status_Product statusProduct;
     private int quantity;
-    private User user;
 
-    public OrderDetailDTO(String code, int product_id, String product_name, String description, BigDecimal price,Status_Product statusProduct, int quantity) {
-        this.code = code;
+    public OrderDetailDTO(int order_detail_id, int product_id, String product_name, int request_product_id, String request_product_name, BigDecimal price,int quantity) {
+        this.order_detail_id = order_detail_id;
         this.product_id = product_id;
         this.product_name = product_name;
-        this.description = description;
+        this.request_product_id = request_product_id;
+        this.request_product_name = request_product_name;
         this.price = price;
-        this.statusProduct=statusProduct;
         this.quantity = quantity;
     }
-
-
 }
+
+
+

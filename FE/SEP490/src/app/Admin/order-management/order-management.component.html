@@ -34,7 +34,7 @@
                   <!-- product.component.html -->
                   <select [(ngModel)]="selectedCategory">
                     <option value="null" disabled selected>Tình trạng</option>
-                    <option *ngFor="let ps of position" [value]="ps.status_id">{{ ps.status_name }}</option>
+                    <option *ngFor="let ps of userStatus" [value]="ps.status_id">{{ ps.status_name }}</option>
                   </select>
 
                   <input type="text" class="form-control" placeholder="Code">
@@ -73,12 +73,15 @@
                         <i class="fa-solid fa-circle-info"></i>
                       </a>
                     </td>
-                    <td>{{ us.userInfor.fullname }}</td>
-                    <td>{{ us.orderDate }}</td>
-                    <td>{{ us.status.status_name }}</td>
-                    <td>{{ us.userInfor.fullname }}</td>
+                    <td>{{ us?.orderDate | date:'dd/MM/yyyy' }}</td>
+
+                    <td>{{ us?.status.status_name}}</td>                  
+                    <td [ngStyle]="{'color': us?.paymentMethod === 1 ? 'green' : (us?.paymentMethod === 0 ? 'red' : 'black')}">
+                      {{ us?.paymentMethod === 1 ? 'ONLINE' : (us?.paymentMethod === 0 ? 'OFFLINE' : '') }}
+                    </td>                              
 
 
+                    <td>{{ us?.totalAmount | number : '1.0-3' }}</td>
                   </tr>
                 </tbody>
               </table>
@@ -87,11 +90,14 @@
 
 
           <pagination-controls style="justify-content: right; display: flex;"
-            (pageChange)="currentPage = $event"></pagination-controls>
+          (pageChange)="currentPage = $event"
+          previousLabel="Trang trước"
+          nextLabel="Trang sau">
+        </pagination-controls>
           <div class="clearfix" style="justify-content: right; display: flex;">
-            <div class="hint-text">Showing <b>{{ (currentPage - 1) * 10 + 1 }}</b> to <b>{{ currentPage * 10
-                > user.length ? user.length : currentPage * 10 }}</b> out of <b>{{
-                user.length }}</b> entries</div>
+            <div class="hint-text">Hiển thị <b>{{ (currentPage - 1) * 10 + 1 }}</b> tới <b>{{ currentPage * 10
+                > user.length ? user.length : currentPage * 10 }}</b> trong tổng <b>{{
+                user.length }}</b> dữ liệu</div>
           </div>
 
 
@@ -99,8 +105,6 @@
       </div>
     </div>
   </div>
-
-
   <!-- Modal for Adding User -->
   <div class="modal fade" id="addProductModal" tabindex="-1" role="dialog" aria-labelledby="addProductModalLabel"
     aria-hidden="true">

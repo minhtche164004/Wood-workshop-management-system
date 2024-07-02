@@ -1,5 +1,6 @@
 package com.example.demo.Service.Impl;
 
+import com.example.demo.Dto.OrderDTO.OrderDetailDTO;
 import com.example.demo.Dto.OrderDTO.OrderDetailWithJobStatusDTO;
 import com.example.demo.Dto.ProductDTO.Product_Thumbnail;
 import com.example.demo.Dto.RequestDTO.RequestAllDTO;
@@ -26,6 +27,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 
@@ -70,6 +72,8 @@ public class OrderServiceImpl implements OrderService {
     @Autowired
     CloudinaryService cloudinaryService;
 
+
+
     @Override
     public Orders AddOrder(RequestOrder requestOrder) {
         LocalDate currentDate = LocalDate.now();
@@ -77,6 +81,7 @@ public class OrderServiceImpl implements OrderService {
 
         Orders orders = new Orders();
         orders.setOrderDate(sqlCompletionTime);
+        orders.setOrderFinish(requestOrder.getOrderFinish());
         Status_Order statusOrder = statusOrderRepository.findById(1);//tự set cho nó là 1
         orders.setStatus(statusOrder);
         orders.setPaymentMethod(requestOrder.getPayment_method()); //1 là trả tiền trực tiếp, 2 là chuyển khoản
@@ -197,21 +202,24 @@ public class OrderServiceImpl implements OrderService {
         User user =userRepository.getUserByUsername(userDetails.getUsername());
         //lấy thông tin thằng đang login
         //   User user = userRepository.findById(requestDTO.getUser_id()).get();
+        LocalDate today = LocalDate.now();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("ddMMyy");
+        String dateString = today.format(formatter);
+        Date requestDate = Date.from(today.atStartOfDay(ZoneId.systemDefault()).toInstant());
         requests.setUser(user);
         Status_Request statusRequest =statusRequestRepository.findById(1).get();//nghĩa là request đang chờ phê duyệt
-        requests.setRequestDate(requestDTO.getRequestDate());
+        requests.setRequestDate(requestDate); //lấy time hiện tại
         requests.setDescription(requestDTO.getDescription());
         requests.setStatus(statusRequest);
         requests.setAddress(requestDTO.getAddress());
+        requests.setEmail(requestDTO.getEmail());
         requests.setFullname(requestDTO.getFullname());
         requests.setPhoneNumber(requestDTO.getPhoneNumber());
         requests.setResponse("");
         requests.setCity_province(requestDTO.getCity_province());
-        requests.setDistrict(requestDTO.getDistrict());
-        requests.setWards(requestDTO.getWards());
-        LocalDate today = LocalDate.now();
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("ddMMyy");
-        String dateString = today.format(formatter);
+        requests.setDistrict(requestDTO.getDistrict_province());
+        requests.setWards(requestDTO.getWards_province());
+
         Requests lastRequest = requestRepository.findRequestTop(dateString + "RQ");
         int count = lastRequest != null ? Integer.parseInt(lastRequest.getCode().substring(8)) + 1 : 1;
         String code = dateString + "RQ" + String.format("%03d", count);
@@ -226,28 +234,28 @@ public class OrderServiceImpl implements OrderService {
         return requests;
     }
 
-    @Override
-    public Requests EditRequest(int request_id,RequestEditDTO requestEditDTO,MultipartFile[] multipartFiles) throws IOException {
-        Requests requests = requestRepository.findById(request_id);
-        Date today = new Date();
-        if (multipartFiles != null &&
-                Arrays.stream(multipartFiles).anyMatch(file -> file != null && !file.isEmpty())) {
-            List<Requestimages> requestimagesList= requestimagesRepository.findRequestImageByRequestId(request_id);
-            for(Requestimages requestimages : requestimagesList){
-                String full_path= requestimages.getFullPath();
-                String id_image =cloudinaryService.extractPublicIdFromUrl(full_path);
-                cloudinaryService.deleteImage(id_image);
-            }
-            requestimagesRepository.deleteRequestImages(request_id); // Xóa những ảnh trước đó
-            uploadImageService.uploadFile(multipartFiles, requests.getRequestId());
-        }
-        requestRepository.updateRequest(request_id,
-                requestEditDTO.getDescription(),
-                today
-        );
-        entityManager.refresh(requests); // Làm mới đối tượng products
-        return requests;
-    }
+//    @Override
+//    public Requests EditRequest(int request_id,RequestEditDTO requestEditDTO,MultipartFile[] multipartFiles) throws IOException {
+//        Requests requests = requestRepository.findById(request_id);
+//        Date today = new Date();
+//        if (multipartFiles != null &&
+//                Arrays.stream(multipartFiles).anyMatch(file -> file != null && !file.isEmpty())) {
+//            List<Requestimages> requestimagesList= requestimagesRepository.findRequestImageByRequestId(request_id);
+//            for(Requestimages requestimages : requestimagesList){
+//                String full_path= requestimages.getFullPath();
+//                String id_image =cloudinaryService.extractPublicIdFromUrl(full_path);
+//                cloudinaryService.deleteImage(id_image);
+//            }
+//            requestimagesRepository.deleteRequestImages(request_id); // Xóa những ảnh trước đó
+//            uploadImageService.uploadFile(multipartFiles, requests.getRequestId());
+//        }
+//        requestRepository.updateRequest(request_id,
+//                requestEditDTO.getDescription(),
+//                today
+//        );
+//        entityManager.refresh(requests); // Làm mới đối tượng products
+//        return requests;
+//    }
     @Override
     public Requests getRequestById(int id) {
         return requestRepository.findById(id);
@@ -325,7 +333,7 @@ public class OrderServiceImpl implements OrderService {
         requestProductAllDTO.setDescription(requestProducts.getDescription());
         List<Product_Requestimages> processedImages = new ArrayList<>(); // Danh sách mới
         for (Product_Requestimages productRequestimages : productRequestimagesList) {
-            productRequestimages.setFullPath(getAddressLocalComputer(productRequestimages.getFullPath()));
+            productRequestimages.setFullPath(productRequestimages.getFullPath());
             processedImages.add(productRequestimages); // Thêm vào danh sách mới
         }
         requestProductAllDTO.setImagesList(processedImages); // Gán danh sách mới vào DTO
@@ -346,6 +354,7 @@ public class OrderServiceImpl implements OrderService {
         requestAllDTO.setResponse(requests.getResponse());
         requestAllDTO.setPhoneNumber(requests.getPhoneNumber());
         requestAllDTO.setFullname(requests.getFullname());
+        requestAllDTO.setEmail(requests.getEmail());
         requestAllDTO.setAddress(requests.getAddress());
         requestAllDTO.setCity_province(requests.getCity_province());
         requestAllDTO.setStatus_id(requests.getStatus().getStatus_id());
@@ -354,7 +363,7 @@ public class OrderServiceImpl implements OrderService {
         requestAllDTO.setDescription(requests.getDescription());
         List<Requestimages> processedImages = new ArrayList<>(); // Danh sách mới
         for (Requestimages requestimages : requestimagesList) {
-            requestimages.setFullPath(getAddressLocalComputer(requestimages.getFullPath()));
+            requestimages.setFullPath(requestimages.getFullPath());
             processedImages.add(requestimages); // Thêm vào danh sách mới
         }
         requestAllDTO.setImagesList(processedImages); // Gán danh sách mới vào DTO
@@ -422,23 +431,62 @@ public class OrderServiceImpl implements OrderService {
         return requestProductRepository.findAll();
     }
 
-    private String getAddressLocalComputer(String imagePath) {
-        int assetsIndex = imagePath.indexOf("/assets/");
-        if (assetsIndex != -1) {
-            imagePath = imagePath.substring(assetsIndex); // Cắt từ "/assets/"
-            if (imagePath.startsWith("/")) { // Kiểm tra xem có dấu "/" ở đầu không
-                imagePath = imagePath.substring(1); // Loại bỏ dấu "/" đầu tiên
-            }
-        }
-        return imagePath;
-    }// Trả về đường dẫn tương đối hoặc đường dẫn ban đầu nếu không tìm thấy "/assets/"
+//    private String getAddressLocalComputer(String imagePath) {
+//        int assetsIndex = imagePath.indexOf("/assets/");
+//        if (assetsIndex != -1) {
+//            imagePath = imagePath.substring(assetsIndex); // Cắt từ "/assets/"
+//            if (imagePath.startsWith("/")) { // Kiểm tra xem có dấu "/" ở đầu không
+//                imagePath = imagePath.substring(1); // Loại bỏ dấu "/" đầu tiên
+//            }
+//        }
+//        return imagePath;
+//    }// Trả về đường dẫn tương đối hoặc đường dẫn ban đầu nếu không tìm thấy "/assets/"
 
     @Override
     public List<OrderDetailWithJobStatusDTO> getOrderDetailByOrderId(int order_id) {
-        List<OrderDetailWithJobStatusDTO> results = orderDetailRepository.getOrderDetailWithJobStatusByOrderId(order_id);
+        List<OrderDetailWithJobStatusDTO> results = orderDetailRepository.getAllOrderDetailByOrderId(order_id);
         if(results.isEmpty()){
             throw new AppException(ErrorCode.NOT_FOUND);
         }
         return results;
     }
+
+
+    @Transactional
+    @Override
+    public Requests ManagerEditRequest(int request_id, RequestEditDTO requestEditDTO) {
+        Requests requests = requestRepository.findById(request_id);
+        Status_Request statusRequest = statusRequestRepository.getById(requestEditDTO.getStatus_id());
+        requests.setStatus(statusRequest);
+        requests.setResponse(requestEditDTO.getResponse());
+        requestRepository.save(requests);
+      //  entityManager.refresh(requests);
+        return requests;
+    }
+
+    @Override
+    public OrderDetailDTO getOrderDetailById(int id) {
+        OrderDetailDTO orderDetailDTO = orderDetailRepository.getOrderDetailById(id);
+        if (orderDetailDTO == null) {
+            throw new AppException(ErrorCode.NOT_FOUND);
+        }
+        return orderDetailDTO;
+    }
+
+    @Override
+    public void deleteRequestById(int requestId) {
+        requestRepository.deleteById(requestId);
+    }
+
+    @Override
+    public boolean checkOderDoneOrNot(int order_id) {
+        List<OrderDetailWithJobStatusDTO> results = orderDetailRepository.getAllOrderDetailByOrderId(order_id);
+        for (OrderDetailWithJobStatusDTO result : results) {
+            if (result.getStatus_job_id() != 13) {  //13 tức là sản phẩm của oderdetail đã hoàn thành
+                return false; // Ngay lập tức trả về false nếu tìm thấy job chưa hoàn thành
+            }
+        }
+        return true; // Chỉ trả về true nếu tất cả các job đều đã hoàn thành (status_id = 13)
+    }
+
 }

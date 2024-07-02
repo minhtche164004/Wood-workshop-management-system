@@ -32,7 +32,7 @@ public class ProductAddDTO {
 //   private String images;
     @NotNull(message = "MUST_REQUIRED")
     private int category_id;
-    @NotNull(message = "MUST_REQUIRED")
+  //  @NotNull(message = "MUST_REQUIRED")
     private int type;
 
     private String file_thumbnail;

@@ -27,7 +27,7 @@ import { CreateOrderComponent } from './create-order/create-order.component';
 import { OrderManagementComponent } from './Admin/order-management/order-management.component';
 import { ProductDetailComponent } from './features/product-detail/product-detail.component';
 import { JobManagementComponent } from './Admin/job-management/job-management.component';
-import { JobDetailComponent } from './Admin/job-detail/job-detail.component';
+
 
 import { ForgotPassComponent } from './forgotPassword/forgot-pass/forgot-pass.component';
 import { ChangePasswordComponent } from './features/change-password/change-password.component';
@@ -37,6 +37,19 @@ import { ChangePasswordComponent } from './features/change-password/change-passw
 import { ContactComponent } from './contact/contact.component';
 import { AboutUsComponent } from './about-us/about-us.component';
 import { EmployeeJobComponent } from './employee-job/employee-job.component';
+
+import { WishlistComponent } from './features/wishlist/wishlist.component';
+import { TemplateComponent } from './features/template/template.component';
+
+import { BillComponent } from './bill/bill.component';
+import { MaterialManagementComponent } from './Admin/material-management/material-management.component';
+import { ReportManagementComponent } from './Admin/report-management/report-management.component';
+import { AdvancedBillManagementComponent } from './Admin/advanced-bill-management/advanced-bill-management.component';
+import { FeedbackDefectiveComponent } from './Admin/feedback-defective/feedback-defective.component';
+import { TotalSalaryComponent } from './Admin/total-salary/total-salary.component';
+import { AutoCompleteComponent } from './auto-complete/auto-complete.component';
+import { HistoryOrderComponent } from './Admin/history-order/history-order.component';
+
 
 
 
@@ -72,12 +85,23 @@ const routes: Routes = [
   { path: 'order_management', component: OrderManagementComponent },
   { path: 'product_details', component: ProductDetailComponent },
   { path: 'job_management', component: JobManagementComponent },
-  { path: 'job_detail', component: JobDetailComponent },
-
   { path: 'changePassWord', component: ChangePasswordComponent },
-
   { path: 'employee-job', component: EmployeeJobComponent },
+  { path: 'bill', component: BillComponent },
   { path: 'product-details/:id', component: ProductDetailComponent },
+
+  { path: 'wishlist', component: WishlistComponent },
+  { path: 'template', component: TemplateComponent },
+  
+
+  { path: 'material_management', component: MaterialManagementComponent },
+  { path: 'report_management', component: ReportManagementComponent },
+  { path: 'advanced_bill', component: AdvancedBillManagementComponent },
+  { path: 'feedback_defective', component: FeedbackDefectiveComponent },
+  { path: 'total_salary', component: TotalSalaryComponent },
+  { path: 'autoComplete', component: AutoCompleteComponent },
+  { path: 'history_order', component: HistoryOrderComponent },
+
   { path: '', redirectTo: '/homepage', pathMatch: 'full' },
   { path: '**', redirectTo: '/homepage', pathMatch: 'full' },
 

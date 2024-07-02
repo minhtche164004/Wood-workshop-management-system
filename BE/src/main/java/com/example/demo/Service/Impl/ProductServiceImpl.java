@@ -1,6 +1,7 @@
 package com.example.demo.Service.Impl;
 
 import com.example.demo.Dto.ProductDTO.*;
+import com.example.demo.Dto.SubMaterialDTO.SubMateProductDTO;
 import com.example.demo.Entity.*;
 import com.example.demo.Exception.AppException;
 import com.example.demo.Exception.ErrorCode;
@@ -83,7 +84,7 @@ public class ProductServiceImpl implements ProductService {
         Categories categories = categoryRepository.findById(productAddDTO.getCategory_id());
 
         products.setCategories(categories);
-        products.setType(productAddDTO.getType());
+        products.setType(0);
 
 
         products.setQuantity(0);
@@ -342,6 +343,7 @@ public class ProductServiceImpl implements ProductService {
 
 
 
+
     //này là dành cho trang homepage
     @Override
     public List<Products> GetAllProductForCustomer() {
@@ -430,6 +432,15 @@ public class ProductServiceImpl implements ProductService {
         if (!checkConditionService.checkInputPrice(productEditDTO.getPrice())) {
             throw new AppException(ErrorCode.PRICE_INVALID);
         }
+    }
+
+    @Override
+    public List<SubMateProductDTO> getProductSubMaterialByProductIdDTO(int productId) {
+        List<SubMateProductDTO> list = productSubMaterialsRepository.getProductSubMaterialByProductIdDTO(productId);
+        if(list == null){
+            throw new AppException(ErrorCode.NOT_FOUND);
+        }
+        return list;
     }
 
 

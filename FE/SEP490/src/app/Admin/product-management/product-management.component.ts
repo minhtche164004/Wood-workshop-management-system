@@ -68,6 +68,7 @@ export class ProductManagementComponent implements OnInit {
   editForm: FormGroup;
   formSubMaterialPerProduct: FormGroup;
   subMaterialItemOfProduct: SubMaterialItemOfProduct[] = [];
+  subMaterialData : any;
   constructor(
     private fb: FormBuilder,
     private productListService: ProductListService,
@@ -122,11 +123,67 @@ export class ProductManagementComponent implements OnInit {
   }
   //phan formGroup cua edit productt
 
-  populateFormWithData() {
+  populateFormWithData(productId: number) {
+    this.productListService.exportMaterialProductByProductId(productId).subscribe(
+      (data) => {
+        if (data.code === 1000) {
+          this.subMaterialData = data.result;
+          console.log('Danh sách material sản phẩm:', this.subMaterialData);
+          console.log('productId', productId);
+        } else {
+          console.error('Failed to fetch products:', data);
+          this.toastr.error('Không thể lấy danh sách sản phẩm!', 'Lỗi');
+        }
+      },
+      (error) => {
+        console.error('Error fetching products:', error);
+        this.toastr.error('Có lỗi xảy ra!', 'Lỗi');
+      }
+    );
+
+    [
+      {
+          "material_id": "1",
+          "sub_material_id": "1",
+          "material_type": "m3",
+          "unitPrice": 1200000,
+          "product_sub_quantity": 5
+      },
+      {
+          "material_id": "2",
+          "sub_material_id": "13",
+          "material_type": "m2",
+          "unitPrice": 120000,
+          "product_sub_quantity": 2
+      },
+      {
+          "material_id": "1",
+          "sub_material_id": "1",
+          "material_type": "m3",
+          "unitPrice": 1200000,
+          "product_sub_quantity": 2
+      },
+      {
+          "material_id": null,
+          "sub_material_id": null,
+          "material_type": null,
+          "unitPrice": null,
+          "product_sub_quantity": 3
+      },
+      {
+          "material_id": null,
+          "sub_material_id": null,
+          "material_type": null,
+          "unitPrice": null,
+          "product_sub_quantity": 1
+      }
+  ]
+
     const materialsData = [
       { materialId: '2',subMaterialId: '15', subMaterialName: 'abc', materialType: "m3",unitPrice: 300000, quantity: 110,},
       { materialId: '1',subMaterialId: '48', subMaterialName: 'axx', materialType: "lit",unitPrice: 20000, quantity: 100 },
     ];
+
     
     // Reset the form and remove all items
     this.formSubMaterialPerProduct.reset();
@@ -135,7 +192,7 @@ export class ProductManagementComponent implements OnInit {
     }
     // Populate the form with data
     this.selectedMaterialId = [] as any;
-    materialsData.forEach((materialItem, index) => {  
+    this.subMaterialData.forEach((materialItem: any, index: any) => {  
       this.selectedMaterialId[index] = materialItem.materialId;
       this.selectedSubMaterialId[index] = materialItem.subMaterialId;
       this.onMaterialChangeFirstEdit(Number(this.selectedMaterialId[index]), index); 
@@ -442,47 +499,9 @@ export class ProductManagementComponent implements OnInit {
         // console.log("productId la", this.editForm.value);
       });
 
-    this.populateFormWithData();
+    this.populateFormWithData(productId);
 
   }
-
-
-  // initForm() {
-  //   this.productListService.getAllSubMaterialByMaterialIdProduct(1).subscribe({
-  //     next: (response) => {
-  //       console.log("Response result:", response.result);
-
-  //       if (response && Array.isArray(response.result)) {
-  //         const itemFormGroups = response.result.map((item: SubMaterialItemOfProduct) => {
-  //           return this.fb.group({
-  //             subMaterialId: item.subMaterialId,
-  //             quantity: item.quantity,
-  //             unitPrice: item.unitPrice
-
-  //             // Thêm các trường khác nếu cần
-  //           });
-  //         });
-  //         const formGroups = itemFormGroups.map((item: SubMaterialItemOfProduct) => {
-  //           return new FormGroup({
-  //             price: new FormControl(item.unitPrice),
-  //             materialType: new FormControl(item.subMaterialId),
-  //             quantity: new FormControl(item.quantity)
-  //           });
-  //         });
-  //         this.form = new FormGroup({
-  //           items: new FormArray(itemFormGroups)
-  //         });
-  //         console.log("form", this.form);
-  //         this.subMaterials = response.result;
-  //         return true;
-  //       } else {
-  //         // Xử lý trường hợp response.result không tồn tại hoặc không phải là mảng
-  //         console.error('response.result không tồn tại hoặc không phải là một mảng');
-  //         return [];
-  //       }
-  //     }
-  //   });
-  // }
 
 
   onFileSelected(event: any) {

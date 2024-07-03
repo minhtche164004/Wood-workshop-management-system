@@ -161,9 +161,9 @@ public class JobController {
     }
 
     @PostMapping("/CreateJobs")
-    public ApiResponse<?> CreateJobs(@RequestBody JobDTO jobDTO , @RequestParam("user_id") int user_id, @RequestParam("p_id") int p_id, @RequestParam("status_id") int status_id, @RequestParam("job_id") int job_id) {
+    public ApiResponse<?> CreateJobs(@RequestBody JobDTO jobDTO , @RequestParam("user_id") int user_id, @RequestParam("p_id") int p_id, @RequestParam("status_id") int status_id, @RequestParam("job_id") int job_id,@RequestParam("type_job") int type_job) {
         ApiResponse<Jobs> apiResponse = new ApiResponse<>();
-        apiResponse.setResult(jobService.CreateJob(jobDTO,user_id,p_id,status_id,job_id));
+        apiResponse.setResult(jobService.CreateJob(jobDTO,user_id,p_id,status_id,job_id,type_job));
         return apiResponse;
     }
 

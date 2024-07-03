@@ -23,7 +23,7 @@ public interface JobService {
     List<JobProductDTO> getListProductJobByNameOrCode(String key);
 //
     List<JobProductDTO> getRequestProductInOrderDetailByCode(String code);
-    Jobs CreateJob(JobDTO jobDTO, int user_id, int p_id, int status_id, int job_id);
+    Jobs CreateJob(JobDTO jobDTO, int user_id, int p_id, int status_id, int job_id,int type_job);
 
     Jobs CreateJob_Log(int job_id,int status_id);
 

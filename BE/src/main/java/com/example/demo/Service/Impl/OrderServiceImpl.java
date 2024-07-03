@@ -94,9 +94,9 @@ public class OrderServiceImpl implements OrderService {
         orders.setFullname(requestOrder.getCusInfo().getFullname());
         orders.setPhoneNumber(requestOrder.getCusInfo().getPhone());
         //day la` dia chi nhan hang cua khach hang
-        orders.setCity_province(requestOrder.getCusInfo().getAddress());
-        orders.setDistrict(requestOrder.getCusInfo().getAddress());
-        orders.setWards(requestOrder.getCusInfo().getAddress());
+        orders.setCity_province(requestOrder.getCusInfo().getCity_province());
+        orders.setDistrict(requestOrder.getCusInfo().getDistrict());
+        orders.setWards(requestOrder.getCusInfo().getWards());
         //luu thong tin nguoi dat
         UserInfor userInfor = new UserInfor();
         userInfor.setFullname(requestOrder.getCusInfo().getFullname());

@@ -89,17 +89,17 @@ public class JobServiceImpl implements JobService {
     //nếu màn bên kia là đang là Đã nghiệm thu làm sơn thì lúc sửa status, nó sẽ sửa thành Sản phẩm đã hoàn thành , job thành công , quantity được cộng vào
     @Transactional
     @Override
-    public Jobs CreateJob(JobDTO jobDTO, int user_id, int p_id, int status_id, int job_id) {
+    public Jobs CreateJob(JobDTO jobDTO, int user_id, int p_id, int status_id, int job_id,int type_job) {
+      //  type_job để phân biệt alf hàng có sẵn hay hàng theo yêu cầu , 0 là ko có sẵn , 1 là có sẵn
         Jobs jobs = new Jobs();
         User user = userRepository.findByIdJob(user_id);
         jobs.setUser(user);
-        Products products = productRepository.findById(p_id);
-        RequestProducts requestProducts = requestProductRepository.findById(p_id);
-
-        if (products == null) { //tức là đang phân job cho requets product
+        if (type_job ==0) { //tức là đang phân job cho requets product
+            RequestProducts requestProducts = requestProductRepository.findById(p_id);
             jobs.setRequestProducts(requestProducts);
             jobs.setProduct(null);
         } else {////tức là đang phân job cho  product có sẵn
+            Products products = productRepository.findById(p_id);
             jobs.setProduct(products);
             jobs.setRequestProducts(null);
         }
@@ -163,9 +163,7 @@ public class JobServiceImpl implements JobService {
                 requestProductRepository.save(requestProducts);
                 jobs_log.setProduct(null);
                 //------ đoạn này chỉ dành cho request product , vì nó là đơn hàng , còn product có sẵn thì lúc cọc xong thì chuyển sang status là đã thi công xong luôn
-              Orderdetails orderdetails =jobs_history.getOrderdetails();
-              String code_order = orderdetails.getOrder().getCode();
-                Orders orders = orderRepository.findByCode(code_order);
+                Orders orders = orderRepository.findByCode(jobs_history.getOrderdetails().getOrder().getCode());
                 if(checkOderDoneOrNot(orders.getOrderId()) == true){
                     orders.setStatus(statusOrderRepository.findById(4)); //nghĩa là đơn hàng đã thi công xong
                     orderRepository.save(orders);
@@ -194,16 +192,15 @@ public class JobServiceImpl implements JobService {
     }
 
     private boolean checkOderDoneOrNot(int order_id) {
-        List<OrderDetailWithJobStatusDTO> results = orderDetailRepository.getAllOrderDetailByOrderId(order_id);
+        List<OrderDetailWithJobStatusDTO> results = orderDetailRepository.getAllOrderDetailByOrderIdCheck(order_id);
         for (OrderDetailWithJobStatusDTO result : results) {
-            if (result.getStatus_job_id() != 13) {  //13 tức là sản phẩm của oderdetail đã hoàn thành
+            if (result.getStatus_job_id() != 13 && result.getStatus_job_id() != 15 ) {  //13 tức là sản phẩm của oderdetail đã hoàn thành
                 return false; // Ngay lập tức trả về false nếu tìm thấy job chưa hoàn thành
             }
         }
         return true; // Chỉ trả về true nếu tất cả các job đều đã hoàn thành (status_id = 13)
     }
-
-
+    
     @Override
     public Jobs EditJobs(JobDTO jobDTO, int job_id) {
         Jobs jobs = jobRepository.getJobById(job_id);

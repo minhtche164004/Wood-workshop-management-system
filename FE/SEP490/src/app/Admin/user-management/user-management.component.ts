@@ -10,7 +10,7 @@ import { environment } from 'src/app/environments/environment'; // Ensure this i
 import { Router } from '@angular/router';
 import { AuthenListService } from 'src/app/service/authen.service';
 
-interface AddNewAccount {
+export interface AddNewAccount {
   username: string;
   password: string;
   checkPass: string;
@@ -28,9 +28,9 @@ interface AddNewAccount {
   wards: string;
 }
 interface BankName {
-  id: number;
-  name: string;
-  
+  id: string;
+  shortName: string;
+  logo: string;
 }
 interface EditUserRequest {
   userId: number;
@@ -60,7 +60,8 @@ interface ApiResponse {
 
 interface ApiResponse1 {
   code: string;
-  result: any[];
+  message?: string;
+  data: BankName[];
 }
 
 interface Province {
@@ -85,27 +86,25 @@ interface Ward {
   styleUrls: ['./user-management.component.scss']
 })
 export class UserManagementComponent implements OnInit {
-  @ViewChild('closeButton') closeButton: ElementRef | undefined;
-  private apiUrl_AddNewAccount = `${environment.apiUrl}api/auth/admin/AddNewAccount`; // URL của backend
+  @ViewChild('closeButton', { static: false }) closeButton!: ElementRef<any>;
 
-
-
-  private apiUrl_EditUser = `${environment.apiUrl}api/auth/admin/EditUser`;
-  private apiUrl_GetUserById = `${environment.apiUrl}api/auth/admin/GetUserById`;
-
+  ngAfterViewInit() {
+    if (this.closeButton) {
+      this.closeButton.nativeElement.click();
+    }
+  }
   addAccountForm: FormGroup;
   editUserForm: FormGroup;
   provinces: Province[] = [];
   districts: District[] = [];
   bankname: BankName[] = [];
-  
   provinceControl = new FormControl();
   districtControl = new FormControl();
   wards: Ward[] = [];
   role: Role[] = [];
   position: any[] = [];
   status: any[] = [];
-
+  banks: any[] = [];
   isPositionDisabled: boolean = true;
   user: any[] = [];
   loginToken: string | null = null;
@@ -116,19 +115,17 @@ export class UserManagementComponent implements OnInit {
   selectedRole: any = null; // Assuming selectedRole should be a boolean
   selectedPosition: any = null;
   selectedStatus: any = null;
+  
   selectBankName: any = null;
-
   isPositionEnabled: boolean = false;
-
+  isPositionEnabled_Update: boolean = false;
   selectProvince: any = null;
   selectDistricts: any = null;
   selectWards: any = null;
   selectedUser: any;
   userData: any = {};
-
   selectedProvince: any;
   selectedDistrict: any;
-
   constructor(private provincesService: ProvincesService,
     private productListService: ProductListService,
     private authenListService: AuthenListService,
@@ -137,7 +134,7 @@ export class UserManagementComponent implements OnInit {
     private toastr: ToastrService,
     private router: Router) {
     this.addAccountForm = this.fb.group({
-      username: ['', Validators.required],
+      username: [''],
       password: ['', Validators.required],
       checkPass: ['', Validators.required],
       email: ['', [Validators.required, Validators.email]],
@@ -171,10 +168,9 @@ export class UserManagementComponent implements OnInit {
     });
 
   }
-
   isUserDataLoaded: boolean = false;
-
   ngOnInit(): void {
+
     this.userData = {
       username: '',
       email: '',
@@ -199,12 +195,12 @@ export class UserManagementComponent implements OnInit {
     this.loadStatus();
     this.loadAllBankName();
     if (this.loginToken) {
-      console.log('Retrieved loginToken:', this.loginToken);
+
       this.productListService.getAllUser().subscribe(
         (data: ApiResponse) => {
           if (data.code === 1000) {
             this.user = data.result;
-          
+
           } else {
             console.error('Failed to fetch products:', data);
           }
@@ -216,19 +212,17 @@ export class UserManagementComponent implements OnInit {
     } else {
       console.error('No loginToken found in localStorage.');
     }
-    // this.addAccountForm.get('city')?.valueChanges.subscribe(provinceName => {
-    //   const selectedProvince = this.provinces.find(province => province.name === provinceName);
-    //   this.districts = selectedProvince ? selectedProvince.districts : [];
-    //   this.addAccountForm.get('district')?.reset();
-    //   this.addAccountForm.get('wards')?.reset();
-    // });
-
-    // this.addAccountForm.get('district')?.valueChanges.subscribe(districtName => {
-    //   const selectedDistrict = this.districts.find(district => district.name === districtName);
-    //   this.wards = selectedDistrict ? selectedDistrict.wards : [];
-    //   this.addAccountForm.get('wards')?.reset();
-    // });
-
+    this.addAccountForm.get('city')?.valueChanges.subscribe(provinceName => {
+      const selectedProvince = this.provinces.find(province => province.name === provinceName);
+      this.districts = selectedProvince ? selectedProvince.districts : [];
+      this.addAccountForm.get('district')?.reset();
+      this.addAccountForm.get('wards')?.reset();
+    });
+    this.addAccountForm.get('district')?.valueChanges.subscribe(districtName => {
+      const selectedDistrict = this.districts.find(district => district.name === districtName);
+      this.wards = selectedDistrict ? selectedDistrict.wards : [];
+      this.addAccountForm.get('wards')?.reset();
+    });
     // khi load trang cai nay` no ghi de` vao` gia tri user nen bi loi~
     this.editUserForm.get('city_province')?.valueChanges.subscribe(provinceName => {
       const selectedProvince = this.provinces.find(province => province.name === provinceName);
@@ -238,7 +232,6 @@ export class UserManagementComponent implements OnInit {
         this.editUserForm.get('wards')?.reset();
       }
     });
-
     this.editUserForm.get('district')?.valueChanges.subscribe(districtName => {
       const selectedDistrict = this.districts.find(district => district.name === districtName);
       this.wards = selectedDistrict ? selectedDistrict.wards : [];
@@ -246,10 +239,12 @@ export class UserManagementComponent implements OnInit {
         this.editUserForm.get('wards')?.reset();
       }
     });
-
-
+    this.editUserForm.get('role_id')?.valueChanges.subscribe((roleId) => {
+      this.selectedRole = roleId;
+      this.onRoleChangeUpdate();
+    });
+    this.onRoleChangeUpdate(); // gọi hàm này khi form vừa được khởi tạo
   }
-
   loadAllRole(): void {
     this.productListService.getAllRole().subscribe(
       (data: any) => {
@@ -284,33 +279,12 @@ export class UserManagementComponent implements OnInit {
       }
     );
   }
-  onRoleChange() {
-    if (this.selectedRoleAdd !== 4) {
-      this.isPositionEnabled = false;
-
-
-    } else {
-      this.isPositionEnabled = true;
-
-
-    }
-  }
-  onRoleChangeUpdate() {
-    if (this.userData.role_id !== 4) {
-      this.isPositionEnabled = false;
-    } else {
-      this.isPositionEnabled = true;
-
-    }
-  }
-
-
   loadPosition(): void {
     this.productListService.getAllPosition().subscribe(
       (data: any) => {
         if (data.code === 1000) {
           this.position = data.result;
-          console.log("Position" ,data)
+
         } else {
           console.error('Invalid data returned:', data);
         }
@@ -325,7 +299,7 @@ export class UserManagementComponent implements OnInit {
       (data: any) => {
         if (data.code === 1000) {
           this.status = data.result;
-          console.log("Status" ,data)
+
         } else {
           console.error('Invalid data returned:', data);
         }
@@ -335,13 +309,11 @@ export class UserManagementComponent implements OnInit {
       }
     );
   }
-
   loadProvinces(): void {
     this.provincesService.getProvinces().subscribe((data: Province[]) => {
       this.provinces = data;
     });
   }
-
   loadAllUsers(): void {
     this.productListService.getAllUser().subscribe(
       (data: ApiResponse) => {
@@ -358,88 +330,61 @@ export class UserManagementComponent implements OnInit {
   }
   loadAllBankName(): void {
     this.authenListService.getNameATM().subscribe(
-      (data: ApiResponse1) => {
-        if (data.code === "00") {
-          this.bankname = data.result;
-          console.log("Status" ,data)
+      (response: ApiResponse1) => {
+        if (response.code === "00") {
+          this.bankname = response.data;
+
         } else {
-          console.error('Failed to fetch users:', data);
+          console.error('Failed to fetch banks:', response);
         }
       },
       (error) => {
-        console.error('Error fetching users:', error);
+        console.error('Error fetching banks:', error);
       }
     );
   }
-
-  AddNewAccount(): void {
-
-    const addNewAccountRequest: AddNewAccount = this.addAccountForm.value;
-    console.log('Request Data:', addNewAccountRequest);
-    this.http.post<any>(this.apiUrl_AddNewAccount, addNewAccountRequest, { withCredentials: true })
-      .subscribe(
-        () => {
-          this.toastr.success('Thêm tài khoản người dùng thành công.');
-          if (this.closeButton) {
-            this.closeButton.nativeElement.click(); // Gọi hành động đóng modal
-          }
-          this.addAccountForm.reset(); // Reset the form after successful addition
-        },
-        (error: any) => {
-          console.error('Registration failed', error);
-          this.toastr.error('Registration failed. Please try again.');
-        }
-      );
-  }
-  populateForm(user: any): void {
-    this.editUserForm.patchValue({
-      username: user.username,
-      email: user.email,
-      phoneNumber: user.phoneNumber,
-      address: user.address,
-      fullname: user.fullname,
-      status: user.status,
-      position: user.position,
-      role: user.role,
-      bank_name: user.bank_name,
-      bank_number: user.bank_number,
-
-      city: user.city_province,
-      district: user.district,
-      wards: user.wards
-    });
-    // this.selectedProvince = this.provinces.find(province => province.name === user.city_province);
-    // if (this.selectedProvince) {
-    //   this.districts = this.selectedProvince.districts;
-    //   this.editUserForm.patchValue({ district: user.district });  // Set initial district
-    //   // Find the matching district based on district name (if necessary)
-    //   this.selectedDistrict = this.districts.find(district => district.name === user.district);
-    //   if (this.selectedDistrict) {
-    //     this.wards = this.selectedDistrict.wards;
-    //     this.editUserForm.patchValue({ wards: user.wards });  // Set initial ward (if necessary)
-    //   }
-    // }
-    this.editUserForm.get('city_province')?.setValue(user.city_province); // Set initial values for dropdowns
-    this.editUserForm.get('district')?.setValue(user.district);
-    this.editUserForm.get('wards')?.setValue(user.wards);
-
-  }
-
   getUserData(user_id: string): void {
     this.authenListService.getUserById(user_id).subscribe(
       (data) => {
         this.userData = data.result;
         this.selectedRole = this.role.find(role => role.roleName === this.userData.role_name)?.roleId;
         this.selectedPosition = this.position.find(position => position.position_name === this.userData.position_name)?.position_id;
-        this.selectedStatus = this.status.find(sa => sa.status_name === this.userData.status_name)?.status_id ;
-        console.log("User data:", data)
-        console.log("User data:", this.userData.role_name)
+        this.selectedStatus = this.status.find(sa => sa.status_name === this.userData.status_name)?.status_id;
+        this.selectBankName = this.userData.bank_name;
+
+      
       },
       (error) => {
         console.error('Error fetching user data:', error);
       }
     );
 
+  }
+  onRoleChange() {
+    if (this.selectedRoleAdd !== 4) {
+      this.isPositionEnabled = false;
+      this.addAccountForm.patchValue({
+        position: null,
+        bank_name: null,
+        bank_number: ''
+      });
+    } else {
+      this.isPositionEnabled = true;
+    }
+  }
+  onRoleChangeUpdate() {
+    if (this.selectedRole === 4) {
+      this.isPositionEnabled_Update = true;
+      // Enable position and bank fields
+    } else {
+      this.isPositionEnabled_Update = false;
+      this.editUserForm.patchValue({
+        position: null,
+        bank_name: null,
+        bank_number: ''
+      });
+
+    }
   }
   onProvinceChange() {
     const selectedProvinceName = this.userData.city_province; // assuming 'city' is bound to ngModel of the province dropdown
@@ -457,14 +402,36 @@ export class UserManagementComponent implements OnInit {
     this.wards = this.selectedDistrict ? this.selectedDistrict.wards : [];
     this.userData.wards = ''; // reset selected ward in the model
   }
+  AddNewAccount(): void {
+    const addNewAccountRequest: AddNewAccount = this.addAccountForm.value;
+    console.log('Request Data:', addNewAccountRequest);
+
+    this.authenListService.AddNewAccountForAdmin(addNewAccountRequest).subscribe(
+      () => {
+        this.toastr.success('Thêm tài khoản người dùng thành công.');
+        this.addAccountForm.reset(); // Reset the form after successful addition
+        setTimeout(() => {
+          window.location.reload();
+        },  1000); // Delay 1 second before reload
+      },
+      (error: any) => {
+        console.error('Registration failed', error);
+        this.toastr.error('Registration failed. Please try again.');
+      }
+    );
+  }
   EditUser(): void {
     const editUserRequest: EditUserRequest = this.editUserForm.value;
     const userId = this.userData.userId; // Lấy userId từ userData
     console.log("Data: ", editUserRequest)
     this.authenListService.editUserById(userId, editUserRequest).subscribe(
       () => {
-        this.toastr.success('User updated successfully.');
-        this.router.navigate(['/user_management']); // Navigate to users list or profile page
+       
+        this.toastr.success('Thay đổi thông tin thành công.');
+        this.ngAfterViewInit(); 
+        setTimeout(() => {
+          window.location.reload();
+        }, 2000); // Delay 1 second before reload
       },
       (error: any) => {
         console.error('User update failed', error);
@@ -472,6 +439,4 @@ export class UserManagementComponent implements OnInit {
       }
     );
   }
-
-
 }

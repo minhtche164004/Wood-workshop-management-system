@@ -71,7 +71,7 @@ public class UserServiceImpl implements UserService {
         String pass = passwordEncoder.encode(userDTO.getPassword());
         Role userRole = roleRepository.findById(2); //Default la CUSTOMER
         Status_User status = statusRepository.findById(2); //Default la KICHHOAT
-        //Position position = positionRepository.findById(1);//Default la khong phai employee
+        Position position = positionRepository.findById(4);//Default la Không đảm nhận vị trí
         UserInfor userInfor = new UserInfor(
                 userDTO.getPhoneNumber(),
                 userDTO.getFullname(),
@@ -90,7 +90,7 @@ public class UserServiceImpl implements UserService {
                 pass,
                 userDTO.getEmail(),
                 status,
-                null,
+                position,
                 hireDate,
                 userRole,
                 userInfor

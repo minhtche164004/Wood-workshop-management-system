@@ -30,8 +30,8 @@ interface MaterialItem {
   quantity: number;
 }
 interface SubMaterialItemOfProduct {
-  materialId: string;
-  subMaterialId: string;
+  materialId: number;
+  subMaterialId: number;
   subMaterialName: string;
   quantity: number;
   unitPrice: number;
@@ -68,7 +68,7 @@ export class ProductManagementComponent implements OnInit {
   editForm: FormGroup;
   formSubMaterialPerProduct: FormGroup;
   subMaterialItemOfProduct: SubMaterialItemOfProduct[] = [];
-  subMaterialData : any;
+  subMaterialData: any;
   constructor(
     private fb: FormBuilder,
     private productListService: ProductListService,
@@ -83,14 +83,17 @@ export class ProductManagementComponent implements OnInit {
     });
 
     this.editForm = this.fb.group({
+      product_id  : [0],
       product_name: [''],
       description: [''],
       price: [0],
       category_id: [0],
       completionTime: [''],
       enddateWarranty: [''],
-      status: [''],
-      image: ['']
+      status_id: [''],
+      image: [''],
+      quantity: [0],
+      type: [0]
     });
 
     this.materialForm = this.fb.group({
@@ -99,7 +102,7 @@ export class ProductManagementComponent implements OnInit {
 
     this.formSubMaterialPerProduct = this.fb.group({
       itemsEdit: this.fb.array([]),
-    });  
+    });
   }
 
   //phan formGroup cua add productt
@@ -124,12 +127,32 @@ export class ProductManagementComponent implements OnInit {
   //phan formGroup cua edit productt
 
   populateFormWithData(productId: number) {
+
     this.productListService.exportMaterialProductByProductId(productId).subscribe(
       (data) => {
         if (data.code === 1000) {
           this.subMaterialData = data.result;
-          console.log('Danh sách material sản phẩm:', this.subMaterialData);
-          console.log('productId', productId);
+          // console.log('Danh sách material sản phẩm:', this.subMaterialData);
+          // console.log('productId', productId);
+
+          // Reset the form and remove all items
+          this.formSubMaterialPerProduct.reset();
+          while (this.itemsEditArray.length !== 0) {
+            this.itemsEditArray.removeAt(0);
+          }
+          // Populate the form with data
+          this.selectedMaterialId = [] as any;
+          this.subMaterialData.forEach((materialItem: any, index: any) => {
+            this.selectedMaterialId[index] = materialItem.materialId;
+            this.selectedSubMaterialId[index] = materialItem.subMaterialId;
+            this.onMaterialChangeFirstEdit(Number(this.selectedMaterialId[index]), index);
+
+            this.fillMaterialItemEdit(materialItem);
+
+          });
+
+          console.log(this.itemsEditArray.value);
+
         } else {
           console.error('Failed to fetch products:', data);
           this.toastr.error('Không thể lấy danh sách sản phẩm!', 'Lỗi');
@@ -141,77 +164,16 @@ export class ProductManagementComponent implements OnInit {
       }
     );
 
-    [
-      {
-          "material_id": "1",
-          "sub_material_id": "1",
-          "material_type": "m3",
-          "unitPrice": 1200000,
-          "product_sub_quantity": 5
-      },
-      {
-          "material_id": "2",
-          "sub_material_id": "13",
-          "material_type": "m2",
-          "unitPrice": 120000,
-          "product_sub_quantity": 2
-      },
-      {
-          "material_id": "1",
-          "sub_material_id": "1",
-          "material_type": "m3",
-          "unitPrice": 1200000,
-          "product_sub_quantity": 2
-      },
-      {
-          "material_id": null,
-          "sub_material_id": null,
-          "material_type": null,
-          "unitPrice": null,
-          "product_sub_quantity": 3
-      },
-      {
-          "material_id": null,
-          "sub_material_id": null,
-          "material_type": null,
-          "unitPrice": null,
-          "product_sub_quantity": 1
-      }
-  ]
-
-    const materialsData = [
-      { materialId: '2',subMaterialId: '15', subMaterialName: 'abc', materialType: "m3",unitPrice: 300000, quantity: 110,},
-      { materialId: '1',subMaterialId: '48', subMaterialName: 'axx', materialType: "lit",unitPrice: 20000, quantity: 100 },
-    ];
-
-    
-    // Reset the form and remove all items
-    this.formSubMaterialPerProduct.reset();
-    while (this.itemsEditArray.length !== 0) {
-      this.itemsEditArray.removeAt(0);
-    }
-    // Populate the form with data
-    this.selectedMaterialId = [] as any;
-    this.subMaterialData.forEach((materialItem: any, index: any) => {  
-      this.selectedMaterialId[index] = materialItem.materialId;
-      this.selectedSubMaterialId[index] = materialItem.subMaterialId;
-      this.onMaterialChangeFirstEdit(Number(this.selectedMaterialId[index]), index); 
-
-      this.fillMaterialItemEdit(materialItem);
-
-   });
-
-    console.log('Form populated with data:' ,this.formSubMaterialPerProduct.value);
   }
 
-  onMaterialChangeFirstEdit(materialId: number, index: number){
+  onMaterialChangeFirstEdit(materialId: number, index: number) {
     this.loadSubMaterials(materialId, index);
   }
 
   get itemsEditArray(): FormArray {
     return this.formSubMaterialPerProduct.get('itemsEdit') as FormArray;
   }
-  
+
   fillMaterialItemEdit(material: SubMaterialItemOfProduct) {
     const itemFormGroup = this.fb.group({
       materialId: [material.materialId],
@@ -233,7 +195,7 @@ export class ProductManagementComponent implements OnInit {
     });
     this.itemsEditArray.push(item);
   }
-  
+
   removeItemEdit(index: number) {
     if (this.itemsEditArray && this.itemsEditArray.length > index) {
       this.itemsEditArray.removeAt(index);
@@ -410,32 +372,10 @@ export class ProductManagementComponent implements OnInit {
     this.selectedImages = Array.from(event.target.files);
   }
 
-  onSubmit123(): void {
-    if (this.uploadForm.valid && this.selectedThumbnail && this.selectedImages.length) {
-      const productData = this.uploadForm.value;
-      console.log('Form Data:', productData);
-      console.log('Selected Thumbnail:', this.selectedThumbnail);
-      console.log('Selected Images:', this.selectedImages);
-
-      this.productListService.uploadProduct(productData, this.selectedThumbnail, this.selectedImages)
-        .subscribe(
-          response => {
-
-            this.toastr.success('Tạo sản phẩm thành công!', 'Thành công');
-            this.ngOnInit();
-            console.log('Upload successful', response);
-          },
-          error => {
-
-            this.toastr.error('Tạo sản phẩm bị lỗi!', 'Lỗi');
-          }
-        );
-    }
-  }
 
   onSubmit() {
     if (this.uploadForm.valid && this.selectedThumbnail && this.selectedImages.length) {
-      const productData = this.uploadForm.value;
+      const productData = this.editForm.value;
       console.log('data goc:', this.materialForm.value);
       var temp = this.materialForm.value;
 
@@ -478,11 +418,13 @@ export class ProductManagementComponent implements OnInit {
 
   editProduct(productId: number) {
     this.editForm.patchValue({
+      product_id: productId,
       product_name: null,
       description: null,
       price: null,
       category_id: null,
-      image: null
+      image: null,
+      quantity: null
     });
     this.productListService.getProductById(productId)
       .subscribe(product => {
@@ -493,8 +435,9 @@ export class ProductManagementComponent implements OnInit {
           category_id: product.result.categories.categoryId,
           completionTime: product.result.completionTime,
           enddateWarranty: product.result.enddateWarranty,
-          status: product.result.status.status_id,
-          image: product.result.image
+          status_id: product.result.status.status_id,
+          image: product.result.image,
+          quantity: product.result.quantity
         });
         // console.log("productId la", this.editForm.value);
       });
@@ -504,42 +447,37 @@ export class ProductManagementComponent implements OnInit {
   }
 
 
-  onFileSelected(event: any) {
-    if (event.target.files && event.target.files[0]) {
-      var reader = new FileReader();
 
-      reader.onload = (event: any) => {
-        document.getElementById('blah')?.setAttribute('src', event.target.result);
-      }
-      reader.readAsDataURL(event.target.files[0]);
-    }
-  }
 
   onEditSubmit(): void {
     if (this.editForm.valid) {
-      const productData = this.uploadForm.value;
-      console.log('Form Data for Edit:', productData);
+      const productData = this.editForm.value;
+      // console.log('Form Data for Edit:', productData.product_id);
 
       const updatedProduct = {
         ...productData,
-        status: this.selectedStatus,
-        // type: this.selectedType,
+        // status: this.selectedStatus,
         thumbnail: this.selectedThumbnail,
         images: this.selectedImages
       };
+      console.log('Form Data for updatedProduct:', updatedProduct);
 
-      //   this.productListService.updateProduct(updatedProduct)
-      //     .subscribe(
-      //       response => {
-      //         console.log('Update successful', response);
-      //         this.toastr.success('Cập nhật sản phẩm thành công!', 'Thành công');
-      //         this.reloadProducts();
-      //       },
-      //       error => {
-      //         console.error('Update error', error);
-      //         this.toastr.error('Cập nhật sản phẩm bị lỗi!', 'Lỗi');
-      //       }
-      //     );
+
+        this.productListService.editProduct(updatedProduct, this.selectedThumbnail, this.selectedImages, productData.product_id)
+          .subscribe(
+            response => {
+              console.log('Update successful', response);
+              this.toastr.success('Cập nhật sản phẩm thành công!', 'Thành công');
+              const closeButton = document.querySelector('.btn-mau-do[data-dismiss="modal"]') as HTMLElement;
+              if (closeButton) { // Check if the button exists
+                closeButton.click(); // If it exists, click it to close the modal
+              }
+            },
+            error => {
+              console.error('Update error', error);
+              this.toastr.error('Cập nhật sản phẩm bị lỗi!', 'Lỗi');
+            }
+          );
     }
   }
 

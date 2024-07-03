@@ -257,7 +257,7 @@
         </button>
       </div>
       <div class="modal-body">
-        <form enctype="multipart/form-data" [formGroup]="editForm">
+        <form enctype="multipart/form-data" [formGroup]="editForm" (ngSubmit)="onEditSubmit()">
 
           <div class="form-group">
             <label style="font-size: 16px;" for="editProductName">Tên sản phẩm</label>
@@ -302,23 +302,27 @@
             </div>
             <div class="form-group col-md-6">
               <label style="font-size: 16px;" for="editSelectedStatus">Tình trạng</label>
-              <select class="form-control" formControlName="status">
+              <select class="form-control" formControlName="status_id">
                 <option [ngValue]="0" disabled selected>Chọn trạng thái</option>
                 <option *ngFor="let status of statuses" [ngValue]="status.status_id">{{ status.status_name }}</option>
                 <option value="0">Tất cả trạng thái</option>
               </select>
             </div>
           </div>
-
+          <div class="form-group">
+            <label style="font-size: 16px;" for="editSelectedStatus">Số lượng</label>
+            <input type="number" class="form-control" id="editProductQuantity" name="editProductQuantity"
+              formControlName="quantity">
+          </div>
           <div class="form-row">
             <div class="form-group col-md-6">
               <label style="font-size: 16px;" for="editProductImages">Ảnh sản phẩm (Chọn nhiều)</label>
-              <input type="file" class="form-control-file" id="editProductImages" name="editProductImages" multiple>
+              <input type="file" class="form-control-file" id="editProductImages" name="editProductImages" multiple (change)="onImagesSelected($event)">
               <img id="blah" src="#" alt="image product" formControlName="image"/>
             </div>
             <div class="form-group col-md-6">
               <label style="font-size: 16px;" for="editThumbnailImage">Ảnh đại diện sản phẩm</label>
-              <input type="file" class="form-control-file" id="editThumbnailImage" name="editThumbnailImage" multiple (change)="onFileSelected($event)">
+              <input type="file" class="form-control-file" id="editThumbnailImage" name="editThumbnailImage" multiple (change)="onThumbnailSelected($event)">
               <img id="blah" src="#" alt="image product" formControlName="image"/>
             </div>
           </div>

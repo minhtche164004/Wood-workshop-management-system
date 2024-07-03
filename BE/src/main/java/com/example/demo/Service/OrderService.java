@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
 
@@ -63,6 +64,9 @@ public interface OrderService {
     void ChangeStatusOrder(int orderId, int status_id);
 
 
+    List<RequestProducts> filterRequestProductsForAdmin(String search,Integer statusId, BigDecimal minPrice, BigDecimal maxPrice, String sortDirection,String sortId);
+
+    List<RequestProducts> findByPriceRange(BigDecimal min, BigDecimal max);
 
 
 

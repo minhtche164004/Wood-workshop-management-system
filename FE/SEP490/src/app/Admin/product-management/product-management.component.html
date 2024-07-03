@@ -33,15 +33,9 @@
                   <option [value]="true">Sản phẩm thường</option>
                   <option [value]="false">Sản phẩm theo yêu cầu</option>
                 </select>
-                <!-- Sắp xếp theo id -->
-                <select>
-                  <option disabled selected>Sắp xếp sản thểm theo mã</option>
-                  <option value="0">Tăng dần</option>
-                  <option value="1">Giảm dần</option>
-                </select>
                 <!-- Sắp xếp giá tiền -->
                 <select (change)="isProduct ? filterProducts() : filterProductsRequest()" [(ngModel)]="selectedSortByPrice">
-                  <option [ngValue]="0" disabled selected>Sắp xếp giá tiền</option>
+                  <option value="0" disabled selected>Sắp xếp giá tiền</option>
                   <option value="asc">Giá tăng dần</option>
                   <option value="desc">Giá giảm dần</option>
                 </select>

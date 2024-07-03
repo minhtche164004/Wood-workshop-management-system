@@ -57,8 +57,8 @@ export class ProductManagementComponent implements OnInit {
   selectedCategory: number = 0;
   selectedStatus: number = 0;
   // selectedType: number = 0;
-  selectedSortByPrice: string = 'asc';
-  selectedSortById: string = 'asc';
+  selectedSortByPrice: string = '0';
+  selectedSortById: string = '';
   productImages: File[] = [];
   thumbnailImage: File | null = null;
   materialForm: FormGroup;  // tao list material de luu vao bang

@@ -100,6 +100,7 @@ export class UserManagementComponent implements OnInit {
   bankname: BankName[] = [];
   provinceControl = new FormControl();
   districtControl = new FormControl();
+  wardControl = new FormControl();
   wards: Ward[] = [];
   role: Role[] = [];
   position: any[] = [];
@@ -115,7 +116,7 @@ export class UserManagementComponent implements OnInit {
   selectedRole: any = null; // Assuming selectedRole should be a boolean
   selectedPosition: any = null;
   selectedStatus: any = null;
-  
+
   selectBankName: any = null;
   isPositionEnabled: boolean = false;
   isPositionEnabled_Update: boolean = false;
@@ -352,7 +353,7 @@ export class UserManagementComponent implements OnInit {
         this.selectedStatus = this.status.find(sa => sa.status_name === this.userData.status_name)?.status_id;
         this.selectBankName = this.userData.bank_name;
 
-      
+
       },
       (error) => {
         console.error('Error fetching user data:', error);
@@ -402,7 +403,204 @@ export class UserManagementComponent implements OnInit {
     this.wards = this.selectedDistrict ? this.selectedDistrict.wards : [];
     this.userData.wards = ''; // reset selected ward in the model
   }
+  validateUsername(username: string): boolean {
+    const usernameRegex = /^[a-zA-Z0-9]{3,20}$/;
+    return usernameRegex.test(username);
+  }
+
+  validatePassword(password: string): boolean {
+    const passwordRegex = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{6,20}$/;
+    return passwordRegex.test(password);
+  }
+
+  validateEmail(email: string): boolean {
+    const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+    return emailRegex.test(email);
+  }
+  
+  validatePhoneNumber(phoneNumber: string): boolean {
+    const phoneNumberRegex = /^[0-9]{10,12}$/;
+    return phoneNumberRegex.test(phoneNumber);
+  }
+
+  validateRegistration(): boolean {
+    if (this.addAccountForm.controls['username'].value.trim() === "") {
+      this.toastr.error('Không được bỏ trống trường Tên đăng nhập');
+      return false;
+    }
+
+    if (this.addAccountForm.controls['password'].value.trim() === "") {
+      this.toastr.error('Không được bỏ trống trường Mật Khẩu');
+      return false;
+    }
+
+    if (this.addAccountForm.controls['checkPass'].value.trim() === "") {
+      this.toastr.error('Không được bỏ trống trường Xác nhận mật khẩu');
+      return false;
+    }
+
+    if (this.addAccountForm.controls['email'].value.trim() === "") {
+      this.toastr.error('Không được bỏ trống trường Email');
+      return false;
+    }
+
+    if (this.addAccountForm.controls['phoneNumber'].value.trim() === "") {
+      this.toastr.error('Không được bỏ trống trường Số điện thoại');
+      return false;
+    }
+
+    if (this.addAccountForm.controls['address'].value.trim() === "") {
+      this.toastr.error('Không được bỏ trống trường Địa chỉ cụ thể');
+      return false;
+    }
+
+    if (this.addAccountForm.controls['fullname'].value.trim() === "") {
+      this.toastr.error('Không được bỏ trống trường Họ Và Tên');
+      return false;
+    }
+
+    const positionValue = this.addAccountForm.controls['position'].value;
+    if (!positionValue || positionValue.toString().trim() === "") {
+      this.toastr.error('Không được bỏ trống trường Vai Trò');
+      return false;
+    }
+
+    const roleValue = this.addAccountForm.controls['role'].value;
+    if (!roleValue || roleValue.toString().trim() === "") {
+      this.toastr.error('Không được bỏ trống trường Vị Trí');
+      return false;
+    }
+
+    const BankNameValue = this.addAccountForm.controls['bank_name'].value;
+    if (!BankNameValue || BankNameValue.toString().trim() === "") {
+      this.toastr.error('Không được bỏ trống trường Tên Ngân Hàng');
+      return false;
+    }
+
+    const CityValue = this.addAccountForm.controls['city'].value;
+    if (!CityValue || CityValue.toString().trim() === "") {
+      this.toastr.error('Không được bỏ trống trường Tỉnh / Thành Phố');
+      return false;
+    }
+    const District = this.addAccountForm.controls['district'].value;
+    if (!District || District.toString().trim() === "") {
+      this.toastr.error('Không được bỏ trống trường Quận / Huyện ');
+      return false;
+    }
+    const Ward = this.addAccountForm.controls['wards'].value;
+    if (!Ward || Ward.toString().trim() === "") {
+      this.toastr.error('Không được bỏ trống trường Phường / Xã  ');
+      return false;
+    }
+    
+    
+    const email = this.addAccountForm.controls['email'].value;
+    const phoneNumber = this.addAccountForm.controls['phoneNumber'].value;
+    const username = this.addAccountForm.controls['username'].value;
+    if (this.addAccountForm.controls['password'].value !== this.addAccountForm.controls['checkPass'].value) {
+      this.toastr.error('Mật khẩu xác nhận không khớp.', 'Lỗi');
+      return false;
+    }
+    if (!this.validateUsername(username)) {
+      this.toastr.error('Tên đăng nhập không hợp lệ.', 'Lỗi');
+      return false;
+    }
+    if (!this.validateEmail(email)) {
+      this.toastr.error('Email không hợp lệ.', 'Lỗi');
+      return false;
+    }
+
+    if (!this.validatePhoneNumber(phoneNumber)) {
+      this.toastr.error('Số điện thoại không hợp lệ.', 'Lỗi');
+      return false;
+    }
+    return true;
+  }
+  validateEditUser(): boolean {
+    if (this.editUserForm.controls['username'].value.trim() === "") {
+      this.toastr.error('Không được bỏ trống trường Tên đăng nhập');
+      return false;
+    }
+
+    if (this.editUserForm.controls['email'].value.trim() === "") {
+      this.toastr.error('Không được bỏ trống trường Email');
+      return false;
+    }
+
+    if (this.editUserForm.controls['phoneNumber'].value.trim() === "") {
+      this.toastr.error('Không được bỏ trống trường Số điện thoại');
+      return false;
+    }
+
+    if (this.editUserForm.controls['address'].value.trim() === "") {
+      this.toastr.error('Không được bỏ trống trường Địa chỉ cụ thể');
+      return false;
+    }
+
+    if (this.editUserForm.controls['fullname'].value.trim() === "") {
+      this.toastr.error('Không được bỏ trống trường Họ Và Tên');
+      return false;
+    }
+
+    const positionValue = this.editUserForm.controls['position_id'].value;
+    if (!positionValue || positionValue.toString().trim() === "") {
+      this.toastr.error('Không được bỏ trống trường Vai Trò');
+      return false;
+    }
+
+    const roleValue = this.editUserForm.controls['role_id'].value;
+    if (!roleValue || roleValue.toString().trim() === "") {
+      this.toastr.error('Không được bỏ trống trường Vị Trí');
+      return false;
+    }
+
+    const BankNameValue = this.editUserForm.controls['bank_name'].value;
+    if (!BankNameValue || BankNameValue.toString().trim() === "") {
+      this.toastr.error('Không được bỏ trống trường Tên Ngân Hàng');
+      return false;
+    }
+
+    const CityValue = this.editUserForm.controls['city_province'].value;
+    if (!CityValue || CityValue.toString().trim() === "") {
+      this.toastr.error('Không được bỏ trống trường Tỉnh / Thành Phố');
+      return false;
+    }
+    const District = this.editUserForm.controls['district'].value;
+    if (!District || District.toString().trim() === "") {
+      this.toastr.error('Không được bỏ trống trường Quận / Huyện ');
+      return false;
+    }
+    const Ward = this.editUserForm.controls['wards'].value;
+    if (!Ward || Ward.toString().trim() === "") {
+      this.toastr.error('Không được bỏ trống trường Phường / Xã  ');
+      return false;
+    }
+    
+    
+    const email = this.editUserForm.controls['email'].value;
+    const phoneNumber = this.editUserForm.controls['phoneNumber'].value;
+    const username = this.editUserForm.controls['username'].value;
+   
+    if (!this.validateUsername(username)) {
+      this.toastr.error('Tên đăng nhập không hợp lệ.', 'Lỗi');
+      return false;
+    }
+    if (!this.validateEmail(email)) {
+      this.toastr.error('Email không hợp lệ.', 'Lỗi');
+      return false;
+    }
+
+    if (!this.validatePhoneNumber(phoneNumber)) {
+      this.toastr.error('Số điện thoại không hợp lệ.', 'Lỗi');
+      return false;
+    }
+    return true;
+  }
+
   AddNewAccount(): void {
+    if (!this.validateRegistration()) {
+      return;
+    }
     const addNewAccountRequest: AddNewAccount = this.addAccountForm.value;
     console.log('Request Data:', addNewAccountRequest);
 
@@ -412,23 +610,31 @@ export class UserManagementComponent implements OnInit {
         this.addAccountForm.reset(); // Reset the form after successful addition
         setTimeout(() => {
           window.location.reload();
-        },  1000); // Delay 1 second before reload
+        }, 1000); // Delay 1 second before reload
       },
       (error: any) => {
-        console.error('Registration failed', error);
-        this.toastr.error('Registration failed. Please try again.');
+        console.error('Lỗi khi đăng nhập', error);
+        if ( error.error.code === 1019) {
+          this.toastr.error('Tên đăng nhập đã tồn tại',);
+        }
+        else if ( error.error.code === 1001) {
+          this.toastr.error('Email đã tồn tại',);
+        }
       }
     );
   }
   EditUser(): void {
+    if (!this.validateEditUser()) {
+      return;
+    }
     const editUserRequest: EditUserRequest = this.editUserForm.value;
     const userId = this.userData.userId; // Lấy userId từ userData
     console.log("Data: ", editUserRequest)
     this.authenListService.editUserById(userId, editUserRequest).subscribe(
       () => {
-       
+
         this.toastr.success('Thay đổi thông tin thành công.');
-        this.ngAfterViewInit(); 
+        this.ngAfterViewInit();
         setTimeout(() => {
           window.location.reload();
         }, 2000); // Delay 1 second before reload

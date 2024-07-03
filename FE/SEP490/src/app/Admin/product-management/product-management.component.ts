@@ -83,7 +83,7 @@ export class ProductManagementComponent implements OnInit {
     });
 
     this.editForm = this.fb.group({
-      product_id  : [0],
+      product_id: [0],
       product_name: [''],
       description: [''],
       price: [0],
@@ -463,26 +463,43 @@ export class ProductManagementComponent implements OnInit {
       console.log('Form Data for updatedProduct:', updatedProduct);
 
 
-        this.productListService.editProduct(updatedProduct, this.selectedThumbnail, this.selectedImages, productData.product_id)
-          .subscribe(
-            response => {
-              console.log('Update successful', response);
-              this.toastr.success('Cập nhật sản phẩm thành công!', 'Thành công');
-              const closeButton = document.querySelector('.btn-mau-do[data-dismiss="modal"]') as HTMLElement;
-              if (closeButton) { // Check if the button exists
-                closeButton.click(); // If it exists, click it to close the modal
-              }
-            },
-            error => {
-              console.error('Update error', error);
-              this.toastr.error('Cập nhật sản phẩm bị lỗi!', 'Lỗi');
+      this.productListService.editProduct(updatedProduct, this.selectedThumbnail, this.selectedImages, productData.product_id)
+        .subscribe(
+          response => {
+            console.log('Update successful', response);
+            this.toastr.success('Cập nhật sản phẩm thành công!', 'Thành công');
+            const closeButton = document.querySelector('.btn-mau-do[data-dismiss="modal"]') as HTMLElement;
+            if (closeButton) { // Check if the button exists
+              closeButton.click(); // If it exists, click it to close the modal
             }
-          );
+          },
+          error => {
+            console.error('Update error', error);
+            this.toastr.error('Cập nhật sản phẩm bị lỗi!', 'Lỗi');
+          }
+        );
     }
   }
 
   deleteProduct(productId: number) {
-    // Implement delete logic
+    this.productListService.deleteProduct(productId)
+      .subscribe(
+        response => {
+          console.log('Xóa thành công', response);
+          if (response.code === 1000) {
+            this.toastr.success('Xóa sản phẩm thành công!', 'Thành công');
+          }
+          else if(response.code === 1030){
+            this.toastr.error(response.message, 'Lỗi');
+          }
+
+        },
+        error => {
+          console.error('Update error', error);
+          this.toastr.error('Xóa sản phẩm bị lỗi!', 'Lỗi');
+        }
+      );
+      console.log('productId', productId);
   }
 
   showProductDetails(productId: number) {

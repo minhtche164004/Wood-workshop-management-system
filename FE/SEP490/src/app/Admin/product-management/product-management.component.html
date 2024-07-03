@@ -86,9 +86,9 @@
                 <a href="#" class="settings" title="Chỉnh sửa" data-toggle="modal" data-target="#editProductModal"
                   (click)="editProduct(product.productId)">
                   <i class="fa-solid fa-pen-to-square"></i>
-                </a>
-                <a href="#" class="delete" title="Xóa" data-toggle="modal" data-target="#confirmDeleteModal"
-                  (click)="deleteProduct(product.id)">
+                </a>data-target="#confirmDeleteModal"
+                <a href="#" class="delete" title="Xóa" data-toggle="modal" 
+                  (click)="deleteProduct(product.productId)">
                   <i class="fa-regular fa-trash-can"></i>
                 </a>
                 <a href="#" class="info" title="Chi tiết" data-toggle="modal" data-target="#productDetailModal"

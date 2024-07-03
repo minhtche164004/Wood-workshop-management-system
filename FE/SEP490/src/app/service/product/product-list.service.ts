@@ -10,7 +10,7 @@ import { environment } from 'src/app/environments/environment';
 export class ProductListService {
 
   private apiAddProduct = `${environment.apiUrl}api/auth/product/AddNewProduct`;
-  private apiDeleteProduct = `${environment.apiUrl}api/auth/product/DeleteProduct`; // Assuming the delete endpoint
+  private apiDeleteProduct = `${environment.apiUrl}api/auth/product/deleteProduct`; // Assuming the delete endpoint
   private api_findProductByCategory = `${environment.apiUrl}api/auth/product`;
   private apiUrlGetProduct = `${environment.apiUrl}api/auth/product/getAllProductForCustomer`;
   private apiUrl = `${environment.apiUrl}api/auth/product/getAllProductForAdmin`;
@@ -32,7 +32,7 @@ export class ProductListService {
 
   private apiUrl_EditProduct = `${environment.apiUrl}api/auth/product/EditProduct`;
 
-  private apiUrl_DeleteProduct = `${environment.apiUrl}api/auth/product/EditProduct`;
+  private apiUrl_DeleteProduct = `${environment.apiUrl}api/auth/product/deleteProduct`;
 
   private apiUrl_getMultiFillterProductForAdmin = `${environment.apiUrl}api/auth/product/getMultiFillterProductForAdmin`;
   private getAllStatusProduct = `${environment.apiUrl}api/auth/product/GetStatusProduct`;  //sau lay api khac thay vao` api nay bi thieu
@@ -196,7 +196,7 @@ export class ProductListService {
     return this.http.get<any>(url);
   }
   deleteProduct(productId: number): Observable<any> {
-    const url = `${this.apiDeleteProduct}?product_id=${productId}`;
+    const url = `${this.apiDeleteProduct}?id=${productId}`;
     return this.http.delete<any>(url).pipe(
       catchError(this.handleError)
     );

@@ -2,6 +2,7 @@ package com.example.demo.Repository;
 
 import com.example.demo.Dto.OrderDTO.JobProductDTO;
 import com.example.demo.Dto.SubMaterialDTO.Product_SubmaterialDTO;
+import com.example.demo.Dto.SubMaterialDTO.SubMateProductDTO;
 import com.example.demo.Entity.ProductSubMaterials;
 import com.example.demo.Entity.Products;
 import com.example.demo.Entity.WishList;
@@ -34,6 +35,19 @@ public interface ProductSubMaterialsRepository extends JpaRepository<ProductSubM
             "LEFT JOIN j.subMaterial sub " +
             "LEFT JOIN sub.material m WHERE j.product.productId= :productId AND j.subMaterial.material.materialId = :materialId")
     List<Product_SubmaterialDTO> getProductSubMaterialByProductIdAndTypeMate(int productId,int materialId);
+
+
+    @Query("SELECT new com.example.demo.Dto.SubMaterialDTO.SubMateProductDTO( " +
+            "CAST(m.materialId AS string), CAST(sub.subMaterialId AS string), m.type, sub.unitPrice, j.quantity) " +
+            "FROM ProductSubMaterials j " +
+            "LEFT JOIN j.subMaterial sub " +
+            "LEFT JOIN sub.material m " +
+            "WHERE j.product.productId = :productId")
+    List<SubMateProductDTO> getProductSubMaterialByProductIdDTO(int productId);
+
+
+
+
 
 
 }

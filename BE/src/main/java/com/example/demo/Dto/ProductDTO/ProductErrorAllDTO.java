@@ -21,7 +21,7 @@ public class ProductErrorAllDTO {
     private String code_order;
     private String user_name_order;
     private String employee_name;
-    
+
     public ProductErrorAllDTO(int id, String code, String des, boolean is_fix, String solution, String job_name, int job_id, int product_id, String product_name, int request_product_id, String request_product_name) {
         this.id = id;
         this.code = code;

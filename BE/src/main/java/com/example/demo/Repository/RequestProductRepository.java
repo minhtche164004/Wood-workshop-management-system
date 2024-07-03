@@ -32,11 +32,11 @@ public interface RequestProductRepository extends JpaRepository<RequestProducts,
 
     @Query("SELECT p FROM RequestProducts p WHERE " +
             "(p.requestProductName LIKE %:search% OR :search IS NULL) AND " +
-            "(p.status.status_id = :statusId OR :statusId IS NULL) AND " +
+            "(p.status.status_id = :status_id OR :status_id IS NULL) AND " +
             "(p.price >= :minPrice OR :minPrice IS NULL) AND " +
             "(p.price <= :maxPrice OR :maxPrice IS NULL)")
     List<RequestProducts> filterRequestProductsForAdmin(@Param("search") String search,
-                                          @Param("statusId") Integer statusId,
+                                          @Param("status_id") Integer status_id,
                                           @Param("minPrice") BigDecimal minPrice,
                                           @Param("maxPrice") BigDecimal maxPrice);
 

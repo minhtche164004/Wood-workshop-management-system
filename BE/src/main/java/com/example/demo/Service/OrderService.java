@@ -64,7 +64,7 @@ public interface OrderService {
     void ChangeStatusOrder(int orderId, int status_id);
 
 
-    List<RequestProducts> filterRequestProductsForAdmin(String search,Integer statusId, BigDecimal minPrice, BigDecimal maxPrice, String sortDirection,String sortId);
+    List<RequestProducts> filterRequestProductsForAdmin(String search,Integer statusId, BigDecimal minPrice, BigDecimal maxPrice, String sortDirection);
 
     List<RequestProducts> findByPriceRange(BigDecimal min, BigDecimal max);
 

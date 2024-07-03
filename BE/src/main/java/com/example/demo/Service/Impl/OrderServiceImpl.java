@@ -510,10 +510,10 @@ public class OrderServiceImpl implements OrderService {
 
 
     @Override
-    public List<RequestProducts> filterRequestProductsForAdmin(String search,  Integer statusId, BigDecimal minPrice, BigDecimal maxPrice, String sortDirection,String sortId) {
+    public List<RequestProducts> filterRequestProductsForAdmin(String search,  Integer statusId, BigDecimal minPrice, BigDecimal maxPrice, String sortDirection) {
         List<RequestProducts> productList = new ArrayList<>();
 
-        if (search != null  || minPrice != null || maxPrice != null) {
+        if (search != null|| statusId != null  || minPrice != null || maxPrice != null) {
             productList = requestProductRepository.filterRequestProductsForAdmin(search, statusId, minPrice, maxPrice);
         } else {
             productList = requestProductRepository.findAll();
@@ -535,13 +535,7 @@ public class OrderServiceImpl implements OrderService {
                 productList.sort(Comparator.comparing(RequestProducts::getPrice).reversed());
             }
         }
-        if (sortId != null) {
-            if (sortId.equals("asc")) {
-                productList.sort(Comparator.comparing(RequestProducts::getRequestProductId));
-            } else if (sortId.equals("desc")) {
-                productList.sort(Comparator.comparing(RequestProducts::getRequestProductId).reversed());
-            }
-        }
+
 
         return productList;
     }

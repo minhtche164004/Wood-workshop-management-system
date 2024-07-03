@@ -323,10 +323,10 @@ public class ProductServiceImpl implements ProductService {
 }
 
     @Override
-    public List<Products> filterProductsForAdmin(String search, Integer categoryId, Integer statusId, BigDecimal minPrice, BigDecimal maxPrice, String sortDirection,String sortId) {
+    public List<Products> filterProductsForAdmin(String search, Integer categoryId, Integer statusId, BigDecimal minPrice, BigDecimal maxPrice, String sortDirection) {
         List<Products> productList = new ArrayList<>();
 
-        if (search != null || categoryId != null || minPrice != null || maxPrice != null) {
+        if (search != null || categoryId != null || statusId != null || minPrice != null || maxPrice != null) {
             productList = productRepository.filterProductsForAdmin(search, categoryId, statusId, minPrice, maxPrice);
         } else {
             productList = productRepository.ViewProductLandingPage();
@@ -346,15 +346,6 @@ public class ProductServiceImpl implements ProductService {
                 productList.sort(Comparator.comparing(Products::getPrice));
             } else if (sortDirection.equals("desc")) {
                 productList.sort(Comparator.comparing(Products::getPrice).reversed());
-            }
-        }
-
-        // Sắp xếp danh sách sản phẩm theo giá
-        if (sortId != null) {
-            if (sortId.equals("asc")) {
-                productList.sort(Comparator.comparing(Products::getProductId));
-            } else if (sortId.equals("desc")) {
-                productList.sort(Comparator.comparing(Products::getProductId).reversed());
             }
         }
 

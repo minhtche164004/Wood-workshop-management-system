@@ -44,7 +44,7 @@ public interface ProductService {
     public List<Products> filterProductForCustomer(String search, List<Integer> categoryIds, BigDecimal minPrice, BigDecimal maxPrice, String sortDirection);
 
 
-    public List<Products> filterProductsForAdmin(String search, Integer categoryId, Integer statusId, BigDecimal minPrice, BigDecimal maxPrice, String sortDirection,String sortId);
+    public List<Products> filterProductsForAdmin(String search, Integer categoryId, Integer statusId, BigDecimal minPrice, BigDecimal maxPrice, String sortDirection);
 
     List<SubMateProductDTO> getProductSubMaterialByProductIdDTO(int productId);
 

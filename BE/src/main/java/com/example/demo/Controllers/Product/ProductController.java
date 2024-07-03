@@ -428,10 +428,10 @@ public class ProductController {
             @RequestParam(required = false) Integer statusId,
             @RequestParam(required = false) BigDecimal minPrice,
             @RequestParam(required = false) BigDecimal maxPrice,
-            @RequestParam(required = false) String sortDirection,
-            @RequestParam(required = false) String sortId){
+            @RequestParam(required = false) String sortDirection
+         ){
         ApiResponse<List> apiResponse = new ApiResponse<>();
-        apiResponse.setResult(productService.filterProductsForAdmin(search, categoryId, statusId, minPrice, maxPrice, sortDirection,sortId));
+        apiResponse.setResult(productService.filterProductsForAdmin(search, categoryId, statusId, minPrice, maxPrice, sortDirection));
         return apiResponse;
 
     }
@@ -442,10 +442,10 @@ public class ProductController {
             @RequestParam(required = false) Integer statusId,
             @RequestParam(required = false) BigDecimal minPrice,
             @RequestParam(required = false) BigDecimal maxPrice,
-            @RequestParam(required = false) String sortDirection,
-            @RequestParam(required = false) String sortId){
+            @RequestParam(required = false) String sortDirection
+         ){
         ApiResponse<List> apiResponse = new ApiResponse<>();
-        apiResponse.setResult(orderService.filterRequestProductsForAdmin(search, statusId, minPrice, maxPrice, sortDirection,sortId));
+        apiResponse.setResult(orderService.filterRequestProductsForAdmin(search, statusId, minPrice, maxPrice, sortDirection));
         return apiResponse;
     }
 

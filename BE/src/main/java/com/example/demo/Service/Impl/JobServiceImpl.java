@@ -200,7 +200,7 @@ public class JobServiceImpl implements JobService {
         }
         return true; // Chỉ trả về true nếu tất cả các job đều đã hoàn thành (status_id = 13)
     }
-    
+
     @Override
     public Jobs EditJobs(JobDTO jobDTO, int job_id) {
         Jobs jobs = jobRepository.getJobById(job_id);

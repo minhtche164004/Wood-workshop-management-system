@@ -58,6 +58,7 @@ export class ProductManagementComponent implements OnInit {
   selectedStatus: number = 0;
   // selectedType: number = 0;
   selectedSortByPrice: string = 'asc';
+  selectedSortById: string = 'asc';
   productImages: File[] = [];
   thumbnailImage: File | null = null;
   materialForm: FormGroup;  // tao list material de luu vao bang
@@ -74,12 +75,11 @@ export class ProductManagementComponent implements OnInit {
   selectedProductIdCurrentDelele: number = 0;
   selectedProductNameCurrentDelele: string | null = null;
 
-  isProduct: boolean = false;
+  isProduct: boolean = true;
   constructor(
     private fb: FormBuilder,
     private productListService: ProductListService,
     private toastr: ToastrService,
-    private cdr: ChangeDetectorRef
   ) {
     this.uploadForm = this.fb.group({
       product_name: [''],
@@ -316,6 +316,25 @@ export class ProductManagementComponent implements OnInit {
     // console.log("Lọc sản phẩm với từ khóa:", this.searchKey, ", danh mục:", this.selectedCategory, "và giá:", this.selectedSortByPrice);
 
     this.productListService.getMultiFillterProductForAdmin(this.searchKey, this.selectedCategory, this.selectedStatus, this.selectedSortByPrice)
+      .subscribe(
+        (data) => {
+          if (data.code === 1000) {
+            this.products = data.result;
+            console.log('Lọc sản phẩm thành công:', this.products);
+            this.toastr.success('Lọc sản phẩm thành công!', 'Thành công');
+          } else if (data.code === 1015) {
+            this.products = [];
+            console.error('Lọc sản phẩm không thành công:', data);
+            this.toastr.error('Không tìm thấy sản phẩm phù hợp!', 'Lọc thất bại');
+          }
+        }
+      );
+  }
+
+  filterProductsRequest(): void {
+    // console.log("Lọc sản phẩm với từ khóa:", this.searchKey, ", danh mục:", this.selectedCategory, "và giá:", this.selectedSortByPrice);
+
+    this.productListService.getMultiFillterRequestProductForAdmin(this.searchKey, this.selectedStatus, this.selectedSortByPrice, this.selectedSortById)
       .subscribe(
         (data) => {
           if (data.code === 1000) {

@@ -33,8 +33,6 @@
                   <option [value]="true">Sản phẩm thường</option>
                   <option [value]="false">Sản phẩm theo yêu cầu</option>
                 </select>
-                <div>Giá trị của isProduct: {{ isProduct }}</div>
-
                 <!-- Sắp xếp theo id -->
                 <select>
                   <option disabled selected>Sắp xếp sản thểm theo mã</option>
@@ -42,13 +40,13 @@
                   <option value="1">Giảm dần</option>
                 </select>
                 <!-- Sắp xếp giá tiền -->
-                <select (change)="filterProducts()" [(ngModel)]="selectedSortByPrice">
+                <select (change)="isProduct ? filterProducts() : filterProductsRequest()" [(ngModel)]="selectedSortByPrice">
                   <option [ngValue]="0" disabled selected>Sắp xếp giá tiền</option>
                   <option value="asc">Giá tăng dần</option>
                   <option value="desc">Giá giảm dần</option>
                 </select>
                 <!-- Chọn trạng thái -->
-                <select [(ngModel)]="selectedStatus" (change)="filterProducts()">
+                <select [(ngModel)]="selectedStatus" (change)="isProduct ? filterProducts() : filterProductsRequest()">
                   <option [ngValue]="0" disabled selected>Chọn trạng thái</option>
                   <option *ngFor="let status of statuses" [ngValue]="status.status_id">{{ status.status_name }}</option>
                   <option value="">Tất cả trạng thái</option>
@@ -64,7 +62,7 @@
 
                 <!-- Tìm kiếm tên sản phẩm -->
                 <input type="text" class="form-control" placeholder="Tìm kiếm tên sản phẩm..." [(ngModel)]="searchKey">
-                <button class="btn search-button" type="button" (click)="filterProducts()">
+                <button class="btn search-button" type="button" (click)="isProduct ? filterProducts() : filterProductsRequest()">
                   <i class="fa fa-search"></i>
                 </button>
               </div>

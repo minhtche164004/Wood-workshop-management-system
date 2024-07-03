@@ -51,6 +51,8 @@ public class ProductController {
     @Autowired
     private CloudinaryService cloudinaryService;
     @Autowired
+    private OrderService orderService;
+    @Autowired
     private Status_Product_Repository statusProductRepository;
     private static final JedisPooled jedis = RedisConfig.getRedisInstance();
 
@@ -170,6 +172,15 @@ public class ProductController {
         apiResponse.setResult(productService.findByPriceRange(min,max));
         return apiResponse;
     }
+
+    @GetMapping("/findByPriceRangeRequestProduct")
+    public ApiResponse<?> GetRequestProductByIdWithImage(@RequestParam("min") BigDecimal min,@RequestParam("max") BigDecimal max) {
+        ApiResponse<List> apiResponse = new ApiResponse<>();
+        apiResponse.setResult(orderService.findByPriceRange(min,max));
+        return apiResponse;
+    }
+
+
 
 //    @GetMapping("/GetRequestById")
 //    public ApiResponse<?> GetRequestById(@RequestParam("id") int id) {
@@ -416,10 +427,22 @@ public class ProductController {
             @RequestParam(required = false) Integer statusId,
             @RequestParam(required = false) BigDecimal minPrice,
             @RequestParam(required = false) BigDecimal maxPrice,
-            @RequestParam(required = false) String sortDirection){
-        ApiResponse<List> apiResponse = new ApiResponse<>();
-        apiResponse.setResult(productService.filterProductsForAdmin(search, categoryId, statusId, minPrice, maxPrice, sortDirection));
-        return ResponseEntity.ok(apiResponse);
+            @RequestParam(required = false) String sortDirection,
+            @RequestParam(required = false) String sortId){
+        List<Products> products = productService.filterProductsForAdmin(search, categoryId, statusId, minPrice, maxPrice, sortDirection,sortId);
+        return ResponseEntity.ok(products);
+    }
+
+    @GetMapping("/getMultiFillterRequestProductForAdmin")
+    public ResponseEntity<?> getAllRequestProductForAdmin(
+            @RequestParam(required = false) String search,
+            @RequestParam(required = false) Integer statusId,
+            @RequestParam(required = false) BigDecimal minPrice,
+            @RequestParam(required = false) BigDecimal maxPrice,
+            @RequestParam(required = false) String sortDirection,
+            @RequestParam(required = false) String sortId){
+        List<RequestProducts> products = orderService.filterRequestProductsForAdmin(search, statusId, minPrice, maxPrice, sortDirection,sortId);
+        return ResponseEntity.ok(products);
     }
 
 

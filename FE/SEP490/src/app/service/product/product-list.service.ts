@@ -47,6 +47,7 @@ export class ProductListService {
 
   //api for product request
   private apiUrlGetProductRequired = `${environment.apiUrl}api/auth/order/GetAllProductRequest`;
+  private apiUrl_getMultiFillterRequestProductForAdmin = `${environment.apiUrl}api/auth/product/getMultiFillterRequestProductForAdmin`;
   //
 
   constructor(private http: HttpClient) { }
@@ -284,6 +285,31 @@ export class ProductListService {
   //for request product
   getAllProductRequest(): Observable<any> {
     return this.http.get<any>(this.apiUrlGetProductRequired).pipe(
+      catchError(this.handleError)
+    );
+  }
+
+  getMultiFillterRequestProductForAdmin(search: string, statusId: number, sortDirection: string, sortId: string): Observable<any> {
+    const params = {
+      search: search,
+      statusId: statusId,
+      sortDirection: sortDirection,
+      sortId: sortId
+    };
+
+    const queryString = Object.entries(params)
+      .filter(([key, value]) => {
+        if (key === 'search' && value === '') return false;
+        if (key === 'statusId' && value === 0) return false;
+        
+        return value != null;
+      })
+      .map(([key, value]) => `${encodeURIComponent(key)}=${encodeURIComponent(value)}`)
+      .join('&');
+
+    const url = `${this.apiUrl_getMultiFillterRequestProductForAdmin}?${queryString}`;
+    console.log(url);
+    return this.http.get<any>(url).pipe(
       catchError(this.handleError)
     );
   }

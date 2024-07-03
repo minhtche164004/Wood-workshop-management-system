@@ -98,6 +98,8 @@ public interface JobRepository extends JpaRepository<Jobs,Integer> {
 
 
 
+
+
     @Query("SELECT new com.example.demo.Dto.OrderDTO.JobProductDTO(j.jobId,null, p.productId, p.productName, p.description, p.price, j.status, j.quantityProduct," +
             " u.userId, u.username, pos.position_id, pos.position_name) " +
             "FROM Jobs j " +

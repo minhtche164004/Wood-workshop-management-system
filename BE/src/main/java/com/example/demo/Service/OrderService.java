@@ -60,7 +60,11 @@ public interface OrderService {
 
     void deleteRequestById(int requestId);
 
-    boolean checkOderDoneOrNot(int order_id);
+    void ChangeStatusOrder(int orderId, int status_id);
+
+
+
+
 
 
 

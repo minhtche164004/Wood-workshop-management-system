@@ -35,6 +35,11 @@ public interface ProductRepository extends JpaRepository<Products, Integer> {
     @Query("SELECT u FROM Products u WHERE u.status.status_id = :query")
     List<Products> findByStatus(int query);
 
+    @Transactional
+    @Modifying
+    @Query("DELETE FROM Products u WHERE u.productId = :query")
+    void deleteByProductId(@Param("query") int productId);
+
 //    @Query("SELECT u FROM Products u WHERE u.status.status_id = :query")
 //    List<Products> ViewProductLandingPage(int query);
 

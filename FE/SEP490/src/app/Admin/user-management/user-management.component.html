@@ -115,36 +115,36 @@
           <div class="form-row">
             <div class="form-group col-md-6">
               <label for="username">Tên Đăng Nhập</label>
-              <input formControlName="username" type="text" class="form-control form-control-lg" id="username"
+              <input formControlName="username" type="text" class="form-control form-control-lg" 
                 placeholder="Nhập tên đăng nhập">
             </div>
             <div class="form-group col-md-6">
               <label for="email">Email</label>
-              <input formControlName="email" type="email" class="form-control form-control-lg" id="email"
+              <input formControlName="email" type="email" class="form-control form-control-lg"
                 placeholder="Nhập email">
             </div>
           </div>
           <div class="form-row">
             <div class="form-group col-md-6">
               <label for="password">Mật Khẩu</label>
-              <input formControlName="password" type="password" class="form-control form-control-lg" id="password"
+              <input formControlName="password" type="password" class="form-control form-control-lg" 
                 placeholder="Nhập mật khẩu">
             </div>
             <div class="form-group col-md-6">
               <label for="checkPass">Xác Nhận Mật Khẩu</label>
-              <input formControlName="checkPass" type="password" class="form-control form-control-lg" id="checkPass"
+              <input formControlName="checkPass" type="password" class="form-control form-control-lg" 
                 placeholder="Xác nhận mật khẩu">
             </div>
           </div>
           <div class="form-row">
             <div class="form-group col-md-6">
               <label for="phoneNumber">Số Điện Thoại</label>
-              <input formControlName="phoneNumber" type="tel" class="form-control form-control-lg" id="phoneNumber"
+              <input formControlName="phoneNumber" type="tel" class="form-control form-control-lg" 
                 placeholder="Nhập số điện thoại">
             </div>
             <div class="form-group col-md-6">
               <label for="fullname">Họ Và Tên</label>
-              <input formControlName="fullname" type="text" class="form-control form-control-lg" id="fullname"
+              <input formControlName="fullname" type="text" class="form-control form-control-lg" 
                 placeholder="Nhập họ và tên">
             </div>
           </div>
@@ -162,7 +162,7 @@
 
             <div class="form-group col-md-6">
               <label for="position">Vị Trí</label>
-              <div *ngIf="isPositionEnabled">
+              <div *ngIf="isPositionEnabled" >
                 <select [(ngModel)]="selectedPosition" formControlName="position" class="form-control form-control-lg"
                   id="position">
                   <option [ngValue]="null" disabled selected>Chọn Vị Trí</option>
@@ -184,13 +184,19 @@
           <div class="form-row">
             <div class="form-group col-md-6">
               <label for="bank_name">Tên Ngân Hàng</label>
-              <div>
+              <div *ngIf="isPositionEnabled">
                 <select [(ngModel)]="selectBankName" formControlName="bank_name" class="form-control form-control-lg"
                   id="bank_name">
                   <option [ngValue]="null" disabled selected>Chọn Ngân Hàng</option>
-                  <option *ngFor="let bank of bankname" [ngValue]="bank.id">
-                    {{ bank.name }}
+                  <option *ngFor="let bank of bankname" [ngValue]="bank.shortName" [attr.data-logo]="bank.logo">
+                    {{ bank.shortName}}
                   </option>
+                </select>
+
+              </div>
+              <div *ngIf="!isPositionEnabled">
+                <select disabled class="form-control form-control-lg" id="bank_name">
+                  <option [ngValue]="null" disabled selected>Chọn Ngân Hàng</option>
                 </select>
               </div>
             </div>
@@ -212,7 +218,7 @@
           <div class="row">
             <div class="col-md-4 mb-5">
               <div class="form-group">
-                <select [ngModel]="selectProvince" formControlName="city" class="form-control" required>
+                <select [ngModel]="selectProvince" formControlName="city" class="form-control" >
                   <option [ngValue]="null" disabled selected>Tỉnh /Thành Phố</option>
                   <option *ngFor="let province of provinces" [ngValue]="province.name">
                     {{ province.name }}
@@ -222,7 +228,7 @@
             </div>
             <div class="col-md-4 mb-5">
               <div class="form-group">
-                <select [ngModel]="selectDistricts" formControlName="district" class="form-control" required>
+                <select [ngModel]="selectDistricts" formControlName="district" class="form-control" >
                   <option [ngValue]="null" disabled selected>Quận / Huyện</option>
                   <option *ngFor="let district of districts" [ngValue]="district.name">
                     {{ district.name }}
@@ -232,7 +238,7 @@
             </div>
             <div class="col-md-4 mb-5">
               <div class="form-group">
-                <select [ngModel]="selectWards" formControlName="wards" class="form-control" required>
+                <select [ngModel]="selectWards" formControlName="wards" class="form-control" >
                   <option [ngValue]="null" disabled selected>Phường / Xã</option>
                   <option *ngFor="let ward of wards" [ngValue]="ward.name">
                     {{ ward.name }}
@@ -274,13 +280,13 @@
           <div class="form-row">
             <div class="form-group col-md-6">
               <label for="username">Tên Đăng Nhập</label>
-              <input formControlName="username" type="text" class="form-control form-control-lg" id="username"
-                placeholder="Nhập tên đăng nhập" [(ngModel)]="userData.username">
+              <input formControlName="username" type="text" class="form-control form-control-lg" 
+                placeholder="Nhập tên đăng nhập" readonly [(ngModel)]="userData.username">
 
             </div>
             <div class="form-group col-md-6">
               <label for="email">Email</label>
-              <input formControlName="email" type="email" class="form-control form-control-lg" id="email"
+              <input formControlName="email" type="email" class="form-control form-control-lg" 
                 placeholder="Nhập email" [(ngModel)]="userData.email">
             </div>
           </div>
@@ -288,20 +294,20 @@
           <div class="form-row">
             <div class="form-group col-md-6">
               <label for="phoneNumber">Số Điện Thoại</label>
-              <input formControlName="phoneNumber" type="tel" class="form-control form-control-lg" id="phoneNumber"
+              <input formControlName="phoneNumber" type="tel" class="form-control form-control-lg"
                 placeholder="Nhập số điện thoại" [(ngModel)]="userData.phoneNumber">
             </div>
             <div class="form-group col-md-6">
               <label for="fullname">Họ Và Tên</label>
-              <input formControlName="fullname" type="text" class="form-control form-control-lg" id="fullname"
+              <input formControlName="fullname" type="text" class="form-control form-control-lg"
                 placeholder="Nhập họ và tên" [(ngModel)]="userData.fullname">
             </div>
           </div>
           <div class="form-row">
             <div class="form-group col-md-6">
               <label for="role">Vai Trò</label>
-              <select [(ngModel)]="selectedRole" formControlName="role_id" class="form-control form-control-lg"
-                id="role">
+              <select (change)="onRoleChangeUpdate()" [(ngModel)]="selectedRole" formControlName="role_id"
+                class="form-control form-control-lg" >
                 <option [ngValue]="null" disabled selected>Chọn Vai Trò</option>
                 <option *ngFor="let rol of role" [ngValue]="rol.roleId">
                   {{ rol.roleName }}
@@ -309,45 +315,54 @@
               </select>
             </div>
 
-
             <div class="form-group col-md-6">
               <label for="position">Vị Trí</label>
-              <div>
+              <div *ngIf="isPositionEnabled_Update">
                 <select [(ngModel)]="selectedPosition" formControlName="position_id"
-                  class="form-control form-control-lg" id="position">
+                  class="form-control form-control-lg" >
                   <option [ngValue]="null" disabled selected>Chọn Vị Trí</option>
                   <option *ngFor="let pos of position" [ngValue]="pos.position_id">
                     {{ pos.position_name }}
                   </option>
                 </select>
               </div>
-            </div>
-
-            <div class="form-group col-md-6">
-              <label for="position">Trạng Thái</label>
-              <div>
-                <select [(ngModel)]="selectedStatus" formControlName="status_id" class="form-control form-control-lg"
-                  id="position">
-                  <option [ngValue]="null" disabled selected>Chọn Trạng Thái</option>
-                  <option *ngFor="let sa of status" [ngValue]="sa.status_id">
-                    {{ sa.status_name }}
-                  </option>
+              <div *ngIf="!isPositionEnabled_Update">
+                <select disabled class="form-control form-control-lg" >
+                  <option [ngValue]="null" disabled selected>Chọn Vị Trí</option>
                 </select>
               </div>
+
+
             </div>
 
 
           </div>
           <div class="form-row">
             <div class="form-group col-md-6">
-              <label for="bankName">Tên ngân hàng</label>
-              <input [(ngModel)]="userData.bank_name" formControlName="bank_name" type="text"
-                class="form-control form-control-lg" id="bankName" placeholder="Tên ngân hàng">
+              <label for="position">Tên ngân hàng</label>
+              <div *ngIf="isPositionEnabled_Update">
+                <select [(ngModel)]="selectBankName" formControlName="bank_name"
+                  class="form-control form-control-lg" >
+                  <option [ngValue]="null" disabled selected>Chọn Ngân Hàng</option>
+                  <option *ngFor="let bank of bankname" [ngValue]="bank.shortName">
+                    {{ bank.shortName }}
+                  </option>
+                </select>
+              </div>
+              <div *ngIf="!isPositionEnabled_Update">
+                <select disabled class="form-control form-control-lg" >
+                  <option [ngValue]="null" disabled selected>Chọn Ngân Hàng</option>
+                </select>
+              </div>
+
+
             </div>
             <div class="form-group col-md-6">
               <label for="fullname">Số tài khoản</label>
-              <input [(ngModel)]="userData.bank_number" formControlName="bank_number" type="text"
-                class="form-control form-control-lg" id="fullname" placeholder="Số tài khoản">
+              <input *ngIf="isPositionEnabled_Update" [(ngModel)]="userData.bank_number" formControlName="bank_number" type="text"
+                class="form-control form-control-lg"  placeholder="Số tài khoản">
+              <input readonly *ngIf="!isPositionEnabled_Update" [(ngModel)]="userData.bank_number" formControlName="bank_number" type="text"
+                class="form-control form-control-lg"  placeholder="Số tài khoản">
 
             </div>
           </div>
@@ -356,7 +371,7 @@
             <div class="col-md-4 mb-5">
               <div class="form-group">
                 <select [ngModel]="selectProvince" [(ngModel)]="userData.city_province" formControlName="city_province"
-                  class="form-control" required>
+                  class="form-control" >
                   <option [ngValue]="null" disabled selected>Tỉnh / Thành Phố</option>
                   <option *ngFor="let province of provinces" [ngValue]="province.name">
                     {{ province.name }}
@@ -366,7 +381,7 @@
             </div>
             <div class="col-md-4 mb-5">
               <div class="form-group">
-                <select [(ngModel)]="userData.district" formControlName="district" class="form-control" required>
+                <select [(ngModel)]="userData.district" formControlName="district" class="form-control" >
                   <option [ngValue]="null" disabled selected>Quận / Huyện</option>
                   <option *ngFor="let district of districts" [ngValue]="district.name">
                     {{ district.name }}
@@ -376,7 +391,7 @@
             </div>
             <div class="col-md-4 mb-5">
               <div class="form-group">
-                <select [(ngModel)]="userData.wards" formControlName="wards" class="form-control" required>
+                <select [(ngModel)]="userData.wards" formControlName="wards" class="form-control" >
                   <option [ngValue]="null" disabled selected>Phường / Xã</option>
                   <option *ngFor="let ward of wards" [ngValue]="ward.name">
                     {{ ward.name }}
@@ -386,10 +401,23 @@
             </div>
           </div>
           <div class="row">
-            <div class="form-group col-md-12">
+            <div class="form-group col-md-6">
               <label for="address">Địa Chỉ Cụ Thể</label>
-              <input formControlName="address" type="text" class="form-control form-control-lg" id="address"
+              <input formControlName="address" type="text" class="form-control form-control-lg" 
                 placeholder="Nhập địa chỉ cụ thể" [(ngModel)]="userData.address">
+            </div>
+            <div class="form-group col-md-6">
+              <label for="position">Trạng Thái</label>
+              <div>
+                <select [(ngModel)]="selectedStatus" formControlName="status_id" class="form-control form-control-lg"
+                 >
+                  <option [ngValue]="null" disabled selected>Chọn Trạng Thái</option>
+                  <option *ngFor="let sa of status" [ngValue]="sa.status_id">
+                    {{ sa.status_name }}
+                  </option>
+                </select>
+              </div>
+
             </div>
           </div>
         </div>

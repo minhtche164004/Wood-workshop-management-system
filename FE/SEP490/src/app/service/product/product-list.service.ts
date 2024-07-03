@@ -32,8 +32,6 @@ export class ProductListService {
 
   private apiUrl_EditProduct = `${environment.apiUrl}api/auth/product/EditProduct`;
 
-  private apiUrl_DeleteProduct = `${environment.apiUrl}api/auth/product/deleteProduct`;
-
   private apiUrl_getMultiFillterProductForAdmin = `${environment.apiUrl}api/auth/product/getMultiFillterProductForAdmin`;
   private getAllStatusProduct = `${environment.apiUrl}api/auth/product/GetStatusProduct`;  //sau lay api khac thay vao` api nay bi thieu
   private getAllMaterial = `${environment.apiUrl}api/auth/getAll`;  // lay cac vat lieu
@@ -47,11 +45,15 @@ export class ProductListService {
 
   private api_UrlexportMaterialProductByProductId = `${environment.apiUrl}api/auth/product/getProductSubMaterialAndMaterialByProductId`;  // lay tat ca vat lieu can co de tao 1 san pham
 
+  //api for product request
+  private apiUrlGetProductRequired = `${environment.apiUrl}api/auth/order/GetAllProductRequest`;
+  //
+
   constructor(private http: HttpClient) { }
   uploadProduct(productData: any, thumbnail: File, images: File[]): Observable<any> {
     const formData = new FormData();
     formData.append('productDTO', new Blob([JSON.stringify(productData)], { type: 'application/json' }));
-    formData.append('files', thumbnail, thumbnail.name);
+    formData.append('file_thumbnail', thumbnail, thumbnail.name);
     images.forEach(image => {
       formData.append('files', image, image.name);
     });
@@ -258,24 +260,32 @@ export class ProductListService {
   editProduct(productData: any, thumbnail: File | null, images: File[] | null, productId: number): Observable<any> {
     const formData = new FormData();
     formData.append('productDTO', new Blob([JSON.stringify(productData)], { type: 'application/json' }));
-    if (thumbnail !== null) { 
+    if (thumbnail !== null) {
       formData.append('file_thumbnail', thumbnail, thumbnail.name);
     } else {
-      formData.append('file_thumbnail', new Blob(), ''); 
+      formData.append('file_thumbnail', new Blob(), '');
     }
     // cho phep null anh neu khong update anh
-    if (images !== null && images.length > 0) { 
+    if (images !== null && images.length > 0) {
       images.forEach(image => {
         formData.append('files', image, image.name);
       });
     } else {
-      formData.append('files', new Blob(), ''); 
+      formData.append('files', new Blob(), '');
     }
     const url = `${this.apiUrl_EditProduct}?product_id=${productId}`;
-    return this.http.put(url, formData,{
+    return this.http.put(url, formData, {
       headers: {
         'Accept': 'application/json'
       }
     });
   }
+
+  //for request product
+  getAllProductRequest(): Observable<any> {
+    return this.http.get<any>(this.apiUrlGetProductRequired).pipe(
+      catchError(this.handleError)
+    );
+  }
+  //
 }

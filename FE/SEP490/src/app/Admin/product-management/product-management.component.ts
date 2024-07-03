@@ -3,6 +3,8 @@ import { ProductListService } from 'src/app/service/product/product-list.service
 import { ToastrService } from 'ngx-toastr';
 import { FormArray, FormBuilder, FormGroup, Validators, FormsModule, FormControl } from '@angular/forms';
 import { concatMap } from 'rxjs/operators';
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
+import { ChangeDetectorRef } from '@angular/core';
 
 interface Category {
   categoryId: number;
@@ -69,10 +71,15 @@ export class ProductManagementComponent implements OnInit {
   formSubMaterialPerProduct: FormGroup;
   subMaterialItemOfProduct: SubMaterialItemOfProduct[] = [];
   subMaterialData: any;
+  selectedProductIdCurrentDelele: number = 0;
+  selectedProductNameCurrentDelele: string | null = null;
+
+  isProduct: boolean = false;
   constructor(
     private fb: FormBuilder,
     private productListService: ProductListService,
-    private toastr: ToastrService
+    private toastr: ToastrService,
+    private cdr: ChangeDetectorRef
   ) {
     this.uploadForm = this.fb.group({
       product_name: [''],
@@ -209,24 +216,43 @@ export class ProductManagementComponent implements OnInit {
     this.loadStatus();
     this.loadMaterials();
 
-
     if (this.loginToken) {
       // console.log('Retrieved loginToken:', this.loginToken);
-      this.productListService.getProducts().subscribe(
-        (data) => {
-          if (data.code === 1000) {
-            this.products = data.result;
-            // console.log('Danh sách sản phẩm:', this.products);
-          } else {
-            console.error('Failed to fetch products:', data);
-            this.toastr.error('Không thể lấy danh sách sản phẩm!', 'Lỗi');
+      if(this.isProduct == true){
+        this.productListService.getProducts().subscribe(
+          (data) => {
+            if (data.code === 1000) {
+              this.products = data.result;
+              // console.log('Danh sách sản phẩm:', this.products);
+            } else {
+              console.error('Failed to fetch products:', data);
+              this.toastr.error('Không thể lấy danh sách sản phẩm!', 'Lỗi');
+            }
+          },
+          (error) => {
+            console.error('Error fetching products:', error);
+            this.toastr.error('Có lỗi xảy ra!', 'Lỗi');
           }
-        },
-        (error) => {
-          console.error('Error fetching products:', error);
-          this.toastr.error('Có lỗi xảy ra!', 'Lỗi');
-        }
-      );
+        );
+      }
+      else{
+        this.productListService.getAllProductRequest().subscribe(
+          (data) => {
+            if (data.code === 1000) {
+              this.products = data?.result;
+              console.log('Danh sách sản phẩm:', this.products);
+            } else {
+              console.error('Failed to fetch products:', data);
+              this.toastr.error('Không thể lấy danh sách sản phẩm!', 'Lỗi');
+            }
+          },
+          (error) => {
+            console.error('Error fetching products:', error);
+            this.toastr.error('Có lỗi xảy ra!', 'Lỗi');
+          }
+        );
+      }
+
     } else {
       console.error('No loginToken found in localStorage.');
     }
@@ -276,6 +302,14 @@ export class ProductManagementComponent implements OnInit {
         console.error('Error fetching status:', error);
       }
     );
+  }
+
+  onChangeProductOrRequestProduct(isProduct: number) {
+    if (isProduct == 0) {
+      this.isProduct = true;
+    } else {
+      this.isProduct = false;
+    }
   }
 
   filterProducts(): void {
@@ -375,7 +409,9 @@ export class ProductManagementComponent implements OnInit {
 
   onSubmit() {
     if (this.uploadForm.valid && this.selectedThumbnail && this.selectedImages.length) {
-      const productData = this.editForm.value;
+      const productData = this.uploadForm.value;
+      console.log(productData);
+
       console.log('data goc:', this.materialForm.value);
       var temp = this.materialForm.value;
 
@@ -398,7 +434,6 @@ export class ProductManagementComponent implements OnInit {
             productId: response.result.productId,
             subMaterialQuantities: transformedObject
           };
-          console.log(transformedData);
           return this.productListService.createExportMaterialProduct(transformedData);
         })
       ).subscribe(
@@ -480,26 +515,38 @@ export class ProductManagementComponent implements OnInit {
         );
     }
   }
-
-  deleteProduct(productId: number) {
-    this.productListService.deleteProduct(productId)
+  openConfirmDeleteModal(productId: number, productName: string): void {
+    this.selectedProductIdCurrentDelele = productId;
+    this.selectedProductNameCurrentDelele = productName;
+  }
+  deleteProduct() {
+    this.productListService.deleteProduct(this.selectedProductIdCurrentDelele)
       .subscribe(
         response => {
           console.log('Xóa thành công', response);
           if (response.code === 1000) {
             this.toastr.success('Xóa sản phẩm thành công!', 'Thành công');
           }
-          else if(response.code === 1030){
-            this.toastr.error(response.message, 'Lỗi');
+          const cancelButton = document.querySelector('.btn.btn-secondary[data-dismiss="modal"]') as HTMLElement;
+          if (cancelButton) { // Check if the button exists
+            cancelButton.click(); // If it exists, click it to close the modal
           }
 
         },
-        error => {
-          console.error('Update error', error);
-          this.toastr.error('Xóa sản phẩm bị lỗi!', 'Lỗi');
+        (error: HttpErrorResponse) => {
+          if (error.status === 400 && error.error.code === 1030) {
+            this.toastr.error(error.error.message, 'Lỗi');
+          } else {
+            this.toastr.error("Không thể xoá sản phẩm do sản phẩm đang được sử dụng ở các chức năng khác", 'Lỗi');
+          }
+          const cancelButton = document.querySelector('.btn.btn-secondary[data-dismiss="modal"]') as HTMLElement;
+          if (cancelButton) { // Check if the button exists
+            cancelButton.click(); // If it exists, click it to close the modal
+          }
+          // this.isLoading = false; // Stop the loading spinner on error
         }
       );
-      console.log('productId', productId);
+    console.log('productId', this.selectedProductIdCurrentDelele);
   }
 
   showProductDetails(productId: number) {

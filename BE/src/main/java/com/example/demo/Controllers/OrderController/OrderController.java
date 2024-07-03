@@ -1,5 +1,7 @@
 package com.example.demo.Controllers.OrderController;
 
+import com.example.demo.Config.RedisConfig;
+import com.example.demo.Dto.OrderDTO.JobProductDTO;
 import com.example.demo.Dto.ProductDTO.ProductEditDTO;
 import com.example.demo.Dto.RequestDTO.RequestAllDTO;
 import com.example.demo.Dto.ProductDTO.RequestProductAllDTO;
@@ -14,6 +16,9 @@ import com.example.demo.Repository.Status_Order_Repository;
 
 import com.example.demo.Response.ApiResponse;
 import com.example.demo.Service.*;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.reflect.TypeToken;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -21,8 +26,10 @@ import org.springframework.http.MediaType;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import redis.clients.jedis.JedisPooled;
 
 import java.io.IOException;
+import java.lang.reflect.Type;
 import java.util.Date;
 import java.util.List;
 
@@ -41,7 +48,8 @@ public class OrderController {
     @Autowired
     private WhiteListService whiteListService;
     private final OrderRepository orderRepository;
-
+    private static final JedisPooled jedis = RedisConfig.getRedisInstance();
+    private static final String GET_ALL_ORDER_CACHE_KEY = "all_orders";
 
     @GetMapping("/GetAllProductRequest")
     public ApiResponse<?> GetAllProductRequest() {
@@ -131,7 +139,22 @@ public class OrderController {
     @GetMapping("GetAllOrder")
     public ApiResponse<?> GetAllOrder(){
         ApiResponse<List> apiResponse = new ApiResponse<>();
-        apiResponse.setResult(orderService.GetAllOrder());
+        String cacheKey = GET_ALL_ORDER_CACHE_KEY;
+        List<Orders> ordersListAll;
+        String cachedData = jedis.get(cacheKey);
+        Gson gson = new GsonBuilder().setDateFormat("MMM dd, yyyy").create();
+        if (cachedData != null) {
+            Type type = new TypeToken<List<Orders>>() {
+            }.getType();
+
+            ordersListAll = gson.fromJson(cachedData, type);
+        } else {
+            ordersListAll = orderService.GetAllOrder();
+            String jsonData = gson.toJson(ordersListAll);
+            jedis.set(cacheKey, jsonData);
+            jedis.expire(cacheKey, 1200);
+        }
+        apiResponse.setResult(ordersListAll);
         return apiResponse;
     }
     @GetMapping("FindOrderByNameorCode")
@@ -145,6 +168,7 @@ public class OrderController {
     public ApiResponse<?> AddOrder(@RequestBody RequestOrder requestOrder) {
         ApiResponse<Orders> apiResponse = new ApiResponse<>();
         apiResponse.setResult(orderService.AddOrder(requestOrder));
+        jedis.del(GET_ALL_ORDER_CACHE_KEY);
         return apiResponse;
     }
 

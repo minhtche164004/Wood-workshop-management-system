@@ -410,18 +410,19 @@ public class ProductController {
 
     // neu input cua sortDirection la asc thi la sap xep tang dan` va desc la giam dan
     @GetMapping("/getMultiFillterProductForCustomer")
-    public ResponseEntity<?> getAllProductForCustomer(
+    public ApiResponse<?> getAllProductForCustomer(
             @RequestParam(required = false) String search,
             @RequestParam(required = false) List<Integer> categoryIds,
             @RequestParam(required = false) BigDecimal minPrice,
             @RequestParam(required = false) BigDecimal maxPrice,
             @RequestParam(required = false) String sortDirection){
-        List<Products> products = productService.filterProductForCustomer(search, categoryIds, minPrice, maxPrice, sortDirection);
-        return ResponseEntity.ok(products);
+        ApiResponse<List> apiResponse = new ApiResponse<>();
+        apiResponse.setResult(productService.filterProductForCustomer(search, categoryIds, minPrice, maxPrice, sortDirection));
+        return apiResponse;
     }
 
     @GetMapping("/getMultiFillterProductForAdmin")
-    public ResponseEntity<?> getAllProductForAdmin(
+    public ApiResponse<?>  getAllProductForAdmin(
             @RequestParam(required = false) String search,
             @RequestParam(required = false) Integer categoryId,
             @RequestParam(required = false) Integer statusId,
@@ -429,20 +430,23 @@ public class ProductController {
             @RequestParam(required = false) BigDecimal maxPrice,
             @RequestParam(required = false) String sortDirection,
             @RequestParam(required = false) String sortId){
-        List<Products> products = productService.filterProductsForAdmin(search, categoryId, statusId, minPrice, maxPrice, sortDirection,sortId);
-        return ResponseEntity.ok(products);
+        ApiResponse<List> apiResponse = new ApiResponse<>();
+        apiResponse.setResult(productService.filterProductsForAdmin(search, categoryId, statusId, minPrice, maxPrice, sortDirection,sortId));
+        return apiResponse;
+
     }
 
     @GetMapping("/getMultiFillterRequestProductForAdmin")
-    public ResponseEntity<?> getAllRequestProductForAdmin(
+    public ApiResponse<?> getAllRequestProductForAdmin(
             @RequestParam(required = false) String search,
             @RequestParam(required = false) Integer statusId,
             @RequestParam(required = false) BigDecimal minPrice,
             @RequestParam(required = false) BigDecimal maxPrice,
             @RequestParam(required = false) String sortDirection,
             @RequestParam(required = false) String sortId){
-        List<RequestProducts> products = orderService.filterRequestProductsForAdmin(search, statusId, minPrice, maxPrice, sortDirection,sortId);
-        return ResponseEntity.ok(products);
+        ApiResponse<List> apiResponse = new ApiResponse<>();
+        apiResponse.setResult(orderService.filterRequestProductsForAdmin(search, statusId, minPrice, maxPrice, sortDirection,sortId));
+        return apiResponse;
     }
 
 

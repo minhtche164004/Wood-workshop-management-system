@@ -33,7 +33,7 @@ export class JobManagementComponent implements OnInit {
 
     this.createJobs = this.fb.group({
       job_name: [''],
-      quantity_product: this.selectedProduct.quantity_product,
+      quantity_product: this.selectedProduct.quantity,
       cost: [],
       description: [''],
       finish: [''],
@@ -52,7 +52,7 @@ export class JobManagementComponent implements OnInit {
     const p_id = this.selectedProduct.product_id; // Thay đổi giá trị tùy theo sản phẩm
     const status_id = this.selectedProduct.statusJob?.status_id; // Thay đổi giá trị tùy theo trạng thái
     const job_id = this.selectedProduct.job_id; // Thay đổi giá trị tùy theo công việc
-    const type_id = this.selectedProduct.type_id; //cho sp có sẵn     0 - k có sẵn
+    const type_id = this.selectedCategory; //cho sp có sẵn     0 - k có sẵn
     console.log("user_id: ", user_id)
     console.log("p_id: ", p_id)
     console.log("status_id: ", status_id)

@@ -24,9 +24,9 @@
 
                             <div class="input-group mb-3">
                                 <select [(ngModel)]="selectedCategory" (change)="onSearch(selectedCategory, searchKey)">
-                                    <option [ngValue]="0" disabled selected>Sản phẩm theo yêu cầu</option>
+                                   
                                     <option [ngValue]="1" [(ngModel)]="selectedCategory">Sản phẩm có sẵn </option>
-                                    <option [ngValue]="0" [(ngModel)]="selectedCategory ">Sản phẩm theo yêu cầu
+                                    <option [ngValue]="0" [(ngModel)]="selectedCategory" selected>Sản phẩm theo yêu cầu
                                     </option>
 
                                 </select>

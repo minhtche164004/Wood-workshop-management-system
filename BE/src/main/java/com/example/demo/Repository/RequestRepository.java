@@ -1,5 +1,7 @@
 package com.example.demo.Repository;
 
+import com.example.demo.Dto.OrderDTO.JobProductDTO;
+import com.example.demo.Dto.RequestDTO.RequestEditCusDTO;
 import com.example.demo.Entity.Products;
 import com.example.demo.Entity.RequestProducts;
 import com.example.demo.Entity.Requests;
@@ -12,6 +14,7 @@ import org.springframework.stereotype.Repository;
 
 import java.math.BigDecimal;
 import java.util.Date;
+import java.util.List;
 
 @Repository
 public interface RequestRepository extends JpaRepository<Requests,Integer> {
@@ -22,6 +25,9 @@ public interface RequestRepository extends JpaRepository<Requests,Integer> {
     @Query("SELECT u FROM Requests u WHERE u.requestId = :query")
     Requests findById(int query);
 
+    @Query("SELECT u FROM Requests u WHERE u.user.userId = :query")
+    List<Requests> findByUserId(int query);
+
     @Transactional
     @Modifying
     @Query("UPDATE Requests u SET u.status.status_id = :status_id WHERE u.requestId = :requestId")
@@ -29,8 +35,15 @@ public interface RequestRepository extends JpaRepository<Requests,Integer> {
 
     @Transactional
     @Modifying
-    @Query("update Requests u set u.description = ?2, u.requestDate=?3 where u.requestId = ?1")
-    void updateRequest(int requestId,String description,Date requestDate);
+    @Query("update Requests u set u.description = ?2 where u.requestId = ?1")
+    void updateRequest(int requestId,String description);
+
+//    @Query("SELECT new com.example.demo.Dto.RequestDTO.RequestEditCusDTO(r.description, " +
+//            "(SELECT ri.fullPath FROM Requestimages ri WHERE ri.requests = r)) " +
+//            "FROM Requests r " +
+//            "WHERE r.requestId = :requestId")
+//    RequestEditCusDTO getRequestEditCusDTOById(int requestId);
+
 
 
 //    @Transactional

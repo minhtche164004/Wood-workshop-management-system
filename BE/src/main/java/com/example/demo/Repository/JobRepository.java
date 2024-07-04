@@ -104,7 +104,7 @@ public interface JobRepository extends JpaRepository<Jobs,Integer> {
 
 
     @Query("SELECT new com.example.demo.Dto.OrderDTO.JobProductDTO(j.jobId,null, p.productId, p.productName, p.description, p.price, j.status, j.quantityProduct," +
-            " u.userId, u.username, pos.position_id, pos.position_name) " +
+            "COALESCE(u.userId, 0), COALESCE(u.username, ''), COALESCE(pos.position_id, 0), COALESCE(pos.position_name, '')) " +
             "FROM Jobs j " +
             "LEFT JOIN j.product p " +
             "LEFT JOIN j.user u " +

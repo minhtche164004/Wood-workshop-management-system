@@ -191,6 +191,7 @@ public class JobController {
         jedis.del("all_products_request_job");
         apiResponse.setResult(jobService.CreateJob_Log(job_id, status_id));
         return apiResponse;
+
     }
 
     @PutMapping("/EditJob")

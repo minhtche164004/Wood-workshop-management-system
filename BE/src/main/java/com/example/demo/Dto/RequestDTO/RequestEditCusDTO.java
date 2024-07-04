@@ -13,8 +13,8 @@ public class RequestEditCusDTO {
     private List<String> files;
 
 
-    public RequestEditCusDTO(String description, List<String> files) {
-        this.description = description;
-        this.files = files;
-    }
+//    public RequestEditCusDTO(String description, List<String> files) {
+//        this.description = description;
+//        this.files = files;
+//    }
 }

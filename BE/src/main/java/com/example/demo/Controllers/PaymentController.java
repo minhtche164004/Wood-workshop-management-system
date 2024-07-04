@@ -94,7 +94,13 @@ public class PaymentController {
         BigDecimal totalPriceAsBigDecimal = new BigDecimal(totalPrice).divide(new BigDecimal(100));
 
         if (paymentStatus == 1 && orders != null && totalPriceAsBigDecimal.compareTo(orders.getDeposite()) == 0) {
-            Status_Order statusOrder = status_Order_Repository.findById(2); // 2 la status order da thanh toan dat coc
+            Status_Order statusOrder = new Status_Order();
+            if(orders.getSpecialOrder() == false){//nếu là hàng có sẵn thì set status order cho nó là đã thi công xong luôn(vì nó ko cần sản xuất nữa)
+                 statusOrder = status_Order_Repository.findById(4);
+            }
+            if(orders.getSpecialOrder() == true){//nếu là hàng đặt làm theo yêu cầu thì set status order cho nó là đã đặt cọc thành công
+                 statusOrder = status_Order_Repository.findById(3);//đã đặt cọc, đang thi công
+            }
             Status_Job statusJob = statusJobRepository.findById(3); // 3 la status job sau khi dat coc thi set status la chua giao viec
             List<Jobs> jobsList = jobRepository.getJobByOrderDetailByOrderCode(orderInfo);
             for(Jobs jobs : jobsList){

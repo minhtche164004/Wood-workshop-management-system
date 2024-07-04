@@ -22,7 +22,7 @@ public class EditUserDTO {
     private String fullname;
     //    @NotNull(message = "MUST_REQUIRED")
     private Integer status_id;
-    @NotNull(message = "MUST_REQUIRED")
+//    @NotNull(message = "MUST_REQUIRED")
     private Integer position_id;
 
 

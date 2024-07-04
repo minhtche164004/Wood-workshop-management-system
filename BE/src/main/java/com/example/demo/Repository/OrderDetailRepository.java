@@ -5,6 +5,7 @@ import com.example.demo.Dto.OrderDTO.JobProductDTO;
 import com.example.demo.Dto.OrderDTO.OrderDetailDTO;
 import com.example.demo.Dto.OrderDTO.OrderDetailWithJobStatusDTO;
 import com.example.demo.Entity.Orderdetails;
+import com.example.demo.Entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -42,6 +43,13 @@ public interface OrderDetailRepository extends JpaRepository<Orderdetails, Integ
 
 
 
+    @Query("SELECT r.user.email FROM Orderdetails od " +
+            "LEFT JOIN od.requestProduct rp " +
+            "LEFT JOIN rp.requests r " +
+            "WHERE od.order.orderId = :orderId")
+    String getOrderDetailsByOrderIdForSendMail(@Param("orderId") int orderId);
+
+
 
 
     @Query("SELECT new com.example.demo.Dto.OrderDTO.OrderDetailWithJobStatusDTO(" +
@@ -62,6 +70,26 @@ public interface OrderDetailRepository extends JpaRepository<Orderdetails, Integ
             "LEFT JOIN j.status s " + // Thêm LEFT JOIN với status_job
             "WHERE od.order.orderId = :query")
     List<OrderDetailWithJobStatusDTO> getAllOrderDetailByOrderId(int query);
+
+
+    @Query("SELECT new com.example.demo.Dto.OrderDTO.OrderDetailWithJobStatusDTO(" +
+            "od.orderDetailId, " +
+            "COALESCE(p.productId, 0), " +
+            "COALESCE(p.productName, ''), " +
+            "COALESCE(rp.requestProductId, 0), " +
+            "COALESCE(rp.requestProductName, ''), " +
+            "od.unitPrice, " +
+            "COALESCE(j.status.status_id, 0), " + // Sửa lại thành j.status.statusId
+            "COALESCE(s.status_name, ''), " +  // Sửa lại thành s.statusName
+            "od.quantity " +
+            ") " +
+            "FROM Orderdetails od " +
+            "LEFT JOIN od.product p " +
+            "LEFT JOIN od.requestProduct rp " +
+            "LEFT JOIN od.jobs j " +
+            "LEFT JOIN j.status s " + // Thêm LEFT JOIN với status_job
+            "WHERE od.order.orderId = :query AND (j.status.status_id = 15 OR j.status.status_id = 13)")
+    List<OrderDetailWithJobStatusDTO> getAllOrderDetailByOrderIdCheck(int query);
 
 
 //    @Query("SELECT u FROM Orderdetails u WHERE u.product.productId = :query")

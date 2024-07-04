@@ -2,7 +2,9 @@ package com.example.demo.Repository;
 
 import com.example.demo.Entity.Orders;
 import com.example.demo.Entity.Products;
+import jakarta.transaction.Transactional;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
@@ -19,6 +21,9 @@ public interface OrderRepository extends JpaRepository<Orders,Integer> {
     @Query("SELECT u FROM Orders u WHERE u.code = :query")
     Orders findByCode(String query);
 
+    @Query("SELECT u FROM Orders u WHERE u.orderId = :query")
+    Orders findById(int query);
+
     @Query("SELECT u FROM Orders u  WHERE u.address LIKE CONCAT('%', :keyword, '%') OR " +
             "u.code LIKE CONCAT('%', :keyword, '%')")
     List<Orders> findOrderByAddressorCode(@Param("keyword") String keyword);
@@ -31,6 +36,12 @@ public interface OrderRepository extends JpaRepository<Orders,Integer> {
 
     @Query("SELECT u FROM Orders u WHERE u.userInfor.user.userId = :query")
     List<Orders> findHistoryOrder(int query);
+
+
+    @Transactional
+    @Modifying
+    @Query("update Orders u set u.status.status_id = ?2 where u.orderId = ?1")
+    void UpdateStatusOrder(int orderId, int status_id);
 
 
 

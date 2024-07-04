@@ -326,10 +326,10 @@ public class ProductServiceImpl implements ProductService {
     public List<Products> filterProductsForAdmin(String search, Integer categoryId, Integer statusId, BigDecimal minPrice, BigDecimal maxPrice, String sortDirection) {
         List<Products> productList = new ArrayList<>();
 
-        if (search != null || categoryId != null || minPrice != null || maxPrice != null) {
+        if (search != null || categoryId != null || statusId != null || minPrice != null || maxPrice != null) {
             productList = productRepository.filterProductsForAdmin(search, categoryId, statusId, minPrice, maxPrice);
         } else {
-            productList = productRepository.ViewProductLandingPage();
+            productList = productRepository.findAll();
         }
 
         if (productList.isEmpty()) {

@@ -159,6 +159,12 @@ public class JobController {
         apiResponse.setResult(jobRepository.findByStatusByType(type_));
         return apiResponse;
     }
+    @GetMapping("/countJobsByUserId")
+    public ApiResponse<?> countJobsByUserId(@RequestParam("user_id") int user_id) {
+        ApiResponse<Integer> apiResponse = new ApiResponse<>();
+        apiResponse.setResult(jobRepository.countJobsByUserId(user_id));
+        return apiResponse;
+    }
 
     @PostMapping("/CreateJobs")
     public ApiResponse<?> CreateJobs(@RequestBody JobDTO jobDTO , @RequestParam("user_id") int user_id, @RequestParam("p_id") int p_id, @RequestParam("status_id") int status_id, @RequestParam("job_id") int job_id,@RequestParam("type_job") int type_job) {

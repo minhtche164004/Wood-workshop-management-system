@@ -51,6 +51,8 @@ public class ProductController {
     @Autowired
     private CloudinaryService cloudinaryService;
     @Autowired
+    private OrderService orderService;
+    @Autowired
     private Status_Product_Repository statusProductRepository;
     private static final JedisPooled jedis = RedisConfig.getRedisInstance();
 
@@ -170,6 +172,15 @@ public class ProductController {
         apiResponse.setResult(productService.findByPriceRange(min,max));
         return apiResponse;
     }
+
+    @GetMapping("/findByPriceRangeRequestProduct")
+    public ApiResponse<?> GetRequestProductByIdWithImage(@RequestParam("min") BigDecimal min,@RequestParam("max") BigDecimal max) {
+        ApiResponse<List> apiResponse = new ApiResponse<>();
+        apiResponse.setResult(orderService.findByPriceRange(min,max));
+        return apiResponse;
+    }
+
+
 
 //    @GetMapping("/GetRequestById")
 //    public ApiResponse<?> GetRequestById(@RequestParam("id") int id) {
@@ -390,7 +401,7 @@ public class ProductController {
     @GetMapping("/GetStatusProduct")
     public ApiResponse<?> GetAllStatusProduct() {
         ApiResponse<List> apiResponse = new ApiResponse<>();
-        apiResponse.setResult(statusProductRepository.GetListStatusType0());
+        apiResponse.setResult(statusProductRepository.GetListStatusType());
         return apiResponse;
     }
 
@@ -399,26 +410,42 @@ public class ProductController {
 
     // neu input cua sortDirection la asc thi la sap xep tang dan` va desc la giam dan
     @GetMapping("/getMultiFillterProductForCustomer")
-    public ResponseEntity<?> getAllProductForCustomer(
+    public ApiResponse<?> getAllProductForCustomer(
             @RequestParam(required = false) String search,
             @RequestParam(required = false) List<Integer> categoryIds,
             @RequestParam(required = false) BigDecimal minPrice,
             @RequestParam(required = false) BigDecimal maxPrice,
             @RequestParam(required = false) String sortDirection){
-        List<Products> products = productService.filterProductForCustomer(search, categoryIds, minPrice, maxPrice, sortDirection);
-        return ResponseEntity.ok(products);
+        ApiResponse<List> apiResponse = new ApiResponse<>();
+        apiResponse.setResult(productService.filterProductForCustomer(search, categoryIds, minPrice, maxPrice, sortDirection));
+        return apiResponse;
     }
 
     @GetMapping("/getMultiFillterProductForAdmin")
-    public ResponseEntity<?> getAllProductForAdmin(
+    public ApiResponse<?>  getAllProductForAdmin(
             @RequestParam(required = false) String search,
             @RequestParam(required = false) Integer categoryId,
             @RequestParam(required = false) Integer statusId,
             @RequestParam(required = false) BigDecimal minPrice,
             @RequestParam(required = false) BigDecimal maxPrice,
             @RequestParam(required = false) String sortDirection){
-        List<Products> products = productService.filterProductsForAdmin(search, categoryId, statusId, minPrice, maxPrice, sortDirection);
-        return ResponseEntity.ok(products);
+        ApiResponse<List> apiResponse = new ApiResponse<>();
+        apiResponse.setResult(productService.filterProductsForAdmin(search, categoryId, statusId, minPrice, maxPrice, sortDirection));
+        return apiResponse;
+
+    }
+
+    @GetMapping("/getMultiFillterRequestProductForAdmin")
+    public ApiResponse<?> getAllRequestProductForAdmin(
+            @RequestParam(required = false) String search,
+            @RequestParam(required = false) Integer statusId,
+            @RequestParam(required = false) BigDecimal minPrice,
+            @RequestParam(required = false) BigDecimal maxPrice,
+            @RequestParam(required = false) String sortDirection
+         ){
+        ApiResponse<List> apiResponse = new ApiResponse<>();
+        apiResponse.setResult(orderService.filterRequestProductsForAdmin(search, statusId, minPrice, maxPrice, sortDirection));
+        return apiResponse;
     }
 
 

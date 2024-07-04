@@ -509,4 +509,44 @@ public class OrderServiceImpl implements OrderService {
     }
 
 
+    @Override
+    public List<RequestProducts> filterRequestProductsForAdmin(String search,  Integer statusId, BigDecimal minPrice, BigDecimal maxPrice, String sortDirection) {
+        List<RequestProducts> productList = new ArrayList<>();
+
+        if (search != null|| statusId != null  || minPrice != null || maxPrice != null) {
+            productList = requestProductRepository.filterRequestProductsForAdmin(search, statusId, minPrice, maxPrice);
+        } else {
+            productList = requestProductRepository.findAll();
+        }
+
+        if (productList.isEmpty()) {
+            throw new AppException(ErrorCode.NOT_FOUND);
+        }
+
+//        for (RequestProducts product : productList) {
+//            product.setImage(getAddressLocalComputer(product.getImage())); // Cập nhật lại đường dẫn ảnh
+//        }
+
+        // Sắp xếp danh sách sản phẩm theo giá
+        if (sortDirection != null) {
+            if (sortDirection.equals("asc")) {
+                productList.sort(Comparator.comparing(RequestProducts::getPrice));
+            } else if (sortDirection.equals("desc")) {
+                productList.sort(Comparator.comparing(RequestProducts::getPrice).reversed());
+            }
+        }
+
+
+        return productList;
+    }
+    @Override
+    public List<RequestProducts> findByPriceRange(BigDecimal min, BigDecimal max) {
+        List<RequestProducts> productsList = requestProductRepository.findByPriceRange(min,max);
+        if(productsList == null ){
+            throw new AppException(ErrorCode.NOT_FOUND);
+        }
+        return productsList;
+    }
+
+
 }

@@ -354,7 +354,6 @@ export class UserManagementComponent implements OnInit {
         this.selectedStatus = this.status.find(sa => sa.status_name === this.userData.status_name)?.status_id;
         this.selectBankName = this.userData.bank_name;
 
-
       },
       (error) => {
         console.error('Error fetching user data:', error);

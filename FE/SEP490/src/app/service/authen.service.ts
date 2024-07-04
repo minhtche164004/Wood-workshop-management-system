@@ -15,6 +15,9 @@ export class AuthenListService {
   private apiUrl_EditUser = `${environment.apiUrl}api/auth/admin/EditUser`;
   private apiUrl_GetByIdWishList = `${environment.apiUrl}api/auth/order/GetWhiteListByUser`;
   private apiUrl_GetHistoryOrderCustomer = `${environment.apiUrl}api/auth/order/historyOrder`;
+
+  private apiUrl_GetListProductCustomer = `${environment.apiUrl}api/auth/order/GetAllProductRequestByUserId`;
+
   private apiUrl_DeleteWhiteList = `${environment.apiUrl}api/auth/order/DeleteWhiteList`;
   private apiUrl_GetOrderDeTailById = `${environment.apiUrl}api/auth/order/getOrderDetailById`;
   private apiUrl_AddNewAccount = `${environment.apiUrl}api/auth/admin/AddNewAccount`; 
@@ -84,7 +87,23 @@ export class AuthenListService {
       catchError(this.handleError)
     );
   }
+  getListRequestProductCusomer(): Observable<any> {
+    const token = localStorage.getItem('loginToken');
 
+    if (!token) {
+      return throwError(new Error('Login token not found in localStorage.'));
+    }
+
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${token}`
+    });
+
+    console.log("Authorization header:", headers.get('Authorization'));
+
+    return this.http.get<any>(this.apiUrl_GetListProductCustomer, { headers }).pipe(
+      catchError(this.handleError)
+    );
+  }
 
   GetByIdWishList(): Observable<any> {
     const token = localStorage.getItem('loginToken');

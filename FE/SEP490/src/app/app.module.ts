@@ -63,6 +63,7 @@ import {AutocompleteLibModule} from 'angular-ng-autocomplete';
 import { WishlistComponent } from './features/wishlist/wishlist.component';
 import { TemplateComponent } from './features/template/template.component';
 import { HistoryOrderComponent } from './Admin/history-order/history-order.component';
+import { ListRequestProductComponent } from './features/list-request-product/list-request-product.component';
 
 
 
@@ -120,6 +121,7 @@ import { HistoryOrderComponent } from './Admin/history-order/history-order.compo
     AutoCompleteComponent,
     TemplateComponent,
     HistoryOrderComponent,
+    ListRequestProductComponent,
 
   ],
   imports: [

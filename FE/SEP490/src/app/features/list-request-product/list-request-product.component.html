@@ -1,0 +1,97 @@
+<app-header></app-header>
+
+<div class="dashboard-main" style="margin-top: 150px;">
+  <div class="container-fluid">
+    <div class="table-responsive">
+      <div class="table-wrapper">
+        <div class="table-title">
+          <div class="row " style="height: 60px;">
+            <div class="col-sm-5 ">
+              <h2 style="margin-bottom: 0;">Lịch sử đơn đặt hàng</h2>
+            </div>
+            <div class="col-sm-7 text-end d-flex align-items-center justify-content-end">
+
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-md-7">
+              <div class="input-group mb-3">
+                <!-- product.component.html -->
+                <label>Từ: </label>
+                <input style="margin-left: 10px;" type="date" class="form-control" placeholder="Đến: dd/mm/yyyy">
+
+                <label>Đến: </label>
+                <input style="margin-left: 10px;" type="date" class="form-control" placeholder="Đến: dd/mm/yyyy">
+              </div>
+            </div>
+            <div class="col-md-5 text-end">
+              <div class="input-group mb-3">
+                <!-- product.component.html -->
+                <select>
+                  <option value="null" disabled selected>Kiểu việc làm</option>
+                  <option></option>
+                </select>
+
+                <input type="text" class="form-control" placeholder="(Mã đơn hàng, Tên)">
+                <button class="btn search-button" type="button">
+                  <i class="fa fa-search"></i>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="table-container">
+          <div class="table-responsive">
+            <table class="table table-striped table-hover">
+              <thead>
+                <tr>
+
+                  <th style="width: 200px;">STT</th>
+                  <th style="width: 300px;">Ngày dự kiến hoàn thành</th>
+                  <th>Mô tả đơn hàng</th>
+                  <th>Tình trạng</th>
+                  <th>Địa chị cụ thể</th>
+                  <th style="width: 250px;">Lí do từ chối</th>
+
+                </tr>
+              </thead>
+              <tbody>
+                <tr
+                  *ngFor="let hs of list_request_product | paginate: { itemsPerPage: 10, currentPage: currentPage }; let i = index">
+                  <td>{{ i + 1 + (currentPage - 1) * 10 }}</td>
+                  <td >{{ hs.completionTime | date:'dd/MM/yyyy' }}</td>                 
+                  <td>{{ hs.requests.description  }}</td>
+                  <td>{{ hs.status.status_name  }}</td>
+                  <td>{{ hs.requests.address}}</td>
+                  <td>{{ hs.requests.response}}</td>
+                  
+                  <!-- <td
+                    [ngStyle]="{'color': hs?.paymentMethod === 1 ? 'green' : (hs?.paymentMethod === 0 ? 'red' : 'black')}">
+                    {{ hs?.paymentMethod === 1 ? 'ONLINE' : (hs?.paymentMethod === 0 ? 'OFFLINE' : '') }}
+                  </td>
+                  <td>{{ hs?.totalAmount | number : '1.0-3' }}</td> -->
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+
+        <pagination-controls style="justify-content: right; display: flex;" (pageChange)="currentPage = $event"
+          previousLabel="Trang trước" nextLabel="Trang sau">
+        </pagination-controls>
+        <div  class="clearfix" style="justify-content: right; display: flex; margin-top: 400px;">
+          <div class="hint-text">Hiển thị <b>{{ (currentPage - 1) * 10 + 1 }}</b> tới <b>{{ currentPage * 10
+              > list_request_product.length ? list_request_product.length : currentPage * 10 }}</b> trong tổng <b>{{
+                list_request_product.length }}</b> dữ liệu</div>
+        </div>
+
+
+      </div>
+    </div>
+  </div>
+</div >
+
+
+<app-footer></app-footer>

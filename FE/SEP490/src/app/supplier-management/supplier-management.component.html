@@ -48,7 +48,9 @@
               *ngFor="let supplier of suppliers | paginate: { itemsPerPage: 10, currentPage: currentPage }; let i = index">
               <td>{{ i + 1 + (currentPage - 1) * 10 }}</td>
               <td class="action-buttons">
-                <a href="#" class="settings" title="Edit" data-toggle="modal" data-target="#editProductModal">
+                <a href="#" class="settings" title="Edit" data-toggle="modal" data-target="#editProductModal"
+                >
+                <!-- (click)="getUserData(supplier.supplierMaterial)" -->
                   <i class="fa-solid fa-pen-to-square"></i>
                 </a>
                 <a href="#" class="delete" title="Delete" data-toggle="modal" data-target="#confirmDeleteModal" (click)="setDeleteId(supplier.supplierMaterial)">

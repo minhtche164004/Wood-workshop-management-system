@@ -82,6 +82,7 @@ public class ProductController {
     public ApiResponse<?> getAllProductForAdmin() {
         ApiResponse<List> apiResponse = new ApiResponse<>();
         String cacheKey = "all_products_admin";
+//        jedis.del("all_products_admin");
         List<Products> products;
         String cachedData = jedis.get(cacheKey);
         Gson gson = new GsonBuilder().setDateFormat("MMM dd, yyyy").create();

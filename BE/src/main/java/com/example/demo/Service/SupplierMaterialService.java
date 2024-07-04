@@ -4,6 +4,7 @@ package com.example.demo.Service;
 import com.example.demo.Dto.SubMaterialDTO.SubMaterialNameDTO;
 import com.example.demo.Dto.SupplierDTO.SupplierMaterialDTO;
 import com.example.demo.Dto.SupplierDTO.SupplierNameDTO;
+import com.example.demo.Entity.Materials;
 import com.example.demo.Entity.Suppliermaterial;
 import org.springframework.stereotype.Service;
 
@@ -17,4 +18,5 @@ public interface SupplierMaterialService {
     Suppliermaterial EditSupplier(int id,SupplierMaterialDTO supplierMaterialDTO);
     List<Suppliermaterial> SearchSupplierByName(String key);
     void DeleteSupplier(int id);
+    Suppliermaterial GetSuppliermaterialById(int id);
 }

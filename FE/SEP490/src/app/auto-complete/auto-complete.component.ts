@@ -33,8 +33,6 @@ export class AutoCompleteComponent implements OnInit {
   keyword = 'productName';
   products: any[] = [];
 
-  public cartCount: number = 0;
-
   constructor(private productListService: ProductListService, ) { }
 
   ngOnInit(): void {

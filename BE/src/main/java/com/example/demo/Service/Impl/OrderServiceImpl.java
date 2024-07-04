@@ -3,13 +3,10 @@ package com.example.demo.Service.Impl;
 import com.example.demo.Dto.OrderDTO.OrderDetailDTO;
 import com.example.demo.Dto.OrderDTO.OrderDetailWithJobStatusDTO;
 import com.example.demo.Dto.ProductDTO.Product_Thumbnail;
-import com.example.demo.Dto.RequestDTO.RequestAllDTO;
-import com.example.demo.Dto.RequestDTO.RequestEditDTO;
-import com.example.demo.Dto.RequestDTO.RequestUpdateDTO;
+import com.example.demo.Dto.RequestDTO.*;
 import com.example.demo.Dto.ProductDTO.RequestProductAllDTO;
 import com.example.demo.Dto.ProductDTO.RequestProductDTO;
 import com.example.demo.Dto.OrderDTO.ProductItem;
-import com.example.demo.Dto.RequestDTO.RequestDTO;
 import com.example.demo.Dto.OrderDTO.RequestOrder;
 import com.example.demo.Entity.*;
 import com.example.demo.Exception.AppException;
@@ -239,28 +236,26 @@ public class OrderServiceImpl implements OrderService {
         return requests;
     }
 
-//    @Override
-//    public Requests EditRequest(int request_id,RequestEditDTO requestEditDTO,MultipartFile[] multipartFiles) throws IOException {
-//        Requests requests = requestRepository.findById(request_id);
-//        Date today = new Date();
-//        if (multipartFiles != null &&
-//                Arrays.stream(multipartFiles).anyMatch(file -> file != null && !file.isEmpty())) {
-//            List<Requestimages> requestimagesList= requestimagesRepository.findRequestImageByRequestId(request_id);
-//            for(Requestimages requestimages : requestimagesList){
-//                String full_path= requestimages.getFullPath();
-//                String id_image =cloudinaryService.extractPublicIdFromUrl(full_path);
-//                cloudinaryService.deleteImage(id_image);
-//            }
-//            requestimagesRepository.deleteRequestImages(request_id); // Xóa những ảnh trước đó
-//            uploadImageService.uploadFile(multipartFiles, requests.getRequestId());
-//        }
-//        requestRepository.updateRequest(request_id,
-//                requestEditDTO.getDescription(),
-//                today
-//        );
-//        entityManager.refresh(requests); // Làm mới đối tượng products
-//        return requests;
-//    }
+    @Transactional
+    @Override
+    public Requests EditRequest(int request_id, RequestEditCusDTO requestEditDTO, MultipartFile[] multipartFiles) throws IOException {
+        Requests requests = requestRepository.findById(request_id);
+        if (multipartFiles != null && Arrays.stream(multipartFiles).anyMatch(file -> file != null && !file.isEmpty())) {
+            List<Requestimages> requestimagesList= requestimagesRepository.findRequestImageByRequestId(request_id);
+            for(Requestimages requestimages : requestimagesList){
+                String full_path= requestimages.getFullPath();
+                String id_image =cloudinaryService.extractPublicIdFromUrl(full_path);
+                cloudinaryService.deleteImage(id_image);
+            }
+            requestimagesRepository.deleteRequestImages(request_id); // Xóa những ảnh trước đó
+            uploadImageService.uploadFileRequest(multipartFiles, requests.getRequestId());
+        }
+        requestRepository.updateRequest(request_id,
+                requestEditDTO.getDescription()
+        );
+        entityManager.refresh(requests); // Làm mới đối tượng products
+        return requests;
+    }
     @Override
     public Requests getRequestById(int id) {
         return requestRepository.findById(id);
@@ -433,6 +428,7 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public List<RequestProducts> GetAllProductRequest() {
+
         return requestProductRepository.findAll();
     }
 
@@ -469,6 +465,12 @@ public class OrderServiceImpl implements OrderService {
         return requests;
     }
 
+//    @Override
+//    public Requests CustomerEditRequest(int request_id, Requests requests) {
+//        Requests requests1 = requestRepository.findById(request_id);
+//        requests1.
+//    }
+
     @Override
     public OrderDetailDTO getOrderDetailById(int id) {
         OrderDetailDTO orderDetailDTO = orderDetailRepository.getOrderDetailById(id);
@@ -478,11 +480,17 @@ public class OrderServiceImpl implements OrderService {
         return orderDetailDTO;
     }
 
+//    @Override
+//    public RequestEditCusDTO getRequestEditCusDTOById(int id) {
+//        return requestRepository.getRequestEditCusDTOById(id);
+//    }
+
     @Override
     public void deleteRequestById(int requestId) {
         requestRepository.deleteById(requestId);
     }
 
+    @Transactional
     @Override
     public void ChangeStatusOrder(int orderId, int status_id) {
         //send mail cho những đơn hàng đặt theo yêu cầu , vì đơn hàng mau có sẵn thì mua luôn rồi, trả tiền luôn r cần đéo gì nữa mà phải theo dõi tình trạng đơn hàng
@@ -547,6 +555,29 @@ public class OrderServiceImpl implements OrderService {
         }
         return productsList;
     }
+
+    @Override
+    public List<RequestProducts> GetAllProductRequestByUserId() {
+        UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        User user = userRepository.getUserByUsername(userDetails.getUsername());
+        List<RequestProducts> list = requestProductRepository.findByUserId(user.getUserId());
+        if(list == null ){
+            throw new AppException(ErrorCode.NOT_FOUND);
+        }
+        return list;
+    }
+
+    @Override
+    public List<Requests> GetAllRequestByUserId() {
+        UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        User user = userRepository.getUserByUsername(userDetails.getUsername());
+        List<Requests> list = requestRepository.findByUserId(user.getUserId());
+        if(list == null ){
+            throw new AppException(ErrorCode.NOT_FOUND);
+        }
+        return list;
+    }
+
 
 
 }

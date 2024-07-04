@@ -54,15 +54,20 @@ import { AdvancedBillManagementComponent } from './Admin/advanced-bill-managemen
 import { FeedbackDefectiveComponent } from './Admin/feedback-defective/feedback-defective.component';
 import { TotalSalaryComponent } from './Admin/total-salary/total-salary.component';
 
-
 import { AutoCompleteComponent } from './auto-complete/auto-complete.component';
 import {AutocompleteLibModule} from 'angular-ng-autocomplete';
-
-
-
 import { WishlistComponent } from './features/wishlist/wishlist.component';
 import { TemplateComponent } from './features/template/template.component';
 import { HistoryOrderComponent } from './Admin/history-order/history-order.component';
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatNativeDateModule } from '@angular/material/core';
+import { CalendarModule } from 'primeng/calendar';
+
+
+
+
+
 
 
 
@@ -118,6 +123,7 @@ import { HistoryOrderComponent } from './Admin/history-order/history-order.compo
     TotalSalaryComponent,
     WishlistComponent,
     AutoCompleteComponent,
+    AutoCompleteComponent,
     TemplateComponent,
     HistoryOrderComponent,
 
@@ -134,7 +140,11 @@ import { HistoryOrderComponent } from './Admin/history-order/history-order.compo
     ToastrModule.forRoot(),
     ConfirmDialogModule,
     ConfirmPopupModule,
-    AutocompleteLibModule
+    AutocompleteLibModule,
+    MatDatepickerModule,
+    MatFormFieldModule,
+    CalendarModule,
+    MatNativeDateModule
   ],
   
   providers: [

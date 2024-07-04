@@ -20,36 +20,40 @@
           <div class="row" style="background-color: white;">
             <div class="row">
               <h2 style="color: black; text-align: center; margin: 10px;">Báo cáo lỗi</h2>
-              <div style="display: flex;">
-                <div class="col-md-6">
-                  <h3 style="color: black;">Mã sản phẩm: </h3>
+              <form [formGroup]="errorForm" (ngSubmit)="reportError()">
+                <div style="display: flex;">
+                  <div class="col-md-6">
+                    <h3 style="color: black;">Mã sản phẩm: </h3>
+                  </div>
+                  <div class="col-md-6">
+                    <h3 style="color: black;">Mã nhân viên: </h3>
+                  </div>
                 </div>
-                <div class="col-md-6">
-                  <h3 style="color: black;">Mã nhân viên: </h3>
+                <div class="row" style="margin-left: 7px; margin-top: 18px;">
+                  <div class="col-md-6">
+                    <h3 style="color: black;">Mã đơn hàng: </h3>
+                  </div>
                 </div>
-              </div>
-              <div class="row" style="margin-left: 7px; margin-top: 18px;">
-                <div class="col-md-6">
-                  <h3 style="color: black;">Mã đơn hàng: </h3>
+                <div class="row" style="margin-left: 7px; margin-top: 18px;">
+                  <h3 style="color: black;">Mô tả lỗi: </h3>
+                  <textarea [(ngModel)]="description" class="form-control" formControlName="description" id="descriptionTextarea" rows="10"
+                    style="height: 100px;" cols="5"></textarea>
                 </div>
-              </div>
-              <div class="row" style="margin-left: 7px; margin-top: 18px;">
-                <h3 style="color: black;">Mô tả lỗi: </h3>
-                <textarea class="form-control" id="exampleFormControlTextarea1" rows="10" style="height: 100px;"
-                  cols="5"></textarea>
-              </div>
-              <div class="row" style="margin-left: 7px; margin-top: 18px;">
-                <h3 style="color: black;">Giải pháp: </h3>
-                <textarea class="form-control" id="exampleFormControlTextarea1" rows="10" style="height: 100px;"
-                  cols="5"></textarea>
-              </div>
-              <div class="modal-footer d-flex justify-content-center">
+                <div class="row" style="margin-left: 7px; margin-top: 18px;">
+                  <h3 style="color: black;">Giải pháp: </h3>
+                  <textarea [(ngModel)]="solution" class="form-control" formControlName="solution"  id="solutionTextarea" rows="10"
+                    style="height: 100px;" cols="5"></textarea>
+                </div>
 
-                <button type="submit" class="btn btn-primary" style=" background-color: #20EC4D;
-    border-color: #20EC4D;">Tạo</button>
-                    <button type="button" class="btn" style="background: #CC4949;
-    color: white" data-dismiss="modal">Hủy bỏ</button>
-              </div>
+
+                <div class="modal-footer d-flex justify-content-center">
+
+                  <button (click)="reportError()" class="btn btn-primary"
+                    style="background-color: #20EC4D; border-color: #20EC4D;">Tạo</button>
+                  <button (click)="resetForm()" type="button" class="btn" style="background: #CC4949; color: white"
+                    data-dismiss="modal">Hủy bỏ</button>
+                </div>
+              </form>
             </div>
             <div class="col-md-7"></div> <!-- Dummy column to push the search box to the right -->
             <div class="col-md-5 text-end">
@@ -78,19 +82,16 @@
               <th>STT</th>
               <th>Mã sản phẩm</th>
               <th>Thao tác</th>
-              <th>Ảnh đại diện</th>
-              <th>Ngày hoàn thành</th>
-              <th>Tên sản phẩm</th>
-              <th>Mô tả</th>
-              <th>Kiểu sản phẩm</th>
-              <th>Số lượng</th>
-              <th>Đơn giá (vnđ)</th>
+              <th>Mô tả lỗi</th>
+              <th>Trạng thái</th>
+              <th>Quá trình</th>
+              <th>Giải pháp</th>
             </tr>
           </thead>
 
           <tbody>
-            <!-- <tr
-              *ngFor="let product of products | paginate: { itemsPerPage: 10, currentPage: currentPage }; let i = index">
+            <tr
+              *ngFor="let product of errorProducts | paginate: { itemsPerPage: 10, currentPage: currentPage }; let i = index">
               <td>{{ i + 1 + (currentPage - 1) * 10 }}</td>
               <td>{{ product.code }}</td>
               <td class="action-buttons">
@@ -100,7 +101,7 @@
                   <i class="fa-solid fa-pen-to-square"></i>
                 </a>
                 <a href="#" class="delete" title="Xóa" data-toggle="modal" data-target="#confirmDeleteModal"
-                  (click)="deleteProduct(product.id)">
+                  (click)="deleteProduct()">
                   <i class="fa-regular fa-trash-can"></i>
                 </a>
                 <a href="#" class="info" title="Chi tiết" data-toggle="modal" data-target="#productDetailModal"
@@ -109,16 +110,16 @@
                 </a>
 
               </td>
-              <td><img class="img_product" [src]="product.image" alt="Ảnh đại diện"></td>
-              <td>{{ product.completionTime }}</td>
-              <td>{{ product.productName }}</td>
-              <td>{{ product.description }}</td>
-              <td>{{ product.categories.categoryName }}</td>
-              <td>{{ product.quantity }}</td>
-              <td>{{ product.price | number: '1.0-3' }}</td>
+
+              <td>{{ product.des }}</td>
+              <td>{{ product.isFixed }}</td>
+
+              <td>{{ product.processProductErrorId }}</td>
+              <td>{{ product.solution }}</td>
+
             </tr>
 
-          </tbody> -->
+          </tbody>
         </table>
 
         <!-- <pagination-controls style="justify-content: right; display: flex;"

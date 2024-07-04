@@ -6,8 +6,10 @@ import com.example.demo.Dto.RequestDTO.RequestAllDTO;
 import com.example.demo.Dto.ProductDTO.*;
 import com.example.demo.Dto.RequestDTO.RequestDTO;
 import com.example.demo.Dto.OrderDTO.RequestOrder;
+import com.example.demo.Dto.RequestDTO.RequestEditCusDTO;
 import com.example.demo.Dto.RequestDTO.RequestEditDTO;
 import com.example.demo.Entity.*;
+import org.junit.runner.Request;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -54,10 +56,12 @@ public interface OrderService {
 
     public List<OrderDetailWithJobStatusDTO> getOrderDetailByOrderId(int order_id);
 
-
+    Requests EditRequest(int request_id, RequestEditCusDTO requestEditDTO, MultipartFile[] multipartFiles) throws IOException;
     Requests ManagerEditRequest(int request_id, RequestEditDTO requestEditDTO);
-    OrderDetailDTO getOrderDetailById(int id);
+//    Requests CustomerEditRequest(int request_id , Requests requests);
 
+    OrderDetailDTO getOrderDetailById(int id);
+//    RequestEditCusDTO getRequestEditCusDTOById(int id);
 
     void deleteRequestById(int requestId);
 
@@ -67,6 +71,8 @@ public interface OrderService {
     List<RequestProducts> filterRequestProductsForAdmin(String search,Integer statusId, BigDecimal minPrice, BigDecimal maxPrice, String sortDirection);
 
     List<RequestProducts> findByPriceRange(BigDecimal min, BigDecimal max);
+    List<RequestProducts> GetAllProductRequestByUserId();
+    List<Requests> GetAllRequestByUserId();
 
 
 

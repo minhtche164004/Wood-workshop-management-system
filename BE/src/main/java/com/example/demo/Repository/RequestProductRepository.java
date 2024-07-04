@@ -29,6 +29,9 @@ public interface RequestProductRepository extends JpaRepository<RequestProducts,
     @Query("SELECT u FROM RequestProducts u WHERE u.requestProductId = :query")
     Optional<RequestProducts> findByIdJob(int query);
 
+    @Query("SELECT u FROM RequestProducts u WHERE u.requests.user.userId = :query")
+    List<RequestProducts> findByUserId(int query);
+
 
     @Query("SELECT p FROM RequestProducts p WHERE " +
             "(p.requestProductName LIKE %:search% OR :search IS NULL) AND " +

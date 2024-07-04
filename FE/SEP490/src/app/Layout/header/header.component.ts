@@ -21,14 +21,7 @@ export class HeaderComponent implements OnInit {
 
   constructor(private dataService: DataService, private router: Router, private http: HttpClient, private authService: AuthenListService, private productListService: ProductListService) { }
   ngOnInit(): void {
-    this.searchControl.valueChanges.pipe(
-      debounceTime(300),
-      distinctUntilChanged(),
-      switchMap(keyword => this.productListService.getMultiFilterProductForCustomer(keyword))
-    ).subscribe(products => {
-      this.filteredProducts = products;
-    });
-    this.loadAllUsers();
+  
   }
   
   user: any[] = [];
@@ -76,6 +69,7 @@ export class HeaderComponent implements OnInit {
     return !this.authService.isLoggedIn();
   }
   onSearch(): void {
+    console.log('Search key header:', this.searchKey);
     this.dataService.changeSearchKey(this.searchKey);
 
     this.router.navigate(['/product']);

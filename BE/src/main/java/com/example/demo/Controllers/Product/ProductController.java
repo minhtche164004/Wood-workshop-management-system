@@ -3,6 +3,7 @@ package com.example.demo.Controllers.Product;
 import com.example.demo.Config.RedisConfig;
 import com.example.demo.Dto.Category.CategoryNameDTO;
 import com.example.demo.Dto.ProductDTO.*;
+import com.example.demo.Dto.RequestDTO.RequestEditCusDTO;
 import com.example.demo.Dto.SubMaterialDTO.SubMateProductDTO;
 import com.example.demo.Entity.*;
 import com.example.demo.Repository.*;
@@ -82,6 +83,7 @@ public class ProductController {
     public ApiResponse<?> getAllProductForAdmin() {
         ApiResponse<List> apiResponse = new ApiResponse<>();
         String cacheKey = "all_products_admin";
+//        jedis.del("all_products_admin");
         List<Products> products;
         String cachedData = jedis.get(cacheKey);
         Gson gson = new GsonBuilder().setDateFormat("MMM dd, yyyy").create();
@@ -179,6 +181,13 @@ public class ProductController {
         apiResponse.setResult(orderService.findByPriceRange(min,max));
         return apiResponse;
     }
+
+//    @GetMapping("/getRequestEditCusDTOById")
+//    public ApiResponse<?> getRequestEditCusDTOById(@RequestParam("id") int id) {
+//        ApiResponse<RequestEditCusDTO> apiResponse = new ApiResponse<>();
+//        apiResponse.setResult(orderService.getRequestEditCusDTOById(id));
+//        return apiResponse;
+//    }
 
 
 
@@ -358,7 +367,7 @@ public class ProductController {
             @RequestPart("file_thumbnail") MultipartFile file_thumbnail
     ) throws Exception {
         ApiResponse<Products> apiResponse = new ApiResponse<>();
-
+        jedis.del("all_products_admin");
         apiResponse.setResult(productService.EditProduct(productId,productEditDTO,files, file_thumbnail));
         return apiResponse;
     }
@@ -429,8 +438,7 @@ public class ProductController {
             @RequestParam(required = false) Integer statusId,
             @RequestParam(required = false) BigDecimal minPrice,
             @RequestParam(required = false) BigDecimal maxPrice,
-            @RequestParam(required = false) String sortDirection
-         ){
+            @RequestParam(required = false) String sortDirection){
         ApiResponse<List> apiResponse = new ApiResponse<>();
         apiResponse.setResult(productService.filterProductsForAdmin(search, categoryId, statusId, minPrice, maxPrice, sortDirection));
         return apiResponse;

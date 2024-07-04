@@ -17,9 +17,7 @@ export class AuthenListService {
   private apiUrl_GetHistoryOrderCustomer = `${environment.apiUrl}api/auth/order/historyOrder`;
   private apiUrl_DeleteWhiteList = `${environment.apiUrl}api/auth/order/DeleteWhiteList`;
   private apiUrl_GetOrderDeTailById = `${environment.apiUrl}api/auth/order/getOrderDetailById`;
-
   private apiUrl_AddNewAccount = `${environment.apiUrl}api/auth/admin/AddNewAccount`; 
-
   private apiUrl_SearchUserByNameorAddress = `${environment.apiUrl}api/auth/admin/SearchUserByNameorAddress`; 
   private apiUrl_NameATM = 'https://api.vietqr.io/v2/banks';
   constructor(private http: HttpClient) { }
@@ -30,9 +28,6 @@ export class AuthenListService {
   findSearchUserByNameorAddress(query: string): Observable<any> {
     return this.http.get<any>(`${this.apiUrl_SearchUserByNameorAddress}?query=${query}`);
   }
-
-
-
   AddNewAccountForAdmin(addNewAccountRequest: AddNewAccount): Observable<any> {
     const token = localStorage.getItem('loginToken');
 

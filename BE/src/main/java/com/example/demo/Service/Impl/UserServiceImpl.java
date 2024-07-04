@@ -341,9 +341,9 @@ userRepository.save(user);
     public UserDTO EditUser(int id, EditUserDTO userDTO) {
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new AppException(ErrorCode.NOT_FOUND));
-        if(user.getRole().getRoleId()==4 && jobRepository.countJobsByUserId(id) >= 1) { //nếu sửa thằng employee thì nó phải chưa nhận job nào thì mới có quyền sửa role cho nó
-            throw new AppException(ErrorCode.NOT_EDIT_EMPLOYEE);
-        }
+//        if(user.getRole().getRoleId()==4 && jobRepository.countJobsByUserId(id) >= 1) { //nếu sửa thằng employee thì nó phải chưa nhận job nào thì mới có quyền sửa role cho nó
+//            throw new AppException(ErrorCode.NOT_EDIT_EMPLOYEE);
+//        }
         // Tải rõ ràng UserInfor (Tải EAGER được ưu tiên trong trường hợp này)
         UserInfor userInfor = user.getUserInfor();
         entityManager.refresh(user); // Làm mới thực thể user trước khi sửa đổi

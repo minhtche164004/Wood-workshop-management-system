@@ -642,9 +642,9 @@ export class UserManagementComponent implements OnInit {
       },
       (error: any) => {
         
-        if ( error.error.code === 1033) {
-          this.toastr.error('Không thể thay đổi quyền của nhân viên này vì họ đang đảm nhận công việc ở vị trí của họ',);
-        }
+        // if ( error.error.code === 1033) {
+        //   this.toastr.error('Không thể thay đổi quyền của nhân viên này vì họ đang đảm nhận công việc ở vị trí của họ',);
+        // }
        
       }
     );

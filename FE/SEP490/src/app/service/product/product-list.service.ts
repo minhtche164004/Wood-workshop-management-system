@@ -289,12 +289,11 @@ export class ProductListService {
     );
   }
 
-  getMultiFillterRequestProductForAdmin(search: string, statusId: number, sortDirection: string, sortId: string): Observable<any> {
+  getMultiFillterRequestProductForAdmin(search: string, statusId: number, sortDirection: string): Observable<any> {
     const params = {
       search: search,
       statusId: statusId,
       sortDirection: sortDirection,
-      sortId: sortId
     };
 
     const queryString = Object.entries(params)

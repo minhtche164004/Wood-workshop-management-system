@@ -25,13 +25,13 @@
 
           <div class="row">
             <div class="col-md-2"></div> <!-- Dummy column to push the search box to the right -->
-            <div class="col-md-12 text-end">
+            <div class="col-md-10 text-end">
               <div class="input-group mb-3">
                 <!-- Chọn product thường hay product request -->
-                <select [(ngModel)]="isProduct">
+                <select [(ngModel)]="isProduct" (ngModelChange)="onIsProductChange($event)">
                   <option disabled selected>Chọn loại sản phẩm</option>
-                  <option [value]="true">Sản phẩm thường</option>
-                  <option [value]="false">Sản phẩm theo yêu cầu</option>
+                  <option [ngValue]="true">Sản phẩm thường</option>
+                  <option [ngValue]="false">Sản phẩm theo yêu cầu</option>
                 </select>
                 <!-- Sắp xếp giá tiền -->
                 <select (change)="isProduct ? filterProducts() : filterProductsRequest()" [(ngModel)]="selectedSortByPrice">
@@ -215,14 +215,31 @@
             </div>
           </div>
           <div class="form-row">
-            <div class="form-group col-md-6">
+            <div class="form-group col-md-4">
               <label style="font-size: 16px;" for="productImages">Ảnh sản phẩm (Chọn nhiều)</label>
               <input type="file" class="form-control-file" id="productImages" multiple
                 (change)="onImagesSelected($event)">
             </div>
-            <div class="form-group col-md-6">
+            <div class="form-group col-md-2 d-flex align-items-end">
+              <button (click)="onResetImage()" class="btn" style="height: calc(2.25rem + 2px); padding: 0.375rem 0.75rem; font-size: 1rem; line-height: 1.5; border-radius: 0.25rem; border: 1px solid #ced4da; background-color: #fff; color: #495057;">
+                Làm mới</button>
+            </div>
+            <div class="form-group col-md-4">
               <label style="font-size: 16px;" for="thumbnailImage">Ảnh đại diện sản phẩm</label>
               <input type="file" class="form-control-file" id="thumbnailImage" (change)="onThumbnailSelected($event)">
+            </div>
+            <div class="form-group col-md-2 d-flex align-items-end">
+              <button (click)="onResetThumbnail()" class="btn" style="height: calc(2.25rem + 2px); padding: 0.375rem 0.75rem; font-size: 1rem; line-height: 1.5; border-radius: 0.25rem; border: 1px solid #ced4da; background-color: #fff; color: #495057;">
+                Làm mới</button>
+            </div>
+          </div>
+          <!-- Preview anh -->
+          <div class="form-row">
+            <div class="form-group col-md-6" *ngIf="selectedImages">
+              <img *ngFor="let imageUrl of imagesPreview" [src]="imageUrl" class="previewMultiple">
+            </div>
+            <div class="form-group col-md-6">
+              <img *ngIf="selectedThumbnail" [src]="thumbnailPreview" class="preview">
             </div>
           </div>
           <!-- Mảng các vật liệu cần có trong product -->

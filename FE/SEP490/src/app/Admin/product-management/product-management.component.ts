@@ -4,7 +4,7 @@ import { ToastrService } from 'ngx-toastr';
 import { FormArray, FormBuilder, FormGroup, Validators, FormsModule, FormControl } from '@angular/forms';
 import { concatMap } from 'rxjs/operators';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
-import { ChangeDetectorRef } from '@angular/core';
+
 
 interface Category {
   categoryId: number;
@@ -46,7 +46,7 @@ interface SubMaterialItemOfProduct {
 })
 export class ProductManagementComponent implements OnInit {
   uploadForm: FormGroup;
-  selectedThumbnail: File | null = null;
+  selectedThumbnail: File | any = null;
   selectedImages: File[] = [];
   categories: Category[] = [];
   statuses: Status[] = [];
@@ -59,8 +59,12 @@ export class ProductManagementComponent implements OnInit {
   // selectedType: number = 0;
   selectedSortByPrice: string = '0';
   selectedSortById: string = '';
+  // thumbnail image and list image
   productImages: File[] = [];
   thumbnailImage: File | null = null;
+  thumbnailPreview = '';
+  imagesPreview: string[] = [];
+  //
   materialForm: FormGroup;  // tao list material de luu vao bang
   materials: Material[] = [];
   subMaterials: SubMaterial[][] = [];
@@ -218,29 +222,12 @@ export class ProductManagementComponent implements OnInit {
 
     if (this.loginToken) {
       // console.log('Retrieved loginToken:', this.loginToken);
-      if(this.isProduct == true){
+      if (this.isProduct == true) {
         this.productListService.getProducts().subscribe(
           (data) => {
             if (data.code === 1000) {
               this.products = data.result;
               // console.log('Danh sách sản phẩm:', this.products);
-            } else {
-              console.error('Failed to fetch products:', data);
-              this.toastr.error('Không thể lấy danh sách sản phẩm!', 'Lỗi');
-            }
-          },
-          (error) => {
-            console.error('Error fetching products:', error);
-            this.toastr.error('Có lỗi xảy ra!', 'Lỗi');
-          }
-        );
-      }
-      else{
-        this.productListService.getAllProductRequest().subscribe(
-          (data) => {
-            if (data.code === 1000) {
-              this.products = data?.result;
-              console.log('Danh sách sản phẩm:', this.products);
             } else {
               console.error('Failed to fetch products:', data);
               this.toastr.error('Không thể lấy danh sách sản phẩm!', 'Lỗi');
@@ -279,6 +266,46 @@ export class ProductManagementComponent implements OnInit {
     );
   }
 
+  onIsProductChange(newValue: boolean) {
+    this.isProduct = newValue;
+
+    this.products.length = 0;
+    if (this.isProduct == true) {
+      this.productListService.getProducts().subscribe(
+        (data) => {
+          if (data.code === 1000) {
+            this.products = data.result;
+            // console.log('Danh sách sản phẩm:', this.products);
+          } else {
+            console.error('Failed to fetch products:', data);
+            this.toastr.error('Không thể lấy danh sách sản phẩm!', 'Lỗi');
+          }
+        },
+        (error) => {
+          console.error('Error fetching products:', error);
+          this.toastr.error('Có lỗi xảy ra!', 'Lỗi');
+        }
+      );
+    } else {
+      this.productListService.getAllProductRequest().subscribe(
+        (data) => {
+          if (data.code === 1000) {
+            this.products = data?.result;
+            console.log('Danh sách sản phẩm:', this.products);
+          } else {
+            console.error('Failed to fetch products:', data);
+            this.toastr.error('Không thể lấy danh sách sản phẩm!', 'Lỗi');
+          }
+        },
+        (error) => {
+          console.error('Error fetching products:', error);
+          this.toastr.error('Có lỗi xảy ra!', 'Lỗi');
+        }
+      );
+    }
+    // console.log('Giá trị mới của isProduct:', this.isProduct);
+  }
+
   // onCategoryChange(selectedValue: string) {
   //   const categoryId = parseInt(selectedValue, 10);
   //   // console.log("Selected category ID:", categoryId);
@@ -304,13 +331,7 @@ export class ProductManagementComponent implements OnInit {
     );
   }
 
-  onChangeProductOrRequestProduct(isProduct: number) {
-    if (isProduct == 0) {
-      this.isProduct = true;
-    } else {
-      this.isProduct = false;
-    }
-  }
+
 
   filterProducts(): void {
     // console.log("Lọc sản phẩm với từ khóa:", this.searchKey, ", danh mục:", this.selectedCategory, "và giá:", this.selectedSortByPrice);
@@ -334,7 +355,7 @@ export class ProductManagementComponent implements OnInit {
   filterProductsRequest(): void {
     // console.log("Lọc sản phẩm với từ khóa:", this.searchKey, ", danh mục:", this.selectedCategory, "và giá:", this.selectedSortByPrice);
 
-    this.productListService.getMultiFillterRequestProductForAdmin(this.searchKey, this.selectedStatus, this.selectedSortByPrice, this.selectedSortById)
+    this.productListService.getMultiFillterRequestProductForAdmin(this.searchKey, this.selectedStatus, this.selectedSortByPrice)
       .subscribe(
         (data) => {
           if (data.code === 1000) {
@@ -417,14 +438,48 @@ export class ProductManagementComponent implements OnInit {
     }
   }
 
+
   onThumbnailSelected(event: any): void {
-    this.selectedThumbnail = event.target.files[0];
+    const file = event.target.files[0];
+    if (file) {
+      this.selectedThumbnail = file;
+
+      const reader = new FileReader();
+      reader.onload = (e: any) => {
+        this.thumbnailPreview = e.target.result;
+      };
+      reader.readAsDataURL(file);
+    } else {
+      this.selectedThumbnail = null;
+      this.thumbnailPreview = '';
+    }
   }
 
   onImagesSelected(event: any): void {
     this.selectedImages = Array.from(event.target.files);
+
+    const files: File[] = Array.from(event.target.files as FileList);
+    if (event.target.files && event.target.files.length) {
+      // xoa list preview cu    
+      this.imagesPreview = [];
+
+      // Create and store URLs for preview
+      files.forEach((file: File) => {
+        const url = URL.createObjectURL(file);
+        this.imagesPreview.push(url);
+      });
+
+    }
+  }
+  onResetThumbnail(){
+    this.selectedThumbnail = null;
+    this.thumbnailPreview = '';
   }
 
+  onResetImage(){
+    this.selectedImages = [];
+    this.imagesPreview = [];
+  }
 
   onSubmit() {
     if (this.uploadForm.valid && this.selectedThumbnail && this.selectedImages.length) {
@@ -526,6 +581,7 @@ export class ProductManagementComponent implements OnInit {
             if (closeButton) { // Check if the button exists
               closeButton.click(); // If it exists, click it to close the modal
             }
+
           },
           error => {
             console.error('Update error', error);

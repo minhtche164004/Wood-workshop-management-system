@@ -322,6 +322,7 @@ public class ProductController {
             @RequestPart("file_thumbnail") MultipartFile file_thumbnail
     ) {
         ApiResponse<Products> apiResponse = new ApiResponse<>();
+        jedis.del("all_products_admin");
         apiResponse.setResult(productService.AddNewProduct(productAddDTO, files, file_thumbnail));
         return apiResponse;
     }

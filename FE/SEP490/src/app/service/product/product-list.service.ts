@@ -19,7 +19,7 @@ export class ProductListService {
   private apiUrl_Position = `${environment.apiUrl}api/auth/admin/GetAllPosition`;
 
   private apiUrl_findProduct = `${environment.apiUrl}api/auth/product`;
-  private apiUrl_getProductByID = `${environment.apiUrl}api/auth/product/GetProductById`; // Assuming the correct endpoint
+  private apiUrl_getProductByID = `${environment.apiUrl}api/auth/product/ViewDetailProductById`; // update tu api get product by id
 
   private apiUrl_GetAllOrder = `${environment.apiUrl}api/auth/order/GetAllOrder`; // Assuming the correct endpoint
 
@@ -195,7 +195,7 @@ export class ProductListService {
   }
 
   getProductById(productId: number): Observable<any> {
-    const url = `${this.apiUrl_getProductByID}?product_id=${productId}`;
+    const url = `${this.apiUrl_getProductByID}?id=${productId}`;
     return this.http.get<any>(url);
   }
   deleteProduct(productId: number): Observable<any> {

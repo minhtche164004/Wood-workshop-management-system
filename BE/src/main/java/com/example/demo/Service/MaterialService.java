@@ -13,5 +13,6 @@ Materials AddNewMaterial(MaterialDTO materialDTO);
 List<MaterialDTO> GetListName();
 
 Materials EditMaterial(int id,MaterialDTO materialDTO);
+    Materials GetMaterialById(int id);
 //void DeleteMaterial(int id);
 }

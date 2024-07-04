@@ -66,6 +66,13 @@ public class OrderController {
         return apiResponse;
 
     }
+    @GetMapping("/GetAllRequestByUserId")
+    public ApiResponse<?> GetAllRequestByUserId() {
+        ApiResponse<List> apiResponse = new ApiResponse<>();
+        apiResponse.setResult(orderService.GetAllRequestByUserId());
+        return apiResponse;
+
+    }
     @GetMapping("/GetAllRequest")
     public ApiResponse<?> GetAllRequest() {
         ApiResponse<List> apiResponse = new ApiResponse<>();

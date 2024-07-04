@@ -61,6 +61,17 @@ public class MaterialServiceImpl implements MaterialService {
         materialRepository.updateMaterial(id, materialDTO.getMaterialName(), materialDTO.getType());
        return materialRepository.findById1(id);
     }
+
+    @Override
+    public Materials GetMaterialById(int id) {
+        Materials materials = materialRepository.findById1(id);
+        if(materials == null ){
+            throw new AppException(ErrorCode.NOT_FOUND);
+        }
+        return materials;
+
+
+    }
 //    @Override
 //    public void DeleteMaterial(int id){
 //        materialRepository.deleteById(id);

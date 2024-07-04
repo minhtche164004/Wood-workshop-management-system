@@ -53,11 +53,8 @@ import { ReportManagementComponent } from './Admin/report-management/report-mana
 import { AdvancedBillManagementComponent } from './Admin/advanced-bill-management/advanced-bill-management.component';
 import { FeedbackDefectiveComponent } from './Admin/feedback-defective/feedback-defective.component';
 import { TotalSalaryComponent } from './Admin/total-salary/total-salary.component';
-
 import { AutoCompleteComponent } from './auto-complete/auto-complete.component';
 import {AutocompleteLibModule} from 'angular-ng-autocomplete';
-
-
 import { WishlistComponent } from './features/wishlist/wishlist.component';
 import { TemplateComponent } from './features/template/template.component';
 import { HistoryOrderComponent } from './Admin/history-order/history-order.component';
@@ -121,6 +118,7 @@ import { HistoryOrderComponent } from './Admin/history-order/history-order.compo
     FeedbackDefectiveComponent,
     TotalSalaryComponent,
     WishlistComponent,
+    AutoCompleteComponent,
     AutoCompleteComponent,
     TemplateComponent,
     HistoryOrderComponent,

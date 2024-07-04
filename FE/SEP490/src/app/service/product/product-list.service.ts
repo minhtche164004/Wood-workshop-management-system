@@ -38,7 +38,7 @@ export class ProductListService {
 
   
   private apiUrl_AddProductRequired = `${environment.apiUrl}api/auth/order/AddNewRequest`;
-  
+  private api_Url_GetProductError = `${environment.apiUrl}api/auth/job/getAllProductError`;
 
   constructor(private http: HttpClient) { }
   uploadProduct(productData: any, thumbnail: File, images: File[]): Observable<any> {
@@ -55,7 +55,11 @@ export class ProductListService {
       }
     });
   }
-
+  getAllProductError(): Observable<any> {
+    return this.http.get<any>(this.api_Url_GetProductError).pipe(
+      catchError(this.handleError)
+    );
+  }
   uploadProductRequired(productRequiredData: any, images: File[]): Observable<any> {
     const formData = new FormData();
 

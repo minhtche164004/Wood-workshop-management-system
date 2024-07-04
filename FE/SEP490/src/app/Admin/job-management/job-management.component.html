@@ -220,9 +220,20 @@
             <form>
             <div class="form-group">
               <label style="font-size: 16px;" for="productName">Danh sách sản phẩm có sẵn</label>
-              <select>
-                <option>Chọn sản phảm</option>
-              </select>
+              <div class="ng-autocomplete">
+                <ng-autocomplete *ngIf="products" [data]="products" [searchKeyword]="keyword" placeholder="Enter the product's name"
+                    historyIdentifier="products" [itemTemplate]="itemTemplate" [notFoundTemplate]="notFoundTemplate">
+                </ng-autocomplete>
+            
+                <ng-template #itemTemplate let-item>
+                    <a [innerHTML]="item.productName"></a>
+                </ng-template>
+            
+                <ng-template #notFoundTemplate let-notFound>
+                    <div>No results found!</div>
+                </ng-template>
+            
+            </div>
             </div>
             <div class="form-group">
               <label style="font-size: 16px;" for="productDescription">Mô tả</label>

@@ -8,6 +8,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
 
@@ -27,6 +28,21 @@ public interface RequestProductRepository extends JpaRepository<RequestProducts,
 
     @Query("SELECT u FROM RequestProducts u WHERE u.requestProductId = :query")
     Optional<RequestProducts> findByIdJob(int query);
+
+
+    @Query("SELECT p FROM RequestProducts p WHERE " +
+            "(p.requestProductName LIKE %:search% OR :search IS NULL) AND " +
+            "(p.status.status_id = :status_id OR :status_id IS NULL) AND " +
+            "(p.price >= :minPrice OR :minPrice IS NULL) AND " +
+            "(p.price <= :maxPrice OR :maxPrice IS NULL)")
+    List<RequestProducts> filterRequestProductsForAdmin(@Param("search") String search,
+                                          @Param("status_id") Integer status_id,
+                                          @Param("minPrice") BigDecimal minPrice,
+                                          @Param("maxPrice") BigDecimal maxPrice);
+
+
+    @Query("SELECT p FROM RequestProducts p WHERE p.price BETWEEN :minPrice AND :maxPrice")
+    List<RequestProducts> findByPriceRange(@Param("minPrice") BigDecimal minPrice, @Param("maxPrice") BigDecimal maxPrice);
 
 
 

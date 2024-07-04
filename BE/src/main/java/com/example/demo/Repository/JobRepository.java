@@ -38,6 +38,9 @@ public interface JobRepository extends JpaRepository<Jobs,Integer> {
             "(SELECT COUNT( j.jobId) FROM Jobs j WHERE j.user.userId = u.userId) < 3")
     List<User> findUsersWithPositionAndLessThan3Jobs(@Param("type") int type);
 
+    @Query(value = "SELECT COUNT(*) FROM jobs j WHERE j.user_id = :userId", nativeQuery = true)
+    int countJobsByUserId(@Param("userId") int userId);
+
     @Query(value = "SELECT p.* FROM jobs p WHERE p.code LIKE :prefix% ORDER BY p.code DESC LIMIT 1", nativeQuery = true)
     Jobs findJobsTop(@Param("prefix") String prefix);
 

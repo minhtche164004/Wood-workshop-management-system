@@ -347,9 +347,7 @@ userRepository.save(user);
         // Tải rõ ràng UserInfor (Tải EAGER được ưu tiên trong trường hợp này)
         UserInfor userInfor = user.getUserInfor();
         entityManager.refresh(user); // Làm mới thực thể user trước khi sửa đổi
-
         // Thực hiện xác thực (như trong mã hiện tại của bạn)
-
         // Cập nhật trực tiếp các thuộc tính của user
         user.setUsername(userDTO.getUsername());
         user.setEmail(userDTO.getEmail());

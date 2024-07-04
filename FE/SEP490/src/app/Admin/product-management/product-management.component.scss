@@ -347,3 +347,17 @@ option[value="option3"] {
   color: white;
   /* Các thuộc tính khác */
 }
+
+.preview {
+  width: 80%; /* Adjust the width as needed */
+  height: auto; /* This will maintain the aspect ratio */
+  max-width: 400px; /* Example max-width, adjust as needed */
+}
+
+.previewMultiple {
+  width: calc(80% / 2);
+  height: auto; 
+  max-width: calc(400px / 3); 
+  display: inline-flex;
+  padding-left: 2%;
+}

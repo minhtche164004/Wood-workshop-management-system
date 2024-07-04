@@ -67,6 +67,7 @@ public interface OrderService {
     List<RequestProducts> filterRequestProductsForAdmin(String search,Integer statusId, BigDecimal minPrice, BigDecimal maxPrice, String sortDirection);
 
     List<RequestProducts> findByPriceRange(BigDecimal min, BigDecimal max);
+    List<RequestProducts> GetAllProductRequestByUserId();
 
 
 

@@ -19,9 +19,15 @@ export class ProductComponent  implements OnInit  {
   products: any[] = [];
   currentPage: number = 1;
   categories: Category[] = [];
-  selectedCategory: number = 0;
-  searchKey?: string;
+  searchKey?: string = '' ;
+  searchKey2: string = '';
   categoryId?: number;
+  selectedCategory: number = 0;
+  selectedStatus: number = 0;
+  // selectedType: number = 0;
+  selectedSortByPrice: string = 'asc';
+  selectedSortById: string = '';
+  
   minPrice: any;
   maxPrice: any;
   constructor( private dataService: DataService, 
@@ -29,14 +35,14 @@ export class ProductComponent  implements OnInit  {
     private toastr: ToastrService, 
     private router: Router) { }
   ngOnInit(): void {
+    
     this.loadCategories();
     this.getProduct();
     this.dataService.currentSearchKey.subscribe(searchKey => {
       if (searchKey !== null && searchKey !== undefined) {
-        this.searchKey = searchKey;
-        console.log('Search key data:', this.searchKey);
-        // Bạn có thể gọi hàm tìm kiếm sản phẩm ở đây nếu cần
-        this.getProductsSearch();
+        this.searchKey2 = searchKey;
+        console.log('Search key product homepage data 2:', this.searchKey2);
+        this.filterProducts();
       } else {
         console.log('Search key is null or undefined, skipping search.');
         // Có thể xử lý hoặc bỏ qua khi searchKey là null
@@ -48,31 +54,9 @@ export class ProductComponent  implements OnInit  {
       this.minPrice = this.maxPrice;
     }
   }
-  formSubmit(): void {
-    this.getProductsSearch();
-  }
+ 
 
-  getProductsSearch(): void {
-    console.log('Search header:', this.categoryId);
-    this.productListService.getMultiFilterProductForCustomer(this.searchKey, this.categoryId, this.minPrice, this.maxPrice).subscribe(
-      (data: any) => {
-        if (data && Array.isArray(data) && data.length > 0) {
-          // Lấy dữ liệu thành công từ response.body
-          this.products = data;
-          this.toastr.success('Tìm kiếm sản phẩm thành công!', 'Thành công');
-          console.log('Kết quả tìm kiếm:', this.products);
-        } else {
-          // Xử lý khi không có dữ liệu hoặc dữ liệu không hợp lệ
-          this.toastr.error('Không tìm thấy sản phẩm nào!', 'Thông báo');
-        }
-      },
-      (error: any) => {
-        // Xử lý khi gặp lỗi trong quá trình gọi API
-        console.error('Error fetching products:', error);
-        this.toastr.error('Có lỗi xảy ra khi tìm kiếm sản phẩm!', 'Lỗi');
-      }
-    );
-  }
+  
   
 
   onPriceRangeChange(event: Event): void {
@@ -82,7 +66,7 @@ export class ProductComponent  implements OnInit  {
   onSliderChange(): void {
     console.log('Min price:', this.minPrice);
     console.log('Max price:', this.maxPrice);
-    this.getProductsSearch();
+   
   }
 
   getProduct() {
@@ -124,17 +108,23 @@ export class ProductComponent  implements OnInit  {
       }
     );
   }
-  searchProducts(categoryId: number): void {
-    this.productListService.getMultiFilterProductForCustomer(this.searchKey, categoryId, this.minPrice, this.maxPrice).subscribe(
-      (data: any) => {
-        this.toastr.success('Tìm kiếm sản phẩm thành công!', 'Thành công');
-        this.products = data;
-        console.log('Danh sách sản phẩm sau khi tìm kiếm:', this.products);
-      },
-      (error: any) => {
-        console.error('Error fetching products:', error);
-        this.toastr.error('Có lỗi xảy ra!', 'Lỗi');
-      }
-    );
+
+  filterProducts(): void {
+    
+    console.log("Lọc sản phẩm với từ khóa:", this.searchKey2, ", danh mục:", this.selectedCategory, "và giá:", this.selectedSortByPrice);
+    this.productListService.getMultiFillterProductForCustomer(this.searchKey2, this.selectedCategory, this.selectedStatus, this.selectedSortByPrice)
+      .subscribe(
+        (data) => {
+          if (data.code === 1000) {
+            this.products = data.result;
+            console.log('Lọc sản phẩm thành công:', this.products);
+            this.toastr.success('Lọc sản phẩm thành công!', 'Thành công');
+          } else if (data.code === 1015) {
+            this.products = [];
+            console.error('Lọc sản phẩm không thành công:', data);
+            this.toastr.error('Không tìm thấy sản phẩm phù hợp!', 'Lọc thất bại');
+          }
+        }
+      );
   }
 }

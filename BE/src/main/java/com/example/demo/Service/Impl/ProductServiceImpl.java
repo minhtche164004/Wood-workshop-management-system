@@ -329,7 +329,7 @@ public class ProductServiceImpl implements ProductService {
         if (search != null || categoryId != null || statusId != null || minPrice != null || maxPrice != null) {
             productList = productRepository.filterProductsForAdmin(search, categoryId, statusId, minPrice, maxPrice);
         } else {
-            productList = productRepository.ViewProductLandingPage();
+            productList = productRepository.findAll();
         }
 
         if (productList.isEmpty()) {

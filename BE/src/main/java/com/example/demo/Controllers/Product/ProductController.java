@@ -401,7 +401,7 @@ public class ProductController {
     @GetMapping("/GetStatusProduct")
     public ApiResponse<?> GetAllStatusProduct() {
         ApiResponse<List> apiResponse = new ApiResponse<>();
-        apiResponse.setResult(statusProductRepository.GetListStatusType0());
+        apiResponse.setResult(statusProductRepository.GetListStatusType());
         return apiResponse;
     }
 

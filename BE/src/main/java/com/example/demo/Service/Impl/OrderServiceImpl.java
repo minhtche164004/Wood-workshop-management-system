@@ -433,6 +433,7 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public List<RequestProducts> GetAllProductRequest() {
+
         return requestProductRepository.findAll();
     }
 
@@ -546,6 +547,17 @@ public class OrderServiceImpl implements OrderService {
             throw new AppException(ErrorCode.NOT_FOUND);
         }
         return productsList;
+    }
+
+    @Override
+    public List<RequestProducts> GetAllProductRequestByUserId() {
+        UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        User user = userRepository.getUserByUsername(userDetails.getUsername());
+        List<RequestProducts> list = requestProductRepository.findByUserId(user.getUserId());
+        if(list == null ){
+            throw new AppException(ErrorCode.NOT_FOUND);
+        }
+        return list;
     }
 
 

@@ -3,6 +3,7 @@ package com.example.demo.Controllers.Product;
 import com.example.demo.Config.RedisConfig;
 import com.example.demo.Dto.Category.CategoryNameDTO;
 import com.example.demo.Dto.ProductDTO.*;
+import com.example.demo.Dto.RequestDTO.RequestEditCusDTO;
 import com.example.demo.Dto.SubMaterialDTO.SubMateProductDTO;
 import com.example.demo.Entity.*;
 import com.example.demo.Repository.*;
@@ -181,6 +182,13 @@ public class ProductController {
         return apiResponse;
     }
 
+//    @GetMapping("/getRequestEditCusDTOById")
+//    public ApiResponse<?> getRequestEditCusDTOById(@RequestParam("id") int id) {
+//        ApiResponse<RequestEditCusDTO> apiResponse = new ApiResponse<>();
+//        apiResponse.setResult(orderService.getRequestEditCusDTOById(id));
+//        return apiResponse;
+//    }
+
 
 
 //    @GetMapping("/GetRequestById")
@@ -323,6 +331,7 @@ public class ProductController {
             @RequestPart("file_thumbnail") MultipartFile file_thumbnail
     ) {
         ApiResponse<Products> apiResponse = new ApiResponse<>();
+        jedis.del("all_products_admin");
         apiResponse.setResult(productService.AddNewProduct(productAddDTO, files, file_thumbnail));
         return apiResponse;
     }
@@ -358,7 +367,7 @@ public class ProductController {
             @RequestPart("file_thumbnail") MultipartFile file_thumbnail
     ) throws Exception {
         ApiResponse<Products> apiResponse = new ApiResponse<>();
-
+        jedis.del("all_products_admin");
         apiResponse.setResult(productService.EditProduct(productId,productEditDTO,files, file_thumbnail));
         return apiResponse;
     }

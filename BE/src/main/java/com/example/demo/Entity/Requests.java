@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 
 import java.sql.Timestamp;
 import java.util.Date;
+import java.util.List;
 import java.util.Objects;
 @AllArgsConstructor
 @NoArgsConstructor
@@ -63,6 +64,11 @@ public class Requests {
 
     @Column(name = "email")
     private String email;
+
+    @OneToMany(mappedBy = "requests", cascade = CascadeType.ALL)
+    private List<Requestimages> requestImages;
+
+
 
     
 }

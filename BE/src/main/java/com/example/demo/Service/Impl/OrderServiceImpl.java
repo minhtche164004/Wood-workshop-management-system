@@ -236,11 +236,11 @@ public class OrderServiceImpl implements OrderService {
         return requests;
     }
 
+    @Transactional
     @Override
     public Requests EditRequest(int request_id, RequestEditCusDTO requestEditDTO, MultipartFile[] multipartFiles) throws IOException {
         Requests requests = requestRepository.findById(request_id);
-        if (multipartFiles != null &&
-                Arrays.stream(multipartFiles).anyMatch(file -> file != null && !file.isEmpty())) {
+        if (multipartFiles != null && Arrays.stream(multipartFiles).anyMatch(file -> file != null && !file.isEmpty())) {
             List<Requestimages> requestimagesList= requestimagesRepository.findRequestImageByRequestId(request_id);
             for(Requestimages requestimages : requestimagesList){
                 String full_path= requestimages.getFullPath();
@@ -490,6 +490,7 @@ public class OrderServiceImpl implements OrderService {
         requestRepository.deleteById(requestId);
     }
 
+    @Transactional
     @Override
     public void ChangeStatusOrder(int orderId, int status_id) {
         //send mail cho những đơn hàng đặt theo yêu cầu , vì đơn hàng mau có sẵn thì mua luôn rồi, trả tiền luôn r cần đéo gì nữa mà phải theo dõi tình trạng đơn hàng

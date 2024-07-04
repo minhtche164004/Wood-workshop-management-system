@@ -307,24 +307,16 @@
           <div class="form-row">
             <div class="form-group col-md-6">
               <label for="role">Vai Trò</label>
-              <div >
-                <select *ngIf="!isPositionEnabled_Update" (change)="onRoleChangeUpdate()" [(ngModel)]="selectedRole" formControlName="role_id"
-                  class="form-control form-control-lg">
+              <div>
+                <select  (change)="onRoleChangeUpdate()" [(ngModel)]="selectedRole"
+                  formControlName="role_id" class="form-control form-control-lg">
                   <option [ngValue]="null" disabled selected>Chọn Vai Trò</option>
                   <option *ngFor="let rol of role" [ngValue]="rol.roleId">
                     {{ rol.roleName }}
                   </option>
                 </select>
               </div>
-              <div >
-                <select *ngIf="isPositionEnabled_Update"  (change)="onRoleChangeUpdate()" [(ngModel)]="selectedRole" formControlName="role_id"
-                class="form-control form-control-lg">
-                <option [ngValue]="null" disabled selected>Chọn Vai Trò</option>
-                <option disabled *ngFor="let rol of role" [ngValue]="rol.roleId">
-                  {{ rol.roleName }}
-                </option>
-              </select>
-              </div>
+              
             </div>
 
 

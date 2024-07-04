@@ -35,6 +35,8 @@ export class JobManagementComponent implements OnInit {
     const p_id = 1; // Thay đổi giá trị tùy theo sản phẩm
     const status_id = 1; // Thay đổi giá trị tùy theo trạng thái
     const job_id = 1; // Thay đổi giá trị tùy theo công việc
+    const type_id = 1; //cho sp có sẵn     0 - k có sẵn
+
     const jobData = {
       job_name: 'New Job',
       quantity_product: 10,

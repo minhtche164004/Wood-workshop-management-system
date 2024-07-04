@@ -35,7 +35,7 @@
                                                     </li>
                                                     <li *ngFor="let category of categories" style="margin-top: -5x"
                                                         class="{{ category.categoryName.toLowerCase() }}-check">
-                                                        <input style="margin-right: 5px;" type="checkbox" name="category"
+                                                        <input style="margin-right: 5px;" type="radio" name="category"
                                                             id="{{ category.categoryId }}"
                                                             value="{{ category.categoryId }}" (change)="searchProducts(category.categoryId)">
                                                         <label for="{{ category.categoryId }}">{{ category.categoryName

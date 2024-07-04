@@ -3,6 +3,7 @@ import { HttpClient, HttpHeaders, HttpErrorResponse } from '@angular/common/http
 import { Observable, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { environment } from 'src/app/environments/environment'; // Đường dẫn đúng tới file môi trường
+import { AddNewAccount } from '../Admin/user-management/user-management.component';
 @Injectable({
   providedIn: 'root'
 })
@@ -16,12 +17,41 @@ export class AuthenListService {
   private apiUrl_GetHistoryOrderCustomer = `${environment.apiUrl}api/auth/order/historyOrder`;
   private apiUrl_DeleteWhiteList = `${environment.apiUrl}api/auth/order/DeleteWhiteList`;
   private apiUrl_GetOrderDeTailById = `${environment.apiUrl}api/auth/order/getOrderDetailById`;
+
+  private apiUrl_AddNewAccount = `${environment.apiUrl}api/auth/admin/AddNewAccount`; 
+
+
+  private apiUrl_NameATM = 'https://api.vietqr.io/v2/banks';
   constructor(private http: HttpClient) { }
   isLoggedIn(): boolean {
     const token = localStorage.getItem('loginToken');
     return token !== null; // Trả về true nếu tồn tại token trong localStorage, ngược lại false
   }
-  
+
+
+  AddNewAccountForAdmin(addNewAccountRequest: AddNewAccount): Observable<any> {
+    const token = localStorage.getItem('loginToken');
+
+    if (!token) {
+      return throwError(new Error('Login token not found in localStorage.'));
+    }
+
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${token}`
+    });
+
+    console.log('Authorization header:', headers.get('Authorization'));
+
+    return this.http.post<any>(this.apiUrl_AddNewAccount, addNewAccountRequest, { headers }).pipe(
+      catchError(this.handleError)
+    );
+  }
+  getNameATM(): Observable<any> {
+    const url = `${this.apiUrl_NameATM}`;
+    return this.http.get<any>(url).pipe(
+      catchError(this.handleError)
+    );
+  }
 
   getUserById(user_id: string): Observable<any> {
     const url = `${this.apiUrl_GetById}?user_id=${user_id}`;

@@ -1,6 +1,7 @@
 package com.example.demo.Service.Impl;
 
 import com.example.demo.Dto.ProductDTO.*;
+import com.example.demo.Dto.SubMaterialDTO.SubMateProductDTO;
 import com.example.demo.Entity.*;
 import com.example.demo.Exception.AppException;
 import com.example.demo.Exception.ErrorCode;
@@ -177,6 +178,7 @@ public class ProductServiceImpl implements ProductService {
         return productRepository.findById(product_id);
     }
 
+    @Transactional
     @Override
     public void DeleteProduct(int product_id) {
         Products product = productRepository.findById(product_id);
@@ -184,15 +186,25 @@ public class ProductServiceImpl implements ProductService {
             throw new AppException(ErrorCode.NOT_FOUND);
         }
         // Kiểm tra các ràng buộc
+       // productImageRepository.findImageByProductId(product_id).isEmpty()
+       // productSubMaterialsRepository.findByProductID(product_id).isEmpty()
             if (orderDetailRepository.getOrderDetailByProductId(product_id).isEmpty() &&
                 jobRepository.getJobByProductId(product_id).isEmpty() &&
-                productImageRepository.findImageByProductId(product_id).isEmpty() &&
                 processproducterrorRepository.getProcessproducterrorByProductId(product_id).isEmpty() &&
-                wishListRepository.findByProductID(product_id).isEmpty() &&
-                productSubMaterialsRepository.findByProductID(product_id).isEmpty()) {
+                wishListRepository.findByProductID(product_id).isEmpty()
+              ) {
             // Không có ràng buộc nào, có thể xóa sản phẩm
-            productSubMaterialsRepository.deleteAll(productSubMaterialsRepository.findByProductID(product_id));
-            productRepository.delete(product);
+                List<Productimages> productImages = productImageRepository.findImageByProductId(product_id);
+                for (Productimages productImage : productImages) {
+                    productImageRepository.deleteProductimagesById(productImage.getProductImageId());
+                }
+                List<ProductSubMaterials> productSubMaterialsList = productSubMaterialsRepository.findByProductID(product_id);
+                for (ProductSubMaterials productSubMaterials : productSubMaterialsList) {
+                    productSubMaterialsRepository.deleteProductSubMaterialsById(productSubMaterials.getProductSubMaterialId());
+                }
+//            productImageRepository.deleteAll(productImageRepository.findImageByProductId(product_id));
+//            productSubMaterialsRepository.deleteAll(productSubMaterialsRepository.findByProductID(product_id));
+            productRepository.deleteByProductId(product_id);
 
         } else {
             // Có ràng buộc, không thể xóa sản phẩm
@@ -342,6 +354,7 @@ public class ProductServiceImpl implements ProductService {
 
 
 
+
     //này là dành cho trang homepage
     @Override
     public List<Products> GetAllProductForCustomer() {
@@ -430,6 +443,15 @@ public class ProductServiceImpl implements ProductService {
         if (!checkConditionService.checkInputPrice(productEditDTO.getPrice())) {
             throw new AppException(ErrorCode.PRICE_INVALID);
         }
+    }
+
+    @Override
+    public List<SubMateProductDTO> getProductSubMaterialByProductIdDTO(int productId) {
+        List<SubMateProductDTO> list = productSubMaterialsRepository.getProductSubMaterialByProductIdDTO(productId);
+        if(list == null){
+            throw new AppException(ErrorCode.NOT_FOUND);
+        }
+        return list;
     }
 
 

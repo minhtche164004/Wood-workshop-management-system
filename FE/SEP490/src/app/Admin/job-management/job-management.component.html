@@ -64,7 +64,8 @@
                         <tr
                             *ngFor="let product of productRQs | paginate: { itemsPerPage: 10, currentPage: currentPage }; let i = index">
                             <td>{{ i + 1 + (currentPage - 1) * 10 }}</td>
-                            <td>{{ product.code }}</td>
+                            <td>{{ product?.code ? product.code : 'Không có mã đơn hàng' }}</td>
+
                             <td class="action-buttons">
                                 <a href="#" class="settings" title="Chỉnh sửa" data-toggle="modal"
                                     data-target="#editProductModal">
@@ -79,13 +80,13 @@
                                     <i class="fa-solid fa-ellipsis-vertical"></i>
                                 </button>
                             </td>
-                            <td>{{ product.product_name }}</td>
+                            <td>{{ product?.product_name }}</td>
                             <td>Loại sản phẩm</td>
-                            <td>{{ product.quantity }}</td>
-                            <td>{{ product.price | number: '1.0-3' }}</td>
+                            <td>{{ product?.quantity }}</td>
+                            <td>{{ product?.price | number: '1.0-3' }}</td>
                             <td>
-                                <ng-container *ngIf="product.statusJob.type !== 1">
-                                    <select [ngModel]="product.statusJob.status_id" style="width: 100%;">
+                                <ng-container *ngIf="product?.statusJob.type !== 1">
+                                    <select [ngModel]="product?.statusJob.status_id" style="width: 100%;">
                                         <ng-container *ngFor="let status of statusType">
                                             <option *ngIf="status.type === product.statusJob.type" [value]="status.status_id">{{ status.status_name }}</option>
                                         </ng-container>
@@ -97,7 +98,7 @@
 
                             </td>
 
-                            <td>{{ product.user_name }}</td>
+                            <td>{{ product?.user_name }}</td>
                             <td>
                                
                                 <button style="margin-left: -10px; size: 15px;"

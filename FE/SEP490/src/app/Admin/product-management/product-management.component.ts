@@ -146,7 +146,9 @@ export class ProductManagementComponent implements OnInit {
         }
       );
   }
-
+  filterProducts(): void {
+    // console.log("Lọc sản phẩm với từ khóa:", this.searchKey, ", danh mục:", this.selectedCategory, "và giá:", this.selectedSortByPrice);
+  }
   onFilesSelected(event: any) {
     if (event.target.files.length > 0) {
       this.productImages = [];

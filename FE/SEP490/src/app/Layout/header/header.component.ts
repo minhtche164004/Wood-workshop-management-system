@@ -21,14 +21,7 @@ export class HeaderComponent implements OnInit {
 
   constructor(private dataService: DataService, private router: Router, private http: HttpClient, private authService: AuthenListService, private productListService: ProductListService) { }
   ngOnInit(): void {
-    this.searchControl.valueChanges.pipe(
-      debounceTime(300),
-      distinctUntilChanged(),
-      switchMap(keyword => this.productListService.getMultiFilterProductForCustomer(keyword))
-    ).subscribe(products => {
-      this.filteredProducts = products;
-    });
-    this.loadAllUsers();
+   
   }
   
   user: any[] = [];
@@ -88,6 +81,7 @@ export class HeaderComponent implements OnInit {
   }
 
   getProductsSearch() {
+    
     // Thực hiện tìm kiếm sản phẩm dựa trên từ khóa đã chọn
     const selectedProduct = this.filteredProducts.find(product => product.productName === this.searchControl.value);
     if (selectedProduct) {

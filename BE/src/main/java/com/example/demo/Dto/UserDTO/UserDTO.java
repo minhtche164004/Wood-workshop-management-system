@@ -32,7 +32,7 @@ public class UserDTO implements Serializable {
     private String status_id;
     @NotNull(message = "MUST_REQUIRED")
     private String position_name;
-    @NotNull(message = "MUST_REQUIRED")
+//    @NotNull(message = "MUST_REQUIRED")
     private String position_id;
     @NotNull(message = "MUST_REQUIRED")
     private String role_name;

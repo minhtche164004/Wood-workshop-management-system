@@ -26,14 +26,15 @@ export class ProductListService {
 
   private apiUrl_AllRole = `${environment.apiUrl}api/auth/admin/GetAllRole`; // Assuming the correct endpoint
 
-  private apiUrl_GetMultiProductForCustomer = `${environment.apiUrl}api/auth/product`; 
+  private apiUrl_getMultiFillterProductForAdmin = `${environment.apiUrl}api/auth/product`; 
 
   private apiUrl_AddProduct = `${environment.apiUrl}api/auth/product/AddNewProduct`;
 
   private apiUrl_UpdateProduct = `${environment.apiUrl}api/auth/product/AddNewProduct`;
 
-  private apiUrl_GetAllStatus = `${environment.apiUrl}api/auth/admin/GetStatusUser`;
-
+  private apiUrl_GetAllStatus = `${environment.apiUrl}api/auth/admin/GetAllStatusUser`;
+  private apiUrlCreateProductError = `${environment.apiUrl}api/auth/job/CreateProductError`;
+   
 
 
   
@@ -54,6 +55,11 @@ export class ProductListService {
         'Accept': 'application/json'
       }
     });
+  }
+  createProductError(jobId: number, description: string, solution: string): Observable<any> {
+    const body = { description, solution };
+
+    return this.http.post(`${this.apiUrlCreateProductError}?job_id=${jobId}`, body);
   }
   getAllProductError(): Observable<any> {
     return this.http.get<any>(this.api_Url_GetProductError).pipe(
@@ -85,42 +91,6 @@ export class ProductListService {
     );
   }
   
-
-
-  getMultiFilterProductForCustomer(search?: string, categoryId?: number, minPrice?: number, maxPrice?: number, sortDirection?: number): Observable<any> {
-   
-    let params = new HttpParams();
-
-    console.log('categoryId', categoryId);
-    console.log('search param', search);
-    // Add parameters only if they are provided
-    if (search !== undefined && search !== null) {
-      params = params.set('search', search);
-    }
-    if (categoryId !== undefined && categoryId !== null) {
-      params = params.set('categoryId', categoryId.toString());
-      console.log(params.get('categoryId'));
-    }
-    if (minPrice !== undefined && minPrice !== null) {
-      params = params.set('minPrice', minPrice.toString());
-    }
-    if (maxPrice !== undefined && maxPrice !== null) {
-      params = params.set('maxPrice', maxPrice.toString());
-    }
-    if (sortDirection !== undefined && sortDirection !== null) {
-      params = params.set('sortDirection', sortDirection.toString());
-    }
-    const apiUrl = `${this.apiUrl_GetMultiProductForCustomer}/getMultiFillterProductForCustomer`;
-    const apiWithParams = `${apiUrl}?${params.toString()}`;
-    console.log('API URL with params:', apiWithParams);
-    // Check if all parameters are null or undefined
-    if (search == null && categoryId == null && minPrice == null && maxPrice == null && sortDirection == null) {
-      return this.http.get(`${this.apiUrlGetProduct}`);
-    }
-    
-    return this.http.get(`${this.apiUrl_GetMultiProductForCustomer}/getMultiFillterProductForCustomer`, { params });
-
-  }
   
   getProducts(): Observable<any> {
     console.log(this.apiUrl)

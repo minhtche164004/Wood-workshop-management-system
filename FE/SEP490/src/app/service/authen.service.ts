@@ -16,12 +16,16 @@ export class AuthenListService {
   private apiUrl_GetByIdWishList = `${environment.apiUrl}api/auth/order/GetWhiteListByUser`;
   private apiUrl_GetHistoryOrderCustomer = `${environment.apiUrl}api/auth/order/historyOrder`;
 
-  private apiUrl_GetListProductCustomer = `${environment.apiUrl}api/auth/order/GetAllProductRequestByUserId`;
+  private apiUrl_GetListProductCustomer = `${environment.apiUrl}api/auth/order/GetAllRequestByUserId`;
 
   private apiUrl_DeleteWhiteList = `${environment.apiUrl}api/auth/order/DeleteWhiteList`;
   private apiUrl_GetOrderDeTailById = `${environment.apiUrl}api/auth/order/getOrderDetailById`;
   private apiUrl_AddNewAccount = `${environment.apiUrl}api/auth/admin/AddNewAccount`; 
   private apiUrl_SearchUserByNameorAddress = `${environment.apiUrl}api/auth/admin/SearchUserByNameorAddress`; 
+
+  private apiUrl_deleteRequest = `${environment.apiUrl}api/auth/order/deleteRequest`; 
+  
+
   private apiUrl_NameATM = 'https://api.vietqr.io/v2/banks';
   constructor(private http: HttpClient) { }
   isLoggedIn(): boolean {
@@ -124,6 +128,13 @@ export class AuthenListService {
   }
   deleteWishList(wishlist_id: number): Observable<any> {
     const url = `${this.apiUrl_DeleteWhiteList}?wishlist_id=${wishlist_id}`;
+    return this.http.delete<any>(url).pipe(
+      catchError(this.handleError)
+    );
+  
+}
+  deleteRequestProductCustomer(requestId: number): Observable<any> {
+    const url = `${this.apiUrl_deleteRequest}?requestId=${requestId}`;
     return this.http.delete<any>(url).pipe(
       catchError(this.handleError)
     );

@@ -7,7 +7,7 @@
         <div class="table-title">
           <div class="row " style="height: 60px;">
             <div class="col-sm-5 ">
-              <h2 style="margin-bottom: 0;">Lịch sử đơn đặt hàng</h2>
+              <h2 style="margin-bottom: 0;">Quản lí sản phẩm yêu cầu</h2>
             </div>
             <div class="col-sm-7 text-end d-flex align-items-center justify-content-end">
 
@@ -48,10 +48,12 @@
                 <tr>
 
                   <th style="width: 200px;">STT</th>
-                  <th style="width: 300px;">Ngày dự kiến hoàn thành</th>
-                  <th>Mô tả đơn hàng</th>
-                  <th>Tình trạng</th>
-                  <th>Địa chị cụ thể</th>
+                  <th style="width: 200px;">Thao Tác</th>
+                  <th  style="width: 250px;">Ảnh sản phẩm</th>
+                  <th style="width: 250px;">Ngày đặt hàng</th>
+                  <th  style="width: 250px;">Mô tả sản phẩm</th>
+                  <th style="width: 250px;">Tình trạng</th>
+                  <th style="width: 250px;">Địa chị cụ thể</th>
                   <th style="width: 250px;">Lí do từ chối</th>
 
                 </tr>
@@ -60,11 +62,29 @@
                 <tr
                   *ngFor="let hs of list_request_product | paginate: { itemsPerPage: 10, currentPage: currentPage }; let i = index">
                   <td>{{ i + 1 + (currentPage - 1) * 10 }}</td>
-                  <td >{{ hs.completionTime | date:'dd/MM/yyyy' }}</td>                 
-                  <td>{{ hs.requests.description  }}</td>
+                  <td class="action-buttons">
+
+                    <a href="#" class="settings" title="Chỉnh sửa" data-toggle="modal" data-target="#editProductModal">
+                      <i class="fa-solid fa-pen-to-square"></i>
+                    </a>
+                    <a href="#" class="delete" title="Xóa" data-toggle="modal" data-target="#confirmDeleteModal"
+                    (click)="openConfirmDeleteModal(hs.requestId)"
+                    >
+                      <i class="fa-regular fa-trash-can"></i>
+                    </a>
+                    <a href="#" class="info" title="Chi tiết" data-toggle="modal" data-target="#productDetailModal"
+                    >
+                      <i class="fa-solid fa-ellipsis-vertical"></i>
+                    </a>
+    
+                  </td>
+                  <td><img class="img_product" [src]="hs.requestImages[0]?.fullPath" alt="Ảnh sản phẩm"></td>
+                  
+                  <td >{{ hs.requestDate | date:'dd/MM/yyyy' }}</td>                 
+                  <td>{{ hs.description  }}</td>
                   <td>{{ hs.status.status_name  }}</td>
-                  <td>{{ hs.requests.address}}</td>
-                  <td>{{ hs.requests.response}}</td>
+                  <td>{{ hs.address}}</td>
+                  <td>{{ hs.response}}</td>
                   
                   <!-- <td
                     [ngStyle]="{'color': hs?.paymentMethod === 1 ? 'green' : (hs?.paymentMethod === 0 ? 'red' : 'black')}">
@@ -92,6 +112,25 @@
     </div>
   </div>
 </div >
-
+<div class="modal fade" id="confirmDeleteModal" tabindex="-1" role="dialog" aria-labelledby="confirmDeleteModalLabel"
+  aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="confirmDeleteModalLabel">Confirm Delete</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body" id="confirmDeleteModal">
+        Bạn có chắc muốn xóa sản phẩm đã đặt này không ?
+      </div>
+      <div class="modal-footer" id="confirmDeleteModal">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Hủy</button>
+        <button type="button" class="btn btn-danger" (click)="deleteRequest()">Xóa</button>
+      </div>
+    </div>
+  </div>
+</div>
 
 <app-footer></app-footer>

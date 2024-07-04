@@ -10,6 +10,8 @@ import { JobService } from 'src/app/service/job.service';
 })
 export class JobManagementComponent implements OnInit {
   products: any[] = [];
+  keyword = 'productName';
+
   productRQs: any[] = [];
   currentPage: number = 1;
   searchKey: string = '';
@@ -26,13 +28,15 @@ export class JobManagementComponent implements OnInit {
   ngOnInit(): void {
     this.loadProductRQForJob();
     this.loadStatusByType();
-
+    
   }
   createNewJob() {
     const user_id = 1; // Thay đổi giá trị tùy theo người dùng
     const p_id = 1; // Thay đổi giá trị tùy theo sản phẩm
     const status_id = 1; // Thay đổi giá trị tùy theo trạng thái
     const job_id = 1; // Thay đổi giá trị tùy theo công việc
+    const type_id = 1; //cho sp có sẵn     0 - k có sẵn
+
     const jobData = {
       job_name: 'New Job',
       quantity_product: 10,
@@ -52,6 +56,16 @@ export class JobManagementComponent implements OnInit {
         // Xử lý lỗi
       }
     );
+  }
+  selectEvent(item: any) {
+      
+  }
+
+  onChangeSearch(search: string) {
+
+  }
+
+  onFocused(e: any) {
   }
   loadStatusByType() {
 

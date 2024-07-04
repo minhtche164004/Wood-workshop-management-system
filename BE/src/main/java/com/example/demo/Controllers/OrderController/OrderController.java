@@ -9,6 +9,7 @@ import com.example.demo.Dto.ProductDTO.RequestProductAllDTO;
 import com.example.demo.Dto.ProductDTO.RequestProductDTO;
 import com.example.demo.Dto.RequestDTO.RequestDTO;
 import com.example.demo.Dto.OrderDTO.RequestOrder;
+import com.example.demo.Dto.RequestDTO.RequestEditCusDTO;
 import com.example.demo.Dto.RequestDTO.RequestEditDTO;
 import com.example.demo.Entity.*;
 
@@ -79,6 +80,14 @@ public class OrderController {
         apiResponse.setResult(orderService.GetAllRequests());
         return apiResponse;
 
+    }
+    @PutMapping(value ="/CustomerEditRequest" ,consumes = MediaType.MULTIPART_FORM_DATA_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ApiResponse<?> CustomerEditRequest(@RequestParam(value="request_id") int request_id,
+                                              @RequestPart("requestEditCusDTO") RequestEditCusDTO requestEditCusDTO,
+                                              @RequestPart("files") MultipartFile[] files) throws Exception {
+        ApiResponse<Requests> apiResponse = new ApiResponse<>();
+        apiResponse.setResult(orderService.EditRequest(request_id,requestEditCusDTO,files));
+        return apiResponse;
     }
     @GetMapping("/GetRequestById")
     public ApiResponse<?> GetRequestById(@RequestParam("id") int id) {
@@ -163,6 +172,7 @@ public class OrderController {
         apiResponse.setResult(orderService.ManagerEditRequest(request_id,requestEditDTO));
         return apiResponse;
     }
+
     @GetMapping("FindOrderByNameorCode")
     public ApiResponse<?> FindOrderByNameorCode(@RequestParam("key") String key){
         ApiResponse<List> apiResponse = new ApiResponse<>();

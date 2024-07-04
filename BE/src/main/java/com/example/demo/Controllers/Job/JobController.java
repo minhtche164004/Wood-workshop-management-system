@@ -67,6 +67,7 @@ public class JobController {
     public ApiResponse<?> getListProductForJob() {
         ApiResponse<List> apiResponse = new ApiResponse<>();
         String cacheKey = "all_products_job";
+
 //        jedis.del(cacheKey);
         List<JobProductDTO> jobProductDTOS;
         String cachedData = jedis.get(cacheKey);
@@ -170,6 +171,8 @@ public class JobController {
     @PostMapping("/CreateJobs")
     public ApiResponse<?> CreateJobs(@RequestBody JobDTO jobDTO , @RequestParam("user_id") int user_id, @RequestParam("p_id") int p_id, @RequestParam("status_id") int status_id, @RequestParam("job_id") int job_id,@RequestParam("type_job") int type_job) {
         ApiResponse<Jobs> apiResponse = new ApiResponse<>();
+        jedis.del("all_products_job");
+        jedis.del("all_products_request_job");
         apiResponse.setResult(jobService.CreateJob(jobDTO,user_id,p_id,status_id,job_id,type_job));
         return apiResponse;
     }
@@ -184,13 +187,18 @@ public class JobController {
     @PutMapping("/acceptJob")
     public ApiResponse<?> AcceptJob(@RequestParam("job_id") int job_id,@RequestParam("status_id") int status_id) {
         ApiResponse<Jobs> apiResponse = new ApiResponse<>();
+        jedis.del("all_products_job");
+        jedis.del("all_products_request_job");
         apiResponse.setResult(jobService.CreateJob_Log(job_id, status_id));
         return apiResponse;
+
     }
 
     @PutMapping("/EditJob")
     public ApiResponse<?> EditJob(@RequestParam("job_id") int job_id,@RequestBody JobDTO jobDTO) {
         ApiResponse<Jobs> apiResponse = new ApiResponse<>();
+        jedis.del("all_products_job");
+        jedis.del("all_products_request_job");
         apiResponse.setResult(jobService.EditJobs(jobDTO,job_id));
         return apiResponse;
 
@@ -288,6 +296,7 @@ public class JobController {
     @PostMapping("/CreateProductError")
     public ApiResponse<?> CreateProductError(@RequestParam("job_id") int job_id, @RequestBody ProductErrorDTO productErrorDTO) {
         ApiResponse<Processproducterror> apiResponse = new ApiResponse<>();
+        jedis.del("all_product_error");
         apiResponse.setResult(jobService.AddProductError(job_id,productErrorDTO));
         return apiResponse;
     }

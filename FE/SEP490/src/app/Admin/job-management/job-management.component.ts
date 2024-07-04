@@ -2,6 +2,9 @@ import { Component, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { ToastrService } from 'ngx-toastr';
 import { JobService } from 'src/app/service/job.service';
+import { FormBuilder, FormGroup } from '@angular/forms';
+import {MatDatepickerModule} from '@angular/material/datepicker';
+import { CalendarModule } from 'primeng/calendar';
 
 @Component({
   selector: 'app-job-management',
@@ -11,7 +14,7 @@ import { JobService } from 'src/app/service/job.service';
 export class JobManagementComponent implements OnInit {
   products: any[] = [];
   keyword = 'productName';
-
+  createJobs: FormGroup;
   productRQs: any[] = [];
   currentPage: number = 1;
   searchKey: string = '';
@@ -23,30 +26,42 @@ export class JobManagementComponent implements OnInit {
   type : any = {}
   statusType: any[] = [];
   statusOptions: any[] = [];
-  constructor(private jobService: JobService, private toastr: ToastrService) { }
+  
+  costJob: any; // Cost of the job
+  jobDescription: string = ''; // Job description
+  constructor( private fb: FormBuilder,private jobService: JobService, private toastr: ToastrService) { 
+
+    this.createJobs = this.fb.group({
+      job_name: [''],
+      quantity_product: this.selectedProduct.quantity_product,
+      cost: [],
+      description: [''],
+      finish: [''],
+      start: [''],
+    });
+  }
 
   ngOnInit(): void {
     this.loadProductRQForJob();
     this.loadStatusByType();
     
   }
-  createNewJob() {
-    const user_id = 1; // Thay đổi giá trị tùy theo người dùng
-    const p_id = 1; // Thay đổi giá trị tùy theo sản phẩm
-    const status_id = 1; // Thay đổi giá trị tùy theo trạng thái
-    const job_id = 1; // Thay đổi giá trị tùy theo công việc
-    const type_id = 1; //cho sp có sẵn     0 - k có sẵn
-
-    const jobData = {
-      job_name: 'New Job',
-      quantity_product: 10,
-      description: 'Description of the job',
-      finish: new Date(),
-      start: new Date(),
-      cost: 1000
-    };
-
-    this.jobService.addJob(user_id, p_id, status_id, job_id, jobData).subscribe(
+  createNewJob(selectedProduct: any) {
+    const user_id = this.selectedEmployee;
+    // Thay đổi giá trị tùy theo người dùng
+    const p_id = this.selectedProduct.product_id; // Thay đổi giá trị tùy theo sản phẩm
+    const status_id = this.selectedProduct.statusJob?.status_id; // Thay đổi giá trị tùy theo trạng thái
+    const job_id = this.selectedProduct.job_id; // Thay đổi giá trị tùy theo công việc
+    const type_id = this.selectedProduct.type_id; //cho sp có sẵn     0 - k có sẵn
+    console.log("user_id: ", user_id)
+    console.log("p_id: ", p_id)
+    console.log("status_id: ", status_id)
+    console.log("job_id: ", job_id)
+    console.log("type: ", type_id)
+    const jobData = this.createJobs.value;
+    
+    console.log('Job data:', jobData);
+    this.jobService.addJob(user_id, p_id, status_id, job_id, type_id, jobData).subscribe(
       response => {
         console.log('Job created successfully!', response);
         // Xử lý response hoặc thực hiện các hành động tiếp theo
@@ -142,60 +157,50 @@ export class JobManagementComponent implements OnInit {
   
     this.selectedProduct = { ...product }; // Lưu trữ dữ liệu sản phẩm vào biến selectedProduct
     console.log("Sản phẩm được chọn để giao việc:", this.selectedProduct);
-    console.log("Type:", this.selectedProduct.statusJob.type);
+    console.log("Trạng thái của sản phẩm:", this.selectedProduct.statusJob.status_id);
+    this.selectedProduct.statusJob?.statusId;
+    if (this.selectedProduct.code !== null) {
+      this.selectedProduct.type_id = 0;
+  } else {
+      this.selectedProduct.type_id = 1;
+  }
     console.log("employee: ", this.selectedProduct.user_name)
     if (this.selectedProduct) {
       // Kiểm tra giá trị của type và gọi các hàm tương ứng
       
-          this.loadPosition3();
+          this.loadPosition3(product);
          
     }
   
 
   }
 
-  addNewJob() {
-    const user_id = 3; // Replace with actual user_id
-    const p_id = 3; // Replace with actual p_id
-    const status_id = 3; // Replace with actual status_id
-    const job_id = 3; // Replace with actual job_id
-    const jobData = {
-      job_name: 'string',
-      quantity_product: 0,
-      description: 'string',
-      finish: '2024-07-02T16:11:04.300Z',
-      start: '2024-07-02T16:11:04.300Z',
-      cost: 0
-    };
-
-    this.jobService.addJob(user_id, p_id, status_id, job_id, jobData).subscribe(
-      (response) => {
-        console.log('Thêm công việc thành công:', response);
-        // Xử lý logic sau khi thêm công việc thành công
-      },
-      (error) => {
-        console.error('Lỗi khi thêm công việc:', error);
-        // Xử lý lỗi khi thêm công việc
-      }
-    );
-  }
 
  
   onSearch(selectedCategory: number, searchKey: string): void {
     console.log('Thực hiện tìm kiếm: ', searchKey);
     console.log('Category: ', selectedCategory);
   
-    if (selectedCategory == 1) {
+    if (selectedCategory == 0) {
       this.loadProductRQForJob();
-    } else if (selectedCategory == 2) {
+    } else if (selectedCategory == 1) {
       this.loadProduct()
     }
   }
 
   
 
-  loadPosition3() {
+  loadPosition3(product: any) {
+    this.selectedProduct = { ...product };
     this.type = this.selectedProduct.statusJob.type;
+    console.log('Type truoc khi cong:', this.type);
+    // Increase type by 1 if statusId is 6, 9, or 12
+    const statusId = this.selectedProduct.statusJob?.status_id;
+    console.log('Status ID:', this.selectedProduct.statusJob?.status_id);
+    if (statusId === 6 || statusId === 9 || statusId === 12) {
+      this.type += 1;
+    }
+  
     console.log('Type:', this.type);
     this.jobService.GetPosition3(this.type).subscribe(
       (data) => {
@@ -210,4 +215,5 @@ export class JobManagementComponent implements OnInit {
       }
     );
   }
+  
 }

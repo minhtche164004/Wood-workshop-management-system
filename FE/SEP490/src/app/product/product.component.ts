@@ -25,7 +25,7 @@ export class ProductComponent  implements OnInit  {
   selectedCategory: number = 0;
   selectedStatus: number = 0;
   // selectedType: number = 0;
-  selectedSortByPrice: string = 'asc';
+  selectedSortByPrice: string = '';
   selectedSortById: string = '';
   
   minPrice: any;
@@ -42,7 +42,7 @@ export class ProductComponent  implements OnInit  {
       if (searchKey !== null && searchKey !== undefined) {
         this.searchKey2 = searchKey;
         console.log('Search key product homepage data 2:', this.searchKey2);
-        this.filterProducts();
+        this.filterProducts(this.selectedSortByPrice);
       } else {
         console.log('Search key is null or undefined, skipping search.');
         // Có thể xử lý hoặc bỏ qua khi searchKey là null
@@ -109,10 +109,10 @@ export class ProductComponent  implements OnInit  {
     );
   }
 
-  filterProducts(): void {
-    
-    console.log("Lọc sản phẩm với từ khóa:", this.searchKey2, ", danh mục:", this.selectedCategory, "và giá:", this.selectedSortByPrice);
-    this.productListService.getMultiFillterProductForCustomer(this.searchKey2, this.selectedCategory, this.selectedStatus, this.selectedSortByPrice)
+  filterProducts(selectedSortByPrice: string): void {
+    const sort = selectedSortByPrice;
+    console.log("Lọc sản phẩm với từ khóa:", this.searchKey2, ", danh mục:", this.selectedCategory, "và giá:", sort);
+    this.productListService.getMultiFillterProductForCustomer(this.searchKey2, this.selectedCategory, this.selectedStatus, sort)
       .subscribe(
         (data) => {
           if (data.code === 1000) {

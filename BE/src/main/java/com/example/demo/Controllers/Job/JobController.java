@@ -288,6 +288,7 @@ public class JobController {
     @PostMapping("/CreateProductError")
     public ApiResponse<?> CreateProductError(@RequestParam("job_id") int job_id, @RequestBody ProductErrorDTO productErrorDTO) {
         ApiResponse<Processproducterror> apiResponse = new ApiResponse<>();
+        jedis.del("all_product_error");
         apiResponse.setResult(jobService.AddProductError(job_id,productErrorDTO));
         return apiResponse;
     }

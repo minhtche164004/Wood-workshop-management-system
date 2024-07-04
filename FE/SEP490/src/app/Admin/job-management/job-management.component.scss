@@ -7,7 +7,10 @@
   .my-element {
     justify-content: flex-start; /* Or align-items: flex-start; */
   }
-  
+  .custom-calendar .p-inputtext {
+    background-color: aqua;
+    /* Add more styles as needed */
+}
   
   .dashboard-main {
     color: #566787;

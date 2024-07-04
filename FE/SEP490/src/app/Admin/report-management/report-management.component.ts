@@ -1,3 +1,4 @@
+import { HttpErrorResponse } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
@@ -20,6 +21,8 @@ export class ReportManagementComponent implements OnInit {
         solution: ['']
       });
     }
+    selectedProductIdCurrentDelele: number = 0;
+    selectedProductNameCurrentDelele: string | null = null;
     errorForm: FormGroup;
     description: string = '';
     solution: string = '';
@@ -76,7 +79,40 @@ export class ReportManagementComponent implements OnInit {
   editProduct(productId: number) {
     
   }
- 
+  openConfirmDeleteModal(productId: number, productName: string): void {
+    this.selectedProductIdCurrentDelele = productId;
+    this.selectedProductNameCurrentDelele = productName;
+  }
+  deleteProduct() {
+    this.productListService.deleteProduct(this.selectedProductIdCurrentDelele)
+      .subscribe(
+        response => {
+          console.log('Xóa thành công', response);
+          if (response.code === 1000) {
+            this.toastr.success('Xóa sản phẩm thành công!', 'Thành công');
+          }
+          const cancelButton = document.querySelector('.btn.btn-secondary[data-dismiss="modal"]') as HTMLElement;
+          if (cancelButton) { // Check if the button exists
+            cancelButton.click(); // If it exists, click it to close the modal
+          }
+
+        },
+        (error: HttpErrorResponse) => {
+          if (error.status === 400 && error.error.code === 1030) {
+            this.toastr.error(error.error.message, 'Lỗi');
+          } else {
+            this.toastr.error("Không thể xoá sản phẩm do sản phẩm đang được sử dụng ở các chức năng khác", 'Lỗi');
+          }
+          const cancelButton = document.querySelector('.btn.btn-secondary[data-dismiss="modal"]') as HTMLElement;
+          if (cancelButton) { // Check if the button exists
+            cancelButton.click(); // If it exists, click it to close the modal
+          }
+          // this.isLoading = false; // Stop the loading spinner on error
+        }
+      );
+    console.log('productId', this.selectedProductIdCurrentDelele);
+  }
+
   onEditSubmit(): void {
   
 
@@ -95,9 +131,7 @@ export class ReportManagementComponent implements OnInit {
      }
   
 
-  deleteProduct(productId: number) {
-    // Implement delete logic
-  }
+  
 
   showProductDetails(productId: number) {
     this.productListService.getProductById(productId)

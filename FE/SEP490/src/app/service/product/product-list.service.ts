@@ -284,7 +284,7 @@ export class ProductListService {
         if (key === 'search' && value === '') return false;
         if (key === 'statusId' && value === 0) return false;
         if (key === 'categoryIds' && value === 0) return false;
-        if (key === 'sortDirection') return false;
+        if (key === 'sortDirection' && value === '') return false;
         return value != null;
       })
       .map(([key, value]) => `${encodeURIComponent(key)}=${encodeURIComponent(value)}`)

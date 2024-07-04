@@ -67,6 +67,7 @@ public class JobController {
     public ApiResponse<?> getListProductForJob() {
         ApiResponse<List> apiResponse = new ApiResponse<>();
         String cacheKey = "all_products_job";
+//        jedis.del(cacheKey);
         List<JobProductDTO> jobProductDTOS;
         String cachedData = jedis.get(cacheKey);
         Gson gson = new GsonBuilder().setDateFormat("MMM dd, yyyy").create();

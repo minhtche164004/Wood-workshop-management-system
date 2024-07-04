@@ -93,6 +93,7 @@ export class UserManagementComponent implements OnInit {
       this.closeButton.nativeElement.click();
     }
   }
+  searchKey: string = '';
   addAccountForm: FormGroup;
   editUserForm: FormGroup;
   provinces: Province[] = [];
@@ -459,23 +460,23 @@ export class UserManagementComponent implements OnInit {
       return false;
     }
 
-    const positionValue = this.addAccountForm.controls['position'].value;
-    if (!positionValue || positionValue.toString().trim() === "") {
-      this.toastr.error('Không được bỏ trống trường Vai Trò');
-      return false;
-    }
+    // const positionValue = this.addAccountForm.controls['position'].value;
+    // if (!positionValue || positionValue.toString().trim() === "") {
+    //   this.toastr.error('Không được bỏ trống trường Vai Trò');
+    //   return false;
+    // }
 
-    const roleValue = this.addAccountForm.controls['role'].value;
-    if (!roleValue || roleValue.toString().trim() === "") {
-      this.toastr.error('Không được bỏ trống trường Vị Trí');
-      return false;
-    }
+    // const roleValue = this.addAccountForm.controls['role'].value;
+    // if (!roleValue || roleValue.toString().trim() === "") {
+    //   this.toastr.error('Không được bỏ trống trường Vị Trí');
+    //   return false;
+    // }
 
-    const BankNameValue = this.addAccountForm.controls['bank_name'].value;
-    if (!BankNameValue || BankNameValue.toString().trim() === "") {
-      this.toastr.error('Không được bỏ trống trường Tên Ngân Hàng');
-      return false;
-    }
+    // const BankNameValue = this.addAccountForm.controls['bank_name'].value;
+    // if (!BankNameValue || BankNameValue.toString().trim() === "") {
+    //   this.toastr.error('Không được bỏ trống trường Tên Ngân Hàng');
+    //   return false;
+    // }
 
     const CityValue = this.addAccountForm.controls['city'].value;
     if (!CityValue || CityValue.toString().trim() === "") {
@@ -542,23 +543,23 @@ export class UserManagementComponent implements OnInit {
       return false;
     }
 
-    const positionValue = this.editUserForm.controls['position_id'].value;
-    if (!positionValue || positionValue.toString().trim() === "") {
-      this.toastr.error('Không được bỏ trống trường Vai Trò');
-      return false;
-    }
+    // const positionValue = this.editUserForm.controls['position_id'].value;
+    // if (!positionValue || positionValue.toString().trim() === "") {
+    //   this.toastr.error('Không được bỏ trống trường Vai Trò');
+    //   return false;
+    // }
 
-    const roleValue = this.editUserForm.controls['role_id'].value;
-    if (!roleValue || roleValue.toString().trim() === "") {
-      this.toastr.error('Không được bỏ trống trường Vị Trí');
-      return false;
-    }
+    // const roleValue = this.editUserForm.controls['role_id'].value;
+    // if (!roleValue || roleValue.toString().trim() === "") {
+    //   this.toastr.error('Không được bỏ trống trường Vị Trí');
+    //   return false;
+    // }
 
-    const BankNameValue = this.editUserForm.controls['bank_name'].value;
-    if (!BankNameValue || BankNameValue.toString().trim() === "") {
-      this.toastr.error('Không được bỏ trống trường Tên Ngân Hàng');
-      return false;
-    }
+    // const BankNameValue = this.editUserForm.controls['bank_name'].value;
+    // if (!BankNameValue || BankNameValue.toString().trim() === "") {
+    //   this.toastr.error('Không được bỏ trống trường Tên Ngân Hàng');
+    //   return false;
+    // }
 
     const CityValue = this.editUserForm.controls['city_province'].value;
     if (!CityValue || CityValue.toString().trim() === "") {
@@ -645,4 +646,29 @@ export class UserManagementComponent implements OnInit {
       }
     );
   }
+  
+  SearchUserByNameorAddress(): void {
+    console.log("Thực hiện tìm kiếm sản phẩm: ", this.searchKey);
+
+    if (this.searchKey.trim() !== "") {
+      this.authenListService.findSearchUserByNameorAddress(this.searchKey)
+        .subscribe(
+          (data) => {
+            if (data.code === 1000) {
+              this.user = data.result;
+              console.log('Tìm kiếm thành công:', this.user);
+              this.toastr.success('Tìm kiếm sản phẩm thành công!', 'Thành công');
+            } else if (data.code === 1015) {
+              this.user = [];
+              console.error('Tìm kiếm không thành công:', data);
+              this.toastr.error('Không tìm thấy sản phẩm!', 'Tìm kiếm thất bại');
+            } 
+          }
+        );
+    } else{
+      
+      this.loadAllUsers();
+    }
+  }
+
 }

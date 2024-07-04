@@ -20,13 +20,17 @@ export class AuthenListService {
 
   private apiUrl_AddNewAccount = `${environment.apiUrl}api/auth/admin/AddNewAccount`; 
 
-
+  private apiUrl_SearchUserByNameorAddress = `${environment.apiUrl}api/auth/admin/SearchUserByNameorAddress`; 
   private apiUrl_NameATM = 'https://api.vietqr.io/v2/banks';
   constructor(private http: HttpClient) { }
   isLoggedIn(): boolean {
     const token = localStorage.getItem('loginToken');
     return token !== null; // Trả về true nếu tồn tại token trong localStorage, ngược lại false
   }
+  findSearchUserByNameorAddress(query: string): Observable<any> {
+    return this.http.get<any>(`${this.apiUrl_SearchUserByNameorAddress}?query=${query}`);
+  }
+
 
 
   AddNewAccountForAdmin(addNewAccountRequest: AddNewAccount): Observable<any> {

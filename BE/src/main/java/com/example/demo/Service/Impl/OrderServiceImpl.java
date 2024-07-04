@@ -248,7 +248,7 @@ public class OrderServiceImpl implements OrderService {
                 cloudinaryService.deleteImage(id_image);
             }
             requestimagesRepository.deleteRequestImages(request_id); // Xóa những ảnh trước đó
-            uploadImageService.uploadFile(multipartFiles, requests.getRequestId());
+            uploadImageService.uploadFileRequest(multipartFiles, requests.getRequestId());
         }
         requestRepository.updateRequest(request_id,
                 requestEditDTO.getDescription()

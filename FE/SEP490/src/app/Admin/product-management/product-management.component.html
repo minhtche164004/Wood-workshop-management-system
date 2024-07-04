@@ -10,11 +10,18 @@
               <h2 style="margin-bottom: 0;">Quản lí Sản Phẩm</h2>
             </div>
             <div class="col-sm-7 text-end d-flex align-items-center justify-content-end">
-              <a href="#" class="btn btn-secondary btn-sm" data-toggle="modal" data-target="#addProductModal"
+              <!-- Them san pham trong bang product -->
+              <a *ngIf="isProduct" href="#" class="btn btn-secondary btn-sm" data-toggle="modal" data-target="#addProductModal"
                 style="font-size: 14px;">
                 <i class="material-icons align-middle" style="font-size: 18px;">&#xE147;</i>
-                <span class="align-middle">Thêm Sản Phẩm</span>
+                <span class="align-middle">Thêm sản phẩm</span>
               </a>
+              <!-- Them san pham trong bang request product theo yeu cau -->
+              <a *ngIf="!isProduct" href="#" class="btn btn-secondary btn-sm" data-toggle="modal" data-target="#addRequestProductModal"
+              style="font-size: 14px;">
+              <i class="material-icons align-middle" style="font-size: 18px;">&#xE147;</i>
+              <span class="align-middle">Thêm sản phẩm theo yêu cầu</span>
+            </a>
             </div>
           </div>
 
@@ -184,6 +191,145 @@
   <div class="modal-dialog modal-dialog-wide" role="document">
     <div class="modal-content">
       <div class="modal-body">
+        <label style="font-size: 32px;" for="productName">Thêm sản phẩm</label>
+        <form [formGroup]="uploadForm" (ngSubmit)="onSubmit()">
+          <div class="form-group">
+            <label style="font-size: 16px;" for="productName">Tên sản phẩm</label>
+            <input type="text" class="form-control" id="productName" formControlName="product_name">
+          </div>
+          <div class="form-group">
+            <label style="font-size: 16px;" for="productDescription">Mô tả</label>
+            <textarea class="form-control" id="productDescription" rows="3" formControlName="description"></textarea>
+          </div>
+          <div class="form-group">
+            <label style="font-size: 16px;" for="productCategory">Kiểu sản phẩm</label>
+            <select class="form-control" id="productCategory" formControlName="category_id">
+              <option [ngValue]="null" disabled selected>Loại sản phẩm</option>
+              <option *ngFor="let category of categories" [ngValue]="category.categoryId">{{ category.categoryName }}
+              </option>
+            </select>
+          </div>
+          <div class="form-row">
+            <div class="form-group col-md-6">
+              <label style="font-size: 16px;" for="productPrice">Đơn giá</label>
+              <input type="number" class="form-control" id="productPrice" formControlName="price">
+            </div>
+            <div class="form-group col-md-6">
+              <label style="font-size: 16px;" for="selectedStatus">Tình trạng</label>
+              <select class="form-control" id="selectedStatus">
+                <option disabled selected>Chọn trạng thái</option>
+                <option *ngFor="let status of statuses" [ngValue]="status.status_id">{{ status.status_name }}</option>
+              </select>
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group col-md-4">
+              <label style="font-size: 16px;" for="productImages">Ảnh sản phẩm (Chọn nhiều)</label>
+              <input type="file" class="form-control-file" id="productImages" multiple
+                (change)="onImagesSelected($event)">
+            </div>
+            <div class="form-group col-md-2 d-flex align-items-end">
+              <button (click)="onResetImage()" class="btn" style="height: calc(2.25rem + 2px); padding: 0.375rem 0.75rem; font-size: 1rem; line-height: 1.5; border-radius: 0.25rem; border: 1px solid #ced4da; background-color: #fff; color: #495057;">
+                Làm mới</button>
+            </div>
+            <div class="form-group col-md-4">
+              <label style="font-size: 16px;" for="thumbnailImage">Ảnh đại diện sản phẩm</label>
+              <input type="file" class="form-control-file" id="thumbnailImage" (change)="onThumbnailSelected($event)">
+            </div>
+            <div class="form-group col-md-2 d-flex align-items-end">
+              <button (click)="onResetThumbnail()" class="btn" style="height: calc(2.25rem + 2px); padding: 0.375rem 0.75rem; font-size: 1rem; line-height: 1.5; border-radius: 0.25rem; border: 1px solid #ced4da; background-color: #fff; color: #495057;">
+                Làm mới</button>
+            </div>
+          </div>
+          <!-- Preview anh -->
+          <div class="form-row">
+            <div class="form-group col-md-6" *ngIf="selectedImages">
+              <img *ngFor="let imageUrl of imagesPreview" [src]="imageUrl" class="previewMultiple">
+            </div>
+            <div class="form-group col-md-6">
+              <img *ngIf="selectedThumbnail" [src]="thumbnailPreview" class="preview">
+            </div>
+          </div>
+          <!-- Mảng các vật liệu cần có trong product -->
+          <hr>
+          <label style="font-size: 16px;">Bảng ước tính nguyên vật liệu</label>
+          <form [formGroup]="materialForm">
+            <div formArrayName="items">
+              <div *ngFor="let item of items.controls; let i = index" [formGroupName]="i" class="row mb-3">
+                <!-- Thêm select cho materialId -->
+                <div class="col-md-2 mb-3">
+                  <div class="form-group">
+                    <label for="materialId-{{i}}">Loại vật liệu</label>
+                    <select id="materialId-{{i}}" class="form-control" formControlName="materialId"
+                      (change)="onMaterialChange($event, i)">
+                      <option *ngFor="let material of materials" [value]="material.materialId">{{ material.materialName
+                        }}</option>
+                    </select>
+                  </div>
+                </div>
+                <!-- subMaterial -->
+                <div class="col-md-4 mb-3">
+                  <div class="form-group">
+                    <label for="subMaterialId-{{i}}">Vật liệu</label>
+                    <select id="subMaterialId-{{i}}" class="form-control" formControlName="subMaterialId"
+                      *ngIf="subMaterials[i]" (change)="onSubMaterialChange($event, i)">
+                      <option *ngFor="let subMaterial of subMaterials[i]" [value]="subMaterial?.subMaterialId">{{
+                        subMaterial?.subMaterialName
+                        }}</option>
+                    </select>
+                  </div>
+                </div>
+                <!-- Giá -->
+                <div class="col-md-2 mb-2">
+                  <div class="form-group">
+                    <label for="price-{{i}}">Giá</label>
+                    <input id="price-{{i}}" class="form-control" formControlName="price" type="text"
+                      [value]="unitPriceSubMaterial[i]" readonly="">
+                  </div>
+                </div>
+                <!-- Đơn vị vật liệu -->
+                <div class="col-md-2 mb-3">
+                  <div class="form-group">
+                    <label for="subMaterialId-{{i}}">Đơn vị</label>
+                    <input id="price-{{i}}" class="form-control" formControlName="" type="text"
+                      [value]="materialType[i]" readonly="">
+                  </div>
+                </div>
+                <!-- Input cho số lượng -->
+                <div class="col-md-1 mb-3">
+                  <div class="form-group">
+                    <label for="quantity-{{i}}">Số lượng</label>
+                    <input id="quantity-{{i}}" class="form-control" formControlName="quantity" type="number"
+                      placeholder="Nhập số lượng">
+                  </div>
+                </div>
+                <!-- Nút xóa -->
+                <div class="col-md-1 mb-3 d-flex align-items-center">
+                  <button type="button" class="btn btn-danger" (click)="removeItem(i)">Xóa</button>
+                </div>
+              </div>
+            </div>
+            <button type="button" class="btn btn-secondary" (click)="addItem()">Thêm nguyên vật liệu ước tính</button>
+          </form>
+          <div>
+          </div>
+          <div class="modal-footer d-flex justify-content-center">
+            <button type="button" class="btn btn-mau-do" data-dismiss="modal">Hủy</button>
+            <button type="submit" class="btn btn-primary">Lưu thay đổi</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal for Adding Request Product -->
+<div class="modal fade" id="addRequestProductModal" tabindex="-1" role="dialog" aria-labelledby="addRequestProductModalLabel"
+  aria-hidden="true">
+  <div class="modal-dialog modal-dialog-wide" role="document">
+    <div class="modal-content">
+      <div class="modal-body">
+        <label style="font-size: 32px;" for="productName">Thêm sản phẩm theo yêu cầu</label>
         <form [formGroup]="uploadForm" (ngSubmit)="onSubmit()">
           <div class="form-group">
             <label style="font-size: 16px;" for="productName">Tên sản phẩm</label>

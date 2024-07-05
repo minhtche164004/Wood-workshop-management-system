@@ -22,7 +22,6 @@ public class Suppliermaterial {
     private String phoneNumber;
 
     @ManyToOne // Một nhà cung cấp có thể cung cấp nhiều nguyên liệu phụ
-  //  @JsonIgnore
     @JoinColumn(name = "sub_material_id") // Khóa ngoại liên kết với bảng sub_materials
     private SubMaterials subMaterial;
  //vd : nhiều nhà cung cấp có thể cung cấp 1 loại đồ

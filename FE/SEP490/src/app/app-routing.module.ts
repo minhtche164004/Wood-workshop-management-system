@@ -84,7 +84,7 @@ const routes: Routes = [
   { path: 'contact', component: ContactComponent },
   { path: 'about-us', component:  AboutUsComponent},
   { path: 'order_management', component: OrderManagementComponent },
-  { path: 'product_details', component: ProductDetailComponent },
+  { path: 'product-details', component: ProductDetailComponent },
   { path: 'job_management', component: JobManagementComponent },
   { path: 'changePassWord', component: ChangePasswordComponent },
   { path: 'employee-job', component: EmployeeJobComponent },

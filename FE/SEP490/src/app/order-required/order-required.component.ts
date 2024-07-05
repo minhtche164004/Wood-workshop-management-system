@@ -135,7 +135,7 @@ export class OrderRequiredComponent implements OnInit {
 
       console.log('Selected Images:', this.selectedImages);
 
-      this.productListService.uploadProductRequired(productData, this.selectedImages)
+      this.authenListService.uploadProductRequired(productData, this.selectedImages)
         .subscribe(
           response => {
 

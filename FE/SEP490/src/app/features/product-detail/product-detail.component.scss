@@ -3,7 +3,38 @@
     background-color: white !important;
     color: #C89551 !important;
   }
+  .form-container {
+    max-width: 500px; /* Adjust the width as needed */
+    height: 400px; /* Adjust the height as needed */
+  }
   
+  .large-image {
+    max-width: 100%;
+    max-height: 400px;
+    object-fit: cover;
+  }
+  .fixed-size {
+    width: 100px; /* Set your desired fixed width */
+    height: 100px; /* Set your desired fixed height */
+    object-fit: cover; /* Ensures the images maintain their aspect ratio while fitting the specified dimensions */
+    margin: 15px; /* Margin for spacing between images */
+    transition: transform 0.3s ease, box-shadow 0.3s ease; /* Smooth transition for hover effects */
+  }
+  
+  .stylish-border {
+    border: 2px solid #fff; /* White border */
+    border-radius: 10px; /* Rounded corners */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+  }
+  
+  .stylish-border:hover {
+    transform: scale(1.1); /* Slight zoom effect on hover */
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2); /* Enhanced shadow on hover */
+  }
+  
+  .selected-image {
+    border: 1px solid #007bff; /* Blue border for selected image */
+  }
   .icon-hover:hover i {
     color: #C89551 !important;
   }

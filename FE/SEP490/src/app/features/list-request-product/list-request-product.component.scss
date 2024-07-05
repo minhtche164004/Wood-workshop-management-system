@@ -353,9 +353,9 @@
     color: red;
   }
   .previewMultiple {
-    width: calc(100% / 1.5); /* Increase the width */
+    width: calc(100% / 4);
     height: auto; 
-    max-width: calc(700px / 1); /* Increase the maximum width */
+    max-width: calc(400px / 2); 
     display: inline-flex;
     padding-left: 2%;
     padding-bottom: 2%;
@@ -372,4 +372,7 @@
     max-height: 500vh; /* Prevent the modal from being too tall */
     overflow-y: auto; /* Add scroll if content overflows */
   }
+  
+
+
   

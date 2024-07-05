@@ -5,49 +5,39 @@
   <div class="container">
     <div class="row gx-5">
       <aside class="col-lg-6">
-        <!-- Ảnh lớn ở trên -->
+        <!-- Large image on top -->
         <div class="border rounded-4 mb-3 d-flex justify-content-center">
-          <a data-fslightbox="mygalley" class="rounded-4" target="_blank" data-type="image"
-            href="https://mdbcdn.b-cdn.net/img/bootstrap-ecommerce/items/detail1/big.webp">
-            <img style="max-width: 100%; max-height: 100vh; margin: auto;" class="rounded-4 fit"
-              [src]="productDetails.image" />
+          <a data-fslightbox="mygalley" class="rounded-4" target="_blank" data-type="image" [href]="largeImageUrl">
+            <img class="large-image rounded-4 fit" [src]="largeImageUrl" />
           </a>
         </div>
       
-        <!-- 5 ảnh nhỏ ở dưới -->
+        <!-- 4 smaller images below -->
         <div class="d-flex justify-content-center mb-3">
-          <a data-fslightbox="mygalley" class="rounded-4" target="_blank" data-type="image"
-            href="https://mdbcdn.b-cdn.net/img/bootstrap-ecommerce/items/detail1/big.webp">
-            <img style="max-width: 18%; max-height: 100vh; margin: 5px;" class="rounded-4 fit"
-              [src]="productDetails.image" />
+          <a data-fslightbox="mygalley" class="rounded-4" target="_blank" data-type="image" (click)="updateLargeImage(productDetails.image)" [ngClass]="{'selected-image': largeImageUrl === productDetails.image}">
+            <img class="rounded-4 fit fixed-size stylish-border" [src]="productDetails.image" />
           </a>
-          <a data-fslightbox="mygalley" class="rounded-4" target="_blank" data-type="image"
-            href="https://mdbcdn.b-cdn.net/img/bootstrap-ecommerce/items/detail1/big.webp">
-            <img style="max-width: 18%; max-height: 100vh; margin: 5px;" class="rounded-4 fit"
-              [src]="productDetails.image" />
+          <a data-fslightbox="mygalley" class="rounded-4" target="_blank" data-type="image" (click)="updateLargeImage(productDetails.imageList[0]?.fullPath)" [ngClass]="{'selected-image': largeImageUrl === productDetails.imageList[0]?.fullPath}">
+            <img class="rounded-4 fit fixed-size stylish-border" [src]="productDetails.imageList[0]?.fullPath" />
           </a>
-          <a data-fslightbox="mygalley" class="rounded-4" target="_blank" data-type="image"
-            href="https://mdbcdn.b-cdn.net/img/bootstrap-ecommerce/items/detail1/big.webp">
-            <img style="max-width: 18%; max-height: 100vh; margin: 5px;" class="rounded-4 fit"
-              [src]="productDetails.image" />
+          <a data-fslightbox="mygalley" class="rounded-4" target="_blank" data-type="image" (click)="updateLargeImage(productDetails.imageList[1]?.fullPath)" [ngClass]="{'selected-image': largeImageUrl === productDetails.imageList[1]?.fullPath}">
+            <img class="rounded-4 fit fixed-size stylish-border" [src]="productDetails.imageList[1]?.fullPath" />
           </a>
-          <a data-fslightbox="mygalley" class="rounded-4" target="_blank" data-type="image"
-            href="https://mdbcdn.b-cdn.net/img/bootstrap-ecommerce/items/detail1/big.webp">
-            <img style="max-width: 18%; max-height: 100vh; margin: 5px;" class="rounded-4 fit"
-              [src]="productDetails.image" />
+          <a data-fslightbox="mygalley" class="rounded-4" target="_blank" data-type="image" (click)="updateLargeImage(productDetails.imageList[2]?.fullPath)" [ngClass]="{'selected-image': largeImageUrl === productDetails.imageList[2]?.fullPath}">
+            <img class="rounded-4 fit fixed-size stylish-border" [src]="productDetails.imageList[2]?.fullPath" />
           </a>
-          <a data-fslightbox="mygalley" class="rounded-4" target="_blank" data-type="image"
-            href="https://mdbcdn.b-cdn.net/img/bootstrap-ecommerce/items/detail1/big.webp">
-            <img style="max-width: 18%; max-height: 100vh; margin: 5px;" class="rounded-4 fit"
-              [src]="productDetails.image" />
+          <a data-fslightbox="mygalley" class="rounded-4" target="_blank" data-type="image" (click)="updateLargeImage(productDetails.imageList[3]?.fullPath)" [ngClass]="{'selected-image': largeImageUrl === productDetails.imageList[3]?.fullPath}">
+            <img class="rounded-4 fit fixed-size stylish-border" [src]="productDetails.imageList[3]?.fullPath" />
           </a>
         </div>
       </aside>
       
+      
       <main class="col-lg-6">
         <div class="ps-lg-3">
           <h4 class="title text-dark" style="font-size: 20px;">
-            {{ productDetails.productName }} <br />
+            {{ productDetails?.sub_material_name?.[1] }}
+            aaa
           </h4>
           <div class="mb-3">
             <span style="font-size: 16px;  font-weight: bold;">Giá Tiền: </span>

@@ -33,7 +33,7 @@ export class HomepageComponent implements AfterViewInit, OnInit {
         console.error('Error fetching products:', error);
         this.toastr.error('Có lỗi xảy ra!', 'Lỗi');
       }
-    );
+    ); 
   }
   addToWishlist(productId: number) {  
     this.toastr.success('Thực hiện thêm sản phẩm', 'Thành công'); // Success message
@@ -63,6 +63,15 @@ export class HomepageComponent implements AfterViewInit, OnInit {
     this.initializeBackToTop();
     this.initializeResponsiveNavbar();
     this.initializeCountdownTimer();
+    const someElement = document.querySelector('.some-class');
+
+    // Ensure the element exists before trying to access its classList
+    if (someElement) {
+      someElement.classList.add('new-class');
+    } else {
+      console.error('Element not found');
+    }
+  
   }
 
   private initializeSlickSliders() {
@@ -168,21 +177,18 @@ export class HomepageComponent implements AfterViewInit, OnInit {
     });
   }
 
-  private initializeBackToTop() {
-    const backtotop = document.querySelector('.backtotop') as HTMLElement;
-    window.addEventListener('scroll', function () {
-      if (document.documentElement.scrollTop > 300) {
-        backtotop.classList.remove('hide');
-      } else {
-        backtotop.classList.add('hide');
-      }
-    });
-    backtotop.addEventListener('click', function () {
-      window.scrollTo({
-        top: 0,
-        behavior: 'smooth'
-      });
-    });
+  initializeBackToTop(): void {
+    const backToTopButton = document.querySelector('.back-to-top-button');
+
+    if (backToTopButton) {
+      backToTopButton.addEventListener('click', this.scrollToTop);
+    } else {
+      console.error('Back to top button not found');
+    }
+  }
+
+  scrollToTop(): void {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   }
 
   private initializeResponsiveNavbar() {
@@ -206,5 +212,5 @@ export class HomepageComponent implements AfterViewInit, OnInit {
 
     }, 1000);
   }
-
+ 
 }

@@ -4,7 +4,7 @@
     </ng-autocomplete>
 
     <ng-template #itemTemplate let-item>
-        <a [innerHTML]="item.productName"></a>
+        <a [innerHTML]="item.productName" (click)="selectProduct(item)"></a>
     </ng-template>
 
     <ng-template #notFoundTemplate let-notFound>
@@ -17,3 +17,6 @@
 <mat-hint>MM/DD/YYYY</mat-hint>
 <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
 <mat-datepicker #picker></mat-datepicker>
+
+
+

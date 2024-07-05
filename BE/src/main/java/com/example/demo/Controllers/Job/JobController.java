@@ -86,7 +86,6 @@ public class JobController {
 //        }
         apiResponse.setResult(jobService.getListProductJob());
         return apiResponse;
-
     }
 //
     @GetMapping("/getRequestProductInOrderDetailByCode")

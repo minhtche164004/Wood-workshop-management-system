@@ -354,7 +354,6 @@ export class UserManagementComponent implements OnInit {
         this.selectedStatus = this.status.find(sa => sa.status_name === this.userData.status_name)?.status_id;
         this.selectBankName = this.userData.bank_name;
 
-
       },
       (error) => {
         console.error('Error fetching user data:', error);
@@ -373,7 +372,7 @@ export class UserManagementComponent implements OnInit {
     } else {
       this.isPositionEnabled = true;
     }
-  }
+  } 
   onRoleChangeUpdate() {
     if (this.selectedRole === 4) {
       this.isPositionEnabled_Update = true;
@@ -625,7 +624,7 @@ export class UserManagementComponent implements OnInit {
     );
   }
   EditUser(): void {
-    if (!this.validateEditUser()) {
+    if (!this.validateEditUser()) { 
       return;
     }
     const editUserRequest: EditUserRequest = this.editUserForm.value;
@@ -642,9 +641,9 @@ export class UserManagementComponent implements OnInit {
       },
       (error: any) => {
         
-        if ( error.error.code === 1033) {
-          this.toastr.error('Không thể thay đổi quyền của nhân viên này vì họ đang đảm nhận công việc ở vị trí của họ',);
-        }
+        // if ( error.error.code === 1033) {
+        //   this.toastr.error('Không thể thay đổi quyền của nhân viên này vì họ đang đảm nhận công việc ở vị trí của họ',);
+        // }
        
       }
     );

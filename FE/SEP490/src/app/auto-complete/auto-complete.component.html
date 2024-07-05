@@ -1,0 +1,36 @@
+<div class="ng-autocomplete">
+    <ng-autocomplete *ngIf="products" [data]="products" [searchKeyword]="keyword" placeholder="Enter the product's name"
+
+        historyIdentifier="products" [itemTemplate]="itemTemplate" [notFoundTemplate]="notFoundTemplate">
+    </ng-autocomplete>
+
+
+    <ng-template #itemTemplate let-item>
+        <a [innerHTML]="item.productName"></a>
+    </ng-template>
+
+    <ng-template #notFoundTemplate let-notFound>
+        <div>No results found!</div>
+    </ng-template>
+
+</div>
+
+
+<div>
+    <table>
+        <thead>
+            <tr>
+                <th>Product Name</th>
+                <th>Price</th>
+                <th>Quantity</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let product of products">
+                <td>{{ product.productName }}</td>
+                <td>{{ product.price }}</td>
+                <td>{{ product.quantity }}</td>
+            </tr>
+        </tbody>
+    </table>
+</div>

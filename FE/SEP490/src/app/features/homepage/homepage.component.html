@@ -127,6 +127,7 @@
     </div>
     <div class="all-product text-center">
         <div class="container">
+
             <p class="all-heading">Sản phẩm</p>
             <p class="all-intro">Tất cả sản phẩm có sẵn tại cửa hàng</p>
 
@@ -138,7 +139,7 @@
                             *ngFor="let product of products | paginate: { itemsPerPage: 9, currentPage: currentPage }; let i = index">
                             <div class="product">
                                 <a style="text-decoration: none;" href="{{ product.productName }}">
-                                    <img src="{{ product.image }}" alt="" class="product-img">
+                                    <img [routerLink]="['/product-details', product.productId]" src="{{ product.image }}" alt="" class="product-img">
                                     <div class="product-info">
                                         <p class="name-product text-center">{{ product.productName }}</p>
                                         <p class="description"
@@ -153,13 +154,14 @@
                                                 currency:'VND' }}</p>
                                         </div>
                                         <div class="buttons d-flex ">
-                                            <button class="addCart">
+                                            <button (click)="addToWishlist(product.productId)" class="addCart">
                                                 Thêm vào danh sách yêu thích <i
                                                     class="fa-solid fa-heart"></i>
                                             </button>
                                         </div>
                                     </div>
                                 </a>
+
                             </div>
                         </div>
 

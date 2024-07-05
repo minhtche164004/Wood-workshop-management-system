@@ -341,6 +341,7 @@ userRepository.save(user);
         userInfor.setBank_number(userDTO.getBank_number());
         userInfor.setBank_name(userDTO.getBank_name());
         userInfor.setWards(userDTO.getWards());
+        userInfor.setDistrict(userDTO.getDistrict());
         userInfor.setCity_province(userDTO.getCity_province());
 
         // Lấy và đặt Position, Status_User, và Role (giả sử các phương thức repository là chính xác)

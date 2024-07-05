@@ -1,5 +1,6 @@
 package com.example.demo.Service;
 
+import com.example.demo.Dto.OrderDTO.OrderDetailDTO;
 import com.example.demo.Dto.OrderDTO.OrderDetailWithJobStatusDTO;
 import com.example.demo.Dto.RequestDTO.RequestAllDTO;
 import com.example.demo.Dto.ProductDTO.*;
@@ -48,9 +49,19 @@ public interface OrderService {
 
     Requests AddNewRequest(RequestDTO requestDTO, MultipartFile[] multipartFiles);
 
-    Requests EditRequest(int request_id, RequestEditDTO requestEditDTO,MultipartFile[] multipartFiles) throws IOException;
+//    Requests EditRequest(int request_id, RequestEditDTO requestEditDTO,MultipartFile[] multipartFiles) throws IOException;
 
     public List<OrderDetailWithJobStatusDTO> getOrderDetailByOrderId(int order_id);
 
+
+    Requests ManagerEditRequest(int request_id, RequestEditDTO requestEditDTO);
+    OrderDetailDTO getOrderDetailById(int id);
+
+
     void deleteRequestById(int requestId);
+
+    boolean checkOderDoneOrNot(int order_id);
+
+
+
 }

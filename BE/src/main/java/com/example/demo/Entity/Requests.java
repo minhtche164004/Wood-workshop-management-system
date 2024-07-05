@@ -61,5 +61,8 @@ public class Requests {
     @Column(name = "wards")
     private String wards;
 
+    @Column(name = "email")
+    private String email;
+
     
 }

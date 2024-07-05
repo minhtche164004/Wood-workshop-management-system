@@ -2,6 +2,9 @@ package com.example.demo.Controllers.OrderController;
 
 import com.example.demo.Config.RedisConfig;
 import com.example.demo.Dto.OrderDTO.JobProductDTO;
+
+import com.example.demo.Dto.OrderDTO.OrderDetailDTO;
+import com.example.demo.Dto.OrderDTO.OrderDetailWithJobStatusDTO;
 import com.example.demo.Dto.ProductDTO.ProductEditDTO;
 import com.example.demo.Dto.RequestDTO.RequestAllDTO;
 import com.example.demo.Dto.ProductDTO.RequestProductAllDTO;
@@ -48,8 +51,6 @@ public class OrderController {
     @Autowired
     private WhiteListService whiteListService;
     private final OrderRepository orderRepository;
-    private static final JedisPooled jedis = RedisConfig.getRedisInstance();
-    private static final String GET_ALL_ORDER_CACHE_KEY = "all_orders";
 
     @GetMapping("/GetAllProductRequest")
     public ApiResponse<?> GetAllProductRequest() {
@@ -91,9 +92,9 @@ public class OrderController {
         return apiResponse;
     }
     @DeleteMapping("/DeleteWhiteList")
-    public ApiResponse<?> DeleteWhiteList(@RequestParam("wistlist_id") int user_id) {
+    public ApiResponse<?> DeleteWhiteList(@RequestParam("wishlist_id") int wishlist_id) {
         ApiResponse<String> apiResponse = new ApiResponse<>();
-        whiteListService.DeleteWhiteList(user_id);
+        whiteListService.DeleteWhiteList(wishlist_id);
         apiResponse.setResult("Xoá Sản Phẩm khỏi danh sách yêu thích thành công !");
         return apiResponse;
     }
@@ -124,37 +125,28 @@ public class OrderController {
         return apiResponse;
     }
 
-    @PutMapping(value = "/EditRequest", consumes = MediaType.MULTIPART_FORM_DATA_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ApiResponse<?> EditRequest(
-            @RequestParam(value="request_id") int request_id,
-            @RequestPart("productDTO") RequestEditDTO requestEditDTO,
-            @RequestPart("files") MultipartFile[] files
-    ) throws IOException {
-        ApiResponse<Requests> apiResponse = new ApiResponse<>();
-        apiResponse.setResult(orderService.EditRequest(request_id,requestEditDTO,files));
-        return apiResponse;
-    }
+//    @PutMapping(value = "/EditRequest", consumes = MediaType.MULTIPART_FORM_DATA_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+//    public ApiResponse<?> EditRequest(
+//            @RequestParam(value="request_id") int request_id,
+//            @RequestPart("productDTO") RequestEditDTO requestEditDTO,
+//            @RequestPart("files") MultipartFile[] files
+//    ) throws IOException {
+//        ApiResponse<Requests> apiResponse = new ApiResponse<>();
+//        apiResponse.setResult(orderService.EditRequest(request_id,requestEditDTO,files));
+//        return apiResponse;
+//    }
 
 
     @GetMapping("GetAllOrder")
     public ApiResponse<?> GetAllOrder(){
         ApiResponse<List> apiResponse = new ApiResponse<>();
-        String cacheKey = GET_ALL_ORDER_CACHE_KEY;
-        List<Orders> ordersListAll;
-        String cachedData = jedis.get(cacheKey);
-        Gson gson = new GsonBuilder().setDateFormat("MMM dd, yyyy").create();
-        if (cachedData != null) {
-            Type type = new TypeToken<List<Orders>>() {
-            }.getType();
-
-            ordersListAll = gson.fromJson(cachedData, type);
-        } else {
-            ordersListAll = orderService.GetAllOrder();
-            String jsonData = gson.toJson(ordersListAll);
-            jedis.set(cacheKey, jsonData);
-            jedis.expire(cacheKey, 1200);
-        }
-        apiResponse.setResult(ordersListAll);
+        apiResponse.setResult(orderService.GetAllOrder());
+        return apiResponse;
+    }
+    @PutMapping("ManagerEditRequest")
+    public ApiResponse<?> ManagerEditRequest(@RequestParam("request_id") int request_id,@RequestBody RequestEditDTO requestEditDTO){
+        ApiResponse<Requests> apiResponse = new ApiResponse<>();
+        apiResponse.setResult(orderService.ManagerEditRequest(request_id,requestEditDTO));
         return apiResponse;
     }
     @GetMapping("FindOrderByNameorCode")
@@ -168,7 +160,6 @@ public class OrderController {
     public ApiResponse<?> AddOrder(@RequestBody RequestOrder requestOrder) {
         ApiResponse<Orders> apiResponse = new ApiResponse<>();
         apiResponse.setResult(orderService.AddOrder(requestOrder));
-        jedis.del(GET_ALL_ORDER_CACHE_KEY);
         return apiResponse;
     }
 
@@ -192,6 +183,12 @@ public class OrderController {
     public ApiResponse<?>  historyOrder() {
         ApiResponse<List> apiResponse = new ApiResponse<>();
         apiResponse.setResult(orderService.HistoryOrder());
+        return apiResponse;
+    }
+    @GetMapping("/getOrderDetailById")
+    public ApiResponse<?>  getOrderDetailById(@RequestParam("id") int id) {
+        ApiResponse<OrderDetailDTO> apiResponse = new ApiResponse<>();
+        apiResponse.setResult(orderService.getOrderDetailById(id));
         return apiResponse;
     }
 

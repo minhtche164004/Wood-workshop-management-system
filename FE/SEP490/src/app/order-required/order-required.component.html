@@ -1,8 +1,8 @@
-<app-dashboard></app-dashboard>
+<app-header></app-header>
 
 
-<div class="container" style="margin: 80px 0px 250px 220px;">
-  <div class="row justify-content-center">
+<div class="container" style="margin-top: 160px; margin-bottom: 10px; " >
+  <div class="row justify-content-center" >
     <div class="col-lg-10">
       <div class="card">
         <div class="card-body">
@@ -14,20 +14,22 @@
             </ul>
             <div class="tab-content pt-5">
               <div class="tab-pane active">
-                <form class="form" novalidate="">
+                <form [formGroup]="uploadForm" (ngSubmit)="onSubmit()" enctype="multipart/form-data">
                   <div class="row">
                     <div class="col">
                       <div class="row">
                         <div class="col-md-6 mb-3">
                           <div class="form-group">
                             <label>Họ tên khách hàng</label>
-                            <input class="form-control" type="text" name="name" placeholder="">
+                            <input class="form-control" type="text" name="name" readonly
+                              [(ngModel)]="userProfile.fullname" formControlName="fullname">
                           </div>
                         </div>
                         <div class="col-md-6 mb-3">
                           <div class="form-group">
                             <label>Số điện thoại</label>
-                            <input class="form-control" type="text" name="phone" placeholder="">
+                            <input class="form-control" type="text" name="phone" readonly
+                              [(ngModel)]="userProfile.phoneNumber" formControlName="phoneNumber">
                           </div>
                         </div>
                       </div>
@@ -35,24 +37,14 @@
                         <div class="col-md-6 mb-3">
                           <div class="form-group">
                             <label>Email</label>
-                            <input class="form-control" type="text" name="email" placeholder="">
+                            <input class="form-control" type="text" name="email" readonly
+                              [(ngModel)]="userProfile.email" formControlName="email">
                           </div>
                         </div>
                         <div class="col-md-6 mb-3">
-                          <div class="form-group">
-                            <div class="input-with-icon">
-                              <label>Ảnh mẫu sản phẩm</label>
-                              <div style="position: relative;">
-                                <input class="form-control" type="text" name="sampleImage" placeholder="">
-                                <label for="uploadInput" class="icon" style="position: absolute; top: 12px; right: 0;">
-                                  <i class="fa fa-upload"></i>
-                                </label>
-                                <input id="uploadInput" type="file"
-                                  style="position: absolute; top: 0; right: 0; opacity: 0; height: 100%;"
-                                  (change)="onFileSelected($event)">
-                              </div>
-                            </div>
-                          </div>
+                          <label style="font-size: 16px;" for="thumbnailImage">Ảnh Sản Phẩm</label>
+                          <input type="file" class="form-control-file" id="thumbnailImage" multiple
+                            (change)="onImagesSelected($event)">
                         </div>
                       </div>
                       <div class="row mb-3">
@@ -61,29 +53,28 @@
                           <div class="row">
                             <div class="col-md-4 mb-3">
                               <div class="form-group">
-                                <select class="form-control" [formControl]="provinceControl" required>
+                                <select class="form-control" formControlName="city_province"
+                                  [(ngModel)]="userProfile.city" [formControl]="provinceControl" required>
                                   <option [ngValue]="null" disabled selected>Tỉnh / Thành Phố</option>
-
                                   <option *ngFor="let province of provinces" [ngValue]="province.name">{{ province.name
                                     }}</option>
-
                                 </select>
                               </div>
                             </div>
                             <div class="col-md-4 mb-3">
                               <div class="form-group">
-                                <select class="form-control" [formControl]="districtControl" required>
+                                <select class="form-control" formControlName="district_province"
+                                  [(ngModel)]="userProfile.district" [formControl]="districtControl" required>
                                   <option [ngValue]="null" disabled selected>Quận / Huyện</option>
-
                                   <option *ngFor="let district of districts" [ngValue]="district.name">{{ district.name
                                     }}</option>
-
                                 </select>
                               </div>
                             </div>
                             <div class="col-md-4 mb-3">
                               <div class="form-group">
-                                <select class="form-control" [formControl]="wardControl" required>
+                                <select class="form-control" formControlName="wards_province"
+                                  [(ngModel)]="userProfile.wards" [formControl]="wardControl" required>
                                   <option [ngValue]="null" disabled selected>Phường / Xã</option>
 
                                   <option *ngFor="let ward of wards" [ngValue]="ward.name">{{ ward.name }}</option>
@@ -97,22 +88,33 @@
                         <div class="col">
                           <div class="form-group">
                             <label>Địa chỉ cụ thể</label>
-                            <input class="form-control" type="text" placeholder="">
+                            <input class="form-control" type="text"  [(ngModel)]="userProfile.address"
+                              formControlName="address">
+                          </div>
+                        </div>
+                      </div>
+                      
+                      <div class="row mb-3">
+                        <div class="col">
+                          <div class="form-group">
+                            <label>Mô tả đơn hàng</label>
+                            <textarea class="form-control" formControlName="description" rows="5"
+                              placeholder=""></textarea>
                           </div>
                         </div>
                       </div>
                       <div class="row mb-3">
                         <div class="col">
                           <div class="form-group">
-                            <label>Mô tả đơn hàng</label>
-                            <textarea class="form-control" rows="5" placeholder=""></textarea>
+                            <label>Lí do từ chối</label>
+                            <input class="form-control" type="text" placeholder="" formControlName="response">
                           </div>
                         </div>
                       </div>
-                      <div class="row">
+                      <div class="row" style="margin-bottom: 10px;">
                         <div class="col d-flex justify-content-center">
-                          <button class="btn btn-primary btn-lg mx-5" type="submit">Gửi</button>
-                          <button class="btn btn-mau-do btn-lg mx-5" type="button">Hủy Bỏ</button>
+                          <button class="btn btn-primary btn-lg mx-5" type="submit">Chấp nhận</button>
+                          <button class="btn btn-mau-do btn-lg mx-5" (click)="onCancel()" type="button">Hủy Bỏ</button>
                         </div>
                       </div>
                     </div>
@@ -126,3 +128,4 @@
     </div>
   </div>
 </div>
+<app-footer></app-footer>

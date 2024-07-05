@@ -3,7 +3,6 @@ import { BrowserModule } from '@angular/platform-browser';
 import { FormsModule } from '@angular/forms';
 import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
 import { ROUTES, RouterModule } from '@angular/router';
-
 import { AppRoutingModule } from './app-routing.module'; // Import AppRoutingModule
 import { ToastrModule, provideToastr } from 'ngx-toastr';
 import { AppComponent } from './app.component';
@@ -18,27 +17,20 @@ import { UserManagementComponent } from './Admin/user-management/user-management
 import { DashboardComponent } from './Layout/dashboard/dashboard.component';
 import { PaymentSalaryComponent } from './payment-salary/payment-salary.component';
 import { VerifyMailComponent } from './forgotPassword/verify-mail/verify-mail.component';
-
 import { VerifyOtpMailComponent } from './forgotPassword/verify-otp-mail/verify-otp-mail.component';
 import { ApiProvinceComponent } from './api-province/api-province.component';
 import { ReactiveFormsModule } from '@angular/forms';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ProductListComponent } from './product-list/product-list.component';
-
 import { ProductManagementComponent } from './Admin/product-management/product-management.component';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { ConfirmPopupModule } from 'primeng/confirmpopup';
 import { NgxPaginationModule } from 'ngx-pagination';
-
 import { SupplierManagementComponent } from 'src/app/supplier-management/supplier-management.component';
-
 import { ViewProfileComponent } from './features/view-profile/view-profile.component';
 import { FileUploadComponent } from './file-upload/file-upload.component';
-
 import { SubMaterialManagementComponent } from './Admin/sub-material-management/sub-material-management.component';
-
 import { ProductDetailComponent } from './features/product-detail/product-detail.component';
-
 import { OrderRequiredComponent } from './order-required/order-required.component';
 import { CreateOrderComponent } from './create-order/create-order.component';
 import { TestUploadComponent } from './test-upload/test-upload.component';
@@ -47,15 +39,10 @@ import { OrderDetailComponent } from './Admin/order-detail/order-detail.componen
 import { ProcessProductManagementComponent } from './Admin/process-product-management/process-product-management.component';
 import { OrderRequestComponentComponent } from './Admin/order-request-component/order-request-component.component';
 import { OrderRqDetailComponent } from './Admin/order-rq-detail/order-rq-detail.component';
-
 import { OrderManagementComponent } from './Admin/order-management/order-management.component';
-
 import { JobManagementComponent } from './Admin/job-management/job-management.component';
-
-
 import { ForgotPassComponent } from './forgotPassword/forgot-pass/forgot-pass.component';
 import { ChangePasswordComponent } from './features/change-password/change-password.component';
-
 import { AboutUsComponent } from './about-us/about-us.component';
 import { ContactComponent } from './contact/contact.component';
 import { EmployeeJobComponent } from './employee-job/employee-job.component';
@@ -67,12 +54,15 @@ import { AdvancedBillManagementComponent } from './Admin/advanced-bill-managemen
 import { FeedbackDefectiveComponent } from './Admin/feedback-defective/feedback-defective.component';
 import { TotalSalaryComponent } from './Admin/total-salary/total-salary.component';
 
+
+import { AutoCompleteComponent } from './auto-complete/auto-complete.component';
+import {AutocompleteLibModule} from 'angular-ng-autocomplete';
+
+
+
 import { WishlistComponent } from './features/wishlist/wishlist.component';
-
-
-
-
-
+import { TemplateComponent } from './features/template/template.component';
+import { HistoryOrderComponent } from './Admin/history-order/history-order.component';
 
 
 
@@ -104,41 +94,32 @@ import { WishlistComponent } from './features/wishlist/wishlist.component';
     ViewProfileComponent,
     SubMaterialManagementComponent,
     SupplierManagementComponent,
-
     ProductDetailComponent,
     CreateOrderComponent,
-
     TestUploadComponent,
     OrderDetailManagementComponent,
     OrderDetailComponent,
     ProcessProductManagementComponent,
     OrderRequestComponentComponent,
     OrderRqDetailComponent,
-
     OrderManagementComponent,
     ChangePasswordComponent,
     JobManagementComponent,
-
-
     ForgotPassComponent,
-
     AboutUsComponent,
     ContactComponent,
     EmployeeJobComponent,
     SubSubmaterialProductComponent,
-
     BillComponent,
     MaterialManagementComponent,
     ReportManagementComponent,
     AdvancedBillManagementComponent,
     FeedbackDefectiveComponent,
     TotalSalaryComponent,
-
     WishlistComponent,
-
-    
-
-  
+    AutoCompleteComponent,
+    TemplateComponent,
+    HistoryOrderComponent,
 
   ],
   imports: [
@@ -153,7 +134,7 @@ import { WishlistComponent } from './features/wishlist/wishlist.component';
     ToastrModule.forRoot(),
     ConfirmDialogModule,
     ConfirmPopupModule,
-  
+    AutocompleteLibModule
   ],
   
   providers: [

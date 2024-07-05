@@ -3,6 +3,8 @@ package com.example.demo.Service.Impl;
 import com.example.demo.Dto.JobDTO.JobDTO;
 import com.example.demo.Dto.JobDTO.JobDoneDTO;
 import com.example.demo.Dto.OrderDTO.JobProductDTO;
+import com.example.demo.Dto.ProductDTO.ProductErrorAllDTO;
+import com.example.demo.Dto.ProductDTO.ProductErrorDTO;
 import com.example.demo.Entity.*;
 import com.example.demo.Exception.AppException;
 import com.example.demo.Exception.ErrorCode;
@@ -37,6 +39,8 @@ public class JobServiceImpl implements JobService {
     private Status_Job_Repository statusJobRepository;
     @Autowired
     private EntityManager entityManager;
+    @Autowired
+    private ProcessproducterrorRepository processproducterrorRepository;
 
 
     @Override
@@ -162,7 +166,8 @@ public class JobServiceImpl implements JobService {
                 productRepository.save(products);
                 jobs_log.setRequestProducts(null);
             }
-            jobs_log.setStatus(statusJobRepository.findById(13)); //khi da nghiem thu o cong doan cuoi la son thi` se chuyen status sang trang thai da hoan` thanh
+            jobs_log.setStatus(statusJobRepository.findById(13));
+            waitNextJob.setJob_log(true);//khi da nghiem thu o cong doan cuoi la son thi` se chuyen status sang trang thai da hoan` thanh
         }
         else{
 
@@ -237,6 +242,54 @@ public class JobServiceImpl implements JobService {
             throw new AppException(ErrorCode.NOT_FOUND);
         }
         return jobsList;
+    }
+
+    @Override
+    public List<Status_Job> getAllStatusJob() {
+        return statusJobRepository.getAllStatus();
+    }
+
+    @Override
+    public Processproducterror AddProductError(int job_id, ProductErrorDTO productErrorDTO) {
+        Processproducterror processproducterror = new Processproducterror();
+        Jobs jobs = jobRepository.getJobById(job_id);
+        processproducterror.setJob(jobs);
+        processproducterror.setCode(jobs.getCode());
+        processproducterror.setIsFixed(false);
+
+        processproducterror.setDescription(productErrorDTO.getDescription());
+        processproducterror.setSolution(productErrorDTO.getSolution());
+
+        Products product = jobs.getProduct(); // Lấy đối tượng Product
+        if (product == null ) { // Kiểm tra product có null không
+            processproducterror.setProduct(null);
+            processproducterror.setRequestProducts(jobs.getRequestProducts());
+        } else {
+            processproducterror.setRequestProducts(null);
+            processproducterror.setProduct(product); // Gán trực tiếp product
+        }
+
+        processproducterrorRepository.save(processproducterror);
+        return processproducterror;
+    }
+
+    @Override
+    public List<ProductErrorAllDTO> getAllProductError() {
+        List<ProductErrorAllDTO> list = jobRepository.getAllProductError();
+        if(list == null ){
+            throw new AppException(ErrorCode.NOT_FOUND);
+        }
+        return list;
+    }
+
+    @Override
+    public ProductErrorAllDTO getProductErrorDetailById(int query) {
+        ProductErrorAllDTO productErrorAllDTO = jobRepository.getProductErrorDetailById(query);
+        if(productErrorAllDTO == null ){
+            throw new AppException(ErrorCode.NOT_FOUND);
+        }
+
+        return productErrorAllDTO;
     }
 
 }

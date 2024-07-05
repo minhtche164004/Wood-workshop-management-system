@@ -3,7 +3,11 @@ package com.example.demo.Service;
 import com.example.demo.Dto.JobDTO.JobDTO;
 import com.example.demo.Dto.JobDTO.JobDoneDTO;
 import com.example.demo.Dto.OrderDTO.JobProductDTO;
+import com.example.demo.Dto.ProductDTO.ProductErrorAllDTO;
+import com.example.demo.Dto.ProductDTO.ProductErrorDTO;
 import com.example.demo.Entity.Jobs;
+import com.example.demo.Entity.Processproducterror;
+import com.example.demo.Entity.Status_Job;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -31,4 +35,10 @@ public interface JobService {
 
     List<Jobs> getJobWasDone();
     List<JobDoneDTO> filterJobWasDoneByEmployeeName(String keyword);
+    List<Status_Job> getAllStatusJob();
+
+
+    Processproducterror AddProductError(int job_id,ProductErrorDTO productErrorDTO);
+    List<ProductErrorAllDTO> getAllProductError();
+    ProductErrorAllDTO getProductErrorDetailById(int query);
 }

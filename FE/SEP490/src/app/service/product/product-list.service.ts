@@ -32,14 +32,21 @@ export class ProductListService {
 
   private apiUrl_UpdateProduct = `${environment.apiUrl}api/auth/product/AddNewProduct`;
 
-  private apiUrl_GetAllStatus = `${environment.apiUrl}api/auth/admin/GetStatusUser`;
+  private apiUrl_GetAllStatus = `${environment.apiUrl}api/auth/admin/GetAllStatusUser`;
+
+
+   
+
+
+  
+  private apiUrl_AddProductRequired = `${environment.apiUrl}api/auth/order/AddNewRequest`;
   
 
   constructor(private http: HttpClient) { }
   uploadProduct(productData: any, thumbnail: File, images: File[]): Observable<any> {
     const formData = new FormData();
     formData.append('productDTO', new Blob([JSON.stringify(productData)], { type: 'application/json' }));
-    formData.append('file_thumbnail', thumbnail, thumbnail.name);
+    formData.append('files', thumbnail, thumbnail.name);
     images.forEach(image => {
       formData.append('files', image, image.name);
     });
@@ -50,6 +57,32 @@ export class ProductListService {
       }
     });
   }
+
+  uploadProductRequired(productRequiredData: any, images: File[]): Observable<any> {
+    const formData = new FormData();
+
+    formData.append('requestDTO', new Blob([JSON.stringify(productRequiredData)], { type: 'application/json' }));
+    images.forEach(image => {
+      formData.append('files', image, image.name);
+    });
+    const token = localStorage.getItem('loginToken');
+  
+    if (!token) {
+      return throwError(new Error('Login token not found in localStorage.'));
+    }
+  
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${token}`,
+      'Accept': 'application/json'
+    });
+  
+    console.log("Authorization header:", headers.get('Authorization'));
+  
+    return this.http.post(this.apiUrl_AddProductRequired, formData, { headers }).pipe(
+      catchError(this.handleError)
+    );
+  }
+  
 
 
   getMultiFilterProductForCustomer(search?: string, categoryId?: number, minPrice?: number, maxPrice?: number, sortDirection?: number): Observable<any> {

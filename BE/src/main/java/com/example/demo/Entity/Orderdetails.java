@@ -7,6 +7,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
+import java.util.List;
 import java.util.Objects;
 @Data
 @NoArgsConstructor
@@ -40,6 +41,11 @@ public class Orderdetails {
     @JsonIgnore
     @JoinColumn(name = "request_product_id", referencedColumnName = "request_product_id")
     private RequestProducts requestProduct; // Assuming you have a RequestProducts entity
+
+
+    @OneToMany(mappedBy = "orderdetails")
+    @JsonIgnore // Tùy chọn: bỏ qua trường này khi serialize thành JSON
+    private List<Jobs> jobs;  // Một chi tiết đơn hàng có thể có nhiều công việc
 
 
 }

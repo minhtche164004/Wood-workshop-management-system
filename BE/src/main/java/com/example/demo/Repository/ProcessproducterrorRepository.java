@@ -13,4 +13,7 @@ public interface ProcessproducterrorRepository extends JpaRepository<Processprod
 
     @Query("SELECT u FROM Processproducterror u WHERE u.product.productId = :query")
     List<Processproducterror> getProcessproducterrorByProductId(int query);
+
+    @Query("SELECT u FROM Processproducterror u WHERE u.processProductErrorId = :query")
+    Processproducterror FindByIdProductErrorId(int query);
 }

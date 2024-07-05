@@ -15,17 +15,27 @@ export class JobService {
   private apiGetPosition3 = `${environment.apiUrl}api/auth/job/findUsersWithPositionAndLessThan3Jobs`
   private apiGetPosition2 = `${environment.apiUrl}api/auth/job/findUsersWithPosition2AndLessThan3Jobs`
   private apiGetPosition1 = `${environment.apiUrl}api/auth/job/findUsersWithPosition1AndLessThan3Jobs`
-  private apiGetStatusByType =`${environment.apiUrl}api/auth/job/getListStatusJobByType`
- 
+  private apiGetStatusJob =`${environment.apiUrl}api/auth/job/getAllStatusJob`
+  private apiGetStatusJobByType = `${environment.apiUrl}api/auth/job/getAllStatusType`
+  private apiCreateProductForjob = `${environment.apiUrl}api/auth/job/CreateJobs`
     // user_id={{$random.integer(100)}}&
     // p_id={{$random.integer(100)}}&
     // status_id={{$random.integer(100)}}`
 
   constructor(private http: HttpClient) { }
-
-  getStatusByType(type: number): Observable<any> {
-    console.log(this.apiGetStatusByType)
-    return this.http.get<any>(`${this.apiGetStatusByType}?type=${type}`).pipe(
+  addJob(user_id: number, p_id: number, status_id: number, job_id: number, jobData: any): Observable<any> {
+    const url = `${this.apiCreateProductForjob}?user_id=${user_id}&p_id=${p_id}&status_id=${status_id}&job_id=${job_id}`;
+    return this.http.post<any>(url, jobData);
+  }
+  getStatusJobByType(type: number): Observable<any> {
+    console.log(this.apiGetStatusJobByType)
+    return this.http.get<any>(`${this.apiGetStatusJobByType}?type=${type}`).pipe(
+      catchError(this.handleError)
+    );
+  }
+  getStatusByType(): Observable<any> {
+    console.log(this.apiGetStatusJob)
+    return this.http.get<any>(this.apiGetStatusJob).pipe(
       catchError(this.handleError)
     );
   }
@@ -63,13 +73,6 @@ export class JobService {
     console.log(this.apiGetListProduct)
     return this.http.get<any>(`${this.apiSearchProductJob}?key=${key}`);
   
-  }
-
-  addJob(user_id: number, p_id: number, status_id: number, job_id: number, jobData: any): Observable<any> {
-    const url = `${this.apiAddJob}?user_id=${user_id}&p_id=${p_id}&status_id=${status_id}&job_id=${job_id}`;
-    return this.http.post<any>(url, jobData).pipe(
-      catchError(this.handleError)
-    );
   }
   
   private handleError(error: any) {

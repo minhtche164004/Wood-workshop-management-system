@@ -29,7 +29,7 @@
               <div class="input-group mb-3">
                 <!-- product.component.html -->
                 <select>
-                  <option value="null" disabled selected>Kiểu việc làm</option>
+                  <option value="null" disabled selected>Tình Trạng Đơn Hàng</option>
                   <option></option>
                 </select>
 
@@ -85,11 +85,7 @@
         <pagination-controls style="justify-content: right; display: flex;" (pageChange)="currentPage = $event"
           previousLabel="Trang trước" nextLabel="Trang sau">
         </pagination-controls>
-        <div  class="clearfix" style="justify-content: right; display: flex; margin-top: 400px;">
-          <div class="hint-text">Hiển thị <b>{{ (currentPage - 1) * 10 + 1 }}</b> tới <b>{{ currentPage * 10
-              > history_order.length ? history_order.length : currentPage * 10 }}</b> trong tổng <b>{{
-              history_order.length }}</b> dữ liệu</div>
-        </div>
+       
 
 
       </div>

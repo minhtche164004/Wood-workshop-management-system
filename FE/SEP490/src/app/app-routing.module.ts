@@ -49,6 +49,7 @@ import { FeedbackDefectiveComponent } from './Admin/feedback-defective/feedback-
 import { TotalSalaryComponent } from './Admin/total-salary/total-salary.component';
 import { AutoCompleteComponent } from './auto-complete/auto-complete.component';
 import { HistoryOrderComponent } from './Admin/history-order/history-order.component';
+import { ListRequestProductComponent } from './features/list-request-product/list-request-product.component';
 
 
 
@@ -101,6 +102,7 @@ const routes: Routes = [
   { path: 'total_salary', component: TotalSalaryComponent },
   { path: 'autoComplete', component: AutoCompleteComponent },
   { path: 'history_order', component: HistoryOrderComponent },
+  { path: 'request_product', component: ListRequestProductComponent },
 
   { path: '', redirectTo: '/homepage', pathMatch: 'full' },
   { path: '**', redirectTo: '/homepage', pathMatch: 'full' },

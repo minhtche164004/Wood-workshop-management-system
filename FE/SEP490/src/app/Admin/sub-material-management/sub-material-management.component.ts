@@ -5,6 +5,8 @@ import { ToastrService } from 'ngx-toastr';
 import { MaterialService } from 'src/app/service/material.service';
 import { FormControl } from '@angular/forms';
 import { SubMaterialService } from 'src/app/service/sub-material.service';
+import { AuthenListService } from 'src/app/service/authen.service';
+
 
 interface SubMaterial {
   sub_material_name: string,
@@ -27,16 +29,17 @@ export class SubMaterialManagementComponent implements OnInit {
   categories: any[] = [];
 
   sub_material_name: string ='';
-  
+  SubMaterData: any = {};
   description: string = '';
   quantity: number = 0;
   unit_price: number = 0;
   constructor(
     private subMaterialService: SubMaterialService,
     private materialService: MaterialService,
-    private toastr: ToastrService
+    private toastr: ToastrService,
+    private authenListService: AuthenListService
   ) { }
-
+ 
   ngOnInit() {
     this.getAllMaterials();
     this.getAllSubMaterials();
@@ -127,5 +130,16 @@ export class SubMaterialManagementComponent implements OnInit {
       }
     );
   }
+  getDatasupplierMaterial(id: string): void {
+    this.authenListService.getSupplierById(id).subscribe(
+      (data) => {
+        this.SubMaterData = data.result;
+        // this.selectedRole = this.role.find(role => role.roleName === this.userData.role_name)?.roleId;
+      },
+      (error) => {
+        console.error('Error fetching user data:', error);
+      }
+    );
 
+  }
 }

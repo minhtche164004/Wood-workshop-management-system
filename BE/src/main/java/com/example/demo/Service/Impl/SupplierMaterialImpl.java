@@ -84,7 +84,7 @@ suppliermaterialRepository.save(suppliermaterial);
         SubMaterials subMaterials = subMaterialsRepository.findById1(supplierMaterialDTO.getSub_material_id());
         suppliermaterial.setSubMaterial(subMaterials);
         suppliermaterialRepository.save(suppliermaterial);
-        entityManager.refresh(suppliermaterial);
+//        entityManager.refresh(suppliermaterial);
         return suppliermaterial;
     }
 

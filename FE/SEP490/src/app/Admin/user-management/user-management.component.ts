@@ -93,6 +93,7 @@ export class UserManagementComponent implements OnInit {
       this.closeButton.nativeElement.click();
     }
   }
+  searchKey: string = '';
   addAccountForm: FormGroup;
   editUserForm: FormGroup;
   provinces: Province[] = [];
@@ -353,7 +354,6 @@ export class UserManagementComponent implements OnInit {
         this.selectedStatus = this.status.find(sa => sa.status_name === this.userData.status_name)?.status_id;
         this.selectBankName = this.userData.bank_name;
 
-
       },
       (error) => {
         console.error('Error fetching user data:', error);
@@ -372,7 +372,7 @@ export class UserManagementComponent implements OnInit {
     } else {
       this.isPositionEnabled = true;
     }
-  }
+  } 
   onRoleChangeUpdate() {
     if (this.selectedRole === 4) {
       this.isPositionEnabled_Update = true;
@@ -459,23 +459,23 @@ export class UserManagementComponent implements OnInit {
       return false;
     }
 
-    const positionValue = this.addAccountForm.controls['position'].value;
-    if (!positionValue || positionValue.toString().trim() === "") {
-      this.toastr.error('Không được bỏ trống trường Vai Trò');
-      return false;
-    }
+    // const positionValue = this.addAccountForm.controls['position'].value;
+    // if (!positionValue || positionValue.toString().trim() === "") {
+    //   this.toastr.error('Không được bỏ trống trường Vai Trò');
+    //   return false;
+    // }
 
-    const roleValue = this.addAccountForm.controls['role'].value;
-    if (!roleValue || roleValue.toString().trim() === "") {
-      this.toastr.error('Không được bỏ trống trường Vị Trí');
-      return false;
-    }
+    // const roleValue = this.addAccountForm.controls['role'].value;
+    // if (!roleValue || roleValue.toString().trim() === "") {
+    //   this.toastr.error('Không được bỏ trống trường Vị Trí');
+    //   return false;
+    // }
 
-    const BankNameValue = this.addAccountForm.controls['bank_name'].value;
-    if (!BankNameValue || BankNameValue.toString().trim() === "") {
-      this.toastr.error('Không được bỏ trống trường Tên Ngân Hàng');
-      return false;
-    }
+    // const BankNameValue = this.addAccountForm.controls['bank_name'].value;
+    // if (!BankNameValue || BankNameValue.toString().trim() === "") {
+    //   this.toastr.error('Không được bỏ trống trường Tên Ngân Hàng');
+    //   return false;
+    // }
 
     const CityValue = this.addAccountForm.controls['city'].value;
     if (!CityValue || CityValue.toString().trim() === "") {
@@ -542,23 +542,23 @@ export class UserManagementComponent implements OnInit {
       return false;
     }
 
-    const positionValue = this.editUserForm.controls['position_id'].value;
-    if (!positionValue || positionValue.toString().trim() === "") {
-      this.toastr.error('Không được bỏ trống trường Vai Trò');
-      return false;
-    }
+    // const positionValue = this.editUserForm.controls['position_id'].value;
+    // if (!positionValue || positionValue.toString().trim() === "") {
+    //   this.toastr.error('Không được bỏ trống trường Vai Trò');
+    //   return false;
+    // }
 
-    const roleValue = this.editUserForm.controls['role_id'].value;
-    if (!roleValue || roleValue.toString().trim() === "") {
-      this.toastr.error('Không được bỏ trống trường Vị Trí');
-      return false;
-    }
+    // const roleValue = this.editUserForm.controls['role_id'].value;
+    // if (!roleValue || roleValue.toString().trim() === "") {
+    //   this.toastr.error('Không được bỏ trống trường Vị Trí');
+    //   return false;
+    // }
 
-    const BankNameValue = this.editUserForm.controls['bank_name'].value;
-    if (!BankNameValue || BankNameValue.toString().trim() === "") {
-      this.toastr.error('Không được bỏ trống trường Tên Ngân Hàng');
-      return false;
-    }
+    // const BankNameValue = this.editUserForm.controls['bank_name'].value;
+    // if (!BankNameValue || BankNameValue.toString().trim() === "") {
+    //   this.toastr.error('Không được bỏ trống trường Tên Ngân Hàng');
+    //   return false;
+    // }
 
     const CityValue = this.editUserForm.controls['city_province'].value;
     if (!CityValue || CityValue.toString().trim() === "") {
@@ -624,7 +624,7 @@ export class UserManagementComponent implements OnInit {
     );
   }
   EditUser(): void {
-    if (!this.validateEditUser()) {
+    if (!this.validateEditUser()) { 
       return;
     }
     const editUserRequest: EditUserRequest = this.editUserForm.value;
@@ -640,9 +640,37 @@ export class UserManagementComponent implements OnInit {
         }, 2000); // Delay 1 second before reload
       },
       (error: any) => {
-        console.error('User update failed', error);
-        this.toastr.error('User update failed. Please try again.');
+        
+        // if ( error.error.code === 1033) {
+        //   this.toastr.error('Không thể thay đổi quyền của nhân viên này vì họ đang đảm nhận công việc ở vị trí của họ',);
+        // }
+       
       }
     );
   }
+  
+  SearchUserByNameorAddress(): void {
+    console.log("Thực hiện tìm kiếm sản phẩm: ", this.searchKey);
+
+    if (this.searchKey.trim() !== "") {
+      this.authenListService.findSearchUserByNameorAddress(this.searchKey)
+        .subscribe(
+          (data) => {
+            if (data.code === 1000) {
+              this.user = data.result;
+              console.log('Tìm kiếm thành công:', this.user);
+              this.toastr.success('Tìm kiếm sản phẩm thành công!', 'Thành công');
+            } else if (data.code === 1015) {
+              this.user = [];
+              console.error('Tìm kiếm không thành công:', data);
+              this.toastr.error('Không tìm thấy sản phẩm!', 'Tìm kiếm thất bại');
+            } 
+          }
+        );
+    } else{
+      
+      this.loadAllUsers();
+    }
+  }
+
 }

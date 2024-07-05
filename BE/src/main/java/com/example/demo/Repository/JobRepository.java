@@ -38,6 +38,9 @@ public interface JobRepository extends JpaRepository<Jobs,Integer> {
             "(SELECT COUNT( j.jobId) FROM Jobs j WHERE j.user.userId = u.userId) < 3")
     List<User> findUsersWithPositionAndLessThan3Jobs(@Param("type") int type);
 
+    @Query(value = "SELECT COUNT(*) FROM jobs j WHERE j.user_id = :userId", nativeQuery = true)
+    int countJobsByUserId(@Param("userId") int userId);
+
     @Query(value = "SELECT p.* FROM jobs p WHERE p.code LIKE :prefix% ORDER BY p.code DESC LIMIT 1", nativeQuery = true)
     Jobs findJobsTop(@Param("prefix") String prefix);
 
@@ -84,7 +87,7 @@ public interface JobRepository extends JpaRepository<Jobs,Integer> {
     List<JobProductDTO> getRequestProductInOrderDetailByCode(@Param("query") String query);
 
     @Query("SELECT new com.example.demo.Dto.OrderDTO.JobProductDTO(" +
-            "j.jobId,o.code, p.requestProductId, p.requestProductName, p.description, p.price, j.status, od.quantity, " +
+            "j.jobId,o.code,COALESCE(p.requestProductId, 0) , COALESCE(p.requestProductName, ''), COALESCE(p.description, ''), COALESCE(p.price, 0),COALESCE(j.status, '') ,COALESCE(od.quantity, 0) , " +
             "COALESCE(u.userId, 0), COALESCE(u.username, ''), COALESCE(pos.position_id, 0), COALESCE(pos.position_name, '')) " + // Sử dụng COALESCE
             "FROM Jobs j " +
             "LEFT JOIN j.orderdetails od " +
@@ -98,8 +101,10 @@ public interface JobRepository extends JpaRepository<Jobs,Integer> {
 
 
 
-    @Query("SELECT new com.example.demo.Dto.OrderDTO.JobProductDTO(j.jobId,null, p.productId, p.productName, p.description, p.price, j.status, j.quantityProduct," +
-            " u.userId, u.username, pos.position_id, pos.position_name) " +
+
+
+    @Query("SELECT new com.example.demo.Dto.OrderDTO.JobProductDTO(j.jobId,null, COALESCE(p.productId, 0) ,COALESCE(p.productName, '') ,  COALESCE(p.description, ''),COALESCE(p.price, 0) , j.status,COALESCE(j.quantityProduct, 0) ," +
+            "COALESCE(u.userId, 0), COALESCE(u.username, ''), COALESCE(pos.position_id, 0), COALESCE(pos.position_name, '')) " +
             "FROM Jobs j " +
             "LEFT JOIN j.product p " +
             "LEFT JOIN j.user u " +
@@ -107,7 +112,7 @@ public interface JobRepository extends JpaRepository<Jobs,Integer> {
             "WHERE p.productId IS NOT NULL AND j.job_log = false")
     List<JobProductDTO> getListProductJob();
 
-    @Query("SELECT new com.example.demo.Dto.OrderDTO.JobProductDTO(j.jobId,null, p.productId, p.productName, p.description, p.price, j.status, j.quantityProduct, " +
+    @Query("SELECT new com.example.demo.Dto.OrderDTO.JobProductDTO(j.jobId,null, COALESCE(p.productId, 0),COALESCE(p.productName, '') ,COALESCE(p.description, '') ,COALESCE(p.price, 0), j.status, COALESCE(j.quantityProduct, '') , " +
             "COALESCE(u.userId, 0), COALESCE(u.username, ''), COALESCE(pos.position_id, 0), COALESCE(pos.position_name, '')) " +  // Sử dụng COALESCE
             "FROM Jobs j " +
             "JOIN j.product p " +
@@ -117,9 +122,8 @@ public interface JobRepository extends JpaRepository<Jobs,Integer> {
     List<JobProductDTO> getListProductJobByNameOrCodeProduct(@Param("keyword") String keyword);
 
 
-
     @Query("SELECT new com.example.demo.Dto.JobDTO.JobDoneDTO(" +
-            "j.jobId, j.job_name, u.userId, u.username, p.position_id, p.position_name, s.status_id, s.status_name, j.cost, " +
+            "j.jobId, j.job_name, u.userId, u.username,COALESCE(p.position_id, 0) ,COALESCE(p.position_name, '') , s.status_id, s.status_name, j.cost, " +
             "COALESCE(pr.productId, 0), COALESCE(pr.productName, ''), COALESCE(rp.requestProductId, 0), COALESCE(rp.requestProductName, ''), j.quantityProduct)" + // Sử dụng COALESCE
             " FROM Jobs j" +
             " JOIN j.user u" +
@@ -146,7 +150,7 @@ public interface JobRepository extends JpaRepository<Jobs,Integer> {
 
 
     @Query("SELECT new com.example.demo.Dto.ProductDTO.ProductErrorAllDTO(" +
-            "p.processProductErrorId,j.code,p.description,p.isFixed,p.solution,j.job_name,j.jobId, " +
+            "p.processProductErrorId,COALESCE(j.code, 0), COALESCE(p.description, ''),p.isFixed,COALESCE(p.solution, ''),j.job_name,j.jobId, " +
             "COALESCE(pr.productId, 0), COALESCE(pr.productName, ''), COALESCE(rq.requestProductId, 0), COALESCE(rq.requestProductName, ''))" + // Sử dụng COALESCE
             " FROM Processproducterror p " +
             " LEFT JOIN p.job j" +

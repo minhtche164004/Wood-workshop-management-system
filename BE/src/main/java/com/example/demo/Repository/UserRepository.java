@@ -71,7 +71,6 @@ public interface UserRepository extends JpaRepository<User,Integer> {
 //    List<User> findByUsernameOrAddress(@Param("keyword") String keyword);
 
     @Query("SELECT u FROM User u JOIN u.userInfor ui WHERE u.username LIKE CONCAT('%', :keyword, '%') OR " +
-            "ui.address LIKE CONCAT('%', :keyword, '%') OR " +
             "ui.wards LIKE CONCAT('%', :keyword, '%') OR " +
             "ui.district LIKE CONCAT('%', :keyword, '%') OR " +
             "ui.city_province LIKE CONCAT('%', :keyword, '%')")

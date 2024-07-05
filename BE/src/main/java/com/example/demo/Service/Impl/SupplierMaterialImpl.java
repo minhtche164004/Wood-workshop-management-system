@@ -3,10 +3,7 @@ package com.example.demo.Service.Impl;
 import com.example.demo.Dto.SubMaterialDTO.SubMaterialNameDTO;
 import com.example.demo.Dto.SupplierDTO.SupplierMaterialDTO;
 import com.example.demo.Dto.SupplierDTO.SupplierNameDTO;
-import com.example.demo.Entity.ProductSubMaterials;
-import com.example.demo.Entity.RequestProductsSubmaterials;
-import com.example.demo.Entity.SubMaterials;
-import com.example.demo.Entity.Suppliermaterial;
+import com.example.demo.Entity.*;
 import com.example.demo.Exception.AppException;
 import com.example.demo.Exception.ErrorCode;
 import com.example.demo.Repository.ProductSubMaterialsRepository;
@@ -87,7 +84,7 @@ suppliermaterialRepository.save(suppliermaterial);
         SubMaterials subMaterials = subMaterialsRepository.findById1(supplierMaterialDTO.getSub_material_id());
         suppliermaterial.setSubMaterial(subMaterials);
         suppliermaterialRepository.save(suppliermaterial);
-        entityManager.refresh(suppliermaterial);
+//        entityManager.refresh(suppliermaterial);
         return suppliermaterial;
     }
 
@@ -122,9 +119,14 @@ suppliermaterialRepository.save(suppliermaterial);
         }
     }
 
-
-
-
+    @Override
+    public Suppliermaterial GetSuppliermaterialById(int id) {
+        Suppliermaterial suppliermaterial = suppliermaterialRepository.findById(id);
+        if(suppliermaterial == null ){
+            throw new AppException(ErrorCode.NOT_FOUND);
+        }
+        return suppliermaterial;
+    }
 
 
 }

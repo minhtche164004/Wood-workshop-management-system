@@ -19,10 +19,18 @@ import java.util.List;
 public class SupplierMaterialController {
     @Autowired
     private SupplierMaterialService supplierMaterialService;
+    @Autowired
+    private SuppliermaterialRepository suppliermaterialRepository;
     @GetMapping("/GetAllSupplier")
     public ApiResponse<?> getAllSupplier(){
         ApiResponse<List> apiResponse= new ApiResponse<>();
         apiResponse.setResult(supplierMaterialService.GetAllSupplier());
+        return  apiResponse;
+    }
+    @GetMapping("/GetSupplierById")
+    public ApiResponse<?> GetSupplierById(@RequestParam("id") int id){
+        ApiResponse<Suppliermaterial> apiResponse= new ApiResponse<>();
+        apiResponse.setResult(supplierMaterialService.GetSuppliermaterialById(id));
         return  apiResponse;
     }
     @PostMapping("/AddNewSupplier")

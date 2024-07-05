@@ -2,6 +2,8 @@ package com.example.demo.Controllers.Material;
 
 import com.example.demo.Dto.MaterialDTO.MaterialDTO;
 import com.example.demo.Entity.Materials;
+import com.example.demo.Entity.Suppliermaterial;
+import com.example.demo.Repository.MaterialRepository;
 import com.example.demo.Response.ApiResponse;
 import com.example.demo.Service.MaterialService;
 import lombok.AllArgsConstructor;
@@ -16,11 +18,19 @@ import java.util.List;
 public class MaterialController {
     @Autowired
     private MaterialService materialService;
+    @Autowired
+    private MaterialRepository materialRepository;
     @GetMapping("/getAll")
     public ApiResponse<?> getAllMaterials(){
         ApiResponse<List> apiResponse = new ApiResponse<>();
         apiResponse.setResult(materialService.getAllMaterials());
         return apiResponse;
+    }
+    @GetMapping("/GetMaterialById")
+    public ApiResponse<?> GetSuppliGetMaterialByIderById(@RequestParam("id") int id){
+        ApiResponse<Materials> apiResponse= new ApiResponse<>();
+        apiResponse.setResult(materialService.GetMaterialById(id));
+        return  apiResponse;
     }
 
     @PostMapping("/addNewMaterial")

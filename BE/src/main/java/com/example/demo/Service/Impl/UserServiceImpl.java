@@ -60,6 +60,8 @@ public class UserServiceImpl implements UserService {
     private CheckConditionService checkConditionService;
     @Autowired
     private EntityManager entityManager;
+    @Autowired
+    private JobRepository jobRepository;
 
 
     @Override
@@ -71,7 +73,7 @@ public class UserServiceImpl implements UserService {
         String pass = passwordEncoder.encode(userDTO.getPassword());
         Role userRole = roleRepository.findById(2); //Default la CUSTOMER
         Status_User status = statusRepository.findById(2); //Default la KICHHOAT
-        //Position position = positionRepository.findById(1);//Default la khong phai employee
+        Position position = positionRepository.findById(4);//Default la Không đảm nhận vị trí
         UserInfor userInfor = new UserInfor(
                 userDTO.getPhoneNumber(),
                 userDTO.getFullname(),
@@ -90,7 +92,7 @@ public class UserServiceImpl implements UserService {
                 pass,
                 userDTO.getEmail(),
                 status,
-                null,
+                position,
                 hireDate,
                 userRole,
                 userInfor
@@ -136,6 +138,21 @@ public class UserServiceImpl implements UserService {
                 1 //register thì cho has_Account là 1 , nghĩa là đã có account
 
         );
+        if (!checkConditionService.checkUserbyUsername(userDTO.getUsername())) {
+            throw new AppException(ErrorCode.USERNAME_EXISTED);
+        }
+        if (!checkConditionService.checkEmail(userDTO.getEmail())) {
+            throw new AppException(ErrorCode.WRONG_FORMAT_EMAIL);
+        }
+        if (!checkConditionService.checkUserbyEmail(userDTO.getEmail())) {
+            throw new AppException(ErrorCode.GMAIL_EXISTED);
+        }
+        if (!checkConditionService.checkPhone(userDTO.getPhoneNumber())) {
+            throw new AppException(ErrorCode.PHONE_EXISTED);
+        }
+        if (!checkConditionService.checkPhoneNumber(userDTO.getPhoneNumber())) {
+            throw new AppException(ErrorCode.INVALID_FORMAT_PHONE_NUMBER);
+        }
         informationUserRepository.save(userInfor);
         User user = new User(
                 0,
@@ -168,6 +185,7 @@ public class UserServiceImpl implements UserService {
         if (!passwordEncoder.matches(loginRequest.getPassword(), user.getPassword())) {
             throw new AppException(ErrorCode.WRONG_PASS);
         }
+
         // Nếu mọi thứ đều đúng, tạo JWT token và trả về
         var jwt = jwtService.generateToken(new HashMap<>(), user);
         // var refreshToken = jwtService.generateRefreshToken(new HashMap<>(), user);
@@ -323,13 +341,13 @@ userRepository.save(user);
     public UserDTO EditUser(int id, EditUserDTO userDTO) {
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new AppException(ErrorCode.NOT_FOUND));
-
+//        if(user.getRole().getRoleId()==4 && jobRepository.countJobsByUserId(id) >= 1) { //nếu sửa thằng employee thì nó phải chưa nhận job nào thì mới có quyền sửa role cho nó
+//            throw new AppException(ErrorCode.NOT_EDIT_EMPLOYEE);
+//        }
         // Tải rõ ràng UserInfor (Tải EAGER được ưu tiên trong trường hợp này)
         UserInfor userInfor = user.getUserInfor();
         entityManager.refresh(user); // Làm mới thực thể user trước khi sửa đổi
-
         // Thực hiện xác thực (như trong mã hiện tại của bạn)
-
         // Cập nhật trực tiếp các thuộc tính của user
         user.setUsername(userDTO.getUsername());
         user.setEmail(userDTO.getEmail());
@@ -353,6 +371,24 @@ userRepository.save(user);
         Role role = roleRepository.findByIdEdit(userDTO.getRole_id());
 
         user.setRole(role);
+
+        if (!checkConditionService.checkPhoneNumber(userDTO.getPhoneNumber())) {
+            throw new AppException(ErrorCode.INVALID_FORMAT_PHONE_NUMBER);
+        }
+        if (!checkConditionService.checkFullName(userDTO.getFullname())) {
+            throw new AppException(ErrorCode.INVALID_FORMAT_NAME);
+        }
+        if (!userDTO.getEmail().equals(user.getEmail()) &&
+                userRepository.findByEmail(userDTO.getEmail()).isPresent()) {
+            throw new AppException(ErrorCode.GMAIL_EXISTED);
+        }
+        if (!userDTO.getUsername().equals(user.getUsername()) &&
+                userRepository.findByUsername(userDTO.getUsername()).isPresent()) {
+            throw new AppException(ErrorCode.USERNAME_EXISTED);
+        }
+        if (!checkConditionService.checkEmail(userDTO.getEmail())) {
+            throw new AppException(ErrorCode.WRONG_FORMAT_EMAIL);
+        }
 
         userRepository.save(user); // Điều này cũng sẽ lưu các thay đổi vào UserInfor liên kết
 

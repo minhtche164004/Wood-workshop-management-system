@@ -82,9 +82,9 @@ public class SubMaterialServiceImpl implements SubMaterialService {
         if (!checkConditionService.checkInputName(subMaterialDTO.getSub_material_name())) {
             throw new AppException(ErrorCode.INVALID_FORMAT_NAME);
         }
-        if (subMaterialsRepository.countBySubMaterialName(subMaterialDTO.getSub_material_name()) > 0) {
-            throw new AppException(ErrorCode.NAME_EXIST);
-        }
+//        if (subMaterialsRepository.countBySubMaterialName(subMaterialDTO.getSub_material_name()) > 0) {
+//            throw new AppException(ErrorCode.NAME_EXIST);
+//        }
         if (!checkConditionService.checkInputQuantity(subMaterialDTO.getQuantity())) {
             throw new AppException(ErrorCode.QUANTITY_INVALID);
         }

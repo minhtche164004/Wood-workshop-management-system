@@ -3,17 +3,16 @@ package com.example.demo.Service.Impl;
 import com.example.demo.Dto.OrderDTO.OrderDetailDTO;
 import com.example.demo.Dto.OrderDTO.OrderDetailWithJobStatusDTO;
 import com.example.demo.Dto.ProductDTO.Product_Thumbnail;
-import com.example.demo.Dto.RequestDTO.RequestAllDTO;
-import com.example.demo.Dto.RequestDTO.RequestEditDTO;
-import com.example.demo.Dto.RequestDTO.RequestUpdateDTO;
+import com.example.demo.Dto.RequestDTO.*;
 import com.example.demo.Dto.ProductDTO.RequestProductAllDTO;
 import com.example.demo.Dto.ProductDTO.RequestProductDTO;
 import com.example.demo.Dto.OrderDTO.ProductItem;
-import com.example.demo.Dto.RequestDTO.RequestDTO;
 import com.example.demo.Dto.OrderDTO.RequestOrder;
 import com.example.demo.Entity.*;
 import com.example.demo.Exception.AppException;
 import com.example.demo.Exception.ErrorCode;
+import com.example.demo.Mail.EmailService;
+import com.example.demo.Mail.MailBody;
 import com.example.demo.Repository.*;
 import com.example.demo.Service.*;
 import jakarta.persistence.EntityManager;
@@ -26,6 +25,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.math.BigDecimal;
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
@@ -71,6 +71,8 @@ public class OrderServiceImpl implements OrderService {
     private EntityManager entityManager;
     @Autowired
     CloudinaryService cloudinaryService;
+    @Autowired
+    private EmailService emailService;
 
 
 
@@ -89,9 +91,9 @@ public class OrderServiceImpl implements OrderService {
         orders.setFullname(requestOrder.getCusInfo().getFullname());
         orders.setPhoneNumber(requestOrder.getCusInfo().getPhone());
         //day la` dia chi nhan hang cua khach hang
-        orders.setCity_province(requestOrder.getCusInfo().getAddress());
-        orders.setDistrict(requestOrder.getCusInfo().getAddress());
-        orders.setWards(requestOrder.getCusInfo().getAddress());
+        orders.setCity_province(requestOrder.getCusInfo().getCity_province());
+        orders.setDistrict(requestOrder.getCusInfo().getDistrict());
+        orders.setWards(requestOrder.getCusInfo().getWards());
         //luu thong tin nguoi dat
         UserInfor userInfor = new UserInfor();
         userInfor.setFullname(requestOrder.getCusInfo().getFullname());
@@ -234,28 +236,26 @@ public class OrderServiceImpl implements OrderService {
         return requests;
     }
 
-//    @Override
-//    public Requests EditRequest(int request_id,RequestEditDTO requestEditDTO,MultipartFile[] multipartFiles) throws IOException {
-//        Requests requests = requestRepository.findById(request_id);
-//        Date today = new Date();
-//        if (multipartFiles != null &&
-//                Arrays.stream(multipartFiles).anyMatch(file -> file != null && !file.isEmpty())) {
-//            List<Requestimages> requestimagesList= requestimagesRepository.findRequestImageByRequestId(request_id);
-//            for(Requestimages requestimages : requestimagesList){
-//                String full_path= requestimages.getFullPath();
-//                String id_image =cloudinaryService.extractPublicIdFromUrl(full_path);
-//                cloudinaryService.deleteImage(id_image);
-//            }
-//            requestimagesRepository.deleteRequestImages(request_id); // Xóa những ảnh trước đó
-//            uploadImageService.uploadFile(multipartFiles, requests.getRequestId());
-//        }
-//        requestRepository.updateRequest(request_id,
-//                requestEditDTO.getDescription(),
-//                today
-//        );
-//        entityManager.refresh(requests); // Làm mới đối tượng products
-//        return requests;
-//    }
+    @Transactional
+    @Override
+    public Requests EditRequest(int request_id, RequestEditCusDTO requestEditDTO, MultipartFile[] multipartFiles) throws IOException {
+        Requests requests = requestRepository.findById(request_id);
+        if (multipartFiles != null && Arrays.stream(multipartFiles).anyMatch(file -> file != null && !file.isEmpty())) {
+            List<Requestimages> requestimagesList= requestimagesRepository.findRequestImageByRequestId(request_id);
+            for(Requestimages requestimages : requestimagesList){
+                String full_path= requestimages.getFullPath();
+                String id_image =cloudinaryService.extractPublicIdFromUrl(full_path);
+                cloudinaryService.deleteImage(id_image);
+            }
+            requestimagesRepository.deleteRequestImages(request_id); // Xóa những ảnh trước đó
+            uploadImageService.uploadFileRequest(multipartFiles, requests.getRequestId());
+        }
+        requestRepository.updateRequest(request_id,
+                requestEditDTO.getDescription()
+        );
+        entityManager.refresh(requests); // Làm mới đối tượng products
+        return requests;
+    }
     @Override
     public Requests getRequestById(int id) {
         return requestRepository.findById(id);
@@ -428,6 +428,7 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public List<RequestProducts> GetAllProductRequest() {
+
         return requestProductRepository.findAll();
     }
 
@@ -464,6 +465,12 @@ public class OrderServiceImpl implements OrderService {
         return requests;
     }
 
+//    @Override
+//    public Requests CustomerEditRequest(int request_id, Requests requests) {
+//        Requests requests1 = requestRepository.findById(request_id);
+//        requests1.
+//    }
+
     @Override
     public OrderDetailDTO getOrderDetailById(int id) {
         OrderDetailDTO orderDetailDTO = orderDetailRepository.getOrderDetailById(id);
@@ -473,20 +480,104 @@ public class OrderServiceImpl implements OrderService {
         return orderDetailDTO;
     }
 
+//    @Override
+//    public RequestEditCusDTO getRequestEditCusDTOById(int id) {
+//        return requestRepository.getRequestEditCusDTOById(id);
+//    }
+
     @Override
     public void deleteRequestById(int requestId) {
         requestRepository.deleteById(requestId);
     }
 
+    @Transactional
     @Override
-    public boolean checkOderDoneOrNot(int order_id) {
-        List<OrderDetailWithJobStatusDTO> results = orderDetailRepository.getAllOrderDetailByOrderId(order_id);
-        for (OrderDetailWithJobStatusDTO result : results) {
-            if (result.getStatus_job_id() != 13) {  //13 tức là sản phẩm của oderdetail đã hoàn thành
-                return false; // Ngay lập tức trả về false nếu tìm thấy job chưa hoàn thành
+    public void ChangeStatusOrder(int orderId, int status_id) {
+        //send mail cho những đơn hàng đặt theo yêu cầu , vì đơn hàng mau có sẵn thì mua luôn rồi, trả tiền luôn r cần đéo gì nữa mà phải theo dõi tình trạng đơn hàng
+        orderRepository.UpdateStatusOrder(orderId,status_id);
+        Status_Order statusOrder =statusOrderRepository.findById(status_id);
+        Orders orders = orderRepository.findById(orderId);
+        if(orders.getSpecialOrder() == true){
+            String email=orderDetailRepository.getOrderDetailsByOrderIdForSendMail(orderId);
+            String code = orders.getCode();
+            SimpleDateFormat dateFormatter = new SimpleDateFormat("dd/MM/yyyy");
+            String time_finish = dateFormatter.format(orders.getOrderFinish());
+            String time_start = dateFormatter.format(orders.getOrderDate());
+            String status_name=statusOrder.getStatus_name();
+                    MailBody mailBody = MailBody.builder()
+                    .to(email)
+                    .text("Đơn hàng có mã đơn hàng là : " + code + "\n" +
+                    "Có trạng thái: " + status_name + "\n" +
+                    "Với thời gian tạo đơn là: " + time_start + "\n" +
+                    "Và thời gian dự kiến hoàn thành là: " + time_finish)
+                    .subject("[Thông tin tiến độ của đơn hàng]")
+                    .build();
+            emailService.sendSimpleMessage(mailBody);
+        }
+    }
+
+
+    @Override
+    public List<RequestProducts> filterRequestProductsForAdmin(String search,  Integer statusId, BigDecimal minPrice, BigDecimal maxPrice, String sortDirection) {
+        List<RequestProducts> productList = new ArrayList<>();
+
+        if (search != null|| statusId != null  || minPrice != null || maxPrice != null) {
+            productList = requestProductRepository.filterRequestProductsForAdmin(search, statusId, minPrice, maxPrice);
+        } else {
+            productList = requestProductRepository.findAll();
+        }
+
+        if (productList.isEmpty()) {
+            throw new AppException(ErrorCode.NOT_FOUND);
+        }
+
+//        for (RequestProducts product : productList) {
+//            product.setImage(getAddressLocalComputer(product.getImage())); // Cập nhật lại đường dẫn ảnh
+//        }
+
+        // Sắp xếp danh sách sản phẩm theo giá
+        if (sortDirection != null) {
+            if (sortDirection.equals("asc")) {
+                productList.sort(Comparator.comparing(RequestProducts::getPrice));
+            } else if (sortDirection.equals("desc")) {
+                productList.sort(Comparator.comparing(RequestProducts::getPrice).reversed());
             }
         }
-        return true; // Chỉ trả về true nếu tất cả các job đều đã hoàn thành (status_id = 13)
+
+
+        return productList;
     }
+    @Override
+    public List<RequestProducts> findByPriceRange(BigDecimal min, BigDecimal max) {
+        List<RequestProducts> productsList = requestProductRepository.findByPriceRange(min,max);
+        if(productsList == null ){
+            throw new AppException(ErrorCode.NOT_FOUND);
+        }
+        return productsList;
+    }
+
+    @Override
+    public List<RequestProducts> GetAllProductRequestByUserId() {
+        UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        User user = userRepository.getUserByUsername(userDetails.getUsername());
+        List<RequestProducts> list = requestProductRepository.findByUserId(user.getUserId());
+        if(list == null ){
+            throw new AppException(ErrorCode.NOT_FOUND);
+        }
+        return list;
+    }
+
+    @Override
+    public List<Requests> GetAllRequestByUserId() {
+        UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        User user = userRepository.getUserByUsername(userDetails.getUsername());
+        List<Requests> list = requestRepository.findByUserId(user.getUserId());
+        if(list == null ){
+            throw new AppException(ErrorCode.NOT_FOUND);
+        }
+        return list;
+    }
+
+
 
 }

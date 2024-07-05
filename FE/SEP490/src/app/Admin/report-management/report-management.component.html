@@ -101,8 +101,8 @@
                   <i class="fa-solid fa-pen-to-square"></i>
                 </a>
                 <a href="#" class="delete" title="Xóa" data-toggle="modal" data-target="#confirmDeleteModal"
-                  (click)="deleteProduct()">
-                  <i class="fa-regular fa-trash-can"></i>
+                  (click)="openConfirmDeleteModal(product.product_id, product.product_name)">
+                  <i class="fa-regular fa-trash-can"></i> {{product.product_id}}
                 </a>
                 <a href="#" class="info" title="Chi tiết" data-toggle="modal" data-target="#productDetailModal"
                   (click)="showProductDetails(product.id)">
@@ -112,7 +112,7 @@
               </td>
 
               <td>{{ product.des }}</td>
-              <td>{{ product.isFixed }}</td>
+              <td>{{ product._fix }}</td>
 
               <td>{{ product.processProductErrorId }}</td>
               <td>{{ product.solution }}</td>
@@ -310,12 +310,12 @@
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
-      <div class="modal-body">
-        Are you sure you want to delete this product?
+      <div class="modal-body" id="confirmDeleteModal">
+        Are you sure you want to delete this product "{{ selectedProductNameCurrentDelele }}" ?
       </div>
-      <div class="modal-footer">
+      <div class="modal-footer" id="confirmDeleteModal">
         <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-        <!-- <button type="button" class="btn btn-danger" (click)="deleteProduct">Delete</button> -->
+        <button type="button" class="btn btn-danger" (click)="deleteProduct()">Delete</button>
       </div>
     </div>
   </div>

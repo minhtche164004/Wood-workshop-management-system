@@ -2,6 +2,7 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
+import { ErrorProductService } from 'src/app/service/error-product.service';
 import { ProductListService } from 'src/app/service/product/product-list.service';
 
 @Component({
@@ -12,6 +13,7 @@ import { ProductListService } from 'src/app/service/product/product-list.service
 export class ReportManagementComponent implements OnInit {
   constructor(private fb: FormBuilder,
     private productListService: ProductListService,
+    private errorProductService: ErrorProductService,
     private toastr: ToastrService) { 
       this.errorForm = this.fb.group({
         productCode: [''],
@@ -79,37 +81,39 @@ export class ReportManagementComponent implements OnInit {
   editProduct(productId: number) {
     
   }
-  openConfirmDeleteModal(productId: number, productName: string): void {
-    this.selectedProductIdCurrentDelele = productId;
-    this.selectedProductNameCurrentDelele = productName;
+  openConfirmDeleteModal(product_id : number, product_name: string): void {
+    console.log('productId delete: ', product_id);
+    this.selectedProductIdCurrentDelele = product_id;
+    this.selectedProductNameCurrentDelele = product_name;
   }
   deleteProduct() {
-    this.productListService.deleteProduct(this.selectedProductIdCurrentDelele)
-      .subscribe(
-        response => {
-          console.log('Xóa thành công', response);
-          if (response.code === 1000) {
-            this.toastr.success('Xóa sản phẩm thành công!', 'Thành công');
-          }
-          const cancelButton = document.querySelector('.btn.btn-secondary[data-dismiss="modal"]') as HTMLElement;
-          if (cancelButton) { // Check if the button exists
-            cancelButton.click(); // If it exists, click it to close the modal
-          }
+    console.log('productId', this.selectedProductIdCurrentDelele);
+    // this.errorProductService.deleteProductError(this.selectedProductIdCurrentDelele)
+    //   .subscribe(
+    //     response => {
+    //       console.log('Xóa thành công', response);
+    //       if (response.code === 1000) {
+    //         this.toastr.success('Xóa sản phẩm thành công!', 'Thành công');
+    //       }
+    //       const cancelButton = document.querySelector('.btn.btn-secondary[data-dismiss="modal"]') as HTMLElement;
+    //       if (cancelButton) { // Check if the button exists
+    //         cancelButton.click(); // If it exists, click it to close the modal
+    //       }
 
-        },
-        (error: HttpErrorResponse) => {
-          if (error.status === 400 && error.error.code === 1030) {
-            this.toastr.error(error.error.message, 'Lỗi');
-          } else {
-            this.toastr.error("Không thể xoá sản phẩm do sản phẩm đang được sử dụng ở các chức năng khác", 'Lỗi');
-          }
-          const cancelButton = document.querySelector('.btn.btn-secondary[data-dismiss="modal"]') as HTMLElement;
-          if (cancelButton) { // Check if the button exists
-            cancelButton.click(); // If it exists, click it to close the modal
-          }
-          // this.isLoading = false; // Stop the loading spinner on error
-        }
-      );
+    //     },
+    //     (error: HttpErrorResponse) => {
+    //       if (error.status === 400 && error.error.code === 1030) {
+    //         this.toastr.error(error.error.message, 'Lỗi');
+    //       } else {
+    //         this.toastr.error("Không thể xoá sản phẩm do sản phẩm đang được sử dụng ở các chức năng khác", 'Lỗi');
+    //       }
+    //       const cancelButton = document.querySelector('.btn.btn-secondary[data-dismiss="modal"]') as HTMLElement;
+    //       if (cancelButton) { // Check if the button exists
+    //         cancelButton.click(); // If it exists, click it to close the modal
+    //       }
+    //       // this.isLoading = false; // Stop the loading spinner on error
+    //     }
+    //   );
     console.log('productId', this.selectedProductIdCurrentDelele);
   }
 

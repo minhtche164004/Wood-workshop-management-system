@@ -13,18 +13,35 @@ export class JobService {
   private apiSearchProductJob = `${environment.apiUrl}api/auth/product/findProductByNameorCode`
   private apiAddJob = `${environment.apiUrl}api/auth/job`
   private apiGetPosition3 = `${environment.apiUrl}api/auth/job/findUsersWithPositionAndLessThan3Jobs`
-
+  private apiAddProductForJob = `${environment.apiUrl}api/auth/job`
   private apiGetStatusJob =`${environment.apiUrl}api/auth/job/getAllStatusJob`
   private apiGetStatusJobByType = `${environment.apiUrl}api/auth/job/getAllStatusType`
   private apiCreateProductForjob = `${environment.apiUrl}api/auth/job/CreateJobs`
+ 
+  private apiAcceptJob = `${environment.apiUrl}api/auth/job/acceptJob`
+  private apiGetProductSubMaterial = `${environment.apiUrl}api/auth/submaterial/getProductSubMaterialByProductId`;
+
     // user_id={{$random.integer(100)}}&
-    // p_id={{$random.integer(100)}}&
+    // p_id={{$random.integer(100)}}&                                  ?job_id=152&status_id=9
     // status_id={{$random.integer(100)}}`
 
   constructor(private http: HttpClient) { }
+  getSubMTRProduct(productId: number, mateId: number): Observable<any> {
+    const url = `${this.apiGetProductSubMaterial}?id=${productId}&mate_id=${mateId}`;
+    return this.http.get<any>(url);
+  }
+  acceptJob(jobId: number, statusId: number): Observable<any> {
+    const url = `${this.apiAcceptJob}?job_id=${jobId}&status_id=${statusId}`;
+    return this.http.get<any>(url);
+  }
   addJob(user_id: number, p_id: number, status_id: number, job_id: number, type_id:number, jobData: any): Observable<any> {
     const url = `${this.apiCreateProductForjob}?user_id=${user_id}&p_id=${p_id}&status_id=${status_id}&&type_job=${type_id}&job_id=${job_id}`;
+    console.log('Add job URL:', url);
     return this.http.post<any>(url, jobData);
+  }
+  addProductForJob(p_id: number, quantity: number) {
+    const url = `${this.apiAddProductForJob}/CreateProductForJobs?p_id=${p_id}&quantity=${quantity}`;
+    return this.http.post<any>(url, {});
   }
   createJob(user_id: number, p_id: number, status_id: number, job_id: number, type_id: number, jobData: any): Observable<any> {
     const url = `${this.apiAddJob}/CreateJobs`; // Endpoint for creating jobs

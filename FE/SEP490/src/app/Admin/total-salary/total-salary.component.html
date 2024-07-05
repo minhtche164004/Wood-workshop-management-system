@@ -13,6 +13,9 @@
                             <a href="#" class="btn btn-secondary" data-toggle="modal" data-target="#addProductModal">
                                 <i class="material-icons">&#xE147;</i> <span>Thêm Sản Phẩm</span>
                             </a>
+                            <a href="#" class="btn btn-secondary" >
+                                <span style="margin-right: 5px;">Nhập/Xuất Excel   </span> <i class="fa-solid fa-file-excel"></i>
+                               </a> 
                         </div>
                     </div>
 
@@ -56,24 +59,22 @@
                         <thead>
                             <tr>
                                 <th>STT</th>
-                                <th>Mã đơn hàng</th>
+                                <th>Mã việc làm</th>
                                 <th>Thao tác</th>
-                                <th>Tên sản phẩm</th>
-                                <th>Loại sản phẩm</th>
-                                <th>Số lượng</th>
-                                <th>Đơn giá (vnd)</th>
-                                <th>Trạng thái</th>
+                                <th>Tên việc làm</th>
                                 <th>Nhân viên</th>
-                                <th>Giao việc</th>
-                                <th>Lỗi</th>
+                                <th>Tình trạng</th>
+                                <th>Đơn giá (vnd)</th>
+                                <th>Số lượng</th>
+                              
 
                             </tr>
                         </thead>
 
-                        <!-- <tbody>
-                        <tr *ngFor="let product of productRQs | paginate: { itemsPerPage: 10, currentPage: currentPage }; let i = index">
+                        <tbody>
+                        <tr *ngFor="let product of totalSalary | paginate: { itemsPerPage: 10, currentPage: currentPage }; let i = index">
                           <td>{{ i + 1 + (currentPage - 1) * 10 }}</td>
-                          <td>{{ product.code }}</td>
+                          <td>{{ product?.code }}</td>
                           <td class="action-buttons">
                             <a href="#" class="settings" title="Chỉnh sửa" data-toggle="modal" data-target="#editProductModal">
                               <i class="fa-solid fa-pen-to-square"></i>
@@ -81,36 +82,33 @@
                             <a href="#" class="delete" title="Xóa" data-toggle="modal" data-target="#confirmDeleteModal">
                               <i class="fa-regular fa-trash-can"></i>
                             </a>
-                            <button style="margin-left: 10px;" class="info" title="Chi tiết" data-toggle="modal" data-target="#productDetailModal">
+                            <a style="margin-left: 10px;" class="info" title="Chi tiết" data-toggle="modal" data-target="#productDetailModal">
                               <i class="fa-solid fa-ellipsis-vertical"></i>
-                            </button>
+                            </a>
                           </td>
-                          <td>{{ product.product_name }}</td>
-                          <td>Loại sản phẩm</td>
+                          <td>{{ product.job_name }}</td>
+                          
+                          <td>{{ product.user_name }}</td>
+                          <td>{{ product.status_job_name }}</td>
+                          <td>{{ product.cost }}</td>                     
                           <td>{{ product.quantity }}</td>
-                          <td>{{ product.price | number: '1.0-3' }}</td>
-                          <td>{{ product.statusJob?.status_name }}</td>                     
-                          <td>{{ product.user?.username }}</td>
-                          <td>
-                            <button style="margin-left: -10px; size: 15px;" data-toggle="modal" data-target="#assignJobModal"
-                              (click)="manageJob(product)" class="btn btn-outline-primary btn-sm">Giao việc</button>
-                          </td>
-                          <td><i class="fa-solid fa-bug"></i></td>
+                         
+                       
                         </tr>
-                      </tbody> -->
+                      </tbody>
 
                     </table>
 
-                    <!-- <pagination-controls style="justify-content: right; display: flex;"
+                     <pagination-controls style="justify-content: right; display: flex;"
                 (pageChange)="currentPage = $event"
                 previousLabel="Trang trước"
                 nextLabel="Trang sau">
               </pagination-controls>
                 <div class="clearfix" style="justify-content: right; display: flex;">
-                    <div class="hint-text">Showing <b>{{ (currentPage - 1) * 10 + 1 }}</b> to <b>{{ currentPage * 10
-                            > productRQs.length ? productRQs.length : currentPage * 10 }}</b> out of <b>{{
-                            productRQs.length }}</b> entries</div>
-                </div> -->
+                    <div class="hint-text">Hiển thị <b>{{ (currentPage - 1) * 10 + 1 }}</b> tới <b>{{ currentPage * 10
+                            > totalSalary.length ? totalSalary.length : currentPage * 10 }}</b> trong tổng <b>{{
+                                totalSalary.length }}</b> bản ghi</div>
+                </div> 
 
                 </div>
             </div>

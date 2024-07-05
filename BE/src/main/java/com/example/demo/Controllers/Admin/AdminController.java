@@ -172,6 +172,12 @@ public class AdminController {
         apiResponse.setResult(userService.FilterByStatus(query));
         return apiResponse;
     }
+    @GetMapping("/FilterByPosition")
+    public ApiResponse<?> FilterByPosition(@RequestParam(value = "query", required = false) int query) {
+        ApiResponse<List> apiResponse = new ApiResponse<>();
+        apiResponse.setResult(userService.FilterByPosition(query));
+        return apiResponse;
+    }
 
     @GetMapping("/FilterByRole")
     public ApiResponse<?> FilterByRole(@RequestParam(value = "query", required = false) int query) {

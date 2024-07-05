@@ -23,6 +23,9 @@ public interface MaterialRepository extends JpaRepository<Materials,Integer> {
     @Query("SELECT u FROM Materials u WHERE u.materialId = :query")
     Materials findById1(int query);
 
+    @Query("SELECT u FROM Materials u WHERE u.materialName = :query")
+    Materials findByName(String query);
+
     @Transactional
     @Modifying
     @Query("update Materials  u set u.materialName=?2, u.type=?3 where u.materialId=?1")

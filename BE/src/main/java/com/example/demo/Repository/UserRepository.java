@@ -82,6 +82,9 @@ public interface UserRepository extends JpaRepository<User,Integer> {
     @Query("SELECT u FROM User u WHERE u.role.roleId=?1")
     List<User> FilterByRole(@Param("roleId") int roleId);
 
+    @Query("SELECT u FROM User u WHERE u.position.position_id=?1")
+    List<User> FilterByPosition(@Param("position_id") int position_id);
+
 
     @Query(value =
          "SELECT new com.example.demo.Dto.UserDTO.UserUpdateDTO(u.username,ui.address,s.status_name,p.position_name,r.roleName,u.email)" +

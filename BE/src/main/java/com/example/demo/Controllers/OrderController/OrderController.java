@@ -53,12 +53,17 @@ public class OrderController {
     private WhiteListService whiteListService;
     private final OrderRepository orderRepository;
 
+//    @GetMapping("/GetAllProductRequest")
+//    public ApiResponse<?> GetAllProductRequest() {
+//        ApiResponse<List> apiResponse = new ApiResponse<>();
+//        apiResponse.setResult(orderService.GetAllProductRequest());
+//        return apiResponse;
+//    }
     @GetMapping("/GetAllProductRequest")
     public ApiResponse<?> GetAllProductRequest() {
         ApiResponse<List> apiResponse = new ApiResponse<>();
-        apiResponse.setResult(orderService.GetAllProductRequest());
+        apiResponse.setResult(orderService.GetAllRequestProductWithImage());
         return apiResponse;
-
     }
     @GetMapping("/GetAllProductRequestByUserId")
     public ApiResponse<?> GetAllProductRequestByUserId() {

@@ -2,10 +2,8 @@ package com.example.demo.Service.Impl;
 
 import com.example.demo.Dto.OrderDTO.OrderDetailDTO;
 import com.example.demo.Dto.OrderDTO.OrderDetailWithJobStatusDTO;
-import com.example.demo.Dto.ProductDTO.Product_Thumbnail;
+import com.example.demo.Dto.ProductDTO.*;
 import com.example.demo.Dto.RequestDTO.*;
-import com.example.demo.Dto.ProductDTO.RequestProductAllDTO;
-import com.example.demo.Dto.ProductDTO.RequestProductDTO;
 import com.example.demo.Dto.OrderDTO.ProductItem;
 import com.example.demo.Dto.OrderDTO.RequestOrder;
 import com.example.demo.Entity.*;
@@ -73,6 +71,8 @@ public class OrderServiceImpl implements OrderService {
     CloudinaryService cloudinaryService;
     @Autowired
     private EmailService emailService;
+    @Autowired
+    private RequestProductsSubmaterialsRepository requestProductsSubmaterialsRepository;
 
 
 
@@ -577,6 +577,79 @@ public class OrderServiceImpl implements OrderService {
         }
         return list;
     }
+
+    @Override
+    public RequestProductDTO_Show GetRequestProductByIdWithImage(int id) {
+        List<Product_Requestimages> productRequestimagesList = productRequestimagesRepository.findImageByProductId(id);
+        RequestProducts requestProducts = requestProductRepository.findById(id);
+        if (requestProducts == null) {
+            throw new AppException(ErrorCode.NOT_FOUND);
+        }
+        RequestProductDTO_Show requestProductDTOShow = new RequestProductDTO_Show();
+        if (productRequestimagesList == null) {
+            requestProductDTOShow.setImageList(null);
+        }
+        requestProductDTOShow.setRe_productId(requestProducts.getRequestProductId());
+        requestProductDTOShow.setRe_productName(requestProducts.getRequestProductName());
+        requestProductDTOShow.setDescription(requestProducts.getDescription());
+        requestProductDTOShow.setPrice(requestProducts.getPrice());
+        requestProductDTOShow.setCompletionTime(requestProducts.getCompletionTime());
+        requestProductDTOShow.setStatus(requestProducts.getStatus());
+        List<Product_Requestimages> processedImages = new ArrayList<>(); // Danh sách mới
+        for (Product_Requestimages productimages : productRequestimagesList) {
+            productimages.setFullPath(getAddressLocalComputer(productimages.getFullPath()));
+            processedImages.add(productimages); // Thêm vào danh sách mới
+        }
+        List<String> list = requestProductsSubmaterialsRepository.GetSubNameByProductId(id);
+        if (list.isEmpty()) {
+            requestProductDTOShow.setSub_material_name(null);
+        }
+        requestProductDTOShow.setSub_material_name(list);
+        requestProductDTOShow.setImageList(processedImages); // Gán danh sách mới vào DTO
+
+        return requestProductDTOShow;
+
+    }
+
+    @Override
+    public List<RequestProductDTO_Show> GetAllRequestProductWithImage() {
+        List<RequestProducts> requestProductsList = requestProductRepository.findAll();
+        List<RequestProductDTO_Show> result = new ArrayList<>();
+        for (RequestProducts requestProducts : requestProductsList) {
+            int id = requestProducts.getRequestProductId();
+            List<Product_Requestimages> productRequestimagesList = productRequestimagesRepository.findImageByProductId(id);
+            RequestProductDTO_Show requestProductDTOShow = new RequestProductDTO_Show();
+            requestProductDTOShow.setRe_productId(requestProducts.getRequestProductId());
+            requestProductDTOShow.setRe_productName(requestProducts.getRequestProductName());
+            requestProductDTOShow.setDescription(requestProducts.getDescription());
+            requestProductDTOShow.setPrice(requestProducts.getPrice());
+            requestProductDTOShow.setCompletionTime(requestProducts.getCompletionTime());
+            requestProductDTOShow.setStatus(requestProducts.getStatus());
+            List<Product_Requestimages> imageList = productRequestimagesList.stream()
+                    .map(img -> {
+                        img.setFullPath(getAddressLocalComputer(img.getFullPath()));
+                        return img;
+                    })
+                    .toList();
+            requestProductDTOShow.setImageList(imageList);
+            List<String> subMaterialNames = requestProductsSubmaterialsRepository.GetSubNameByProductId(id);
+            requestProductDTOShow.setSub_material_name(subMaterialNames.isEmpty() ? null : subMaterialNames);
+            result.add(requestProductDTOShow);
+        }
+
+        return result;
+    }
+
+    private String getAddressLocalComputer(String imagePath) {
+        int assetsIndex = imagePath.indexOf("/assets/");
+        if (assetsIndex != -1) {
+            imagePath = imagePath.substring(assetsIndex); // Cắt từ "/assets/"
+            if (imagePath.startsWith("/")) { // Kiểm tra xem có dấu "/" ở đầu không
+                imagePath = imagePath.substring(1); // Loại bỏ dấu "/" đầu tiên
+            }
+        }
+        return imagePath;
+    }// Trả về đường dẫn tương đối hoặc đường dẫn ban đầu nếu không tìm thấy "/assets/"
 
 
 

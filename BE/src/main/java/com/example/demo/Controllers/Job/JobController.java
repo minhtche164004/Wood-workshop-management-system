@@ -208,6 +208,7 @@ public class JobController {
     public ApiResponse<?> getJobWasDone() {
         ApiResponse<List> apiResponse = new ApiResponse<>();
         String cacheKey = "all_job_was_done";
+//        jedis.del(cacheKey);
         List<JobDoneDTO> jobsList;
         String cachedData = jedis.get(cacheKey);
         Gson gson = new GsonBuilder().setDateFormat("MMM dd, yyyy").create();

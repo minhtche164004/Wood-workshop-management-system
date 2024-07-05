@@ -1,5 +1,8 @@
 package com.example.demo.Repository;
 
+import com.example.demo.Dto.OrderDTO.JobProductDTO;
+import com.example.demo.Dto.SubMaterialDTO.SubMaterialDTO;
+import com.example.demo.Dto.SubMaterialDTO.SubMaterialViewDTO;
 import com.example.demo.Entity.Materials;
 import com.example.demo.Entity.Products;
 import com.example.demo.Entity.SubMaterials;
@@ -21,6 +24,17 @@ public interface SubMaterialsRepository extends JpaRepository<SubMaterials,Integ
 
     @Query("SELECT u FROM SubMaterials u WHERE u.subMaterialId = :query")
     SubMaterials findById1(int query);
+
+    @Query("SELECT u FROM SubMaterials u WHERE u.subMaterialName = :query AND u.material.materialName = :materialName")
+    SubMaterials findBySubmaterialNameAndMaterialName(@Param("query") String subMaterialName, @Param("materialName") String materialName);
+
+
+    @Query("SELECT new com.example.demo.Dto.SubMaterialDTO.SubMaterialViewDTO(" +
+            "s.subMaterialId, COALESCE(s.subMaterialName, ''), m.materialId, COALESCE(s.description, ''), COALESCE(m.materialName, ''), s.quantity, s.unitPrice) " + // Thêm dấu phẩy và loại bỏ COALESCE cho các ID
+            "FROM SubMaterials s " +
+            "LEFT JOIN s.material m")
+    List<SubMaterialViewDTO> getAllSubmaterial();
+
 
     @Query("SELECT u FROM SubMaterials u WHERE u.material.materialId = :query")
     List<SubMaterials> findSubMaterialIdByMaterial(int query);

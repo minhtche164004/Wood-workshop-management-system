@@ -74,6 +74,9 @@ public interface OrderService {
     List<RequestProducts> GetAllProductRequestByUserId();
     List<Requests> GetAllRequestByUserId();
 
+    RequestProductDTO_Show GetRequestProductByIdWithImage(int id);
+    List<RequestProductDTO_Show> GetAllRequestProductWithImage();
+
 
 
 

@@ -15,7 +15,9 @@ public class SubMaterialDTO implements Serializable {
     @NotNull(message = "MUST_REQUIRED")
     private String sub_material_name;
     @NotNull(message = "MUST_REQUIRED")
-    private Integer material_id;
+    private String material_name;
+
+   // private Integer material_id;
     @NotNull(message = "MUST_REQUIRED")
     private String description;
     @NotNull(message = "MUST_REQUIRED") // Không được để trống

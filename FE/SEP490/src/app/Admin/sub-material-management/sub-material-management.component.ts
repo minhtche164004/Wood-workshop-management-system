@@ -4,7 +4,9 @@ import { SupplierService } from 'src/app/service/supplier.service';
 import { ToastrService } from 'ngx-toastr';
 import { MaterialService } from 'src/app/service/material.service';
 import { FormControl } from '@angular/forms';
+import { SubMaterialService } from 'src/app/service/sub-material.service';
 import { AuthenListService } from 'src/app/service/authen.service';
+
 
 interface SubMaterial {
   sub_material_name: string,
@@ -32,6 +34,7 @@ export class SubMaterialManagementComponent implements OnInit {
   quantity: number = 0;
   unit_price: number = 0;
   constructor(
+    private subMaterialService: SubMaterialService,
     private materialService: MaterialService,
     private toastr: ToastrService,
     private authenListService: AuthenListService
@@ -59,6 +62,10 @@ export class SubMaterialManagementComponent implements OnInit {
         this.toastr.error('Có lỗi xảy ra!', 'Lỗi'); // Hiển thị thông báo lỗi chung
       }
     );
+  }
+  dowloadExcel(): void {
+    this.subMaterialService.downloadExcel();
+      
   }
   getAllMaterials(): void {
     this.materialService.getAllSubMaterials().subscribe(
@@ -104,7 +111,7 @@ export class SubMaterialManagementComponent implements OnInit {
     );
 
   }
-
+  
   searchSubMaterial(): void {
     console.log("Thực hiện chức năng tìm kiếm nguyên vật liệu: ", this.searchKey);
     this.materialService.searchSubMaterial(this.searchKey).subscribe(

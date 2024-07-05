@@ -1,5 +1,6 @@
 import { HttpErrorResponse } from '@angular/common/http';
 import { Component } from '@angular/core';
+import { FormBuilder, FormGroup } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
 import { AuthenListService } from 'src/app/service/authen.service';
 interface ApiResponse {
@@ -15,13 +16,20 @@ export class ListRequestProductComponent {
   loginToken: string | null = null;
   list_request_product: any[] = [];
   currentPage: number = 1;
+  requestForm: FormGroup;
   selectedProductIdCurrentDelele: number = 0;
-  constructor(private authenListService: AuthenListService, private toastr: ToastrService,) { }
+  constructor(private authenListService: AuthenListService, private toastr: ToastrService,private fb: FormBuilder,) {
+    
+    this.requestForm = this.fb.group({
+      description: ['']
+    });
+   }
   ngOnInit(): void {
-   
+    
     this.getHistoryOrder();
     
   }
+ 
   getHistoryOrder(): void {
     this.loginToken = localStorage.getItem('loginToken');
     if (this.loginToken) {
@@ -77,5 +85,27 @@ export class ListRequestProductComponent {
       );
     console.log('requestId', this.selectedProductIdCurrentDelele);
   }
-
-}
+  getDataRequest(requestId: number) {
+    console.log('Request ID:', requestId); // Log the requestId
+    this.authenListService.getRequestByIdCustomer(requestId)
+    
+      .subscribe(
+        product => {
+          console.log('API response:', product); // Log the entire response
+          if (product && product.result) {
+            this.requestForm.patchValue({
+              description: product.result.description,
+            });
+            console.log("Product details:", this.requestForm.value);
+          } else {
+            console.error('Product result is undefined', product);
+            this.toastr.error('Failed to load product details. Please try again later.', 'Error');
+          }
+        },
+        error => {
+          console.error('Error fetching product details:', error);
+          this.toastr.error('Failed to load product details. Please try again later.', 'Error');
+        }
+      );
+  }
+}  

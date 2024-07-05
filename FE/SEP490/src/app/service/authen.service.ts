@@ -24,8 +24,8 @@ export class AuthenListService {
   private apiUrl_SearchUserByNameorAddress = `${environment.apiUrl}api/auth/admin/SearchUserByNameorAddress`; 
 
   private apiUrl_deleteRequest = `${environment.apiUrl}api/auth/order/deleteRequest`; 
+  private apiUrl_GetRequestByIdCustomer = `${environment.apiUrl}api/auth/order/GetRequestById`;
   
-
   private apiUrl_NameATM = 'https://api.vietqr.io/v2/banks';
   constructor(private http: HttpClient) { }
   isLoggedIn(): boolean {
@@ -105,6 +105,13 @@ export class AuthenListService {
     console.log("Authorization header:", headers.get('Authorization'));
 
     return this.http.get<any>(this.apiUrl_GetListProductCustomer, { headers }).pipe(
+      catchError(this.handleError)
+    );
+  }
+
+  getRequestByIdCustomer(id: number): Observable<any> {
+    const url = `${this.apiUrl_GetRequestByIdCustomer}?id=${id}`;
+    return this.http.get<any>(url).pipe(
       catchError(this.handleError)
     );
   }

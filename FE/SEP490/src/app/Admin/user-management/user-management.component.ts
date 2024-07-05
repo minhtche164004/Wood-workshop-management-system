@@ -372,7 +372,7 @@ export class UserManagementComponent implements OnInit {
     } else {
       this.isPositionEnabled = true;
     }
-  }
+  } 
   onRoleChangeUpdate() {
     if (this.selectedRole === 4) {
       this.isPositionEnabled_Update = true;
@@ -624,7 +624,7 @@ export class UserManagementComponent implements OnInit {
     );
   }
   EditUser(): void {
-    if (!this.validateEditUser()) {
+    if (!this.validateEditUser()) { 
       return;
     }
     const editUserRequest: EditUserRequest = this.editUserForm.value;

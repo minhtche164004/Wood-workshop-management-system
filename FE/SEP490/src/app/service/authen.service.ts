@@ -20,12 +20,22 @@ export class AuthenListService {
 
   private apiUrl_DeleteWhiteList = `${environment.apiUrl}api/auth/order/DeleteWhiteList`;
   private apiUrl_GetOrderDeTailById = `${environment.apiUrl}api/auth/order/getOrderDetailById`;
-  private apiUrl_AddNewAccount = `${environment.apiUrl}api/auth/admin/AddNewAccount`; 
-  private apiUrl_SearchUserByNameorAddress = `${environment.apiUrl}api/auth/admin/SearchUserByNameorAddress`; 
+  private apiUrl_AddNewAccount = `${environment.apiUrl}api/auth/admin/AddNewAccount`;
+  private apiUrl_SearchUserByNameorAddress = `${environment.apiUrl}api/auth/admin/SearchUserByNameorAddress`;
 
-  private apiUrl_deleteRequest = `${environment.apiUrl}api/auth/order/deleteRequest`; 
+  private apiUrl_deleteRequest = `${environment.apiUrl}api/auth/order/deleteRequest`;
   private apiUrl_GetRequestByIdCustomer = `${environment.apiUrl}api/auth/order/GetRequestById`;
+  private apiUrl_EditRequestProduct = `${environment.apiUrl}api/auth/order/CustomerEditRequest`;
+  private apiUrl_getSupplierById = `${environment.apiUrl}api/auth/supplier/GetSupplierById`;
+  private apiUrl_GetMaterialById = `${environment.apiUrl}api/auth/GetMaterialById`;
+  private apiUrl_GetAddMaterial = `${environment.apiUrl}api/auth/addNewMaterial`;
+  private apiUrl_getMaterialyId = `${environment.apiUrl}api/auth/GetMaterialById`;
+  private apiUrl_EditMaterial = `${environment.apiUrl}api/auth/EditMaterial`;
+  private api_getAllMaterialName = `${environment.apiUrl}api/auth/getAllName`;
+  private api_getAllSubMaterialName = `${environment.apiUrl}api/auth/submaterial/getall`;
+  private apiUrl_EditSupplier = `${environment.apiUrl}api/auth/supplier/EditSupplier`;
   
+
   private apiUrl_NameATM = 'https://api.vietqr.io/v2/banks';
   constructor(private http: HttpClient) { }
   isLoggedIn(): boolean {
@@ -65,6 +75,18 @@ export class AuthenListService {
       catchError(this.handleError)
     );
   }
+  getSupplierById(id: string): Observable<any> {
+    const url = `${this.apiUrl_getSupplierById}?id=${id}`;
+    return this.http.get<any>(url).pipe(
+      catchError(this.handleError)
+    );
+  }
+  getSubMaterialById(id: string): Observable<any> {
+    const url = `${this.apiUrl_GetMaterialById}?id=${id}`;
+    return this.http.get<any>(url).pipe(
+      catchError(this.handleError)
+    );
+  }
 
   getOrderDetailById(order_detail_id: string): Observable<any> {
     const url = `${this.apiUrl_GetOrderDeTailById}?id=${order_detail_id}`;
@@ -72,6 +94,26 @@ export class AuthenListService {
       catchError(this.handleError)
     );
   }
+
+  editRequestProductForCustomer(requestData: any, images: File[] | null, request_id: number): Observable<any> {
+    const formData = new FormData();
+    formData.append('productDTO', new Blob([JSON.stringify(requestData)], { type: 'application/json' }));
+    // cho phep null anh neu khong update anh
+    if (images !== null && images.length > 0) {
+      images.forEach(image => {
+        formData.append('files', image, image.name);
+      });
+    } else {
+      formData.append('files', new Blob(), '');
+    }
+    const url = `${this.apiUrl_EditRequestProduct}?request_id=${request_id}`;
+    return this.http.put(url, formData, {
+      headers: {
+        'Accept': 'application/json'
+      }
+    });
+  }
+
 
 
   getHistoryOrderCustomer(): Observable<any> {
@@ -138,8 +180,8 @@ export class AuthenListService {
     return this.http.delete<any>(url).pipe(
       catchError(this.handleError)
     );
-  
-}
+
+  }
   deleteRequestProductCustomer(requestId: number): Observable<any> {
     const url = `${this.apiUrl_deleteRequest}?requestId=${requestId}`;
     return this.http.delete<any>(url).pipe(
@@ -226,5 +268,53 @@ export class AuthenListService {
   private handleError(error: HttpErrorResponse): Observable<never> {
     console.error('An error occurred:', error.message);
     return throwError(error);
+  }
+
+
+  addNewMaterial(MaterialData: any): Observable<any> {
+    
+    return this.http.post<any>(this.apiUrl_GetAddMaterial, MaterialData).pipe(
+      catchError(this.handleError)
+    );
+  }
+  getMaterialById(id: string): Observable<any> {
+    const url = `${this.apiUrl_getMaterialyId}?id=${id}`;
+    return this.http.get<any>(url).pipe(
+      catchError(this.handleError)
+    );
+  }
+  editMaterial(id: string, MaterialData: any): Observable<any> {
+    const url = `${this.apiUrl_EditMaterial}?id=${id}`;
+    return this.http.put<any>(url, MaterialData).pipe(
+      catchError(this.handleError)
+    );
+  }
+
+  getAllMaterialName(): Observable<any>{
+    return this.http.get<any>(this.api_getAllMaterialName).pipe(
+      catchError(this.handleError) 
+    );
+  }
+  getAllSubMaterialName(): Observable<any>{
+    return this.http.get<any>(this.api_getAllSubMaterialName).pipe(
+      catchError(this.handleError) 
+    );
+  }
+  
+  EditSupplier(id: string, suplierData: any): Observable<any> {
+    const token = localStorage.getItem('loginToken');
+    if (!token) {
+      return throwError(new Error('Login token not found in localStorage.'));
+    }
+
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${token}`,
+      'Content-Type': 'application/json'
+    });
+
+    const url = `${this.apiUrl_EditSupplier}?id=${id}`;
+    return this.http.put<any>(url, suplierData, { headers }).pipe(
+      catchError(this.handleError)
+    );
   }
 }

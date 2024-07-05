@@ -4,6 +4,8 @@ import { ToastrService } from 'ngx-toastr';
 import { FormArray, FormBuilder, FormGroup, Validators, FormsModule, FormControl } from '@angular/forms';
 import { concatMap } from 'rxjs/operators';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
+import { map, switchMap } from 'rxjs/operators';
+import { Observable } from 'rxjs';
 
 
 interface Category {
@@ -79,11 +81,20 @@ export class ProductManagementComponent implements OnInit {
   selectedProductIdCurrentDelele: number = 0;
   selectedProductNameCurrentDelele: string | null = null;
 
+  totalUnitPrice: number = 0; // tinh tong unitPrice
+  quantityPerSubMaterial: { [key: number]: number | string } = {};; // so luong cua tung subMaterial cua 1 san pham
+
   isProduct: boolean = true;
+  //loading when click button
+  isLoadding: boolean = false;
+  //dung de dong mo modal
+  isModelShow = true;
+
   constructor(
     private fb: FormBuilder,
     private productListService: ProductListService,
     private toastr: ToastrService,
+    private http: HttpClient
   ) {
     this.uploadForm = this.fb.group({
       product_name: [''],
@@ -104,7 +115,8 @@ export class ProductManagementComponent implements OnInit {
       status_id: [''],
       image: [''],
       quantity: [0],
-      type: [0]
+      type: [0],
+      imageList: ['']
     });
 
     this.materialForm = this.fb.group({
@@ -134,11 +146,12 @@ export class ProductManagementComponent implements OnInit {
   removeItem(index: number) {
     const items = this.materialForm.get('items') as FormArray;
     items.removeAt(index);
+    this.onRemoveMaterial(index);
   }
   //phan formGroup cua edit productt
 
   populateFormWithData(productId: number) {
-
+    this.totalUnitPrice = 0;
     this.productListService.exportMaterialProductByProductId(productId).subscribe(
       (data) => {
         if (data.code === 1000) {
@@ -159,10 +172,12 @@ export class ProductManagementComponent implements OnInit {
             this.onMaterialChangeFirstEdit(Number(this.selectedMaterialId[index]), index);
 
             this.fillMaterialItemEdit(materialItem);
-
+            this.totalUnitPrice += materialItem.unitPrice * materialItem.quantity;
+            this.quantityPerSubMaterial[index] = materialItem.quantity;
+            this.unitPriceSubMaterial[index] = materialItem.unitPrice;
           });
 
-          console.log(this.itemsEditArray.value);
+          // console.log(this.itemsEditArray.value);
 
         } else {
           console.error('Failed to fetch products:', data);
@@ -211,6 +226,7 @@ export class ProductManagementComponent implements OnInit {
     if (this.itemsEditArray && this.itemsEditArray.length > index) {
       this.itemsEditArray.removeAt(index);
     }
+    this.onRemoveMaterial(index);
   }
   //
 
@@ -306,10 +322,23 @@ export class ProductManagementComponent implements OnInit {
     // console.log('Giá trị mới của isProduct:', this.isProduct);
   }
 
-  // onCategoryChange(selectedValue: string) {
-  //   const categoryId = parseInt(selectedValue, 10);
-  //   // console.log("Selected category ID:", categoryId);
-  // }
+  reloadProduct(): void {
+    this.productListService.getProducts().subscribe(
+      (data) => {
+        if (data.code === 1000) {
+          this.products = data.result;
+          // console.log('Danh sách sản phẩm:', this.products);
+        } else {
+          console.error('Failed to fetch products:', data);
+          this.toastr.error('Không thể lấy danh sách sản phẩm!', 'Lỗi');
+        }
+      },
+      (error) => {
+        console.error('Error fetching products:', error);
+        this.toastr.error('Có lỗi xảy ra!', 'Lỗi');
+      }
+    );
+  }
 
   loadStatus(): void {
     this.productListService.getAllProductStatus().subscribe(
@@ -408,9 +437,43 @@ export class ProductManagementComponent implements OnInit {
     this.selectedSubMaterialId[index] = Number((event.target as HTMLSelectElement).value);
     const selectedSubMaterial = this.subMaterials[index].find(subMaterial => subMaterial.subMaterialId === this.selectedSubMaterialId[index]);
     this.unitPriceSubMaterial[index] = selectedSubMaterial ? selectedSubMaterial.unitPrice : '';
-    // console.log('Selected unitPriceSubMaterial: test', this.unitPriceSubMaterial);
   }
 
+  onQuantityChange(event: Event, index: number) {
+    this.quantityPerSubMaterial[index] = (event.target as HTMLInputElement).value;
+    this.totalUnitPrice = 0;
+
+    if (this.unitPriceSubMaterial && this.quantityPerSubMaterial) {
+      for (const key of Object.keys(this.unitPriceSubMaterial)) {
+        const index = Number(key); // Explicitly cast key to a number
+        const numericUnitPrice = Number(this.unitPriceSubMaterial[index]) || 0;
+        const quantity = Number(this.quantityPerSubMaterial[index]) || 0;
+        const totalForThisItem = numericUnitPrice * quantity;
+        this.totalUnitPrice += totalForThisItem;
+      }
+    }
+    console.log('totalprice:', this.totalUnitPrice);
+
+  }
+
+  onQuantityChangeEditForm(event: Event, index: number) {
+    const newQuantity = Number((event.target as HTMLInputElement).value) || 0;
+    
+    const quantityDifference = newQuantity - (Number(this.quantityPerSubMaterial[index]) || 0);
+    
+    const priceDifference = quantityDifference * (Number(this.unitPriceSubMaterial[index]) || 0);
+    
+    this.totalUnitPrice += priceDifference;
+    
+    this.quantityPerSubMaterial[index] = newQuantity;
+    console.log('quantityPerSubMaterial:', this.quantityPerSubMaterial[index]);
+    console.log('priceDifference:', priceDifference);
+
+  }
+
+  onRemoveMaterial(index: number) {
+    this.totalUnitPrice = this.totalUnitPrice - (Number(this.unitPriceSubMaterial[index]) * Number(this.quantityPerSubMaterial[index]));
+  }
 
   getProductDetails(productId: number): void {
     this.productListService.getProductById(productId)
@@ -428,15 +491,15 @@ export class ProductManagementComponent implements OnInit {
       );
   }
 
-  onFilesSelected(event: any) {
-    if (event.target.files.length > 0) {
-      this.productImages = [];
-      for (let i = 0; i < event.target.files.length; i++) {
-        const file = event.target.files[i];
-        this.productImages.push(file);
-      }
-    }
-  }
+  // onFilesSelected(event: any) {
+  //   if (event.target.files.length > 0) {
+  //     this.productImages = [];
+  //     for (let i = 0; i < event.target.files.length; i++) {
+  //       const file = event.target.files[i];
+  //       this.productImages.push(file);
+  //     }
+  //   }
+  // }
 
 
   onThumbnailSelected(event: any): void {
@@ -447,6 +510,7 @@ export class ProductManagementComponent implements OnInit {
       const reader = new FileReader();
       reader.onload = (e: any) => {
         this.thumbnailPreview = e.target.result;
+        // console.log(this.thumbnailPreview)
       };
       reader.readAsDataURL(file);
     } else {
@@ -471,18 +535,19 @@ export class ProductManagementComponent implements OnInit {
 
     }
   }
-  onResetThumbnail(){
+  onResetThumbnail() {
     this.selectedThumbnail = null;
     this.thumbnailPreview = '';
   }
 
-  onResetImage(){
+  onResetImage() {
     this.selectedImages = [];
     this.imagesPreview = [];
   }
 
   onSubmit() {
     if (this.uploadForm.valid && this.selectedThumbnail && this.selectedImages.length) {
+      this.isLoadding = true;
       const productData = this.uploadForm.value;
       console.log(productData);
 
@@ -512,6 +577,8 @@ export class ProductManagementComponent implements OnInit {
         })
       ).subscribe(
         response => {
+          this.reloadProduct();
+          this.isLoadding = false;
           this.toastr.success('Tạo sản phẩm thành công!', 'Thành công');
           const closeButton = document.querySelector('.btn-mau-do[data-dismiss="modal"]') as HTMLElement;
           if (closeButton) { // Check if the button exists
@@ -519,6 +586,7 @@ export class ProductManagementComponent implements OnInit {
           }
         },
         error => {
+          this.isLoadding = false;
           this.toastr.error('Tạo sản phẩm bị lỗi!', 'Lỗi');
         }
       );
@@ -533,10 +601,15 @@ export class ProductManagementComponent implements OnInit {
       price: null,
       category_id: null,
       image: null,
-      quantity: null
+      quantity: null,
+      imageList: null
     });
+    this.imagesPreview = [];
+    this.thumbnailPreview = '';
+    // console.log('Thumbnailpre:', this.thumbnailPreview);
+
     this.productListService.getProductById(productId)
-      .subscribe(product => {
+      .subscribe(async product => {
         this.editForm.patchValue({
           product_name: product.result.productName,
           description: product.result.description,
@@ -546,22 +619,25 @@ export class ProductManagementComponent implements OnInit {
           enddateWarranty: product.result.enddateWarranty,
           status_id: product.result.status.status_id,
           image: product.result.image,
-          quantity: product.result.quantity
+          quantity: product.result.quantity,
+          imageList: product.result.imageList
         });
-        // console.log("productId la", this.editForm.value);
+        this.thumbnailPreview = await this.convertImageTobase64(product.result.image);
+        this.imagesPreview = product.result.imageList.map((image: any) => {
+          return image.fullPath;
+        });
+        // console.log('Thumbnailpre:', this.imagesPreview);
       });
-
     this.populateFormWithData(productId);
 
   }
-
-
 
 
   onEditSubmit(): void {
     if (this.editForm.valid) {
       const productData = this.editForm.value;
       // console.log('Form Data for Edit:', productData.product_id);
+      this.isLoadding = true;
 
       const updatedProduct = {
         ...productData,
@@ -575,21 +651,44 @@ export class ProductManagementComponent implements OnInit {
       this.productListService.editProduct(updatedProduct, this.selectedThumbnail, this.selectedImages, productData.product_id)
         .subscribe(
           response => {
+            this.reloadProduct();
+            this.isLoadding = false;
+
             console.log('Update successful', response);
             this.toastr.success('Cập nhật sản phẩm thành công!', 'Thành công');
             const closeButton = document.querySelector('.btn-mau-do[data-dismiss="modal"]') as HTMLElement;
             if (closeButton) { // Check if the button exists
               closeButton.click(); // If it exists, click it to close the modal
+              console.log("close button success")
             }
-
           },
           error => {
             console.error('Update error', error);
             this.toastr.error('Cập nhật sản phẩm bị lỗi!', 'Lỗi');
+            this.isLoadding = false;
+            const closeButton = document.querySelector('.btn-mau-do[data-dismiss="modal"]') as HTMLElement;
+
+            if (closeButton) { // Check if the button exists
+              closeButton.click(); // If it exists, click it to close the modal
+              console.log("close button success")
+            }
           }
         );
     }
   }
+
+
+  async convertImageTobase64(imageUrl: string): Promise<string> {
+    const response = await fetch(imageUrl);
+    const blob = await response.blob();
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onloadend = () => resolve(reader.result as string);
+      reader.onerror = reject;
+      reader.readAsDataURL(blob);
+    });
+  }
+
   openConfirmDeleteModal(productId: number, productName: string): void {
     this.selectedProductIdCurrentDelele = productId;
     this.selectedProductNameCurrentDelele = productName;

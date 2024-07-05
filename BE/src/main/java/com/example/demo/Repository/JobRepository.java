@@ -122,7 +122,6 @@ public interface JobRepository extends JpaRepository<Jobs,Integer> {
     List<JobProductDTO> getListProductJobByNameOrCodeProduct(@Param("keyword") String keyword);
 
 
-
     @Query("SELECT new com.example.demo.Dto.JobDTO.JobDoneDTO(" +
             "j.jobId, j.job_name, u.userId, u.username,COALESCE(p.position_id, 0) ,COALESCE(p.position_name, '') , s.status_id, s.status_name, j.cost, " +
             "COALESCE(pr.productId, 0), COALESCE(pr.productName, ''), COALESCE(rp.requestProductId, 0), COALESCE(rp.requestProductName, ''), j.quantityProduct)" + // Sử dụng COALESCE

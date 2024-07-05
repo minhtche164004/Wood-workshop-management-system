@@ -11,10 +11,9 @@ export class JobService {
   private apiGetListProductRQ=`${environment.apiUrl}api/auth/job/getListProductRequestForJob`
   private apiGetListProduct=`${environment.apiUrl}api/auth/job/getListProductForJob`
   private apiSearchProductJob = `${environment.apiUrl}api/auth/product/findProductByNameorCode`
-  private apiAddJob = `${environment.apiUrl}api/auth/job/CreateJobs`
+  private apiAddJob = `${environment.apiUrl}api/auth/job`
   private apiGetPosition3 = `${environment.apiUrl}api/auth/job/findUsersWithPositionAndLessThan3Jobs`
-  private apiGetPosition2 = `${environment.apiUrl}api/auth/job/findUsersWithPosition2AndLessThan3Jobs`
-  private apiGetPosition1 = `${environment.apiUrl}api/auth/job/findUsersWithPosition1AndLessThan3Jobs`
+
   private apiGetStatusJob =`${environment.apiUrl}api/auth/job/getAllStatusJob`
   private apiGetStatusJobByType = `${environment.apiUrl}api/auth/job/getAllStatusType`
   private apiCreateProductForjob = `${environment.apiUrl}api/auth/job/CreateJobs`
@@ -23,9 +22,17 @@ export class JobService {
     // status_id={{$random.integer(100)}}`
 
   constructor(private http: HttpClient) { }
-  addJob(user_id: number, p_id: number, status_id: number, job_id: number, jobData: any): Observable<any> {
-    const url = `${this.apiCreateProductForjob}?user_id=${user_id}&p_id=${p_id}&status_id=${status_id}&job_id=${job_id}`;
+  addJob(user_id: number, p_id: number, status_id: number, job_id: number, type_id:number, jobData: any): Observable<any> {
+    const url = `${this.apiCreateProductForjob}?user_id=${user_id}&p_id=${p_id}&status_id=${status_id}&&type_job=${type_id}&job_id=${job_id}`;
     return this.http.post<any>(url, jobData);
+  }
+  createJob(user_id: number, p_id: number, status_id: number, job_id: number, type_id: number, jobData: any): Observable<any> {
+    const url = `${this.apiAddJob}/CreateJobs`; // Endpoint for creating jobs
+   
+    const params = { user_id, p_id, status_id, job_id, type_id };
+    console.log('Constructed URL:', url);
+    console.log('Constructed params:', params);
+    return this.http.post(url, jobData, { params });
   }
   getStatusJobByType(type: number): Observable<any> {
     console.log(this.apiGetStatusJobByType)
@@ -39,18 +46,7 @@ export class JobService {
       catchError(this.handleError)
     );
   }
-  GetPosition1(): Observable<any> {
-    console.log(this.apiGetPosition1)
-    return this.http.get<any>(this.apiGetPosition1).pipe(
-      catchError(this.handleError)
-    );
-  }
-  GetPosition2(): Observable<any> {
-    console.log(this.apiGetPosition2)
-    return this.http.get<any>(this.apiGetPosition2).pipe(
-      catchError(this.handleError)
-    );
-  }
+
   GetPosition3(type: any): Observable<any> {
     console.log(this.apiGetPosition3)
     return this.http.get<any>(`${this.apiGetPosition3}?type=${type}`).pipe(

@@ -15,7 +15,7 @@
                 <i class="material-icons align-middle" style="font-size: 18px;">&#xE147;</i>
                 <span class="align-middle">Thêm Người Dùng</span>
               </a>
-            </div>
+            </div> 
           </div>
 
           <div class="row">
@@ -264,7 +264,7 @@
     </div>
   </div>
 </form>
-
+ 
 <!-- Modal for Editing Product -->
 <form [formGroup]="editUserForm" (ngSubmit)="EditUser()" #editForm="ngForm">
   <div style="margin: 50px 0px 100px 100px;" class="modal fade" id="editAccountModal" tabindex="-1" role="dialog"
@@ -325,7 +325,7 @@
                   class="form-control form-control-lg">
                   <option [ngValue]="null" disabled selected>Chọn Vị Trí</option>
                   <option disabled  *ngFor="let pos of position"  [ngValue]="pos.position_id">
-                    {{ pos.position_name }}
+                    {{ pos.position_name }} 
                   </option>
                 </select>
               </div>

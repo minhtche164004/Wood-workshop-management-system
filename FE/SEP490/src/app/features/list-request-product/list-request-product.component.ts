@@ -17,11 +17,15 @@ export class ListRequestProductComponent {
   list_request_product: any[] = [];
   currentPage: number = 1;
   requestForm: FormGroup;
+  selectedImages: File[] = [];
+  imagesPreview: string[] = [];
   selectedProductIdCurrentDelele: number = 0;
   constructor(private authenListService: AuthenListService, private toastr: ToastrService,private fb: FormBuilder,) {
     
     this.requestForm = this.fb.group({
-      description: ['']
+      request_Id: [0],
+      description: [''],
+      imageList: ['']
     });
    }
   ngOnInit(): void {
@@ -53,7 +57,6 @@ export class ListRequestProductComponent {
   }
   openConfirmDeleteModal(requestId: number): void {
     this.selectedProductIdCurrentDelele = requestId;
-
   }
   deleteRequest() {
     this.authenListService.deleteRequestProductCustomer(this.selectedProductIdCurrentDelele)
@@ -85,27 +88,87 @@ export class ListRequestProductComponent {
       );
     console.log('requestId', this.selectedProductIdCurrentDelele);
   }
-  getDataRequest(requestId: number) {
-    console.log('Request ID:', requestId); // Log the requestId
-    this.authenListService.getRequestByIdCustomer(requestId)
-    
-      .subscribe(
-        product => {
-          console.log('API response:', product); // Log the entire response
-          if (product && product.result) {
-            this.requestForm.patchValue({
-              description: product.result.description,
-            });
-            console.log("Product details:", this.requestForm.value);
-          } else {
-            console.error('Product result is undefined', product);
-            this.toastr.error('Failed to load product details. Please try again later.', 'Error');
-          }
-        },
-        error => {
-          console.error('Error fetching product details:', error);
-          this.toastr.error('Failed to load product details. Please try again later.', 'Error');
-        }
-      );
+
+  onResetImage() {
+    this.selectedImages = [];
+    this.imagesPreview = [];
   }
+  onImagesSelected(event: any): void {
+    console.log(event.target, event.target.files);
+    if (event.target && event.target.files) {
+      this.selectedImages = Array.from(event.target.files);
+  
+      const files: File[] = Array.from(event.target.files as FileList);
+      if (files && files.length) {
+        // Clear the existing preview list    
+        this.imagesPreview = [];
+  
+        // Create and store URLs for preview
+        files.forEach((file: File) => {
+          const url = URL.createObjectURL(file);
+          this.imagesPreview.push(url);
+        });
+      }
+    }
+  }
+  getDataRequest(requestId: number) {
+    this.requestForm.patchValue({
+      request_Id: requestId,
+      description: null,
+      imagesList: null
+    });
+    this.imagesPreview = [];
+    
+    this.authenListService.getRequestByIdCustomer(requestId)
+      .subscribe(async product => {
+        if (product && product.result) {
+          this.requestForm.patchValue({
+            description: product.result.description,
+            imagesList: product.result.imagesList
+          });
+          if (product.result.imagesList) {
+            this.imagesPreview = product.result.imagesList.map((image: any) => {
+              return image.fullPath;
+            });
+          }
+        }
+      });
+  }
+  
+
+  onEditSubmit(): void {
+    if (this.requestForm.valid) {
+      const requestData = this.requestForm.value;
+      // console.log('Form Data for Edit:', requestData.product_id);
+      const updatedRequestProduct = {
+        ...requestData,
+        images: this.selectedImages
+      };
+      console.log('Form Data for updatedProduct:', updatedRequestProduct);
+      this.authenListService.editRequestProductForCustomer(updatedRequestProduct, this.selectedImages, requestData.request_Id)
+        .subscribe(
+          response => {
+            this.getHistoryOrder();
+            console.log('Update successful', response);
+            this.toastr.success('Cập nhật sản phẩm yêu cầu thành công!', 'Thành công');
+            const closeButton = document.querySelector('.btn-mau-do[data-dismiss="modal"]') as HTMLElement;
+            if (closeButton) { // Check if the button exists
+              closeButton.click(); // If it exists, click it to close the modal
+              console.log("close button success")
+            }
+          },
+          error => {
+            console.error('Update error', error);
+            this.toastr.error('Cập nhật sản phẩm bị lỗi!', 'Lỗi');
+            const closeButton = document.querySelector('.btn-mau-do[data-dismiss="modal"]') as HTMLElement;
+            if (closeButton) { // Check if the button exists
+              closeButton.click(); // If it exists, click it to close the modal
+              console.log("close button success")
+            }
+          }
+        );
+    }
+  }
+
+  
 }  

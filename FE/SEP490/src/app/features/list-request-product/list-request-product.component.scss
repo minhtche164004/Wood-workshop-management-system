@@ -352,6 +352,14 @@
   .text-offline {
     color: red;
   }
+  .previewMultiple {
+    width: calc(100% / 1.5); /* Increase the width */
+    height: auto; 
+    max-width: calc(700px / 1); /* Increase the maximum width */
+    display: inline-flex;
+    padding-left: 2%;
+    padding-bottom: 2%;
+  }
   
   
 

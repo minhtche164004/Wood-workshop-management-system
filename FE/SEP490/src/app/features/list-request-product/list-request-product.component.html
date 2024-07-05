@@ -80,7 +80,7 @@
                   <td><img class="img_product" [src]="hs.requestImages[0]?.fullPath" alt="Ảnh sản phẩm"></td>
 
                   <td>{{ hs.requestDate | date:'dd/MM/yyyy' }}</td>
-                  <td>{{ hs.requestId }}</td>
+                  <td>{{ hs.description }}</td>
                   <td>{{ hs.status.status_name }}</td>
                   <td>{{ hs.address}}</td>
                   <td>{{ hs.response}}</td>
@@ -100,12 +100,7 @@
         <pagination-controls style="justify-content: right; display: flex;" (pageChange)="currentPage = $event"
           previousLabel="Trang trước" nextLabel="Trang sau">
         </pagination-controls>
-        <div class="clearfix" style="justify-content: right; display: flex; margin-top: 400px;">
-          <div class="hint-text">Hiển thị <b>{{ (currentPage - 1) * 10 + 1 }}</b> tới <b>{{ currentPage * 10
-              > list_request_product.length ? list_request_product.length : currentPage * 10 }}</b> trong tổng <b>{{
-              list_request_product.length }}</b> dữ liệu</div>
-        </div>
-
+        
 
       </div>
     </div>
@@ -144,10 +139,7 @@
         </button>
       </div>
       <div class="modal-body">
-        <form enctype="multipart/form-data" [formGroup]="requestForm">
-
-
-
+        <form enctype="multipart/form-data" [formGroup]="requestForm" (ngSubmit)="onEditSubmit()">
           <div class="form-group">
             <label style="font-size: 16px;" for="editProductDescription">Mô tả</label>
             <textarea class="form-control" id="editProductDescription" rows="3" name="editProductDescription"
@@ -155,10 +147,20 @@
           </div>
 
           <div class="form-row">
-            <div class="form-group col-md-6">
+            <div class="form-group col-md-10">
               <label style="font-size: 16px;" for="editProductImages">Ảnh sản phẩm (Chọn nhiều)</label>
-              <input type="file" class="form-control-file" id="editProductImages" name="editProductImages" multiple>
-              <img id="blah" src="#" alt="image product" formControlName="image" />
+              <input type="file" class="form-control-file" id="editProductImages" name="editProductImages" multiple
+                (change)="onImagesSelected($event)">
+            </div>
+            <div class="form-group col-md-2 d-flex align-items-end">
+              <button type="button" (click)="onResetImage()" class="btn"
+                style="height: calc(2.25rem + 2px); padding: 0.375rem 0.75rem; font-size: 1rem; line-height: 1.5; border-radius: 0.25rem; border: 1px solid #ced4da; background-color: #fff; color: #495057;">
+                Làm mới</button>
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group col-md-6" *ngIf="imagesPreview">
+              <img *ngFor="let imageUrl of imagesPreview" [src]="imageUrl" class="previewMultiple">
             </div>
           </div>
 

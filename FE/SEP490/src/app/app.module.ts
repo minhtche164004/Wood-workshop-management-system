@@ -28,7 +28,6 @@ import { ConfirmPopupModule } from 'primeng/confirmpopup';
 import { NgxPaginationModule } from 'ngx-pagination';
 import { SupplierManagementComponent } from 'src/app/supplier-management/supplier-management.component';
 import { ViewProfileComponent } from './features/view-profile/view-profile.component';
-import { FileUploadComponent } from './file-upload/file-upload.component';
 import { SubMaterialManagementComponent } from './Admin/sub-material-management/sub-material-management.component';
 import { ProductDetailComponent } from './features/product-detail/product-detail.component';
 import { OrderRequiredComponent } from './order-required/order-required.component';
@@ -53,26 +52,17 @@ import { ReportManagementComponent } from './Admin/report-management/report-mana
 import { AdvancedBillManagementComponent } from './Admin/advanced-bill-management/advanced-bill-management.component';
 import { FeedbackDefectiveComponent } from './Admin/feedback-defective/feedback-defective.component';
 import { TotalSalaryComponent } from './Admin/total-salary/total-salary.component';
-
 import { AutoCompleteComponent } from './auto-complete/auto-complete.component';
 import {AutocompleteLibModule} from 'angular-ng-autocomplete';
 import { WishlistComponent } from './features/wishlist/wishlist.component';
 import { TemplateComponent } from './features/template/template.component';
-import { HistoryOrderComponent } from './Admin/history-order/history-order.component';
 import { ListRequestProductComponent } from './features/list-request-product/list-request-product.component';
-
-
-
-
-
-
-
-
-
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatNativeDateModule } from '@angular/material/core';
+import { CalendarModule } from 'primeng/calendar';
+import { HistoryOrderComponent } from './Admin/history-order/history-order.component';
 // import { AuthInterceptor } from './service/auth.interceptor';
-
-
-
 @NgModule({
 
   declarations: [
@@ -139,7 +129,11 @@ import { ListRequestProductComponent } from './features/list-request-product/lis
     ToastrModule.forRoot(),
     ConfirmDialogModule,
     ConfirmPopupModule,
-    AutocompleteLibModule
+    AutocompleteLibModule,
+    MatDatepickerModule,
+    MatFormFieldModule,
+    CalendarModule,
+    MatNativeDateModule
   ],
   
   providers: [

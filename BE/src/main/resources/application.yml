@@ -10,7 +10,7 @@ spring:
 #    username: root
 #    password: 12012002
 
-        url: jdbc:mysql://sep490g58db.mysql.database.azure.com:3306/test1?useSSL=false
+        url: jdbc:mysql://leadderdeptraivl.mysql.database.azure.com:3306/test1?useSSL=false
         username: sep490_g58
         password: Leaddeptrai@
   mvc:

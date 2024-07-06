@@ -446,6 +446,18 @@ userRepository.save(user);
     }
 
 
+    @Override
+    public List<UserDTO> FilterByPosition(int position_id) {
+        List<User> userList = userRepository.FilterByPosition(position_id);
+        if (userList.isEmpty()) {
+            throw new AppException(ErrorCode.NOT_FOUND);
+        }
+        return userList.stream()
+                .map(user -> modelMapper.map(user, UserDTO.class))
+                .collect(Collectors.toList());
+    }
+
+
 }
 
 

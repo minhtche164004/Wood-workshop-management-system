@@ -18,7 +18,7 @@ import java.util.Map;
 
 @Service
 public interface SubMaterialService {
-    List<SubMaterials> getAll();
+    List<SubMaterialViewDTO> getAll();
     List<SubMaterials> FilterByMaterial(int material_id);
     SubMaterials addNew(SubMaterialDTO subMaterialDTO);
     List<SubMaterialNameDTO> GetListName();

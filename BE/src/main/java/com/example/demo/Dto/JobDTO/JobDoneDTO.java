@@ -25,6 +25,7 @@ public class JobDoneDTO {
     private Integer request_id;
     private String request_name;
     private Integer quantity;
+    private String code;
 
 
 }

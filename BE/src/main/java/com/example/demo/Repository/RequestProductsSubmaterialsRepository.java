@@ -25,4 +25,7 @@ public interface RequestProductsSubmaterialsRepository extends JpaRepository<Req
             "LEFT JOIN j.subMaterial sub " +
             "LEFT JOIN sub.material m WHERE j.requestProduct.requestProductId= :requestProductId AND j.subMaterial.material.materialId = :materialId")
     List<ReProduct_SubmaterialDTO> getRequestProductSubMaterialByProductIdAndTypeMate(int requestProductId,int materialId);
+
+    @Query("SELECT u.subMaterial.subMaterialName FROM RequestProductsSubmaterials u WHERE u.requestProduct.requestProductId = :query AND u.subMaterial.material.materialId IN (1, 2)")
+    List<String> GetSubNameByProductId(int query);
 }

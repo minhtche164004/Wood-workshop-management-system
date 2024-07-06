@@ -14,10 +14,16 @@ import com.example.demo.Service.JobService;
 import jakarta.persistence.EntityManager;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
+import java.sql.Date;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 @Service
@@ -44,6 +50,8 @@ public class JobServiceImpl implements JobService {
     private ProcessproducterrorRepository processproducterrorRepository;
     @Autowired
     private Status_Order_Repository statusOrderRepository;
+    @Autowired
+    private AdvancesalaryRepository advancesalaryRepository;
 
 
     @Override
@@ -178,10 +186,28 @@ public class JobServiceImpl implements JobService {
 
             jobs_log.setStatus(statusJobRepository.findById(13));
             jobs_log.setJob_log(true);
+
+
             //khi da nghiem thu o cong doan cuoi la son thi` se chuyen status sang trang thai da hoan` thanh
         }
         else{
+            //nếu công việc hoàn thành thì set lương cho nhân viên luôn --------------------------------------
+            Advancesalary advancesalary = new Advancesalary();
+            LocalDate today = LocalDate.now();
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("ddMMyy");
+            String dateString = today.format(formatter);
+            Advancesalary lastadvan = advancesalaryRepository.findAdvancesalaryTop(dateString + "AD");
+            int count = lastadvan != null ? Integer.parseInt(lastadvan.getCode().substring(8)) + 1 : 1;
+            String code = dateString + "AD" + String.format("%03d", count);
 
+            advancesalary.setDate(Date.valueOf(today));
+            advancesalary.setAmount(jobs_history.getCost());
+            advancesalary.setApprove(true);
+            advancesalary.setAdvanceSuccess(false);
+            advancesalary.setCode(code);
+            advancesalary.setUser(jobs_history.getUser());
+            advancesalaryRepository.save(advancesalary);
+            ///------------------------------------------------------------------------------------------
             waitNextJob.setStatus(statusJobRepository.findById(15)); // khi da nghiem thu thi se chuyen sang trang thai chờ cong viec tiep theo
         }
         waitNextJob.setJob_log(true); // true đển ẩn , ví dụ đã nghiệm thu xong chờ giai đoạn tiếp theo , ở đây list trong job ra thì bắt đc user_id cảu
@@ -265,6 +291,17 @@ public class JobServiceImpl implements JobService {
     }
 
     @Override
+    public List<JobDoneDTO> findAllJobForDoneByEmployeeID() {
+        UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        User user = userRepository.getUserByUsername(userDetails.getUsername());
+        List<JobDoneDTO> jobsList = jobRepository.findAllJobForDoneByEmployeeID(user.getUserId());
+        if(jobsList == null ){
+            throw new AppException(ErrorCode.NOT_FOUND);
+        }
+        return jobsList;
+    }
+
+    @Override
     public List<Status_Job> getAllStatusJob() {
         return statusJobRepository.getAllStatus();
     }
@@ -311,6 +348,45 @@ public class JobServiceImpl implements JobService {
         return productErrorAllDTO;
     }
 
+    @Override
+    public List<Advancesalary> getAllAdvancesalary() {
+        List<Advancesalary> list = advancesalaryRepository.findAll();
+        if(list == null){
+            throw new AppException(ErrorCode.NOT_FOUND);
+        }
+        return list;
+    }
+
+    @Override
+    public List<Advancesalary> multi_filter_salary(Date fromDate, Date toDate, String employeeName, String sortDirection) {
+        List<Advancesalary> advancesalaryList = advancesalaryRepository.filterAdvancesalary(fromDate, toDate, employeeName);
+
+        if (advancesalaryList.isEmpty()) {
+            throw new AppException(ErrorCode.NOT_FOUND);
+        }
+
+        // Sắp xếp danh sách lương tạm ứng theo ngày
+        if (sortDirection != null) {
+            if (sortDirection.equalsIgnoreCase("asc")) {
+                advancesalaryList.sort(Comparator.comparing(Advancesalary::getAmount));
+            } else if (sortDirection.equalsIgnoreCase("desc")) {
+                advancesalaryList.sort(Comparator.comparing(Advancesalary::getAmount).reversed());
+            }
+        }
+
+        return advancesalaryList;
+    }
+
+    @Override
+    public List<Advancesalary> getAdvancesalaryByEmployeeId() {
+        UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        User user = userRepository.getUserByUsername(userDetails.getUsername());
+        List<Advancesalary> list = advancesalaryRepository.findByUserId(user.getUserId());
+        if(list == null){
+            throw new AppException(ErrorCode.NOT_FOUND);
+        }
+        return list;
+    }
 
 
 }

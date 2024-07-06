@@ -6,6 +6,7 @@ import com.example.demo.Dto.OrderDTO.JobProductDTO;
 import com.example.demo.Dto.OrderDTO.OrderDetailDTO;
 import com.example.demo.Dto.OrderDTO.OrderDetailWithJobStatusDTO;
 import com.example.demo.Dto.ProductDTO.ProductEditDTO;
+import com.example.demo.Dto.ProductDTO.RequestProductDTO_Show;
 import com.example.demo.Dto.RequestDTO.RequestAllDTO;
 import com.example.demo.Dto.ProductDTO.RequestProductAllDTO;
 import com.example.demo.Dto.ProductDTO.RequestProductDTO;
@@ -100,10 +101,10 @@ public class OrderController {
         apiResponse.setResult(orderService.GetRequestById(id));
         return apiResponse;
     }
-    @GetMapping("/GetRequestProductById")
-    public ApiResponse<?> GetRequestProductById(@RequestParam("id") int id) {
-        ApiResponse<RequestProductAllDTO> apiResponse = new ApiResponse<>();
-        apiResponse.setResult(orderService.GetProductRequestById(id));
+    @GetMapping("/getRequestProductById")
+    public ApiResponse<?> GetRequestProductByIdWithImage(@RequestParam("id") int id) {
+        ApiResponse<RequestProductDTO_Show> apiResponse = new ApiResponse<>();
+        apiResponse.setResult(orderService.GetRequestProductByIdWithImage(id));
         return apiResponse;
     }
     @PreAuthorize("hasAuthority('CUSTOMER')")

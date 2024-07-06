@@ -97,7 +97,7 @@ public class SubMaterialController {
     public ResponseEntity<Resource> downloadFile() {
         try {
             // 1. Sử dụng ResourceLoader để lấy resource từ classpath
-            Resource resource = resourceLoader.getResource("classpath:templates/submate.xlsx");
+            Resource resource = resourceLoader.getResource("classpath:templates/Bieu mau nhap nguyen lieu.xlsx");
 
             // 2. Kiểm tra xem resource có tồn tại không
             if (!resource.exists()) {

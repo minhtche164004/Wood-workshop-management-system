@@ -1,9 +1,12 @@
 package com.example.demo.Controllers.OrderController;
 
 import com.example.demo.Config.RedisConfig;
+import com.example.demo.Dto.OrderDTO.JobProductDTO;
+
 import com.example.demo.Dto.OrderDTO.OrderDetailDTO;
 import com.example.demo.Dto.OrderDTO.OrderDetailWithJobStatusDTO;
 import com.example.demo.Dto.ProductDTO.ProductEditDTO;
+import com.example.demo.Dto.ProductDTO.RequestProductDTO_Show;
 import com.example.demo.Dto.RequestDTO.RequestAllDTO;
 import com.example.demo.Dto.ProductDTO.RequestProductAllDTO;
 import com.example.demo.Dto.ProductDTO.RequestProductDTO;
@@ -39,7 +42,6 @@ import java.util.List;
 @RequestMapping("/api/auth/order/")
 @AllArgsConstructor
 public class OrderController {
-    private static final JedisPooled jedis = RedisConfig.getRedisInstance();
     @Autowired
     private UserInforService userInforService;
     @Autowired
@@ -52,13 +54,17 @@ public class OrderController {
     private WhiteListService whiteListService;
     private final OrderRepository orderRepository;
 
-
+//    @GetMapping("/GetAllProductRequest")
+//    public ApiResponse<?> GetAllProductRequest() {
+//        ApiResponse<List> apiResponse = new ApiResponse<>();
+//        apiResponse.setResult(orderService.GetAllProductRequest());
+//        return apiResponse;
+//    }
     @GetMapping("/GetAllProductRequest")
     public ApiResponse<?> GetAllProductRequest() {
         ApiResponse<List> apiResponse = new ApiResponse<>();
-        apiResponse.setResult(orderService.GetAllProductRequest());
+        apiResponse.setResult(orderService.GetAllRequestProductWithImage());
         return apiResponse;
-
     }
     @GetMapping("/GetAllProductRequestByUserId")
     public ApiResponse<?> GetAllProductRequestByUserId() {
@@ -95,10 +101,10 @@ public class OrderController {
         apiResponse.setResult(orderService.GetRequestById(id));
         return apiResponse;
     }
-    @GetMapping("/GetRequestProductById")
-    public ApiResponse<?> GetRequestProductById(@RequestParam("id") int id) {
-        ApiResponse<RequestProductAllDTO> apiResponse = new ApiResponse<>();
-        apiResponse.setResult(orderService.GetProductRequestById(id));
+    @GetMapping("/getRequestProductById")
+    public ApiResponse<?> GetRequestProductByIdWithImage(@RequestParam("id") int id) {
+        ApiResponse<RequestProductDTO_Show> apiResponse = new ApiResponse<>();
+        apiResponse.setResult(orderService.GetRequestProductByIdWithImage(id));
         return apiResponse;
     }
     @PreAuthorize("hasAuthority('CUSTOMER')")
@@ -232,22 +238,7 @@ public class OrderController {
     @GetMapping("/getAllOrderDetailByOrderId")
     public ApiResponse<?>  getAllOrderDetail(@RequestParam("orderId") int orderId) {
         ApiResponse<List> apiResponse = new ApiResponse<>();
-        String cacheKey = "all_order_detail_by_order_id";
-        List<OrderDetailWithJobStatusDTO> products;
-        String cachedData = jedis.hget(cacheKey, orderId + "");
-        Gson gson = new GsonBuilder().setDateFormat("MMM dd, yyyy").create();
-        if (cachedData != null) {
-            Type type = new TypeToken<List<OrderDetailWithJobStatusDTO>>() {
-            }.getType();
-
-            products = gson.fromJson(cachedData, type);
-        } else {
-            products = orderService.getOrderDetailByOrderId(orderId);
-            String jsonData = gson.toJson(products);
-            jedis.hset(cacheKey, orderId + "", jsonData);
-            jedis.expire(cacheKey, 1800);
-        }
-        apiResponse.setResult(products);
+        apiResponse.setResult(orderService.getOrderDetailByOrderId(orderId));
         return apiResponse;
     }
     @GetMapping("/getListPhoneNumber")

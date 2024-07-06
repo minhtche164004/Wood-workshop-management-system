@@ -44,49 +44,48 @@ public class JobController {
     @GetMapping("/getListProductRequestForJob")
     public ApiResponse<?> getListProductRequestForJob() {
         ApiResponse<List> apiResponse = new ApiResponse<>();
-        String cacheKey = "all_products_request_job";
-//        jedis.del(cacheKey);
-        List<JobProductDTO> jobProductDTOS;
-        String cachedData = jedis.get(cacheKey);
-        Gson gson = new GsonBuilder().setDateFormat("MMM dd, yyyy").create();
-        if (cachedData != null) {
-            Type type = new TypeToken<List<JobProductDTO>>() {
-            }.getType();
-
-            jobProductDTOS = gson.fromJson(cachedData, type);
-        } else {
-            jobProductDTOS = jobService.getListRequestProductJob();
-            String jsonData = gson.toJson(jobProductDTOS);
-            jedis.set(cacheKey, jsonData);
-            jedis.expire(cacheKey, 1200);
-        }
-        apiResponse.setResult(jobProductDTOS);
+//        String cacheKey = "all_products_request_job";
+////        jedis.del(cacheKey);
+//        List<JobProductDTO> jobProductDTOS;
+//        String cachedData = jedis.get(cacheKey);
+//        Gson gson = new GsonBuilder().setDateFormat("MMM dd, yyyy").create();
+//        if (cachedData != null) {
+//            Type type = new TypeToken<List<JobProductDTO>>() {
+//            }.getType();
+//
+//            jobProductDTOS = gson.fromJson(cachedData, type);
+//        } else {
+//            jobProductDTOS = jobService.getListRequestProductJob();
+//            String jsonData = gson.toJson(jobProductDTOS);
+//            jedis.set(cacheKey, jsonData);
+//            jedis.expire(cacheKey, 1200);
+//        }
+        apiResponse.setResult(jobService.getListRequestProductJob());
         return apiResponse;
     }
 //    //lúc filter các có sẵn thì call api này
     @GetMapping("/getListProductForJob")
     public ApiResponse<?> getListProductForJob() {
         ApiResponse<List> apiResponse = new ApiResponse<>();
-        String cacheKey = "all_products_job";
-
-//        jedis.del(cacheKey);
-        List<JobProductDTO> jobProductDTOS;
-        String cachedData = jedis.get(cacheKey);
-        Gson gson = new GsonBuilder().setDateFormat("MMM dd, yyyy").create();
-        if (cachedData != null) {
-            Type type = new TypeToken<List<JobProductDTO>>() {
-            }.getType();
-
-            jobProductDTOS = gson.fromJson(cachedData, type);
-        } else {
-            jobProductDTOS = jobService.getListProductJob();
-            String jsonData = gson.toJson(jobProductDTOS);
-            jedis.set(cacheKey, jsonData);
-            jedis.expire(cacheKey, 1200);
-        }
-        apiResponse.setResult(jobProductDTOS);
+//        String cacheKey = "all_products_job";
+//
+////        jedis.del(cacheKey);
+//        List<JobProductDTO> jobProductDTOS;
+//        String cachedData = jedis.get(cacheKey);
+//        Gson gson = new GsonBuilder().setDateFormat("MMM dd, yyyy").create();
+//        if (cachedData != null) {
+//            Type type = new TypeToken<List<JobProductDTO>>() {
+//            }.getType();
+//
+//            jobProductDTOS = gson.fromJson(cachedData, type);
+//        } else {
+//            jobProductDTOS = jobService.getListProductJob();
+//            String jsonData = gson.toJson(jobProductDTOS);
+//            jedis.set(cacheKey, jsonData);
+//            jedis.expire(cacheKey, 1200);
+//        }
+        apiResponse.setResult(jobService.getListProductJob());
         return apiResponse;
-
     }
 //
     @GetMapping("/getRequestProductInOrderDetailByCode")
@@ -209,6 +208,7 @@ public class JobController {
     public ApiResponse<?> getJobWasDone() {
         ApiResponse<List> apiResponse = new ApiResponse<>();
         String cacheKey = "all_job_was_done";
+//        jedis.del(cacheKey);
         List<JobDoneDTO> jobsList;
         String cachedData = jedis.get(cacheKey);
         Gson gson = new GsonBuilder().setDateFormat("MMM dd, yyyy").create();
@@ -227,6 +227,12 @@ public class JobController {
         return apiResponse;
     }
 
+    @GetMapping("/findAllJobForDoneByEmployeeID")
+    public ApiResponse<?> findAllJobForDoneByEmployeeID() {
+        ApiResponse<List> apiResponse = new ApiResponse<>();
+        apiResponse.setResult(jobService.findAllJobForDoneByEmployeeID());
+        return apiResponse;
+    }
 
 //    @GetMapping("/getListJobWasDone")
 //    public ApiResponse<?> getJobWasDone() {

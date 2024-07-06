@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormControl } from '@angular/forms';
+import { FormBuilder, FormControl } from '@angular/forms';
 import { ProductListService } from 'src/app/service/product/product-list.service';
 import { Observable, debounceTime, distinctUntilChanged, map, startWith, switchMap } from 'rxjs';
 import {AutocompleteLibModule} from 'angular-ng-autocomplete';
@@ -32,8 +32,8 @@ import {AutocompleteLibModule} from 'angular-ng-autocomplete';
 export class AutoCompleteComponent implements OnInit {
   keyword = 'productName';
   products: any[] = [];
-
-  constructor(private productListService: ProductListService, ) { }
+  selectedProduct: any = {};
+  constructor(private productListService: ProductListService,private fb: FormBuilder) { }
 
   ngOnInit(): void {
     this.productListService.getAllProductCustomer().subscribe(
@@ -57,11 +57,26 @@ export class AutoCompleteComponent implements OnInit {
     selectEvent(item: any) {
       
   }
-
+  selectProduct(product: any): void {
+    console.log('Selected product:', product);
+    this.selectedProduct = product.id; // Adjust based on your product object structure
+  }
   onChangeSearch(search: string) {
 
   }
 
   onFocused(e: any) {
+  }
+
+
+
+  inProgress: boolean | undefined;
+
+  isModalOpen: boolean | undefined;
+
+
+
+  save() {
+   
   }
 }

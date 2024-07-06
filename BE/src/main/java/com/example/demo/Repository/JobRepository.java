@@ -135,6 +135,18 @@ public interface JobRepository extends JpaRepository<Jobs,Integer> {
     List<JobDoneDTO> findAllJobForEmployeeDone();
 
     @Query("SELECT new com.example.demo.Dto.JobDTO.JobDoneDTO(" +
+            "j.jobId, j.job_name, u.userId, u.username,COALESCE(p.position_id, 0) ,COALESCE(p.position_name, '') , s.status_id, s.status_name, j.cost, " +
+            "COALESCE(pr.productId, 0), COALESCE(pr.productName, ''), COALESCE(rp.requestProductId, 0), COALESCE(rp.requestProductName, ''), j.quantityProduct,j.code)" + // Sử dụng COALESCE
+            " FROM Jobs j" +
+            " JOIN j.user u" +
+            " JOIN u.position p" +
+            " JOIN j.status s" +
+            " LEFT JOIN j.product pr" +
+            " LEFT JOIN j.requestProducts rp" +
+            " WHERE j.job_log = true AND u.userId = :userId")
+    List<JobDoneDTO> findAllJobForDoneByEmployeeID(int userId);
+
+    @Query("SELECT new com.example.demo.Dto.JobDTO.JobDoneDTO(" +
             "j.jobId, j.job_name, u.userId, u.username, p.position_id, p.position_name, s.status_id, s.status_name, j.cost, " +
             "COALESCE(pr.productId, 0), COALESCE(pr.productName, ''), COALESCE(rp.requestProductId, 0), COALESCE(rp.requestProductName, ''), j.quantityProduct,j.code)" +
             " FROM Jobs j" +

@@ -227,6 +227,12 @@ public class JobController {
         return apiResponse;
     }
 
+    @GetMapping("/findAllJobForDoneByEmployeeID")
+    public ApiResponse<?> findAllJobForDoneByEmployeeID() {
+        ApiResponse<List> apiResponse = new ApiResponse<>();
+        apiResponse.setResult(jobService.findAllJobForDoneByEmployeeID());
+        return apiResponse;
+    }
 
 //    @GetMapping("/getListJobWasDone")
 //    public ApiResponse<?> getJobWasDone() {

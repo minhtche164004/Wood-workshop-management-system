@@ -1,13 +1,6 @@
-<div>
-  <!-- Input 1 -->
-  <input type="text" [(ngModel)]="input1" placeholder="Input 1" />
-  <input type="text" [(ngModel)]="input2" placeholder="Input 1" />
-  <input type="text" [(ngModel)]="input3" placeholder="Input 1" />
-  <input type="text" [(ngModel)]="input4" placeholder="Input 1" />
-  
-  <!-- Input 2 bound to Input 1 -->
-  <input type="text" [ngModel]="input1" placeholder="Input 2 (Automatically updated)" disabled />
-  <input type="text" [ngModel]="input2" placeholder="Input 2 (Automatically updated)" disabled />
-  <input type="text" [ngModel]="input3" placeholder="Input 2 (Automatically updated)" disabled />
-  <input type="text" [ngModel]="input4" placeholder="Input 2 (Automatically updated)" disabled />
+<button (click)="getTransactions()">Get Transactions</button>
+
+<div *ngIf="transactionData">
+  <!-- Display transaction data here -->
+  <pre>{{transactionData | json}}</pre>
 </div>

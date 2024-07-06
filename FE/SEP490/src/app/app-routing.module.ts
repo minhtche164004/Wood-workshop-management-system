@@ -50,6 +50,7 @@ import { TotalSalaryComponent } from './Admin/total-salary/total-salary.componen
 import { AutoCompleteComponent } from './auto-complete/auto-complete.component';
 import { HistoryOrderComponent } from './Admin/history-order/history-order.component';
 import { ListRequestProductComponent } from './features/list-request-product/list-request-product.component';
+import { DashboardComponent } from './Layout/dashboard/dashboard.component';
 
 
 
@@ -93,6 +94,7 @@ const routes: Routes = [
 
   { path: 'wishlist', component: WishlistComponent },
   { path: 'template', component: TemplateComponent },
+  { path: 'ds', component: DashboardComponent },
   
 
   { path: 'material_management', component: MaterialManagementComponent },

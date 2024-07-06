@@ -104,8 +104,7 @@
                   (click)="openConfirmDeleteModal(product.productId, product.productName)">
                   <i class="fa-regular fa-trash-can"></i>
                 </a>
-                <a href="#" class="info" title="Chi tiết" data-toggle="modal" data-target="#productDetailModal"
-                  (click)="showProductDetails(product.id)">
+                <a href="#" class="info" title="Chi tiết" data-toggle="modal" data-target="#productDetailModal">
                   <i class="fa-solid fa-ellipsis-vertical"></i>
                 </a>
 
@@ -126,7 +125,7 @@
           <thead>
             <tr>
               <th>STT</th>
-              <th>Mã đơn</th>
+              <th>Mã yêu cầu</th>
               <th>Thao tác</th>
               <th>Ảnh đại diện</th>
               <th>Ngày hoàn thành</th>
@@ -153,13 +152,12 @@
                   (click)="openConfirmDeleteModal(product.requestProductId, product.requestProductName)">
                   <i class="fa-regular fa-trash-can"></i>
                 </a>
-                <a href="#" class="info" title="Chi tiết" data-toggle="modal" data-target="#productDetailModal"
-                  (click)="showProductDetails(product.requestProductId)">
+                <a href="#" class="info" title="Chi tiết" data-toggle="modal" data-target="#productDetailModal">
                   <i class="fa-solid fa-ellipsis-vertical"></i>
                 </a>
 
               </td>
-              <td><img class="img_product" [src]="product.image" alt="Ảnh đại diện"></td>
+              <td *ngIf="product.requestImages && product.requestImages.length > 0;"><img class="img_product" [src]="product.requestImages[0].fullpath" alt="Ảnh đại diện"></td>
               <td>{{ product.completionTime }}</td>
               <td>{{ product.requestProductName }}</td>
               <td>{{ product.description }}</td>
@@ -336,38 +334,55 @@
     <div class="modal-content">
       <div class="modal-body">
         <label style="font-size: 32px;" for="productName">Thêm sản phẩm theo yêu cầu</label>
-        <form [formGroup]="uploadForm" (ngSubmit)="onSubmit()">
-          <div class="form-group">
-            <label style="font-size: 16px;" for="productName">Tên sản phẩm</label>
-            <input type="text" class="form-control" id="productName" formControlName="product_name">
+        <form [formGroup]="uploadForm" (ngSubmit)="onSubmitProductRequest()">
+          <div class="form-row">
+            <div class="form-group col-md-12">
+              <label style="font-size: 16px;" for="request_id">Chọn yêu cầu</label>
+              <input type="number" class="form-control" id="request_id" formControlName="request_id">
+            </div>
           </div>
+          <div class="form-row">
+            <div class="form-group col-md-8">
+              <label style="font-size: 16px;" for="requestProductName">Tên sản phẩm theo yêu cầu</label>
+              <input type="text" class="form-control" id="requestProductName" formControlName="requestProductName">
+            </div>
+            <div class="form-group col-md-4">
+              <label style="font-size: 16px;" for="quantity">Số lượng</label>
+              <input type="number" min="0" class="form-control" id="quantity" formControlName="quantity">
+            </div>
+          </div>
+
           <div class="form-group">
             <label style="font-size: 16px;" for="productDescription">Mô tả</label>
             <textarea class="form-control" id="productDescription" rows="3" formControlName="description"></textarea>
           </div>
-          <div class="form-group">
+          <!-- <div class="form-group">
             <label style="font-size: 16px;" for="productCategory">Kiểu sản phẩm</label>
             <select class="form-control" id="productCategory" formControlName="category_id">
               <option [ngValue]="null" disabled selected>Loại sản phẩm</option>
               <option *ngFor="let category of categories" [ngValue]="category.categoryId">{{ category.categoryName }}
               </option>
             </select>
-          </div>
+          </div> -->
           <div class="form-row">
             <div class="form-group col-md-6">
               <label style="font-size: 16px;" for="productPrice">Đơn giá</label>
               <input type="number" min="0" class="form-control" id="productPrice" formControlName="price">
             </div>
             <div class="form-group col-md-6">
+              <label style="font-size: 16px;" for="completionTime">Thời gian hoàn thành</label>
+              <input type="date" class="form-control" id="completionTime" name="completionTime" formControlName="completionTime">
+            </div>
+            <!-- <div class="form-group col-md-6">
               <label style="font-size: 16px;" for="selectedStatus">Tình trạng</label>
               <select class="form-control" id="selectedStatus">
                 <option disabled selected>Chọn trạng thái</option>
                 <option *ngFor="let status of statuses" [ngValue]="status.status_id">{{ status.status_name }}</option>
               </select>
-            </div>
+            </div> -->
           </div>
           <div class="form-row">
-            <div class="form-group col-md-4">
+            <div class="form-group col-md-10">
               <label style="font-size: 16px;" for="productImages">Ảnh sản phẩm (Chọn nhiều)</label>
               <input type="file" class="form-control-file" id="productImages" multiple
                 (change)="onImagesSelected($event)">
@@ -377,24 +392,15 @@
                 style="height: calc(2.25rem + 2px); padding: 0.375rem 0.75rem; font-size: 1rem; line-height: 1.5; border-radius: 0.25rem; border: 1px solid #ced4da; background-color: #fff; color: #495057;">
                 Làm mới</button>
             </div>
-            <div class="form-group col-md-4">
-              <label style="font-size: 16px;" for="thumbnailImage">Ảnh đại diện sản phẩm</label>
-              <input type="file" class="form-control-file" id="thumbnailImage" (change)="onThumbnailSelected($event)">
-            </div>
-            <div class="form-group col-md-2 d-flex align-items-end">
-              <button (click)="onResetThumbnail()" class="btn"
-                style="height: calc(2.25rem + 2px); padding: 0.375rem 0.75rem; font-size: 1rem; line-height: 1.5; border-radius: 0.25rem; border: 1px solid #ced4da; background-color: #fff; color: #495057;">
-                Làm mới</button>
-            </div>
           </div>
           <!-- Preview anh -->
           <div class="form-row">
-            <div class="form-group col-md-6" *ngIf="selectedImages">
+            <div class="form-group col-md-12" *ngIf="selectedImages">
               <img *ngFor="let imageUrl of imagesPreview" [src]="imageUrl" class="previewMultiple">
             </div>
-            <div class="form-group col-md-6">
+            <!-- <div class="form-group col-md-6">
               <img *ngIf="selectedThumbnail" [src]="thumbnailPreview" class="preview">
-            </div>
+            </div> -->
           </div>
           <!-- Mảng các vật liệu cần có trong product -->
           <hr>

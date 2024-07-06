@@ -85,11 +85,9 @@ export class ProductManagementComponent implements OnInit {
   quantityPerSubMaterial: { [key: number]: number | string } = {};; // so luong cua tung subMaterial cua 1 san pham
 
   isProduct: boolean = true;
-  //loading when click button
-  isLoadding: boolean = false;
-  //dung de dong mo modal
-  isModelShow = true;
+  isLoadding: boolean = false;   //loading when click button
 
+  firstImageOfProductRequest: string = '';
   constructor(
     private fb: FormBuilder,
     private productListService: ProductListService,
@@ -97,11 +95,15 @@ export class ProductManagementComponent implements OnInit {
     private http: HttpClient
   ) {
     this.uploadForm = this.fb.group({
+      request_id: [],// id cua product request
+      requestProductName: [''], // ten cua product request
       product_name: [''],
       description: [''],
       price: [0],
       category_id: [0],
-      type: [0]
+      type: [0],
+      completionTime: [''], // thoi gian hoan thanh cua product request
+      quantity: [1], // quantity cho product request
     });
 
     this.editForm = this.fb.group({
@@ -307,7 +309,7 @@ export class ProductManagementComponent implements OnInit {
         (data) => {
           if (data.code === 1000) {
             this.products = data?.result;
-            console.log('Danh sách sản phẩm:', this.products);
+            console.log('Danh sách sản phẩm theo yeu cau:', this.products);
           } else {
             console.error('Failed to fetch products:', data);
             this.toastr.error('Không thể lấy danh sách sản phẩm!', 'Lỗi');
@@ -363,7 +365,7 @@ export class ProductManagementComponent implements OnInit {
 
 
   filterProducts(): void {
-     console.log("Lọc sản phẩm với từ khóa:", this.searchKey, ", danh mục:", this.selectedCategory, "và giá:", this.selectedSortByPrice);
+    console.log("Lọc sản phẩm với từ khóa:", this.searchKey, ", danh mục:", this.selectedCategory, "và giá:", this.selectedSortByPrice);
 
     this.productListService.getMultiFillterProductForAdmin(this.searchKey, this.selectedCategory, this.selectedStatus, this.selectedSortByPrice)
       .subscribe(
@@ -458,13 +460,13 @@ export class ProductManagementComponent implements OnInit {
 
   onQuantityChangeEditForm(event: Event, index: number) {
     const newQuantity = Number((event.target as HTMLInputElement).value) || 0;
-    
+
     const quantityDifference = newQuantity - (Number(this.quantityPerSubMaterial[index]) || 0);
-    
+
     const priceDifference = quantityDifference * (Number(this.unitPriceSubMaterial[index]) || 0);
-    
+
     this.totalUnitPrice += priceDifference;
-    
+
     this.quantityPerSubMaterial[index] = newQuantity;
     console.log('quantityPerSubMaterial:', this.quantityPerSubMaterial[index]);
     console.log('priceDifference:', priceDifference);
@@ -491,17 +493,7 @@ export class ProductManagementComponent implements OnInit {
       );
   }
 
-  // onFilesSelected(event: any) {
-  //   if (event.target.files.length > 0) {
-  //     this.productImages = [];
-  //     for (let i = 0; i < event.target.files.length; i++) {
-  //       const file = event.target.files[i];
-  //       this.productImages.push(file);
-  //     }
-  //   }
-  // }
-
-
+  //phan xu li upload anh
   onThumbnailSelected(event: any): void {
     const file = event.target.files[0];
     if (file) {
@@ -544,6 +536,8 @@ export class ProductManagementComponent implements OnInit {
     this.selectedImages = [];
     this.imagesPreview = [];
   }
+  //
+
 
   onSubmit() {
     if (this.uploadForm.valid && this.selectedThumbnail && this.selectedImages.length) {
@@ -723,11 +717,72 @@ export class ProductManagementComponent implements OnInit {
     console.log('productId', this.selectedProductIdCurrentDelele);
   }
 
-  showProductDetails(productId: number) {
-    this.productListService.getProductById(productId)
-      .subscribe(product => {
-        // Update modal content with retrieved product data
 
-      });
+  //phan xu li product request
+  reloadProductRequest(): void {
+    this.productListService.getAllProductRequest().subscribe(
+      (data) => {
+        if (data.code === 1000) {
+          this.products = data.result;
+          // console.log('Danh sách sản phẩm:', this.products);
+        } else {
+          console.error('Failed to fetch products:', data);
+          this.toastr.error('Không thể lấy danh sách sản phẩm!', 'Lỗi');
+        }
+      },
+      (error) => {
+        console.error('Error fetching products:', error);
+        this.toastr.error('Có lỗi xảy ra!', 'Lỗi');
+      }
+    );
+  }
+
+  onSubmitProductRequest() {
+    console.log('Form Data for Product Request:', this.uploadForm.value);
+    console.log('check valid hay khong', this.uploadForm.valid)
+    if (this.uploadForm.valid && this.selectedImages.length) {
+      this.isLoadding = true;
+      const productRequestData = this.uploadForm.value;
+      console.log(productRequestData);
+
+      console.log('data goc:', this.materialForm.value);
+      var temp = this.materialForm.value;
+
+      // tach lay quantity va subMaterialId
+      var processedData = temp.items.map((item: MaterialItem) => (
+        [(item.subMaterialId as string), item.quantity]
+      ));
+      // convert thanh dang map
+      const transformedObject: { [key: string]: number } = {};
+
+      for (const [subMaterialId, quantity] of processedData) {
+        transformedObject[subMaterialId] = quantity;
+      }
+
+      this.productListService.addNewProductRequest(productRequestData, this.selectedImages)
+      .pipe(concatMap(response => {
+
+          const transformedData = {
+            productId: response.result.productId,
+            subMaterialQuantities: transformedObject
+          };
+          return this.productListService.createExportMaterialProductRequest(transformedData);
+        }))
+        .subscribe(
+        response => {
+          this.reloadProductRequest();
+          this.isLoadding = false;
+          this.toastr.success('Tạo sản phẩm theo yêu cầu thành công!', 'Thành công');
+          const closeButton = document.querySelector('.btn-mau-do[data-dismiss="modal"]') as HTMLElement;
+          if (closeButton) { // Check if the button exists
+            closeButton.click(); // If it exists, click it to close the modal
+          }
+        },
+        error => {
+          this.isLoadding = false;
+          this.toastr.error('Tạo sản phẩm bị lỗi!', 'Lỗi');
+        }
+      );
+    }
   }
 }

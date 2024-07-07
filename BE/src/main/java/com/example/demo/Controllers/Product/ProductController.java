@@ -4,6 +4,7 @@ import com.example.demo.Config.RedisConfig;
 import com.example.demo.Dto.Category.CategoryNameDTO;
 import com.example.demo.Dto.ProductDTO.*;
 import com.example.demo.Dto.RequestDTO.RequestEditCusDTO;
+import com.example.demo.Dto.RequestDTO.RequestProductEditDTO;
 import com.example.demo.Dto.SubMaterialDTO.SubMateProductDTO;
 import com.example.demo.Dto.SubMaterialDTO.SubMateProductRequestDTO;
 import com.example.demo.Entity.*;
@@ -372,6 +373,18 @@ public class ProductController {
         ApiResponse<Products> apiResponse = new ApiResponse<>();
         jedis.del("all_products_admin");
         apiResponse.setResult(productService.EditProduct(productId,productEditDTO,files, file_thumbnail));
+        return apiResponse;
+    }
+
+    @PutMapping(value = "/EditRequestProduct", consumes = MediaType.MULTIPART_FORM_DATA_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ApiResponse<?> EditRequestProduct(
+            @RequestParam(value="product_id") int productId,
+            @RequestPart("productDTO") RequestProductEditDTO requestProductEditDTO,
+            @RequestPart("files") MultipartFile[] files
+    ) throws Exception {
+        ApiResponse<RequestProducts> apiResponse = new ApiResponse<>();
+        jedis.del("all_products_admin");
+        apiResponse.setResult(productService.EditRequestProduct(productId,requestProductEditDTO,files));
         return apiResponse;
     }
 

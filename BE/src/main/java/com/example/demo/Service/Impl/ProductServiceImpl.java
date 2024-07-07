@@ -1,6 +1,7 @@
 package com.example.demo.Service.Impl;
 
 import com.example.demo.Dto.ProductDTO.*;
+import com.example.demo.Dto.RequestDTO.RequestProductEditDTO;
 import com.example.demo.Dto.SubMaterialDTO.SubMateProductDTO;
 import com.example.demo.Dto.SubMaterialDTO.SubMateProductRequestDTO;
 import com.example.demo.Entity.*;
@@ -164,6 +165,35 @@ public class ProductServiceImpl implements ProductService {
                 productEditDTO.getType(),
                 thumbnailPath, // Sử dụng thumbnailPath đã cập nhật
                 productEditDTO.getEnddateWarranty()
+        );
+        entityManager.refresh(products); // Làm mới đối tượng products
+        return products;
+    }
+
+    public RequestProducts EditRequestProduct(int id, RequestProductEditDTO requestProductEditDTO, MultipartFile[] multipartFiles) throws IOException {
+        RequestProducts products = requestProductRepository.findById(id);
+        if (multipartFiles != null &&
+                Arrays.stream(multipartFiles).anyMatch(file -> file != null && !file.isEmpty())) {
+            List<Product_Requestimages> productimages= productRequestimagesRepository.findImageByProductId(id);
+            for(Product_Requestimages productimages1 : productimages){
+                String full_path= productimages1.getFullPath();
+                String id_image =cloudinaryService.extractPublicIdFromUrl(full_path);
+                cloudinaryService.deleteImage(id_image);
+            }
+            productRequestimagesRepository.deleteRequestProductImages(id); // Xóa những ảnh trước đó
+            uploadImageService.uploadFile(multipartFiles, products.getRequestProductId());
+
+
+        }
+        //ko đc chỉnh sửa quantity
+      //  validateProductEditDTO(productEditDTO);
+        requestProductRepository.updateRequestProduct(id,
+                requestProductEditDTO.getRequestProductName(),
+                requestProductEditDTO.getDescription(),
+                requestProductEditDTO.getPrice(),
+                requestProductEditDTO.getStatus_id(),
+                requestProductEditDTO.getQuantity(),
+                requestProductEditDTO.getCompletionTime()
         );
         entityManager.refresh(products); // Làm mới đối tượng products
         return products;

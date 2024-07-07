@@ -13,7 +13,8 @@ interface ApiResponse {
   styleUrls: ['./list-request-product.component.scss']
 })
 export class ListRequestProductComponent {
-  loginToken: string | null = null;
+  
+  loginToken: string | null = null; 
   list_request_product: any[] = [];
   currentPage: number = 1;
   requestForm: FormGroup;
@@ -94,21 +95,19 @@ export class ListRequestProductComponent {
     this.imagesPreview = [];
   }
   onImagesSelected(event: any): void {
-    console.log(event.target, event.target.files);
-    if (event.target && event.target.files) {
-      this.selectedImages = Array.from(event.target.files);
-  
-      const files: File[] = Array.from(event.target.files as FileList);
-      if (files && files.length) {
-        // Clear the existing preview list    
-        this.imagesPreview = [];
-  
-        // Create and store URLs for preview
-        files.forEach((file: File) => {
-          const url = URL.createObjectURL(file);
-          this.imagesPreview.push(url);
-        });
-      }
+    this.selectedImages = Array.from(event.target.files);
+
+    const files: File[] = Array.from(event.target.files as FileList);
+    if (event.target.files && event.target.files.length) {
+      // xoa list preview cu    
+      this.imagesPreview = [];
+
+      // Create and store URLs for preview
+      files.forEach((file: File) => {
+        const url = URL.createObjectURL(file);
+        this.imagesPreview.push(url);
+      });
+
     }
   }
   getDataRequest(requestId: number) {
@@ -137,7 +136,7 @@ export class ListRequestProductComponent {
   
 
   onEditSubmit(): void {
-    if (this.requestForm.valid) {
+
       const requestData = this.requestForm.value;
       // console.log('Form Data for Edit:', requestData.product_id);
       const updatedRequestProduct = {
@@ -167,7 +166,7 @@ export class ListRequestProductComponent {
             }
           }
         );
-    }
+    
   }
 
   

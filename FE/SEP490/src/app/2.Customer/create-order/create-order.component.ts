@@ -50,8 +50,15 @@ interface Ward {
   styleUrls: ['./create-order.component.scss']
 })
 export class CreateOrderComponent implements OnInit {
+  fullname: string = ''; // Initialize input1
+  phonenumber: string = ''; // Initialize input1
+  email: string = ''; // Initialize input1
+  address: string = ''; // Initialize input1
+  city_change: number | null = null; // Initialize city as null
+  district_change: number | null = null; // Initialize city as null
+  wards_change: number | null = null; // Initialize city as null
   productForm: FormGroup;
-
+  
 
   provinces: Province[] = [];
   districts: District[] = [];

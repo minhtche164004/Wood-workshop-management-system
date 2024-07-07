@@ -11,7 +11,7 @@ import { environment } from 'src/app/environments/environment';
 export class ProductDetailComponent implements OnInit {
   productId: number = 0;
   productDetails: any;
-
+  largeImageUrl: string = ''; // Add this property
   constructor(private route: ActivatedRoute, private http: HttpClient) {}
 
   ngOnInit(): void {
@@ -26,11 +26,15 @@ export class ProductDetailComponent implements OnInit {
       .subscribe(
         (response: any) => {
           this.productDetails = response.result;
+          this.largeImageUrl = this.productDetails.image; // Initialize largeImageUrl
           console.log('Product details:', this.productDetails);
         },
         (error) => {
           console.error('Error fetching product details:', error);
         }
       );
+  }
+  updateLargeImage(imageUrl: string) {
+    this.largeImageUrl = imageUrl; // Update largeImageUrl when a smaller image is clicked
   }
 }

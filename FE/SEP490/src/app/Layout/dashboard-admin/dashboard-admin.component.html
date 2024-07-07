@@ -1,0 +1,69 @@
+<!-- SIDEBAR -->
+<section id="sidebar" [ngClass]="status ? 'hide' : ''">
+	<a href="#" class="brand">
+		<i class='bx bxs-smile'></i>
+		<span style="text-decoration: none;" class="text">Quản Trị Viên</span>
+	</a>
+	<ul class="side-menu top">
+
+		<li>
+			<a routerLink="/order_rq" routerLinkActive="active">
+				<i class='bx bxs-shopping-bag'></i>
+				<span class="text">Tra cứu đơn hàng</span>
+			</a>
+		</li>
+
+		<li>
+			<a routerLink="/order_management" routerLinkActive="active">
+				<i class='bx bxs-dollar-circle'></i>
+				<span class="text">Tra cứu đơn ứng lương</span>
+			</a>
+		</li>
+		<li>
+			<a routerLink="/list_job_done" routerLinkActive="active">
+				<i class='bx bxs-briefcase'></i>
+				<span class="text">Tra cứu việc làm</span>
+			</a>
+		</li>
+
+
+		<li>
+			<a routerLink="/user_management" routerLinkActive="active">
+				<i class='bx bxs-user-circle'></i>
+				<span class="text">Quản lý người dùng</span>
+			</a>
+		</li>
+		<li>
+			<a routerLink="/create_order" routerLinkActive="active">
+				<i class='bx bxs-receipt'></i>
+				<span class="text">Tạo Phiếu hóa đơn</span>
+			</a>
+		</li>
+
+	</ul>
+	<ul class="side-menu">
+
+		<li>
+			<a href="#" class="logout">
+				<i class='bx bxs-log-out'></i>
+				<span class="text">Đăng xuất</span>
+			</a>
+		</li>
+	</ul>
+</section>
+<!-- SIDEBAR -->
+<section id="content">
+	<nav>
+
+		<div class="spacer"></div>
+		<a href="#" class="profile">
+			<img src="assets/img/logomain-removebg-preview.png">
+		</a>
+	</nav>
+	<!-- Other content here -->
+</section>
+
+
+
+
+

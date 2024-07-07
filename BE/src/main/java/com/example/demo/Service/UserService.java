@@ -51,4 +51,6 @@ public interface UserService {
 
     void changePass(ChangePassDTO changePassDTO);
 
+
+    List<UserDTO> FilterByPosition(int position_id);
 }

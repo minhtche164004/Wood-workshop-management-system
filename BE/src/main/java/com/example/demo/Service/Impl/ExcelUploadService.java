@@ -44,7 +44,7 @@ public class ExcelUploadService {
                     Cell cell = cellIterator.next();
                     switch (cellIndex){
                         case 0 -> subMaterialDTO.setSub_material_name(cell.getStringCellValue());
-                        case 1 -> subMaterialDTO.setMaterial_id((int) cell.getNumericCellValue());
+                        case 1 -> subMaterialDTO.setMaterial_name(cell.getStringCellValue());
                         case 2 -> subMaterialDTO.setDescription(cell.getStringCellValue());
                         case 3 -> subMaterialDTO.setQuantity(cell.getNumericCellValue());
                         case 4 -> subMaterialDTO.setUnit_price(BigDecimal.valueOf(cell.getNumericCellValue()));

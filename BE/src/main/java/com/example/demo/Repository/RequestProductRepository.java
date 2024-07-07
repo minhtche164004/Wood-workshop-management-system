@@ -3,6 +3,7 @@ package com.example.demo.Repository;
 import com.example.demo.Dto.ProductDTO.RequestProductAllDTO;
 import com.example.demo.Entity.Products;
 import com.example.demo.Entity.RequestProducts;
+import com.example.demo.Entity.Requests;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -19,6 +20,8 @@ public interface RequestProductRepository extends JpaRepository<RequestProducts,
 
     @Query("SELECT u FROM RequestProducts u WHERE u.requestProductId = :query")
     RequestProducts findById(int query);
+
+
 
 //    @Query("SELECT new com.example.demo.Dto.ProductDTO.RequestProductAllDTO(rp.requestProductId, rp.requestProductName, rp.description, " +
 //            "rp.price, rp.quantity, rp.completionTime, rp.requests.requestId, pri.fullPath, pri.productImageId) " +
@@ -42,6 +45,8 @@ public interface RequestProductRepository extends JpaRepository<RequestProducts,
                                           @Param("status_id") Integer status_id,
                                           @Param("minPrice") BigDecimal minPrice,
                                           @Param("maxPrice") BigDecimal maxPrice);
+
+
 
 
     @Query("SELECT p FROM RequestProducts p WHERE p.price BETWEEN :minPrice AND :maxPrice")

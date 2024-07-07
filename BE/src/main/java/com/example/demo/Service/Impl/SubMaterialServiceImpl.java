@@ -56,8 +56,8 @@ public class SubMaterialServiceImpl implements SubMaterialService {
 
 
     @Override
-    public List<SubMaterials> getAll() {
-        return subMaterialsRepository.findAll();
+    public List<SubMaterialViewDTO> getAll() {
+        return subMaterialsRepository.getAllSubmaterial();
     }
 
     @Override
@@ -73,7 +73,7 @@ public class SubMaterialServiceImpl implements SubMaterialService {
     public SubMaterials addNew(SubMaterialDTO subMaterialDTO) {
         SubMaterials subMaterials = new SubMaterials();
         subMaterials.setSubMaterialName(subMaterialDTO.getSub_material_name());
-        Materials materials = materialRepository.findById1(subMaterialDTO.getMaterial_id());
+        Materials materials = materialRepository.findByName(subMaterialDTO.getMaterial_name());
         subMaterials.setMaterial(materials);
         subMaterials.setQuantity(subMaterialDTO.getQuantity());
         subMaterials.setUnitPrice(subMaterialDTO.getUnit_price());
@@ -108,30 +108,42 @@ public class SubMaterialServiceImpl implements SubMaterialService {
                 int i = 1;
                 HashMap<Integer, String> codeCount = generateMultipleCode(countSubMaterials);
                 for (SubMaterialDTO dto : subMaterialDTOs) {
-                    if (!checkConditionService.checkInputName(dto.getSub_material_name())) {
-                        throw new AppException(ErrorCode.INVALID_FORMAT_NAME);
-                    }
-                    if (subMaterialsRepository.countBySubMaterialName(dto.getSub_material_name()) > 0) {
-                        throw new AppException(ErrorCode.NAME_EXIST);
-                    }
-                    if (!checkConditionService.checkInputQuantity(dto.getQuantity())) {
-                        throw new AppException(ErrorCode.QUANTITY_INVALID);
-                    }
-                    if (!checkConditionService.checkInputPrice(dto.getUnit_price())) {
-                        throw new AppException(ErrorCode.PRICE_INVALID);
-                    }
-                    SubMaterials subMaterials = new SubMaterials();
-                    subMaterials.setSubMaterialName(dto.getSub_material_name());
-                    Materials materials = materialRepository.findById1(dto.getMaterial_id());
-                    subMaterials.setMaterial(materials);
-                    subMaterials.setQuantity(dto.getQuantity());
-                    subMaterials.setUnitPrice(dto.getUnit_price());
-                    subMaterials.setDescription(dto.getDescription());
+                    String subMaterialName = dto.getSub_material_name();
+                    String materialName = dto.getMaterial_name(); // Lấy tên vật liệu từ DTO
 
-                    subMaterials.setCode(codeCount.get(i));
-                    //                   subMaterials.setCode(generateCode());
-                    subMaterialsList.add(subMaterials);
-                    i++;
+                    SubMaterials existingSubMaterial = subMaterialsRepository.findBySubmaterialNameAndMaterialName(
+                            subMaterialName, materialName); // Tìm kiếm theo cả tên và vật liệu
+
+                    if (existingSubMaterial != null) {
+                        // Nếu đã tồn tại SubMaterial với tên và vật liệu này, cập nhật số lượng
+                        existingSubMaterial.setQuantity(existingSubMaterial.getQuantity() + dto.getQuantity());
+                        subMaterialsList.add(existingSubMaterial); // Thêm vào danh sách để save sau
+                    } else {
+                        // Nếu chưa tồn tại, tạo SubMaterial mới với đầy đủ thuộc tính
+
+                        // Thực hiện các kiểm tra điều kiện
+                        if (!checkConditionService.checkInputName(dto.getSub_material_name())) {
+                            throw new AppException(ErrorCode.INVALID_FORMAT_NAME);
+                        }
+                        if (!checkConditionService.checkInputQuantity(dto.getQuantity())) {
+                            throw new AppException(ErrorCode.QUANTITY_INVALID);
+                        }
+                        if (!checkConditionService.checkInputPrice(dto.getUnit_price())) {
+                            throw new AppException(ErrorCode.PRICE_INVALID);
+                        }
+
+                        SubMaterials subMaterials = new SubMaterials();
+                        subMaterials.setSubMaterialName(subMaterialName);
+                        // Lấy Material (nên kiểm tra null để tránh lỗi)
+                        Materials materials = materialRepository.findByName(materialName);
+                        subMaterials.setMaterial(materials);
+                        subMaterials.setQuantity(dto.getQuantity());
+                        subMaterials.setUnitPrice(dto.getUnit_price());
+                        subMaterials.setDescription(dto.getDescription());
+                        subMaterials.setCode(codeCount.get(i));
+                        subMaterialsList.add(subMaterials); // Thêm vào danh sách để save sau
+                        i++;
+                    }
                 }
 
                 subMaterialsRepository.saveAll(subMaterialsList);

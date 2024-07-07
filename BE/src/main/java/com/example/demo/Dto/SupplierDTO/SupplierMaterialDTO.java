@@ -18,7 +18,7 @@ public class SupplierMaterialDTO implements Serializable {
     @NotNull(message = "MUST_REQUIRED") // Không được để trống
     @DecimalMin(value = "0.0", inclusive = false, message = "PHONE_INVALID") // Giá trị tối thiểu lớn hơn 0
     private String phoneNumber;
-    private Integer sub_material_id;
+    private int sub_material_id;
 }
 
 

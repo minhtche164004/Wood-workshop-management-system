@@ -6,6 +6,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.math.BigDecimal;
 import java.sql.Date;
 import java.util.List;
 import java.util.Objects;
@@ -25,13 +26,13 @@ public class Advancesalary {
     private Date date;
 
     @Column(name = "amount")
-    private Long amount;
+    private BigDecimal amount;
 
     @Column(name = "is_advance_success")
-    private Byte isAdvanceSuccess;
+    private boolean isAdvanceSuccess; // đã thanh toán thành công
 
     @Column(name = "is_approve")
-    private Byte isApprove;
+    private boolean isApprove; //chưa ck
 
     @Column(name = "code")
     private String code;

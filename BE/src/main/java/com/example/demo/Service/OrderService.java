@@ -32,7 +32,7 @@ public interface OrderService {
 
     void Approve_Reject_Request(int id, int status_id);
 
-    RequestProductAllDTO GetProductRequestById(int id);
+  //  RequestProductAllDTO GetProductRequestById(int id);
 
     RequestAllDTO GetRequestById(int id);
 
@@ -68,11 +68,14 @@ public interface OrderService {
     void ChangeStatusOrder(int orderId, int status_id);
 
 
-    List<RequestProducts> filterRequestProductsForAdmin(String search,Integer statusId, BigDecimal minPrice, BigDecimal maxPrice, String sortDirection);
+    List<RequestProductDTO_Show> filterRequestProductsForAdmin(String search,Integer statusId, BigDecimal minPrice, BigDecimal maxPrice, String sortDirection);
 
     List<RequestProducts> findByPriceRange(BigDecimal min, BigDecimal max);
     List<RequestProducts> GetAllProductRequestByUserId();
     List<Requests> GetAllRequestByUserId();
+
+    RequestProductDTO_Show GetRequestProductByIdWithImage(int id);
+    List<RequestProductDTO_Show> GetAllRequestProductWithImage();
 
 
 

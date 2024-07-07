@@ -37,6 +37,11 @@ export class AuthenListService {
   private apiUrl_AddProductRequired = `${environment.apiUrl}api/auth/order/AddNewRequest`;
   private apiUrl_getfindAllJobForDoneByEmployeeID = `${environment.apiUrl}api/auth/job/findAllJobForDoneByEmployeeID`;
   private api_getListJobWasDoneAdmin = `${environment.apiUrl}api/auth/job/getListJobWasDone`;
+  private api_getAllRequest = `${environment.apiUrl}api/auth/order/GetAllRequest`;
+  private api_getAllStatusRequest = `${environment.apiUrl}api/auth/admin/GetAllStatusRequest`;
+  private apiUrl_getRequestById = `${environment.apiUrl}api/auth/order/GetRequestById`;
+  private apiUrl_EditRequest = `${environment.apiUrl}api/auth/order/ManagerEditRequest`;
+  
   
   private apiUrl_NameATM = 'https://api.vietqr.io/v2/banks';
   constructor(private http: HttpClient) { }
@@ -89,6 +94,14 @@ export class AuthenListService {
       catchError(this.handleError)
     );
   }
+
+  getRequestById(id: string): Observable<any> {
+    const url = `${this.apiUrl_getRequestById}?id=${id}`;
+    return this.http.get<any>(url).pipe(
+      catchError(this.handleError)
+    );
+  }
+
 
   getOrderDetailById(order_detail_id: string): Observable<any> {
     const url = `${this.apiUrl_GetOrderDeTailById}?id=${order_detail_id}`;
@@ -157,6 +170,12 @@ export class AuthenListService {
     
 
     return this.http.get<any>(this.api_getListJobWasDoneAdmin).pipe(
+      catchError(this.handleError) 
+    );
+  }
+  getAllRequest(): Observable<any> {
+  
+    return this.http.get<any>(this.api_getAllRequest).pipe(
       catchError(this.handleError) 
     );
   }
@@ -329,6 +348,20 @@ export class AuthenListService {
       catchError(this.handleError) 
     );
   }
+
+  getAllStatusRequest(): Observable<any>{
+    return this.http.get<any>(this.api_getAllStatusRequest).pipe(
+      catchError(this.handleError) 
+    );
+  }
+  EditRequest(request_id: string, RequestData: any): Observable<any> {
+    const url = `${this.apiUrl_EditRequest}?request_id=${request_id}`;
+    return this.http.put<any>(url, RequestData).pipe(
+      catchError(this.handleError)
+    );
+  }
+
+  
   
   EditSupplier(id: string, suplierData: any): Observable<any> {
     const token = localStorage.getItem('loginToken');

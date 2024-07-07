@@ -5,11 +5,13 @@ import com.example.demo.Dto.JobDTO.JobDoneDTO;
 import com.example.demo.Dto.OrderDTO.JobProductDTO;
 import com.example.demo.Dto.ProductDTO.ProductErrorAllDTO;
 import com.example.demo.Dto.ProductDTO.ProductErrorDTO;
+import com.example.demo.Entity.Advancesalary;
 import com.example.demo.Entity.Jobs;
 import com.example.demo.Entity.Processproducterror;
 import com.example.demo.Entity.Status_Job;
 import org.springframework.stereotype.Service;
 
+import java.sql.Date;
 import java.util.List;
 
 @Service
@@ -35,6 +37,7 @@ public interface JobService {
 
     List<Jobs> getJobWasDone();
     List<JobDoneDTO> filterJobWasDoneByEmployeeName(String keyword);
+    List<JobDoneDTO> findAllJobForDoneByEmployeeID();
     List<Status_Job> getAllStatusJob();
 
 
@@ -42,4 +45,8 @@ public interface JobService {
     List<ProductErrorAllDTO> getAllProductError();
     ProductErrorAllDTO getProductErrorDetailById(int query);
    // boolean checkOderDoneOrNot(int order_id);
+
+    List<Advancesalary> getAllAdvancesalary();
+    List<Advancesalary> multi_filter_salary(Date fromDate, Date toDate, String employeeName, String sortDirection);
+    List<Advancesalary> getAdvancesalaryByEmployeeId();
 }

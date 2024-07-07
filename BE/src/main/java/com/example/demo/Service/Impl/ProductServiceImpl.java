@@ -181,9 +181,7 @@ public class ProductServiceImpl implements ProductService {
                 cloudinaryService.deleteImage(id_image);
             }
             productRequestimagesRepository.deleteRequestProductImages(id); // Xóa những ảnh trước đó
-            uploadImageService.uploadFile(multipartFiles, products.getRequestProductId());
-
-
+            uploadImageService.uploadFileRequestProduct(multipartFiles, products.getRequestProductId());
         }
         //ko đc chỉnh sửa quantity
       //  validateProductEditDTO(productEditDTO);
@@ -195,7 +193,7 @@ public class ProductServiceImpl implements ProductService {
                 requestProductEditDTO.getQuantity(),
                 requestProductEditDTO.getCompletionTime()
         );
-        entityManager.refresh(products); // Làm mới đối tượng products
+//        entityManager.refresh(products); // Làm mới đối tượng products
         return products;
     }
 

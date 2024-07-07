@@ -62,6 +62,9 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatNativeDateModule } from '@angular/material/core';
 import { CalendarModule } from 'primeng/calendar';
 import { HistoryOrderComponent } from './Admin/history-order/history-order.component';
+import { ReportCostManagementComponent } from './Admin/report-cost-management/report-cost-management.component';
+import { ChartComponent } from './Admin/chart/chart.component';
+import { NgChartjsModule } from 'ng-chartjs';
 // import { AuthInterceptor } from './service/auth.interceptor';
 @NgModule({
 
@@ -115,6 +118,8 @@ import { HistoryOrderComponent } from './Admin/history-order/history-order.compo
     TemplateComponent,
     HistoryOrderComponent,
     ListRequestProductComponent,
+    ReportCostManagementComponent,
+    ChartComponent,
 
   ],
   imports: [
@@ -133,7 +138,8 @@ import { HistoryOrderComponent } from './Admin/history-order/history-order.compo
     MatDatepickerModule,
     MatFormFieldModule,
     CalendarModule,
-    MatNativeDateModule
+    MatNativeDateModule,
+    NgChartjsModule
   ],
   
   providers: [

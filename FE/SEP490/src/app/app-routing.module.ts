@@ -2,7 +2,7 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 
-import { HomepageComponent } from './features/homepage/homepage.component';
+import { HomepageComponent } from './2.Customer/homepage/homepage.component';
 import { ProductComponent } from './product/product.component'; // Import ProductComponent
 import { RegisterComponent } from './register/register.component';
 import { VerifyOtpComponent } from './verify-otp/verify-otp.component';
@@ -15,22 +15,22 @@ import { ApiProvinceComponent } from './api-province/api-province.component';
 import { ProductListComponent } from './product-list/product-list.component';
 import { VerifyOtpMailComponent } from './forgotPassword/verify-otp-mail/verify-otp-mail.component';
 import { ProductManagementComponent } from './Admin/product-management/product-management.component';
-import { ViewProfileComponent } from './features/view-profile/view-profile.component';
+import { ViewProfileComponent } from './2.Customer/view-profile/view-profile.component';
 import { FileUploadComponent } from './file-upload/file-upload.component';
 import { SubMaterialManagementComponent } from './Admin/sub-material-management/sub-material-management.component';
 import { SupplierManagementComponent } from './supplier-management/supplier-management.component';
 import { OrderDetailManagementComponent } from './Admin/order-detail-management/order-detail-management.component';
 import { OrderRequestComponentComponent } from './Admin/order-request-component/order-request-component.component';
 import { OrderRqDetailComponent } from './Admin/order-rq-detail/order-rq-detail.component';
-import { OrderRequiredComponent } from './order-required/order-required.component';
-import { CreateOrderComponent } from './create-order/create-order.component';
+import { OrderRequiredComponent } from './2.Customer/order-required/order-required.component';
+import { CreateOrderComponent } from './2.Customer/create-order/create-order.component';
 import { OrderManagementComponent } from './Admin/order-management/order-management.component';
-import { ProductDetailComponent } from './features/product-detail/product-detail.component';
+import { ProductDetailComponent } from './2.Customer/product-detail/product-detail.component';
 import { JobManagementComponent } from './Admin/job-management/job-management.component';
 
 
 import { ForgotPassComponent } from './forgotPassword/forgot-pass/forgot-pass.component';
-import { ChangePasswordComponent } from './features/change-password/change-password.component';
+import { ChangePasswordComponent } from './2.Customer/change-password/change-password.component';
 
 
 
@@ -38,8 +38,8 @@ import { ContactComponent } from './contact/contact.component';
 import { AboutUsComponent } from './about-us/about-us.component';
 import { EmployeeJobComponent } from './employee-job/employee-job.component';
 
-import { WishlistComponent } from './features/wishlist/wishlist.component';
-import { TemplateComponent } from './features/template/template.component';
+import { WishlistComponent } from './2.Customer/wishlist/wishlist.component';
+import { TemplateComponent } from './2.Customer/template/template.component';
 
 import { BillComponent } from './bill/bill.component';
 import { MaterialManagementComponent } from './Admin/material-management/material-management.component';
@@ -49,8 +49,10 @@ import { FeedbackDefectiveComponent } from './Admin/feedback-defective/feedback-
 import { TotalSalaryComponent } from './Admin/total-salary/total-salary.component';
 import { AutoCompleteComponent } from './auto-complete/auto-complete.component';
 import { HistoryOrderComponent } from './Admin/history-order/history-order.component';
-import { ListRequestProductComponent } from './features/list-request-product/list-request-product.component';
-import { DashboardComponent } from './Layout/dashboard/dashboard.component';
+import { ListRequestProductComponent } from './2.Customer/list-request-product/list-request-product.component';
+import { DashboardComponent } from './Layout/dashboard-manager/dashboard.component';
+import { ListJobDoneEmployeeComponent } from './4.Employee/list-job-done-employee/list-job-done-employee.component';
+import { ListJobDoneComponent } from './Admin/list-job-done/list-job-done.component';
 
 
 
@@ -105,8 +107,10 @@ const routes: Routes = [
   { path: 'autoComplete', component: AutoCompleteComponent },
   { path: 'history_order', component: HistoryOrderComponent },
   { path: 'request_product', component: ListRequestProductComponent },
-
-  { path: '', redirectTo: '/homepage', pathMatch: 'full' },
+  { path: 'employee', component: ListJobDoneEmployeeComponent },
+  { path: 'list_job_done', component: ListJobDoneComponent },
+  
+  // { path: '', redirectTo: '/homepage', pathMatch: 'full' },
   { path: '**', redirectTo: '/homepage', pathMatch: 'full' },
 
 

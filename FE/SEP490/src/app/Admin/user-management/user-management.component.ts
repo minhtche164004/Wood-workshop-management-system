@@ -676,7 +676,7 @@ export class UserManagementComponent implements OnInit {
               this.toastr.error('Không tìm thấy sản phẩm!', 'Tìm kiếm thất bại');
             } 
           }
-        );
+        ); 
     } else{
       
       this.loadAllUsers();

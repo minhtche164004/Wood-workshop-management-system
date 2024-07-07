@@ -35,7 +35,9 @@ export class AuthenListService {
   private api_getAllSubMaterialName = `${environment.apiUrl}api/auth/submaterial/getall`;
   private apiUrl_EditSupplier = `${environment.apiUrl}api/auth/supplier/EditSupplier`;
   private apiUrl_AddProductRequired = `${environment.apiUrl}api/auth/order/AddNewRequest`;
-
+  private apiUrl_getfindAllJobForDoneByEmployeeID = `${environment.apiUrl}api/auth/job/findAllJobForDoneByEmployeeID`;
+  private api_getListJobWasDoneAdmin = `${environment.apiUrl}api/auth/job/getListJobWasDone`;
+  
   private apiUrl_NameATM = 'https://api.vietqr.io/v2/banks';
   constructor(private http: HttpClient) { }
   isLoggedIn(): boolean {
@@ -133,6 +135,33 @@ export class AuthenListService {
       catchError(this.handleError)
     );
   }
+  getfindAllJobForDoneByEmployeeID(): Observable<any> {
+    const token = localStorage.getItem('loginToken');
+
+    if (!token) {
+      return throwError(new Error('Login token not found in localStorage.'));
+    }
+
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${token}`
+    });
+
+    console.log("Authorization header:", headers.get('Authorization'));
+
+    return this.http.get<any>(this.apiUrl_getfindAllJobForDoneByEmployeeID, { headers }).pipe(
+      catchError(this.handleError)
+    );
+  }
+
+  getListJobWasDoneAdmin(): Observable<any> {
+    
+
+    return this.http.get<any>(this.api_getListJobWasDoneAdmin).pipe(
+      catchError(this.handleError) 
+    );
+  }
+
+
   getListRequestProductCusomer(): Observable<any> {
     const token = localStorage.getItem('loginToken');
 

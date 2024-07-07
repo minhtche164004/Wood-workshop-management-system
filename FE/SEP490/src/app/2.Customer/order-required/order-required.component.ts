@@ -3,8 +3,8 @@ import { Component, OnInit } from '@angular/core';
 import { ProvincesService } from 'src/app/service/provinces.service';
 import { FormArray, FormBuilder, FormControl, FormGroup } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
-import { ProductListService } from '../service/product/product-list.service';
-import { AuthenListService } from '../service/authen.service';
+import { ProductListService } from '../../service/product/product-list.service';
+import { AuthenListService } from '../../service/authen.service';
 
 interface Province {
   code: string;

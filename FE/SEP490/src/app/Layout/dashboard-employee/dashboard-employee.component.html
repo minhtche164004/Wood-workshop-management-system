@@ -1,0 +1,70 @@
+<!-- SIDEBAR -->
+<section id="sidebar" [ngClass]="status ? 'hide' : ''">
+	<a href="#" class="brand">
+		<i class='bx bxs-smile'></i>
+		<span style="text-decoration: none;" class="text">Trang Nhân Viên</span>
+	</a>
+	<ul class="side-menu top">
+		<li>
+			<a routerLink="/employee" routerLinkActive="active">
+				<i class='bx bxs-user-detail'></i>
+				<span class="text"> Tra cứu việc làm đã giao</span>
+			</a>
+		</li>
+		<li>
+			<a routerLink="a" routerLinkActive="active">
+				<i class='bx bxs-user-detail'></i>
+				<span class="text">Tra cứu đơn ứng lương</span>
+			</a>
+		</li>
+		<li>
+			
+			<a routerLink="a" routerLinkActive="active">
+				<i class='bx bxs-user-detail'></i>
+				<span class="text">Tra cứu tình trạng công việc</span>
+			</a>
+		</li>
+
+		<li>
+			<a routerLink="/create_order" routerLinkActive="active">
+				<i class='bx bxs-notepad'></i>
+				<span class="text">Tra cứu đơn hàng liên kết với nhân viên</span>
+			</a>
+		</li>
+		<li>
+			<a routerLink="/order_rq" routerLinkActive="active">
+				<i class='bx bxs-doughnut-chart'></i>
+				<span class="text">Tạo báo cáo sản phẩm có lỗi</span>
+			</a>
+		</li>
+
+
+
+		<li>
+			<a routerLink="/product_management" routerLinkActive="active">
+				<i class='bx bxs-message-dots'></i>
+				<span class="text">Quản lý sản phẩm</span>
+			</a>
+		</li>
+		
+	</ul>
+	<ul class="side-menu">
+		<li>
+		  <a href="#" class="logout">
+			<i class='bx bxs-log-out-circle'></i>
+			<span class="text">Đăng xuất</span>
+		  </a>
+		</li>
+	  </ul>
+	</section>
+	<!-- SIDEBAR -->
+	<section id="content">
+	  <nav>
+		<div class="spacer"></div>
+		<a href="/logout" class="profile">
+		  <img src="assets/img/logomain-removebg-preview.png">
+		</a>
+	  </nav>
+	  <!-- Other content here -->
+	</section>
+	

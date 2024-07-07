@@ -90,7 +90,7 @@ public List<ProductImageDTO> uploadFileRequestProduct(MultipartFile[] multipartF
                             }
                             // Tải ảnh lên Cloudinary
                             Map result = cloudinaryService.upload(file, "product_images");
-                            String cloudinaryUrl = (String) result.get("url"); // Lấy URL từ kết quả trả về
+                            String cloudinaryUrl = (String) result.get("secure_url"); // Lấy URL từ kết quả trả về
 
 //                            // Đọc nội dung tệp tin thành mảng byte
 //                            byte[] bytes = file.getBytes();
@@ -182,7 +182,7 @@ public List<ProductImageDTO> uploadFileRequestProduct(MultipartFile[] multipartF
 
                                 // Tải ảnh lên Cloudinary
                                 Map result = cloudinaryService.upload(file, "product_images");
-                                String cloudinaryUrl = (String) result.get("url"); // Lấy URL từ kết quả trả về
+                                String cloudinaryUrl = (String) result.get("secure_url"); // Lấy URL từ kết quả trả về
 //                                // Đọc nội dung tệp tin thành mảng byte
 //                                byte[] bytes = file.getBytes();
 //
@@ -276,7 +276,7 @@ public List<ProductImageDTO> uploadFileRequestProduct(MultipartFile[] multipartF
 
                         // Tải ảnh lên Cloudinary
                         Map result = cloudinaryService.upload(file, "product_images");
-                        String cloudinaryUrl = (String) result.get("url"); // Lấy URL từ kết quả trả về
+                        String cloudinaryUrl = (String) result.get("secure_url"); // Lấy URL từ kết quả trả về
 
                         // Sử dụng Admin API để lấy thông tin chi tiết của ảnh
 
@@ -335,7 +335,7 @@ public List<ProductImageDTO> uploadFileRequestProduct(MultipartFile[] multipartF
 
             // Upload to Cloudinary
             Map result = cloudinaryService.upload(multipartFile, "product_images"); // Folder for thumbnails
-            String cloudinaryUrl = (String) result.get("url");
+            String cloudinaryUrl = (String) result.get("secure_url");
          //   String id =(String) result.get("public_id");
 
             // Create and return Product_Thumbnail object

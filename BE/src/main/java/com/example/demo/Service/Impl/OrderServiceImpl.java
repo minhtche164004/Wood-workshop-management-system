@@ -7,6 +7,7 @@ import com.example.demo.Dto.RequestDTO.*;
 import com.example.demo.Dto.OrderDTO.ProductItem;
 import com.example.demo.Dto.OrderDTO.RequestOrder;
 import com.example.demo.Entity.*;
+import com.example.demo.Entity.UserInfor;
 import com.example.demo.Exception.AppException;
 import com.example.demo.Exception.ErrorCode;
 import com.example.demo.Mail.EmailService;
@@ -464,7 +465,7 @@ public class OrderServiceImpl implements OrderService {
         requests.setStatus(statusRequest);
         requests.setResponse(requestEditDTO.getResponse());
         requestRepository.save(requests);
-      //  entityManager.refresh(requests);
+        //  entityManager.refresh(requests);
         return requests;
     }
 
@@ -507,12 +508,12 @@ public class OrderServiceImpl implements OrderService {
             String time_finish = dateFormatter.format(orders.getOrderFinish());
             String time_start = dateFormatter.format(orders.getOrderDate());
             String status_name=statusOrder.getStatus_name();
-                    MailBody mailBody = MailBody.builder()
+            MailBody mailBody = MailBody.builder()
                     .to(email)
                     .text("Đơn hàng có mã đơn hàng là : " + code + "\n" +
-                    "Có trạng thái: " + status_name + "\n" +
-                    "Với thời gian tạo đơn là: " + time_start + "\n" +
-                    "Và thời gian dự kiến hoàn thành là: " + time_finish)
+                            "Có trạng thái: " + status_name + "\n" +
+                            "Với thời gian tạo đơn là: " + time_start + "\n" +
+                            "Và thời gian dự kiến hoàn thành là: " + time_finish)
                     .subject("[Thông tin tiến độ của đơn hàng]")
                     .build();
             emailService.sendSimpleMessage(mailBody);

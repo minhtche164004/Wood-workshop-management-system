@@ -21,9 +21,9 @@ export class HeaderComponent implements OnInit {
 
   constructor(private dataService: DataService, private router: Router, private http: HttpClient, private authService: AuthenListService, private productListService: ProductListService) { }
   ngOnInit(): void {
-  
+    this.wishlistcount()
   }
-  
+  countwishlist: number = 0;
   user: any[] = [];
   parentData: any;
   searchKey?: string = '';
@@ -39,15 +39,28 @@ export class HeaderComponent implements OnInit {
       (response: ApiResponse) => {
         if (response.code === 1000) {
           this.user = response.result; // Lưu trữ dữ liệu người dùng vào biến users
-     
-        } 
+
+        }
       },
       (error) => {
         console.error('Error fetching users:', error);
       }
     );
   }
-
+  wishlistcount(): void {
+    this.authService.GetByIdWishList().subscribe(
+      (data) => {
+        console.log(data)
+        if (data != null || data != undefined)
+          this.countwishlist = data.result.length; // Lưu trữ dữ liệu nhận được từ API vào biến wishlistItems
+        else this.countwishlist = 0
+      },
+      (error) => {
+        // console.error('Failed to fetch wishlist:', error);
+        // Xử lý lỗi nếu cần thiết
+      }
+    );
+  }
   onLogout(): void {
     // Lấy giá trị của token từ local storage
     const token = localStorage.getItem('loginToken');

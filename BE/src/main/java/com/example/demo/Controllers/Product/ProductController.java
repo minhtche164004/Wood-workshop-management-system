@@ -4,7 +4,9 @@ import com.example.demo.Config.RedisConfig;
 import com.example.demo.Dto.Category.CategoryNameDTO;
 import com.example.demo.Dto.ProductDTO.*;
 import com.example.demo.Dto.RequestDTO.RequestEditCusDTO;
+import com.example.demo.Dto.RequestDTO.RequestProductEditDTO;
 import com.example.demo.Dto.SubMaterialDTO.SubMateProductDTO;
+import com.example.demo.Dto.SubMaterialDTO.SubMateProductRequestDTO;
 import com.example.demo.Entity.*;
 import com.example.demo.Repository.*;
 import com.example.demo.Response.ApiResponse;
@@ -374,6 +376,18 @@ public class ProductController {
         return apiResponse;
     }
 
+    @PutMapping(value = "/EditRequestProduct", consumes = MediaType.MULTIPART_FORM_DATA_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ApiResponse<?> EditRequestProduct(
+            @RequestParam(value="product_id") int productId,
+            @RequestPart("productDTO") RequestProductEditDTO requestProductEditDTO,
+            @RequestPart("files") MultipartFile[] files
+    ) throws Exception {
+        ApiResponse<RequestProducts> apiResponse = new ApiResponse<>();
+        jedis.del("all_products_admin");
+        apiResponse.setResult(productService.EditRequestProduct(productId,requestProductEditDTO,files));
+        return apiResponse;
+    }
+
     @DeleteMapping("/deleteimages")
     public ResponseEntity<?> deleteImage(@RequestParam("id") String id) {
         try {
@@ -391,6 +405,15 @@ public class ProductController {
       apiResponse.setResult("Xoá thành công");
       return apiResponse;
     }
+
+    @DeleteMapping("/deleteRequestProduct")
+    public ApiResponse<?> deleteRequestProduct(@RequestParam("id") int product_id) {
+        ApiResponse<String> apiResponse = new ApiResponse<>();
+        productService.DeleteRequestProduct(product_id);
+        apiResponse.setResult("Xoá thành công");
+        return apiResponse;
+    }
+
 
 
     //edit chỗ status product thì chỉ cho chọn là hết hàng hay là còn hàng , nếu còn hàng thì show ra cho customer xem trên landingpage
@@ -475,6 +498,28 @@ public class ProductController {
             products = gson.fromJson(cachedData, type);
         } else {
             products = productService.getProductSubMaterialByProductIdDTO(id);
+            String jsonData = gson.toJson(products);
+            jedis.hset(cacheKey, id + "", jsonData);
+            jedis.expire(cacheKey, 1800);
+        }
+        apiResponse.setResult(products);
+        return apiResponse;
+    }
+
+    @GetMapping("/getRequestProductSubMaterialAndMaterialByRequestProductId")
+    public ApiResponse<?> getRequestProductSubMaterialAndMaterialByRequestProductId(@RequestParam("id") int id) {
+        ApiResponse<List> apiResponse = new ApiResponse<>();
+        String cacheKey = "all_sub_mate_re_product";
+        List<SubMateProductRequestDTO> products;
+        String cachedData = jedis.hget(cacheKey, id + "");
+        Gson gson = new GsonBuilder().setDateFormat("MMM dd, yyyy").create();
+        if (cachedData != null) {
+            Type type = new TypeToken<List<SubMateProductRequestDTO>>() {
+            }.getType();
+
+            products = gson.fromJson(cachedData, type);
+        } else {
+            products = productService.getRequestProductSubMaterialByRequestProductIdDTO(id);
             String jsonData = gson.toJson(products);
             jedis.hset(cacheKey, id + "", jsonData);
             jedis.expire(cacheKey, 1800);

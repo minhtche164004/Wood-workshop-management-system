@@ -9,6 +9,7 @@ import { ToastrService } from 'ngx-toastr';
 import { environment } from 'src/app/environments/environment'; // Ensure this is the correct path
 import { Router } from '@angular/router';
 import { AuthenListService } from 'src/app/service/authen.service';
+import { timer } from 'rxjs';
 
 export interface AddNewAccount {
   username: string;
@@ -618,9 +619,9 @@ export class UserManagementComponent implements OnInit {
       () => {
         this.toastr.success('Thêm tài khoản người dùng thành công.');
         this.addAccountForm.reset(); // Reset the form after successful addition
-        setTimeout(() => {
+        timer(200).subscribe(() => {
           window.location.reload();
-        }, 1000); // Delay 1 second before reload
+        });
       },
       (error: any) => {
         console.error('Lỗi khi đăng nhập', error);
@@ -644,6 +645,9 @@ export class UserManagementComponent implements OnInit {
       () => {
 
         this.toastr.success('Thay đổi thông tin thành công.');
+        timer(200).subscribe(() => {
+          window.location.reload();
+        });
         // this.ngAfterViewInit();
         // setTimeout(() => {
         //   window.location.reload();

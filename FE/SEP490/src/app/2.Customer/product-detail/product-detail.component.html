@@ -11,33 +11,51 @@
             <img class="large-image rounded-4 fit" [src]="largeImageUrl" />
           </a>
         </div>
-      
-        <!-- 4 smaller images below -->
-        <div class="d-flex justify-content-center mb-3">
-          <a data-fslightbox="mygalley" class="rounded-4" target="_blank" data-type="image" (click)="updateLargeImage(productDetails.image)" [ngClass]="{'selected-image': largeImageUrl === productDetails.image}">
-            <img class="rounded-4 fit fixed-size stylish-border" [src]="productDetails.image" />
-          </a>
-          <a data-fslightbox="mygalley" class="rounded-4" target="_blank" data-type="image" (click)="updateLargeImage(productDetails.imageList[0]?.fullPath)" [ngClass]="{'selected-image': largeImageUrl === productDetails.imageList[0]?.fullPath}">
-            <img class="rounded-4 fit fixed-size stylish-border" [src]="productDetails.imageList[0]?.fullPath" />
-          </a>
-          <a data-fslightbox="mygalley" class="rounded-4" target="_blank" data-type="image" (click)="updateLargeImage(productDetails.imageList[1]?.fullPath)" [ngClass]="{'selected-image': largeImageUrl === productDetails.imageList[1]?.fullPath}">
-            <img class="rounded-4 fit fixed-size stylish-border" [src]="productDetails.imageList[1]?.fullPath" />
-          </a>
-          <a data-fslightbox="mygalley" class="rounded-4" target="_blank" data-type="image" (click)="updateLargeImage(productDetails.imageList[2]?.fullPath)" [ngClass]="{'selected-image': largeImageUrl === productDetails.imageList[2]?.fullPath}">
-            <img class="rounded-4 fit fixed-size stylish-border" [src]="productDetails.imageList[2]?.fullPath" />
-          </a>
-          <a data-fslightbox="mygalley" class="rounded-4" target="_blank" data-type="image" (click)="updateLargeImage(productDetails.imageList[3]?.fullPath)" [ngClass]="{'selected-image': largeImageUrl === productDetails.imageList[3]?.fullPath}">
-            <img class="rounded-4 fit fixed-size stylish-border" [src]="productDetails.imageList[3]?.fullPath" />
-          </a>
+
+        <!-- 4 smaller images below (with scrollable overflow) -->
+        <div class="d-flex justify-content-center mb-3" style="overflow-x: auto; white-space: nowrap;">
+          <!-- Main image -->
+
+
+          <!-- Additional images -->
+          <div class="d-flex justify-content-center mb-3" style="overflow-x: auto; white-space: nowrap;">
+            <!-- Main image -->
+
+
+            <!-- Additional images -->
+            <div *ngIf="productDetails.imageList?.length" class="image-scroll-container">
+              <div class="d-flex flex-nowrap">
+                <!-- Main image -->
+                <a data-fslightbox="mygallery" class="rounded-4 me-2 mb-2" target="_blank" data-type="image"
+                  (click)="updateLargeImage(productDetails.image)"
+                  [ngClass]="{'selected-image': largeImageUrl === productDetails.image}">
+                  <img class="rounded-4 fit fixed-size stylish-border thumbnail-image" [src]="productDetails.image" />
+                </a>
+
+                <!-- Additional images -->
+                <ng-container *ngFor="let image of productDetails.imageList">
+                  <a data-fslightbox="mygallery" class="rounded-4 me-2 mb-2" target="_blank" data-type="image"
+                    (click)="updateLargeImage(image.fullPath)"
+                    [ngClass]="{'selected-image': largeImageUrl === image.fullPath}">
+                    <img class="rounded-4 fit fixed-size stylish-border thumbnail-image" [src]="image.fullPath" />
+                  </a>
+                </ng-container>
+              </div>
+            </div>
+
+          </div>
+
         </div>
       </aside>
-      
-      
+
+
+
       <main class="col-lg-6">
         <div class="ps-lg-3">
           <h4 class="title text-dark" style="font-size: 20px;">
             {{ productDetails?.productName }}
-            
+            {{ categoryProduct?.productName}}
+
           </h4>
           <div class="mb-3">
             <span style="font-size: 16px;  font-weight: bold;">Giá Tiền: </span>
@@ -50,7 +68,7 @@
             <dt class="col-3">Màu sắc</dt>
             <dd class="col-9">Màu nâu</dd>
             <dt class="col-3">Loại gỗ:</dt>
-            <dd class="col-9">{{ productDetails.categories.categoryName }}</dd>
+            <dd class="col-9">{{ productDetails?.categories?.categoryName }}</dd>
             <dt class="col-3">Kích thước</dt>
             <dd class="col-9">4m2</dd>
 
@@ -70,52 +88,40 @@
 </section>
 <!-- content -->
 
-<section class="bg-light border-top py-4">
+<section class="bg-light border-top py-2">
   <div class="container">
     <div class="row gx-4">
-      <div class="col-lg-8 mb-4">
+      <div class="col-lg-7">
         <div class="border rounded-2 px-3 py-2 bg-white">
           <!-- Pills navs -->
           <ul class="nav nav-pills nav-justified mb-3" id="ex1" role="tablist">
-            <li class="nav-item d-flex" role="presentation">
+            <li class="nav-item" role="presentation">
               <a class="nav-link d-flex align-items-center justify-content-center w-100 active custom-background"
-                id="ex1-tab-1" data-mdb-toggle="pill" href="#ex1-pills-1" role="tab" aria-controls="ex1-pills-1"
-                aria-selected="true">Mô Tả</a>
-              <!-- {{ productDetails.description }} -->
+                 id="ex1-tab-1" data-toggle="pill" href="#ex1-pills-1" role="tab" aria-controls="ex1-pills-1"
+                 aria-selected="true" (click)="onTabClick('description')">Mô Tả</a>
             </li>
-
-            <li class="nav-item d-flex" role="presentation">
+            <li class="nav-item" role="presentation">
               <a class="nav-link d-flex align-items-center justify-content-center w-100 custom-background"
-                id="ex1-tab-2" data-mdb-toggle="pill" href="#ex1-pills-2" role="tab" aria-controls="ex1-pills-2"
-                aria-selected="false">Thông tin bảo hành</a>
+                 id="ex1-tab-2" data-toggle="pill" href="#ex1-pills-2" role="tab" aria-controls="ex1-pills-2"
+                 aria-selected="false" (click)="onTabClick('warranty')">Thông tin bảo hành</a>
             </li>
           </ul>
           <!-- Pills navs -->
-
+      
           <!-- Pills content -->
-          <div class="tab-content" id="ex1-content">
-            <div class="tab-pane fade show active" id="ex1-pills-1" role="tabpanel" aria-labelledby="ex1-tab-1">
-              <p>Vải mềm mại và co giãn, thiết kế thời trang và trẻ trung. Sản phẩm thích hợp cho nhiều hoạt động thể
-                thao và giải trí.</p>
-              <table class="table border mt-3 mb-2">
+          <div class="tab-content">
+            <!-- Tab 1: Mô Tả -->
+            <div id="ex1-pills-1" role="tabpanel" aria-labelledby="ex1-tab-1">
+              <table class="table table-custom">
                 <tr>
-                  <th class="py-2">Chất liệu:</th>
-                  <td class="py-2">Cotton, Jeans</td>
-                </tr>
-                <tr>
-                  <th class="py-2">Màu sắc:</th>
-                  <td class="py-2">Màu nâu</td>
-                </tr>
-                <tr>
-                  <th class="py-2">Loại:</th>
-                  <td class="py-2">Thông thường</td>
-                </tr>
-                <tr>
-                  <th class="py-2">Thương hiệu:</th>
-                  <td class="py-2">Reebook</td>
+                  <td>
+                    <textarea readonly class="form-control" rows="5">{{ productDetails.description }}</textarea>
+                  </td>
                 </tr>
               </table>
             </div>
+      
+            <!-- Tab 2: Thông tin bảo hành -->
             <div class="tab-pane fade" id="ex1-pills-2" role="tabpanel" aria-labelledby="ex1-tab-2">
               <p>Sản phẩm được bảo hành 1 năm kể từ ngày mua.</p>
               <ul>
@@ -124,88 +130,37 @@
                 <li>Bảo hành sản phẩm tận nơi</li>
               </ul>
             </div>
-            <div class="tab-pane fade" id="ex1-pills-3" role="tabpanel" aria-labelledby="ex1-tab-3">
-              <p>Thông tin giao hàng</p>
-              <ul>
-                <li>Giao hàng miễn phí toàn quốc</li>
-                <li>Thời gian giao hàng từ 3-5 ngày</li>
-                <li>Hỗ trợ giao hàng nhanh trong 24h</li>
-              </ul>
-            </div>
-            <div class="tab-pane fade" id="ex1-pills-4" role="tabpanel" aria-labelledby="ex1-tab-4">
-              <p>Những sản phẩm được tuyển chọn từ những thương hiệu hàng đầu, đảm bảo chất lượng và phong cách.</p>
-              <ul>
-                <li>Áo khoác thời trang</li>
-                <li>Quần jeans nam</li>
-                <li>Giày thể thao</li>
-              </ul>
-            </div>
           </div>
           <!-- Pills content -->
         </div>
       </div>
-      <div class="col-lg-4">
+
+
+      <div class="col-lg-5">
         <div class="px-0 border rounded-2 shadow-0">
           <div class="card-body">
             <h5 style="font-size: 20px; margin-bottom: 10px;" class="card-title">Sản phẩm tương tự</h5>
-            <div class="d-flex mb-3">
-              <a href="#" class="me-3">
-                <img
-                  src="https://hanoicomputercdn.com/media/product/74883_ghe_game_e_dra_yummy_egc232_black_mau_den_1.jpg"
-                  style="min-width: 96px; height: 96px;" class="img-md img-thumbnail" />
-              </a>
-              <div class="info">
-                <a href="#" class="nav-link mb-1">
-                  Ghế Zina Ember Black
+            <!-- Use ng-container to control the *ngIf -->
+            <ng-container *ngFor="let cate of categoryProduct; let i = index">
+              <div class="d-flex mb-3" *ngIf="i < 4">
+                <a [routerLink]="['/product-details', cate.productId]" class="me-3">
+                  <img [src]="cate.image" style="min-width: 150px; height: 110px;" class="img-md img-thumbnail" />
                 </a>
-                <strong class="text-dark"> $99.00</strong>
+                <div class="info">
+                  <a [routerLink]="['/product-details', cate.productId]" class="nav-link mb-1">
+                    {{ cate.productName }}
+                  </a>
+                  <strong class="text-dark"> {{ cate.price |  number: '1.0-3' }} VNĐ</strong>
+                </div>
               </div>
-            </div>
-            <div class="d-flex mb-3">
-              <a href="#" class="me-3">
-                <img
-                  src="https://hanoicomputercdn.com/media/product/74883_ghe_game_e_dra_yummy_egc232_black_mau_den_1.jpg"
-                  style="min-width: 96px; height: 96px;" class="img-md img-thumbnail" />
-              </a>
-              <div class="info">
-                <a href="#" class="nav-link mb-1">
-                  Ghế Zina Ember Black
-                </a>
-                <strong class="text-dark"> $55.00</strong>
-              </div>
-            </div>
-            <div class="d-flex mb-3">
-              <a href="#" class="me-3">
-                <img
-                  src="https://hanoicomputercdn.com/media/product/74883_ghe_game_e_dra_yummy_egc232_black_mau_den_1.jpg"
-                  style="min-width: 96px; height: 96px;" class="img-md img-thumbnail" />
-              </a>
-              <div class="info">
-                <a href="#" class="nav-link mb-1">
-                  Ghế Zina Ember Black
-                </a>
-                <strong class="text-dark"> $65.00</strong>
-              </div>
-            </div>
-            <div class="d-flex mb-3">
-              <a href="#" class="me-3">
-                <img
-                  src="https://hanoicomputercdn.com/media/product/74883_ghe_game_e_dra_yummy_egc232_black_mau_den_1.jpg"
-                  style="min-width: 96px; height: 96px;" class="img-md img-thumbnail" />
-              </a>
-              <div class="info">
-                <a href="#" class="nav-link mb-1">
-                  Ghế Zina Ember Black
-                </a>
-                <strong class="text-dark"> $45.00</strong>
-              </div>
-            </div>
+            </ng-container>
           </div>
         </div>
       </div>
+      
     </div>
   </div>
 </section>
 <div class="zalo-chat-widget" data-oaid="2628068117103072011" data-welcome-message="Rất vui khi được hỗ trợ bạn!"
-    data-autopopup="0" data-width="" data-height=""></div>
+  data-autopopup="0" data-width="" data-height=""></div>
 <app-footer></app-footer>

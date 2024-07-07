@@ -38,7 +38,7 @@
         /* Product Container Styles */
         .product-container {
             display: grid;
-            grid-template-columns: repeat(2, 1fr);
+            grid-template-columns: repeat(3, 1fr);
             grid-gap: 40px;
             padding: 40px;
         }
@@ -134,11 +134,11 @@
     <div class="product-container">
         <div *ngFor="let item of wishlistItems | paginate: { itemsPerPage: 4, currentPage: currentPage }; let i = index"
             class="product">
-            <img src="https://mcdn.coolmate.me/image/March2023/thay-ong-noi-meme-1440_204.jpg" alt="Sản phẩm 2">
-            <h3>{{ item.id }}</h3>
-            <h3>{{ item.product.productName }}</h3>
-            <p>{{ item.product.description }}</p>
-            <p>{{ item.product.price | number: '1.0-3'}}</p>
+            <img  [routerLink]="['/product-details', item.product.productId]" src="{{ item.product.image }}" alt="Sản phẩm 2">
+          
+            <h3>Tên sản phẩm: {{ item.product.productName }}</h3>
+            <p>Mô tả: {{ item.product.description }}</p>
+            <p>Giá: {{ item.product.price | number: '1.0-3'}} VNĐ</p>
             <div class="actions">
                 <button class="delete" title="Delete" data-toggle="modal" data-target="#confirmDeleteModal"
                     (click)="setDeleteId(item.id)">
@@ -167,8 +167,8 @@
                     Bạn có chắc muốn xóa sản phẩm yêu thích này không ?
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-                    <button type="button" class="btn btn-danger" (click)="deleteSupplier()">Delete</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Hủy</button>
+                    <button type="button" class="btn btn-danger" (click)="deleteSupplier()">Xóa</button>
                 </div>
             </div>
         </div>

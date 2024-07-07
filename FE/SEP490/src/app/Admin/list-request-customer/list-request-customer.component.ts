@@ -113,7 +113,7 @@ export class ListRequestCustomerComponent implements OnInit {
 
   EditRequestAccept(): void {
     const editUserRequest: EditUserRequest = this.Accept_Reject_rForm.value;
-    const requestid = this.RequestData.requestId; // Lấy requestId từ requestData
+    const requestid = this.RequestData.request_id; // Lấy requestId từ requestData
     console.log("Data: ", editUserRequest);
   
     this.authenListService.EditRequest(requestid, editUserRequest).subscribe(

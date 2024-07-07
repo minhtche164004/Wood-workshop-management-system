@@ -26,6 +26,7 @@ export class ListRequestProductComponent {
     this.requestForm = this.fb.group({
       request_Id: [0],
       description: [''],
+      status_id:[''],
       imageList: ['']
     });
    }
@@ -114,6 +115,7 @@ export class ListRequestProductComponent {
     this.requestForm.patchValue({
       request_Id: requestId,
       description: null,
+      status_id: null,
       imagesList: null
     });
     this.imagesPreview = [];
@@ -123,6 +125,7 @@ export class ListRequestProductComponent {
         if (product && product.result) {
           this.requestForm.patchValue({
             description: product.result.description,
+            status_id: product.result.status_id,
             imagesList: product.result.imagesList
           });
           if (product.result.imagesList) {
@@ -169,5 +172,11 @@ export class ListRequestProductComponent {
     
   }
 
-  
+  get isStatusDisabled(): boolean {
+    return this.requestForm.get('status_id')?.value === '1';
+  }
+
+  get isDescriptionReadonly(): boolean {
+    return this.isStatusDisabled; // Description is readonly if status_id is 1
+  }
 }  

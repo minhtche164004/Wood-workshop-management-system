@@ -259,14 +259,12 @@ export class AuthenListService {
     const token = localStorage.getItem('loginToken');
 
     if (!token) {
-      return throwError(new Error('Login token not found in localStorage.'));
+      // return throwError(new Error('Login token not found in localStorage.'));
     }
 
     const headers = new HttpHeaders({
       'Authorization': `Bearer ${token}`
     });
-
-    console.log("Authorization header:", headers.get('Authorization'));
 
     return this.http.get<any>(this.apiUrl_ViewProfile, { headers }).pipe(
       catchError(this.handleError)

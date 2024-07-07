@@ -49,8 +49,14 @@ export class ProductListService {
   private api_UrlexportMaterialProductByProductId = `${environment.apiUrl}api/auth/product/getProductSubMaterialAndMaterialByProductId`;  // lay tat ca vat lieu can co de tao 1 san pham
 
   //api for product request
-  private apiUrlGetProductRequired = `${environment.apiUrl}api/auth/order/GetAllProductRequest`;
+  private apiUrlGetProductRequest = `${environment.apiUrl}api/auth/order/GetAllProductRequest`;
   private apiUrl_getMultiFillterRequestProductForAdmin = `${environment.apiUrl}api/auth/product/getMultiFillterRequestProductForAdmin`;
+  private apiUrlAddNewProductRequest = `${environment.apiUrl}api/auth/order/AddNewRequestProduct`;
+  private api_UrlcreateExportMaterialProductRequest = `${environment.apiUrl}api/auth/submaterial/createExportMaterialProductRequest`;  // luu 1 san pham can bao nhieu vat lieu
+  private apiUrl_getAllRequest = `${environment.apiUrl}api/auth/order/GetAllRequest`;
+  private apiUrlGetProductRequestByProductRequestId = `${environment.apiUrl}api/auth/order/getRequestProductById`;
+  private apiUrlEditProductRequest = `${environment.apiUrl}api/auth/order/getRequestProductById`; // cho api
+  private apiUrlDeleteProductRequest = `${environment.apiUrl}api/auth/order/deleteProductRequest`;// cho api
   //
 
   constructor(private http: HttpClient) { }
@@ -242,7 +248,7 @@ export class ProductListService {
 
   //for request product
   getAllProductRequest(): Observable<any> {
-    return this.http.get<any>(this.apiUrlGetProductRequired).pipe(
+    return this.http.get<any>(this.apiUrlGetProductRequest).pipe(
       catchError(this.handleError)
     );
   }
@@ -292,6 +298,74 @@ export class ProductListService {
     const url = `${this.apiUrl_getMultiFillterRequestProductForAdmin}?${queryString}`;
     console.log(url);
     return this.http.get<any>(url).pipe(
+      catchError(this.handleError)
+    );
+  }
+
+  addNewProductRequest(productRequestData: any, images: File[]): Observable<any> {
+    const formData = new FormData();
+
+    formData.append('productDTO', new Blob([JSON.stringify(productRequestData)], { type: 'application/json' }));
+    images.forEach(image => {
+      formData.append('files', image, image.name);
+    });
+    const token = localStorage.getItem('loginToken');
+
+    if (!token) {
+      return throwError(new Error('Login token not found in localStorage.'));
+    }
+
+    const headers = new HttpHeaders({
+      // 'Authorization': `Bearer ${token}`,
+      'Accept': 'application/json'
+    });
+
+    // console.log("Authorization header:", headers.get('Authorization'));
+
+    return this.http.post(this.apiUrlAddNewProductRequest, formData, { headers }).pipe(
+      catchError(this.handleError)
+    );
+  }
+
+  createExportMaterialProductRequest(requestData: any): Observable<any> {
+    return this.http.post<any>(this.api_UrlcreateExportMaterialProductRequest, requestData).pipe(
+      catchError(this.handleError)
+    );
+  }
+  getAllRequest(): Observable<any> {
+    return this.http.get<any>(this.apiUrl_getAllRequest).pipe(
+      catchError(this.handleError)
+    );
+  }
+  getRequestProductById(requestId: number): Observable<any> {
+    const url = `${this.apiUrlGetProductRequestByProductRequestId}?id=${requestId}`;
+    return this.http.get<any>(url).pipe(
+      catchError(this.handleError)
+    );
+  }
+
+  editProductRequest(productData: any, images: File[] | null, productId: number): Observable<any> {
+    const formData = new FormData();
+    formData.append('productDTO', new Blob([JSON.stringify(productData)], { type: 'application/json' }));
+    // cho phep null anh neu khong update anh
+    if (images !== null && images.length > 0) {
+      images.forEach(image => {
+        formData.append('files', image, image.name);
+      });
+    } else {
+      formData.append('files', new Blob(), '');
+    }
+    const url = `${this.apiUrlEditProductRequest}?product_id=${productId}`;
+    return this.http.put(url, formData, {
+      headers: {
+        'Accept': 'application/json'
+      }
+    });
+  }
+
+  deleteProductRequest(productId: number): Observable<any> {
+    const url = `${this.apiUrlDeleteProductRequest}?id=${productId}`;
+    return this.http.delete<any>(url).pipe(
       catchError(this.handleError)
     );
   }

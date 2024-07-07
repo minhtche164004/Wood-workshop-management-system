@@ -2,6 +2,8 @@ package com.example.demo.Repository;
 
 import com.example.demo.Dto.SubMaterialDTO.Product_SubmaterialDTO;
 import com.example.demo.Dto.SubMaterialDTO.ReProduct_SubmaterialDTO;
+import com.example.demo.Dto.SubMaterialDTO.SubMateProductDTO;
+import com.example.demo.Dto.SubMaterialDTO.SubMateProductRequestDTO;
 import com.example.demo.Entity.ProductSubMaterials;
 import com.example.demo.Entity.RequestProductsSubmaterials;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -28,4 +30,12 @@ public interface RequestProductsSubmaterialsRepository extends JpaRepository<Req
 
     @Query("SELECT u.subMaterial.subMaterialName FROM RequestProductsSubmaterials u WHERE u.requestProduct.requestProductId = :query AND u.subMaterial.material.materialId IN (1, 2)")
     List<String> GetSubNameByProductId(int query);
+
+    @Query("SELECT new com.example.demo.Dto.SubMaterialDTO.SubMateProductRequestDTO( " +
+            "m.materialId ,sub.subMaterialId ,sub.subMaterialName, m.type, sub.unitPrice, j.quantity) " +
+            "FROM RequestProductsSubmaterials j " +
+            "LEFT JOIN j.subMaterial sub " +
+            "LEFT JOIN sub.material m " +
+            "WHERE j.requestProduct.requestProductId = :requestProductId")
+    List<SubMateProductRequestDTO> getRequestProductSubMaterialByRequestProductIdDTO(int requestProductId);
 }

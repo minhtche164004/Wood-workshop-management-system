@@ -2,6 +2,7 @@ package com.example.demo.Service;
 
 import com.example.demo.Dto.ProductDTO.*;
 import com.example.demo.Dto.SubMaterialDTO.SubMateProductDTO;
+import com.example.demo.Dto.SubMaterialDTO.SubMateProductRequestDTO;
 import com.example.demo.Entity.*;
 import com.example.demo.Response.ApiResponse;
 import org.springframework.http.ResponseEntity;
@@ -47,6 +48,8 @@ public interface ProductService {
     public List<Products> filterProductsForAdmin(String search, Integer categoryId, Integer statusId, BigDecimal minPrice, BigDecimal maxPrice, String sortDirection);
 
     List<SubMateProductDTO> getProductSubMaterialByProductIdDTO(int productId);
+
+    List<SubMateProductRequestDTO> getRequestProductSubMaterialByRequestProductIdDTO(int re_productId);
 
 
 

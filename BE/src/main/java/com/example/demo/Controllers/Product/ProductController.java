@@ -5,6 +5,7 @@ import com.example.demo.Dto.Category.CategoryNameDTO;
 import com.example.demo.Dto.ProductDTO.*;
 import com.example.demo.Dto.RequestDTO.RequestEditCusDTO;
 import com.example.demo.Dto.SubMaterialDTO.SubMateProductDTO;
+import com.example.demo.Dto.SubMaterialDTO.SubMateProductRequestDTO;
 import com.example.demo.Entity.*;
 import com.example.demo.Repository.*;
 import com.example.demo.Response.ApiResponse;
@@ -475,6 +476,28 @@ public class ProductController {
             products = gson.fromJson(cachedData, type);
         } else {
             products = productService.getProductSubMaterialByProductIdDTO(id);
+            String jsonData = gson.toJson(products);
+            jedis.hset(cacheKey, id + "", jsonData);
+            jedis.expire(cacheKey, 1800);
+        }
+        apiResponse.setResult(products);
+        return apiResponse;
+    }
+
+    @GetMapping("/getRequestProductSubMaterialAndMaterialByRequestProductId")
+    public ApiResponse<?> getRequestProductSubMaterialAndMaterialByRequestProductId(@RequestParam("id") int id) {
+        ApiResponse<List> apiResponse = new ApiResponse<>();
+        String cacheKey = "all_sub_mate_re_product";
+        List<SubMateProductRequestDTO> products;
+        String cachedData = jedis.hget(cacheKey, id + "");
+        Gson gson = new GsonBuilder().setDateFormat("MMM dd, yyyy").create();
+        if (cachedData != null) {
+            Type type = new TypeToken<List<SubMateProductRequestDTO>>() {
+            }.getType();
+
+            products = gson.fromJson(cachedData, type);
+        } else {
+            products = productService.getRequestProductSubMaterialByRequestProductIdDTO(id);
             String jsonData = gson.toJson(products);
             jedis.hset(cacheKey, id + "", jsonData);
             jedis.expire(cacheKey, 1800);

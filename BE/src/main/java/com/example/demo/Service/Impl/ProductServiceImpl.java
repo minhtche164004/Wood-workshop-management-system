@@ -2,6 +2,7 @@ package com.example.demo.Service.Impl;
 
 import com.example.demo.Dto.ProductDTO.*;
 import com.example.demo.Dto.SubMaterialDTO.SubMateProductDTO;
+import com.example.demo.Dto.SubMaterialDTO.SubMateProductRequestDTO;
 import com.example.demo.Entity.*;
 import com.example.demo.Exception.AppException;
 import com.example.demo.Exception.ErrorCode;
@@ -57,6 +58,8 @@ public class ProductServiceImpl implements ProductService {
     private ProcessproducterrorRepository processproducterrorRepository;
     @Autowired
     private WishListRepository wishListRepository;
+    @Autowired
+    private RequestProductsSubmaterialsRepository requestProductsSubmaterialsRepository;
 
 
 
@@ -448,6 +451,15 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public List<SubMateProductDTO> getProductSubMaterialByProductIdDTO(int productId) {
         List<SubMateProductDTO> list = productSubMaterialsRepository.getProductSubMaterialByProductIdDTO(productId);
+        if(list == null){
+            throw new AppException(ErrorCode.NOT_FOUND);
+        }
+        return list;
+    }
+
+    @Override
+    public List<SubMateProductRequestDTO> getRequestProductSubMaterialByRequestProductIdDTO(int re_productId) {
+        List<SubMateProductRequestDTO> list = requestProductsSubmaterialsRepository.getRequestProductSubMaterialByRequestProductIdDTO(re_productId);
         if(list == null){
             throw new AppException(ErrorCode.NOT_FOUND);
         }

@@ -62,10 +62,16 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatNativeDateModule } from '@angular/material/core';
 import { CalendarModule } from 'primeng/calendar';
 import { HistoryOrderComponent } from './Admin/history-order/history-order.component';
+
 import { DashboardEmployeeComponent } from './Layout/dashboard-employee/dashboard-employee.component';
 import { DashboardAdminComponent } from './Layout/dashboard-admin/dashboard-admin.component';
 import { ListJobDoneEmployeeComponent } from './4.Employee/list-job-done-employee/list-job-done-employee.component';
 import { ListJobDoneComponent } from './Admin/list-job-done/list-job-done.component';
+
+
+import { ReportCostManagementComponent } from './Admin/report-cost-management/report-cost-management.component';
+import { ChartComponent } from './Admin/chart/chart.component';
+import { NgChartjsModule } from 'ng-chartjs';
 
 // import { AuthInterceptor } from './service/auth.interceptor';
 @NgModule({
@@ -120,11 +126,16 @@ import { ListJobDoneComponent } from './Admin/list-job-done/list-job-done.compon
     TemplateComponent,
     HistoryOrderComponent,
     ListRequestProductComponent,
+
     DashboardEmployeeComponent,
     DashboardAdminComponent,
     ListJobDoneEmployeeComponent,
     ListJobDoneComponent,
   
+
+    ReportCostManagementComponent,
+    ChartComponent,
+
 
   ],
   imports: [
@@ -143,7 +154,8 @@ import { ListJobDoneComponent } from './Admin/list-job-done/list-job-done.compon
     MatDatepickerModule,
     MatFormFieldModule,
     CalendarModule,
-    MatNativeDateModule
+    MatNativeDateModule,
+    NgChartjsModule
   ],
   
   providers: [

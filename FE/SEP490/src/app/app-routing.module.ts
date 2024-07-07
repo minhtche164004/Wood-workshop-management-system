@@ -49,10 +49,16 @@ import { FeedbackDefectiveComponent } from './Admin/feedback-defective/feedback-
 import { TotalSalaryComponent } from './Admin/total-salary/total-salary.component';
 import { AutoCompleteComponent } from './auto-complete/auto-complete.component';
 import { HistoryOrderComponent } from './Admin/history-order/history-order.component';
+
 import { ListRequestProductComponent } from './2.Customer/list-request-product/list-request-product.component';
 import { DashboardComponent } from './Layout/dashboard-manager/dashboard.component';
 import { ListJobDoneEmployeeComponent } from './4.Employee/list-job-done-employee/list-job-done-employee.component';
 import { ListJobDoneComponent } from './Admin/list-job-done/list-job-done.component';
+
+import { ReportCostManagementComponent } from './Admin/report-cost-management/report-cost-management.component';
+import { Chart } from 'chart.js';
+import { ChartComponent } from './Admin/chart/chart.component';
+
 
 
 
@@ -96,21 +102,31 @@ const routes: Routes = [
 
   { path: 'wishlist', component: WishlistComponent },
   { path: 'template', component: TemplateComponent },
+
   { path: 'ds', component: DashboardComponent },
+
+  { path: 'chart', component: ChartComponent },
+
   
 
   { path: 'material_management', component: MaterialManagementComponent },
   { path: 'report_management', component: ReportManagementComponent },
+  { path: 'report_management/:id', component: ReportManagementComponent },
   { path: 'advanced_bill', component: AdvancedBillManagementComponent },
   { path: 'feedback_defective', component: FeedbackDefectiveComponent },
   { path: 'total_salary', component: TotalSalaryComponent },
   { path: 'autoComplete', component: AutoCompleteComponent },
   { path: 'history_order', component: HistoryOrderComponent },
   { path: 'request_product', component: ListRequestProductComponent },
+
   { path: 'employee', component: ListJobDoneEmployeeComponent },
   { path: 'list_job_done', component: ListJobDoneComponent },
   
   // { path: '', redirectTo: '/homepage', pathMatch: 'full' },
+
+  { path: 'report-cost', component: ReportCostManagementComponent },
+  { path: '', redirectTo: '/homepage', pathMatch: 'full' },
+
   { path: '**', redirectTo: '/homepage', pathMatch: 'full' },
 
 

@@ -195,7 +195,7 @@ public class ProductServiceImpl implements ProductService {
                 requestProductEditDTO.getQuantity(),
                 requestProductEditDTO.getCompletionTime()
         );
-        entityManager.refresh(products); // Làm mới đối tượng products
+//        entityManager.refresh(products); // Làm mới đối tượng products
         return products;
     }
 

@@ -42,7 +42,7 @@ export class ProductListService {
   private getSubMaterialByMaterialId = `${environment.apiUrl}api/auth/submaterial/FilterByMaterial`;  // lay cac vat lieu con theo vat lieu cha 
   private apiUrl_GetAllStatus = `${environment.apiUrl}api/auth/admin/GetAllStatusUser`;
   
-  private apiUrl_AddProductRequired = `${environment.apiUrl}api/auth/order/AddNewRequest`;
+
 
   private api_UrlcreateExportMaterialProduct = `${environment.apiUrl}api/auth/submaterial/createExportMaterialProduct`;  // luu 1 san pham can bao nhieu vat lieu
 
@@ -81,31 +81,6 @@ export class ProductListService {
     );
   }
 
-
-  uploadProductRequired(productRequiredData: any, images: File[]): Observable<any> {
-    const formData = new FormData();
-
-    formData.append('requestDTO', new Blob([JSON.stringify(productRequiredData)], { type: 'application/json' }));
-    images.forEach(image => {
-      formData.append('files', image, image.name);
-    });
-    const token = localStorage.getItem('loginToken');
-
-    if (!token) {
-      return throwError(new Error('Login token not found in localStorage.'));
-    }
-
-    const headers = new HttpHeaders({
-      'Authorization': `Bearer ${token}`,
-      'Accept': 'application/json'
-    });
-
-    console.log("Authorization header:", headers.get('Authorization'));
-
-    return this.http.post(this.apiUrl_AddProductRequired, formData, { headers }).pipe(
-      catchError(this.handleError)
-    );
-  }
 
 
 

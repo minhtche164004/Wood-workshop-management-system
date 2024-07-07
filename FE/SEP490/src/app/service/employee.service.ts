@@ -10,6 +10,10 @@ import { environment } from 'src/app/environments/environment';
 export class EmployeeService {
 
   private apiGetAllEmployee = `${environment.apiUrl}api/auth/admin/getAllEmployee`;
+
+  private apiGetAllPosition = `${environment.apiUrl}api/auth/admin/GetAllPosition`;
+
+  private apiCountJobById = `${environment.apiUrl}api/auth/job/countJobsByUserId`;
   constructor(private http: HttpClient) { }
 
   getAllEmployee(): Observable<any> {
@@ -17,7 +21,11 @@ export class EmployeeService {
       catchError(this.handleError)
     );
   }
-
+  getAllPostionEmp(): Observable<any>{
+    return this.http.get<any>(this.apiGetAllPosition).pipe(
+      catchError(this.handleError)
+    );
+  }
   private handleError(error: HttpErrorResponse) {
     let errorMessage = '';
     if (error.error instanceof ErrorEvent) {
@@ -30,5 +38,12 @@ export class EmployeeService {
     }
     console.error(errorMessage); // Ghi log lỗi để debug
     return throwError(errorMessage); // Ném lỗi lại như một observable
+  }
+  countJobByUserId(id: number): Observable<any> {
+    const url = `${this.apiCountJobById}?user_id=${id}`;
+    console.log('Count job by user ID:', url);
+    return this.http.get<any>(`${this.apiCountJobById}?user_id=${id}`).pipe(
+      catchError(this.handleError)
+    );
   }
 }

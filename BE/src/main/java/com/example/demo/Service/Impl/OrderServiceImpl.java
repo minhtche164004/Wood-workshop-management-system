@@ -349,6 +349,8 @@ public class OrderServiceImpl implements OrderService {
             throw new AppException(ErrorCode.NOT_FOUND);
         }
         RequestAllDTO requestAllDTO = new RequestAllDTO();
+        requestAllDTO.setRequest_id(requests.getRequestId());
+
         requestAllDTO.setUser_id(requests.getUser().getUserId());
         requestAllDTO.setRequestDate(requests.getRequestDate());
         requestAllDTO.setResponse(requests.getResponse());
@@ -358,6 +360,7 @@ public class OrderServiceImpl implements OrderService {
         requestAllDTO.setAddress(requests.getAddress());
         requestAllDTO.setCity_province(requests.getCity_province());
         requestAllDTO.setStatus_id(requests.getStatus().getStatus_id());
+        requestAllDTO.setStatus_name(requests.getStatus().getStatus_name());
         requestAllDTO.setDistrict(requests.getDistrict());
         requestAllDTO.setWards(requests.getWards());
         requestAllDTO.setDescription(requests.getDescription());

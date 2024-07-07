@@ -12,6 +12,8 @@ import java.util.List;
 @NoArgsConstructor
 @Data
 public class RequestAllDTO {
+    private Integer request_id;
+    private String status_name;
     private Integer user_id;
     private Integer status_id;
 

@@ -78,8 +78,8 @@
                                 <div class="col-lg-4 col-md-6 col-12 nopadding"
                                     *ngFor="let product of products | paginate: { itemsPerPage: 9, currentPage: currentPage }; let i = index">
                                     <div class="product">
-                                        <a style="text-decoration: none;" href="{{ product.productName }}">
-                                            <img src="{{ product.image }}" alt="" class="product-img">
+                                        <a style="text-decoration: none;" >
+                                            <img [routerLink]="['/product-details', product.productId]" src="{{ product.image }}" alt="" class="product-img">
                                             <div class="product-info">
                                                 <p class="name-product text-center">{{ product.productName }}</p>
                                                 <p class="description"

@@ -208,8 +208,6 @@ export class HomepageComponent implements AfterViewInit, OnInit {
       const m = ((total - s) / 60) % 60;
       const h = Math.floor(total / 3600);
       const d = Math.floor(total / 86400);
-
-
     }, 1000);
   }
  

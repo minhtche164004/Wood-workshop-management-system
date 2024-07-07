@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { ToastrService } from 'ngx-toastr';
 import { AuthenListService } from 'src/app/service/authen.service';
+import { timer } from 'rxjs';
 @Component({
   selector: 'app-wishlist',
   templateUrl: './wishlist.component.html',
@@ -42,9 +43,9 @@ export class WishlistComponent {
       response => {
         console.log('Supplier deleted successfully!', response);
         this.toastr.success('Nhà cung cấp đã được xóa thành công!', 'Thành công');
-        this.router.navigate(['/wishlist']); // Navigate to the wishlist page
-        this.modalRef.close(); // Close the modal
-        this.ngOnInit(); // Refresh the list of suppliers
+        timer(1000).subscribe(() => {
+          window.location.reload();
+        });
       },
       error => {
         console.error('Error deleting supplier:', error);

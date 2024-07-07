@@ -1,55 +1,75 @@
 .icon-hover:hover {
-    border-color: #C89551 !important;
-    background-color: white !important;
-    color: #C89551 !important;
-  }
-  .form-container {
-    max-width: 500px; /* Adjust the width as needed */
-    height: 400px; /* Adjust the height as needed */
-  }
-  
-  .large-image {
-    max-width: 100%;
-    max-height: 400px;
-    object-fit: cover;
-  }
-  .fixed-size {
-    width: 100px; /* Set your desired fixed width */
-    height: 100px; /* Set your desired fixed height */
-    object-fit: cover; /* Ensures the images maintain their aspect ratio while fitting the specified dimensions */
-    margin: 15px; /* Margin for spacing between images */
-    transition: transform 0.3s ease, box-shadow 0.3s ease; /* Smooth transition for hover effects */
-  }
-  
-  .stylish-border {
-    border: 2px solid #fff; /* White border */
-    border-radius: 10px; /* Rounded corners */
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Subtle shadow */
-  }
-  
-  .stylish-border:hover {
-    transform: scale(1.1); /* Slight zoom effect on hover */
-    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2); /* Enhanced shadow on hover */
-  }
-  
-  .selected-image {
-    border: 1px solid #007bff; /* Blue border for selected image */
-  }
-  .icon-hover:hover i {
-    color: #C89551 !important;
-  }
-  .custom-border {
-    border: 2px solid black;
-    padding: 3px;
-  }
-  .row dt {
-    font-weight: bold;
-font-size: 16px;
+  border-color: #C89551 !important;
+  background-color: white !important;
+  color: #C89551 !important;
 }
+
+.form-container {
+  max-width: 600px;
+  /* Adjust the width as needed */
+  height: 400px;
+  /* Adjust the height as needed */
+}
+
+.large-image {
+  max-width: 100%;
+  max-height: 400px;
+  object-fit: cover;
+}
+
+.fixed-size {
+  width: 100px;
+  /* Set your desired fixed width */
+  height: 100px;
+  /* Set your desired fixed height */
+  object-fit: cover;
+  /* Ensures the images maintain their aspect ratio while fitting the specified dimensions */
+  margin: 15px;
+  /* Margin for spacing between images */
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  /* Smooth transition for hover effects */
+}
+
+.stylish-border {
+  border: 2px solid #fff;
+  /* White border */
+  border-radius: 10px;
+  /* Rounded corners */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  /* Subtle shadow */
+}
+
+.stylish-border:hover {
+  transform: scale(1.1);
+  /* Slight zoom effect on hover */
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+  /* Enhanced shadow on hover */
+}
+
+.selected-image {
+  border: 1px solid #007bff;
+  /* Blue border for selected image */
+}
+
+.icon-hover:hover i {
+  color: #C89551 !important;
+}
+
+.custom-border {
+  border: 2px solid black;
+  padding: 3px;
+}
+
+.row dt {
+  font-weight: bold;
+  font-size: 16px;
+}
+
 .row dd {
   margin-top: 9px;
   font-size: 13px;
-    margin-bottom: 4rem; /* Add some spacing between items */
+  margin-bottom: 4rem;
+  /* Add some spacing between items */
 }
 
 .image-container {
@@ -65,7 +85,137 @@ font-size: 16px;
   width: 100px;
   height: 100px;
 }
+
 .custom-background {
-  background-color: #C89551 !important; /* Màu nền */
-  color: white; /* Đổi màu chữ nếu cần */
+  background-color: #C89551 !important;
+  /* Màu nền */
+  color: white;
+  /* Đổi màu chữ nếu cần */
+}
+
+.image-scroll-container {
+  overflow-x: auto;
+  white-space: nowrap;
+  max-width: 100%;
+  /* Ensure it stretches to full width */
+}
+
+.image-scroll-container .d-flex {
+  flex-wrap: nowrap;
+  /* Prevent wrapping */
+}
+
+.image-scroll-container .rounded-4 {
+  display: inline-block;
+  /* Display images inline */
+}
+
+.image-scroll-container .me-2 {
+  margin-right: 0.5rem;
+  /* Adjust margin between images */
+}
+
+/* General Styles */
+.table-custom {
+  width: 100%;
+  margin-top: 20px;
+  margin-bottom: 20px;
+  border: 1px solid #dee2e6;
+  border-radius: 0.25rem;
+  background-color: #fff;
+}
+
+/* Table Header */
+.table-custom th {
+  background-color: #f8f9fa;
+  font-weight: bold;
+  padding: 15px;
+  text-align: left;
+  border-bottom: 1px solid #dee2e6;
+}
+
+/* Table Data */
+.table-custom td {
+  padding: 15px;
+  border-bottom: 1px solid #dee2e6;
+}
+
+/* First Column */
+.table-custom th:first-child,
+.table-custom td:first-child {
+  width: 30%;
+}
+
+/* Table Rows */
+.table-custom tr:nth-child(odd) {
+  background-color: #f2f2f2;
+}
+
+/* Pills Navigation */
+.nav-pills .nav-link {
+  border-radius: 0;
+  border: 1px solid #dee2e6;
+}
+
+.nav-pills .nav-link.active {
+  background-color: #007bff;
+  color: #fff;
+}
+
+/* Tab Content */
+.tab-content {
+  padding: 20px;
+  border: 1px solid #dee2e6;
+  border-top: none;
+  border-radius: 0 0 0.25rem 0.25rem;
+}
+
+/* Second Tab Styles */
+.tab-pane p {
+  font-size: 16px;
+  margin-bottom: 10px;
+}
+
+.tab-pane ul {
+  list-style-type: none;
+  padding: 0;
+}
+
+.tab-pane ul li {
+  padding: 8px 0;
+  border-bottom: 1px solid #dee2e6;
+}
+
+.tab-pane ul li:last-child {
+  border-bottom: none;
+}
+
+/* Responsive Adjustments */
+@media (max-width: 768px) {
+
+  .table-custom th,
+  .table-custom td {
+    padding: 10px;
+  }
+}
+
+/* Optional: Customize styles as needed */
+.custom-background {
+  background-color: #f0f0f0;
+  /* Custom background color */
+}
+
+.table-custom {
+  width: 100%;
+  /* Ensure table width spans full container */
+}
+
+.tab-content {
+  padding: 15px;
+  /* Padding around tab content */
+}
+
+.table-responsive {
+  overflow-x: auto;
+  /* Enable horizontal scrolling if needed */
 }

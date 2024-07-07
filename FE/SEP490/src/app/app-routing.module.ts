@@ -50,6 +50,9 @@ import { TotalSalaryComponent } from './Admin/total-salary/total-salary.componen
 import { AutoCompleteComponent } from './auto-complete/auto-complete.component';
 import { HistoryOrderComponent } from './Admin/history-order/history-order.component';
 import { ListRequestProductComponent } from './features/list-request-product/list-request-product.component';
+import { ReportCostManagementComponent } from './Admin/report-cost-management/report-cost-management.component';
+import { Chart } from 'chart.js';
+import { ChartComponent } from './Admin/chart/chart.component';
 
 
 
@@ -93,17 +96,19 @@ const routes: Routes = [
 
   { path: 'wishlist', component: WishlistComponent },
   { path: 'template', component: TemplateComponent },
+  { path: 'chart', component: ChartComponent },
   
 
   { path: 'material_management', component: MaterialManagementComponent },
   { path: 'report_management', component: ReportManagementComponent },
+  { path: 'report_management/:id', component: ReportManagementComponent },
   { path: 'advanced_bill', component: AdvancedBillManagementComponent },
   { path: 'feedback_defective', component: FeedbackDefectiveComponent },
   { path: 'total_salary', component: TotalSalaryComponent },
   { path: 'autoComplete', component: AutoCompleteComponent },
   { path: 'history_order', component: HistoryOrderComponent },
   { path: 'request_product', component: ListRequestProductComponent },
-
+  { path: 'report-cost', component: ReportCostManagementComponent },
   { path: '', redirectTo: '/homepage', pathMatch: 'full' },
   { path: '**', redirectTo: '/homepage', pathMatch: 'full' },
 

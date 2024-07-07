@@ -20,7 +20,7 @@ export class JobService {
  
   private apiAcceptJob = `${environment.apiUrl}api/auth/job/acceptJob`
   private apiGetProductSubMaterial = `${environment.apiUrl}api/auth/submaterial/getProductSubMaterialByProductId`;
-
+  private apiCreateExportProd = `${environment.apiUrl}api/auth/submaterial/createExportMaterialProductTotalJob`
     // user_id={{$random.integer(100)}}&
     // p_id={{$random.integer(100)}}&                                  ?job_id=152&status_id=9
     // status_id={{$random.integer(100)}}`
@@ -30,13 +30,18 @@ export class JobService {
     const url = `${this.apiGetProductSubMaterial}?id=${productId}&mate_id=${mateId}`;
     return this.http.get<any>(url);
   }
+  createExportMaterialProductTotalJob(id:number, mate_id: number, emp_id: number, productForm: any): Observable<any> {
+    const url = `${this.apiCreateExportProd}?id=${id}&mate_id=${mate_id}&emp_id=${emp_id}`;
+    console.log('Total product for job URL:', url);
+    return this.http.post(url, productForm);
+  }
   acceptJob(jobId: number, statusId: number): Observable<any> {
     const url = `${this.apiAcceptJob}?job_id=${jobId}&status_id=${statusId}`;
     return this.http.get<any>(url);
   }
   addJob(user_id: number, p_id: number, status_id: number, job_id: number, type_id:number, jobData: any): Observable<any> {
     const url = `${this.apiCreateProductForjob}?user_id=${user_id}&p_id=${p_id}&status_id=${status_id}&&type_job=${type_id}&job_id=${job_id}`;
-    console.log('Add job URL:', url);
+    // console.log('Add job URL:', url);
     return this.http.post<any>(url, jobData);
   }
   addProductForJob(p_id: number, quantity: number) {
@@ -47,8 +52,8 @@ export class JobService {
     const url = `${this.apiAddJob}/CreateJobs`; // Endpoint for creating jobs
    
     const params = { user_id, p_id, status_id, job_id, type_id };
-    console.log('Constructed URL:', url);
-    console.log('Constructed params:', params);
+    // console.log('Constructed URL:', url);
+    // console.log('Constructed params:', params);
     return this.http.post(url, jobData, { params });
   }
   getStatusJobByType(type: number): Observable<any> {

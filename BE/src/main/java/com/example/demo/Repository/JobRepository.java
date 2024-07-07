@@ -54,6 +54,9 @@ public interface JobRepository extends JpaRepository<Jobs,Integer> {
     @Query("SELECT u FROM Jobs u WHERE u.product.productId = :query")
     List<Jobs> getJobByProductId(int query);
 
+    @Query("SELECT u FROM Jobs u WHERE u.requestProducts.requestProductId = :query")
+    List<Jobs> getJobByRequestProductId(int query);
+
     @Query("SELECT u FROM Jobs u WHERE u.job_log IS TRUE")
     List<Jobs> getJobWasDone();
 

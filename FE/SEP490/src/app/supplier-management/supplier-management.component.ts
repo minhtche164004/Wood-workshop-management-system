@@ -182,13 +182,13 @@ export class SupplierManagementComponent implements OnInit {
   }
 
 
-
+ 
   getDatasupplierMaterial(id: string): void {
     this.authenListService.getSupplierById(id).subscribe(
       (data) => {
         if (data.code === 1000) {
           this.suplierData = data.result;
-          this.selectedMaterial = this.materials.find(material => material.subMaterialName === this.suplierData.subMaterial.subMaterialName)?.subMaterialId;
+          this.selectedMaterial = this.materials.find(material => material.sub_material_name === this.suplierData.subMaterial.subMaterialName)?.sub_material_id;
           console.log('KVL: ', this.selectedMaterial);
         } else {
           console.error('Failed to fetch supplier data:', data);

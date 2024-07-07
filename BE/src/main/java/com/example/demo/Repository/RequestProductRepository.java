@@ -4,7 +4,9 @@ import com.example.demo.Dto.ProductDTO.RequestProductAllDTO;
 import com.example.demo.Entity.Products;
 import com.example.demo.Entity.RequestProducts;
 import com.example.demo.Entity.Requests;
+import jakarta.transaction.Transactional;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
@@ -20,6 +22,11 @@ public interface RequestProductRepository extends JpaRepository<RequestProducts,
 
     @Query("SELECT u FROM RequestProducts u WHERE u.requestProductId = :query")
     RequestProducts findById(int query);
+
+    @Transactional
+    @Modifying
+    @Query("DELETE FROM RequestProducts u WHERE u.requestProductId = :query")
+    void deleteByRequestProductId(@Param("query") int requestProductId);
 
 
 

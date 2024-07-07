@@ -59,7 +59,11 @@ public class ProductServiceImpl implements ProductService {
     @Autowired
     private WishListRepository wishListRepository;
     @Autowired
+    private RequestProductRepository requestProductRepository;
+    @Autowired
     private RequestProductsSubmaterialsRepository requestProductsSubmaterialsRepository;
+    @Autowired
+    private Product_RequestimagesRepository productRequestimagesRepository;
 
 
 
@@ -464,6 +468,39 @@ public class ProductServiceImpl implements ProductService {
             throw new AppException(ErrorCode.NOT_FOUND);
         }
         return list;
+    }
+
+    @Transactional
+    @Override
+    public void DeleteRequestProduct(int re_product_id) {
+        RequestProducts product = requestProductRepository.findById(re_product_id);
+        if(product == null){
+            throw new AppException(ErrorCode.NOT_FOUND);
+        }
+        // Kiểm tra các ràng buộc
+        // productImageRepository.findImageByProductId(product_id).isEmpty()
+        // productSubMaterialsRepository.findByProductID(product_id).isEmpty()
+        if (orderDetailRepository.getOrderDetailByRequestProductId(re_product_id).isEmpty() &&
+                jobRepository.getJobByRequestProductId(re_product_id).isEmpty() &&
+                processproducterrorRepository.getProcessproducterrorByRequestProductId(re_product_id).isEmpty()
+        ) {
+            // Không có ràng buộc nào, có thể xóa sản phẩm
+            List<Product_Requestimages> productImages = productRequestimagesRepository.findImageByProductId(re_product_id);
+            for (Product_Requestimages productImage : productImages) {
+                productRequestimagesRepository.deleteRequestProductimagesById(productImage.getProductImageId());
+            }
+            List<RequestProductsSubmaterials> productSubMaterialsList = requestProductsSubmaterialsRepository.findByRequestProductID(re_product_id);
+            for (RequestProductsSubmaterials productSubMaterials : productSubMaterialsList) {
+                requestProductsSubmaterialsRepository.deleteRequestProductSubMaterialsById(productSubMaterials.getRequestProductsSubmaterialsId());
+            }
+//            productImageRepository.deleteAll(productImageRepository.findImageByProductId(product_id));
+//            productSubMaterialsRepository.deleteAll(productSubMaterialsRepository.findByProductID(product_id));
+            requestProductRepository.deleteByRequestProductId(re_product_id);
+
+        } else {
+            // Có ràng buộc, không thể xóa sản phẩm
+            throw new AppException(ErrorCode.PRODUCT_HAS_RELATIONSHIPS); // Hoặc một mã lỗi phù hợp
+        }
     }
 
 

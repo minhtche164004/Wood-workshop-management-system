@@ -36,6 +36,7 @@ public interface ProductService {
 
 
     void DeleteProduct(int product_id);
+    void DeleteRequestProduct(int re_product_id);
 
 
 

@@ -87,12 +87,14 @@ interface Ward {
 })
 export class UserManagementComponent implements OnInit {
   @ViewChild('closeButton', { static: false }) closeButton!: ElementRef<any>;
+  @ViewChild('confirmDeleteModal', { static: false }) confirmDeleteModal!: ElementRef<HTMLDivElement>;
 
   ngAfterViewInit() {
     if (this.closeButton) {
       this.closeButton.nativeElement.click();
     }
   }
+  isModalOpen = false;
   searchKey: string = '';
   addAccountForm: FormGroup;
   editUserForm: FormGroup;
@@ -115,6 +117,8 @@ export class UserManagementComponent implements OnInit {
   selectedCategory: any = null;
   selectedRoleAdd: any = null;
   selectedRole: any = null; // Assuming selectedRole should be a boolean
+  selectedPosition_Update: any = null;
+  selectBankName_update: any = null;
   selectedPosition: any = null;
   selectedStatus: any = null;
 
@@ -159,11 +163,12 @@ export class UserManagementComponent implements OnInit {
       phoneNumber: ['', Validators.required],
       address: ['', Validators.required],
       fullname: ['', Validators.required],
-      status_id: [],
-      position_id: ['', Validators.required],
+      status_id: [''],
+      position_id: [''],
+      position_name: ['', Validators.required],
       role_id: ['', Validators.required],
-      bank_name: ['', Validators.required],
-      bank_number: ['', Validators.required],
+      bank_name: [''],
+      bank_number: [''],
       city_province: ['', Validators.required],
       district: ['', Validators.required],
       wards: ['', Validators.required]
@@ -243,6 +248,11 @@ export class UserManagementComponent implements OnInit {
     });
     this.editUserForm.get('role_id')?.valueChanges.subscribe((roleId) => {
       this.selectedRole = roleId;
+      this.onRoleChangeUpdate();
+    });
+
+    this.editUserForm.get('position_id')?.valueChanges.subscribe((position_id) => {
+      this.selectedPosition_Update = position_id;
       this.onRoleChangeUpdate();
     });
     this.onRoleChangeUpdate(); // gọi hàm này khi form vừa được khởi tạo
@@ -350,9 +360,9 @@ export class UserManagementComponent implements OnInit {
       (data) => {
         this.userData = data.result;
         this.selectedRole = this.role.find(role => role.roleName === this.userData.role_name)?.roleId;
-        this.selectedPosition = this.position.find(position => position.position_name === this.userData.position_name)?.position_id;
+        this.selectedPosition_Update = this.position.find(position => position.position_name === this.userData.position_name)?.position_id;
         this.selectedStatus = this.status.find(sa => sa.status_name === this.userData.status_name)?.status_id;
-        this.selectBankName = this.userData.bank_name;
+        this.selectBankName_update = this.userData.bank_name;
 
       },
       (error) => {
@@ -380,7 +390,7 @@ export class UserManagementComponent implements OnInit {
     } else {
       this.isPositionEnabled_Update = false;
       this.editUserForm.patchValue({
-        position: null,
+        position_id: 4,
         bank_name: null,
         bank_number: ''
       });
@@ -634,10 +644,10 @@ export class UserManagementComponent implements OnInit {
       () => {
 
         this.toastr.success('Thay đổi thông tin thành công.');
-        this.ngAfterViewInit();
-        setTimeout(() => {
-          window.location.reload();
-        }, 2000); // Delay 1 second before reload
+        // this.ngAfterViewInit();
+        // setTimeout(() => {
+        //   window.location.reload();
+        // }, 2000); // Delay 1 second before reload
       },
       (error: any) => {
         
@@ -666,11 +676,25 @@ export class UserManagementComponent implements OnInit {
               this.toastr.error('Không tìm thấy sản phẩm!', 'Tìm kiếm thất bại');
             } 
           }
-        );
+        ); 
     } else{
       
       this.loadAllUsers();
     }
   }
+  openModal() {
+    this.isModalOpen = true;
+    this.confirmDeleteModal.nativeElement.classList.add('modal-open');
+  }
 
+  closeModal() {
+    this.isModalOpen = false;
+    this.confirmDeleteModal.nativeElement.classList.remove('modal-open');
+  }
+
+  deleteProduct() {
+    // Code to delete the product
+    console.log('Deleting product...');
+    this.closeModal();
+  }
 }

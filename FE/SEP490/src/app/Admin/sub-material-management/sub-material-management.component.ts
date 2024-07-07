@@ -6,7 +6,7 @@ import { MaterialService } from 'src/app/service/material.service';
 import { FormControl } from '@angular/forms';
 import { SubMaterialService } from 'src/app/service/sub-material.service';
 import { AuthenListService } from 'src/app/service/authen.service';
-
+import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 
 interface SubMaterial {
   sub_material_name: string,
@@ -27,17 +27,19 @@ export class SubMaterialManagementComponent implements OnInit {
   selectedMaterial: any = null;
   searchKey: string = '';
   categories: any[] = [];
-
+  keyword = 'subMaterialName';
   sub_material_name: string ='';
   SubMaterData: any = {};
   description: string = '';
   quantity: number = 0;
   unit_price: number = 0;
+  selectedSubMtr: any = {};
   constructor(
     private subMaterialService: SubMaterialService,
     private materialService: MaterialService,
     private toastr: ToastrService,
-    private authenListService: AuthenListService
+    private authenListService: AuthenListService,
+    private sanitizer: DomSanitizer
   ) { }
  
   ngOnInit() {
@@ -68,7 +70,7 @@ export class SubMaterialManagementComponent implements OnInit {
       
   }
   getAllMaterials(): void {
-    this.materialService.getAllSubMaterials().subscribe(
+    this.materialService.getAllMaterial().subscribe(
       (data) => {
         if (data.code === 1000) {
           this.categories = data.result;
@@ -130,6 +132,49 @@ export class SubMaterialManagementComponent implements OnInit {
       }
     );
   }
+
+  sanitize(name: string): SafeHtml {
+    return this.sanitizer.bypassSecurityTrustHtml(name);
+  }
+  selectEvent(item: any) {
+      
+  }
+  selectEmp(product: any): void {
+    this.selectedSubMtr = product; // Adjust based on your product object structure
+    console.log('Selected emp:', this.selectedSubMtr);
+    console.log('Selected emp id:', this.selectedSubMtr.userId);
+    
+  }
+  onChangeSearch(event: any) {
+    this.selectedSubMtr = event.target.value;
+    console.log('Selected submaterial:', event.target.value);
+  }
+
+  filterByMaterialId(): void {
+    this.subMaterialService.filterByMaterial(this.selectedMaterial).subscribe(
+      (data) => {
+        if (data.code === 1000) {
+          this.products = data.result;
+          this.toastr.success('Vật liệu ' + this.selectedMaterial.materialName + ' thành công!', 'Thành công');
+          console.log('Kết quả lọc Sub-Materials:', this.products);
+        } else {
+          console.error('Failed to filter sub-materials:', data);
+          this.toastr.error('Không thể lọc sub-materials!', 'Lỗi');
+        }
+      },
+      (error) => {
+        console.error('Error filtering sub-materials:', error);
+        this.toastr.error('Có lỗi xảy ra!', 'Lỗi');
+      }
+    );
+    
+  }
+  searchSelectedMaterial(material: any): void {
+    this.selectedMaterial = material;
+    console.log("Thực hiện chức năng tìm kiếm nguyên vật liệu: ", this.selectedMaterial);
+    // console.log("Thực hiện chức năng tìm kiếm nguyên vật liệu: ", this.selectedMaterial.materialName);
+    this.filterByMaterialId();
+  }  
   getDatasupplierMaterial(id: string): void {
     this.authenListService.getSupplierById(id).subscribe(
       (data) => {

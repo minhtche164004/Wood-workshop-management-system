@@ -644,7 +644,7 @@ export class ProductManagementComponent implements OnInit {
 
       this.productListService.editProduct(updatedProduct, this.selectedThumbnail, this.selectedImages, productData.product_id)
         .subscribe(
-          response => {
+          response => { 
             this.reloadProduct();
             this.isLoadding = false;
 

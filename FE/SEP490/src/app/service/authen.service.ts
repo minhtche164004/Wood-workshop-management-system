@@ -34,8 +34,15 @@ export class AuthenListService {
   private api_getAllMaterialName = `${environment.apiUrl}api/auth/getAllName`;
   private api_getAllSubMaterialName = `${environment.apiUrl}api/auth/submaterial/getall`;
   private apiUrl_EditSupplier = `${environment.apiUrl}api/auth/supplier/EditSupplier`;
+  private apiUrl_AddProductRequired = `${environment.apiUrl}api/auth/order/AddNewRequest`;
+  private apiUrl_getfindAllJobForDoneByEmployeeID = `${environment.apiUrl}api/auth/job/findAllJobForDoneByEmployeeID`;
+  private api_getListJobWasDoneAdmin = `${environment.apiUrl}api/auth/job/getListJobWasDone`;
+  private api_getAllRequest = `${environment.apiUrl}api/auth/order/GetAllRequest`;
+  private api_getAllStatusRequest = `${environment.apiUrl}api/auth/admin/GetAllStatusRequest`;
+  private apiUrl_getRequestById = `${environment.apiUrl}api/auth/order/GetRequestById`;
+  private apiUrl_EditRequest = `${environment.apiUrl}api/auth/order/ManagerEditRequest`;
   
-
+  
   private apiUrl_NameATM = 'https://api.vietqr.io/v2/banks';
   constructor(private http: HttpClient) { }
   isLoggedIn(): boolean {
@@ -88,6 +95,14 @@ export class AuthenListService {
     );
   }
 
+  getRequestById(id: string): Observable<any> {
+    const url = `${this.apiUrl_getRequestById}?id=${id}`;
+    return this.http.get<any>(url).pipe(
+      catchError(this.handleError)
+    );
+  }
+
+
   getOrderDetailById(order_detail_id: string): Observable<any> {
     const url = `${this.apiUrl_GetOrderDeTailById}?id=${order_detail_id}`;
     return this.http.get<any>(url).pipe(
@@ -97,7 +112,7 @@ export class AuthenListService {
 
   editRequestProductForCustomer(requestData: any, images: File[] | null, request_id: number): Observable<any> {
     const formData = new FormData();
-    formData.append('productDTO', new Blob([JSON.stringify(requestData)], { type: 'application/json' }));
+    formData.append('requestEditCusDTO', new Blob([JSON.stringify(requestData)], { type: 'application/json' }));
     // cho phep null anh neu khong update anh
     if (images !== null && images.length > 0) {
       images.forEach(image => {
@@ -133,6 +148,39 @@ export class AuthenListService {
       catchError(this.handleError)
     );
   }
+  getfindAllJobForDoneByEmployeeID(): Observable<any> {
+    const token = localStorage.getItem('loginToken');
+
+    if (!token) {
+      return throwError(new Error('Login token not found in localStorage.'));
+    }
+
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${token}`
+    });
+
+    console.log("Authorization header:", headers.get('Authorization'));
+
+    return this.http.get<any>(this.apiUrl_getfindAllJobForDoneByEmployeeID, { headers }).pipe(
+      catchError(this.handleError)
+    );
+  }
+
+  getListJobWasDoneAdmin(): Observable<any> {
+    
+
+    return this.http.get<any>(this.api_getListJobWasDoneAdmin).pipe(
+      catchError(this.handleError) 
+    );
+  }
+  getAllRequest(): Observable<any> {
+  
+    return this.http.get<any>(this.api_getAllRequest).pipe(
+      catchError(this.handleError) 
+    );
+  }
+
+
   getListRequestProductCusomer(): Observable<any> {
     const token = localStorage.getItem('loginToken');
 
@@ -300,6 +348,20 @@ export class AuthenListService {
       catchError(this.handleError) 
     );
   }
+
+  getAllStatusRequest(): Observable<any>{
+    return this.http.get<any>(this.api_getAllStatusRequest).pipe(
+      catchError(this.handleError) 
+    );
+  }
+  EditRequest(request_id: string, RequestData: any): Observable<any> {
+    const url = `${this.apiUrl_EditRequest}?request_id=${request_id}`;
+    return this.http.put<any>(url, RequestData).pipe(
+      catchError(this.handleError)
+    );
+  }
+
+  
   
   EditSupplier(id: string, suplierData: any): Observable<any> {
     const token = localStorage.getItem('loginToken');
@@ -317,4 +379,30 @@ export class AuthenListService {
       catchError(this.handleError)
     );
   }
+  
+  uploadProductRequired(productRequiredData: any, images: File[]): Observable<any> {
+    const formData = new FormData();
+
+    formData.append('requestDTO', new Blob([JSON.stringify(productRequiredData)], { type: 'application/json' }));
+    images.forEach(image => {
+      formData.append('files', image, image.name);
+    });
+    const token = localStorage.getItem('loginToken');
+
+    if (!token) {
+      return throwError(new Error('Login token not found in localStorage.'));
+    }
+
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${token}`,
+      'Accept': 'application/json'
+    });
+
+    console.log("Authorization header:", headers.get('Authorization'));
+
+    return this.http.post(this.apiUrl_AddProductRequired, formData, { headers }).pipe(
+      catchError(this.handleError)
+    );
+  }
+
 }

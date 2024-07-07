@@ -273,7 +273,7 @@ registerUser(): void {
           } else if (authorities.includes('ADMIN')) {
             this.router.navigateByUrl('/admin');
           } else if (authorities.includes('EMPLOYEE')) {
-            this.router.navigateByUrl('/employee-work');
+            this.router.navigateByUrl('/employee');
           } else {
             console.error('Vai trò người dùng không hợp lệ:', authorities);
             this.toastr.error('Vai trò người dùng không hợp lệ', 'Lỗi cố khi thực hiện đăng nhập');

@@ -12,7 +12,7 @@ export class MaterialService {
   private api_getAllSubMtr = `${environment.apiUrl}api/auth/submaterial/getall`
   private api_addsubMtr = `${environment.apiUrl}api/auth/submaterial/AddNewSubMaterial`
   private api_editMaterial = `${environment.apiUrl}api/auth/EditMaterial`;
-
+private api_searchSubMaterial = `${environment.apiUrl}api/auth/submaterial/SearchByNameorCode`;
   constructor(private http: HttpClient) { }
   getAllMaterial(): Observable<any>{
     return this.http.get<any>(this.api_getAllMaterial).pipe(
@@ -47,9 +47,9 @@ export class MaterialService {
       catchError(this.handleError)
     );
   }
-  private api_searchSubMaterial = `${environment.apiUrl}api/auth/submaterial/search`;
+  
   searchSubMaterial(searchKey: string): Observable<any> {
-    return this.http.get<any>(`${this.api_searchSubMaterial}?q=${searchKey}`).pipe(
+    return this.http.get<any>(`${this.api_searchSubMaterial}?key=${searchKey}`).pipe(
       catchError(this.handleError)
     );
   }

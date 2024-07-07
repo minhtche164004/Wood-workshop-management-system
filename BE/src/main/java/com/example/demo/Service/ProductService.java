@@ -1,6 +1,7 @@
 package com.example.demo.Service;
 
 import com.example.demo.Dto.ProductDTO.*;
+import com.example.demo.Dto.RequestDTO.RequestProductEditDTO;
 import com.example.demo.Dto.SubMaterialDTO.SubMateProductDTO;
 import com.example.demo.Dto.SubMaterialDTO.SubMateProductRequestDTO;
 import com.example.demo.Entity.*;
@@ -10,6 +11,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 
+import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
@@ -37,6 +39,8 @@ public interface ProductService {
 
     void DeleteProduct(int product_id);
     void DeleteRequestProduct(int re_product_id);
+
+    RequestProducts EditRequestProduct(int id, RequestProductEditDTO requestProductEditDTO, MultipartFile[] multipartFiles) throws IOException;
 
 
 

@@ -28,6 +28,11 @@ public interface Product_RequestimagesRepository extends JpaRepository<Product_R
     @Query("DELETE FROM Product_Requestimages u WHERE u.productImageId = :query")
     void deleteRequestProductimagesById(@Param("query") int productImageId);
 
+    @Transactional
+    @Modifying
+    @Query("DELETE FROM Product_Requestimages p WHERE p.requestProducts.requestProductId = :requestProductId")
+    void deleteRequestProductImages(@Param("requestProductId") int requestProductId);
+
 
 
 }

@@ -145,11 +145,11 @@ public class PaymentServiceImpl implements PaymentService {
         accessToken =  login();
 
         Map<String, Object> data = new HashMap<>();
-        data.put("accountNo", accountId);
-        data.put("accountName", "LE NAM");
-        data.put("acqId", "970423");
-        data.put("amount", amout);
-        data.put("addInfo", "THANH TOAN " + orderInfo);
+        data.put("accountNo", accountId); //stk ngân hàng
+        data.put("accountName", "LE NAM"); //username của acc
+        data.put("acqId", "970423"); //mã bin của ngân hàng
+        data.put("amount", amout); //số tiền
+        data.put("addInfo", "THANH TOAN " + orderInfo); //nội dung ck
         data.put("format", "text");
         data.put("template", "compact2");
 
@@ -190,5 +190,41 @@ public class PaymentServiceImpl implements PaymentService {
         String qrCode = (String) dataMap.get("qrDataURL");
 
         return qrCode;
+    }
+
+    @Override
+    public String getQRCodeBankingForEmployee(int amout,String accountId,String username,String bin_bank, String orderInfo) {
+        accessToken =  login();
+
+        Map<String, Object> data = new HashMap<>();
+        data.put("accountNo", accountId); //stk ngân hàng
+        data.put("accountName", username); //username của acc
+        data.put("acqId", bin_bank); //mã bin của ngân hàng
+        data.put("amount", amout); //số tiền
+        data.put("addInfo", "THANH TOAN " + orderInfo); //nội dung ck
+        data.put("format", "text");
+        data.put("template", "compact2");
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.set("Accept", "application/json, text/plain, */*");
+        headers.set("Accept-Language", "vi,en-US;q=0.9,en;q=0.8");
+        headers.set("Connection", "keep-alive");
+        headers.set("Content-Type", "application/json");
+
+        HttpEntity<Map<String, Object>> entity = new HttpEntity<>(data, headers);
+
+        RestTemplate restTemplate = new RestTemplate();
+        ResponseEntity<String> response = null;
+        try {
+            response = restTemplate.postForEntity(
+                    "https://api.vietqr.io/v2/generate",
+                    entity,
+                    String.class
+            );
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return response.getBody();
     }
 }

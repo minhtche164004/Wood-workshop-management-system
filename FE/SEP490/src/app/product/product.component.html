@@ -29,8 +29,8 @@
                                         <div class="accordion-body">
                                             <ul class="category-list">
                                                 <li class="all-sp">
-                                                    <input type="radio" name="category" id="all" value="0"
-                                                        (change)="ngOnInit()">
+                                                    <input type="radio" [(ngModel)]="selectedCategory" [value]=""
+                                                        name="category" id="all" (change)="filterProducts()">
                                                     <label for="all">Tất cả</label>
                                                 </li>
                                                 <li *ngFor="let category of categories" style="margin-top: -5x"
@@ -38,11 +38,11 @@
                                                     <input style="margin-right: 5px;" type="radio"
                                                         [(ngModel)]="selectedCategory" name="category"
                                                         id="{{ category.categoryId }}" value="{{ category.categoryId }}"
-                                                        (change)="filterProducts('')">
+                                                        (change)="filterProducts()">
                                                     <label for="{{ category.categoryId }}">{{ category.categoryName
                                                         }}</label>
 
-                                                   
+
                                                 </li>
                                             </ul>
 
@@ -64,11 +64,23 @@
                 <div class="col-lg-9 col-12">
                     <div class="boloc d-flex">
                         <div class="boloc d-flex">
-                            
-                            <p class="giacao" (click)="filterProducts('asc')" ><i class="fas fa-sort-amount-up"></i>Giá cao</p>
-                            <p class="giathap" (click)="filterProducts('desc')"><i class="fas fa-sort-amount-down-alt"></i>Giá thấp</p>
-                           
-                          </div>
+
+                            <!-- Ví dụ với input button -->
+                            <div>
+                                <button class="giacao" [class.selected]="selectedSortByPrice === 'desc'"
+                                style="margin: 5px; padding: 5px;  border: none; background: none;"
+                                    (click)="sortProducts('desc')">Giá cao <i
+                                        class="fa-solid fa-arrow-down-wide-short"></i></button>
+                                <button class="giathap" [class.selected]="selectedSortByPrice === 'asc'"
+                                style="margin: 5px; padding: 5px;  border: none; background: none;"
+                                    (click)="sortProducts('asc')">Giá thấp <i
+                                        class="fa-solid fa-arrow-up-wide-short"></i></button>
+
+
+
+                            </div>
+
+                        </div>
                     </div>
 
                     <div>
@@ -78,8 +90,9 @@
                                 <div class="col-lg-4 col-md-6 col-12 nopadding"
                                     *ngFor="let product of products | paginate: { itemsPerPage: 9, currentPage: currentPage }; let i = index">
                                     <div class="product">
-                                        <a style="text-decoration: none;" >
-                                            <img [routerLink]="['/product-details', product.productId]" src="{{ product.image }}" alt="" class="product-img">
+                                        <a style="text-decoration: none;">
+                                            <img [routerLink]="['/product-details', product.productId]"
+                                                src="{{ product.image }}" alt="" class="product-img">
                                             <div class="product-info">
                                                 <p class="name-product text-center">{{ product.productName }}</p>
                                                 <p class="description"

@@ -107,14 +107,26 @@
     <div class="container-fluid search-bar-container" style="margin-top: -2%;">
         <div class="row">
             <div class="col-12 d-flex justify-content-center">
-                <form class="d-flex search-bar" (ngSubmit)="onSearch()">
-                    <input class="form-control me-2 search-input" style="height: 46px;" type="search"
-                        placeholder="Tìm kiếm sản phẩm ..." aria-label="Search" [(ngModel)]="searchKey" name="searchKey"
-                        aria-label="Search">
-                    <button class="btn search-button" type="submit">
+                <div class="d-flex search-bar" >
+                    <ng-autocomplete class="" *ngIf="products" [data]="products" [searchKeyword]="keyword"
+                                    placeholder="Nhập tên sản phẩm để tìm kiếm" historyIdentifier="products"
+                                    [(ngModel)]="searchKey"
+                                    [itemTemplate]="itemTemplate" [notFoundTemplate]="notFoundTemplate"
+                                    (selected)="selectProduct($event)">
+                                </ng-autocomplete>
+
+                                <ng-template #itemTemplate let-item>
+                                    <a [innerHTML]="sanitize(item.productName)"></a>
+                                </ng-template>
+
+                                <ng-template #notFoundTemplate let-notFound>
+                                    <div>Không tìm thấy tên sản phẩm!</div>
+                                </ng-template>
+                  
+                    <button class="btn search-button" type="submit" (click)="onSearch()">
                         <i class="fa-solid fa-magnifying-glass"></i>
                     </button>
 
-                </form>
+                </div>
             </div>
         </div>

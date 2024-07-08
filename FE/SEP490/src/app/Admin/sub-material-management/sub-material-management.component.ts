@@ -3,14 +3,14 @@ import { Component, OnInit } from '@angular/core';
 import { SupplierService } from 'src/app/service/supplier.service';
 import { ToastrService } from 'ngx-toastr';
 import { MaterialService } from 'src/app/service/material.service';
-import { FormControl } from '@angular/forms';
+import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
 import { SubMaterialService } from 'src/app/service/sub-material.service';
 import { AuthenListService } from 'src/app/service/authen.service';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 
 interface SubMaterial {
   sub_material_name: string,
-  material_id: number,
+  material_name: string,
   description: string,
   quantity: number | undefined,
   unit_price: number
@@ -27,22 +27,36 @@ export class SubMaterialManagementComponent implements OnInit {
   selectedMaterial: any = null;
   searchKey: string = '';
   categories: any[] = [];
-  keyword = 'subMaterialName';
+  keyword = 'sub_material_name';
   sub_material_name: string ='';
   SubMaterData: any = {};
   description: string = '';
   quantity: number = 0;
   unit_price: number = 0;
   selectedSubMtr: any = {};
+  editForm: FormGroup;
   constructor(
     private subMaterialService: SubMaterialService,
     private materialService: MaterialService,
     private toastr: ToastrService,
     private authenListService: AuthenListService,
-    private sanitizer: DomSanitizer
-  ) { }
+    private sanitizer: DomSanitizer,
+    private fb: FormBuilder,
+  ) { 
+    this.editForm = this.fb.group({
+
+      sub_material_id: [],
+      sub_material_name: [''],
+      material_name: [''],
+      description: [''],
+      quantity: [],
+      unit_price: [],
+    });
+
+  }
  
-  ngOnInit() {
+  ngOnInit():void {
+    console.log("Bắt đầu chạy sub-material-management.component.ts")
     this.getAllMaterials();
     this.getAllSubMaterials();
 
@@ -90,7 +104,7 @@ export class SubMaterialManagementComponent implements OnInit {
     console.log("Bắt đầu chạy thêm vật liệu")
     const subMaterial: SubMaterial = {
       sub_material_name: this.sub_material_name,
-      material_id: this.selectedMaterial,
+      material_name: this.selectedMaterial,
       description: this.description,
       quantity: this.quantity,
       unit_price: this.unit_price,
@@ -100,7 +114,7 @@ export class SubMaterialManagementComponent implements OnInit {
     this.materialService.addNewSubMaterial(subMaterial).subscribe(
       (response) => {
         if (response.code === 1000) {
-          this.toastr.success('Sub-material added successfully!', 'Success');
+          this.toastr.success('Thêm nguyên vật liệu mới thành công!', 'Success');
           this.getAllSubMaterials(); // Refresh the list of sub-materials
         } else {
           this.toastr.error('Failed to add sub-material!', 'Error');
@@ -113,10 +127,47 @@ export class SubMaterialManagementComponent implements OnInit {
     );
 
   }
-  
+  editSubMaterial(subMaterialId: number){
+    this.editForm.patchValue({
+      sub_material_id: subMaterialId,
+      sub_material_name:null,
+      material_name: null,
+      description: null,
+      quantity: null,
+      unit_price: null,
+    });
+    // this.subMaterialService.getS
+  }
   searchSubMaterial(): void {
-    console.log("Thực hiện chức năng tìm kiếm nguyên vật liệu: ", this.searchKey);
-    this.materialService.searchSubMaterial(this.searchKey).subscribe(
+  
+      this.materialService.searchSubMaterial(this.searchKey).subscribe(
+        (data) => {
+          if (data.code === 1000) {
+            this.products = data.result;
+            console.log('Kết quả tìm kiếm Sub-Materials:', this.products);
+          } else {
+            console.error('Failed to search sub-materials:', data);
+            this.toastr.error('Không thể tìm kiếm sub-materials!', 'Lỗi');
+          }
+        },
+        (error) => {
+          console.error('Error searching sub-materials:', error);
+          this.toastr.error('Có lỗi xảy ra!', 'Lỗi');
+        }
+      );
+    
+    
+  }
+
+  sanitize(name: string): SafeHtml {
+    return this.sanitizer.bypassSecurityTrustHtml(name);
+  }
+
+  selectProduct(product: any): void {
+    this.selectedSubMtr = product; // Adjust based on your product object structure
+    console.log('Selected mtr seacu:', this.selectedSubMtr.sub_material_name);
+   
+    this.materialService.searchSubMaterial(this.selectedSubMtr.sub_material_name).subscribe(
       (data) => {
         if (data.code === 1000) {
           this.products = data.result;
@@ -131,19 +182,7 @@ export class SubMaterialManagementComponent implements OnInit {
         this.toastr.error('Có lỗi xảy ra!', 'Lỗi');
       }
     );
-  }
-
-  sanitize(name: string): SafeHtml {
-    return this.sanitizer.bypassSecurityTrustHtml(name);
-  }
-  selectEvent(item: any) {
-      
-  }
-  selectEmp(product: any): void {
-    this.selectedSubMtr = product; // Adjust based on your product object structure
-    console.log('Selected emp:', this.selectedSubMtr);
-    console.log('Selected emp id:', this.selectedSubMtr.userId);
-    
+  
   }
   onChangeSearch(event: any) {
     this.selectedSubMtr = event.target.value;
@@ -151,6 +190,7 @@ export class SubMaterialManagementComponent implements OnInit {
   }
 
   filterByMaterialId(): void {
+    console.log("Thực hiện chức năng lọc theo nguyên vật liệu: ", this.selectedMaterial);
     this.subMaterialService.filterByMaterial(this.selectedMaterial).subscribe(
       (data) => {
         if (data.code === 1000) {
@@ -173,8 +213,13 @@ export class SubMaterialManagementComponent implements OnInit {
     this.selectedMaterial = material;
     console.log("Thực hiện chức năng tìm kiếm nguyên vật liệu: ", this.selectedMaterial);
     // console.log("Thực hiện chức năng tìm kiếm nguyên vật liệu: ", this.selectedMaterial.materialName);
+    if (this.selectedMaterial === null) {
+      this.getAllSubMaterials();
+    } else {
     this.filterByMaterialId();
   }  
+}
+
   getDatasupplierMaterial(id: string): void {
     this.authenListService.getSupplierById(id).subscribe(
       (data) => {

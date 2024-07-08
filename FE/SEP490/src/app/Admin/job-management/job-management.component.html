@@ -95,7 +95,9 @@
                                         >
                                         <ng-container *ngFor="let status of statusType">
                                             <option *ngIf="status.type === product.statusJob.type"
-                                                [value]="status.status_id">{{ status.status_name }}</option>
+                                                [value]="status.status_id"
+                                                [disabled]="status.status_id === 4 || status.status_id === 7 || status.status_id === 10"    
+                                                >{{ status.status_name }}</option>
                                         </ng-container>
                                     </select>
                                 </ng-container>

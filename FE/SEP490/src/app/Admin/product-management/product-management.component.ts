@@ -310,6 +310,7 @@ export class ProductManagementComponent implements OnInit {
   }
 
   onIsProductChange(newValue: boolean) {
+    this.isLoadding = true;
     this.isProduct = newValue;
 
     this.products.length = 0;
@@ -317,21 +318,24 @@ export class ProductManagementComponent implements OnInit {
       this.productListService.getProducts().subscribe(
         (data) => {
           if (data.code === 1000) {
-            this.products = data.result;
-            // console.log('Danh sách sản phẩm:', this.products);
+            this.products = data?.result;
+            console.log('Danh sách sản phẩm:', this.products);
           } else {
             console.error('Failed to fetch products:', data);
             this.toastr.error('Không thể lấy danh sách sản phẩm!', 'Lỗi');
           }
+          this.isLoadding = false;
         },
         (error) => {
           console.error('Error fetching products:', error);
           this.toastr.error('Có lỗi xảy ra!', 'Lỗi');
+          this.isLoadding = false;
         }
       );
     } else {
       this.productListService.getAllProductRequest().subscribe(
         (data) => {
+          this.isLoadding = false;
           if (data.code === 1000) {
             this.products = data?.result;
             console.log('Danh sách sản phẩm theo yeu cau:', this.products);
@@ -343,6 +347,7 @@ export class ProductManagementComponent implements OnInit {
         (error) => {
           console.error('Error fetching products:', error);
           this.toastr.error('Có lỗi xảy ra!', 'Lỗi');
+          this.isLoadding = false;
         }
       );
       // lay danh sach request de autocomplete
@@ -402,11 +407,13 @@ export class ProductManagementComponent implements OnInit {
 
 
   filterProducts(): void {
+    this.isLoadding = true;
     console.log("Lọc sản phẩm với từ khóa:", this.searchKey, ", danh mục:", this.selectedCategory, "và giá:", this.selectedSortByPrice);
 
     this.productListService.getMultiFillterProductForAdmin(this.searchKey, this.selectedCategory, this.selectedStatus, this.selectedSortByPrice)
       .subscribe(
         (data) => {
+          this.isLoadding = false;
           if (data.code === 1000) {
             this.products = data.result;
             console.log('Lọc sản phẩm thành công:', this.products);
@@ -422,10 +429,11 @@ export class ProductManagementComponent implements OnInit {
 
   filterProductsRequest(): void {
     // console.log("Lọc sản phẩm với từ khóa:", this.searchKey, ", danh mục:", this.selectedCategory, "và giá:", this.selectedSortByPrice);
-
+    this.isLoadding = true;
     this.productListService.getMultiFillterRequestProductForAdmin(this.searchKey, this.selectedStatus, this.selectedSortByPrice)
       .subscribe(
         (data) => {
+          this.isLoadding = false;
           if (data.code === 1000) {
             this.products = data.result;
             console.log('Lọc sản phẩm thành công:', this.products);

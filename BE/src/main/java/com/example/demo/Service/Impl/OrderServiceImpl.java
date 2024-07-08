@@ -70,6 +70,8 @@ public class OrderServiceImpl implements OrderService {
     private EmailService emailService;
     @Autowired
     private RequestProductsSubmaterialsRepository requestProductsSubmaterialsRepository;
+    @Autowired
+    private Status_Product_Repository statusProductRepository;
 
 
 
@@ -277,6 +279,8 @@ public class OrderServiceImpl implements OrderService {
         requestProducts.setRequestProductName(requestProductDTO.getRequestProductName());
         requestProducts.setDescription(requestProductDTO.getDescription());
         requestProducts.setPrice(requestProductDTO.getPrice());
+        Status_Product status = statusProductRepository.findById(2);//tuc la kich hoạt
+        requestProducts.setStatus(status);
         requestProducts.setQuantity(requestProductDTO.getQuantity());
         requestProducts.setCompletionTime(requestProductDTO.getCompletionTime());
         Requests requests = requestRepository.findById(requestProductDTO.getRequest_id());

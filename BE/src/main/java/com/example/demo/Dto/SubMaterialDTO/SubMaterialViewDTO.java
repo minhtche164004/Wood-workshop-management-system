@@ -37,6 +37,14 @@ import java.math.BigDecimal;
             this.quantity = quantity;
             this.unit_price = unit_price;
         }
+
+        public SubMaterialViewDTO(String sub_material_name, String description, Double quantity, BigDecimal unit_price, Integer material_id) {
+            this.sub_material_name = sub_material_name;
+            this.description = description;
+            this.quantity = quantity;
+            this.unit_price = unit_price;
+            this.material_id = material_id;
+        }
     }
 
 

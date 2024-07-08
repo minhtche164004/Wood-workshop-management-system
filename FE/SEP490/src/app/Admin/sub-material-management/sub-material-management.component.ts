@@ -106,9 +106,28 @@ export class SubMaterialManagementComponent implements OnInit {
       }
     );
   }
-  dowloadExcel(): void {
-    this.subMaterialService.downloadExcel();
-
+  dowloadExcelLink(): void {
+    this.subMaterialService.downloadExcel().subscribe(
+      (response) => {
+        // Assuming the response is the file data
+        const blob = new Blob([response], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+        const url = window.URL.createObjectURL(blob);
+  
+        // Creating an anchor element to trigger download
+        const anchor = document.createElement('a');
+        anchor.href = url;
+        anchor.download = 'downloaded_file.xlsx'; // Specify the file name here
+        document.body.appendChild(anchor); // Append anchor to the body to make it clickable
+        anchor.click();
+  
+        // Clean up
+        document.body.removeChild(anchor);
+        window.URL.revokeObjectURL(url); // Revoke the blob URL to free up resources
+      },
+      (error) => {
+        console.error('Download error:', error);
+      }
+    );
   }
   getAllMaterials(): void {
     this.materialService.getAllMaterial().subscribe(
@@ -286,6 +305,9 @@ export class SubMaterialManagementComponent implements OnInit {
         this.toastr.error('Có lỗi xảy ra!', 'Lỗi');
       }
     );
+
+  }
+  impottExcel(){
 
   }
   searchSelectedMaterial(material: any): void {

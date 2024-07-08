@@ -303,29 +303,37 @@ public class JobController {
     @PostMapping("/CreateProductError")
     public ApiResponse<?> CreateProductError(@RequestParam("job_id") int job_id, @RequestBody ProductErrorDTO productErrorDTO) {
         ApiResponse<Processproducterror> apiResponse = new ApiResponse<>();
-        jedis.del("all_product_error");
+       // jedis.del("all_product_error");
         apiResponse.setResult(jobService.AddProductError(job_id,productErrorDTO));
         return apiResponse;
+    }
+    @PutMapping("/EditProductError")
+    public ApiResponse<?> EditProductError(@RequestParam("error_id") int error_id,@RequestBody ProductErrorDTO productErrorDTO) {
+        ApiResponse<ProductErrorAllDTO> apiResponse = new ApiResponse<>();
+       // jedis.del("all_product_error");
+        apiResponse.setResult(jobService.EditProductError(error_id,productErrorDTO));
+        return apiResponse;
+
     }
     @GetMapping("/getAllProductError")
     public ApiResponse<?> getAllProductError() {
         ApiResponse<List> apiResponse = new ApiResponse<>();
-        String cacheKey = "all_product_error";
-        List<ProductErrorAllDTO> jobsList;
-        String cachedData = jedis.get(cacheKey);
-        Gson gson = new GsonBuilder().setDateFormat("MMM dd, yyyy").create();
-        if (cachedData != null) {
-            Type type = new TypeToken<List<Processproducterror>>() {
-            }.getType();
-
-            jobsList = gson.fromJson(cachedData, type);
-        } else {
-            jobsList = jobService.getAllProductError();
-            String jsonData = gson.toJson(jobsList);
-            jedis.set(cacheKey, jsonData);
-            jedis.expire(cacheKey, 1200);
-        }
-        apiResponse.setResult(jobsList);
+//        String cacheKey = "all_product_error";
+//        List<ProductErrorAllDTO> jobsList;
+//        String cachedData = jedis.get(cacheKey);
+//        Gson gson = new GsonBuilder().setDateFormat("MMM dd, yyyy").create();
+//        if (cachedData != null) {
+//            Type type = new TypeToken<List<Processproducterror>>() {
+//            }.getType();
+//
+//            jobsList = gson.fromJson(cachedData, type);
+//        } else {
+//            jobsList = jobService.getAllProductError();
+//            String jsonData = gson.toJson(jobsList);
+//            jedis.set(cacheKey, jsonData);
+//            jedis.expire(cacheKey, 1200);
+//        }
+        apiResponse.setResult(jobService.getAllProductError());
         return apiResponse;
     }
 

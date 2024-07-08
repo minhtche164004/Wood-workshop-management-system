@@ -359,4 +359,57 @@
     color: red;
   }
   
+  .select-wrapper {
+    position: relative;
+  }
+  
+  .select-wrapper::after {
+   /* FontAwesome down arrow icon */
+    // font-family: FontAwesome;
+    position: absolute;
+    top: 50%;
+    right: 10px;
+    transform: translateY(-50%);
+    pointer-events: none;
+  }
+  
+  .custom-select {
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    background-color: #f8f9fa;
+    border: 1px solid #ced4da;
+    border-radius: 0.25rem;
+    padding: 0.375rem 2.25rem 0.375rem 0.75rem;
+    font-size: 1rem;
+    line-height: 1.5;
+    width: 100%;
+  }
+
+
+
+  .modal-header {
+    background-color: #007bff; /* Example blue color */
+    color: #fff; /* White text */
+  }
+  
+  .modal-title {
+    font-size: 1.5rem; /* Larger title font size */
+  }
+  
+  .modal-body {
+    padding: 20px; /* Increase padding for content */
+  }
+  
+  .modal-footer {
+    background-color: #f8f9fa; /* Light gray background */
+  }
+  
+  h4 {
+    font-size: 1.25rem; /* Larger font size for headings */
+  }
+  
+  p {
+    font-size: 1rem; /* Regular font size for paragraphs */
+  }
   

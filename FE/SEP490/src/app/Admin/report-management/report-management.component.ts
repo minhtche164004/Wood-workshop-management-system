@@ -1,6 +1,7 @@
 import { HttpErrorResponse } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
+import { ActivatedRoute } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { ErrorProductService } from 'src/app/service/error-product.service';
 import { ProductListService } from 'src/app/service/product/product-list.service';
@@ -12,6 +13,7 @@ import { ProductListService } from 'src/app/service/product/product-list.service
 })
 export class ReportManagementComponent implements OnInit {
   constructor(private fb: FormBuilder,
+    private route: ActivatedRoute,
     private productListService: ProductListService,
     private errorProductService: ErrorProductService,
     private toastr: ToastrService) { 
@@ -28,13 +30,15 @@ export class ReportManagementComponent implements OnInit {
     errorForm: FormGroup;
     description: string = '';
     solution: string = '';
+    productId: number = 0;
   errorProducts: any[] = [];
   currentPage: number = 1;
   ngOnInit(): void {
     this.getAllProductError();
+    
   }
   getAllProductError(): void {
-    this.productListService.getAllProductError().subscribe(
+    this.errorProductService.getAllProductError().subscribe(
       (data) => {
         if (data.code === 1000) {
           this.errorProducts = data.result;
@@ -50,6 +54,25 @@ export class ReportManagementComponent implements OnInit {
       }
     );
   }
+  showErrorDetails(productId: any) {
+    console.log('errorId: ', productId);
+    this.errorProductService.getRrrorDetail(productId).subscribe(
+      (data) => {
+        if (data.code === 1000) {
+          console.log('Chi tiết lỗi sản phẩm:', data.result); 
+         } else {
+            console.error('Failed to fetch products:', data);
+            this.toastr.error('Không thể lấy danh sách sản phẩm!', 'Lỗi');
+          }
+        },
+        (error) => {
+          console.error('Error fetching products:', error);
+          this.toastr.error('Có lỗi xảy ra!', 'Lỗi');
+        }
+      );
+    
+  }
+
   reportError() {
     const jobId = 99; // Hoặc lấy từ giá trị khác nếu cần
     const formValues = this.errorForm.value;
@@ -78,8 +101,8 @@ export class ReportManagementComponent implements OnInit {
   resetForm() {
     this.errorForm.reset();
   }
-  editProduct(productId: number) {
-    
+  editProduct(product: any) {
+      console.log('error details', product);
   }
   openConfirmDeleteModal(product_id : number, product_name: string): void {
     console.log('productId delete: ', product_id);

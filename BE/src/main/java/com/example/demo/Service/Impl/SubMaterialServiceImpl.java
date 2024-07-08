@@ -61,8 +61,8 @@ public class SubMaterialServiceImpl implements SubMaterialService {
     }
 
     @Override
-    public List<SubMaterials> FilterByMaterial(int material_id) {
-        List<SubMaterials> subMaterialsList = subMaterialsRepository.findSubMaterialIdByMaterial(material_id);
+    public List<SubMaterialViewDTO> FilterByMaterial(int material_id) {
+        List<SubMaterialViewDTO> subMaterialsList = subMaterialsRepository.findSubMaterialIdByMaterial(material_id);
         if(subMaterialsList.isEmpty()){
             throw new AppException(ErrorCode.NOT_FOUND);
         }
@@ -187,7 +187,7 @@ public class SubMaterialServiceImpl implements SubMaterialService {
                 .collect(Collectors.toList());
     }
     @Override
-    public List<SubMaterials> SearchByNameorCode(String key){
+    public List<SubMaterialViewDTO> SearchByNameorCode(String key){
         return subMaterialsRepository.findSubMaterialsByNameCode(key);
     }
     @Transactional
@@ -197,6 +197,15 @@ public class SubMaterialServiceImpl implements SubMaterialService {
         subMaterialsRepository.updateSubMaterials(id, updateSubDTO.getSub_material_name(),updateSubDTO.getDescription()
         , updateSubDTO.getQuantity(),updateSubDTO.getUnit_price());
         return modelMapper.map(subMaterials,UpdateSubDTO.class);
+    }
+
+    @Override
+    public SubMaterialViewDTO getSubMaterialById(int sub_material_id) {
+        SubMaterialViewDTO subMaterials = subMaterialsRepository.findSubMaterialsById(sub_material_id);
+        if(subMaterials == null){
+            throw new AppException(ErrorCode.NOT_FOUND);
+        }
+        return subMaterials;
     }
 
     @Override
@@ -234,6 +243,18 @@ public class SubMaterialServiceImpl implements SubMaterialService {
             throw new AppException(ErrorCode.NOT_FOUND);
         }
         return employeematerialsList;
+    }
+
+    @Override
+    public SubMaterialViewDTO EditSubMaterial(int id, SubMaterialViewDTO subMaterialViewDTO) {
+        SubMaterials subMaterials = subMaterialsRepository.findById1(id);
+        subMaterials.setQuantity(subMaterialViewDTO.getQuantity());
+        subMaterials.setUnitPrice(subMaterialViewDTO.getUnit_price());
+        subMaterials.getMaterial().setMaterialId(subMaterialViewDTO.getMaterial_id());
+        subMaterials.setDescription(subMaterialViewDTO.getDescription());
+        subMaterials.setSubMaterialName(subMaterialViewDTO.getSub_material_name());
+        subMaterialsRepository.save(subMaterials);
+        return subMaterialsRepository.findSubMaterialsById(id);
     }
 
 //    @Override

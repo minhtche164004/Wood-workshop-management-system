@@ -59,11 +59,7 @@ public class OrderServiceImpl implements OrderService {
     @Autowired
     private OrderDetailRepository orderDetailRepository;
     @Autowired
-    private Status_Product_Repository statusProduct;
-    @Autowired
     private JobRepository jobRepository;
-    @Autowired
-    private Status_Product_Repository status_Product_Repository;
     @Autowired
     private Status_Job_Repository statusJobRepository;
     @Autowired
@@ -74,7 +70,8 @@ public class OrderServiceImpl implements OrderService {
     private EmailService emailService;
     @Autowired
     private RequestProductsSubmaterialsRepository requestProductsSubmaterialsRepository;
-
+    @Autowired
+    private Status_Product_Repository statusProductRepository;
 
 
     @Override
@@ -82,9 +79,22 @@ public class OrderServiceImpl implements OrderService {
         LocalDate currentDate = LocalDate.now();
         java.sql.Date sqlCompletionTime = java.sql.Date.valueOf(currentDate); // Chuyển đổi sang java.sql.Date
 
+        UserInfor userInfor;
+        boolean userIsExists = informationUserRepository.existsById(requestOrder.getCusInfo().getUserid());
+        if (!userIsExists) {
+            // Nếu không tìm thấy thông tin người dùng thi tao moi
+            userInfor = new UserInfor();
+            userInfor.setFullname(requestOrder.getCusInfo().getFullname());
+            userInfor.setAddress(requestOrder.getCusInfo().getAddress());
+            userInfor.setPhoneNumber(requestOrder.getCusInfo().getPhone());
+            informationUserRepository.save(userInfor);
+        } else {
+            userInfor = informationUserRepository.findById(requestOrder.getCusInfo().getUserid()).get();
+        }
+
+
         Orders orders = new Orders();
         orders.setOrderDate(sqlCompletionTime);
-        orders.setOrderFinish(requestOrder.getOrderFinish());
         Status_Order statusOrder = statusOrderRepository.findById(1);//tự set cho nó là 1
         orders.setStatus(statusOrder);
         orders.setPaymentMethod(requestOrder.getPayment_method()); //1 là trả tiền trực tiếp, 2 là chuyển khoản
@@ -92,16 +102,11 @@ public class OrderServiceImpl implements OrderService {
         orders.setFullname(requestOrder.getCusInfo().getFullname());
         orders.setPhoneNumber(requestOrder.getCusInfo().getPhone());
         //day la` dia chi nhan hang cua khach hang
-        orders.setCity_province(requestOrder.getCusInfo().getCity_province());
-        orders.setDistrict(requestOrder.getCusInfo().getDistrict());
-        orders.setWards(requestOrder.getCusInfo().getWards());
-        //luu thong tin nguoi dat
-        UserInfor userInfor = new UserInfor();
-        userInfor.setFullname(requestOrder.getCusInfo().getFullname());
-        userInfor.setAddress(requestOrder.getCusInfo().getAddress());
-        userInfor.setPhoneNumber(requestOrder.getCusInfo().getPhone());
+        orders.setCity_province(requestOrder.getCusInfo().getAddress());
+        orders.setDistrict(requestOrder.getCusInfo().getAddress());
+        orders.setWards(requestOrder.getCusInfo().getAddress());
 
-        informationUserRepository.save(userInfor);
+
         orders.setUserInfor(userInfor);
         LocalDate today = LocalDate.now();
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("ddMMyy");
@@ -128,7 +133,7 @@ public class OrderServiceImpl implements OrderService {
                     orderdetail.setProduct(productRepository.findById(item.getId()));
                     orderdetail.setQuantity(item.getQuantity()); //set quantity
                     orderdetail.setUnitPrice(item.getPrice()); //set unit price
-                    if(orderdetail.getProduct().getQuantity() < item.getQuantity()){
+                    if (orderdetail.getProduct().getQuantity() < item.getQuantity()) {
                         throw new AppException(ErrorCode.OUT_OF_STOCK);
                     }
                     product.setQuantity(product.getQuantity() - item.getQuantity());
@@ -155,7 +160,7 @@ public class OrderServiceImpl implements OrderService {
             if (requestProductItems != null && !requestProductItems.isEmpty()) {
                 for (ProductItem item : requestProductItems) { // Duyệt qua từng sản phẩm
                     RequestProducts requestProducts = requestProductRepository.findById(item.getId());
-                    Orderdetails orderdetail= new Orderdetails();
+                    Orderdetails orderdetail = new Orderdetails();
                     orderdetail.setOrder(orders);
                     orderdetail.setRequestProduct(requestProductRepository.findById(item.getId()));
                     orderdetail.setQuantity(item.getQuantity()); //set quantity
@@ -281,6 +286,8 @@ public class OrderServiceImpl implements OrderService {
         requestProducts.setRequestProductName(requestProductDTO.getRequestProductName());
         requestProducts.setDescription(requestProductDTO.getDescription());
         requestProducts.setPrice(requestProductDTO.getPrice());
+        Status_Product status = statusProductRepository.findById(2);//tuc la kich hoạt
+        requestProducts.setStatus(status);
         requestProducts.setQuantity(requestProductDTO.getQuantity());
         requestProducts.setCompletionTime(requestProductDTO.getCompletionTime());
         Requests requests = requestRepository.findById(requestProductDTO.getRequest_id());
@@ -418,6 +425,16 @@ public class OrderServiceImpl implements OrderService {
             throw new AppException(ErrorCode.NOT_FOUND);
         }
         return ordersList;
+
+    }
+
+    @Override
+    public Orders getOrderById(int order_id) {
+        Orders orders = orderRepository.findById(order_id);
+        if (orders == null) {
+            throw new AppException(ErrorCode.NOT_FOUND);
+        }
+        return orders;
 
     }
 

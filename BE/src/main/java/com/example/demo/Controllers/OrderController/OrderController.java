@@ -101,13 +101,19 @@ public class OrderController {
         apiResponse.setResult(orderService.GetRequestById(id));
         return apiResponse;
     }
+    @GetMapping("/GetOrderById")
+    public ApiResponse<?> GetOrderById(@RequestParam("id") int id) {
+        ApiResponse<Orders> apiResponse = new ApiResponse<>();
+        apiResponse.setResult(orderService.getOrderById(id));
+        return apiResponse;
+    }
     @GetMapping("/getRequestProductById")
     public ApiResponse<?> GetRequestProductByIdWithImage(@RequestParam("id") int id) {
         ApiResponse<RequestProductDTO_Show> apiResponse = new ApiResponse<>();
         apiResponse.setResult(orderService.GetRequestProductByIdWithImage(id));
         return apiResponse;
     }
-    @PreAuthorize("hasAuthority('CUSTOMER')")
+//    @PreAuthorize("hasAuthority('CUSTOMER')")
     @PostMapping("/AddWhiteList")
     public ApiResponse<?> AddWhiteList(@RequestParam("product_id") int product_id) {
         ApiResponse<WishList> apiResponse = new ApiResponse<>();

@@ -52,11 +52,13 @@ export class ProductListService {
   private apiUrlGetProductRequest = `${environment.apiUrl}api/auth/order/GetAllProductRequest`;
   private apiUrl_getMultiFillterRequestProductForAdmin = `${environment.apiUrl}api/auth/product/getMultiFillterRequestProductForAdmin`;
   private apiUrlAddNewProductRequest = `${environment.apiUrl}api/auth/order/AddNewRequestProduct`;
-  private api_UrlcreateExportMaterialProductRequest = `${environment.apiUrl}api/auth/submaterial/createExportMaterialProductRequest`;  // luu 1 san pham can bao nhieu vat lieu
+  private api_UrlcreateExportMaterialProductRequest = `${environment.apiUrl}api/auth/submaterial/createExportMaterialProductRequest`;  // lay 1 san pham can bao nhieu vat lieu
   private apiUrl_getAllRequest = `${environment.apiUrl}api/auth/order/GetAllRequest`;
   private apiUrlGetProductRequestByProductRequestId = `${environment.apiUrl}api/auth/order/getRequestProductById`;
-  private apiUrlEditProductRequest = `${environment.apiUrl}api/auth/order/getRequestProductById`; // cho api
+  private apiUrlEditProductRequest = `${environment.apiUrl}api/auth/product/EditRequestProduct`; 
   private apiUrlDeleteProductRequest = `${environment.apiUrl}api/auth/product/deleteRequestProduct`;
+  private api_UrlexportMaterialProductByProductRequestId = `${environment.apiUrl}api/auth/product/getRequestProductSubMaterialAndMaterialByRequestProductId`;  // lay tat ca vat lieu can co de tao 1 san pham theo yeu cau 
+
   //
 
   constructor(private http: HttpClient) { }
@@ -76,7 +78,7 @@ export class ProductListService {
   }
   createProductError(jobId: number, description: string, solution: string): Observable<any> {
     const body = { description, solution };
-
+    console.log("create error:  ",body);
     return this.http.post(`${this.apiUrlCreateProductError}?job_id=${jobId}`, body);
   }
 
@@ -366,6 +368,13 @@ export class ProductListService {
   deleteProductRequest(productId: number): Observable<any> {
     const url = `${this.apiUrlDeleteProductRequest}?id=${productId}`;
     return this.http.delete<any>(url).pipe(
+      catchError(this.handleError)
+    );
+  }
+
+  exportMaterialProductRequestByProductId(productId: number): Observable<any> {
+    const url = `${this.api_UrlexportMaterialProductByProductRequestId}?id=${productId}`;
+    return this.http.get<any>(url).pipe(
       catchError(this.handleError)
     );
   }

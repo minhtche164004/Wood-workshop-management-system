@@ -17,44 +17,7 @@
           <table class="table table-striped table-hover">
           </table>
 
-          <div class="row" style="background-color: white;">
-            <div class="row">
-              <h2 style="color: black; text-align: center; margin: 10px;">Báo cáo lỗi</h2>
-              <form [formGroup]="errorForm" (ngSubmit)="reportError()">
-                <div style="display: flex;">
-                  <div class="col-md-6">
-                    <h3 style="color: black;">Mã sản phẩm: </h3>
-                  </div>
-                  <div class="col-md-6">
-                    <h3 style="color: black;">Mã nhân viên: </h3>
-                  </div>
-                </div>
-                <div class="row" style="margin-left: 7px; margin-top: 18px;">
-                  <div class="col-md-6">
-                    <h3 style="color: black;">Mã đơn hàng: </h3>
-                  </div>
-                </div>
-                <div class="row" style="margin-left: 7px; margin-top: 18px;">
-                  <h3 style="color: black;">Mô tả lỗi: </h3>
-                  <textarea [(ngModel)]="description" class="form-control" formControlName="description" id="descriptionTextarea" rows="10"
-                    style="height: 100px;" cols="5"></textarea>
-                </div>
-                <div class="row" style="margin-left: 7px; margin-top: 18px;">
-                  <h3 style="color: black;">Giải pháp: </h3>
-                  <textarea [(ngModel)]="solution" class="form-control" formControlName="solution"  id="solutionTextarea" rows="10"
-                    style="height: 100px;" cols="5"></textarea>
-                </div>
-
-
-                <div class="modal-footer d-flex justify-content-center">
-
-                  <button (click)="reportError()" class="btn btn-primary"
-                    style="background-color: #20EC4D; border-color: #20EC4D;">Tạo</button>
-                  <button (click)="resetForm()" type="button" class="btn" style="background: #CC4949; color: white"
-                    data-dismiss="modal">Hủy bỏ</button>
-                </div>
-              </form>
-            </div>
+         
             <div class="col-md-7"></div> <!-- Dummy column to push the search box to the right -->
             <div class="col-md-5 text-end">
               <div class="input-group mb-3">
@@ -80,11 +43,11 @@
           <thead>
             <tr>
               <th>STT</th>
-              <th>Mã sản phẩm</th>
+              <th>Mã việc làm</th>
               <th>Thao tác</th>
               <th>Mô tả lỗi</th>
-              <th>Trạng thái</th>
-              <th>Quá trình</th>
+              <th>Tình trạng</th>
+              
               <th>Giải pháp</th>
             </tr>
           </thead>
@@ -114,7 +77,7 @@
               <td>{{ product.des }}</td>
               <td>{{ product._fix }}</td>
 
-              <td>{{ product.processProductErrorId }}</td>
+          
               <td>{{ product.solution }}</td>
 
             </tr>
@@ -137,7 +100,6 @@
       </div>
     </div>
   </div>
-</div>
 
 
 <!-- Modal for Adding Product -->

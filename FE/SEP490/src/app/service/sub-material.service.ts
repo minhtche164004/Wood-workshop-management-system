@@ -19,7 +19,7 @@ export class SubMaterialService {
 
 
   downloadExcel(): Observable<any> {
-    return this.http.get(this.apiDowloadExcel);
+    return this.http.get(this.apiDowloadExcel, { responseType: 'blob' });
   }
   getSubMaterialById(id: number): Observable<any> {
     const url = `${this.api_getSubMtrById}?id=${id}`;

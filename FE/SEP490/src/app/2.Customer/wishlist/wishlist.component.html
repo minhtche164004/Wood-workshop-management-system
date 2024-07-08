@@ -64,39 +64,40 @@
         }
 
         .product-info {
-  padding: 1rem;
-  border: 1px solid #ddd;
-  border-radius: 4px;
-}
+            padding: 1rem;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
 
-.product-info h3 {
-  margin-top: 0;
-  font-size: 1.2rem;
-}
+        .product-info h3 {
+            margin-top: 0;
+            font-size: 1.2rem;
+        }
 
-.product-info .price {
-  color: #007bff;
-  font-weight: bold;
-}
+        .product-info .price {
+            color: #007bff;
+            font-weight: bold;
+        }
 
-.product-info .actions {
-  display: flex;
-  justify-content: flex-end;
-  margin-top: 1rem;
-}
+        .product-info .actions {
+            display: flex;
+            justify-content: flex-end;
+            margin-top: 1rem;
+        }
 
-.product-info .delete-btn {
-  background-color: #dc3545;
-  color: #fff;
-  border: none;
-  border-radius: 4px;
-  padding: 0.5rem 1rem;
-  cursor: pointer;
-}
+        .product-info .delete-btn {
+            background-color: #dc3545;
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            padding: 0.5rem 1rem;
+            cursor: pointer;
+        }
 
-.product-info .delete-btn:hover {
-  background-color: #c82333;
-}
+        .product-info .delete-btn:hover {
+            background-color: #c82333;
+        }
+
         .product h3 {
             margin-top: 0;
             font-size: 20px;
@@ -171,17 +172,17 @@
             class="product">
             <img [routerLink]="['/product-details', item.product.productId]" src="{{ item.product.image }}"
                 alt="Sản phẩm 2">
-                <div class="product-info">
-                    <h3>Sản Phẩm: {{ item.product.productName }}</h3>
-      
-                    <p class="price">Giá Tiền: {{ item.product.price | number: '1.0-3' }} VNĐ</p>
-                    <div class="actions">
-                      <button class="delete-btn" title="Delete" data-toggle="modal" data-target="#confirmDeleteModal"
+            <div class="product-info">
+                <h3>Sản Phẩm: {{ item.product.productName }}</h3>
+
+                <p class="price">Giá Tiền: {{ item.product.price | number: '1.0-3' }} VNĐ</p>
+                <div class="actions">
+                    <button class="delete-btn" title="Delete" data-toggle="modal" data-target="#confirmDeleteModal"
                         (click)="setDeleteId(item.id)">
                         <i class="fas fa-trash-alt"></i> Xóa
-                      </button>
-                    </div>
-                  </div>
+                    </button>
+                </div>
+            </div>
         </div>
     </div>
 

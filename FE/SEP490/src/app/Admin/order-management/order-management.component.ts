@@ -1,5 +1,8 @@
 
 import { Component, OnInit } from '@angular/core';
+import { ToastrService } from 'ngx-toastr';
+import { timer } from 'rxjs';
+import { AuthenListService } from 'src/app/service/authen.service';
 import { OrderService } from 'src/app/service/order.service';
 import { ProductListService } from 'src/app/service/product/product-list.service';
 
@@ -20,16 +23,21 @@ export class OrderManagementComponent implements OnInit {
   loginToken: string | null = null;
   currentPage: number = 1;
   position: any[] = [];
+  status_order: any[] = [];
   selectedCategory: any = null;
+  OrderdetailById: any = {};
 
-
-  constructor(private productListService: ProductListService, private orderService: OrderService) { }
+  constructor(private productListService: ProductListService, private orderService: OrderService,
+    private authenListService: AuthenListService,    private toastr: ToastrService,
+  ) { }
 
   ngOnInit(): void {
-    
+
     this.loadPosition();
+    this.loadStatus();
     this.getOrderStatus();
     this.getAllUser();
+
   }
   getOrderStatus(): void {
     this.orderService.getOrderStatus().subscribe(
@@ -48,7 +56,7 @@ export class OrderManagementComponent implements OnInit {
   }
   getAllUser(): void {
     this.loginToken = localStorage.getItem('loginToken');
-    
+
     if (this.loginToken) {
       console.log('Retrieved loginToken:', this.loginToken);
       this.productListService.getAllOrder().subscribe(
@@ -84,4 +92,86 @@ export class OrderManagementComponent implements OnInit {
       }
     );
   }
+  loadStatus(): void {
+    this.authenListService.getAllStatusOrder().subscribe(
+      (data: any) => {
+        if (data.code === 1000) {
+          this.status_order = data.result;
+          console.log('Danh sách trạng thái:', this.status_order);
+        } else {
+          console.error('Dữ liệu trả về không hợp lệ:', data);
+        }
+      },
+      (error) => {
+        console.error('Lỗi khi lấy danh sách Loại:', error);
+      }
+    );
+
+  }
+  getOrDetailById(order_detail_id: string): void {
+    this.authenListService.getOrderDetailById(order_detail_id).subscribe(
+      (data) => {
+        this.OrderdetailById = data.result;
+        console.log('OrderdetailById:', this.OrderdetailById);
+      },
+      (error) => {
+        console.error('Error fetching user data:', error);
+      }
+    );
+
+  }
+  
+  onStatusChange(orderId: string, event: Event): void {
+    const statusId = (event.target as HTMLSelectElement).value;
+    this.changeStatus(orderId, statusId);
+  }
+
+  changeStatus(orderId: string, statusId: string): void {
+    this.authenListService.changeStatusOrder(orderId, statusId).subscribe(
+      response => {
+        console.log('Order status changed', response);
+        this.toastr.success('Thay đổi tình trạng công việc thành công.');
+        // timer(200).subscribe(() => {
+        //   window.location.reload();
+        // });
+      },
+      error => {
+        console.error('Error changing order status', error);
+      }
+    );
+  }
+  getStatusColor(statusId: number): { [key: string]: string } {
+    switch (statusId) {
+      case 1:
+        return { 'color': 'red' };
+      case 3:
+        return { 'color': 'blue' };
+      case 4:
+        return { 'color': 'green' };
+      case 5:
+        return { 'color': 'purple' };
+      default:
+        return { 'color': 'black' };
+    }
+  }
+  
+  filterStatus(): void {
+    console.log( this.selectedCategory);
+
+    this.authenListService.getFilterStatus(this.selectedCategory)
+      .subscribe(
+        (data) => {
+          if (data.code === 1000) {
+            this.user = data.result;
+            console.log('Lọc đơn hàng thành công:', this.user);
+            this.toastr.success('Lọc đơn hàng thành công!', 'Thành công');
+          } else if (data.code === 1015) {
+            this.user = [];
+            console.error('Lọc đơn hàng không thành công:', data);
+            this.toastr.error('Không tìm thấy đơn hàng phù hợp!', 'Lọc thất bại');
+          }
+        }
+      );
+  }
+
 }

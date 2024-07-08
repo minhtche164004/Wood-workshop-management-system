@@ -68,15 +68,15 @@
                             <!-- Ví dụ với input button -->
                             <div>
                                 <button class="giacao" [class.selected]="selectedSortByPrice === 'desc'"
-                                style="margin: 5px; padding: 8px; border: none; background: none;">
-                            Giá cao <i class="fa-solid fa-arrow-down-wide-short" style="font-size: 1.6em;"></i>
-                        </button>
-                        
-                        <button class="giathap" [class.selected]="selectedSortByPrice === 'asc'"
-                                style="padding: 8px; border: none; background: none;">
-                            Giá thấp <i class="fa-solid fa-arrow-up-wide-short" style="font-size: 1.6em;"></i>
-                        </button>
-                        
+                                style="margin: 5px; padding: 5px;  border: none; background: none;"
+                                    (click)="sortProducts('desc')">Giá cao <i
+                                        class="fa-solid fa-arrow-down-wide-short"></i></button>
+                                <button class="giathap" [class.selected]="selectedSortByPrice === 'asc'"
+                                style="margin: 5px; padding: 5px;  border: none; background: none;"
+                                    (click)="sortProducts('asc')">Giá thấp <i
+                                        class="fa-solid fa-arrow-up-wide-short"></i></button>
+
+
 
                             </div>
 

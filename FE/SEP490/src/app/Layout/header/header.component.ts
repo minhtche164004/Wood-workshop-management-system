@@ -22,16 +22,9 @@ export class HeaderComponent implements OnInit {
   constructor(private dataService: DataService, private router: Router, private http: HttpClient, private authService: AuthenListService, private productListService: ProductListService) { }
   ngOnInit(): void {
     this.wishlistcount()
-    if (localStorage.getItem('fullname') === null) {
       this.authService.getUserProfile().subscribe((data) => {
         this.fullname = data.result.fullname; // Assuming 'result' contains the profile data
-        localStorage.setItem('fullname', data.result?.fullname)
-        console.log("fullname: ", data.result?.fullname)
       });
-    }
-    else {
-      this.fullname = localStorage.getItem('fullname')
-    }
   }
   countwishlist: number = 0;
   user: any[] = [];

@@ -166,7 +166,8 @@ public interface JobRepository extends JpaRepository<Jobs,Integer> {
 
     @Query("SELECT new com.example.demo.Dto.ProductDTO.ProductErrorAllDTO(" +
             "p.processProductErrorId,COALESCE(j.code, 0), COALESCE(p.description, ''),p.isFixed,COALESCE(p.solution, ''),j.job_name,j.jobId, " +
-            "COALESCE(pr.productId, 0), COALESCE(pr.productName, ''), COALESCE(rq.requestProductId, 0), COALESCE(rq.requestProductName, ''))" + // Sử dụng COALESCE
+            "COALESCE(pr.productId, 0), COALESCE(pr.productName, ''), COALESCE(rq.requestProductId, 0), COALESCE(rq.requestProductName, ''),j.orderdetails.order.code," +
+            "j.orderdetails.order.userInfor.fullname,j.user.username)" + // Sử dụng COALESCE
             " FROM Processproducterror p " +
             " LEFT JOIN p.job j" +
             " LEFT JOIN j.product pr"+
@@ -175,8 +176,9 @@ public interface JobRepository extends JpaRepository<Jobs,Integer> {
 
 
     @Query("SELECT new com.example.demo.Dto.ProductDTO.ProductErrorAllDTO(" +
-            "j.code,p.description,p.solution,j.job_name, " +
-            "COALESCE(pr.productName, ''),COALESCE(rq.requestProductName, ''),COALESCE(o.code, ''),COALESCE(o.phoneNumber, ''),COALESCE(j.user.userInfor.fullname, ''))" + // Sử dụng COALESCE
+            "p.processProductErrorId,COALESCE(j.code, 0), COALESCE(p.description, ''),p.isFixed,COALESCE(p.solution, ''),j.job_name,j.jobId, " +
+            "COALESCE(pr.productId, 0), COALESCE(pr.productName, ''), COALESCE(rq.requestProductId, 0), COALESCE(rq.requestProductName, ''),j.orderdetails.order.code," +
+            "j.orderdetails.order.userInfor.fullname,j.user.username)" + // Sử dụng COALESCE
             " FROM Processproducterror p " +
             " LEFT JOIN p.job j" +
             " LEFT JOIN j.product pr"+

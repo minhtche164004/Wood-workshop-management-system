@@ -13,6 +13,7 @@ import com.example.demo.Repository.*;
 import com.example.demo.Service.JobService;
 import jakarta.persistence.EntityManager;
 import jakarta.transaction.Transactional;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -52,6 +53,8 @@ public class JobServiceImpl implements JobService {
     private Status_Order_Repository statusOrderRepository;
     @Autowired
     private AdvancesalaryRepository advancesalaryRepository;
+    @Autowired
+    private ModelMapper modelMapper;
 
 
     @Override
@@ -346,6 +349,16 @@ public class JobServiceImpl implements JobService {
             throw new AppException(ErrorCode.NOT_FOUND);
         }
         return productErrorAllDTO;
+    }
+
+    @Override
+    public ProductErrorAllDTO EditProductError(int error_id, ProductErrorDTO productErrorDTO) {
+        Processproducterror processproducterror = processproducterrorRepository.FindByIdProductErrorId(error_id);
+        processproducterror.setDescription(productErrorDTO.getDescription());
+        processproducterror.setIsFixed(productErrorDTO.getIsFixed());
+        processproducterror.setSolution(productErrorDTO.getSolution());
+        processproducterrorRepository.save(processproducterror);
+        return modelMapper.map(processproducterror, ProductErrorAllDTO.class);
     }
 
     @Override

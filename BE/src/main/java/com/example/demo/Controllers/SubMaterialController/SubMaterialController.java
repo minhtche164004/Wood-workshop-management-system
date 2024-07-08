@@ -5,6 +5,7 @@ import com.example.demo.Dto.ProductDTO.CreateExportMaterialProductRequest;
 import com.example.demo.Dto.ProductDTO.ProductDTO;
 import com.example.demo.Dto.ProductDTO.QuantityTotalDTO;
 import com.example.demo.Dto.SubMaterialDTO.SubMaterialDTO;
+import com.example.demo.Dto.SubMaterialDTO.SubMaterialViewDTO;
 import com.example.demo.Dto.SubMaterialDTO.UpdateSubDTO;
 import com.example.demo.Entity.ProductSubMaterials;
 import com.example.demo.Entity.Products;
@@ -47,6 +48,18 @@ public class SubMaterialController {
     public ApiResponse<?> getAllSubMaterials() {
         ApiResponse<List> apiResponse = new ApiResponse<>();
         apiResponse.setResult(subMaterialService.getAll());
+        return apiResponse;
+    }
+    @GetMapping("/getSubmaterialById")
+    public ApiResponse<?> getSubmaterialById(@RequestParam("id") int id) {
+        ApiResponse<SubMaterialViewDTO> apiResponse = new ApiResponse<>();
+        apiResponse.setResult(subMaterialService.getSubMaterialById(id));
+        return apiResponse;
+    }
+    @PutMapping("/editSubMaterial")
+    public ApiResponse<?> editSubMaterial(@RequestParam("id") int id,@RequestBody SubMaterialViewDTO subMaterialViewDTO) {
+        ApiResponse<SubMaterialViewDTO> apiResponse = new ApiResponse<>();
+        apiResponse.setResult(subMaterialService.EditSubMaterial(id,subMaterialViewDTO));
         return apiResponse;
     }
 

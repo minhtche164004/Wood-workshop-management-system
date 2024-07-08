@@ -25,6 +25,7 @@ public interface SubMaterialService {
     void saveSubMaterialToDatabase(MultipartFile file);
     List<SubMaterialViewDTO> SearchByNameorCode(String key);
     UpdateSubDTO UpdateSub(int id, UpdateSubDTO updateSubDTO);
+    SubMaterialViewDTO getSubMaterialById(int sub_material_id);
 
 
     List<ProductSubMaterials> createExportMaterialProduct(int product_id, Map<Integer, Double> subMaterialQuantities);
@@ -39,6 +40,10 @@ public interface SubMaterialService {
     List<Employeematerials> getAllEmpMate();
 
     List<Employeematerials> findEmployeematerialsByName(String key);
+
+    SubMaterialViewDTO EditSubMaterial(int id,SubMaterialViewDTO subMaterialViewDTO);
+
 //    List<Employeematerials> filterEmployeematerialsByMaterialType(int materialId);
+
 
 }

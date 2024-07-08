@@ -200,6 +200,15 @@ public class SubMaterialServiceImpl implements SubMaterialService {
     }
 
     @Override
+    public SubMaterialViewDTO getSubMaterialById(int sub_material_id) {
+        SubMaterialViewDTO subMaterials = subMaterialsRepository.findSubMaterialsById(sub_material_id);
+        if(subMaterials == null){
+            throw new AppException(ErrorCode.NOT_FOUND);
+        }
+        return subMaterials;
+    }
+
+    @Override
     public List<Product_SubmaterialDTO> getProductSubMaterialByProductId(int id,int material_id) {
         List<Product_SubmaterialDTO> productSubMaterialsList = productSubMaterialsRepository.getProductSubMaterialByProductIdAndTypeMate(id,material_id);
         if(productSubMaterialsList == null){
@@ -234,6 +243,18 @@ public class SubMaterialServiceImpl implements SubMaterialService {
             throw new AppException(ErrorCode.NOT_FOUND);
         }
         return employeematerialsList;
+    }
+
+    @Override
+    public SubMaterialViewDTO EditSubMaterial(int id, SubMaterialViewDTO subMaterialViewDTO) {
+        SubMaterials subMaterials = subMaterialsRepository.findById1(id);
+        subMaterials.setQuantity(subMaterialViewDTO.getQuantity());
+        subMaterials.setUnitPrice(subMaterialViewDTO.getUnit_price());
+        subMaterials.getMaterial().setMaterialId(subMaterialViewDTO.getMaterial_id());
+        subMaterials.setDescription(subMaterialViewDTO.getDescription());
+        subMaterials.setSubMaterialName(subMaterialViewDTO.getSub_material_name());
+        subMaterialsRepository.save(subMaterials);
+        return subMaterialsRepository.findSubMaterialsById(id);
     }
 
 //    @Override

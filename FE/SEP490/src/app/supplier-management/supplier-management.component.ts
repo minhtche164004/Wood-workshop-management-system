@@ -77,7 +77,7 @@ export class SupplierManagementComponent implements OnInit {
       (data) => {
         if (data.code === 1000) {
           this.suppliers = data.result;
-          console.log('Danh sách nhà cung cấp: :', this.suppliers);
+         // console.log('Danh sách nhà cung cấp: :', this.suppliers);
         } else {
           console.error('Failed to fetch products:', data);
           this.toastr.error('Không thể lấy danh sách nhà cung cấp!', 'Lỗi'); // Display error toast
@@ -98,9 +98,9 @@ export class SupplierManagementComponent implements OnInit {
           (data) => {
             if (data.code === 1000) {
               this.suppliers = data.result;
-              console.log('Tìm kiếm thành công:', this.suppliers);
-              console.log('searchKey:', this.searchKey);
-              this.toastr.success('Tìm kiếm nhà sản xuất vật liệu!', 'Thành công');
+              // console.log('Tìm kiếm thành công:', this.suppliers);
+              // console.log('searchKey:', this.searchKey);
+              // this.toastr.success('Tìm kiếm nhà sản xuất vật liệu!', 'Thành công');
             } else if (data.code === 1015) {
               this.suppliers = []; // Clear previous results
               console.error('Tìm kiếm không thành công:', data);
@@ -131,9 +131,11 @@ export class SupplierManagementComponent implements OnInit {
             this.supplierName = '';
             this.phoneNumber = '';
             window.location.reload();
+            
           } else {  
-            console.error('Failed to add supplier:', data);
+       //     console.error('Failed to add supplier:', data);
             this.toastr.error('Có lỗi khi thêm nhà cung cấp!', 'Lỗi');
+
           }
         },
         (error) => {
@@ -181,7 +183,7 @@ export class SupplierManagementComponent implements OnInit {
     );
   }
 
-
+  
  
   getDatasupplierMaterial(id: string): void {
     this.authenListService.getSupplierById(id).subscribe(

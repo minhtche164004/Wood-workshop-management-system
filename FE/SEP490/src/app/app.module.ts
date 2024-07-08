@@ -34,7 +34,7 @@ import { OrderRequiredComponent } from './2.Customer/order-required/order-requir
 import { CreateOrderComponent } from './2.Customer/create-order/create-order.component';
 import { TestUploadComponent } from './test-upload/test-upload.component';
 import { OrderDetailManagementComponent } from './Admin/order-detail-management/order-detail-management.component';
-import { OrderDetailComponent } from './Admin/order-detail/order-detail.component';
+
 import { ProcessProductManagementComponent } from './Admin/process-product-management/process-product-management.component';
 import { OrderRequestComponentComponent } from './Admin/order-request-component/order-request-component.component';
 import { OrderRqDetailComponent } from './Admin/order-rq-detail/order-rq-detail.component';
@@ -102,7 +102,7 @@ import { ListRequestCustomerComponent } from './Admin/list-request-customer/list
     CreateOrderComponent,
     TestUploadComponent,
     OrderDetailManagementComponent,
-    OrderDetailComponent,
+
     ProcessProductManagementComponent,
     OrderRequestComponentComponent,
     OrderRqDetailComponent,

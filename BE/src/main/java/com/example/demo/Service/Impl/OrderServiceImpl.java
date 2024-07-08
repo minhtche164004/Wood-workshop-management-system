@@ -59,11 +59,7 @@ public class OrderServiceImpl implements OrderService {
     @Autowired
     private OrderDetailRepository orderDetailRepository;
     @Autowired
-    private Status_Product_Repository statusProduct;
-    @Autowired
     private JobRepository jobRepository;
-    @Autowired
-    private Status_Product_Repository status_Product_Repository;
     @Autowired
     private Status_Job_Repository statusJobRepository;
     @Autowired
@@ -74,6 +70,8 @@ public class OrderServiceImpl implements OrderService {
     private EmailService emailService;
     @Autowired
     private RequestProductsSubmaterialsRepository requestProductsSubmaterialsRepository;
+    @Autowired
+    private Status_Product_Repository statusProductRepository;
 
 
 
@@ -281,6 +279,8 @@ public class OrderServiceImpl implements OrderService {
         requestProducts.setRequestProductName(requestProductDTO.getRequestProductName());
         requestProducts.setDescription(requestProductDTO.getDescription());
         requestProducts.setPrice(requestProductDTO.getPrice());
+        Status_Product status = statusProductRepository.findById(2);//tuc la kich hoạt
+        requestProducts.setStatus(status);
         requestProducts.setQuantity(requestProductDTO.getQuantity());
         requestProducts.setCompletionTime(requestProductDTO.getCompletionTime());
         Requests requests = requestRepository.findById(requestProductDTO.getRequest_id());
@@ -418,6 +418,16 @@ public class OrderServiceImpl implements OrderService {
             throw new AppException(ErrorCode.NOT_FOUND);
         }
         return ordersList;
+
+    }
+
+    @Override
+    public Orders getOrderById(int order_id) {
+        Orders orders = orderRepository.findById(order_id);
+        if (orders == null) {
+            throw new AppException(ErrorCode.NOT_FOUND);
+        }
+        return orders;
 
     }
 

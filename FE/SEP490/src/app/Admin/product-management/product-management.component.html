@@ -157,8 +157,8 @@
                 </a> -->
 
               </td>
-              <td *ngIf="product.imageList && product.imageList.length > 0;"><img class="img_product"
-                  [src]="product.imageList[0].fullPath" alt="Ảnh đại diện"></td>
+              <td><img class="img_product"
+                  [src]="product.imageList[0]?.fullPath" alt="Ảnh đại diện"></td>
               <td>{{ product.completionTime }}</td>
               <td>{{ product.re_productName }}</td>
               <td>{{ product.description }}</td>

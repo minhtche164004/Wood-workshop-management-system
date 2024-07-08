@@ -45,7 +45,6 @@ import { ChangePasswordComponent } from './2.Customer/change-password/change-pas
 import { AboutUsComponent } from './about-us/about-us.component';
 import { ContactComponent } from './contact/contact.component';
 import { EmployeeJobComponent } from './employee-job/employee-job.component';
-import { SubSubmaterialProductComponent } from './sub-submaterial-product/sub-submaterial-product.component';
 import { BillComponent } from './bill/bill.component';
 import { MaterialManagementComponent } from './Admin/material-management/material-management.component';
 import { ReportManagementComponent } from './Admin/report-management/report-management.component';
@@ -114,7 +113,6 @@ import { ListRequestCustomerComponent } from './Admin/list-request-customer/list
     AboutUsComponent,
     ContactComponent,
     EmployeeJobComponent,
-    SubSubmaterialProductComponent,
     BillComponent,
     MaterialManagementComponent,
     ReportManagementComponent,

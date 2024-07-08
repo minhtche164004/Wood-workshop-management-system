@@ -8,7 +8,7 @@ import { CalendarModule } from 'primeng/calendar';
 import { ProductListService } from 'src/app/service/product/product-list.service';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { ProductService } from 'src/app/service/product.service';
-
+import { MatDialog, MAT_DIALOG_DATA } from '@angular/material/dialog';
 @Component({
   selector: 'app-job-management',
   templateUrl: './job-management.component.html',
@@ -120,9 +120,9 @@ export class JobManagementComponent implements OnInit {
 
     this.selectedProduct = { ...product };
     console.log('selectedProduct.job_id:', this.selectedProduct.job_id);
-    // console.log('this.selectedProduct.type:', this.selectedProduct.statusJob.status_id);
+     console.log('this.selectedProduct.type:', this.selectedProduct.statusJob.status_id);
     this.confirmStatus = this.selectedProduct.statusJob.status_name;
-    this.acceptJob(this.selectedProduct.job_id, this.selectedProduct.statusJob.status_id);
+    // this.acceptJob(this.selectedProduct.job_id, this.selectedProduct.statusJob.status_id);
   }
 
   getAllProductSubMaterialByProductId(productId: number, materialId: number) {
@@ -172,7 +172,7 @@ export class JobManagementComponent implements OnInit {
       quantity_product: quantity
     };
     console.log('quantity productForm:', createJobs);
-    this.jobService.createExportMaterialProductTotalJob(user_id, position_id, p_id, createJobs).subscribe(
+    this.jobService.createExportMaterialProductTotalJob(p_id, position_id, user_id, createJobs).subscribe(
       (data) => {
         if (data.code === 1000) {
           this.toastr.success('Xuất nguyên liệu thành công', 'Thành công');
@@ -256,7 +256,7 @@ export class JobManagementComponent implements OnInit {
 
   selectProduct(product: any): void {
     this.selectedProduct = product; // Điều chỉnh theo cấu trúc đối tượng sản phẩm của bạn
-    // console.log('Tên sản phẩm được chọn:', product);
+     console.log('Tên sản phẩm được chọn:', product);
     // console.log('Id sản phẩm được chọn:', product.productId);
   }
 

@@ -72,7 +72,7 @@
 
                             <td class="action-buttons">
                                 <a href="#" class="settings" title="Chỉnh sửa" data-toggle="modal"
-                                    data-target="#editProductModal">
+                                    data-target="#editProductModal" (click)="editSubMaterial(product)">
                                     <i class="fa-solid fa-pen-to-square"></i>
                                 </a>
                                 <a href="#" class="delete" title="Xóa" data-toggle="modal"
@@ -122,7 +122,8 @@
 
 
                             </td>
-                            <td><button class="btn btn-sm"
+                            <td><button class="btn btn-sm" data-toggle="modal"
+                                data-target="#errorProduct" (click)="errorJob(product)" 
                                     [class.btn-outline-primary]="product.statusJob.status_id !== 10 && product.statusJob.status_id !== 7 && product.statusJob.status_id !== 4"
                                     [class.btn-danger]="product.statusJob.status_id === 10 || product.statusJob.status_id === 7 || product.statusJob.status_id === 4"
                                     [disabled]="product.statusJob.status_id === 10 || product.statusJob.status_id === 7 || product.statusJob.status_id === 4"><i
@@ -387,6 +388,65 @@
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
                 <button type="button" class="btn btn-primary" (click)="changeStatusJob()">Confirm</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" style="margin-top: 15%;" id="errorProduct" tabindex="-1" role="dialog"
+    aria-labelledby="errorProductLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-wide" role="document">
+
+        <div class="modal-content">
+            <div class="modal-header bg-primary text-white">
+                <h5 class="modal-title" id="assignJobModalLabel">Báo cáo lỗi sản xuất</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <!-- <form [formGroup]="uploadForm" (ngSubmit)="onSubmit()"> -->
+                <form [formGroup]="errorForm" (ngSubmit)="onSubmit()">
+                    <div class="row">
+                       
+                      
+                            <div style="display: flex;">
+                                <div class="col-md-6">
+                                  <h3 style="color: black;">Tên sản phẩm: {{ this.selectedProduct.product_name }}</h3>
+                                </div>
+                                <div class="col-md-6">
+                                  <h3 style="color: black;">Tên nhân viên: {{ this.selectedProduct.user_name }}</h3>
+                                </div>
+                              </div>
+                              <div class="row" style="margin-left: 7px; margin-top: 18px;">
+                                <div class="col-md-6">
+                                  <h3 style="color: black;">Mã đơn hàng: {{ this.selectedProduct.code }}</h3>
+                                </div>
+                              </div>
+                             
+                        
+                    </div>
+
+                    <div class="row" style="margin-top: 2%;">
+                        <div class="row" style="margin-left: 7px; margin-top: 18px;">
+                            <h3 style="color: black;">Mô tả lỗi: </h3>
+                            <textarea class="form-control" formControlName="description" id="description" name="description" rows="10"
+                              style="height: 100px;" cols="5"></textarea>
+                          </div>
+                          <div class="row" style="margin-left: 7px; margin-top: 18px;">
+                            <h3 style="color: black;">Giải pháp: </h3>
+                            <textarea class="form-control" formControlName="solution"  id="solution" name="solution" rows="10"
+                              style="height: 100px;" cols="5"></textarea>
+                          </div>
+                    </div>
+
+                    <div class="modal-footer d-flex justify-content-center">
+                        <button type="button" class="btn btn-mau-do" data-dismiss="modal">Hủy</button>
+                        <button type="submit" class="btn btn-primary" (click)="createErrorJob()">Lưu thay đổi</button>
+                    </div>
+                </form>
+
+
+
+
             </div>
         </div>
     </div>

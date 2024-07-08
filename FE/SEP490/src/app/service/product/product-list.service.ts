@@ -56,7 +56,7 @@ export class ProductListService {
   private apiUrl_getAllRequest = `${environment.apiUrl}api/auth/order/GetAllRequest`;
   private apiUrlGetProductRequestByProductRequestId = `${environment.apiUrl}api/auth/order/getRequestProductById`;
   private apiUrlEditProductRequest = `${environment.apiUrl}api/auth/order/getRequestProductById`; // cho api
-  private apiUrlDeleteProductRequest = `${environment.apiUrl}api/auth/order/deleteProductRequest`;// cho api
+  private apiUrlDeleteProductRequest = `${environment.apiUrl}api/auth/product/deleteRequestProduct`;
   //
 
   constructor(private http: HttpClient) { }

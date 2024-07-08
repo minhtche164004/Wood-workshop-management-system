@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { ProductListService } from 'src/app/service/product/product-list.service';
 import { ToastrService } from 'ngx-toastr';
 import { FormArray, FormBuilder, FormGroup, Validators, FormsModule, FormControl } from '@angular/forms';
@@ -6,7 +6,7 @@ import { concatMap } from 'rxjs/operators';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { map, switchMap } from 'rxjs/operators';
 import { Observable } from 'rxjs';
-
+import 'jquery';
 
 interface Category {
   categoryId: number;
@@ -41,6 +41,8 @@ interface SubMaterialItemOfProduct {
   unitPrice: number;
   materialType: string;
 }
+declare var $: any; // khai bao jquery
+
 @Component({
   selector: 'app-product-management',
   templateUrl: './product-management.component.html',
@@ -90,9 +92,7 @@ export class ProductManagementComponent implements OnInit {
   //autocomplete request
   keyword = 'code';
   requests: any[] = [];
-
   //
-  firstImageOfProductRequest: string = '';
   constructor(
     private fb: FormBuilder,
     private productListService: ProductListService,
@@ -141,7 +141,7 @@ export class ProductManagementComponent implements OnInit {
     });
   }
   //reset lai khi add lai material cho product va product request
-  resetFormAdd(){
+  resetFormAdd() {
     this.totalUnitPrice = 0;
     this.materialForm.reset();
     this.items.clear();
@@ -484,7 +484,7 @@ export class ProductManagementComponent implements OnInit {
 
     if (this.unitPriceSubMaterial && this.quantityPerSubMaterial) {
       for (const key of Object.keys(this.unitPriceSubMaterial)) {
-        const index = Number(key); 
+        const index = Number(key);
         const numericUnitPrice = Number(this.unitPriceSubMaterial[index]) || 0;
         const quantity = Number(this.quantityPerSubMaterial[index]) || 0;
         const totalForThisItem = numericUnitPrice * quantity;
@@ -511,7 +511,7 @@ export class ProductManagementComponent implements OnInit {
   }
 
   onRemoveMaterial(index: number) {
-    if(this.unitPriceSubMaterial[index] && this.quantityPerSubMaterial[index]){
+    if (this.unitPriceSubMaterial[index] && this.quantityPerSubMaterial[index]) {
       this.totalUnitPrice = this.totalUnitPrice - (Number(this.unitPriceSubMaterial[index]) * Number(this.quantityPerSubMaterial[index]));
     }
   }
@@ -577,7 +577,6 @@ export class ProductManagementComponent implements OnInit {
   }
   //
 
-
   onSubmit() {
     if (this.uploadForm.valid && this.selectedThumbnail && this.selectedImages.length) {
       this.isLoadding = true;
@@ -613,10 +612,7 @@ export class ProductManagementComponent implements OnInit {
           this.reloadProduct();
           this.isLoadding = false;
           this.toastr.success('Tạo sản phẩm thành công!', 'Thành công');
-          const closeButton = document.querySelector('.btn-mau-do[data-dismiss="modal"]') as HTMLElement;
-          if (closeButton) { // Check if the button exists
-            closeButton.click(); // If it exists, click it to close the modal
-          }
+          $('[data-dismiss="modal"]').click();        
         },
         error => {
           this.isLoadding = false;
@@ -683,28 +679,20 @@ export class ProductManagementComponent implements OnInit {
 
       this.productListService.editProduct(updatedProduct, this.selectedThumbnail, this.selectedImages, productData.product_id)
         .subscribe(
-          response => { 
+          response => {
             this.reloadProduct();
             this.isLoadding = false;
 
             console.log('Update successful', response);
             this.toastr.success('Cập nhật sản phẩm thành công!', 'Thành công');
-            const closeButton = document.querySelector('.btn-mau-do[data-dismiss="modal"]') as HTMLElement;
-            if (closeButton) { // Check if the button exists
-              closeButton.click(); // If it exists, click it to close the modal
-              console.log("close button success")
-            }
+            $('[data-dismiss="modal"]').click();      // tat modal  
+
           },
           error => {
             console.error('Update error', error);
             this.toastr.error('Cập nhật sản phẩm bị lỗi!', 'Lỗi');
             this.isLoadding = false;
-            const closeButton = document.querySelector('.btn-mau-do[data-dismiss="modal"]') as HTMLElement;
 
-            if (closeButton) { // Check if the button exists
-              closeButton.click(); // If it exists, click it to close the modal
-              console.log("close button success")
-            }
           }
         );
     }
@@ -728,17 +716,17 @@ export class ProductManagementComponent implements OnInit {
   }
 
   deleteProduct() {
+    this.isLoadding = true;
     this.productListService.deleteProduct(this.selectedProductIdCurrentDelele)
       .subscribe(
         response => {
+          this.reloadProduct();
           console.log('Xóa thành công', response);
           if (response.code === 1000) {
             this.toastr.success('Xóa sản phẩm thành công!', 'Thành công');
           }
-          const cancelButton = document.querySelector('.btn.btn-secondary[data-dismiss="modal"]') as HTMLElement;
-          if (cancelButton) { // Check if the button exists
-            cancelButton.click(); // If it exists, click it to close the modal
-          }
+          $('[data-dismiss="modal"]').click();      // tat modal  
+          this.isLoadding = false;
 
         },
         (error: HttpErrorResponse) => {
@@ -747,14 +735,11 @@ export class ProductManagementComponent implements OnInit {
           } else {
             this.toastr.error("Không thể xoá sản phẩm do sản phẩm đang được sử dụng ở các chức năng khác", 'Lỗi');
           }
-          const cancelButton = document.querySelector('.btn.btn-secondary[data-dismiss="modal"]') as HTMLElement;
-          if (cancelButton) { // Check if the button exists
-            cancelButton.click(); // If it exists, click it to close the modal
-          }
-          // this.isLoading = false; // Stop the loading spinner on error
+          $('[data-dismiss="modal"]').click();      // tat modal  
+          this.isLoadding = false; // Stop the loading spinner on error
         }
       );
-    console.log('productId', this.selectedProductIdCurrentDelele);
+    // console.log('productId', this.selectedProductIdCurrentDelele);
   }
 
 
@@ -820,14 +805,13 @@ export class ProductManagementComponent implements OnInit {
             this.reloadProductRequest();
             this.isLoadding = false;
             this.toastr.success('Tạo sản phẩm theo yêu cầu thành công!', 'Thành công');
-            const closeButton = document.querySelector('.btn-mau-do[data-dismiss="modal"]') as HTMLElement;
-            if (closeButton) { // Check if the button exists
-              closeButton.click(); // If it exists, click it to close the modal
-            }
+            $('[data-dismiss="modal"]').click();      // tat modal  
+
           },
           error => {
             this.isLoadding = false;
             this.toastr.error('Tạo sản phẩm bị lỗi!', 'Lỗi');
+            
           }
         );
     }
@@ -900,39 +884,32 @@ export class ProductManagementComponent implements OnInit {
 
             console.log('Update successful', response);
             this.toastr.success('Cập nhật sản phẩm thành công!', 'Thành công');
-            const closeButton = document.querySelector('.btn-mau-do[data-dismiss="modal"]') as HTMLElement;
-            if (closeButton) { // Check if the button exists
-              closeButton.click(); // If it exists, click it to close the modal
-              console.log("close button success")
-            }
+            $('[data-dismiss="modal"]').click();      // tat modal  
+
           },
           error => {
             console.error('Update error', error);
             this.toastr.error('Cập nhật sản phẩm bị lỗi!', 'Lỗi');
             this.isLoadding = false;
-            const closeButton = document.querySelector('.btn-mau-do[data-dismiss="modal"]') as HTMLElement;
-
-            if (closeButton) { // Check if the button exists
-              closeButton.click(); // If it exists, click it to close the modal
-              console.log("close button success")
-            }
           }
         );
     }
   }
 
   deleteProductRequest() {
+    this.isLoadding = true;
+    console.log('productId123', this.selectedProductIdCurrentDelele);
     this.productListService.deleteProductRequest(this.selectedProductIdCurrentDelele)
       .subscribe(
         response => {
-          console.log('Xóa thành công', response);
+          this.reloadProductRequest();
+          // console.log('Xóa thành công', response);
           if (response.code === 1000) {
             this.toastr.success('Xóa sản phẩm thành công!', 'Thành công');
           }
-          const cancelButton = document.querySelector('.btn.btn-secondary[data-dismiss="modal"]') as HTMLElement;
-          if (cancelButton) { // Check if the button exists
-            cancelButton.click(); // If it exists, click it to close the modal
-          }
+          $('[data-dismiss="modal"]').click();      // tat modal  
+
+          this.isLoadding = false;
 
         },
         (error: HttpErrorResponse) => {
@@ -941,14 +918,12 @@ export class ProductManagementComponent implements OnInit {
           } else {
             this.toastr.error("Không thể xoá sản phẩm do sản phẩm đang được sử dụng ở các chức năng khác", 'Lỗi');
           }
-          const cancelButton = document.querySelector('.btn.btn-secondary[data-dismiss="modal"]') as HTMLElement;
-          if (cancelButton) { // Check if the button exists
-            cancelButton.click(); // If it exists, click it to close the modal
-          }
-          // this.isLoading = false; // Stop the loading spinner on error
+          $('[data-dismiss="modal"]').click();      // tat modal  
+
+          this.isLoadding = false; // Stop the loading spinner on error
         }
       );
-    console.log('productId', this.selectedProductIdCurrentDelele);
+    // console.log('productId', this.selectedProductIdCurrentDelele);
   }
 
 }

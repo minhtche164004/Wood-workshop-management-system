@@ -11,4 +11,5 @@ public class ProductErrorDTO {
 //    private String code;
     private String description;
     private String solution;
+    private Boolean isFixed;
 }

@@ -1,5 +1,6 @@
 package com.example.demo.Config;
 
+import com.example.demo.Dto.ProductDTO.ProductErrorAllDTO;
 import com.example.demo.Dto.SubMaterialDTO.UpdateSubDTO;
 import com.example.demo.Dto.UserDTO.UpdateProfileDTO;
 import com.example.demo.Dto.UserDTO.UserDTO;
@@ -54,6 +55,22 @@ public class ModelMapperConfig {
                 .addMapping(SubMaterials::getDescription, UpdateSubDTO::setDescription)
                 .addMapping(SubMaterials::getQuantity, UpdateSubDTO::setQuantity)
                 .addMapping(SubMaterials::getUnitPrice, UpdateSubDTO::setUnit_price);
+
+        modelMapper.typeMap(Processproducterror.class, ProductErrorAllDTO.class)
+                .addMapping(Processproducterror::getProcessProductErrorId, ProductErrorAllDTO::setId)
+                .addMapping(Processproducterror::getCode, ProductErrorAllDTO::setCode)
+                .addMapping(Processproducterror::getDescription, ProductErrorAllDTO::setDes)
+                .addMapping(Processproducterror::getIsFixed, ProductErrorAllDTO::set_fix)
+                .addMapping(Processproducterror::getSolution, ProductErrorAllDTO::setSolution)
+                .addMapping(src -> src.getJob().getJob_name(), ProductErrorAllDTO::setJob_name)
+                .addMapping(src -> src.getJob().getJobId(), ProductErrorAllDTO::setJob_id)
+                .addMapping(src -> src.getJob().getProduct().getProductId(), ProductErrorAllDTO::setProduct_id)
+                .addMapping(src -> src.getJob().getProduct().getProductName(), ProductErrorAllDTO::setProduct_name)
+                .addMapping(src -> src.getJob().getRequestProducts().getRequestProductId(), ProductErrorAllDTO::setRequest_product_id)
+                .addMapping(src -> src.getJob().getRequestProducts().getRequestProductName(), ProductErrorAllDTO::setRequest_product_name)
+                .addMapping(src -> src.getJob().getOrderdetails().getOrder().getCode(), ProductErrorAllDTO::setCode_order)
+                .addMapping(src -> src.getJob().getOrderdetails().getOrder().getUserInfor().getFullname(), ProductErrorAllDTO::setUser_name_order)
+                .addMapping(src -> src.getJob().getUser().getUsername(), ProductErrorAllDTO::setEmployee_name);
 
 
 

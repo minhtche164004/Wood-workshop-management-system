@@ -126,7 +126,7 @@ export class ProductManagementComponent implements OnInit {
       imageList: [''],
       //danh cho product request
       re_productId: [''],
-      re_productName: [''],
+      requestProductName: [''],
       code: [''],
       request_id: ['']
       //end
@@ -751,6 +751,48 @@ export class ProductManagementComponent implements OnInit {
     });
   }
 
+  populateFormWithDataRequestProduct(productId: number) {
+    this.totalUnitPrice = 0;
+    this.productListService.exportMaterialProductRequestByProductId(productId).subscribe(
+      (data) => {
+        if (data.code === 1000) {
+          this.subMaterialData = data.result;
+          // console.log('Danh sách material sản phẩm:', this.subMaterialData);
+          // console.log('productId', productId);
+
+          // Reset the form and remove all items
+          this.formSubMaterialPerProduct.reset();
+          while (this.itemsEditArray.length !== 0) {
+            this.itemsEditArray.removeAt(0);
+          }
+          // Populate the form with data
+          this.selectedMaterialId = [] as any;
+          this.subMaterialData.forEach((materialItem: any, index: any) => {
+            this.selectedMaterialId[index] = materialItem.materialId;
+            this.selectedSubMaterialId[index] = materialItem.subMaterialId;
+            this.onMaterialChangeFirstEdit(Number(this.selectedMaterialId[index]), index);
+
+            this.fillMaterialItemEdit(materialItem);
+            this.totalUnitPrice += materialItem.unitPrice * materialItem.quantity;
+            this.quantityPerSubMaterial[index] = materialItem.quantity;
+            this.unitPriceSubMaterial[index] = materialItem.unitPrice;
+          });
+
+          // console.log(this.itemsEditArray.value);
+
+        } else {
+          console.error('Failed to fetch products:', data);
+          this.toastr.error('Không thể lấy danh sách sản phẩm!', 'Lỗi');
+        }
+      },
+      (error) => {
+        console.error('Error fetching products:', error);
+        this.toastr.error('Có lỗi xảy ra!', 'Lỗi');
+      }
+    );
+
+  }
+
   reloadProductRequest(): void {
     this.productListService.getAllProductRequest().subscribe(
       (data) => {
@@ -840,14 +882,14 @@ export class ProductManagementComponent implements OnInit {
       .subscribe(async product => {
         this.editForm.patchValue({
           re_productId: product.result.re_productId,
-          re_productName: product.result.re_productName,
+          requestProductName: product.result.re_productName,
           code: product.result.code,
           request_id: product.result.request_id,
           description: product.result.description,
           price: product.result.price,
           completionTime: product.result.completionTime,
           enddateWarranty: product.result?.enddateWarranty,
-          status_id: product.result.status.status_id,
+          status_id: product.result.status?.status_id,
           quantity: product.result.quantity,
           imageList: product.result.imageList,
 
@@ -857,7 +899,7 @@ export class ProductManagementComponent implements OnInit {
         });
         // console.log('Thumbnailpre:', this.imagesPreview);
       });
-    this.populateFormWithData(productId);
+    this.populateFormWithDataRequestProduct(productId);
 
   }
 
@@ -870,8 +912,7 @@ export class ProductManagementComponent implements OnInit {
       const updatedProductRequest = {
         ...productData,
         // status: this.selectedStatus,
-        thumbnail: this.selectedThumbnail,
-        images: this.selectedImages
+        // images: this.selectedImages
       };
       console.log('Form Data for updatedProductRequest:', updatedProductRequest);
 
@@ -879,7 +920,7 @@ export class ProductManagementComponent implements OnInit {
       this.productListService.editProductRequest(updatedProductRequest, this.selectedImages, productData.product_id)
         .subscribe(
           response => {
-            this.reloadProduct();
+            this.reloadProductRequest();
             this.isLoadding = false;
 
             console.log('Update successful', response);

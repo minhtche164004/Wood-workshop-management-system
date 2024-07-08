@@ -35,9 +35,28 @@ public interface SubMaterialsRepository extends JpaRepository<SubMaterials,Integ
             "LEFT JOIN s.material m")
     List<SubMaterialViewDTO> getAllSubmaterial();
 
+    @Query("SELECT new com.example.demo.Dto.SubMaterialDTO.SubMaterialViewDTO(" +
+            "s.subMaterialId, COALESCE(s.subMaterialName, ''), m.materialId, COALESCE(s.description, ''), COALESCE(m.materialName, ''), s.quantity, s.unitPrice) " + // Thêm dấu phẩy và loại bỏ COALESCE cho các ID
+            "FROM SubMaterials s " +
+            "LEFT JOIN s.material m WHERE s.material.materialId = :query")
+    List<SubMaterialViewDTO> findSubMaterialIdByMaterial(int query);
 
-    @Query("SELECT u FROM SubMaterials u WHERE u.material.materialId = :query")
-    List<SubMaterials> findSubMaterialIdByMaterial(int query);
+    @Query("SELECT new com.example.demo.Dto.SubMaterialDTO.SubMaterialViewDTO(" +
+            "s.subMaterialId, COALESCE(s.subMaterialName, ''), m.materialId, COALESCE(s.description, ''), COALESCE(m.materialName, ''), s.quantity, s.unitPrice) " + // Thêm dấu phẩy và loại bỏ COALESCE cho các ID
+            "FROM SubMaterials s " +
+            "LEFT JOIN s.material m WHERE s.subMaterialName LIKE CONCAT('%', :keyword, '%') OR " +
+            "s.code LIKE CONCAT('%', :keyword, '%')")
+    List<SubMaterialViewDTO> findSubMaterialsByNameCode(@Param("keyword") String keyword);
+
+    @Query("SELECT new com.example.demo.Dto.SubMaterialDTO.SubMaterialViewDTO(" +
+            "s.subMaterialId, COALESCE(s.subMaterialName, ''), m.materialId, COALESCE(s.description, ''), COALESCE(m.materialName, ''), s.quantity, s.unitPrice) " + // Thêm dấu phẩy và loại bỏ COALESCE cho các ID
+            "FROM SubMaterials s " +
+            "LEFT JOIN s.material m WHERE s.subMaterialId = :subMaterialId")
+    SubMaterialViewDTO findSubMaterialsById(int subMaterialId);
+
+
+//    @Query("SELECT u FROM SubMaterials u WHERE u.material.materialId = :query")
+//    List<SubMaterials> findSubMaterialIdByMaterial(int query);
 
     List<SubMaterials> findAll();
     int countBySubMaterialName(String SubMaterialName);
@@ -52,9 +71,9 @@ public interface SubMaterialsRepository extends JpaRepository<SubMaterials,Integ
 
 
 
-    @Query("SELECT u FROM SubMaterials u  WHERE u.subMaterialName LIKE CONCAT('%', :keyword, '%') OR " +
-            "u.code LIKE CONCAT('%', :keyword, '%')")
-    List<SubMaterials> findSubMaterialsByNameCode(@Param("keyword") String keyword);
+//    @Query("SELECT u FROM SubMaterials u  WHERE u.subMaterialName LIKE CONCAT('%', :keyword, '%') OR " +
+//            "u.code LIKE CONCAT('%', :keyword, '%')")
+//    List<SubMaterials> findSubMaterialsByNameCode(@Param("keyword") String keyword);
 
 
     @Transactional

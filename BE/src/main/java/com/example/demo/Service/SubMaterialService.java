@@ -19,12 +19,13 @@ import java.util.Map;
 @Service
 public interface SubMaterialService {
     List<SubMaterialViewDTO> getAll();
-    List<SubMaterials> FilterByMaterial(int material_id);
+    List<SubMaterialViewDTO> FilterByMaterial(int material_id);
     SubMaterials addNew(SubMaterialDTO subMaterialDTO);
     List<SubMaterialNameDTO> GetListName();
     void saveSubMaterialToDatabase(MultipartFile file);
-    List<SubMaterials> SearchByNameorCode(String key);
+    List<SubMaterialViewDTO> SearchByNameorCode(String key);
     UpdateSubDTO UpdateSub(int id, UpdateSubDTO updateSubDTO);
+    SubMaterialViewDTO getSubMaterialById(int sub_material_id);
 
 
     List<ProductSubMaterials> createExportMaterialProduct(int product_id, Map<Integer, Double> subMaterialQuantities);
@@ -39,6 +40,10 @@ public interface SubMaterialService {
     List<Employeematerials> getAllEmpMate();
 
     List<Employeematerials> findEmployeematerialsByName(String key);
+
+    SubMaterialViewDTO EditSubMaterial(int id,SubMaterialViewDTO subMaterialViewDTO);
+
 //    List<Employeematerials> filterEmployeematerialsByMaterialType(int materialId);
+
 
 }

@@ -18,10 +18,20 @@ interface ApiResponse {
 })
 
 export class HeaderComponent implements OnInit {
-
+  fullname: string | null = null;
   constructor(private dataService: DataService, private router: Router, private http: HttpClient, private authService: AuthenListService, private productListService: ProductListService) { }
   ngOnInit(): void {
     this.wishlistcount()
+    if (localStorage.getItem('fullname') === null) {
+      this.authService.getUserProfile().subscribe((data) => {
+        this.fullname = data.result.fullname; // Assuming 'result' contains the profile data
+        localStorage.setItem('fullname', data.result?.fullname)
+        console.log("fullname: ", data.result?.fullname)
+      });
+    }
+    else {
+      this.fullname = localStorage.getItem('fullname')
+    }
   }
   countwishlist: number = 0;
   user: any[] = [];
@@ -50,7 +60,6 @@ export class HeaderComponent implements OnInit {
   wishlistcount(): void {
     this.authService.GetByIdWishList().subscribe(
       (data) => {
-        console.log(data)
         if (data != null || data != undefined)
           this.countwishlist = data.result.length; // Lưu trữ dữ liệu nhận được từ API vào biến wishlistItems
         else this.countwishlist = 0

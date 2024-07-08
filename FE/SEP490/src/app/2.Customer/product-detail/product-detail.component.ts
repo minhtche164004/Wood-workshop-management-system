@@ -9,14 +9,20 @@ import { environment } from 'src/app/environments/environment';
   styleUrls: ['./product-detail.component.scss']
 })
 export class ProductDetailComponent implements OnInit {
+  isDescriptionActive: boolean = true;
   productId: number = 0;
-  productDetails: any;
-  largeImageUrl: string = ''; // Add this property
-  constructor(private route: ActivatedRoute, private http: HttpClient) {}
+  categoryId: number = 0;
+  productDetails: any = {};
+  categoryProduct: any= {};
+  largeImageUrl: string = '';
+
+  constructor(private route: ActivatedRoute, private http: HttpClient) {
+    this.onTabClick('description');
+  }
 
   ngOnInit(): void {
     this.route.params.subscribe(params => {
-      this.productId = +params['id']; // Retrieve the product ID from the route parameters
+      this.productId = +params['id'];
       this.getProductDetails(this.productId);
     });
   }
@@ -26,15 +32,46 @@ export class ProductDetailComponent implements OnInit {
       .subscribe(
         (response: any) => {
           this.productDetails = response.result;
-          this.largeImageUrl = this.productDetails.image; // Initialize largeImageUrl
+          this.categoryId = this.productDetails.categories.categoryId;
+          this.largeImageUrl = this.productDetails.image;
           console.log('Product details:', this.productDetails);
+          console.log('CategoryID:', this.categoryId);
+          this.getCategoryProducts(this.categoryId);
         },
         (error) => {
           console.error('Error fetching product details:', error);
         }
       );
   }
+  getCategoryProducts(categoryId: number) {
+    this.http.get(`${environment.apiUrl}api/auth/product/GetProductByCategory?id=${categoryId}`)
+      .subscribe(
+        (response: any) => {
+          this.categoryProduct = response.result;
+        
+  
+
+        },
+        (error) => {
+          console.error('Error fetching product details:', error);
+        }
+      );
+  }
+  
+
   updateLargeImage(imageUrl: string) {
-    this.largeImageUrl = imageUrl; // Update largeImageUrl when a smaller image is clicked
+    this.largeImageUrl = imageUrl;
+  }
+
+  onTabClick(tabName: string): void {
+    if (tabName === 'description') {
+      console.log('Mô Tả tab activated');
+      // Handle the event when the "Mô Tả" tab is clicked or activated.
+      // Add your logic here.
+    } else if (tabName === 'warranty') {
+      console.log('Thông tin bảo hành tab activated');
+      // Handle the event when the "Thông tin bảo hành" tab is clicked or activated.
+      // Add your logic here.
+    }
   }
 }

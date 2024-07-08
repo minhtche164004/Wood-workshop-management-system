@@ -127,9 +127,9 @@ const routes: Routes = [
   // { path: '', redirectTo: '/homepage', pathMatch: 'full' },
 
   { path: 'report-cost', component: ReportCostManagementComponent },
-  { path: '', redirectTo: '/homepage', pathMatch: 'full' },
+  // { path: '', redirectTo: '/homepage', pathMatch: 'full' },
 
-  { path: '**', redirectTo: '/homepage', pathMatch: 'full' },
+  // { path: '**', redirectTo: '/homepage', pathMatch: 'full' },
 
 
 ];

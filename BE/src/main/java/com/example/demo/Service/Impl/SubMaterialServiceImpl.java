@@ -61,8 +61,8 @@ public class SubMaterialServiceImpl implements SubMaterialService {
     }
 
     @Override
-    public List<SubMaterials> FilterByMaterial(int material_id) {
-        List<SubMaterials> subMaterialsList = subMaterialsRepository.findSubMaterialIdByMaterial(material_id);
+    public List<SubMaterialViewDTO> FilterByMaterial(int material_id) {
+        List<SubMaterialViewDTO> subMaterialsList = subMaterialsRepository.findSubMaterialIdByMaterial(material_id);
         if(subMaterialsList.isEmpty()){
             throw new AppException(ErrorCode.NOT_FOUND);
         }
@@ -187,7 +187,7 @@ public class SubMaterialServiceImpl implements SubMaterialService {
                 .collect(Collectors.toList());
     }
     @Override
-    public List<SubMaterials> SearchByNameorCode(String key){
+    public List<SubMaterialViewDTO> SearchByNameorCode(String key){
         return subMaterialsRepository.findSubMaterialsByNameCode(key);
     }
     @Transactional

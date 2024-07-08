@@ -19,11 +19,11 @@ import java.util.Map;
 @Service
 public interface SubMaterialService {
     List<SubMaterialViewDTO> getAll();
-    List<SubMaterials> FilterByMaterial(int material_id);
+    List<SubMaterialViewDTO> FilterByMaterial(int material_id);
     SubMaterials addNew(SubMaterialDTO subMaterialDTO);
     List<SubMaterialNameDTO> GetListName();
     void saveSubMaterialToDatabase(MultipartFile file);
-    List<SubMaterials> SearchByNameorCode(String key);
+    List<SubMaterialViewDTO> SearchByNameorCode(String key);
     UpdateSubDTO UpdateSub(int id, UpdateSubDTO updateSubDTO);
 
 

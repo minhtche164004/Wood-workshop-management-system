@@ -58,11 +58,7 @@ public class OrderServiceImpl implements OrderService {
     @Autowired
     private OrderDetailRepository orderDetailRepository;
     @Autowired
-    private Status_Product_Repository statusProduct;
-    @Autowired
     private JobRepository jobRepository;
-    @Autowired
-    private Status_Product_Repository status_Product_Repository;
     @Autowired
     private Status_Job_Repository statusJobRepository;
     @Autowired
@@ -417,6 +413,16 @@ public class OrderServiceImpl implements OrderService {
             throw new AppException(ErrorCode.NOT_FOUND);
         }
         return ordersList;
+
+    }
+
+    @Override
+    public Orders getOrderById(int order_id) {
+        Orders orders = orderRepository.findById(order_id);
+        if (orders == null) {
+            throw new AppException(ErrorCode.NOT_FOUND);
+        }
+        return orders;
 
     }
 

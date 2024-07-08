@@ -17,9 +17,10 @@
               </a>
             </div>
           </div>
-
-          <div class="row">
-            <div class="col-md-7">
+          <table class="table table-striped table-hover">
+          </table>
+          <div class="row  justify-content-end">
+            <div class="col-md-7 text-end">
               <div class="input-group mb-3">
                 <!-- product.component.html -->
                 <label>Từ: </label>
@@ -27,12 +28,9 @@
 
                 <label>Đến: </label>
                 <input style="margin-left: 10px;" type="date" class="form-control" placeholder="Đến: dd/mm/yyyy">
-              </div>
-            </div>
-            <div class="col-md-5 text-end">
-              <div class="input-group mb-3">
+
                 <!-- product.component.html -->
-                <select [(ngModel)]="selectedCategory"  (change)="filterStatus()">
+                <select [(ngModel)]="selectedCategory" (change)="filterStatus()">
                   <option value="null" disabled selected>Tất cả đơn hàng</option>
                   <option *ngFor="let ps of userStatus" [value]="ps.status_id">{{ ps.status_name }}</option>
                 </select>
@@ -44,77 +42,77 @@
               </div>
             </div>
           </div>
-        </div>
-        <div class="table-container">
-          <div class="table-responsive">
-            <table class="table table-striped table-hover">
-              <thead>
-                <tr>
-                  <th>Mã đơn</th>
-                  <th style="width: 50px;">Thao tác</th>
-                  <th style="width: 200px;">Ngày đặt hàng</th>
-                  <th style="width: 200px;">Tình trạng</th>
-                  <th style="width: 150px;">Kiểu thanh toán</th>
-                  <th style="width: 100px;">Tổng tiền(vnd)</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr *ngFor="let us of user | paginate: { itemsPerPage: 10, currentPage: currentPage }; let i = index">
-                  <td>{{ i + 1 + (currentPage - 1) * 10 }}</td>
 
-                  <td class="action-buttons">
-                    <a href="#" class="settings" title="Edit" data-toggle="modal" data-target="#editProductModal">
-                      <i class="fa-solid fa-pen-to-square"></i>
-                    </a>
-                    <a href="#" class="info" title="Info" data-toggle="modal" data-target="#productDetailModal"
-                    (click)="getOrDetailById(us?.orderId)">
-                      <i class="fa-solid fa-circle-info"></i>
-                    </a>
-                    <!-- Dropdown for changing status -->
-                   
-                  </td>
-                  <td>{{ us?.orderDate | date:'dd/MM/yyyy' }}</td>
-                
-
-                  <td>
-                    <div class="select-wrapper">
-                      <select class="custom-select" (change)="onStatusChange(us.orderId, $event)">
-                        <option *ngFor="let status of status_order" [ngStyle]="getStatusColor(status.status_id)" [value]="status.status_id" [selected]="status.status_id === us?.status.status_id">
-                          {{ status.status_name }}
-                        </option>
-                      </select>
-                    </div>
-                  </td>
-                  
-
-                  <td style="text-align: center;"
-                    [ngStyle]="{'color': us?.paymentMethod === 1 ? 'green' : (us?.paymentMethod === 0 ? 'red' : 'black')}">
-                    {{ us?.paymentMethod === 1 ? 'ONLINE' : (us?.paymentMethod === 0 ? 'OFFLINE' : '') }}
-                  </td>
-
-
-                  <td style="text-align: center;">{{ us?.totalAmount | number : '1.0-3' }}</td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
         </div>
 
+        <table class="table table-striped table-hover">
+          <thead>
+            <tr>
+              <th>Mã đơn</th>
+              <th>Thao tác</th>
+              <th>Ngày đặt hàng</th>
+              <th>Tình trạng</th>
+              <th>Kiểu thanh toán</th>
+              <th>Tổng tiền(vnd)</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let us of user | paginate: { itemsPerPage: 10, currentPage: currentPage }; let i = index">
+              <td>{{ i + 1 + (currentPage - 1) * 10 }}</td>
 
-        <pagination-controls style="justify-content: right; display: flex;" (pageChange)="currentPage = $event"
-          previousLabel="Trang trước" nextLabel="Trang sau">
-        </pagination-controls>
-        <div class="clearfix" style="justify-content: right; display: flex;">
-          <div class="hint-text">Hiển thị <b>{{ (currentPage - 1) * 10 + 1 }}</b> tới <b>{{ currentPage * 10
-              > user.length ? user.length : currentPage * 10 }}</b> trong tổng <b>{{
-              user.length }}</b> dữ liệu</div>
-        </div>
+              <td class="action-buttons">
+                <a href="#" class="settings" title="Edit" data-toggle="modal" data-target="#editProductModal">
+                  <i class="fa-solid fa-pen-to-square"></i>
+                </a>
+                <a href="#" class="info" title="Info" data-toggle="modal" data-target="#productDetailModal"
+                  (click)="getOrDetailById(us?.orderId)">
+                  <i class="fa-solid fa-circle-info"></i>
+                </a>
+                <!-- Dropdown for changing status -->
+
+              </td>
+              <td>{{ us?.orderDate | date:'dd/MM/yyyy' }}</td>
 
 
+              <td>
+                <div class="select-wrapper">
+                  <select class="custom-select" (change)="onStatusChange(us.orderId, $event)">
+                    <option *ngFor="let status of status_order" [ngStyle]="getStatusColor(status.status_id)"
+                      [value]="status.status_id" [selected]="status.status_id === us?.status.status_id">
+                      {{ status.status_name }}
+                    </option>
+                  </select>
+                </div>
+              </td>
+
+
+              <td style="text-align: center;"
+                [ngStyle]="{'color': us?.paymentMethod === 1 ? 'green' : (us?.paymentMethod === 0 ? 'red' : 'black')}">
+                {{ us?.paymentMethod === 1 ? 'ONLINE' : (us?.paymentMethod === 0 ? 'OFFLINE' : '') }}
+              </td>
+
+
+              <td style="text-align: center;">{{ us?.totalAmount | number : '1.0-3' }}</td>
+            </tr>
+          </tbody>
+        </table>
       </div>
     </div>
+
+
+    <pagination-controls style="justify-content: right; display: flex;" (pageChange)="currentPage = $event"
+      previousLabel="Trang trước" nextLabel="Trang sau">
+    </pagination-controls>
+    <div class="clearfix" style="justify-content: right; display: flex;">
+      <div class="hint-text">Hiển thị <b>{{ (currentPage - 1) * 10 + 1 }}</b> tới <b>{{ currentPage * 10
+          > user.length ? user.length : currentPage * 10 }}</b> trong tổng <b>{{
+          user.length }}</b> dữ liệu</div>
+    </div>
+
+
   </div>
 </div>
+
 <!-- Modal for Adding User -->
 <div class="modal fade" id="addProductModal" tabindex="-1" role="dialog" aria-labelledby="addProductModalLabel"
   aria-hidden="true">
@@ -236,7 +234,8 @@
   </div>
 </div>
 <!-- Modal for Product Detail -->
-<div class="modal fade" id="productDetailModal" tabindex="-1" role="dialog" aria-labelledby="productDetailModalLabel" aria-hidden="true">
+<div class="modal fade" id="productDetailModal" tabindex="-1" role="dialog" aria-labelledby="productDetailModalLabel"
+  aria-hidden="true">
   <div class="modal-dialog modal-lg" role="document">
     <div class="modal-content">
       <div class="modal-header">
@@ -248,7 +247,7 @@
       <div class="modal-body">
         <div class="row">
           <div class="col-md-2">
-          
+
           </div>
           <div class="col-md-10">
             <h4 class="text-primary mb-4">Tên Sản Phẩm: {{ OrderdetailById.product_name }}</h4>

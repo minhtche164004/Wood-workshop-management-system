@@ -24,30 +24,22 @@ export class HeaderComponent implements OnInit {
   constructor(private dataService: DataService, private sanitizer: DomSanitizer, private toastr: ToastrService, private router: Router, private http: HttpClient, private authService: AuthenListService, private productListService: ProductListService) { }
   ngOnInit(): void {
     this.wishlistcount()
-    if (localStorage.getItem('fullname') === null) {
       this.authService.getUserProfile().subscribe((data) => {
         this.fullname = data.result.fullname; // Assuming 'result' contains the profile data
-        localStorage.setItem('fullname', data.result?.fullname)
-        console.log("fullname: ", data.result?.fullname)
       });
-    }
-    else {
-      this.fullname = localStorage.getItem('fullname')
-    }
-    this.productListService.getAllProductCustomer().subscribe(
-      (data: any) => {
-        if (data.code === 1000) {
-          this.products = data.result;
-          //    console.log('Danh sách sản phẩm:', this.products);
-        } else {
-          console.error('Invalid data returned:', data);
+      this.productListService.getAllProductCustomer().subscribe(
+        (data: any) => {
+          if (data.code === 1000) {
+            this.products = data.result;
+            //    console.log('Danh sách sản phẩm:', this.products);
+          } else {
+            console.error('Invalid data returned:', data);
+          }
+        },
+        (error) => {
+          console.error('Error fetching categories:', error);
         }
-      },
-      (error) => {
-        console.error('Error fetching categories:', error);
-      }
-    );
-
+      );
   }
   selectedSortByPrice: string = '';
   countwishlist: number = 0;

@@ -41,6 +41,9 @@ export class AuthenListService {
   private api_getAllStatusRequest = `${environment.apiUrl}api/auth/admin/GetAllStatusRequest`;
   private apiUrl_getRequestById = `${environment.apiUrl}api/auth/order/GetRequestById`;
   private apiUrl_EditRequest = `${environment.apiUrl}api/auth/order/ManagerEditRequest`;
+  private apiUrl_getAllStatusOrder = `${environment.apiUrl}api/auth/order/getStatusOrder`;
+  private apiUrl_chanegStatusOrder = `${environment.apiUrl}api/auth/order/ChangeStatusOrder`;
+  private apiUrl_getFilterStatus = `${environment.apiUrl}api/auth/order/filter-by-status`;
   
   
   private apiUrl_NameATM = 'https://api.vietqr.io/v2/banks';
@@ -399,6 +402,47 @@ export class AuthenListService {
     console.log("Authorization header:", headers.get('Authorization'));
 
     return this.http.post(this.apiUrl_AddProductRequired, formData, { headers }).pipe(
+      catchError(this.handleError)
+    );
+  }
+  getAllStatusOrder(): Observable<any[]> {
+    return this.http.get<any[]>(this.apiUrl_getAllStatusOrder);
+  }
+  changeStatusOrder(orderId: string, status_id: string): Observable<any> {
+    const token = localStorage.getItem('loginToken');
+    if (!token) {
+      return throwError(new Error('Login token not found in localStorage.'));
+    }
+
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${token}`,
+      'Content-Type': 'application/json'
+    });
+
+    const url = `${this.apiUrl_chanegStatusOrder}?orderId=${orderId}&status_id=${status_id}`;
+    return this.http.put<any>(url, null, { headers }).pipe(
+      catchError(this.handleError)
+    );
+  }
+  getFilterStatus(status_id : number): Observable<any> {
+    const params = {
+     
+      status_id : status_id,
+ 
+    };
+
+    const queryString = Object.entries(params)
+      .filter(([key, value]) => {
+
+        if (key === 'status_id' && value === 0) return false;
+        return value != null;
+      })
+      .map(([key, value]) => `${encodeURIComponent(key)}=${encodeURIComponent(value)}`)
+      .join('&');
+
+    const url = `${this.apiUrl_getFilterStatus}?${queryString}`;
+    console.log(url);
+    return this.http.get<any>(url).pipe(
       catchError(this.handleError)
     );
   }

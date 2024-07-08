@@ -7,6 +7,7 @@ import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
 import { SubMaterialService } from 'src/app/service/sub-material.service';
 import { AuthenListService } from 'src/app/service/authen.service';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
+import { data } from 'jquery';
 
 interface SubMaterial {
   sub_material_name: string,
@@ -28,13 +29,30 @@ export class SubMaterialManagementComponent implements OnInit {
   searchKey: string = '';
   categories: any[] = [];
   keyword = 'sub_material_name';
-  sub_material_name: string ='';
+  sub_material_name: string = '';
   SubMaterData: any = {};
   description: string = '';
   quantity: number = 0;
   unit_price: number = 0;
   selectedSubMtr: any = {};
+  originalSubMaterial: any = {};
+  selectedSubMaterial: any = {
+    sub_material_id: null,
+    sub_material_name: '',
+    material_id: null,
+    description: '',
+    material_name: '',
+    quantity: 0,
+    unit_price: 0
+  };
   editForm: FormGroup;
+  selectedSubMtr2: any = {
+    sub_material_name: '',
+    description: '',
+    quantity: 0,
+    unit_price: 0
+    // Add more fields as needed
+  };
   constructor(
     private subMaterialService: SubMaterialService,
     private materialService: MaterialService,
@@ -42,20 +60,20 @@ export class SubMaterialManagementComponent implements OnInit {
     private authenListService: AuthenListService,
     private sanitizer: DomSanitizer,
     private fb: FormBuilder,
-  ) { 
+  ) {
     this.editForm = this.fb.group({
-
-      sub_material_id: [],
+      sub_material_id: [''],
       sub_material_name: [''],
-      material_name: [''],
+      material_id: [''],
       description: [''],
-      quantity: [],
-      unit_price: [],
+      material_name: [''],
+      quantity: [''],
+      unit_price: ['']
     });
 
   }
- 
-  ngOnInit():void {
+
+  ngOnInit(): void {
     console.log("Bắt đầu chạy sub-material-management.component.ts")
     this.getAllMaterials();
     this.getAllSubMaterials();
@@ -81,7 +99,7 @@ export class SubMaterialManagementComponent implements OnInit {
   }
   dowloadExcel(): void {
     this.subMaterialService.downloadExcel();
-      
+
   }
   getAllMaterials(): void {
     this.materialService.getAllMaterial().subscribe(
@@ -127,36 +145,86 @@ export class SubMaterialManagementComponent implements OnInit {
     );
 
   }
-  editSubMaterial(subMaterialId: number){
-    this.editForm.patchValue({
-      sub_material_id: subMaterialId,
-      sub_material_name:null,
-      material_name: null,
-      description: null,
-      quantity: null,
-      unit_price: null,
-    });
-    // this.subMaterialService.getS
-  }
-  searchSubMaterial(): void {
-  
-      this.materialService.searchSubMaterial(this.searchKey).subscribe(
-        (data) => {
-          if (data.code === 1000) {
-            this.products = data.result;
-            console.log('Kết quả tìm kiếm Sub-Materials:', this.products);
-          } else {
-            console.error('Failed to search sub-materials:', data);
-            this.toastr.error('Không thể tìm kiếm sub-materials!', 'Lỗi');
-          }
-        },
-        (error) => {
-          console.error('Error searching sub-materials:', error);
-          this.toastr.error('Có lỗi xảy ra!', 'Lỗi');
+  saveChanges() {
+    // Here, you can access the updated values from selectedSubMtr2
+    const formData = this.editForm.value;
+    console.log('Updated Data:', formData);
+    this.subMaterialService.editSubMaterial(formData.sub_material_id, formData).subscribe(
+      (data) => {
+        if (data.code === 1000) {
+          this.toastr.success('Cập nhật nguyên vật liệu thành công!', 'Thành công');
+          this.getAllSubMaterials();
+        } else {
+          console.error('Failed to search sub-materials:', data);
+          this.toastr.error('Không thể tìm kiếm sub-materials!', 'Lỗi');
         }
-      );
-    
-    
+      },
+      (error) => {
+        console.error('Error searching sub-materials:', error);
+        this.toastr.error('Có lỗi xảy ra!', 'Lỗi');
+      }
+    )
+
+    // );
+    // Example: You can send the updated data to your API endpoint here
+    // Replace with your actual API call logic
+    // this.yourService.updateSubMaterial(this.selectedSubMtr2).subscribe(response => {
+    //   console.log('Updated successfully:', response);
+    //   // Handle success or error response
+    // });
+  }
+  loadSubMaterialDetails(subMaterialId: number) {
+    this.subMaterialService.getSubMaterialById(subMaterialId)
+      .subscribe((response: any) => {
+        if (response.code === 1000 && response.result) {
+          const subMaterial = response.result;
+          this.selectedSubMaterial = {
+            sub_material_id: subMaterial.sub_material_id,
+            sub_material_name: subMaterial.sub_material_name,
+            material_id: subMaterial.material_id,
+            description: subMaterial.description,
+            material_name: subMaterial.material_name,
+            quantity: subMaterial.quantity,
+            unit_price: subMaterial.unit_price
+          };
+          this.originalSubMaterial = { ...this.selectedSubMaterial };
+
+          this.editForm.patchValue({
+            sub_material_id: this.selectedSubMaterial.sub_material_id,
+            sub_material_name: this.selectedSubMaterial.sub_material_name,
+            material_id: this.selectedSubMaterial.material_id,
+            description: this.selectedSubMaterial.description,
+            material_name: this.selectedSubMaterial.material_name,
+            quantity: this.selectedSubMaterial.quantity,
+            unit_price: this.selectedSubMaterial.unit_price
+          });
+          console.log('Form Values after patchValue:', this.editForm.value);
+        } else {
+          console.error('Failed to load submaterial details.');
+        }
+      });
+  }
+
+
+  searchSubMaterial(): void {
+
+    this.materialService.searchSubMaterial(this.searchKey).subscribe(
+      (data) => {
+        if (data.code === 1000) {
+          this.products = data.result;
+          console.log('Kết quả tìm kiếm Sub-Materials:', this.products);
+        } else {
+          console.error('Failed to search sub-materials:', data);
+          this.toastr.error('Không thể tìm kiếm sub-materials!', 'Lỗi');
+        }
+      },
+      (error) => {
+        console.error('Error searching sub-materials:', error);
+        this.toastr.error('Có lỗi xảy ra!', 'Lỗi');
+      }
+    );
+
+
   }
 
   sanitize(name: string): SafeHtml {
@@ -166,7 +234,7 @@ export class SubMaterialManagementComponent implements OnInit {
   selectProduct(product: any): void {
     this.selectedSubMtr = product; // Adjust based on your product object structure
     console.log('Selected mtr seacu:', this.selectedSubMtr.sub_material_name);
-   
+
     this.materialService.searchSubMaterial(this.selectedSubMtr.sub_material_name).subscribe(
       (data) => {
         if (data.code === 1000) {
@@ -182,7 +250,7 @@ export class SubMaterialManagementComponent implements OnInit {
         this.toastr.error('Có lỗi xảy ra!', 'Lỗi');
       }
     );
-  
+
   }
   onChangeSearch(event: any) {
     this.selectedSubMtr = event.target.value;
@@ -207,7 +275,7 @@ export class SubMaterialManagementComponent implements OnInit {
         this.toastr.error('Có lỗi xảy ra!', 'Lỗi');
       }
     );
-    
+
   }
   searchSelectedMaterial(material: any): void {
     this.selectedMaterial = material;
@@ -216,9 +284,9 @@ export class SubMaterialManagementComponent implements OnInit {
     if (this.selectedMaterial === null) {
       this.getAllSubMaterials();
     } else {
-    this.filterByMaterialId();
-  }  
-}
+      this.filterByMaterialId();
+    }
+  }
 
   getDatasupplierMaterial(id: string): void {
     this.authenListService.getSupplierById(id).subscribe(

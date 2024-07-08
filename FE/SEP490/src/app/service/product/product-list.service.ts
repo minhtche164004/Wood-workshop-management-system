@@ -78,7 +78,7 @@ export class ProductListService {
   }
   createProductError(jobId: number, description: string, solution: string): Observable<any> {
     const body = { description, solution };
-
+    console.log("create error:  ",body);
     return this.http.post(`${this.apiUrlCreateProductError}?job_id=${jobId}`, body);
   }
 

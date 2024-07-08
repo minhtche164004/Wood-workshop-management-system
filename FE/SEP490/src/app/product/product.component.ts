@@ -19,7 +19,7 @@ export class ProductComponent  implements OnInit  {
   products: any[] = [];
   currentPage: number = 1;
   categories: Category[] = [];
-  searchKey: string = '' ;
+  searchKey: any = '';
   searchKey2: string = '';
   categoryId?: number;
   selectedCategory: number = 0;
@@ -37,17 +37,15 @@ export class ProductComponent  implements OnInit  {
     private router: Router) { }
   ngOnInit(): void {
     this.loadCategories();
-    this.getProduct();
+    
     const sort = '';
     
     this.dataService.currentSearchKey.subscribe(searchKey => {
-      if (searchKey !== undefined) {
+     
         this.searchKey = searchKey; // Store searchKey in a class property
         console.log('Received search key:', this.searchKey);
         this.searchProductCustomer(); // Call method using stored searchKey
-      }
- 
-    
+   
     });
   }
 

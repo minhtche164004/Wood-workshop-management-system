@@ -166,11 +166,11 @@ public class PaymentController {
 
     @PostMapping("/getQRBankingForEmployee")
     public ResponseEntity<String> getQRBankingForEmployee(@RequestParam("amount") int amount,
-                                                          @RequestParam("accountId") String accountId,
+                                                          @RequestParam("accountNo") String accountNo,//là stk ngân hàng
                                                           @RequestParam("username") String username,
                                                           @RequestParam("bin_bank") String bin_bank,
                                                           @RequestParam("orderInfo") String orderInfo) {
-        String info = paymentService.getQRCodeBankingForEmployee(amount, accountId, username, bin_bank, orderInfo);
+        String info = paymentService.getQRCodeBankingForEmployee(amount, accountNo, username, bin_bank, orderInfo);
         ObjectMapper mapper = new ObjectMapper();
         Map<String, Object> map = new HashMap<>();
         try {

@@ -16,7 +16,6 @@ public class RedisConfig {
                 .password("xcHV2iYQow6KxZMxZz4klIoKxgYuytAf")
                 .build();
         JedisPooled jedisPooled = new JedisPooled(address, config);
-        jedisPooled.ping();
         return jedisPooled;
     }
 

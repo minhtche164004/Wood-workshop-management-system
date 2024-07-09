@@ -60,7 +60,7 @@ public class ModelMapperConfig {
                 .addMapping(Processproducterror::getProcessProductErrorId, ProductErrorAllDTO::setId)
                 .addMapping(Processproducterror::getCode, ProductErrorAllDTO::setCode)
                 .addMapping(Processproducterror::getDescription, ProductErrorAllDTO::setDes)
-                .addMapping(Processproducterror::getIsFixed, ProductErrorAllDTO::set_fix)
+                .addMapping(Processproducterror::getIsFixed, ProductErrorAllDTO::setFix)
                 .addMapping(Processproducterror::getSolution, ProductErrorAllDTO::setSolution)
                 .addMapping(src -> src.getJob().getJob_name(), ProductErrorAllDTO::setJob_name)
                 .addMapping(src -> src.getJob().getJobId(), ProductErrorAllDTO::setJob_id)

@@ -80,6 +80,13 @@ public class OrderController {
         return apiResponse;
 
     }
+    @GetMapping("/GetAllRequestByAccountId")
+    public ApiResponse<?> GetAllRequestByAccountId(@RequestParam("acc_id") int acc_id) {
+        ApiResponse<List> apiResponse = new ApiResponse<>();
+        apiResponse.setResult(orderService.GetAllRequestByAccountId(acc_id));
+        return apiResponse;
+
+    }
     @GetMapping("/GetAllRequest")
     public ApiResponse<?> GetAllRequest() {
         ApiResponse<List> apiResponse = new ApiResponse<>();

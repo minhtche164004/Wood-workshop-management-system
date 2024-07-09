@@ -5,4 +5,6 @@ public interface PaymentService {
     String getHistoriesTransactions();
     String getQRCodeBanking(int amout, String orderInfo);
     String getQRCodeBankingString(int amount, String orderInfo);
+
+    String getQRCodeBankingForEmployee(int amout,String accountId,String username,String bin_bank, String orderInfo);
 }

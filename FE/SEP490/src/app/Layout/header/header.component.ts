@@ -6,6 +6,8 @@ import { FormControl } from '@angular/forms';
 import { DataService } from 'src/app/service/data.service';
 import { ProductListService } from 'src/app/service/product/product-list.service';
 import { debounceTime, distinctUntilChanged, switchMap } from 'rxjs';
+import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
+import { ToastrService } from 'ngx-toastr';
 interface ApiResponse {
   code: number;
   result: any[];
@@ -19,20 +21,27 @@ interface ApiResponse {
 
 export class HeaderComponent implements OnInit {
   fullname: string | null = null;
-  constructor(private dataService: DataService, private router: Router, private http: HttpClient, private authService: AuthenListService, private productListService: ProductListService) { }
+  constructor(private dataService: DataService, private sanitizer: DomSanitizer, private toastr: ToastrService, private router: Router, private http: HttpClient, private authService: AuthenListService, private productListService: ProductListService) { }
   ngOnInit(): void {
     this.wishlistcount()
-    if (localStorage.getItem('fullname') === null) {
       this.authService.getUserProfile().subscribe((data) => {
         this.fullname = data.result.fullname; // Assuming 'result' contains the profile data
-        localStorage.setItem('fullname', data.result?.fullname)
-        console.log("fullname: ", data.result?.fullname)
       });
-    }
-    else {
-      this.fullname = localStorage.getItem('fullname')
-    }
+      this.productListService.getAllProductCustomer().subscribe(
+        (data: any) => {
+          if (data.code === 1000) {
+            this.products = data.result;
+            //    console.log('Danh sách sản phẩm:', this.products);
+          } else {
+            console.error('Invalid data returned:', data);
+          }
+        },
+        (error) => {
+          console.error('Error fetching categories:', error);
+        }
+      );
   }
+  selectedSortByPrice: string = '';
   countwishlist: number = 0;
   user: any[] = [];
   parentData: any;
@@ -41,15 +50,20 @@ export class HeaderComponent implements OnInit {
   minPrice?: number;
   maxPrice?: number;
   sortDirection?: number;
+  selectedCategory: number = 0;
   products: any[] = [];
   searchControl = new FormControl();
   filteredProducts: any[] = [];
+  selectedProduct: any = {};
+  keyword = 'productName';
+  selectedStatus: number = 0;
+  sort: string = '';
+  obj: any[] = [];
   loadAllUsers(): void {
     this.productListService.getAllUser().subscribe(
       (response: ApiResponse) => {
         if (response.code === 1000) {
           this.user = response.result; // Lưu trữ dữ liệu người dùng vào biến users
-
         }
       },
       (error) => {
@@ -73,16 +87,13 @@ export class HeaderComponent implements OnInit {
   onLogout(): void {
     // Lấy giá trị của token từ local storage
     const token = localStorage.getItem('loginToken');
-    console.log('Token trước khi logout:', token);
-
-    console.log('remove loginToken');
+    //   console.log('Token trước khi logout:', token);
+    //   console.log('remove loginToken');
     // Xóa token đăng nhập khỏi local storage
     localStorage.removeItem('loginToken');
-    console.log('Token sau khi logout:', localStorage.getItem('loginToken'));
+    //   console.log('Token sau khi logout:', localStorage.getItem('loginToken'));
 
     this.router.navigateByUrl('/login');
-
-
   }
   isLoggedIn(): boolean {
     return this.authService.isLoggedIn();
@@ -92,23 +103,45 @@ export class HeaderComponent implements OnInit {
   }
   onSearch(): void {
     console.log('Search key header:', this.searchKey);
-    this.dataService.changeSearchKey(this.searchKey);
-
-    this.router.navigate(['/product']);
-  }
-  onOptionSelected(event: any) {
-    // Xử lý khi lựa chọn một sản phẩm từ autocomplete
-    console.log('Selected product:', event.option.value);
-    // Gọi hàm tìm kiếm sản phẩm ở đây nếu cần
-    this.getProductsSearch();
-  }
-
-  getProductsSearch() {
-    // Thực hiện tìm kiếm sản phẩm dựa trên từ khóa đã chọn
-    const selectedProduct = this.filteredProducts.find(product => product.productName === this.searchControl.value);
-    if (selectedProduct) {
-      console.log('Performing search for:', selectedProduct);
-      // Gọi service hoặc hàm tìm kiếm sản phẩm với selectedProduct.productId
+    if (this.searchKey) { // Kiểm tra nếu searchKey có giá trị
+      this.dataService.changeSearchKey(this.searchKey);
+      this.routerSearch(this.searchKey);
+    } else {
+      // Xử lý trường hợp không có giá trị nhập (ví dụ: thông báo cho người dùng hoặc đặt lại kết quả tìm kiếm)
     }
   }
+
+  onChangeSearch(search: string) {
+
+    this.searchKey = search;
+    console.log('Search key:', this.searchKey);
+    this.routerSearch(this.searchKey);
+  }
+
+  sanitize(name: string): SafeHtml {
+    return this.sanitizer.bypassSecurityTrustHtml(name);
+  }
+  routerSearch(searchKey: any): void {
+    const queryParams = {
+      searchKey: searchKey,
+    };
+
+    const filteredQueryParams = Object.entries(queryParams)
+      .filter(([_, value]) => value !== undefined) // Exclude undefined values
+      .reduce<Record<string, string>>((obj, [key, value]) => {
+        // Convert value to string if it's not undefined
+        obj[key] = String(value);
+        return obj;
+      }, {});
+
+    this.router.navigate(['/product'], { queryParams: filteredQueryParams });
+  }
+  selectProduct(product: any): void {
+    this.selectedProduct = product; // Điều chỉnh theo cấu trúc đối tượng sản phẩm của bạn
+    const productName = this.selectedProduct.productName;
+    this.dataService.changeSearchKey(productName);
+    this.routerSearch(productName);
+  }
+
+
 }

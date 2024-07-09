@@ -3,14 +3,15 @@ import { Component, OnInit } from '@angular/core';
 import { SupplierService } from 'src/app/service/supplier.service';
 import { ToastrService } from 'ngx-toastr';
 import { MaterialService } from 'src/app/service/material.service';
-import { FormControl } from '@angular/forms';
+import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
 import { SubMaterialService } from 'src/app/service/sub-material.service';
 import { AuthenListService } from 'src/app/service/authen.service';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
+import { data } from 'jquery';
 
 interface SubMaterial {
   sub_material_name: string,
-  material_id: number,
+  material_name: string,
   description: string,
   quantity: number | undefined,
   unit_price: number
@@ -27,22 +28,62 @@ export class SubMaterialManagementComponent implements OnInit {
   selectedMaterial: any = null;
   searchKey: string = '';
   categories: any[] = [];
-  keyword = 'subMaterialName';
-  sub_material_name: string ='';
+  keyword = 'sub_material_name';
+  sub_material_name: string = '';
   SubMaterData: any = {};
   description: string = '';
   quantity: number = 0;
   unit_price: number = 0;
   selectedSubMtr: any = {};
+  originalSubMaterial: any = {};
+  selectedSubMaterial: any = {
+    sub_material_id: null,
+    sub_material_name: '',
+    material_id: null,
+    description: '',
+    material_name: '',
+    quantity: 0,
+    unit_price: 0
+  };
+  editForm: FormGroup;
+  createJobs: FormGroup;
+  selectedSubMtr2: any = {
+    sub_material_name: '',
+    description: '',
+    quantity: 0,
+    unit_price: 0
+    // Add more fields as needed
+  };
   constructor(
     private subMaterialService: SubMaterialService,
     private materialService: MaterialService,
     private toastr: ToastrService,
     private authenListService: AuthenListService,
-    private sanitizer: DomSanitizer
-  ) { }
- 
-  ngOnInit() {
+    private sanitizer: DomSanitizer,
+    private fb: FormBuilder,
+  ) {
+    this.editForm = this.fb.group({
+      sub_material_id: [''],
+      sub_material_name: [''],
+      material_id: [''],
+      description: [''],
+      material_name: [''],
+      quantity: [''],
+      unit_price: ['']
+    });
+    this.createJobs = this.fb.group({
+      sub_material_id: [''],
+      sub_material_name: [''],
+      material_id: [''],
+      description: [''],
+      material_name: [''],
+      quantity: [''],
+      unit_price: ['']
+    });
+  }
+
+  ngOnInit(): void {
+    console.log("Bắt đầu chạy sub-material-management.component.ts")
     this.getAllMaterials();
     this.getAllSubMaterials();
 
@@ -65,9 +106,28 @@ export class SubMaterialManagementComponent implements OnInit {
       }
     );
   }
-  dowloadExcel(): void {
-    this.subMaterialService.downloadExcel();
-      
+  dowloadExcelLink(): void {
+    this.subMaterialService.downloadExcel().subscribe(
+      (response) => {
+        // Assuming the response is the file data
+        const blob = new Blob([response], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+        const url = window.URL.createObjectURL(blob);
+  
+        // Creating an anchor element to trigger download
+        const anchor = document.createElement('a');
+        anchor.href = url;
+        anchor.download = 'downloaded_file.xlsx'; // Specify the file name here
+        document.body.appendChild(anchor); // Append anchor to the body to make it clickable
+        anchor.click();
+  
+        // Clean up
+        document.body.removeChild(anchor);
+        window.URL.revokeObjectURL(url); // Revoke the blob URL to free up resources
+      },
+      (error) => {
+        console.error('Download error:', error);
+      }
+    );
   }
   getAllMaterials(): void {
     this.materialService.getAllMaterial().subscribe(
@@ -87,10 +147,10 @@ export class SubMaterialManagementComponent implements OnInit {
     );
   }
   addSubMaterial(): void {
-    console.log("Bắt đầu chạy thêm vật liệu")
+  //  console.log("Bắt đầu chạy thêm vật liệu")
     const subMaterial: SubMaterial = {
       sub_material_name: this.sub_material_name,
-      material_id: this.selectedMaterial,
+      material_name: this.selectedMaterial,
       description: this.description,
       quantity: this.quantity,
       unit_price: this.unit_price,
@@ -100,8 +160,9 @@ export class SubMaterialManagementComponent implements OnInit {
     this.materialService.addNewSubMaterial(subMaterial).subscribe(
       (response) => {
         if (response.code === 1000) {
-          this.toastr.success('Sub-material added successfully!', 'Success');
+          this.toastr.success('Thêm nguyên vật liệu mới thành công!', 'Success');
           this.getAllSubMaterials(); // Refresh the list of sub-materials
+          $('[data-dismiss="modal"]').click();    
         } else {
           this.toastr.error('Failed to add sub-material!', 'Error');
         }
@@ -113,10 +174,98 @@ export class SubMaterialManagementComponent implements OnInit {
     );
 
   }
-  
+  saveChanges() {
+    // Here, you can access the updated values from selectedSubMtr2
+    const formData = this.editForm.value;
+    console.log('Updated Data:', formData);
+    this.subMaterialService.editSubMaterial(formData.sub_material_id, formData).subscribe(
+      (data) => {
+        if (data.code === 1000) {
+          this.toastr.success('Cập nhật nguyên vật liệu thành công!', 'Thành công');
+          this.getAllSubMaterials();
+          $('[data-dismiss="modal"]').click();    
+        } else {
+          console.error('Failed to search sub-materials:', data);
+          this.toastr.error('Không thể tìm kiếm sub-materials!', 'Lỗi');
+        }
+      },
+      (error) => {
+        console.error('Error searching sub-materials:', error);
+        this.toastr.error('Có lỗi xảy ra!', 'Lỗi');
+      }
+    )
+
+    // );
+    // Example: You can send the updated data to your API endpoint here
+    // Replace with your actual API call logic
+    // this.yourService.updateSubMaterial(this.selectedSubMtr2).subscribe(response => {
+    //   console.log('Updated successfully:', response);
+    //   // Handle success or error response
+    // });
+  }
+  loadSubMaterialDetails(subMaterialId: number) {
+    this.subMaterialService.getSubMaterialById(subMaterialId)
+      .subscribe((response: any) => {
+        if (response.code === 1000 && response.result) {
+          const subMaterial = response.result;
+          this.selectedSubMaterial = {
+            sub_material_id: subMaterial.sub_material_id,
+            sub_material_name: subMaterial.sub_material_name,
+            material_id: subMaterial.material_id,
+            description: subMaterial.description,
+            material_name: subMaterial.material_name,
+            quantity: subMaterial.quantity,
+            unit_price: subMaterial.unit_price
+          };
+          this.originalSubMaterial = { ...this.selectedSubMaterial };
+
+          this.editForm.patchValue({
+            sub_material_id: this.selectedSubMaterial.sub_material_id,
+            sub_material_name: this.selectedSubMaterial.sub_material_name,
+            material_id: this.selectedSubMaterial.material_id,
+            description: this.selectedSubMaterial.description,
+            material_name: this.selectedSubMaterial.material_name,
+            quantity: this.selectedSubMaterial.quantity,
+            unit_price: this.selectedSubMaterial.unit_price
+          });
+          console.log('Form Values after patchValue:', this.editForm.value);
+        } else {
+          console.error('Failed to load submaterial details.');
+        }
+      });
+  }
+
+
   searchSubMaterial(): void {
-    console.log("Thực hiện chức năng tìm kiếm nguyên vật liệu: ", this.searchKey);
+
     this.materialService.searchSubMaterial(this.searchKey).subscribe(
+      (data) => {
+        if (data.code === 1000) {
+          this.products = data.result;
+       //   console.log('Kết quả tìm kiếm Sub-Materials:', this.products);
+        } else {
+          console.error('Failed to search sub-materials:', data);
+          this.toastr.error('Không thể tìm kiếm sub-materials!', 'Lỗi');
+        }
+      },
+      (error) => {
+        console.error('Error searching sub-materials:', error);
+        this.toastr.error('Có lỗi xảy ra!', 'Lỗi');
+      }
+    );
+
+
+  }
+
+  sanitize(name: string): SafeHtml {
+    return this.sanitizer.bypassSecurityTrustHtml(name);
+  }
+
+  selectProduct(product: any): void {
+    this.selectedSubMtr = product; // Adjust based on your product object structure
+   // console.log('Selected mtr seacu:', this.selectedSubMtr.sub_material_name);
+
+    this.materialService.searchSubMaterial(this.selectedSubMtr.sub_material_name).subscribe(
       (data) => {
         if (data.code === 1000) {
           this.products = data.result;
@@ -131,19 +280,7 @@ export class SubMaterialManagementComponent implements OnInit {
         this.toastr.error('Có lỗi xảy ra!', 'Lỗi');
       }
     );
-  }
 
-  sanitize(name: string): SafeHtml {
-    return this.sanitizer.bypassSecurityTrustHtml(name);
-  }
-  selectEvent(item: any) {
-      
-  }
-  selectEmp(product: any): void {
-    this.selectedSubMtr = product; // Adjust based on your product object structure
-    console.log('Selected emp:', this.selectedSubMtr);
-    console.log('Selected emp id:', this.selectedSubMtr.userId);
-    
   }
   onChangeSearch(event: any) {
     this.selectedSubMtr = event.target.value;
@@ -151,11 +288,12 @@ export class SubMaterialManagementComponent implements OnInit {
   }
 
   filterByMaterialId(): void {
+    console.log("Thực hiện chức năng lọc theo nguyên vật liệu: ", this.selectedMaterial);
     this.subMaterialService.filterByMaterial(this.selectedMaterial).subscribe(
       (data) => {
         if (data.code === 1000) {
           this.products = data.result;
-          this.toastr.success('Vật liệu ' + this.selectedMaterial.materialName + ' thành công!', 'Thành công');
+      //    this.toastr.success('Vật liệu ' + this.selectedMaterial.materialName + ' thành công!', 'Thành công');
           console.log('Kết quả lọc Sub-Materials:', this.products);
         } else {
           console.error('Failed to filter sub-materials:', data);
@@ -167,14 +305,22 @@ export class SubMaterialManagementComponent implements OnInit {
         this.toastr.error('Có lỗi xảy ra!', 'Lỗi');
       }
     );
-    
+
+  }
+  impottExcel(){
+
   }
   searchSelectedMaterial(material: any): void {
     this.selectedMaterial = material;
     console.log("Thực hiện chức năng tìm kiếm nguyên vật liệu: ", this.selectedMaterial);
     // console.log("Thực hiện chức năng tìm kiếm nguyên vật liệu: ", this.selectedMaterial.materialName);
-    this.filterByMaterialId();
-  }  
+    if (this.selectedMaterial === null) {
+      this.getAllSubMaterials();
+    } else {
+      this.filterByMaterialId();
+    }
+  }
+
   getDatasupplierMaterial(id: string): void {
     this.authenListService.getSupplierById(id).subscribe(
       (data) => {

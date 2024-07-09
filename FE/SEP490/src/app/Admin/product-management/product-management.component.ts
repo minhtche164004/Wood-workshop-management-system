@@ -417,7 +417,7 @@ export class ProductManagementComponent implements OnInit {
           if (data.code === 1000) {
             this.products = data.result;
             console.log('Lọc sản phẩm thành công:', this.products);
-            this.toastr.success('Lọc sản phẩm thành công!', 'Thành công');
+      //      this.toastr.success('Lọc sản phẩm thành công!', 'Thành công');
           } else if (data.code === 1015) {
             this.products = [];
             console.error('Lọc sản phẩm không thành công:', data);
@@ -440,7 +440,7 @@ export class ProductManagementComponent implements OnInit {
             this.toastr.success('Lọc sản phẩm thành công!', 'Thành công');
           } else if (data.code === 1015) {
             this.products = [];
-            console.error('Lọc sản phẩm không thành công:', data);
+        //    console.error('Lọc sản phẩm không thành công:', data);
             this.toastr.error('Không tìm thấy sản phẩm phù hợp!', 'Lọc thất bại');
           }
         }
@@ -637,6 +637,7 @@ export class ProductManagementComponent implements OnInit {
       description: null,
       price: null,
       category_id: null,
+      
       image: null,
       quantity: null,
       imageList: null

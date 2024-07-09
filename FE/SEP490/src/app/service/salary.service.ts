@@ -13,6 +13,8 @@ export class SalaryService {
   private apiMultiSearchSalary = `${environment.apiUrl}api/auth/salary/getMultiFillterSalary`;
 
   private apiUrl = 'https://api.vietqr.io/v2/banks';
+
+  private apiQR = `${environment.apiUrl}api/auth/getQRBankingForEmployee`
   constructor(private http: HttpClient) { }
 
   getSalary(): Observable<any> {
@@ -22,7 +24,12 @@ export class SalaryService {
   getBanks(): Observable<any> {
     return this.http.get<any>(this.apiUrl);
   }
-
+  getQRBanking(amount: number, accountId: number, username: string, bin_bank: any, orderInfo: string): Observable<string> {
+    const url = `${this.apiQR}?amount=${amount}&accountId=${accountId}&username=${username}&bin_bank=${bin_bank}&orderInfo=${orderInfo}`;
+    
+    // Yêu cầu dữ liệu trả về là dạng text (base64 của hình ảnh)
+    return this.http.post<string>(url, {}, { responseType: 'text' as 'json' });
+  }
   multSearchSalary(employeeName: string, fromDate: string, toDate: string, sortDirection: string): Observable<any> {
     const params = {
       employeeName: employeeName,

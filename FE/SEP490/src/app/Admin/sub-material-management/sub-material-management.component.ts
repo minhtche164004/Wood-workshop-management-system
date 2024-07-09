@@ -104,7 +104,7 @@ export class SubMaterialManagementComponent implements OnInit {
           this.isLoadding = false;
         } else {
           console.error('Failed to fetch sub-materials:', data);
-          this.toastr.error('Không thể lấy danh sách sub-materials!', 'Lỗi'); 
+          this.toastr.error('Không thể lấy danh sách sub-materials!', 'Lỗi');
           this.isLoadding = false;// Hiển thị thông báo lỗi
         }
       },
@@ -331,15 +331,15 @@ export class SubMaterialManagementComponent implements OnInit {
         } else {
           console.error('Failed to filter sub-materials:', data);
           this.toastr.error('Không thể lọc sub-materials!', 'Lỗi');
-          
-this.isLoadding = false;
+
+          this.isLoadding = false;
         }
       },
       (error) => {
         console.error('Error filtering sub-materials:', error);
         this.toastr.error('Có lỗi xảy ra!', 'Lỗi');
-        
-this.isLoadding = false;
+
+        this.isLoadding = false;
       }
     );
 

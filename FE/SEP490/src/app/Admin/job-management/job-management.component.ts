@@ -84,6 +84,9 @@ export class JobManagementComponent implements OnInit {
     console.log('Edit sub-material:', product);
   }
   acceptJob(jobId: number, statusId: number): void {
+
+    console.log('Job ID:', jobId);
+    console.log('Status ID:', statusId);
     if (statusId === 4) {
       statusId = 6;
     } else if (statusId === 7) {
@@ -102,7 +105,7 @@ export class JobManagementComponent implements OnInit {
                 this.products = data.result;
                 // console.log('Danh sách sản phẩm:', this.products);
               } else {
-               
+                this.toastr.error('Cập nhật trạng thái làm việc thất bại!', 'Lỗi');
                 console.error('Failed to fetch products:', data);
               }
             },
@@ -120,7 +123,7 @@ export class JobManagementComponent implements OnInit {
         console.error('Error accepting job:', error);
       }
     );
-  }
+   }
   
   // exportProductTotalJob(id: number, mate_id: number, emp_id: number, productForm: any) {
   //   console.log('export id: ', id);

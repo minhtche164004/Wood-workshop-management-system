@@ -113,10 +113,6 @@ export class ProductComponent implements OnInit {
         if (data.code === 1000) {
           this.categories = data.result as Category[];
 
-          // Log categories to console for verification
-          //   console.log('Categories:', this.categories);
-
-          // Iterate through categories and log ID and name
 
         } else {
           console.error('Invalid data returned:', data);

@@ -3,8 +3,9 @@ import { ProvincesService } from 'src/app/service/provinces.service';
 import { FormControl } from '@angular/forms';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { ToastrService } from 'ngx-toastr';
+import { ProductListService } from 'src/app/service/product/product-list.service';
 
-import { FormBuilder, FormGroup, FormArray, Validators, ReactiveFormsModule} from '@angular/forms';
+import { FormBuilder, FormGroup, FormArray, Validators, ReactiveFormsModule } from '@angular/forms';
 import { CreateOrderService } from 'src/app/service/create-order.service';
 interface CustomerInfo {
   inforId: number;
@@ -14,6 +15,7 @@ interface CustomerInfo {
   district: string;
   wards: string;
   phoneNumber: string;
+  email: string;
 }
 interface ReceiveInfo {
   fullnameCopy: string;
@@ -22,6 +24,7 @@ interface ReceiveInfo {
   districtCopy: string;
   wardsCopy: string;
   phoneNumberCopy: string;
+  emailCopy: string;
 }
 interface ProductItem {
   productId: number;
@@ -94,18 +97,29 @@ export class CreateOrderComponent implements OnInit {
   //autocomplete for product
   keywordProduct = 'productName';
   productList: any[] = [];
+  keywordProductRequest = 're_productName'; // for request product
+  //autocomplete for request
+  keywordRequest = 'code';
 
   //tinh tien` san pham
   totalUnitPrice: number = 0; // tinh tong tien
   unitPriceProduct: number[] = [];
   quantityPerProduct: string[] = [];
+  //xac dinh cho don hang theo yeu cau hay co san
+  isForRequestProduct: boolean = false;// xac dinh san pham thuong hay san pham dac biet
+  requests: any[] = [];
   //
-
-  orderForm : FormGroup;
-  constructor(private provincesService: ProvincesService, private fb: FormBuilder, private createOrderService: CreateOrderService,) {
+  isLoadding = false;
+  orderForm: FormGroup;
+  constructor(private provincesService: ProvincesService,
+    private fb: FormBuilder,
+    private createOrderService: CreateOrderService,
+    private toastr: ToastrService,
+    private productListService: ProductListService
+  ) {
 
     this.productForm = this.fb.group({
-      items: this.fb.array([])  // Khởi tạo FormArray trống
+      productItems: this.fb.array([])  // Khởi tạo FormArray trống
     });
 
     this.orderForm = this.fb.group({
@@ -129,27 +143,19 @@ export class CreateOrderComponent implements OnInit {
         phone: [''],
         email: ['']
       }),
-      orderDetail: this.fb.group({
-        productItems: this.fb.array([
-          this.fb.group({
-            id: [0],
-            quantity: [0],
-            price: [0]
-          })
-        ])
-      }),
-      payment_method: [0],
+      orderDetail: this.productForm,
+      payment_method: [null],
 
     });
 
   }
 
-  get items(): FormArray {
-    return this.productForm.get('items') as FormArray;
+  get productItems(): FormArray {
+    return this.productForm.get('productItems') as FormArray;
   }
 
   addItem(): void {
-    this.items.push(this.fb.group({
+    this.productItems.push(this.fb.group({
       id: ['', Validators.required],
       quantity: ['', Validators.required],
       price: ['', Validators.required]
@@ -157,8 +163,8 @@ export class CreateOrderComponent implements OnInit {
   }
 
   removeItem(index: number) {
-    const items = this.productForm.get('items') as FormArray;
-    items.removeAt(index);
+    const productItems = this.productForm.get('productItems') as FormArray;
+    productItems.removeAt(index);
     if (this.unitPriceProduct[index] && this.quantityPerProduct[index]) {
       this.totalUnitPrice = this.totalUnitPrice - (Number(this.unitPriceProduct[index]) * Number(this.quantityPerProduct[index]));
     }
@@ -167,7 +173,7 @@ export class CreateOrderComponent implements OnInit {
   ngOnInit() {
     this.provincesService.getProvinces().subscribe((data: Province[]) => {
       this.provinces = data;
-      console.log(this.provinces);
+      // console.log(this.provinces);
     });
     this.addItem();
 
@@ -175,14 +181,14 @@ export class CreateOrderComponent implements OnInit {
     this.provinceControl.valueChanges.subscribe(provinceName => {
       // console.log('provinceName:', provinceName);
       this.selectedProvince = this.provinces.find(province => province.name === provinceName);
-      console.log('selectedProvince:', this.selectedProvince);
+      // console.log('selectedProvince:', this.selectedProvince);
       this.districts = this.selectedProvince ? this.selectedProvince.districts : [];
     });
 
     this.districtControl.valueChanges.subscribe(districtName => {
       // console.log('districtName:', districtName);
       const selectedDistrict = this.districts.find(district => district.name === districtName);
-      console.log('selectedDistrict:', selectedDistrict);
+      // console.log('selectedDistrict:', selectedDistrict);
       this.wards = selectedDistrict ? selectedDistrict.wards : [];
       this.wardControl.reset();
     });
@@ -191,14 +197,14 @@ export class CreateOrderComponent implements OnInit {
     this.provinceControlCopy.valueChanges.subscribe(provinceName => {
       // console.log('provinceName:', provinceName);
       this.selectedProvinceCopy = this.provincesCopy.find(province => province.name === provinceName);
-      console.log('selectedProvinceCopy:', this.selectedProvinceCopy);
+      // console.log('selectedProvinceCopy:', this.selectedProvinceCopy);
       this.districtsCopy = this.selectedProvinceCopy ? this.selectedProvinceCopy.districts : [];
     });
 
     this.districtControlCopy.valueChanges.subscribe(districtName => {
       // console.log('districtName:', districtName);
       const selectedDistrictCopy = this.districtsCopy.find(district => district.name === districtName);
-      console.log('selectedDistrictCopy:', selectedDistrictCopy);
+      // console.log('selectedDistrictCopy:', selectedDistrictCopy);
       this.wardsCopy = selectedDistrictCopy ? selectedDistrictCopy.wards : [];
       this.wardControlCopy.reset();
     });
@@ -225,13 +231,10 @@ export class CreateOrderComponent implements OnInit {
   onPhoneNumberChange(phoneNumber: string): void {
     this.createOrderService.getUserInfoByPhone(phoneNumber).subscribe(
       (data: any) => {
-        console.log('data theo phone:', data.result);
+        // console.log('data theo phone:', data.result);
         if (data.code === 1000) {
           const customerInfo: CustomerInfo = data.result;
-          // this.inforId = customerInfo.inforId;
-          // this.fullname = customerInfo.fullname;
-          // this.phonenumber = customerInfo.phoneNumber;
-          // this.address = customerInfo.address;
+          this.inforId = customerInfo.inforId;
           this.selectedProvince = this.provinces.find(province => province.name === customerInfo.city_province);
           this.provinceControl.setValue(customerInfo.city_province);
           setTimeout(() => {
@@ -256,15 +259,16 @@ export class CreateOrderComponent implements OnInit {
           // }
           //
           this.orderForm.patchValue({
-            cusInfo:{
+            cusInfo: {
               userid: customerInfo.inforId,
               fullname: customerInfo.fullname,
               address: customerInfo.address,
               city_province: customerInfo.city_province,
               district: customerInfo.district,
               wards: customerInfo.wards,
-              phone: customerInfo.phoneNumber
-            },        
+              phone: customerInfo.phoneNumber,
+              email: customerInfo.email
+            },
 
             receiveInfo: {
               fullname: customerInfo.fullname,
@@ -274,7 +278,7 @@ export class CreateOrderComponent implements OnInit {
               district: customerInfo.district,
               wards: customerInfo.wards,
               phone: customerInfo.phoneNumber,
-              // this.emailCopy: customerInfo.email
+              email: customerInfo.email
             }
           });
         }
@@ -309,7 +313,27 @@ export class CreateOrderComponent implements OnInit {
       (data: any) => {
         if (data.code === 1000) {
           const productItem: ProductItem = data.result;
-          this.items.at(index).patchValue({
+          this.productItems.at(index).patchValue({
+            id: productItem.productId,
+            price: productItem.price
+          });
+          this.unitPriceProduct[index] = productItem.price;
+        }
+
+      },
+      (error) => {
+        console.error('Error fetching phoneList:', error);
+      }
+    );
+  }
+
+  onProductRequestChange(item: any, index: number): void {
+    const productId = item.productId;
+    this.productListService.getRequestProductById(productId).subscribe(
+      (data: any) => {
+        if (data.code === 1000) {
+          const productItem: ProductItem = data.result;
+          this.productItems.at(index).patchValue({
             id: productItem.productId,
             price: productItem.price
           });
@@ -336,54 +360,108 @@ export class CreateOrderComponent implements OnInit {
         this.totalUnitPrice += totalForThisItem;
       }
     }
-    console.log('totalprice:', this.totalUnitPrice);
+    // console.log('totalprice:', this.totalUnitPrice);
 
   }
 
   //
   onSubmit(): void {
-    
-      // this.isLoadding = true;
-      const orderData = this.orderForm.value;
-      console.log(orderData);
 
-      // console.log('data goc:', this.materialForm.value);
-      // var temp = this.materialForm.value;
+    this.isLoadding = true;
+    const orderData = this.orderForm.value;
+    console.log("data order", orderData);
+    // const productFormData = this.productForm.value;
+    if(this.orderForm && this.orderForm.valid){
+      this.createOrderService.addNewOrder(orderData).subscribe(
+        response => {
+          this.isLoadding = false;
+          this.toastr.success('Tạo đơn hàng thành công!', 'Thành công');
+          // this.orderForm.reset();
+          console.log('response:', response);
+        },
+        error => {
+          this.isLoadding = false;
+          this.toastr.error('Tạo đơn hàng bị lỗi!', 'Lỗi');
+        }
+      );
+    }else{
+      this.isLoadding = false;
+      this.toastr.error('Vui lòng nhập đầy đủ thông tin!', 'Lỗi');
+    }
 
-      // tach lay quantity va subMaterialId
-      // var processedData = temp.items.map((item: MaterialItem) => (
-      //   [(item.subMaterialId as string), item.quantity]
-      // ));
-      // convert thanh dang map
-      console.log("product Data: ", this.productForm.value);
-      // const transformedObject: { [key: string]: number } = {};
 
-      // for (const [subMaterialId, quantity] of processedData) {
-      //   transformedObject[subMaterialId] = quantity;
-      // }
+  }
+  //phan xu li don hang theo yeu cau hay co san
+  onRequestIdSelected(item: any) {
+    // console.log('item:', item.requestId)
+  }
 
-      // // var productId;
-      // this.productListService.uploadProduct(productData, this.selectedThumbnail, this.selectedImages).pipe(
-      //   concatMap(response => {
+  onIsProductChange($event: Event) {
+    this.isLoadding = true;
+    const target = $event.target as HTMLInputElement;
+    const value = target.value;
+    console.log("newvalue: ", value);
+  
+    const actualValue = value.split(': ')[1];
+  
+    if(actualValue === '1') {
+      this.isForRequestProduct = true;
+    } else if(actualValue === '0') {
+      this.isForRequestProduct = false;
+    }
+    console.log('Giá trị mới của isProduct:', this.isForRequestProduct);
 
-      //     const transformedData = {
-      //       productId: response.result.productId,
-      //       subMaterialQuantities: transformedObject
-      //     };
-      //     return this.productListService.createExportMaterialProduct(transformedData);
-      //   })
-      // ).subscribe(
-      //   response => {
-      //     this.reloadProduct();
-      //     this.isLoadding = false;
-      //     this.toastr.success('Tạo sản phẩm thành công!', 'Thành công');
-      //     $('[data-dismiss="modal"]').click();
-      //   },
-      //   error => {
-      //     this.isLoadding = false;
-      //     this.toastr.error('Tạo sản phẩm bị lỗi!', 'Lỗi');
+    this.productList.length = 0;
+    if (this.isForRequestProduct == false) {
+      this.productListService.getProducts().subscribe(
+        (data) => {
+          if (data.code === 1000) {
+            this.productList = data?.result;
+            console.log('Danh sách sản phẩm:', this.productList);
+          } else {
+            console.error('Failed to fetch products:', data);
+            this.toastr.error('Không thể lấy danh sách sản phẩm!', 'Lỗi');
+          }
+          this.isLoadding = false;
+        },
+        (error) => {
+          console.error('Error fetching products:', error);
+          this.toastr.error('Có lỗi xảy ra!', 'Lỗi');
+          this.isLoadding = false;
+        }
+      );
+    } else {  
+      this.productListService.getAllProductRequest().subscribe( // ;ay danh sach product request theo request
+        (data) => {
+          this.isLoadding = false;
+          if (data.code === 1000) {
+            this.productList = data?.result;
+            console.log('Danh sách sản phẩm theo yeu cau:', this.productList);
+          } else {
+            console.error('Failed to fetch products:', data);
+            this.toastr.error('Không thể lấy danh sách sản phẩm!', 'Lỗi');
+          }
+        },
+        (error) => {
+          console.error('Error fetching products:', error);
+          this.toastr.error('Có lỗi xảy ra!', 'Lỗi');
+          this.isLoadding = false;
+        }
+      );
+      // lay danh sach request de autocomplete
+      // this.createOrderService.GetAllRequestByUserId(this.inforId).subscribe((data: any) => {
+      //   if (data.code === 1000) {
+      //     this.requests = data?.result;
+      //   } else {
+      //     this.toastr.error('Không thể lấy danh sách request!', 'Lỗi');
       //   }
-      // );
-    
+      // },
+      //   (error) => {
+      //     this.isLoadding = false;
+      //     console.error('Error fetching requests:', error);
+      //     this.toastr.error('Có lỗi xảy ra!', 'Lỗi');
+      //   });
+    }
+    // console.log('Giá trị mới của isProduct:', this.isProduct);
   }
 }

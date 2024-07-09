@@ -78,6 +78,8 @@
 
                 </div>
 
+
+               
                 <table class="table table-striped table-hover">
                     <thead>
                         <tr>
@@ -125,7 +127,7 @@
                             <td> <button 
                                 class="btn btn-primary" 
                                 data-toggle="modal" 
-                                data-target="#errorProduct"
+                                data-target="#QRPAY"
                                 (click)="thanhToan(product)"
                                 [disabled]="product?.advanceSuccess">
                                 <i class="fa-solid fa-money-bill-transfer"></i>
@@ -219,6 +221,22 @@
         </div>
     </div>
 </div>
+<div class="modal fade" id="QRPAY" role="d" aria-labelledby="QRPAY" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content">
+            <div class="modal-header bg-primary text-white">
+               
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <img style="width: 70%; align-items: center;" [src]="qrImageUrl">
+            </div>
+           
+        </div>
+    </div>
+</div>
+
+
 <div *ngIf="isLoadding" class="loading-overlay">
     <div class="spinner"></div>
 </div>

@@ -371,9 +371,13 @@ public class JobServiceImpl implements JobService {
     }
 
     @Override
-    public List<Advancesalary> multi_filter_salary(Date fromDate, Date toDate, String employeeName, String sortDirection) {
-        List<Advancesalary> advancesalaryList = advancesalaryRepository.filterAdvancesalary(fromDate, toDate, employeeName);
-
+    public List<Advancesalary> multi_filter_salary(Date fromDate, Date toDate,Integer position_id, String employeeName, String sortDirection) {
+        List<Advancesalary> advancesalaryList = new ArrayList<>();
+        if (position_id != null ) {
+            advancesalaryList = advancesalaryRepository.filterAdvancesalary(fromDate, toDate, position_id, employeeName);
+        } else {
+            advancesalaryList= advancesalaryRepository.findAll();
+        }
         if (advancesalaryList.isEmpty()) {
             throw new AppException(ErrorCode.NOT_FOUND);
         }

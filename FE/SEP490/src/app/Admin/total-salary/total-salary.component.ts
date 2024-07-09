@@ -44,13 +44,20 @@ export class TotalSalaryComponent implements OnInit{
     console.log('Keyword:', this.searchKey);
 
     this.salaryService.multSearchSalary(this.searchKey, this.fromDate, this.toDate, '').subscribe(
-      data => {
-        console.log('Search results:', data);
-      },
-      error => {
-        console.error('Search error:', error);
-      }
-    );
+      (data) => {
+        if (data.code === 1000) {
+          this.totalSalary = data.result;
+          console.log('Total salary: ', this.totalSalary);
+        } else {
+          console.error('Failed to fetch products:', data);
+        }
+      
+    },
+    (error) => {
+      console.log(error);
+    }
+  );
+    
   }
   getTotalSalary() {
     this.salaryService.getSalary().subscribe(   

@@ -3,6 +3,7 @@ import { ProductListService } from 'src/app/service/product/product-list.service
 import { ToastrService } from 'ngx-toastr';
 import { Router } from '@angular/router';
 import { DataService } from '../service/data.service';
+import { WishlistService } from '../service/wishlist.service';
 declare var $: any; // Declare jQuery globally
 interface Category {
   categoryId: number;
@@ -31,10 +32,10 @@ export class ProductComponent implements OnInit {
   obj: any[] = [];
   minPrice: any;
   maxPrice: any;
-  constructor(private dataService: DataService,
-    private productListService: ProductListService,
-    private toastr: ToastrService,
-    private router: Router) { }
+  constructor( private dataService: DataService, 
+    private productListService: ProductListService, 
+    private toastr: ToastrService, 
+    private router: Router, private wishList: WishlistService) { }
   ngOnInit(): void {
     this.loadCategories();
 
@@ -50,6 +51,43 @@ export class ProductComponent implements OnInit {
         this.searchProductCustomer(); // Call method using stored searchKey
       }
     });
+  }
+  addToWishlist(productId: number) {  
+    this.wishList.addWishlist(productId)
+      .subscribe(
+        (data) => {
+          if (data.code === 1000) {
+            console.log('Product added to wishlist:');
+            this.toastr.success('Sản phẩm đã được thêm vào yêu thích!', 'Thành công'); // Success message
+
+          }else{
+            this.toastr.warning('Vui lòng đăng nhập để thêm sản phẩm yêu thích!', 'Lỗi'); // Error message
+          }
+        },
+        (error) => {
+          console.error('Error adding product to wishlist:', error);
+          this.toastr.warning('Vui lòng đăng nhập để thêm sản phẩm yêu thích!', 'Lỗi'); // Error message
+        }
+      );
+  }
+  validatePriceRange() {
+    if (this.minPrice > this.maxPrice) {
+      this.minPrice = this.maxPrice;
+    }
+  }
+ 
+
+  
+  
+
+  onPriceRangeChange(event: Event): void {
+    // Handle price range change logic here if needed
+  }
+
+  onSliderChange(): void {
+    console.log('Min price:', this.minPrice);
+    console.log('Max price:', this.maxPrice);
+   
   }
 
   getProduct() {

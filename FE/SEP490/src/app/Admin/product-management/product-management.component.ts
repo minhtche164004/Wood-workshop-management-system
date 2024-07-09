@@ -310,7 +310,7 @@ export class ProductManagementComponent implements OnInit {
   }
 
   onIsProductChange(newValue: boolean) {
-    this.isLoadding = true;
+   
     this.isProduct = newValue;
 
     this.products.length = 0;

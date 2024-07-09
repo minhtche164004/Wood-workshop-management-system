@@ -11,10 +11,16 @@ export class SalaryService {
   private apiGetSalary = `${environment.apiUrl}api/auth/salary/getAllSalary`;
 
   private apiMultiSearchSalary = `${environment.apiUrl}api/auth/salary/getMultiFillterSalary`;
+
+  private apiUrl = 'https://api.vietqr.io/v2/banks';
   constructor(private http: HttpClient) { }
 
   getSalary(): Observable<any> {
     return this.http.get<any>(this.apiGetSalary);
+  }
+ 
+  getBanks(): Observable<any> {
+    return this.http.get<any>(this.apiUrl);
   }
 
   multSearchSalary(employeeName: string, fromDate: string, toDate: string, sortDirection: string): Observable<any> {

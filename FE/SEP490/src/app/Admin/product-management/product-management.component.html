@@ -61,7 +61,7 @@
                 </select>
 
                 <!-- Tìm kiếm tên sản phẩm -->
-                <input type="text" class="form-control" placeholder="Tìm kiếm tên sản phẩm..." [(ngModel)]="searchKey">
+                <input type="text" class="form-control" placeholder="Tìm kiếm tên sản phẩm..." [(ngModel)]="searchKey" (keyup.enter)="isProduct ? filterProducts() : filterProductsRequest()">
                 <button class="btn search-button" type="button"
                   (click)="isProduct ? filterProducts() : filterProductsRequest()">
                   <i class="fa fa-search"></i>

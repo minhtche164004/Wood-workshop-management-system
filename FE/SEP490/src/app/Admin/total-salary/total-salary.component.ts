@@ -18,14 +18,16 @@ import { EmailService } from 'src/app/service/email.service';
 })
 export class TotalSalaryComponent implements OnInit{
    keyword = 'username';
-
+   searchKey: string = '';
   totalSalary: any[]= [];
   currentPage: number = 1;
   employeeList: any[] = [];
   selectedEmp: any = {};
   positionEmpList: any[] = [];  
   selectedPosition: any = 0;
-
+  fromDate: string = '';
+  toDate: string = '';
+  
   selectedPositionEmp: any = 0;
   constructor(private http: HttpClient, private toastr: ToastrService, private employeeService: EmployeeService,private jobService: JobService, private fb: FormBuilder, private productListService: ProductListService, private sanitizer: DomSanitizer, private productService: ProductService, private salaryService: SalaryService) { }
   
@@ -35,12 +37,27 @@ export class TotalSalaryComponent implements OnInit{
     this.getAllEmployee();
     this.getAllPostionEmp();
   }
+  search() {
+    console.log('From Date:', this.fromDate);
+    console.log('To Date:', this.toDate);
+    console.log('Selected Position:', this.selectedPosition);
+    console.log('Keyword:', this.searchKey);
+
+    this.salaryService.multSearchSalary(this.searchKey, this.fromDate, this.toDate, '').subscribe(
+      data => {
+        console.log('Search results:', data);
+      },
+      error => {
+        console.error('Search error:', error);
+      }
+    );
+  }
   getTotalSalary() {
     this.salaryService.getSalary().subscribe(   
         (data) => {
           if (data.code === 1000) {
             this.totalSalary = data.result;
-            console.log('Danh sách luong nhan vien', this.totalSalary);
+            console.log('Total salary: ', this.totalSalary);
           } else {
             console.error('Failed to fetch products:', data);
           }
@@ -88,10 +105,25 @@ export class TotalSalaryComponent implements OnInit{
   }
   selectEmp(product: any): void {
     this.selectedEmp = product; // Adjust based on your product object structure
-    console.log('Selected emp:', this.selectedEmp);
-    console.log('Selected emp id:', this.selectedEmp.userId);
-    this.countJobByUserId(this.selectedEmp.userId);
+    console.log('Lương nhân viên:', this.selectedEmp.username);
+    this.searchSalary();
+   
   }
+  searchSalary(): void {
+    console.log('Selected emp:', this.selectedEmp.username);
+    this.salaryService.multSearchSalary(this.selectedEmp.username, '', '', '').subscribe(
+      (data) => {
+        if (data.code === 1000) {
+          this.totalSalary = data.result;
+          console.log('search luong bang ten: ', this.totalSalary);
+        } else {
+          console.error('Failed to fetch products:', data);
+        }
+      
+    },
+    )
+  }
+  
   onChangeSearch(event: any) {
     this.selectedEmp = event.target.value;
     console.log('Selected salary emp:', event.target.value);

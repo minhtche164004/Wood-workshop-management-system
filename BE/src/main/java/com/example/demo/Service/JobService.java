@@ -50,4 +50,5 @@ public interface JobService {
     List<Advancesalary> getAllAdvancesalary();
     List<Advancesalary> multi_filter_salary(Date fromDate, Date toDate, String employeeName, String sortDirection);
     List<Advancesalary> getAdvancesalaryByEmployeeId();
+    Advancesalary ChangeStatus(int id,boolean check);
 }

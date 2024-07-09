@@ -58,30 +58,28 @@
               <td>{{ i + 1 + (currentPage - 1) * 10 }}</td>
               <td>{{ product.code }}</td>
               <td class="action-buttons">
-
                 <a href="#" class="settings" title="Chỉnh sửa" data-toggle="modal" data-target="#editProductModal"
                   (click)="editProduct(product)">
                   <i class="fa-solid fa-pen-to-square"></i>
                 </a>
-                <!-- <a href="#" class="delete" title="Xóa" data-toggle="modal" data-target="#confirmDeleteModal"
+                <a href="#" class="delete" title="Xóa" data-toggle="modal" data-target="#confirmDeleteModal"
                   (click)="openConfirmDeleteModal(product.product_id, product.product_name)">
-                  <i class="fa-regular fa-trash-can"></i> {{product.product_id}}
-                </a> -->
+                  <i class="fa-regular fa-trash-can"></i>
+                </a>
                 <a href="#" class="info" title="Chi tiết" data-toggle="modal" data-target="#productDetailModal"
                   (click)="showErrorDetails(product.id)">
                   <i class="fa-solid fa-ellipsis-vertical"></i>
                 </a>
-
               </td>
-
               <td>{{ product.des }}</td>
-              <td>{{ product._fix }}</td>
-
-          
+              <td>
+                <ng-container *ngIf="product._fix; else notFixed">
+                  Đã sửa
+                </ng-container>
+                <ng-template #notFixed>Chưa sửa</ng-template>
+              </td>
               <td>{{ product.solution }}</td>
-
             </tr>
-
           </tbody>
         </table>
 
@@ -101,72 +99,6 @@
     </div>
   </div>
 
-
-<!-- Modal for Adding Product -->
-<div class="modal fade" id="addProductModal" tabindex="-1" role="dialog" aria-labelledby="addProductModalLabel"
-  aria-hidden="true">
-  <div class="modal-dialog modal-dialog-wide" role="document">
-    <div class="modal-content">
-      <div class="modal-body">
-        <!-- <form [formGroup]="uploadForm" (ngSubmit)="onSubmit()">
-          <div class="form-group">
-            <label style="font-size: 16px;" for="productName">Tên sản phẩm</label>
-            <input type="text" class="form-control" id="productName" formControlName="product_name">
-          </div>
-          <div class="form-group">
-            <label style="font-size: 16px;" for="productDescription">Mô tả</label>
-            <textarea class="form-control" id="productDescription" rows="3" formControlName="description"></textarea>
-          </div>
-          <div class="form-group">
-            <label style="font-size: 16px;" for="productCategory">Kiểu sản phẩm</label>
-            <select class="form-control" id="productCategory" formControlName="category_id">
-              <option [ngValue]="null" disabled selected>Loại sản phẩm</option>
-              <option *ngFor="let category of categories" [ngValue]="category.categoryId">{{ category.categoryName }}</option>
-            </select>
-          </div>
-          <div class="form-row">
-            <div class="form-group col-md-6">
-              <label style="font-size: 16px;" for="productPrice">Đơn giá</label>
-              <input type="number" class="form-control" id="productPrice" formControlName="price">
-            </div>
-            <div class="form-group col-md-6">
-              <label style="font-size: 16px;" for="selectedStatus">Tình trạng</label>
-              <select class="form-control" id="selectedStatus" formControlName="selectedStatus">
-                <option [ngValue]="null" disabled selected>Chọn tình trạng</option>
-                <option [ngValue]="1">Vô hiệu</option>
-                <option [ngValue]="2">Kích hoạt</option>
-                <option [ngValue]="3">Còn hàng</option>
-                <option [ngValue]="4">Hết hàng</option>
-              </select>
-            </div>
-          </div>
-          <div class="form-group">
-            <label style="font-size: 16px;" for="selectedType">Kiểu thanh toán</label>
-            <select class="form-control" id="selectedType" formControlName="type">
-              <option [ngValue]="null" disabled selected>Chọn kiểu</option>
-              <option [ngValue]="0">Thanh toán trực tuyến</option>
-              <option [ngValue]="1">Thanh toán trực tiếp</option>
-            </select>
-          </div>
-          <div class="form-row">
-            <div class="form-group col-md-6">
-              <label style="font-size: 16px;" for="productImages">Ảnh sản phẩm (Chọn nhiều)</label>
-              <input type="file" class="form-control-file" id="productImages" multiple (change)="onImagesSelected($event)">
-            </div>
-            <div class="form-group col-md-6">
-              <label style="font-size: 16px;" for="thumbnailImage">Ảnh Thumbnail</label>
-              <input type="file" class="form-control-file" id="thumbnailImage" (change)="onThumbnailSelected($event)">
-            </div>
-          </div>
-          <div class="modal-footer d-flex justify-content-center">
-            <button type="button" class="btn btn-mau-do" data-dismiss="modal">Hủy</button>
-            <button type="submit" class="btn btn-primary">Lưu thay đổi</button>
-          </div>
-        </form> -->
-      </div>
-    </div>
-  </div>
-</div>
 
 <!-- Modal for Editing Product -->
 
@@ -208,10 +140,7 @@
               <label style="font-size: 16px;" for="editProductCompletionTime">Thời gian hoàn thành</label>
               <input type="date" class="form-control" id="editProductCompletionTime" name="editProductCompletionTime">
             </div>
-            <div class="form-group col-md-6">
-              <label style="font-size: 16px;" for="editProductEndDate">Ngày kết thúc bảo hành</label>
-              <input type="date" class="form-control" id="editProductEndDate" name="editProductEndDate">
-            </div>
+          
           </div>
 
           <div class="form-row">

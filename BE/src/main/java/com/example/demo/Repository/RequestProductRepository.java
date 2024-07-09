@@ -24,6 +24,9 @@ public interface RequestProductRepository extends JpaRepository<RequestProducts,
     @Query("SELECT u FROM RequestProducts u WHERE u.requestProductId = :query")
     RequestProducts findById(int query);
 
+    @Query("SELECT u FROM RequestProducts u WHERE u.requests.requestId = :query")
+    List<RequestProducts> findByRequestId(int query);
+
     @Transactional
     @Modifying
     @Query("DELETE FROM RequestProducts u WHERE u.requestProductId = :query")

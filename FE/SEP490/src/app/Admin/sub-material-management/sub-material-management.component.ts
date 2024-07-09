@@ -35,6 +35,7 @@ export class SubMaterialManagementComponent implements OnInit {
   quantity: number = 0;
   unit_price: number = 0;
   selectedSubMtr: any = {};
+  
   originalSubMaterial: any = {};
   selectedSubMaterial: any = {
     sub_material_id: null,

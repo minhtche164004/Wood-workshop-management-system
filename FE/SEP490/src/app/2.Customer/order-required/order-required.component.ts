@@ -77,7 +77,6 @@ export class OrderRequiredComponent implements OnInit {
     };
     this.authenListService.getUserProfile().subscribe((data) => {
       this.userProfile = data.result;
-      console.log('API Response:', data);
       
     });
     this.provincesService.getProvinces().subscribe((data: Province[]) => {

@@ -18,7 +18,7 @@ export class DataService {
 
  
   clearSearchKey(): void {
-    // this.currentSearchKey.next?(null); // Assuming currentSearchKey is a BehaviorSubject
+    this.searchKeySource.next(undefined); // Clear the search key
   }
 
   triggerSearchProduct(searchParams: any) {

@@ -20,7 +20,7 @@
               <a href="#" class="btn btn-secondary" (click)="dowloadExcelLink()">
                 <span>Xuất Excel </span> <i style="margin-left: 5px;" class="fa-solid fa-file-excel"></i>
               </a>
-              
+
 
             </div>
           </div>
@@ -28,7 +28,7 @@
           <table class="table table-striped table-hover">
           </table>
           <div class="row justify-content-end">
-            <div class="col-md-5">
+            <div class="col-md-7">
               <div class="input-group mb-3">
                 <!-- Chọn product thường hay product request -->
                 <select [(ngModel)]="selectedMaterial" (change)="searchSelectedMaterial(selectedMaterial)"
@@ -164,9 +164,9 @@
           </form>
         </div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
 
-          <button type="submit" (click)="addSubMaterial()" class="btn btn-primary">Save changes</button>
+          <button type="submit" (click)="addSubMaterial()" class="btn btn-primary">Lưu thay đổi</button>
         </div>
       </div>
     </div>
@@ -176,7 +176,7 @@
     aria-labelledby="editSubMaterialModalLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
       <div class="modal-content">
-        <div class="modal-header">
+        <div class="modal-header bg-primary text-white">
           <h5 class="modal-title" id="editSubMaterialModal">Chỉnh sửa nguyên vật liệu</h5>
           <button type="button" class="close" data-dismiss="modal" aria-label="Close">
             <span aria-hidden="true">&times;</span>
@@ -208,8 +208,8 @@
           </form>
         </div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-          <button type="button" class="btn btn-primary" (click)="saveChanges()">Save changes</button>
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
+          <button type="button" class="btn btn-primary" (click)="saveChanges()">Lưu thay đổi</button>
         </div>
 
       </div>

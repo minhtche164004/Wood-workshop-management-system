@@ -9,6 +9,7 @@ import { ProductListService } from 'src/app/service/product/product-list.service
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { ProductService } from 'src/app/service/product.service';
 import { MatDialog, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import 'jquery';
 @Component({
   selector: 'app-job-management',
   templateUrl: './job-management.component.html',

@@ -88,7 +88,7 @@
                             <div class="row">
 
                                 <div class="col-lg-4 col-md-6 col-12 nopadding"
-                                    *ngFor="let product of products | paginate: { itemsPerPage: 9, currentPage: currentPage }; let i = index">
+                                    *ngFor="let product of products | paginate: { itemsPerPage: 6, currentPage: currentPage }; let i = index">
                                     <div class="product">
                                         <a style="text-decoration: none;">
                                             <img [routerLink]="['/product-details', product.productId]"
@@ -107,7 +107,7 @@
                                                         currency:'VND' }}</p>
                                                 </div>
                                                 <div class="buttons d-flex ">
-                                                    <button class="addCart">
+                                                    <button (click)="addToWishlist(product.productId)" class="addCart">
                                                         Thêm vào danh sách yêu thích <i class="fa-solid fa-heart"></i>
                                                     </button>
                                                 </div>

@@ -21,33 +21,25 @@ interface ApiResponse {
 
 export class HeaderComponent implements OnInit {
   fullname: string | null = null;
-  constructor(private dataService: DataService, private sanitizer: DomSanitizer,private toastr: ToastrService,  private router: Router, private http: HttpClient, private authService: AuthenListService, private productListService: ProductListService) { }
+  constructor(private dataService: DataService, private sanitizer: DomSanitizer, private toastr: ToastrService, private router: Router, private http: HttpClient, private authService: AuthenListService, private productListService: ProductListService) { }
   ngOnInit(): void {
     this.wishlistcount()
-    if (localStorage.getItem('fullname') === null) {
       this.authService.getUserProfile().subscribe((data) => {
         this.fullname = data.result.fullname; // Assuming 'result' contains the profile data
-        localStorage.setItem('fullname', data.result?.fullname)
-        console.log("fullname: ", data.result?.fullname)
       });
-    }
-    else {
-      this.fullname = localStorage.getItem('fullname')
-    }
-    this.productListService.getAllProductCustomer().subscribe(
-      (data: any) => {
-        if (data.code === 1000) {
-          this.products = data.result;
-      //    console.log('Danh sách sản phẩm:', this.products);
-        } else {
-          console.error('Invalid data returned:', data);
+      this.productListService.getAllProductCustomer().subscribe(
+        (data: any) => {
+          if (data.code === 1000) {
+            this.products = data.result;
+            //    console.log('Danh sách sản phẩm:', this.products);
+          } else {
+            console.error('Invalid data returned:', data);
+          }
+        },
+        (error) => {
+          console.error('Error fetching categories:', error);
         }
-      },
-      (error) => {
-        console.error('Error fetching categories:', error);
-      }
-    );
-    
+      );
   }
   selectedSortByPrice: string = '';
   countwishlist: number = 0;
@@ -66,6 +58,7 @@ export class HeaderComponent implements OnInit {
   keyword = 'productName';
   selectedStatus: number = 0;
   sort: string = '';
+  obj: any[] = [];
   loadAllUsers(): void {
     this.productListService.getAllUser().subscribe(
       (response: ApiResponse) => {
@@ -94,16 +87,13 @@ export class HeaderComponent implements OnInit {
   onLogout(): void {
     // Lấy giá trị của token từ local storage
     const token = localStorage.getItem('loginToken');
- //   console.log('Token trước khi logout:', token);
-
- //   console.log('remove loginToken');
+    //   console.log('Token trước khi logout:', token);
+    //   console.log('remove loginToken');
     // Xóa token đăng nhập khỏi local storage
     localStorage.removeItem('loginToken');
- //   console.log('Token sau khi logout:', localStorage.getItem('loginToken'));
+    //   console.log('Token sau khi logout:', localStorage.getItem('loginToken'));
 
     this.router.navigateByUrl('/login');
-
-
   }
   isLoggedIn(): boolean {
     return this.authService.isLoggedIn();
@@ -113,24 +103,44 @@ export class HeaderComponent implements OnInit {
   }
   onSearch(): void {
     console.log('Search key header:', this.searchKey);
-    this.dataService.changeSearchKey(this.searchKey);
-    this.router.navigate(['/product']);
+    if (this.searchKey) { // Kiểm tra nếu searchKey có giá trị
+      this.dataService.changeSearchKey(this.searchKey);
+      this.routerSearch(this.searchKey);
+    } else {
+      // Xử lý trường hợp không có giá trị nhập (ví dụ: thông báo cho người dùng hoặc đặt lại kết quả tìm kiếm)
+    }
   }
- 
+
   onChangeSearch(search: string) {
+
     this.searchKey = search;
+    console.log('Search key:', this.searchKey);
+    this.routerSearch(this.searchKey);
   }
 
   sanitize(name: string): SafeHtml {
     return this.sanitizer.bypassSecurityTrustHtml(name);
   }
+  routerSearch(searchKey: any): void {
+    const queryParams = {
+      searchKey: searchKey,
+    };
 
+    const filteredQueryParams = Object.entries(queryParams)
+      .filter(([_, value]) => value !== undefined) // Exclude undefined values
+      .reduce<Record<string, string>>((obj, [key, value]) => {
+        // Convert value to string if it's not undefined
+        obj[key] = String(value);
+        return obj;
+      }, {});
+
+    this.router.navigate(['/product'], { queryParams: filteredQueryParams });
+  }
   selectProduct(product: any): void {
     this.selectedProduct = product; // Điều chỉnh theo cấu trúc đối tượng sản phẩm của bạn
     const productName = this.selectedProduct.productName;
     this.dataService.changeSearchKey(productName);
-    this.router.navigate(['/product']);
-  
+    this.routerSearch(productName);
   }
 
 

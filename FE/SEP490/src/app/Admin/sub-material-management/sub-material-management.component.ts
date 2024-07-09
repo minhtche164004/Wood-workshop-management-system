@@ -46,6 +46,7 @@ export class SubMaterialManagementComponent implements OnInit {
     unit_price: 0
   };
   editForm: FormGroup;
+  createJobs: FormGroup;
   selectedSubMtr2: any = {
     sub_material_name: '',
     description: '',
@@ -70,7 +71,15 @@ export class SubMaterialManagementComponent implements OnInit {
       quantity: [''],
       unit_price: ['']
     });
-
+    this.createJobs = this.fb.group({
+      sub_material_id: [''],
+      sub_material_name: [''],
+      material_id: [''],
+      description: [''],
+      material_name: [''],
+      quantity: [''],
+      unit_price: ['']
+    });
   }
 
   ngOnInit(): void {
@@ -97,9 +106,28 @@ export class SubMaterialManagementComponent implements OnInit {
       }
     );
   }
-  dowloadExcel(): void {
-    this.subMaterialService.downloadExcel();
-
+  dowloadExcelLink(): void {
+    this.subMaterialService.downloadExcel().subscribe(
+      (response) => {
+        // Assuming the response is the file data
+        const blob = new Blob([response], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+        const url = window.URL.createObjectURL(blob);
+  
+        // Creating an anchor element to trigger download
+        const anchor = document.createElement('a');
+        anchor.href = url;
+        anchor.download = 'downloaded_file.xlsx'; // Specify the file name here
+        document.body.appendChild(anchor); // Append anchor to the body to make it clickable
+        anchor.click();
+  
+        // Clean up
+        document.body.removeChild(anchor);
+        window.URL.revokeObjectURL(url); // Revoke the blob URL to free up resources
+      },
+      (error) => {
+        console.error('Download error:', error);
+      }
+    );
   }
   getAllMaterials(): void {
     this.materialService.getAllMaterial().subscribe(
@@ -119,7 +147,7 @@ export class SubMaterialManagementComponent implements OnInit {
     );
   }
   addSubMaterial(): void {
-    console.log("Bắt đầu chạy thêm vật liệu")
+  //  console.log("Bắt đầu chạy thêm vật liệu")
     const subMaterial: SubMaterial = {
       sub_material_name: this.sub_material_name,
       material_name: this.selectedMaterial,
@@ -134,6 +162,7 @@ export class SubMaterialManagementComponent implements OnInit {
         if (response.code === 1000) {
           this.toastr.success('Thêm nguyên vật liệu mới thành công!', 'Success');
           this.getAllSubMaterials(); // Refresh the list of sub-materials
+          $('[data-dismiss="modal"]').click();    
         } else {
           this.toastr.error('Failed to add sub-material!', 'Error');
         }
@@ -154,6 +183,7 @@ export class SubMaterialManagementComponent implements OnInit {
         if (data.code === 1000) {
           this.toastr.success('Cập nhật nguyên vật liệu thành công!', 'Thành công');
           this.getAllSubMaterials();
+          $('[data-dismiss="modal"]').click();    
         } else {
           console.error('Failed to search sub-materials:', data);
           this.toastr.error('Không thể tìm kiếm sub-materials!', 'Lỗi');
@@ -212,7 +242,7 @@ export class SubMaterialManagementComponent implements OnInit {
       (data) => {
         if (data.code === 1000) {
           this.products = data.result;
-          console.log('Kết quả tìm kiếm Sub-Materials:', this.products);
+       //   console.log('Kết quả tìm kiếm Sub-Materials:', this.products);
         } else {
           console.error('Failed to search sub-materials:', data);
           this.toastr.error('Không thể tìm kiếm sub-materials!', 'Lỗi');
@@ -233,7 +263,7 @@ export class SubMaterialManagementComponent implements OnInit {
 
   selectProduct(product: any): void {
     this.selectedSubMtr = product; // Adjust based on your product object structure
-    console.log('Selected mtr seacu:', this.selectedSubMtr.sub_material_name);
+   // console.log('Selected mtr seacu:', this.selectedSubMtr.sub_material_name);
 
     this.materialService.searchSubMaterial(this.selectedSubMtr.sub_material_name).subscribe(
       (data) => {
@@ -263,7 +293,7 @@ export class SubMaterialManagementComponent implements OnInit {
       (data) => {
         if (data.code === 1000) {
           this.products = data.result;
-          this.toastr.success('Vật liệu ' + this.selectedMaterial.materialName + ' thành công!', 'Thành công');
+      //    this.toastr.success('Vật liệu ' + this.selectedMaterial.materialName + ' thành công!', 'Thành công');
           console.log('Kết quả lọc Sub-Materials:', this.products);
         } else {
           console.error('Failed to filter sub-materials:', data);
@@ -275,6 +305,9 @@ export class SubMaterialManagementComponent implements OnInit {
         this.toastr.error('Có lỗi xảy ra!', 'Lỗi');
       }
     );
+
+  }
+  impottExcel(){
 
   }
   searchSelectedMaterial(material: any): void {

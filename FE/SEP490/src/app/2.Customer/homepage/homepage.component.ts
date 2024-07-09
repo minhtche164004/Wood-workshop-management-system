@@ -36,7 +36,7 @@ export class HomepageComponent implements AfterViewInit, OnInit {
     ); 
   }
   addToWishlist(productId: number) {  
-    this.toastr.success('Thực hiện thêm sản phẩm', 'Thành công'); // Success message
+   
     console.log('Product ID:', productId);
     this.wishList.addWishlist(productId)
       .subscribe(
@@ -45,7 +45,7 @@ export class HomepageComponent implements AfterViewInit, OnInit {
             console.log('Product added to wishlist:');
             this.toastr.success('Sản phẩm đã được thêm vào yêu thích!', 'Thành công'); // Success message
 
-          }else{
+          }else if(data.code === 1005){
             this.toastr.warning('Vui lòng đăng nhập để thêm sản phẩm yêu thích!', 'Lỗi'); // Error message
           }
         },

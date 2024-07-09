@@ -68,3 +68,49 @@ body {
     text-align: center;
     align-items: center;
   }
+
+  // .ng-autocomplete {
+  //   display: block;
+  //   width: 100%; /* Match the width of other inputs */
+  //   padding: 0.375rem 0.75rem; /* Bootstrap's default padding for inputs */
+  //   font-size: 1rem; /* Standard font size */
+  //   font-weight: 400; /* Default font weight */
+  //   line-height: 1.5; /* Standard line height */
+  //   color: #495057; /* Input text color */
+  //   background-color: #fff; /* Background color */
+  //   background-clip: padding-box; /* Ensures the background extends to the border */
+  //   border: 1px solid #ced4da; /* Standard border */
+  //   border-radius: 0.25rem; /* Rounded corners */
+  //   transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out; /* Smooth transition for focus */
+  // }
+  
+  .ng-autocomplete:focus-within {
+    color: #495057;
+    background-color: #fff;
+    border-color: #80bdff; /* Focus border color */
+    outline: 0;
+    box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25); /* Bootstrap's default focus shadow */
+  }
+  
+  .ng-autocomplete a {
+    color: #495057; /* Ensures the autocomplete options match the input text color */
+    text-decoration: none; /* Removes underline from links */
+  }
+  
+  .ng-autocomplete div {
+    padding: 0.375rem 0.75rem; /* Ensures consistent padding within autocomplete */
+  }
+
+.total-price {
+  font-size: 1.2rem; /* Makes the font larger than the default */
+  font-weight: bold; /* Makes the text bold */
+  color: #333; /* Dark color for better readability */
+  padding: 10px; /* Adds some space around the text */
+  margin-top: 20px; /* Adds space above the div */
+  background-color: #f8f9fa; /* Light background to make it stand out */
+  border: 1px solid #dee2e6; /* Subtle border */
+  border-radius: 5px; /* Rounded corners for a modern look */
+  text-align: end; /* Aligns the text to the right */
+  width: auto; /* Ensures the div takes up only the necessary width */
+  float: right;
+}

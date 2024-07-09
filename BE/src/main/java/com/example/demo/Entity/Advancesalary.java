@@ -31,8 +31,8 @@ public class Advancesalary {
     @Column(name = "is_advance_success")
     private boolean isAdvanceSuccess; // đã thanh toán thành công
 
-    @Column(name = "is_approve")
-    private boolean isApprove; //chưa ck
+//    @Column(name = "is_approve")
+//    private boolean isApprove; //chưa ck
 
     @Column(name = "code")
     private String code;

@@ -1,15 +1,13 @@
 package com.example.demo.Controllers.Salary;
 
+import com.example.demo.Entity.Advancesalary;
 import com.example.demo.Repository.MaterialRepository;
 import com.example.demo.Response.ApiResponse;
 import com.example.demo.Service.JobService;
 import com.example.demo.Service.MaterialService;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
 import java.sql.Date;
@@ -35,6 +33,12 @@ public class SalaryController {
     public ApiResponse<?> getSalaryByEmployeeID(){
         ApiResponse<List> apiResponse = new ApiResponse<>();
         apiResponse.setResult(jobService.getAdvancesalaryByEmployeeId());
+        return apiResponse;
+    }
+    @PutMapping("/updatebanking")
+    public ApiResponse<?> updatebanking(@RequestParam("id") int id, @RequestParam("is_advance_success") boolean is_advance_success){
+        ApiResponse<Advancesalary> apiResponse = new ApiResponse<>();
+        apiResponse.setResult(jobService.ChangeStatus(id,is_advance_success));
         return apiResponse;
     }
 

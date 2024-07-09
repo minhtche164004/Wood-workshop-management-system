@@ -205,7 +205,7 @@ public class JobServiceImpl implements JobService {
 
             advancesalary.setDate(Date.valueOf(today));
             advancesalary.setAmount(jobs_history.getCost());
-            advancesalary.setApprove(true);
+//            advancesalary.setApprove(null);
             advancesalary.setAdvanceSuccess(false);
             advancesalary.setCode(code);
             advancesalary.setUser(jobs_history.getUser());
@@ -399,6 +399,13 @@ public class JobServiceImpl implements JobService {
             throw new AppException(ErrorCode.NOT_FOUND);
         }
         return list;
+    }
+
+    @Transactional
+    @Override
+    public Advancesalary ChangeStatus(int id,boolean check) {
+        advancesalaryRepository.update_banking(id,check);
+        return advancesalaryRepository.findById(id);
     }
 
 

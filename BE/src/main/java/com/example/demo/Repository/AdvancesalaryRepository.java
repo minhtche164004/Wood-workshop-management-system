@@ -2,7 +2,9 @@ package com.example.demo.Repository;
 
 import com.example.demo.Entity.Advancesalary;
 import com.example.demo.Entity.Products;
+import jakarta.transaction.Transactional;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
@@ -18,6 +20,14 @@ public interface AdvancesalaryRepository extends JpaRepository<Advancesalary,Int
 
     @Query("SELECT u FROM Advancesalary u WHERE u.user.userId = :query")
     List<Advancesalary> findByUserId(int query);
+
+    @Query("SELECT u FROM Advancesalary u WHERE u.advanceSalaryId = :query")
+    Advancesalary findById(int query);
+
+    @Transactional
+    @Modifying
+    @Query("update Advancesalary u set u.isAdvanceSuccess = ?2 where u.advanceSalaryId = ?1")
+    void update_banking(int advanceSalaryId, boolean isAdvanceSuccess);
 
     @Query("SELECT a FROM Advancesalary a WHERE " +
             "(:fromDate IS NULL OR a.date >= :fromDate) AND " +

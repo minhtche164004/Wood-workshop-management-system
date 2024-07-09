@@ -61,7 +61,8 @@
                 </select>
 
                 <!-- Tìm kiếm tên sản phẩm -->
-                <input type="text" class="form-control" placeholder="Tìm kiếm tên sản phẩm..." [(ngModel)]="searchKey" (keyup.enter)="isProduct ? filterProducts() : filterProductsRequest()">
+                <input type="text" class="form-control" placeholder="Tìm kiếm tên sản phẩm..." [(ngModel)]="searchKey"
+                  (keyup.enter)="isProduct ? filterProducts() : filterProductsRequest()">
                 <button class="btn search-button" type="button"
                   (click)="isProduct ? filterProducts() : filterProductsRequest()">
                   <i class="fa fa-search"></i>
@@ -110,7 +111,9 @@
                 </a> -->
 
               </td>
-              <td><img class="img_product" [src]="product.image" alt="Ảnh đại diện"></td>
+              <td> <a [href]="product.image" target="_blank">
+                  <img class="img_product" [src]="product.image" alt="Ảnh đại diện">
+                </a></td>
               <td>{{ product.completionTime }}</td>
               <td>{{ product.productName }}</td>
               <td>{{ product.description }}</td>
@@ -149,7 +152,8 @@
                   data-target="#editProductRequestModal" (click)="editProductRequest(product.re_productId)">
                   <i class="fa-solid fa-pen-to-square"></i>
                 </a>
-                <a href="#" class="delete" title="Xóa" data-toggle="modal" data-target="#confirmDeleteRequestProductModal"
+                <a href="#" class="delete" title="Xóa" data-toggle="modal"
+                  data-target="#confirmDeleteRequestProductModal"
                   (click)="openConfirmDeleteModal(product.re_productId, product.re_productName)">
                   <i class="fa-regular fa-trash-can"></i>
                 </a>
@@ -158,8 +162,11 @@
                 </a> -->
 
               </td>
-              <td><img class="img_product"
-                  [src]="product.imageList[0]?.fullPath" alt="Ảnh đại diện"></td>
+              <td>
+                <a [href]="product.imageList[0]?.fullPath" target="_blank">
+                  <img class="img_product" [src]="product.imageList[0]?.fullPath" alt="Ảnh đại diện">
+                </a>
+              </td>
               <td>{{ product.completionTime }}</td>
               <td>{{ product.re_productName }}</td>
               <td>{{ product.description }}</td>
@@ -475,7 +482,7 @@
                   <div class="form-group">
                     <label for="quantity-{{i}}">Số lượng</label>
                     <input id="quantity-{{i}}" class="form-control" formControlName="quantity" type="number" min="0"
-                      [(ngModel)]="quantityPerSubMaterial[i]" (change)="onQuantityChange($event, i)"x 
+                      [(ngModel)]="quantityPerSubMaterial[i]" (change)="onQuantityChange($event, i)" x
                       placeholder="Nhập số lượng">
                   </div>
                 </div>
@@ -521,7 +528,6 @@
           <div class="form-group">
             <label style="font-size: 16px;" for="editProductName">Tên sản phẩm</label>
             <input type="text" class="form-control" id="editProductName" name="editProductName"
-
               formControlName="product_name">
 
           </div>
@@ -600,10 +606,14 @@
           <!-- Preview anh -->
           <div class="form-row">
             <div class="form-group col-md-6" *ngIf="imagesPreview">
-              <img *ngFor="let imageUrl of imagesPreview" [src]="imageUrl" class="previewMultiple">
+              <a *ngFor="let imageUrl of imagesPreview" [href]="imageUrl" target="_blank">
+                <img [src]="imageUrl" class="previewMultiple">
+              </a>
             </div>
             <div class="form-group col-md-6" *ngIf="thumbnailPreview">
-              <img [src]="thumbnailPreview" class="preview">
+              <a [href]="thumbnailPreview" target="_blank">
+                <img [src]="thumbnailPreview" class="preview">
+              </a>
             </div>
           </div>
           <!-- Mảng các vật liệu cần có trong Edit product -->
@@ -696,7 +706,7 @@
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
-      <div class="modal-body">  
+      <div class="modal-body">
         <form enctype="multipart/form-data" [formGroup]="editForm" (ngSubmit)="onEditRequestProductSubmit()">
 
           <div class="form-group">
@@ -779,8 +789,9 @@
           <!-- Preview anh -->
           <div class="form-row">
             <div class="form-group col-md-6" *ngIf="imagesPreview">
-              <img *ngFor="let imageUrl of imagesPreview" [src]="imageUrl" class="previewMultiple">
-            </div>
+              <a *ngFor="let imageUrl of imagesPreview" [href]="imageUrl" target="_blank">
+                <img [src]="imageUrl" class="previewMultiple">
+              </a>            </div>
             <!-- <div class="form-group col-md-6" *ngIf="thumbnailPreview">
               <img [src]="thumbnailPreview" class="preview">
             </div> -->
@@ -887,8 +898,8 @@
 
 <!-- Modal for Delete Product Request -->
 
-<div class="modal fade" id="confirmDeleteRequestProductModal" tabindex="-1" role="dialog" aria-labelledby="confirmDeleteRequestProductModalLabel"
-  aria-hidden="true">
+<div class="modal fade" id="confirmDeleteRequestProductModal" tabindex="-1" role="dialog"
+  aria-labelledby="confirmDeleteRequestProductModalLabel" aria-hidden="true">
   <div class="modal-dialog" role="document">
     <div class="modal-content">
       <div class="modal-header">

@@ -50,6 +50,8 @@ public class ProductController {
     @Autowired
     private OrderService orderService;
     @Autowired
+    private RequestProductRepository requestProductRepository;
+    @Autowired
     private Status_Product_Repository statusProductRepository;
     private static final JedisPooled jedis = RedisConfig.getRedisInstance();
 
@@ -161,6 +163,12 @@ public class ProductController {
     public ApiResponse<?> GetProductByIdWithImage(@RequestParam("id") int id) {
         ApiResponse<ProductDTO_Show> apiResponse = new ApiResponse<>();
         apiResponse.setResult(productService.GetProductByIdWithImage(id));
+        return apiResponse;
+    }
+    @GetMapping("/getRequestProductByRequestId")
+    public ApiResponse<?> getRequestProductByRequestId(@RequestParam("id") int id) {
+        ApiResponse<List> apiResponse = new ApiResponse<>();
+        apiResponse.setResult(requestProductRepository.findByRequestId(id));
         return apiResponse;
     }
 

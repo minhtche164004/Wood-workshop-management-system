@@ -107,9 +107,6 @@ const routes: Routes = [
   { path: 'ds', component: DashboardComponent },
 
   { path: 'chart', component: ChartComponent },
-
-  
-
   { path: 'material_management', component: MaterialManagementComponent },
   { path: 'report_management', component: ReportManagementComponent },
   { path: 'report_management/:id', component: ReportManagementComponent },
@@ -127,9 +124,9 @@ const routes: Routes = [
   // { path: '', redirectTo: '/homepage', pathMatch: 'full' },
 
   { path: 'report-cost', component: ReportCostManagementComponent },
-  // { path: '', redirectTo: '/homepage', pathMatch: 'full' },
+  { path: '', redirectTo: '/homepage', pathMatch: 'full' },
 
-  // { path: '**', redirectTo: '/homepage', pathMatch: 'full' },
+  { path: '**', redirectTo: '/homepage', pathMatch: 'full' },
 
 
 ];

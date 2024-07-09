@@ -10,12 +10,26 @@ export class SubMaterialService {
   private apiDowloadExcel = `${environment.apiUrl}api/auth/submaterial/download-form-submaterial-data-excel`;
 
   private api_FilterByMaterial = `${environment.apiUrl}api/auth/submaterial/FilterByMaterial`;
-  constructor(private http: HttpClient) { }
+
+  private api_getSubMtrById =`${environment.apiUrl}api/auth/submaterial/getSubmaterialById`;
+ 
+  private api_editSubMaterial = `${environment.apiUrl}api/auth/submaterial/editSubMaterial`;
+   constructor(private http: HttpClient) { }
+
+
 
   downloadExcel(): Observable<any> {
-    return this.http.get(this.apiDowloadExcel);
+    return this.http.get(this.apiDowloadExcel, { responseType: 'blob' });
   }
-
+  getSubMaterialById(id: number): Observable<any> {
+    const url = `${this.api_getSubMtrById}?id=${id}`;
+    return this.http.get<any>(url).pipe(
+      catchError(this.handleError)
+    );
+  }
+  editSubMaterial(subMaterialId: number, data: any): Observable<any> {
+    return this.http.put(`${this.api_editSubMaterial}?id=${subMaterialId}`, data);
+  }
   filterByMaterial(materialId: number): Observable<any> {
     const url = `${this.api_FilterByMaterial}?id=${materialId}`;
     return this.http.get<any>(url).pipe(

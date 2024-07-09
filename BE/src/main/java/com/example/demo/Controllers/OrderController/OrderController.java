@@ -113,7 +113,7 @@ public class OrderController {
         apiResponse.setResult(orderService.GetRequestProductByIdWithImage(id));
         return apiResponse;
     }
-    @PreAuthorize("hasAuthority('CUSTOMER')")
+//    @PreAuthorize("hasAuthority('CUSTOMER')")
     @PostMapping("/AddWhiteList")
     public ApiResponse<?> AddWhiteList(@RequestParam("product_id") int product_id) {
         ApiResponse<WishList> apiResponse = new ApiResponse<>();

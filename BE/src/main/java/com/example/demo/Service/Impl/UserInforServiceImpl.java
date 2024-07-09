@@ -1,5 +1,6 @@
 package com.example.demo.Service.Impl;
 
+import com.example.demo.Dto.UserDTO.UserInforDTO;
 import com.example.demo.Entity.UserInfor;
 import com.example.demo.Repository.InformationUserRepository;
 import com.example.demo.Service.UserInforService;
@@ -14,8 +15,8 @@ public class UserInforServiceImpl implements UserInforService {
     InformationUserRepository informationUserRepository;
 
     @Override
-    public UserInfor getUserInforByPhoneNumber(String phoneNumber) {
-        UserInfor userInfor = informationUserRepository.findUsersByPhoneNumber(phoneNumber);
+    public UserInforDTO getUserInforByPhoneNumber(String phoneNumber) {
+        UserInforDTO userInfor = informationUserRepository.findUsersByPhoneNumber(phoneNumber);
         return userInfor;
     }
 

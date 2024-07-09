@@ -139,8 +139,10 @@ export class HeaderComponent implements OnInit {
   selectProduct(product: any): void {
     this.selectedProduct = product; // Điều chỉnh theo cấu trúc đối tượng sản phẩm của bạn
     const productName = this.selectedProduct.productName;
+    const productId = this.selectedProduct.productId;
     this.dataService.changeSearchKey(productName);
-    this.routerSearch(productName);
+    this.router.navigate(['/product-details', productId]);
+   // this.routerSearch(productName);
   }
 
 

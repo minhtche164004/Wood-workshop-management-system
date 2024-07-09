@@ -449,18 +449,19 @@ export class CreateOrderComponent implements OnInit {
         }
       );
       // lay danh sach request de autocomplete
-      // this.createOrderService.GetAllRequestByUserId(this.inforId).subscribe((data: any) => {
-      //   if (data.code === 1000) {
-      //     this.requests = data?.result;
-      //   } else {
-      //     this.toastr.error('Không thể lấy danh sách request!', 'Lỗi');
-      //   }
-      // },
-      //   (error) => {
-      //     this.isLoadding = false;
-      //     console.error('Error fetching requests:', error);
-      //     this.toastr.error('Có lỗi xảy ra!', 'Lỗi');
-      //   });
+      this.createOrderService.GetAllRequestByUserId(this.inforId).subscribe((data: any) => {
+        if (data.code === 1000) {
+          this.requests = data?.result;
+          console.log('Danh sách request:', this.requests);
+        } else {
+          this.toastr.error('Không thể lấy danh sách request!', 'Lỗi');
+        }
+      },
+        (error) => {
+          this.isLoadding = false;
+          console.error('Error fetching requests:', error);
+          this.toastr.error('Có lỗi xảy ra!', 'Lỗi');
+        });
     }
     // console.log('Giá trị mới của isProduct:', this.isProduct);
   }

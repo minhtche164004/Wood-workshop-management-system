@@ -253,7 +253,7 @@
                                         <label style="font-size: 16px;" for="request_id">Chọn yêu cầu</label>
                                         <div class="ng-autocomplete">
                                             <ng-autocomplete *ngIf="requests" [data]="requests"
-                                                [searchKeyword]="keyword" placeholder="Enter the request's code"
+                                                [searchKeyword]="keywordRequest" placeholder="Enter the request's code"
                                                 [itemTemplate]="itemTemplate" [notFoundTemplate]="notFoundTemplate"
                                                 (selected)="onRequestIdSelected($event)">
                                             </ng-autocomplete>

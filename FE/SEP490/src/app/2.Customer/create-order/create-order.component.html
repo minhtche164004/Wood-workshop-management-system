@@ -253,7 +253,7 @@
                                         <label style="font-size: 16px;" for="request_id">Chọn yêu cầu</label>
                                         <div class="ng-autocomplete">
                                             <ng-autocomplete *ngIf="requests" [data]="requests"
-                                                [searchKeyword]="keyword" placeholder="Enter the request's code"
+                                                [searchKeyword]="keywordRequest" placeholder="Enter the request's code"
                                                 [itemTemplate]="itemTemplate" [notFoundTemplate]="notFoundTemplate"
                                                 (selected)="onRequestIdSelected($event)">
                                             </ng-autocomplete>
@@ -301,11 +301,11 @@
                                                             placeholder="Nhập tên sản phẩm"
                                                             [itemTemplate]="itemTemplate"
                                                             [notFoundTemplate]="notFoundTemplate"
-                                                            (selected)="onProductChange($event, i)">
+                                                            (selected)="onProductRequestChange($event, i)">
                                                         </ng-autocomplete>
 
                                                         <ng-template #itemTemplate let-item>
-                                                            <a [innerHTML]="item.re_productName"></a>
+                                                            <a [innerHTML]="item.requestProductName"></a>
                                                         </ng-template>
 
                                                         <ng-template #notFoundTemplate let-notFound>

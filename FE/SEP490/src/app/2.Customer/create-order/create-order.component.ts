@@ -30,6 +30,10 @@ interface ProductItem {
   productId: number;
   quantity: number;
   price: number;
+  //for product request
+  requestProductId: number;
+  requestProductName: number;
+
 }
 interface Province {
   code: string;
@@ -97,7 +101,7 @@ export class CreateOrderComponent implements OnInit {
   //autocomplete for product
   keywordProduct = 'productName';
   productList: any[] = [];
-  keywordProductRequest = 're_productName'; // for request product
+  keywordProductRequest = 'requestProductName'; // for request product
   //autocomplete for request
   keywordRequest = 'code';
 
@@ -108,6 +112,7 @@ export class CreateOrderComponent implements OnInit {
   //xac dinh cho don hang theo yeu cau hay co san
   isForRequestProduct: boolean = false;// xac dinh san pham thuong hay san pham dac biet
   requests: any[] = [];
+  requestId: number = 0;
   //
   isLoadding = false;
   orderForm: FormGroup;
@@ -334,10 +339,11 @@ export class CreateOrderComponent implements OnInit {
         if (data.code === 1000) {
           const productItem: ProductItem = data.result;
           this.productItems.at(index).patchValue({
-            id: productItem.productId,
+            id: productItem.requestProductId,
             price: productItem.price
           });
           this.unitPriceProduct[index] = productItem.price;
+          console.log('unitPriceProduct:', this.unitPriceProduct)
         }
 
       },
@@ -393,7 +399,25 @@ export class CreateOrderComponent implements OnInit {
   }
   //phan xu li don hang theo yeu cau hay co san
   onRequestIdSelected(item: any) {
-    // console.log('item:', item.requestId)
+    this.requestId = item.requestId;
+    console.log('requestId:', this.requestId); 
+    this.createOrderService.GetAllProductRequestByRequestId(this.requestId).subscribe( // ;ay danh sach product request theo request
+      (data) => {
+        this.isLoadding = false;
+        if (data.code === 1000) {
+          this.productList = data?.result;
+          console.log('Danh sách sản phẩm theo yeu cau:', this.productList);
+        } else {
+          console.error('Failed to fetch products:', data);
+          this.toastr.error('Không thể lấy danh sách sản phẩm!', 'Lỗi');
+        }
+      },
+      (error) => {
+        console.error('Error fetching products:', error);
+        this.toastr.error('Có lỗi xảy ra!', 'Lỗi');
+        this.isLoadding = false;
+      }
+    );
   }
 
   onIsProductChange($event: Event) {
@@ -431,37 +455,25 @@ export class CreateOrderComponent implements OnInit {
         }
       );
     } else {  
-      this.productListService.getAllProductRequest().subscribe( // ;ay danh sach product request theo request
-        (data) => {
-          this.isLoadding = false;
-          if (data.code === 1000) {
-            this.productList = data?.result;
-            console.log('Danh sách sản phẩm theo yeu cau:', this.productList);
-          } else {
-            console.error('Failed to fetch products:', data);
-            this.toastr.error('Không thể lấy danh sách sản phẩm!', 'Lỗi');
-          }
-        },
-        (error) => {
-          console.error('Error fetching products:', error);
-          this.toastr.error('Có lỗi xảy ra!', 'Lỗi');
-          this.isLoadding = false;
-        }
-      );
       // lay danh sach request de autocomplete
-      // this.createOrderService.GetAllRequestByUserId(this.inforId).subscribe((data: any) => {
-      //   if (data.code === 1000) {
-      //     this.requests = data?.result;
-      //   } else {
-      //     this.toastr.error('Không thể lấy danh sách request!', 'Lỗi');
-      //   }
-      // },
-      //   (error) => {
-      //     this.isLoadding = false;
-      //     console.error('Error fetching requests:', error);
-      //     this.toastr.error('Có lỗi xảy ra!', 'Lỗi');
-      //   });
+      this.createOrderService.GetAllRequestByUserId(this.inforId).subscribe((data: any) => {
+        if (data.code === 1000) {
+          this.requests = data?.result;
+          console.log('Danh sách request:', this.requests);
+          this.isLoadding = false;
+        } else {
+          this.isLoadding = false;
+          this.toastr.error('Không thể lấy danh sách request!', 'Lỗi');
+        }
+      },
+        (error) => {
+          this.isLoadding = false;
+          console.error('Error fetching requests:', error);
+          this.toastr.error('Có lỗi xảy ra!', 'Lỗi');
+        });
+
     }
     // console.log('Giá trị mới của isProduct:', this.isProduct);
   }
+
 }

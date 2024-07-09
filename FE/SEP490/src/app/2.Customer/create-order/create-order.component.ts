@@ -333,13 +333,14 @@ export class CreateOrderComponent implements OnInit {
   }
 
   onProductRequestChange(item: any, index: number): void {
-    const productId = item.productId;
+    console.log('item:', item);
+    const productId = item.requestProductId;
     this.productListService.getRequestProductById(productId).subscribe(
       (data: any) => {
         if (data.code === 1000) {
           const productItem: ProductItem = data.result;
           this.productItems.at(index).patchValue({
-            id: productItem.requestProductId,
+            id: productId,
             price: productItem.price
           });
           this.unitPriceProduct[index] = productItem.price;

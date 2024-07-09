@@ -660,7 +660,7 @@ export class ProductManagementComponent implements OnInit {
           quantity: product.result.quantity,
           imageList: product.result.imageList
         });
-        this.thumbnailPreview = await this.convertImageTobase64(product.result.image);
+        this.thumbnailPreview = product.result.image;
         this.imagesPreview = product.result.imageList.map((image: any) => {
           return image.fullPath;
         });

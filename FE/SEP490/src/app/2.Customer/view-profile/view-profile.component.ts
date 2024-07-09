@@ -59,7 +59,6 @@ export class ViewProfileComponent implements OnInit {
       wards: '',
   
     };
-
     // Assuming you receive data from an API call
     this.authenListService.getUserProfile().subscribe((data) => {
       this.userProfile = data.result; // Assuming 'result' contains the profile data

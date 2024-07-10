@@ -125,7 +125,7 @@ export class OrderRequiredComponent implements OnInit {
 
   onFileSelected(event: any) {
     const selectedFile = event.target.files[0];
-    console.log('Selected File:', selectedFile);
+    // console.log('Selected File:', selectedFile);
   }
   onImagesSelected(event: any): void {
     this.selectedImages = Array.from(event.target.files);
@@ -138,7 +138,7 @@ export class OrderRequiredComponent implements OnInit {
         const file = event.target.files[i];
         this.productImages.push(file);
       }
-      console.log('Selected Product Images:', this.productImages);
+      // console.log('Selected Product Images:', this.productImages);
     }
   }
 
@@ -146,22 +146,22 @@ export class OrderRequiredComponent implements OnInit {
     this.isLoadding = true;
     if (this.uploadForm.valid && this.selectedImages.length) {
       const productData = this.uploadForm.value;
-      console.log('Form Data:', productData);
+      // console.log('Form Data:', productData);
   
-      console.log('Selected Images:', this.selectedImages);
+      // console.log('Selected Images:', this.selectedImages);
   
       this.authenListService.uploadProductRequired(productData, this.selectedImages)
         .subscribe(
           response => {
             this.isLoadding = false;
-            this.toastr.success('Tạo sản phẩm thành công!', 'Thành công');
+            this.toastr.success('Đặt hàng thành công!', 'Thành công');
             timer(1000).subscribe(() => {
               window.location.reload();
             });
           },
           error => {
             this.isLoadding = false;
-            this.toastr.error('Tạo sản phẩm bị lỗi!', 'Lỗi');
+            this.toastr.error('Đặt hàng bị lỗi!', 'Lỗi');
           }
         );
     }

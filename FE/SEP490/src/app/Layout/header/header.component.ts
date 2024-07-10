@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { AuthenListService } from 'src/app/service/authen.service';
@@ -20,6 +20,8 @@ interface ApiResponse {
 })
 
 export class HeaderComponent implements OnInit {
+  @ViewChild(HeaderComponent, { static: true }) headerComponent: HeaderComponent | undefined;
+
   fullname: string | null = null;
   constructor(private dataService: DataService, private sanitizer: DomSanitizer, private toastr: ToastrService, private router: Router, private http: HttpClient, private authService: AuthenListService, private productListService: ProductListService) { }
   ngOnInit(): void {
@@ -40,6 +42,7 @@ export class HeaderComponent implements OnInit {
         console.error('Error fetching categories:', error);
       }
     );
+    this.isLoggedInForm();
   }
   selectedSortByPrice: string = '';
   countwishlist: number = 0;
@@ -85,32 +88,32 @@ export class HeaderComponent implements OnInit {
     );
   }
   onLogout(): void {
-    // Lấy giá trị của token từ local storage
     const token = localStorage.getItem('loginToken');
-    //   console.log('Token trước khi logout:', token);
-    //   console.log('remove loginToken');
-    // Xóa token đăng nhập khỏi local storage
     localStorage.removeItem('loginToken');
-    //   console.log('Token sau khi logout:', localStorage.getItem('loginToken'));
-
     this.router.navigateByUrl('/login');
   }
-  isLoggedIn(): boolean {
+  isLoggedInForm(): boolean {
+    return this.authService.isLoggedIn();
+  }
+
+  isLoggedIn() {
     return this.authService.isLoggedIn();
   }
   isLogout(): boolean {
-    return !this.authService.isLoggedIn();
+    return !this.isLoggedInForm();
   }
   onSearch(): void {
     console.log('Search key header:', this.searchKey);
-    // if (this.searchKey) { // Kiểm tra nếu searchKey có giá trị
-    //   this.dataService.changeSearchKey(this.searchKey);
-    //   this.routerSearch(this.searchKey);
-    // } else {
+
+    if (this.searchKey) { // Kiểm tra nếu searchKey có giá trị
+      this.dataService.changeSearchKey(this.searchKey);
+      this.routerSearch(this.searchKey);
+    } else {
+
       this.dataService.changeSearchKey(this.searchKey);
       this.routerSearch(this.searchKey);
       this.router.navigate(['/product']);
-    
+    }
   }
 
   onChangeSearch(search: string) {

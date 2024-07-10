@@ -234,7 +234,13 @@ export class CreateOrderComponent implements OnInit {
   }
 
   onPhoneNumberChange(phoneNumber: string): void {
+    //reset lai form
+    this.orderForm.reset();
     this.onIsProductChangeWhenChangePhoneNumber();
+    this.isForRequestProduct = false;
+    this.requests = [];
+    this.productList = [];
+    //
     this.createOrderService.getUserInfoByPhone(phoneNumber).subscribe(
       (data: any) => {
         // console.log('data theo phone:', data.result);

@@ -482,7 +482,7 @@
                   <div class="form-group">
                     <label for="quantity-{{i}}">Số lượng</label>
                     <input id="quantity-{{i}}" class="form-control" formControlName="quantity" type="number" min="0"
-                      [(ngModel)]="quantityPerSubMaterial[i]" (change)="onQuantityChange($event, i)" x
+                      [(ngModel)]="quantityPerSubMaterial[i]" (change)="onQuantityChange($event, i)"
                       placeholder="Nhập số lượng">
                   </div>
                 </div>
@@ -791,7 +791,8 @@
             <div class="form-group col-md-6" *ngIf="imagesPreview">
               <a *ngFor="let imageUrl of imagesPreview" [href]="imageUrl" target="_blank">
                 <img [src]="imageUrl" class="previewMultiple">
-              </a>            </div>
+              </a>
+            </div>
             <!-- <div class="form-group col-md-6" *ngIf="thumbnailPreview">
               <img [src]="thumbnailPreview" class="preview">
             </div> -->

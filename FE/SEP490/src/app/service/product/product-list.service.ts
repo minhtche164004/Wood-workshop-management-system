@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { environment } from 'src/app/environments/environment';
@@ -29,7 +29,7 @@ export class ProductListService {
 
   private apiUrl_AllRole = `${environment.apiUrl}api/auth/admin/GetAllRole`; // Assuming the correct endpoint
 
- 
+
   private apiUrl_GetMultiProductForCustomer = `${environment.apiUrl}api/auth/product/getMultiFillterProductForCustomer`;
 
   private apiUrl_AddProduct = `${environment.apiUrl}api/auth/product/AddNewProduct`;
@@ -41,7 +41,7 @@ export class ProductListService {
   private getAllMaterial = `${environment.apiUrl}api/auth/getAll`;  // lay cac vat lieu
   private getSubMaterialByMaterialId = `${environment.apiUrl}api/auth/submaterial/FilterByMaterial`;  // lay cac vat lieu con theo vat lieu cha 
   private apiUrl_GetAllStatus = `${environment.apiUrl}api/auth/admin/GetAllStatusUser`;
-  
+
 
 
   private api_UrlcreateExportMaterialProduct = `${environment.apiUrl}api/auth/submaterial/createExportMaterialProduct`;  // luu 1 san pham can bao nhieu vat lieu
@@ -55,7 +55,7 @@ export class ProductListService {
   private api_UrlcreateExportMaterialProductRequest = `${environment.apiUrl}api/auth/submaterial/createExportMaterialProductRequest`;  // lay 1 san pham can bao nhieu vat lieu
   private apiUrl_getAllRequest = `${environment.apiUrl}api/auth/order/GetAllRequest`;
   private apiUrlGetProductRequestByProductRequestId = `${environment.apiUrl}api/auth/order/getRequestProductById`;
-  private apiUrlEditProductRequest = `${environment.apiUrl}api/auth/product/EditRequestProduct`; 
+  private apiUrlEditProductRequest = `${environment.apiUrl}api/auth/product/EditRequestProduct`;
   private apiUrlDeleteProductRequest = `${environment.apiUrl}api/auth/product/deleteRequestProduct`;
   private api_UrlexportMaterialProductByProductRequestId = `${environment.apiUrl}api/auth/product/getRequestProductSubMaterialAndMaterialByRequestProductId`;  // lay tat ca vat lieu can co de tao 1 san pham theo yeu cau 
 
@@ -78,11 +78,11 @@ export class ProductListService {
   }
   createProductError(jobId: number, description: string, solution: string): Observable<any> {
     const body = { description, solution };
-    console.log("create error:  ",body);
+    console.log("create error:  ", body);
     return this.http.post(`${this.apiUrlCreateProductError}?job_id=${jobId}`, body);
   }
 
-  
+
   getAllProductError(): Observable<any> {
     return this.http.get<any>(this.api_Url_GetProductError).pipe(
       catchError(this.handleError)
@@ -126,15 +126,19 @@ export class ProductListService {
     );
   }
 
-  private handleError(error: any) {
-    let errorMessage = '';
-    if (error.error instanceof ErrorEvent) {
-      errorMessage = `An error occurred: ${error.error.message}`;
-    } else {
-      errorMessage = `Backend returned code ${error.status}: ${error.error}`;
-    }
-    console.error(errorMessage);
-    return throwError(errorMessage);
+  // private handleError(error: any) {
+  //   let errorMessage = '';
+  //   if (error.error instanceof ErrorEvent) {
+  //     errorMessage = `An error occurred: ${error.error.message}`;
+  //   } else {
+  //     errorMessage = `Backend returned code ${error.status}: ${error.error}`;
+  //   }
+  //   console.error(errorMessage);
+  //   return throwError(errorMessage);
+  // }
+
+  handleError(error: HttpErrorResponse) {
+    return throwError(error);
   }
 
   getAllUser(): Observable<any> {
@@ -279,7 +283,7 @@ export class ProductListService {
       catchError(this.handleError)
     );
   }
-  
+
   getMultiFillterRequestProductForAdmin(search: string, statusId: number, sortDirection: string): Observable<any> {
     const params = {
       search: search,
@@ -291,7 +295,7 @@ export class ProductListService {
       .filter(([key, value]) => {
         if (key === 'search' && value === '') return false;
         if (key === 'statusId' && value === 0) return false;
-        
+
         return value != null;
       })
       .map(([key, value]) => `${encodeURIComponent(key)}=${encodeURIComponent(value)}`)

@@ -15,26 +15,32 @@ export class SalaryService {
   private apiUrl = 'https://api.vietqr.io/v2/banks';
 
   private apiQR = `${environment.apiUrl}api/auth/getQRBankingForEmployee`
+
+  private acceptPaymentStatus = `${environment.apiUrl}api/auth/salary/updatebanking`;
   constructor(private http: HttpClient) { }
 
   getSalary(): Observable<any> {
     return this.http.get<any>(this.apiGetSalary);
   }
- 
+  updateBanking(id: number, status: any): Observable<any> {
+    const url = `${this.acceptPaymentStatus}?id=${id}&is_advance_success=${status}`;
+    return this.http.put<any>(url, {});
+  }
   getBanks(): Observable<any> {
     return this.http.get<any>(this.apiUrl);
   }
-  getQRBanking(amount: number, accountId: number, username: string, bin_bank: any, orderInfo: string): Observable<string> {
-    const url = `${this.apiQR}?amount=${amount}&accountId=${accountId}&username=${username}&bin_bank=${bin_bank}&orderInfo=${orderInfo}`;
+  getQRBanking(amount: number, accountId: number, username: string, bin_bank: string, orderInfo: string): Observable<string> {
+    const url = `${this.apiQR}?amount=${amount}&accountNo=${accountId}&username=${username}&bin_bank=${bin_bank}&orderInfo=${orderInfo}`;
     
     // Yêu cầu dữ liệu trả về là dạng text (base64 của hình ảnh)
     return this.http.post<string>(url, {}, { responseType: 'text' as 'json' });
   }
-  multSearchSalary(employeeName: string, fromDate: string, toDate: string, sortDirection: string): Observable<any> {
+  multSearchSalary(employeeName: string, fromDate: string, toDate: string, sortDirection: string, position: string): Observable<any> {
     const params = {
       employeeName: employeeName,
       fromDate: fromDate,
       toDate: toDate,
+      position_id: position,
       sortDirection: sortDirection
     };
     

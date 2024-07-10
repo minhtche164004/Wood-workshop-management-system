@@ -103,14 +103,14 @@ export class HeaderComponent implements OnInit {
   }
   onSearch(): void {
     console.log('Search key header:', this.searchKey);
-    if (this.searchKey) { // Kiểm tra nếu searchKey có giá trị
-      this.dataService.changeSearchKey(this.searchKey);
-      this.routerSearch(this.searchKey);
-    } else {
+    // if (this.searchKey) { // Kiểm tra nếu searchKey có giá trị
+    //   this.dataService.changeSearchKey(this.searchKey);
+    //   this.routerSearch(this.searchKey);
+    // } else {
       this.dataService.changeSearchKey(this.searchKey);
       this.routerSearch(this.searchKey);
       this.router.navigate(['/product']);
-    }
+    
   }
 
   onChangeSearch(search: string) {
@@ -143,7 +143,7 @@ export class HeaderComponent implements OnInit {
     const productName = this.selectedProduct.productName;
     const productId = this.selectedProduct.productId;
     this.dataService.changeSearchKey(productName);
-    this.router.navigate(['/product-details', productId]);
+   // this.router.navigate(['/product-details', productId]);
     // this.routerSearch(productName);
   }
 

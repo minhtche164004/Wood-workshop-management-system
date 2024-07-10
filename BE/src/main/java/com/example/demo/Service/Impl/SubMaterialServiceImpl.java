@@ -249,7 +249,7 @@ public class SubMaterialServiceImpl implements SubMaterialService {
     public SubMaterialViewDTO EditSubMaterial(int id, SubMaterialViewDTO subMaterialViewDTO) {
         SubMaterials subMaterials = subMaterialsRepository.findById1(id);
         subMaterials.setQuantity(subMaterialViewDTO.getQuantity());
-        subMaterials.setUnitPrice(subMaterialViewDTO.getUnit_price());
+        subMaterials.setUnitPrice(subMaterialViewDTO.getUnitPrice());
         subMaterials.getMaterial().setMaterialId(subMaterialViewDTO.getMaterialId());
         subMaterials.setDescription(subMaterialViewDTO.getDescription());
         subMaterials.setSubMaterialName(subMaterialViewDTO.getSubMaterialName());

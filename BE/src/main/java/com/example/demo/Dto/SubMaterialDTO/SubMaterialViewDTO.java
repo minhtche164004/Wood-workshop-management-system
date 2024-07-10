@@ -18,7 +18,7 @@ import java.math.BigDecimal;
 
         private String description;
 
-        private String material_name;
+        private String materialName;
 
         //    @NotNull(message = "MUST_REQUIRED") // Không được để trống
 //    @Min(value = 0, message = "QUANTITY_INVALID") // Giá trị tối thiểu là 0
@@ -26,23 +26,23 @@ import java.math.BigDecimal;
         private Double quantity;
 
         //  @DecimalMin(value = "0.0", inclusive = false, message = "PRICE_INVALID") // Giá trị tối thiểu lớn hơn 0
-        private BigDecimal unit_price;
+        private BigDecimal unitPrice;
 
-        public SubMaterialViewDTO(int subMaterialId,String subMaterialName, Integer materialId, String description, String material_name, Double quantity, BigDecimal unit_price) {
+        public SubMaterialViewDTO(int subMaterialId,String subMaterialName, Integer materialId, String description, String materialName, Double quantity, BigDecimal unitPrice) {
             this.subMaterialId=subMaterialId;
             this.subMaterialName = subMaterialName;
             this.materialId = materialId;
             this.description = description;
-            this.material_name = material_name;
+            this.materialName = materialName;
             this.quantity = quantity;
-            this.unit_price = unit_price;
+            this.unitPrice = unitPrice;
         }
 
         public SubMaterialViewDTO(String subMaterialName, String description, Double quantity, BigDecimal unit_price, Integer materialId) {
             this.subMaterialName = subMaterialName;
             this.description = description;
             this.quantity = quantity;
-            this.unit_price = unit_price;
+            this.unitPrice = unitPrice;
             this.materialId = materialId;
         }
     }

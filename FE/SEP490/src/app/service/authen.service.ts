@@ -268,7 +268,7 @@ export class AuthenListService {
     const headers = new HttpHeaders({
       'Authorization': `Bearer ${token}`
     });
-
+    
     return this.http.get<any>(this.apiUrl_ViewProfile, { headers }).pipe(
       catchError(this.handleError)
     );

@@ -33,9 +33,14 @@ public interface JobRepository extends JpaRepository<Jobs,Integer> {
 //    List<User> findUsersWithPosition2AndLessThan3Jobs();
 
     //bắt những thợ sơn có công <= 3 (thợ mộc có position_id là bằng 3)
+//    @Query("SELECT u FROM User u " +
+//            "WHERE u.position.position_id = :type AND u.role.roleId= 4 AND " +
+//            "(SELECT COUNT( j.jobId) FROM Jobs j WHERE j.user.userId = u.userId) < 3")
+//    List<User> findUsersWithPositionAndLessThan3Jobs(@Param("type") int type);
+
     @Query("SELECT u FROM User u " +
             "WHERE u.position.position_id = :type AND u.role.roleId= 4 AND " +
-            "(SELECT COUNT( j.jobId) FROM Jobs j WHERE j.user.userId = u.userId) < 3")
+            "(SELECT COUNT( j.jobId) FROM Jobs j WHERE j.user.userId = u.userId AND j.job_log = true ) < 3")
     List<User> findUsersWithPositionAndLessThan3Jobs(@Param("type") int type);
 
     @Query(value = "SELECT COUNT(*) FROM jobs j WHERE j.user_id = :userId", nativeQuery = true)

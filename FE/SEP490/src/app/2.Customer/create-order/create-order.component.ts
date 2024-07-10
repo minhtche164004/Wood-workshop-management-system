@@ -128,7 +128,7 @@ export class CreateOrderComponent implements OnInit {
     });
 
     this.orderForm = this.fb.group({
-      special_order: [0],
+      special_order: [null],
       cusInfo: this.fb.group({
         userid: [0],
         fullname: [''],
@@ -234,6 +234,13 @@ export class CreateOrderComponent implements OnInit {
   }
 
   onPhoneNumberChange(phoneNumber: string): void {
+    //reset lai form
+    this.orderForm.reset();
+    this.onIsProductChangeWhenChangePhoneNumber();
+    this.isForRequestProduct = false;
+    this.requests = [];
+    this.productList = [];
+    //
     this.createOrderService.getUserInfoByPhone(phoneNumber).subscribe(
       (data: any) => {
         // console.log('data theo phone:', data.result);
@@ -333,13 +340,14 @@ export class CreateOrderComponent implements OnInit {
   }
 
   onProductRequestChange(item: any, index: number): void {
-    const productId = item.productId;
+    console.log('item:', item);
+    const productId = item.requestProductId;
     this.productListService.getRequestProductById(productId).subscribe(
       (data: any) => {
         if (data.code === 1000) {
           const productItem: ProductItem = data.result;
           this.productItems.at(index).patchValue({
-            id: productItem.requestProductId,
+            id: productId,
             price: productItem.price
           });
           this.unitPriceProduct[index] = productItem.price;
@@ -419,7 +427,7 @@ export class CreateOrderComponent implements OnInit {
       }
     );
   }
-
+  //xac dinh san pham theo yeu cau hay co san khi select option
   onIsProductChange($event: Event) {
     this.isLoadding = true;
     const target = $event.target as HTMLInputElement;
@@ -434,6 +442,51 @@ export class CreateOrderComponent implements OnInit {
       this.isForRequestProduct = false;
     }
     console.log('Giá trị mới của isProduct:', this.isForRequestProduct);
+
+    this.productList.length = 0;
+    if (this.isForRequestProduct == false) {
+      this.productListService.getProducts().subscribe(
+        (data) => {
+          if (data.code === 1000) {
+            this.productList = data?.result;
+            console.log('Danh sách sản phẩm:', this.productList);
+          } else {
+            console.error('Failed to fetch products:', data);
+            this.toastr.error('Không thể lấy danh sách sản phẩm!', 'Lỗi');
+          }
+          this.isLoadding = false;
+        },
+        (error) => {
+          console.error('Error fetching products:', error);
+          this.toastr.error('Có lỗi xảy ra!', 'Lỗi');
+          this.isLoadding = false;
+        }
+      );
+    } else {  
+      // lay danh sach request de autocomplete
+      this.createOrderService.GetAllRequestByUserId(this.inforId).subscribe((data: any) => {
+        if (data.code === 1000) {
+          this.requests = data?.result;
+          console.log('Danh sách request:', this.requests);
+          this.isLoadding = false;
+        } else {
+          this.isLoadding = false;
+          this.toastr.error('Không thể lấy danh sách request!', 'Lỗi');
+        }
+      },
+        (error) => {
+          this.isLoadding = false;
+          console.error('Error fetching requests:', error);
+          this.toastr.error('Có lỗi xảy ra!', 'Lỗi');
+        });
+
+    }
+    // console.log('Giá trị mới của isProduct:', this.isProduct);
+  }
+
+  //xac dinh san pham theo yeu cau hay co san khi select lai phoneNumber
+  onIsProductChangeWhenChangePhoneNumber() {
+    this.isLoadding = true;
 
     this.productList.length = 0;
     if (this.isForRequestProduct == false) {

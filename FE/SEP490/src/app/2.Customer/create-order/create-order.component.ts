@@ -401,11 +401,19 @@ export class CreateOrderComponent implements OnInit {
             // Remove spaces from the URL if any
             const codeWithoutQuotes = response.result.code.replace(/"/g, '');
 
-            this.createOrderService.submitOrder(response.result.deposite, codeWithoutQuotes).subscribe(responseVNPAY => {
-              const sanitizedUrl = responseVNPAY.trim().replace(/\s+/g, '');
-              console.log('sanitizedUrl:', responseVNPAY);
-              // this.router.navigateByUrl(sanitizedUrl);
-            },
+            this.createOrderService.submitOrder(response.result.deposite, codeWithoutQuotes).subscribe(
+              responseVNPAY => {
+                // console.log('responseVNPAY:', responseVNPAY); 
+                if (responseVNPAY.url) {
+                  const sanitizedUrl = responseVNPAY.url.trim().replace(/\s+/g, '');
+                  console.log('sanitizedUrl:', sanitizedUrl);
+                  window.location.href = sanitizedUrl;
+                } else {
+
+                  console.error('Error fetching VNPAY URL:', responseVNPAY);
+                  this.toastr.error('Không thể điều hướng sang VNPAY', 'Lỗi');
+                }
+              },
               error => {
                 console.error('Error fetching VNPAY URL:', error);
                 this.toastr.error('Có lỗi khi thanh toán qua thẻ!', 'Lỗi');
@@ -459,7 +467,7 @@ export class CreateOrderComponent implements OnInit {
     this.isLoadding = true;
     const target = $event.target as HTMLInputElement;
     const value = target.value;
-    console.log("newvalue: ", value);
+    // console.log("newvalue: ", value);
 
     const actualValue = value.split(': ')[1];
 

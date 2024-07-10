@@ -127,6 +127,12 @@ public class OrderController {
         apiResponse.setResult(whiteListService.AddWhiteList(product_id));
         return apiResponse;
     }
+    @PostMapping("/Cancel_Order")
+    public ApiResponse<?> Cancel_Order(@RequestParam("order_id") int order_id,@RequestParam("special_order_id") int special_order_id) {
+        ApiResponse<String> apiResponse = new ApiResponse<>();
+        apiResponse.setResult(orderService.Cancel_Order(order_id,special_order_id));
+        return apiResponse;
+    }
     @GetMapping("/GetWhiteListByUser")
     public ApiResponse<?> GetWhiteListByUser() {
         ApiResponse<List> apiResponse = new ApiResponse<>();

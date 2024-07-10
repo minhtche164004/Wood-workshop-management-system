@@ -79,6 +79,8 @@ public interface OrderService {
     RequestProductDTO_Show GetRequestProductByIdWithImage(int id);
     List<RequestProductDTO_Show> GetAllRequestProductWithImage();
 
+   String  Cancel_Order(int order_id,int special_order_id);
+
 
 
 

@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { environment } from 'src/app/environments/environment';
@@ -15,18 +15,19 @@ export class CreateOrderService {
     private apiAddOrder = `${environment.apiUrl}api/auth/order/AddOrder`;
     private apiGetAllRequestByUserId = `${environment.apiUrl}api/auth/order/GetAllRequestByAccountId`;
     private apiGetProductRequestByRequestId = `${environment.apiUrl}api/auth/product/getRequestProductByRequestId`;
+    private apiSubmitOrder = `${environment.apiUrl}api/auth/submitOrder`;
 
     constructor(private http: HttpClient) { }
-    private handleError(error: any) {
-        let errorMessage = '';
-        if (error.error instanceof ErrorEvent) {
-            errorMessage = `An error occurred: ${error.error.message}`;
-        } else {
-            errorMessage = `Backend returned code ${error.status}: ${error.error}`;
-        }
-        console.error(errorMessage);
-        return throwError(errorMessage);
-    }
+    // private handleError(error: any) {
+    //     let errorMessage = '';
+    //     if (error.error instanceof ErrorEvent) {
+    //         errorMessage = `An error occurred: ${error.error.message}`;
+    //     } else {
+    //         errorMessage = `Backend returned code ${error.status}: ${error.error}`;
+    //     }
+    //     console.error(errorMessage);
+    //     return throwError(errorMessage);
+    // }
 
     getGetListPhoneNumber(): Observable<any> {
         const url = `${this.apiGetListPhoneNumber}`;
@@ -50,17 +51,6 @@ export class CreateOrderService {
     }
 
     addNewOrder(orderData: any): Observable<any> {
-
-        // if (!token) {
-        //   return throwError(new Error('Login token not found in localStorage.'));
-        // }
-
-        // const headers = new HttpHeaders({
-        //   // 'Authorization': `Bearer ${token}`,
-        //   'Accept': 'application/json'
-        // });
-
-        // console.log("Authorization header:", headers.get('Authorization'));
         return this.http.post(this.apiAddOrder, orderData).pipe(
             catchError(this.handleError)
         );
@@ -74,5 +64,17 @@ export class CreateOrderService {
     GetAllProductRequestByRequestId(requestId: number): Observable<any> {
         const url = `${this.apiGetProductRequestByRequestId}?id=${requestId}`;
         return this.http.get<any>(url);
+    }
+
+    submitOrder(amount: number, orderInfo: string): Observable<any> {
+        // Mã hóa orderInfo để đảm bảo an toàn khi truyền qua URL
+        // const encodedOrderInfo = encodeURIComponent(JSON.stringify(orderInfo));
+        // Tạo URL với các tham số đã mã hóa
+        const url = `${this.apiSubmitOrder}?amount=${amount}&orderInfo=${orderInfo}`;
+        return this.http.post<any>(url, {});
+    }
+
+    handleError(error: HttpErrorResponse) {
+        return throwError(error);
     }
 }

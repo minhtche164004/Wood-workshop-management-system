@@ -43,15 +43,15 @@ public class SalaryController {
     }
 
     @GetMapping("/getMultiFillterSalary")
-    public ApiResponse<?> getAllRequestProductForAdmin(
-            @RequestParam(required = false) String employeeName,
+    public ApiResponse<?> getMultiFillterSalary(
+            @RequestParam(required = false) String username,
             @RequestParam(required = false) Date fromDate,
             @RequestParam(required = false) Date toDate,
             @RequestParam(required = false) Integer position_id,
             @RequestParam(required = false) String sortDirection
     ){
         ApiResponse<List> apiResponse = new ApiResponse<>();
-        apiResponse.setResult(jobService.multi_filter_salary(fromDate, toDate,position_id, employeeName,sortDirection));
+        apiResponse.setResult(jobService.multi_filter_salary(fromDate, toDate,position_id, username,sortDirection));
         return apiResponse;
     }
 }

@@ -113,7 +113,7 @@ export class HeaderComponent implements OnInit {
       this.dataService.changeSearchKey(this.searchKey);
       this.routerSearch(this.searchKey);
       this.router.navigate(['/product']);
-    
+    }
   }
 
   onChangeSearch(search: string) {

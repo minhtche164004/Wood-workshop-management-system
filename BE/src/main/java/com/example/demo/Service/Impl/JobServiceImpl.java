@@ -317,7 +317,7 @@ public class JobServiceImpl implements JobService {
         processproducterror.setCode(jobs.getCode());
         processproducterror.setIsFixed(false);
 
-        processproducterror.setDescription(productErrorDTO.getDescription());
+        processproducterror.setDescription(productErrorDTO.getDes());
         processproducterror.setSolution(productErrorDTO.getSolution());
 
         Products product = jobs.getProduct(); // Lấy đối tượng Product
@@ -354,7 +354,7 @@ public class JobServiceImpl implements JobService {
     @Override
     public ProductErrorAllDTO EditProductError(int error_id, ProductErrorDTO productErrorDTO) {
         Processproducterror processproducterror = processproducterrorRepository.FindByIdProductErrorId(error_id);
-        processproducterror.setDescription(productErrorDTO.getDescription());
+        processproducterror.setDescription(productErrorDTO.getDes());
         processproducterror.setIsFixed(productErrorDTO.getIsFixed());
         processproducterror.setSolution(productErrorDTO.getSolution());
         processproducterrorRepository.save(processproducterror);

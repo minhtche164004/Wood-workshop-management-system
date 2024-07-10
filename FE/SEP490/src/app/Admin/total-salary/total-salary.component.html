@@ -79,7 +79,7 @@
                 </div>
 
 
-               
+
                 <table class="table table-striped table-hover">
                     <thead>
                         <tr>
@@ -89,7 +89,7 @@
                             <th>Tên nhân viên</th>
                             <!-- <th>Nhân viên</th> -->
                             <th>Vị trí</th>
-                            <th>Tình trạng</th>
+                            <th style="width: 10%;">Tình trạng</th>
                             <th>Đơn giá (vnđ)</th>
                             <th>Ngân hàng</th>
                             <th>STK</th>
@@ -118,20 +118,30 @@
                             <td>{{ product?.user?.username }}</td>
 
                             <td>{{ product?.user?.position?.position_name }}</td>
-                            <td [ngStyle]="{'color': product?.approve ? 'red' : 'green'}">
-                                {{ product?.advanceSuccess ? 'Đã thanh toán' : 'Chưa thanh toán' }}
+                            <td style="text-align: center;">
+                                <select [(ngModel)]="product.advanceSuccess"
+                                    (change)="updateBanking(product.advanceSalaryId,$event)" name="advanceSuccess">
+                                    <option [ngValue]="false" disabled>Chưa thanh toán</option>
+                                    <!-- <option [ngValue]="true">Đã thanh toán</option>
+                                    <option *ngFor="let status of advanceSuccessValues" 
+                                            [value]="status.trueValue" 
+                                            [selected]="status.trueValue === product?.advanceSuccess">
+                                      {{ status.displayName }} -->
+                                    <!-- </option> -->
+                                    <option [value]="true">Đã thanh toán</option>
+
+                                </select>
+
                             </td>
+
                             <td>{{ product?.amount | number: '1.0-3'}}</td>
                             <td>{{ product?.user?.userInfor?.bank_name }}</td>
                             <td>{{ product?.user?.userInfor?.bank_number }}</td>
-                            <td> <button 
-                                class="btn btn-primary" 
-                                data-toggle="modal" 
-                                data-target="#QRPAY"
-                                (click)="thanhToan(product)"
-                                [disabled]="product?.advanceSuccess">
-                                <i class="fa-solid fa-money-bill-transfer"></i>
-                            </button>
+                            <td> <button class="btn" [ngClass]="{'btn-primary': !product?.advanceSuccess, 'btn-secondary': product?.advanceSuccess}"
+                                data-toggle="modal" data-target="#QRPAY" (click)="thanhToan(product)" [disabled]="product?.advanceSuccess">
+                          <i class="fa-solid fa-money-bill-transfer"></i>
+                        </button>
+                        
                             </td>
                         </tr>
                     </tbody>
@@ -221,20 +231,24 @@
         </div>
     </div>
 </div>
-<div class="modal fade" id="QRPAY" role="d" aria-labelledby="QRPAY" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered modal-lg">
+<div class="modal fade" id="QRPAY" role="dialog" aria-labelledby="QRPAY" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header bg-primary text-white">
-               
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close"></button>
             </div>
-            <div class="modal-body">
-                <img style="width: 70%; align-items: center;" [src]="qrImageUrl">
+            <div class="modal-body text-center p-4">
+                <img style="width:100%;" [src]="qrImageUrl" class="img-fluid">
             </div>
-           
+            <div class="modal-footer text-center justify-content-center"> <!-- Thêm justify-content-center để căn giữa -->
+                <button type="button" class="btn btn-primary">Đã thanh toán</button>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Hủy bỏ</button>
+            </div>
         </div>
     </div>
 </div>
+
+
 
 
 <div *ngIf="isLoadding" class="loading-overlay">

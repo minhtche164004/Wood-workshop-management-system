@@ -393,7 +393,7 @@ export class CreateOrderComponent implements OnInit {
       && this.orderForm.value.payment_method != null) {
       this.createOrderService.addNewOrder(orderData).subscribe(
         response => {
-          this.isLoadding = false;
+          // this.isLoadding = false;
           this.toastr.success('Tạo đơn hàng thành công!', 'Thành công');
           // this.orderForm.reset();
           console.log('response:', response);
@@ -405,6 +405,7 @@ export class CreateOrderComponent implements OnInit {
               responseVNPAY => {
                 // console.log('responseVNPAY:', responseVNPAY); 
                 if (responseVNPAY.url) {
+                  this.isLoadding = false;
                   const sanitizedUrl = responseVNPAY.url.trim().replace(/\s+/g, '');
                   console.log('sanitizedUrl:', sanitizedUrl);
                   window.location.href = sanitizedUrl;
@@ -417,7 +418,7 @@ export class CreateOrderComponent implements OnInit {
               error => {
                 console.error('Error fetching VNPAY URL:', error);
                 this.toastr.error('Có lỗi khi thanh toán qua thẻ!', 'Lỗi');
-
+                this.isLoadding = false;
               });
           }
 

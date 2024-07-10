@@ -47,9 +47,9 @@
                             (change)="onImagesSelected($event)">
                         </div>
                       </div>
-                      <div class="row mb-3">
-                        <label class="col-sm-1 col-form-label">Địa chỉ</label>
-                        <div class="col-sm-11">
+                      <div class="row mb-3 form-group" >
+                        <label >Địa chỉ</label>
+                        <div class="col-sm-12">
                           <div class="row">
                             <div class="col-md-4 mb-3">
                               <div class="form-group">
@@ -65,7 +65,7 @@
                               <div class="form-group">
                                 <select class="form-control" formControlName="district_province"
                                   [(ngModel)]="userProfile.district" [formControl]="districtControl" required>
-                                  <option [ngValue]="null" disabled selected>Quận / Huyện</option>
+                                  <option disabled selected [ngValue]="null" >Chọn Quận/Huyện</option>
                                   <option *ngFor="let district of districts" [ngValue]="district.name">{{ district.name
                                     }}</option>
                                 </select>
@@ -75,7 +75,7 @@
                               <div class="form-group">
                                 <select class="form-control" formControlName="wards_province"
                                   [(ngModel)]="userProfile.wards" [formControl]="wardControl" required>
-                                  <option [ngValue]="null" disabled selected>Phường / Xã</option>
+                                  <option disabled selected [ngValue]="null" >Chọn Phường/Xã</option>
 
                                   <option *ngFor="let ward of wards" [ngValue]="ward.name">{{ ward.name }}</option>
                                 </select>
@@ -103,14 +103,8 @@
                           </div>
                         </div>
                       </div>
-                      <div class="row mb-3">
-                        <div class="col">
-                          <div class="form-group">
-                            <label>Lí do từ chối</label>
-                            <input class="form-control" type="text" placeholder="" formControlName="response">
-                          </div>
-                        </div>
-                      </div>
+                      
+                   
                       <div class="row" style="margin-bottom: 10px;">
                         <div class="col d-flex justify-content-center">
                           <button class="btn btn-primary btn-lg mx-5" type="submit">Chấp nhận</button>
@@ -129,3 +123,6 @@
   </div>
 </div>
 <app-footer></app-footer>
+<div *ngIf="isLoadding" class="loading-overlay">
+  <div class="spinner"></div>
+</div>

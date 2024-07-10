@@ -59,6 +59,7 @@ import { ReportCostManagementComponent } from './Admin/report-cost-management/re
 import { Chart } from 'chart.js';
 import { ChartComponent } from './Admin/chart/chart.component';
 import { ListRequestCustomerComponent } from './Admin/list-request-customer/list-request-customer.component';
+import { ListSalaryEmployeeComponent } from './4.Employee/list-salary-employee/list-salary-employee.component';
 
 
 
@@ -120,6 +121,7 @@ const routes: Routes = [
   { path: 'employee', component: ListJobDoneEmployeeComponent },
   { path: 'list_job_done', component: ListJobDoneComponent },
   { path: 'list_request_customer', component: ListRequestCustomerComponent },
+  { path: 'list_salary_employee', component: ListSalaryEmployeeComponent },
   
   // { path: '', redirectTo: '/homepage', pathMatch: 'full' },
 

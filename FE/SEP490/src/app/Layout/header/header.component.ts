@@ -146,7 +146,7 @@ export class HeaderComponent implements OnInit {
     const productName = this.selectedProduct.productName;
     const productId = this.selectedProduct.productId;
     this.dataService.changeSearchKey(productName);
-   // this.router.navigate(['/product-details', productId]);
+   this.router.navigate(['/product-details', productId]);
     // this.routerSearch(productName);
   }
 

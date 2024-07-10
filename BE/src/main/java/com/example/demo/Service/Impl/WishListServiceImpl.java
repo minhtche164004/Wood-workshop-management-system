@@ -40,10 +40,10 @@ public class WishListServiceImpl implements WhiteListService {
             if(w.getProduct().getProductId() == products.getProductId()){
                 throw new AppException(ErrorCode.EXISTED_WISHLIST);
             }
-            w.setProduct(products);
-            whiteLis.setUser(user);
-        }
 
+        }
+        whiteLis.setProduct(products);
+        whiteLis.setUser(user);
         return wishListRepository.save(whiteLis);
 
     }

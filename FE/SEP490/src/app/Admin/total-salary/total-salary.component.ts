@@ -56,6 +56,7 @@ export class TotalSalaryComponent implements OnInit {
     this.getBankList();
   }
   getBankList(): void {
+    this.isLoadding = true;
     this.salaryService.getBanks().subscribe(
       (data) => {
         this.bankList = data.data;
@@ -241,10 +242,11 @@ export class TotalSalaryComponent implements OnInit {
   }
   thanhToan(product: any): void {
     this.isLoadding = true;
+    this.qrImageUrl = '';
     console.log('Thanh toan:', product);
     console.log('Amount: ', product.amount);
     console.log('accountId: ', product.user?.userInfor?.bank_number)
-    console.log('username: ', product.user?.username)
+    console.log('username: ', product?.user?.userInfor?.fullname)
     console.log('code: ', product.code)
    // const bankName = product.user?.userInfor?.bank_name;
     const formattedNdChuyenKhoan = this.ndChuyenKhoan.replace('{{code}}', product.code.toString());
@@ -253,7 +255,7 @@ export class TotalSalaryComponent implements OnInit {
 
      const bin = this.getBinByBankNameOrShortName(product.user?.userInfor?.bank_name);
     console.log('BIN:', bin);
-    this.salaryService.getQRBanking(product.amount, product.user?.userInfor?.bank_number, product.user?.username, bin, formattedNdChuyenKhoan)
+    this.salaryService.getQRBanking(product.amount, product.user?.userInfor?.bank_number, product?.user?.userInfor?.fullname, bin, formattedNdChuyenKhoan)
       .subscribe(
         (response) => {
 

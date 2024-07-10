@@ -11,10 +11,10 @@ import java.math.BigDecimal;
     @NoArgsConstructor
     public class SubMaterialViewDTO implements Serializable {
 
-        private int sub_material_id;
-        private String sub_material_name;
+        private int subMaterialId;
+        private String subMaterialName;
 
-        private Integer material_id;
+        private Integer materialId;
 
         private String description;
 
@@ -28,22 +28,22 @@ import java.math.BigDecimal;
         //  @DecimalMin(value = "0.0", inclusive = false, message = "PRICE_INVALID") // Giá trị tối thiểu lớn hơn 0
         private BigDecimal unit_price;
 
-        public SubMaterialViewDTO(int sub_material_id,String sub_material_name, Integer material_id, String description, String material_name, Double quantity, BigDecimal unit_price) {
-            this.sub_material_id=sub_material_id;
-            this.sub_material_name = sub_material_name;
-            this.material_id = material_id;
+        public SubMaterialViewDTO(int subMaterialId,String subMaterialName, Integer materialId, String description, String material_name, Double quantity, BigDecimal unit_price) {
+            this.subMaterialId=subMaterialId;
+            this.subMaterialName = subMaterialName;
+            this.materialId = materialId;
             this.description = description;
             this.material_name = material_name;
             this.quantity = quantity;
             this.unit_price = unit_price;
         }
 
-        public SubMaterialViewDTO(String sub_material_name, String description, Double quantity, BigDecimal unit_price, Integer material_id) {
-            this.sub_material_name = sub_material_name;
+        public SubMaterialViewDTO(String subMaterialName, String description, Double quantity, BigDecimal unit_price, Integer materialId) {
+            this.subMaterialName = subMaterialName;
             this.description = description;
             this.quantity = quantity;
             this.unit_price = unit_price;
-            this.material_id = material_id;
+            this.materialId = materialId;
         }
     }
 

@@ -5,6 +5,7 @@ import { FormArray, FormBuilder, FormControl, FormGroup } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
 import { ProductListService } from '../../service/product/product-list.service';
 import { AuthenListService } from '../../service/authen.service';
+import { timer } from 'rxjs';
 
 interface Province {
   code: string;
@@ -29,19 +30,22 @@ interface Ward {
   styleUrls: ['./order-required.component.scss']
 })
 export class OrderRequiredComponent implements OnInit {
+  isLoadding: boolean = false;   //loading when click button
   uploadForm: FormGroup;
   userProfile: any = {};
   productImages: File[] = [];
   provinces: Province[] = [];
   districts: District[] = [];
   wards: Ward[] = [];
-  
+
 
   provinceControl = new FormControl();
   districtControl = new FormControl();
   wardControl = new FormControl();
   selectedProvince: any;
   selectedDistrict: any;
+  selectedWard: any;
+  
   selectedImages: File[] = [];
 
   constructor(
@@ -66,48 +70,56 @@ export class OrderRequiredComponent implements OnInit {
     });
   }
   ngOnInit() {
-    this.userProfile = {
-      username: '',
-      email: '',
-      phoneNumber: '',
-      address: '',
-      fullname: '',
-      bank_name: '',
-      bank_number: '',
-    };
+    this.loadData();
+  }
+
+  loadData() {
     this.authenListService.getUserProfile().subscribe((data) => {
       this.userProfile = data.result;
-      console.log('API Response:', data);
-      
-    });
-    this.provincesService.getProvinces().subscribe((data: Province[]) => {
-      this.provinces = data;
-      this.provinces.forEach(province => {
-        this.districts.push(...province.districts);
-        province.districts.forEach(district => {
-          this.wards.push(...district.wards);
-        });
+      this.provincesService.getProvinces().subscribe((data: Province[]) => {
+        this.provinces = data;
+        this.updateControls();
       });
     });
-    this.provinceControl.valueChanges.subscribe(provinceName => {
-      this.selectedProvince = this.provinces.find(city_province => city_province.name === provinceName);
-      this.districts = this.selectedProvince ? this.selectedProvince.districts : [];
-      this.uploadForm.controls['city_province'].setValue(this.selectedProvince ? this.selectedProvince.name : '');
-      this.uploadForm.controls['district'].reset();
-      this.uploadForm.controls['wards'].reset();
-    });
+  }
 
+  updateControls() {
+    // Set initial values based on userProfile
+    this.provinceControl.setValue(this.userProfile.city);
+    this.districtControl.setValue(this.userProfile.district);
+
+    // Handle changes in province selection
+    this.provinceControl.valueChanges.subscribe(provinceName => {
+      this.selectedProvince = this.provinces.find(province => province.name === provinceName);
+      this.districts = this.selectedProvince?.districts || [];
+      // Set the district control to a default value that corresponds to the placeholder
+      this.districtControl.setValue(null, { emitEvent: false });
+      this.wardControl.setValue(null, { emitEvent: false });
+    });
+    
     this.districtControl.valueChanges.subscribe(districtName => {
       this.selectedDistrict = this.districts.find(district => district.name === districtName);
-      this.wards = this.selectedDistrict ? this.selectedDistrict.wards : [];
-      this.uploadForm.controls['district_province'].setValue(this.selectedDistrict ? this.selectedDistrict.name : '');
-      this.uploadForm.controls['wards'].reset();
+      this.wards = this.selectedDistrict?.wards || [];
+      this.wardControl.setValue(null, { emitEvent: false });
     });
-
-    this.wardControl.valueChanges.subscribe(wardName => {
-      this.uploadForm.controls['wards_province'].setValue(wardName);
-    });
+    this.selectedProvince = this.provinces.find(province => province.name === this.userProfile.city);
+    if (this.selectedProvince) {
+      this.districts = this.selectedProvince.districts;
+      this.selectedDistrict = this.districts.find(district => district.name === this.userProfile.district);
+      if (this.selectedDistrict) {
+        this.wards = this.selectedDistrict.wards;
+        // Update ward control based on userProfile initial data
+      }
+    }
   }
+
+
+
+
+  // this.wardControl.valueChanges.subscribe(wardName => {
+  //   this.uploadForm.controls['wards_province'].setValue(wardName);
+  // });
+
 
   onFileSelected(event: any) {
     const selectedFile = event.target.files[0];
@@ -129,26 +141,30 @@ export class OrderRequiredComponent implements OnInit {
   }
 
   onSubmit(): void {
+    this.isLoadding = true;
     if (this.uploadForm.valid && this.selectedImages.length) {
       const productData = this.uploadForm.value;
       console.log('Form Data:', productData);
-
+  
       console.log('Selected Images:', this.selectedImages);
-
+  
       this.authenListService.uploadProductRequired(productData, this.selectedImages)
         .subscribe(
           response => {
-
+            this.isLoadding = false;
             this.toastr.success('Tạo sản phẩm thành công!', 'Thành công');
-            this.ngOnInit();
+            timer(1000).subscribe(() => {
+              window.location.reload();
+            });
           },
           error => {
-
+            this.isLoadding = false;
             this.toastr.error('Tạo sản phẩm bị lỗi!', 'Lỗi');
           }
         );
     }
   }
+  
 
   onCancel() {
     this.uploadForm.patchValue({
@@ -160,5 +176,4 @@ export class OrderRequiredComponent implements OnInit {
     filesArray.clear();
   }
 }
-
 

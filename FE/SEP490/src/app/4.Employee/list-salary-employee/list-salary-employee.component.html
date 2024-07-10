@@ -1,0 +1,108 @@
+<app-dashboard-employee></app-dashboard-employee>
+
+<div class="dashboard-main" >
+
+    <div class="container-fluid">
+      <div class="table-responsive">
+        <div class="table-wrapper">
+          <div class="table-title">
+            <div class="row " style="height: 60px;">
+              <div class="col-sm-5 ">
+                <h2 style="margin-bottom: 0;"> Tra cứu việc làm đã giao</h2>
+              </div>
+              <div class="col-sm-7 text-end d-flex align-items-center justify-content-end">
+                <!-- <a href="#" class="btn btn-secondary btn-sm" data-toggle="modal" data-target="#addAccountModal"
+                  style="font-size: 14px;">
+                  <i class="material-icons align-middle" style="font-size: 18px;">&#xE147;</i>
+                  <span class="align-middle">Thêm Người Dùng</span>
+                </a> -->
+              </div>
+            </div>
+  
+            <div class="row">
+              <div class="col-md-7"></div> <!-- Dummy column to push the search box to the right -->
+              <div class="col-md-5 text-end">
+                <div class="input-group mb-3">
+                  <!-- product.component.html -->
+                  <!-- <select [ngModel]="selectedCategory">
+                    <option value="null" disabled selected>Phân quyền</option>
+                    <option *ngFor="let ps of position" [value]="ps.position_id">{{ ps.position_name }}</option>
+                  </select> -->
+  
+                  <input type="text" class="form-control" placeholder="Mã nhân viên" >
+                  <button class="btn search-button" type="button" >
+                    <i class="fa fa-search"></i>
+                  </button>
+  
+  
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="table-container">
+            <div class="table-responsive">
+              <table class="table table-striped table-hover">
+                <thead>
+                  <tr>
+                    <th>STT</th>
+                    <th>Mã công việc</th>
+                    <th>Thao tác</th>
+                    <th>Vị trí công việc</th>
+      
+                    <th>Tên vị trí</th>
+                    <th>Tình trạng công việc</th>
+                    <th>Lương(VNĐ)</th>
+                  
+                    <th>Sản phẩm</th>
+                    <th>Số lượng</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let job of salary_employee | paginate: { itemsPerPage: 10, currentPage: currentPage }; let i = index">
+                    <td>{{ i + 1 + (currentPage - 1) * 10 }}</td>
+                    <td>{{ job.code }}</td>
+                    
+  
+                    <td class="action-buttons">
+                      <a href="#" class="settings" title="Chỉnh sửa" data-toggle="modal" data-target="#editAccountModal"
+                        >
+                        <i class="fa-solid fa-pen-to-square"></i>
+                      </a>
+                      <a href="#" class="delete" title="Delete" data-toggle="modal" data-target="#confirmDeleteModal">
+                        
+                        <i class="fa-regular fa-trash-can"></i>
+                      </a>
+                      <a href="#" class="info" title="Info" data-toggle="modal" data-target="#productDetailModal">
+                        <i class="fa-solid fa-circle-info"></i>
+                      </a>
+                    </td>
+                    <td>{{ job.job_name }}</td>
+  
+   
+                    <td style="min-width: 150px;">{{ job.position_name }}</td>
+                    <td style="min-width: 150px;">{{ job.status_job_name }}</td>
+                   
+                    <td style="min-width: 100px; text-align: right;">{{ job.cost | number: '1.0-3'}} </td>
+                    <td style="min-width: 100px;">{{ job.request_name }}</td>
+                    <td  style="min-width: 20px; text-align: right;">{{ job.quantity }}</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+  
+  
+          <pagination-controls style="justify-content: right; display: flex;" (pageChange)="currentPage = $event"
+            previousLabel="Trang trước" nextLabel="Trang sau">
+          </pagination-controls>
+          <div class="clearfix" style="justify-content: right; display: flex;">
+            <div class="hint-text">Hiển thị <b>{{ (currentPage - 1) * 10 + 1 }}</b> tới <b>{{ currentPage * 10
+                > salary_employee.length ? salary_employee.length : currentPage * 10 }}</b> trong tổng <b>{{
+                salary_employee.length }}</b> dữ liệu</div>
+          </div>
+  
+  
+        </div>
+      </div>
+    </div>
+  </div>

@@ -27,6 +27,7 @@ interface Ward {
   styleUrls: ['./view-profile.component.scss']
 })
 export class ViewProfileComponent implements OnInit {
+  isLoadding: boolean = false; 
   provinces: Province[] = [];
   districts: District[] = [];
   wards: Ward[] = [];
@@ -35,6 +36,7 @@ export class ViewProfileComponent implements OnInit {
   wardControl = new FormControl();
   selectedProvince: any;
   selectedDistrict: any;
+  selectedWard: any;
   isEditing = false; // Flag to manage readonly state
 
   userProfile: any = {};
@@ -46,62 +48,49 @@ export class ViewProfileComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-    this.userProfile = {
-      username: '',
-      email: '',
-      phoneNumber: '',
-      address: '',
-      fullname: '',
-      bank_name: '',
-      bank_number: '',
-      city: '',
-      district: '',
-      wards: '',
-  
-    };
+    this.loadData();
+  }
 
-    // Assuming you receive data from an API call
+  loadData() {
     this.authenListService.getUserProfile().subscribe((data) => {
-      this.userProfile = data.result; // Assuming 'result' contains the profile data
-    });
-
-    this.provincesService.getProvinces().subscribe((data: Province[]) => {
-      this.provinces = data;
-      // Ví dụ lặp qua các tỉnh/thành phố để lấy ra các quận/huyện và phường/xã
-      this.provinces.forEach(province => {
-        this.districts.push(...province.districts);
-        province.districts.forEach(district => {
-          this.wards.push(...district.wards);
-        });
+      this.userProfile = data.result;
+      this.provincesService.getProvinces().subscribe((data: Province[]) => {
+        this.provinces = data;
+        this.updateControls();
       });
     });
+  }
 
+  updateControls() {
+    // Set initial values based on userProfile
+    this.provinceControl.setValue(this.userProfile.city);
+    this.districtControl.setValue(this.userProfile.district);
+
+    // Handle changes in province selection
     this.provinceControl.valueChanges.subscribe(provinceName => {
-      this.onProvinceChange();
+      this.selectedProvince = this.provinces.find(province => province.name === provinceName);
+      this.districts = this.selectedProvince?.districts || [];
+      // Set the district control to a default value that corresponds to the placeholder
+      this.districtControl.setValue(null, { emitEvent: false });
+      this.wardControl.setValue(null, { emitEvent: false });
     });
+    
+    this.districtControl.valueChanges.subscribe(districtName => {
+      this.selectedDistrict = this.districts.find(district => district.name === districtName);
+      this.wards = this.selectedDistrict?.wards || [];
+      this.wardControl.setValue(null, { emitEvent: false });
+    });
+    this.selectedProvince = this.provinces.find(province => province.name === this.userProfile.city);
+    if (this.selectedProvince) {
+      this.districts = this.selectedProvince.districts;
+      this.selectedDistrict = this.districts.find(district => district.name === this.userProfile.district);
+      if (this.selectedDistrict) {
+        this.wards = this.selectedDistrict.wards;
+        // Update ward control based on userProfile initial data
+      }
+    }
   }
 
-  onProvinceChange() {
-    const selectedProvinceName = this.userProfile.city; // assuming 'city' is bound to ngModel of the province dropdown
-    this.selectedProvince = this.provinces.find(province => province.name === selectedProvinceName);
-
-    // Update districts based on the selected province
-    this.districts = this.selectedProvince ? this.selectedProvince.districts : [];
-
-    // Reset selected district and ward
-    this.userProfile.district = ''; // reset selected district in the model
-    this.userProfile.wards = ''; // reset selected ward in the model
-  }
-
-  onDistrictChange() {
-    const selectedDistrictName = this.userProfile.district; // assuming 'city' is bound to ngModel of the province dropdown
-    this.selectedDistrict = this.districts.find(district => district.name === selectedDistrictName);
-
-    // Update districts based on the selected province
-    this.wards = this.selectedDistrict ? this.selectedDistrict.wards : [];
-
-    this.userProfile.wards = ''; // reset selected ward in the model
-  }
 
   editProfile() {
     this.isEditing = true;
@@ -179,6 +168,7 @@ export class ViewProfileComponent implements OnInit {
   }
 
   saveChanges() {
+    
     if (!this.validateRegistration()) {
       return;
     }
@@ -186,6 +176,7 @@ export class ViewProfileComponent implements OnInit {
 
     this.authenListService.updateUserProfile(this.userProfile).subscribe(
       (response: any) => {
+        
         console.log('Profile updated successfully:', response);
         this.toastr.success('Thông tin đã được cập nhật thành công!', 'Thành công');
         this.isEditing = false; // Exit editing mode after saving changes

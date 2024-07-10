@@ -61,22 +61,28 @@
                     <li class="nav-item">
                         <a routerLink="/product" class="nav-link active" aria-current="page">Sản phẩm</a>
                     </li>
-
                     <li class="nav-item">
                         <a routerLink="/contact" class="nav-link active" aria-current="page">Liên hệ</a>
                     </li>
                     <li class="nav-item">
                         <a routerLink="/about-us" class="nav-link active" aria-current="page">Giới thiệu</a>
                     </li>
-                    <li class="nav-item">
-                        <a routerLink="/order_rq" class="nav-link active" aria-current="page">Đặt hàng</a>
-                    </li>
+                    <ng-container *ngIf="isLoggedIn(); else loggedOutLinks">
+                        <li class="nav-item">
+                            <a routerLink="/order_rq" class="nav-link active" aria-current="page">Đặt hàng</a>
+                        </li>
+                    </ng-container>
+                    <ng-template #loggedOutLinks>
+                       
+                    </ng-template>
                 </ul>
             </div>
+            
             <ul class="icon-nav d-flex justify-content-end" style="margin-right: 60px; margin-top: 2%;">
                 <div class="dropdown">
-                    <a class="icon-buy" href="" data-bs-toggle="modal" data-bs-target="#exampleModal"><i
-                            class="fas fa-user-alt"></i></a>
+                    <a class="icon-buy" href="" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                        <i class="fas fa-user-alt"></i>
+                    </a>
                     <div class="dropdown-content">
                         <ng-container *ngIf="isLogout(); else loggedInLinks">
                             <a routerLink="/login">Đăng nhập</a>
@@ -84,24 +90,21 @@
                         <ng-template #loggedInLinks>
                             <a routerLink="/profile">Thông tin cá nhân</a>
                             <a routerLink="/change_pass">Đổi mật khẩu</a>
-
                             <a routerLink="/request_product">Danh sách theo yêu cầu</a>
                             <a routerLink="/history_order">Lịch sử đơn hàng</a>
-
                             <a (click)="onLogout()">Đăng xuất</a>
                         </ng-template>
                     </div>
                 </div>
-
+            
                 <li>
                     <a class="icon-buy" href="/wishlist">
                         <i class="fa-solid fa-heart"></i>
                         <div class="number-buy">{{ countwishlist }}</div>
-
                     </a>
                 </li>
-
             </ul>
+            
         </div>
     </nav>
     <div class="container-fluid search-bar-container" style="margin-top: -2%;">

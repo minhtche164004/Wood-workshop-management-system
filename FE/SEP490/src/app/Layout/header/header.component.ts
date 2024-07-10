@@ -85,21 +85,16 @@ export class HeaderComponent implements OnInit {
     );
   }
   onLogout(): void {
-    // Lấy giá trị của token từ local storage
     const token = localStorage.getItem('loginToken');
-    //   console.log('Token trước khi logout:', token);
-    //   console.log('remove loginToken');
-    // Xóa token đăng nhập khỏi local storage
     localStorage.removeItem('loginToken');
-    //   console.log('Token sau khi logout:', localStorage.getItem('loginToken'));
-
     this.router.navigateByUrl('/login');
   }
   isLoggedIn(): boolean {
     return this.authService.isLoggedIn();
   }
+
   isLogout(): boolean {
-    return !this.authService.isLoggedIn();
+    return !this.isLoggedIn();
   }
   onSearch(): void {
     console.log('Search key header:', this.searchKey);

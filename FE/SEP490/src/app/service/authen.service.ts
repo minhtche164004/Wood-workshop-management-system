@@ -44,6 +44,7 @@ export class AuthenListService {
   private apiUrl_getAllStatusOrder = `${environment.apiUrl}api/auth/order/getStatusOrder`;
   private apiUrl_chanegStatusOrder = `${environment.apiUrl}api/auth/order/ChangeStatusOrder`;
   private apiUrl_getFilterStatus = `${environment.apiUrl}api/auth/order/filter-by-status`;
+  private apiUrl_getSalaryByEmployeeID = `${environment.apiUrl}api/auth/salary/getSalaryByEmployeeID`;
   
   
   private apiUrl_NameATM = 'https://api.vietqr.io/v2/banks';
@@ -165,6 +166,23 @@ export class AuthenListService {
     console.log("Authorization header:", headers.get('Authorization'));
 
     return this.http.get<any>(this.apiUrl_getfindAllJobForDoneByEmployeeID, { headers }).pipe(
+      catchError(this.handleError)
+    );
+  }
+  getSalaryByEmployeeID(): Observable<any> {
+    const token = localStorage.getItem('loginToken');
+
+    if (!token) {
+      return throwError(new Error('Login token not found in localStorage.'));
+    }
+
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${token}`
+    });
+
+    console.log("Authorization header:", headers.get('Authorization'));
+
+    return this.http.get<any>(this.apiUrl_getSalaryByEmployeeID, { headers }).pipe(
       catchError(this.handleError)
     );
   }

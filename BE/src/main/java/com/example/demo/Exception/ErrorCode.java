@@ -71,7 +71,8 @@ public enum ErrorCode {
 
     PRODUCT_HAS_RELATIONSHIPS(1030,"Không thể xoá sản phẩm do sản phẩm đang được sử dụng ở các chức năng khác",HttpStatus.BAD_REQUEST),
     SUPPLIER_HAS_RELATIONSHIPS(1032,"Không thể xoá nhà cung cấp này  do vật liệu từ họ đang được sử dụng cho đơn hàng",HttpStatus.BAD_REQUEST),
-    NOT_EDIT_EMPLOYEE(1033,"Không thể thay đổi quyền của nhân viên này vì họ đang đảm nhận công việc ở vị trí của họ",HttpStatus.BAD_REQUEST)
+    NOT_EDIT_EMPLOYEE(1033,"Không thể thay đổi quyền của nhân viên này vì họ đang đảm nhận công việc ở vị trí của họ",HttpStatus.BAD_REQUEST),
+    EXISTED_WISHLIST(1034,"Sản phẩm đã tồn tại trong danh sách yêu thích, không cần thêm vào nữa  ",HttpStatus.BAD_REQUEST)
     // OTP_EXPIRED(1013,"OTP has expired! A new OTP has been sent to your email",HttpStatus.EXPECTATION_FAILED),
     ;
 

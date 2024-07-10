@@ -10,7 +10,7 @@ public class ProductErrorAllDTO {
     private int id;
     private String code;
     private String des;
-    private boolean is_fix;
+    private boolean fix;
     private String solution;
     private String job_name;
     private int job_id;
@@ -22,11 +22,11 @@ public class ProductErrorAllDTO {
     private String user_name_order;
     private String employee_name;
 
-    public ProductErrorAllDTO(int id, String code, String des, boolean is_fix, String solution, String job_name, int job_id, int product_id, String product_name, int request_product_id, String request_product_name, String code_order, String user_name_order, String employee_name) {
+    public ProductErrorAllDTO(int id, String code, String des, boolean fix, String solution, String job_name, int job_id, int product_id, String product_name, int request_product_id, String request_product_name, String code_order, String user_name_order, String employee_name) {
         this.id = id;
         this.code = code;
         this.des = des;
-        this.is_fix = is_fix;
+        this.fix = fix;
         this.solution = solution;
         this.job_name = job_name;
         this.job_id = job_id;

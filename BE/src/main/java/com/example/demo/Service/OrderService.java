@@ -74,6 +74,7 @@ public interface OrderService {
     List<RequestProducts> findByPriceRange(BigDecimal min, BigDecimal max);
     List<RequestProducts> GetAllProductRequestByUserId();
     List<Requests> GetAllRequestByUserId();
+    List<Requests> GetAllRequestByAccountId(int acc_id);
 
     RequestProductDTO_Show GetRequestProductByIdWithImage(int id);
     List<RequestProductDTO_Show> GetAllRequestProductWithImage();

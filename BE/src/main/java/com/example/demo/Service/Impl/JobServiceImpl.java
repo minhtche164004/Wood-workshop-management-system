@@ -205,7 +205,7 @@ public class JobServiceImpl implements JobService {
 
             advancesalary.setDate(Date.valueOf(today));
             advancesalary.setAmount(jobs_history.getCost());
-            advancesalary.setApprove(true);
+//            advancesalary.setApprove(null);
             advancesalary.setAdvanceSuccess(false);
             advancesalary.setCode(code);
             advancesalary.setUser(jobs_history.getUser());
@@ -371,9 +371,13 @@ public class JobServiceImpl implements JobService {
     }
 
     @Override
-    public List<Advancesalary> multi_filter_salary(Date fromDate, Date toDate, String employeeName, String sortDirection) {
-        List<Advancesalary> advancesalaryList = advancesalaryRepository.filterAdvancesalary(fromDate, toDate, employeeName);
-
+    public List<Advancesalary> multi_filter_salary(Date fromDate, Date toDate,Integer position_id, String employeeName, String sortDirection) {
+        List<Advancesalary> advancesalaryList = new ArrayList<>();
+        if (position_id != null ) {
+            advancesalaryList = advancesalaryRepository.filterAdvancesalary(fromDate, toDate, position_id, employeeName);
+        } else {
+            advancesalaryList= advancesalaryRepository.findAll();
+        }
         if (advancesalaryList.isEmpty()) {
             throw new AppException(ErrorCode.NOT_FOUND);
         }
@@ -399,6 +403,13 @@ public class JobServiceImpl implements JobService {
             throw new AppException(ErrorCode.NOT_FOUND);
         }
         return list;
+    }
+
+    @Transactional
+    @Override
+    public Advancesalary ChangeStatus(int id,boolean check) {
+        advancesalaryRepository.update_banking(id,check);
+        return advancesalaryRepository.findById(id);
     }
 
 

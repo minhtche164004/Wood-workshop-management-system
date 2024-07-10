@@ -91,13 +91,12 @@
                             <td>
                                 <ng-container *ngIf="product?.statusJob.type !== 1">
                                     <select style="width: 100%;" [ngModel]="product?.statusJob.status_id"
-                                        (change)="openConfirmChangeStatusJob(product)"
-                                        >
+                                        (change)="acceptJob(product?.job_id, product?.statusJob.status_id)">
                                         <ng-container *ngFor="let status of statusType">
                                             <option *ngIf="status.type === product.statusJob.type"
                                                 [value]="status.status_id"
-                                                [disabled]="status.status_id === 4 || status.status_id === 7 || status.status_id === 10"    
-                                                >{{ status.status_name }}</option>
+                                                [disabled]="status.status_id === 4 || status.status_id === 7 || status.status_id === 10">
+                                                {{ status.status_name }}</option>
                                         </ng-container>
                                     </select>
                                 </ng-container>
@@ -122,8 +121,8 @@
 
 
                             </td>
-                            <td><button class="btn btn-sm" data-toggle="modal"
-                                data-target="#errorProduct" (click)="errorJob(product)" 
+                            <td><button class="btn btn-sm" data-toggle="modal" data-target="#errorProduct"
+                                    (click)="errorJob(product)"
                                     [class.btn-outline-primary]="product.statusJob.status_id !== 10 && product.statusJob.status_id !== 7 && product.statusJob.status_id !== 4"
                                     [class.btn-danger]="product.statusJob.status_id === 10 || product.statusJob.status_id === 7 || product.statusJob.status_id === 4"
                                     [disabled]="product.statusJob.status_id === 10 || product.statusJob.status_id === 7 || product.statusJob.status_id === 4"><i
@@ -152,7 +151,7 @@
         <div class="modal-content">
             <div class="modal-header bg-primary text-white">
                 <h5 class="modal-title" id="assignJobModalLabel">Chi tiết giao việc làm</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body p-4">
 
@@ -285,7 +284,7 @@
                                             <td>{{ i + 1 + (currentPage - 1) * 10 }}</td>
                                             <td>{{ product?.sub_name }}</td>
                                             <td>{{ product?.quantity }}</td>
-                                          <td>{{ product.quantity * (selectedProduct?.quantity ?? 1) }}</td>  
+                                            <td>{{ product.quantity * (selectedProduct?.quantity ?? 1) }}</td>
                                             <td>{{ product?.sub_type }}</td>
                                         </tr>
                                     </tbody>
@@ -305,7 +304,7 @@
                     <!-- Modal footer -->
                     <div class="modal-footer">
                         <button type="submit" class="btn btn-primary">Tạo việc</button>
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Hủy</button>
                     </div>
                 </form>
             </div>
@@ -316,12 +315,13 @@
 
 <div class="modal fade" style="margin-top: 15%;" id="addProductModal" tabindex="-1" role="dialog"
     aria-labelledby="addProductModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-wide" role="document">
-
+    <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header bg-primary text-white">
-                <h5 class="modal-title" id="assignJobModalLabel">Thêm sản phẩm sản xuất</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                <h5 class="modal-title" id="addProductModal">Thêm sản phẩm sản xuất</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
             </div>
             <div class="modal-body">
                 <!-- <form [formGroup]="uploadForm" (ngSubmit)="onSubmit()"> -->
@@ -333,7 +333,7 @@
                         <div class="col-md-8">
                             <div class="ng-autocomplete" style="width: 100%;">
                                 <ng-autocomplete *ngIf="products" [data]="products" [searchKeyword]="keyword"
-                                    placeholder="Enter the product's name" historyIdentifier="products"
+                                    placeholder="Nhập tên sản phẩm có sẵn ..." historyIdentifier="products"
                                     [itemTemplate]="itemTemplate" [notFoundTemplate]="notFoundTemplate"
                                     (selected)="selectProduct($event)">
                                 </ng-autocomplete>
@@ -348,7 +348,6 @@
                             </div>
                         </div>
                     </div>
-
                     <div class="row" style="margin-top: 2%;">
                         <div class="col-md-4">
                             <label style="font-size: 16px;" for="productPrice">Số lượng sản phẩm sản xuất: </label>
@@ -357,16 +356,13 @@
                             <input type="number" class="form-control" id="productPrice" formControlName="quantity">
                         </div>
                     </div>
-
-                    <div class="modal-footer d-flex justify-content-center">
-                        <button type="button" class="btn btn-mau-do" data-dismiss="modal">Hủy</button>
-                        <button type="submit" class="btn btn-primary">Lưu thay đổi</button>
-                    </div>
+                    
                 </form>
-
-
-
-
+                <div class="modal-footer d-flex justify-content-center">
+                    <button type="submit" class="btn btn-primary">Lưu thay đổi</button>
+                    <button type="button" class="btn btn-mau-do" data-dismiss="modal">Hủy</button>
+                    
+                </div>
             </div>
         </div>
     </div>
@@ -376,7 +372,7 @@
     aria-labelledby="confirmChangeStatusJobLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
-            <div class="modal-header">
+            <div class="modal-header bg-primary text-white">
                 <h5 class="modal-title" id="confirmChangeStatusJobLabel">Thay đổi trạng thái việc làm</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
@@ -386,8 +382,8 @@
                 Bạn có chắc chắn muốn thay đổi trạng thái việc làm? "{{ confirmStatus }}" ?
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-                <button type="button" class="btn btn-primary" (click)="changeStatusJob()">Confirm</button>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Hủy bỏ</button>
+                <button type="button" class="btn btn-primary" (click)="changeStatusJob()">Xác nhận</button>
             </div>
         </div>
     </div>
@@ -396,58 +392,119 @@
 <div class="modal fade" style="margin-top: 15%;" id="errorProduct" tabindex="-1" role="dialog"
     aria-labelledby="errorProductLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-wide" role="document">
-
         <div class="modal-content">
             <div class="modal-header bg-primary text-white">
-                <h5 class="modal-title" id="assignJobModalLabel">Báo cáo lỗi sản xuất</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                <h2 class="modal-title" id="errorProduct">
+                    Báo cáo lỗi sản xuất
+                </h2>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
             </div>
             <div class="modal-body">
-                <!-- <form [formGroup]="uploadForm" (ngSubmit)="onSubmit()"> -->
                 <form [formGroup]="errorForm" (ngSubmit)="onSubmit()">
                     <div class="row">
-                       
-                      
-                            <div style="display: flex;">
+                        <div style="display: flex;">
+                            <div class="col-md-6">
                                 <div class="col-md-6">
-                                  <h3 style="color: black;">Tên sản phẩm: {{ this.selectedProduct.product_name }}</h3>
+                                    <h3 style="color: black;">Tên sản phẩm:</h3>
                                 </div>
                                 <div class="col-md-6">
-                                  <h3 style="color: black;">Tên nhân viên: {{ this.selectedProduct.user_name }}</h3>
+                                    <h3 style="color: grey;;">{{ selectedProduct?.product_name }}</h3>
                                 </div>
-                              </div>
-                              <div class="row" style="margin-left: 7px; margin-top: 18px;">
+                            </div>
+
+                            <div class="col-md-6">
                                 <div class="col-md-6">
-                                  <h3 style="color: black;">Mã đơn hàng: {{ this.selectedProduct.code }}</h3>
+                                    <h3 style="color: black;">Tên nhân viên:</h3>
                                 </div>
-                              </div>
-                             
-                        
+                                <div class="col-md-6">
+                                    <h3 style="color: grey;;">{{ selectedProduct?.user_name }}</h3>
+                                </div>
+
+                            </div>
+                        </div>
+                        <div class="row" style="margin-left: 7px; margin-top: 18px;">
+                            <div class="col-md-6">
+                                <div class="col-md-6">
+                                    <h3 style="color: black;">Mã đơn hàng:</h3>
+                                </div>
+                                <div class="col-md-6">
+                                    <h3 style="color: grey;">{{ selectedProduct?.code }}</h3>
+                                </div>
+
+                            </div>
+                        </div>
                     </div>
 
                     <div class="row" style="margin-top: 2%;">
                         <div class="row" style="margin-left: 7px; margin-top: 18px;">
                             <h3 style="color: black;">Mô tả lỗi: </h3>
-                            <textarea class="form-control" formControlName="description" id="description" name="description" rows="10"
-                              style="height: 100px;" cols="5"></textarea>
-                          </div>
-                          <div class="row" style="margin-left: 7px; margin-top: 18px;">
+                            <textarea class="form-control" formControlName="description" id="description"
+                                name="description" rows="10" style="height: 100px;" cols="5"></textarea>
+                        </div>
+                        <div class="row" style="margin-left: 7px; margin-top: 18px;">
                             <h3 style="color: black;">Giải pháp: </h3>
-                            <textarea class="form-control" formControlName="solution"  id="solution" name="solution" rows="10"
-                              style="height: 100px;" cols="5"></textarea>
-                          </div>
+                            <textarea class="form-control" formControlName="solution" id="solution" name="solution"
+                                rows="10" style="height: 100px;" cols="5"></textarea>
+                        </div>
                     </div>
 
                     <div class="modal-footer d-flex justify-content-center">
                         <button type="button" class="btn btn-mau-do" data-dismiss="modal">Hủy</button>
-                        <button type="submit" class="btn btn-primary" (click)="createErrorJob()">Lưu thay đổi</button>
+                        <button type="submit" class="btn btn-primary">Lưu thay đổi</button>
                     </div>
                 </form>
-
-
-
-
             </div>
+        </div>
+    </div>
+</div>
+
+
+<!-- Modal for Editing Product -->
+<div class="modal fade" id="editSubMaterialModal" tabindex="-1" role="dialog"
+    aria-labelledby="editSubMaterialModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="editSubMaterialModal">Chỉnh sửa nguyên vật liệu</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form>
+                    <div class="form-group">
+                        <label for="editProductName">Tên nguyên vật liệu</label>
+                        <input type="text" class="form-control" id="editProductName"
+                            formControlName="sub_material_name">
+                    </div>
+                    <div class="form-group">
+                        <label for="editProductDescription">Mô tả</label>
+                        <textarea class="form-control" id="editProductDescription"
+                            formControlName="description"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="editProductCategory">Kiểu nguyên vật liệu</label>
+                        <input type="text" class="form-control" formControlName="material_name" id="editProductCategory"
+                            readonly>
+
+                    </div>
+                    <div class="form-group">
+                        <label for="editProductQuantity">Số lượng</label>
+                        <input type="number" class="form-control" formControlName="quantity" id="editProductQuantity">
+                    </div>
+                    <div class="form-group">
+                        <label for="editProductPrice">Đơn giá (vnđ)</label>
+                        <input type="number" class="form-control" formControlName="unit_price" id="editProductPrice">
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
+                <button type="button" class="btn btn-primary">Lưu thay đổi</button>
+            </div>
+
         </div>
     </div>
 </div>

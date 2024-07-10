@@ -113,10 +113,6 @@ export class ProductComponent implements OnInit {
         if (data.code === 1000) {
           this.categories = data.result as Category[];
 
-          // Log categories to console for verification
-          //   console.log('Categories:', this.categories);
-
-          // Iterate through categories and log ID and name
 
         } else {
           console.error('Invalid data returned:', data);
@@ -139,7 +135,9 @@ export class ProductComponent implements OnInit {
 
   }
 
-
+cleaerSearchKey(): void {
+  this.dataService.clearSearchKey();
+}
   searchProductCustomer(): void {
     console.log("Lọc sản phẩm với từ khóa:", this.searchKey, ", danh mục:", this.selectedCategory, "và giá:", this.selectedSortByPrice);
     const queryParams = {
@@ -162,7 +160,10 @@ export class ProductComponent implements OnInit {
         (data) => {
           if (data.code === 1000) {
             this.products = data.result;
-            // console.log('Lọc sản phẩm thành công:', this.products);
+            console.log('Lọc sản phẩm thành công:', this.products);
+             //console.log('Lọc sản phẩm thành công:', this.products);
+              console.log('search thành công, clearSearchKey');
+              
         //    this.toastr.success('Lọc sản phẩm thành công!', 'Thành công');
           } else if (data.code === 1015) {
             this.products = [];
@@ -170,6 +171,8 @@ export class ProductComponent implements OnInit {
             this.toastr.error('Không tìm thấy sản phẩm phù hợp!', 'Lọc thất bại');
           }
         }
+        
       );
+    //  this.dataService.clearSearchKey();
   }
 }

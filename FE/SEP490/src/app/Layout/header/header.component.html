@@ -69,9 +69,12 @@
                     </li>
                     <ng-container *ngIf="isLoggedIn(); else loggedOutLinks">
                         <li class="nav-item">
-                            <a routerLink="/order_rq" class="nav-link active" aria-current="page">Đặt hàng</a>
+                          <a routerLink="/order_rq" class="nav-link active" aria-current="page">Đặt hàng</a>
                         </li>
-                    </ng-container>
+                      </ng-container>
+                      <ng-template #loggedOutLinks>
+                        <!-- Add your logged-out links here -->
+                      </ng-template>
                     <ng-template #loggedOutLinks>
                        
                     </ng-template>
@@ -115,7 +118,7 @@
                                     placeholder="Nhập tên sản phẩm để tìm kiếm" historyIdentifier="products"
                                     [(ngModel)]="searchKey"
                                     [itemTemplate]="itemTemplate" [notFoundTemplate]="notFoundTemplate"
-                                    (selected)="selectProduct($event)">
+                                    (selected)="selectProduct($event)" (keyup.enter)="onSearch()">
                                 </ng-autocomplete>
 
                                 <ng-template #itemTemplate let-item>
@@ -126,7 +129,7 @@
                                     <div>Không tìm thấy tên sản phẩm!</div>
                                 </ng-template>
                   
-                    <button class="btn search-button" type="submit" (click)="onSearch()">
+                    <button class="btn search-button search-button-custom" type="submit" (click)="onSearch()">
                         <i class="fa-solid fa-magnifying-glass"></i>
                     </button>
 

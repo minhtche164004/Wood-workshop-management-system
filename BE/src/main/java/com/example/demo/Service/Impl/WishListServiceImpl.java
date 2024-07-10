@@ -35,8 +35,15 @@ public class WishListServiceImpl implements WhiteListService {
         Optional<User> userOptional = userRepository.findByUsername(username);
         User user = userOptional.orElseThrow(() -> new AppException(ErrorCode.NOT_FOUND));
         Products products = productRepository.findById(product_id);
-        whiteLis.setProduct(products);
-        whiteLis.setUser(user);
+        List<WishList> wishLists = wishListRepository.findByUserID(user.getUserId());
+        for(WishList w : wishLists){
+            if(w.getProduct().getProductId() == products.getProductId()){
+                throw new AppException(ErrorCode.EXISTED_WISHLIST);
+            }
+            w.setProduct(products);
+            whiteLis.setUser(user);
+        }
+
         return wishListRepository.save(whiteLis);
 
     }

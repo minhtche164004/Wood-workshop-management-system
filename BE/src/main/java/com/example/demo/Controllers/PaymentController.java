@@ -161,6 +161,28 @@ public class PaymentController {
 
         return ResponseEntity.ok(qrCode);
     }
+    //      lay response moi string cua qr dang string
+
+
+    @PostMapping("/getQRBankingForEmployee")
+    public ResponseEntity<String> getQRBankingForEmployee(@RequestParam("amount") int amount,
+                                                          @RequestParam("accountNo") String accountNo,//là stk ngân hàng
+                                                          @RequestParam("username") String username,
+                                                          @RequestParam("bin_bank") String bin_bank,
+                                                          @RequestParam("orderInfo") String orderInfo) {
+        String info = paymentService.getQRCodeBankingForEmployee(amount, accountNo, username, bin_bank, orderInfo);
+        ObjectMapper mapper = new ObjectMapper();
+        Map<String, Object> map = new HashMap<>();
+        try {
+            map = mapper.readValue(info, Map.class);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        Map<String, Object> dataMap = (Map<String, Object>) map.get("data");
+        String qrCode = (String) dataMap.get("qrDataURL");
+
+        return ResponseEntity.ok(qrCode);
+    }
 
 
     @GetMapping("/getqr")

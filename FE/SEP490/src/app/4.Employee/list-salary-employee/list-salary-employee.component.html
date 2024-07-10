@@ -8,7 +8,7 @@
           <div class="table-title">
             <div class="row " style="height: 60px;">
               <div class="col-sm-5 ">
-                <h2 style="margin-bottom: 0;"> Tra cứu việc làm đã giao</h2>
+                <h2 style="margin-bottom: 0;"> Tra cứu lương</h2>
               </div>
               <div class="col-sm-7 text-end d-flex align-items-center justify-content-end">
                 <!-- <a href="#" class="btn btn-secondary btn-sm" data-toggle="modal" data-target="#addAccountModal"
@@ -47,14 +47,11 @@
                     <th>STT</th>
                     <th>Mã công việc</th>
                     <th>Thao tác</th>
+                    <th>Ngày nhận lương</th>
                     <th>Vị trí công việc</th>
       
-                    <th>Tên vị trí</th>
-                    <th>Tình trạng công việc</th>
-                    <th>Lương(VNĐ)</th>
-                  
-                    <th>Sản phẩm</th>
-                    <th>Số lượng</th>
+                    <th>Tiền lương</th>
+   
                   </tr>
                 </thead>
                 <tbody>
@@ -76,15 +73,13 @@
                         <i class="fa-solid fa-circle-info"></i>
                       </a>
                     </td>
-                    <td>{{ job.job_name }}</td>
-  
-   
-                    <td style="min-width: 150px;">{{ job.position_name }}</td>
-                    <td style="min-width: 150px;">{{ job.status_job_name }}</td>
                    
-                    <td style="min-width: 100px; text-align: right;">{{ job.cost | number: '1.0-3'}} </td>
-                    <td style="min-width: 100px;">{{ job.request_name }}</td>
-                    <td  style="min-width: 20px; text-align: right;">{{ job.quantity }}</td>
+  
+                    <td style="min-width: 100px;">{{ job.date }} </td>
+                    <td style="min-width: 150px;">{{ job.user.position.position_name }}</td>
+                    <td style="min-width: 150px;">{{ job.amount | number: '1.0-3'}} VNĐ</td>
+                   
+                  
                   </tr>
                 </tbody>
               </table>

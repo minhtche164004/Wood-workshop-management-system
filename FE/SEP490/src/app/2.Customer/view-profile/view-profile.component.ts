@@ -48,12 +48,16 @@ export class ViewProfileComponent implements OnInit {
   ) { }
 
   ngOnInit() {
+
     this.loadData();
   }
 
   loadData() {
+
     this.authenListService.getUserProfile().subscribe((data) => {
       this.userProfile = data.result;
+
+      console.log("Data Profile: ", this.userProfile)
       this.provincesService.getProvinces().subscribe((data: Province[]) => {
         this.provinces = data;
         this.updateControls();
@@ -168,20 +172,22 @@ export class ViewProfileComponent implements OnInit {
   }
 
   saveChanges() {
-    
+    this.isLoadding = true;
     if (!this.validateRegistration()) {
+      this.isLoadding = false;
       return;
     }
     console.log('Saving profile changes:', this.userProfile); // Log userProfile object for debugging
 
     this.authenListService.updateUserProfile(this.userProfile).subscribe(
       (response: any) => {
-        
+        this.isLoadding = false;
         console.log('Profile updated successfully:', response);
         this.toastr.success('Thông tin đã được cập nhật thành công!', 'Thành công');
-        this.isEditing = false; // Exit editing mode after saving changes
+       
       },
       (error: any) => {
+        this.isLoadding = false;
         console.error('Error updating profile:', error);
         if (error.status === 400 && error.error.code === 1016) {
           this.toastr.error('Sai Format của Đặt Tên! Vui lòng kiểm tra lại', 'Lỗi cố khi thay đổi thông tin'); // Hiển thị thông báo lỗi cho tài khoản bị khóa

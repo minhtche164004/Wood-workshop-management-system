@@ -193,11 +193,11 @@ public class PaymentServiceImpl implements PaymentService {
     }
 
     @Override
-    public String getQRCodeBankingForEmployee(int amout,String accountId,String username,String bin_bank, String orderInfo) {
+    public String getQRCodeBankingForEmployee(int amout,String accountNo,String username,String bin_bank, String orderInfo) {
         accessToken =  login();
 
         Map<String, Object> data = new HashMap<>();
-        data.put("accountNo", accountId); //stk ngân hàng
+        data.put("accountNo", accountNo); //stk ngân hàng
         data.put("accountName", username); //username của acc
         data.put("acqId", bin_bank); //mã bin của ngân hàng
         data.put("amount", amout); //số tiền

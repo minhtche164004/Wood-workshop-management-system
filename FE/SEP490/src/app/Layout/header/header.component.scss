@@ -125,6 +125,7 @@
     background: linear-gradient(45deg, #fad0c4, #ff9a9e); // Gradient background on hover
   }
 
+
   .icon-nav .dropdown {
     position: relative;
     display: inline-block;
@@ -153,4 +154,11 @@
 
 .icon-nav .dropdown .dropdown-content a:hover {
     background-color: #f1f1f1;
+}
+  .search-button-custom {
+    margin-left: 10px; /* Thêm khoảng cách bên trái */
+    width: auto; /* Điều chỉnh chiều dài của button */
+    padding: 0 15px; /* Điều chỉnh padding để button không quá dài hoặc quá ngắn */
+
+
 }

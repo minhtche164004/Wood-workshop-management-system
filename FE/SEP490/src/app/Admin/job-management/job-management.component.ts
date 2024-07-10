@@ -9,6 +9,7 @@ import { ProductListService } from 'src/app/service/product/product-list.service
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { ProductService } from 'src/app/service/product.service';
 import { MatDialog, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import 'jquery';
 @Component({
   selector: 'app-job-management',
   templateUrl: './job-management.component.html',
@@ -50,7 +51,7 @@ export class JobManagementComponent implements OnInit {
       finish: [''],
       start: [''],
     });
-    this.errorForm = this.fb.group({  
+    this.errorForm = this.fb.group({
       description: [''],
       solution: ['']
     });
@@ -80,10 +81,13 @@ export class JobManagementComponent implements OnInit {
     );
   }
 
-  editSubMaterial(product: any){
+  editSubMaterial(product: any) {
     console.log('Edit sub-material:', product);
   }
   acceptJob(jobId: number, statusId: number): void {
+
+    console.log('Job ID:', jobId);
+    console.log('Status ID:', statusId);
     if (statusId === 4) {
       statusId = 6;
     } else if (statusId === 7) {
@@ -102,7 +106,7 @@ export class JobManagementComponent implements OnInit {
                 this.products = data.result;
                 // console.log('Danh sách sản phẩm:', this.products);
               } else {
-               
+                this.toastr.error('Cập nhật trạng thái làm việc thất bại!', 'Lỗi');
                 console.error('Failed to fetch products:', data);
               }
             },
@@ -121,19 +125,19 @@ export class JobManagementComponent implements OnInit {
       }
     );
   }
-  
+
   // exportProductTotalJob(id: number, mate_id: number, emp_id: number, productForm: any) {
   //   console.log('export id: ', id);
   //   console.log('export mate_id: ', mate_id);
   //   console.log('export emp_id: ', emp_id);
-   
+
   // }
-  
+
   openConfirmChangeStatusJob(product: any): void {
 
     this.selectedProduct = { ...product };
     console.log('selectedProduct.job_id:', this.selectedProduct.job_id);
-     console.log('this.selectedProduct.type:', this.selectedProduct.statusJob.status_id);
+    console.log('this.selectedProduct.type:', this.selectedProduct.statusJob.status_id);
     this.confirmStatus = this.selectedProduct.statusJob.status_name;
     // this.acceptJob(this.selectedProduct.job_id, this.selectedProduct.statusJob.status_id);
   }
@@ -166,8 +170,8 @@ export class JobManagementComponent implements OnInit {
     let status_id = this.selectedProduct.statusJob?.status_id; // Thay đổi giá trị tùy theo trạng thái
     const job_id = this.selectedProduct.job_id; // Thay đổi giá trị tùy theo công việc
     const type_id = this.selectedCategory; // cho sp có sẵn     0 - k có sẵn
-    let position_id = this.selectedProduct.position_id +1;
-   
+    let position_id = this.selectedProduct.position_id + 1;
+
     const jobData = this.createJobs.value;
     if (status_id === 6) {
       status_id = 7;
@@ -176,10 +180,10 @@ export class JobManagementComponent implements OnInit {
     } else if (status_id === 9) {
       status_id = 10;
     }
-   
-    console.log('emp_id:', user_id);
-    console.log('mate_id:', position_id);
-    console.log('id:', p_id);
+
+    // console.log('emp_id:', user_id);
+    // console.log('mate_id:', position_id);
+    // console.log('id:', p_id);
     const quantity = this.selectedProduct.quantity;
     const createJobs = {
       quantity_product: quantity
@@ -213,7 +217,16 @@ export class JobManagementComponent implements OnInit {
         }
       },
       (error) => {
-        console.error('Error accepting job:', error);
+        console.error('Error:', error);
+        if (error && error.error && error.error.errors) {
+          Object.entries(error.error.errors).forEach(([key, value]) => {
+            this.toastr.warning(`${key}: ${value}`, 'Lỗi');
+          });
+        } else if (error && error.message) {
+          this.toastr.error(`Có lỗi xảy ra: ${error.message}`, 'Lỗi');
+        } else {
+          this.toastr.error(`Có lỗi xảy ra, vui lòng thử lại.`, 'Lỗi');
+        }
       }
     );
   }
@@ -233,7 +246,7 @@ export class JobManagementComponent implements OnInit {
       return;
     }
     // console.log('Selected product for job:', this.selectedProduct.productId);
-   
+
 
     this.jobService.addProductForJob(this.selectedProduct.productId, quantity).subscribe(
       (data) => {
@@ -269,7 +282,7 @@ export class JobManagementComponent implements OnInit {
 
   selectProduct(product: any): void {
     this.selectedProduct = product; // Điều chỉnh theo cấu trúc đối tượng sản phẩm của bạn
-     console.log('Tên sản phẩm được chọn:', product);
+    console.log('Tên sản phẩm được chọn:', product);
     // console.log('Id sản phẩm được chọn:', product.productId);
   }
 
@@ -340,7 +353,7 @@ export class JobManagementComponent implements OnInit {
       (data) => {
         if (data.code === 1000) {
           this.productRQs = data.result;
-           console.log('Sp đặc biệt cho job:', this.productRQs);
+          console.log('Sp đặc biệt cho job:', this.productRQs);
         } else {
           console.error('Failed to fetch products:', data);
           this.toastr.error('Không thể lấy danh sách sản phẩm!', 'Lỗi');
@@ -373,7 +386,7 @@ export class JobManagementComponent implements OnInit {
 
   manageJob(product: any): void {
     this.selectedProduct = { ...product };
-     console.log("Sản phẩm được chọn để giao việc:", this.selectedProduct);
+    console.log("Sản phẩm được chọn để giao việc:", this.selectedProduct);
     // console.log("Trạng thái của sản phẩm:", this.selectedProduct.statusJob?.status_id);
 
     if (this.selectedProduct.code !== null) {
@@ -411,30 +424,30 @@ export class JobManagementComponent implements OnInit {
     const jobId = this.selectedProduct.job_id; // Hoặc lấy từ giá trị khác nếu cần
     console.log('Job ID:', jobId);
     const formValues = this.errorForm.value;
-    
+
     console.log('Form values:', formValues);
     this.productListService.createProductError(
       jobId,
       formValues.description,
       formValues.solution
     )
-    .subscribe(
-      (data) => {
-        if (data.code === 1000) {
-         
-          console.log('Thêm lỗi sản phẩm thành công:');
-          this.toastr.success('Thêm lỗi sản phẩm thành công!', 'Thành công');
-          $('[data-dismiss="modal"]').click();
-        } else {
-          console.error('Thêm lỗi sản phẩm thất bại');
-          this.toastr.error('Không thể lấy danh sách sản phẩm!', 'Lỗi');
+      .subscribe(
+        (data) => {
+          if (data.code === 1000) {
+
+            console.log('Thêm lỗi sản phẩm thành công:');
+            this.toastr.success('Thêm lỗi sản phẩm thành công!', 'Thành công');
+            $('[data-dismiss="modal"]').click();
+          } else {
+            console.error('Thêm lỗi sản phẩm thất bại');
+            this.toastr.error('Không thể lấy danh sách sản phẩm!', 'Lỗi');
+          }
+        },
+        (error) => {
+          console.error('Lỗi thêm sản phẩm:', error);
+          this.toastr.error('Có lỗi xảy ra!', 'Lỗi');
         }
-      },
-      (error) => {
-        console.error('Lỗi thêm sản phẩm:', error);
-        this.toastr.error('Có lỗi xảy ra!', 'Lỗi');
-      }
-     );
+      );
   }
   getProductSubMaterial(productId: number, mateId: number) {
     this.jobService.getSubMTRProduct(productId, mateId).subscribe(

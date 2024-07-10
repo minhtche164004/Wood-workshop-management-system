@@ -12,6 +12,7 @@ export class ErrorProductService {
   private getError = `${environment.apiUrl}api/auth/job/getAllProductError`;
   private errorDetail = `${environment.apiUrl}api/auth/job/getAllProductErrorDetail`
 
+  private editError = `${environment.apiUrl}api/auth/job/EditProductError`;
   constructor(private http: HttpClient) { }
   deleteProductError(productId: number): Observable<any> {
     const url = `${this.deleteProductErrorUrl}?id=${productId}`;
@@ -20,13 +21,18 @@ export class ErrorProductService {
     );
   }
 
+  editProductError(productId: number, data: any): Observable<any> {
+    return this.http.put(`${this.editError}?error_id=${productId}`, data);
+
+  }
+
   getAllProductError(): Observable<any> {
     return this.http.get<any>(this.getError).pipe(
       catchError(this.handleError)
     );
   }
 
-  getRrrorDetail(productId: number): Observable<any> {
+  getRrrorDetailById(productId: number): Observable<any> {
     const url = `${this.errorDetail}?id=${productId}`;
     return this.http.get<any>(url).pipe(
       catchError(this.handleError)

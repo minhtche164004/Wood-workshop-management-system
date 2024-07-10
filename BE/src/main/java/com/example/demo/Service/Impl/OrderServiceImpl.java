@@ -625,6 +625,14 @@ public class OrderServiceImpl implements OrderService {
         }
         return list;
     }
+    @Override
+    public List<Requests> GetAllRequestByAccountId(int acc_id) {
+        List<Requests> list = requestRepository.findByUserId(acc_id);
+        if(list == null ){
+            throw new AppException(ErrorCode.NOT_FOUND);
+        }
+        return list;
+    }
 
     @Override
     public RequestProductDTO_Show GetRequestProductByIdWithImage(int id) {

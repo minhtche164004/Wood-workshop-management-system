@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { AuthenListService } from 'src/app/service/authen.service';
@@ -20,26 +20,29 @@ interface ApiResponse {
 })
 
 export class HeaderComponent implements OnInit {
+  @ViewChild(HeaderComponent, { static: true }) headerComponent: HeaderComponent | undefined;
+
   fullname: string | null = null;
   constructor(private dataService: DataService, private sanitizer: DomSanitizer, private toastr: ToastrService, private router: Router, private http: HttpClient, private authService: AuthenListService, private productListService: ProductListService) { }
   ngOnInit(): void {
     this.wishlistcount()
-      this.authService.getUserProfile().subscribe((data) => {
-        this.fullname = data.result.fullname; // Assuming 'result' contains the profile data
-      });
-      this.productListService.getAllProductCustomer().subscribe(
-        (data: any) => {
-          if (data.code === 1000) {
-            this.products = data.result;
-            //    console.log('Danh sách sản phẩm:', this.products);
-          } else {
-            console.error('Invalid data returned:', data);
-          }
-        },
-        (error) => {
-          console.error('Error fetching categories:', error);
+    this.authService.getUserProfile().subscribe((data) => {
+      this.fullname = data.result.fullname; // Assuming 'result' contains the profile data
+    });
+    this.productListService.getAllProductCustomer().subscribe(
+      (data: any) => {
+        if (data.code === 1000) {
+          this.products = data.result;
+          //    console.log('Danh sách sản phẩm:', this.products);
+        } else {
+          console.error('Invalid data returned:', data);
         }
-      );
+      },
+      (error) => {
+        console.error('Error fetching categories:', error);
+      }
+    );
+    this.isLoggedInForm();
   }
   selectedSortByPrice: string = '';
   countwishlist: number = 0;
@@ -89,12 +92,15 @@ export class HeaderComponent implements OnInit {
     localStorage.removeItem('loginToken');
     this.router.navigateByUrl('/login');
   }
-  isLoggedIn(): boolean {
+  isLoggedInForm(): boolean {
     return this.authService.isLoggedIn();
   }
 
+  isLoggedIn() {
+    return this.authService.isLoggedIn();
+  }
   isLogout(): boolean {
-    return !this.isLoggedIn();
+    return !this.isLoggedInForm();
   }
   onSearch(): void {
     console.log('Search key header:', this.searchKey);
@@ -103,6 +109,9 @@ export class HeaderComponent implements OnInit {
       this.routerSearch(this.searchKey);
     } else {
       // Xử lý trường hợp không có giá trị nhập (ví dụ: thông báo cho người dùng hoặc đặt lại kết quả tìm kiếm)
+      this.dataService.changeSearchKey(this.searchKey);
+      this.routerSearch(this.searchKey);
+      this.router.navigate(['/product']);
     }
   }
 
@@ -134,8 +143,10 @@ export class HeaderComponent implements OnInit {
   selectProduct(product: any): void {
     this.selectedProduct = product; // Điều chỉnh theo cấu trúc đối tượng sản phẩm của bạn
     const productName = this.selectedProduct.productName;
+    const productId = this.selectedProduct.productId;
     this.dataService.changeSearchKey(productName);
-    this.routerSearch(productName);
+    this.router.navigate(['/product-details', productId]);
+    // this.routerSearch(productName);
   }
 
 

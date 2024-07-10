@@ -61,6 +61,7 @@ export class ReportManagementComponent implements OnInit {
   errorDetail: any;
   errorProducts: any[] = [];
   currentPage: number = 1;
+  isLoadding: boolean = false;
   ngOnInit(): void {
     this.getAllProductError();
 

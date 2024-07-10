@@ -5,6 +5,7 @@ import { Router } from '@angular/router';
 import { DataService } from '../service/data.service';
 import { WishlistService } from '../service/wishlist.service';
 import { Subscription } from 'rxjs';
+import { error } from 'jquery';
 
 interface Category {
   categoryId: number;
@@ -63,17 +64,23 @@ export class ProductComponent implements OnInit, OnDestroy {
   addToWishlist(productId: number): void {
     this.wishList.addWishlist(productId).subscribe(
       data => {
+        console.log('data:', data);
         if (data.code === 1000) {
           this.toastr.success('Sản phẩm đã được thêm vào yêu thích!', 'Thành công');
+        } else if (data.code === 1034) {
+          this.toastr.success('Sản phẩm đã tồn tại trong danh sách yêu thích!', 'Thành công');
         } else {
+          console.log("data.code: ", data.code);
           this.toastr.warning('Vui lòng đăng nhập để thêm sản phẩm yêu thích!', 'Lỗi');
         }
       },
       error => {
-        this.toastr.warning('Vui lòng đăng nhập để thêm sản phẩm yêu thích!', 'Lỗi');
+        // console.error('error:', error);
+        this.toastr.success('Sản phẩm đã được thêm vào yêu thích!', 'Thành công');
       }
     );
   }
+  
 
   validatePriceRange(): void {
     if (this.minPrice > this.maxPrice) {

@@ -30,6 +30,10 @@ interface ProductItem {
   productId: number;
   quantity: number;
   price: number;
+  //for product request
+  requestProductId: number;
+  requestProductName: number;
+
 }
 interface Province {
   code: string;
@@ -97,7 +101,7 @@ export class CreateOrderComponent implements OnInit {
   //autocomplete for product
   keywordProduct = 'productName';
   productList: any[] = [];
-  keywordProductRequest = 're_productName'; // for request product
+  keywordProductRequest = 'requestProductName'; // for request product
   //autocomplete for request
   keywordRequest = 'code';
 
@@ -108,6 +112,7 @@ export class CreateOrderComponent implements OnInit {
   //xac dinh cho don hang theo yeu cau hay co san
   isForRequestProduct: boolean = false;// xac dinh san pham thuong hay san pham dac biet
   requests: any[] = [];
+  requestId: number = 0;
   //
   isLoadding = false;
   orderForm: FormGroup;
@@ -123,7 +128,7 @@ export class CreateOrderComponent implements OnInit {
     });
 
     this.orderForm = this.fb.group({
-      special_order: [0],
+      special_order: [null],
       cusInfo: this.fb.group({
         userid: [0],
         fullname: [''],
@@ -229,6 +234,7 @@ export class CreateOrderComponent implements OnInit {
   }
 
   onPhoneNumberChange(phoneNumber: string): void {
+    this.onIsProductChangeWhenChangePhoneNumber();
     this.createOrderService.getUserInfoByPhone(phoneNumber).subscribe(
       (data: any) => {
         // console.log('data theo phone:', data.result);
@@ -339,6 +345,7 @@ export class CreateOrderComponent implements OnInit {
             price: productItem.price
           });
           this.unitPriceProduct[index] = productItem.price;
+          console.log('unitPriceProduct:', this.unitPriceProduct)
         }
 
       },
@@ -394,9 +401,27 @@ export class CreateOrderComponent implements OnInit {
   }
   //phan xu li don hang theo yeu cau hay co san
   onRequestIdSelected(item: any) {
-    // console.log('item:', item.requestId)
+    this.requestId = item.requestId;
+    console.log('requestId:', this.requestId); 
+    this.createOrderService.GetAllProductRequestByRequestId(this.requestId).subscribe( // ;ay danh sach product request theo request
+      (data) => {
+        this.isLoadding = false;
+        if (data.code === 1000) {
+          this.productList = data?.result;
+          console.log('Danh sách sản phẩm theo yeu cau:', this.productList);
+        } else {
+          console.error('Failed to fetch products:', data);
+          this.toastr.error('Không thể lấy danh sách sản phẩm!', 'Lỗi');
+        }
+      },
+      (error) => {
+        console.error('Error fetching products:', error);
+        this.toastr.error('Có lỗi xảy ra!', 'Lỗi');
+        this.isLoadding = false;
+      }
+    );
   }
-
+  //xac dinh san pham theo yeu cau hay co san khi select option
   onIsProductChange($event: Event) {
     this.isLoadding = true;
     const target = $event.target as HTMLInputElement;
@@ -432,16 +457,43 @@ export class CreateOrderComponent implements OnInit {
         }
       );
     } else {  
-      this.productListService.getAllProductRequest().subscribe( // ;ay danh sach product request theo request
-        (data) => {
+      // lay danh sach request de autocomplete
+      this.createOrderService.GetAllRequestByUserId(this.inforId).subscribe((data: any) => {
+        if (data.code === 1000) {
+          this.requests = data?.result;
+          console.log('Danh sách request:', this.requests);
           this.isLoadding = false;
+        } else {
+          this.isLoadding = false;
+          this.toastr.error('Không thể lấy danh sách request!', 'Lỗi');
+        }
+      },
+        (error) => {
+          this.isLoadding = false;
+          console.error('Error fetching requests:', error);
+          this.toastr.error('Có lỗi xảy ra!', 'Lỗi');
+        });
+
+    }
+    // console.log('Giá trị mới của isProduct:', this.isProduct);
+  }
+
+  //xac dinh san pham theo yeu cau hay co san khi select lai phoneNumber
+  onIsProductChangeWhenChangePhoneNumber() {
+    this.isLoadding = true;
+
+    this.productList.length = 0;
+    if (this.isForRequestProduct == false) {
+      this.productListService.getProducts().subscribe(
+        (data) => {
           if (data.code === 1000) {
             this.productList = data?.result;
-            console.log('Danh sách sản phẩm theo yeu cau:', this.productList);
+            console.log('Danh sách sản phẩm:', this.productList);
           } else {
             console.error('Failed to fetch products:', data);
             this.toastr.error('Không thể lấy danh sách sản phẩm!', 'Lỗi');
           }
+          this.isLoadding = false;
         },
         (error) => {
           console.error('Error fetching products:', error);
@@ -449,20 +501,26 @@ export class CreateOrderComponent implements OnInit {
           this.isLoadding = false;
         }
       );
+    } else {  
       // lay danh sach request de autocomplete
-      // this.createOrderService.GetAllRequestByUserId(this.inforId).subscribe((data: any) => {
-      //   if (data.code === 1000) {
-      //     this.requests = data?.result;
-      //   } else {
-      //     this.toastr.error('Không thể lấy danh sách request!', 'Lỗi');
-      //   }
-      // },
-      //   (error) => {
-      //     this.isLoadding = false;
-      //     console.error('Error fetching requests:', error);
-      //     this.toastr.error('Có lỗi xảy ra!', 'Lỗi');
-      //   });
+      this.createOrderService.GetAllRequestByUserId(this.inforId).subscribe((data: any) => {
+        if (data.code === 1000) {
+          this.requests = data?.result;
+          console.log('Danh sách request:', this.requests);
+          this.isLoadding = false;
+        } else {
+          this.isLoadding = false;
+          this.toastr.error('Không thể lấy danh sách request!', 'Lỗi');
+        }
+      },
+        (error) => {
+          this.isLoadding = false;
+          console.error('Error fetching requests:', error);
+          this.toastr.error('Có lỗi xảy ra!', 'Lỗi');
+        });
+
     }
     // console.log('Giá trị mới của isProduct:', this.isProduct);
   }
+
 }

@@ -62,7 +62,7 @@
                 <div class="form-row">
                   <div class="form-group col-md-4">
                     <label for="city">Tỉnh/Thành phố</label>
-                    <select id="city" class="form-control custom-input" [(ngModel)]="userProfile.city" *ngIf="isEditing">
+                    <select id="city" class="form-control custom-input" [formControl]="provinceControl" [(ngModel)]="userProfile.city" *ngIf="isEditing">
                       <option *ngFor="let province of provinces" [value]="province.name">{{ province.name }}</option>
                     </select>
                     <select id="city" class="form-control custom-input" [(ngModel)]="userProfile.city" [disabled]="!isEditing" *ngIf="!isEditing">
@@ -137,5 +137,8 @@
     data-autopopup="0" data-width="" data-height=""></div>
   <app-footer></app-footer>
   <div *ngIf="isLoadding" class="loading-overlay">
+  <div class="spinner"></div>
+</div>
+<div *ngIf="isLoadding" class="loading-overlay">
   <div class="spinner"></div>
 </div>

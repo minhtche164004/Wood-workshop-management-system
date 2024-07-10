@@ -29,7 +29,7 @@
                     <option *ngFor="let ps of position" [value]="ps.position_id">{{ ps.position_name }}</option>
                   </select> -->
   
-                  <input type="text" class="form-control" placeholder="Mã nhân viên" >
+                  <input type="text" class="form-control" placeholder="Mã code" >
                   <button class="btn search-button" type="button" >
                     <i class="fa fa-search"></i>
                   </button>
@@ -46,7 +46,7 @@
                   <tr>
                     <th>STT</th>
                     <th>Mã công việc</th>
-                    <th>Thao tác</th>
+                    <!-- <th>Thao tác</th> -->
                     <th>Ngày nhận lương</th>
                     <th>Vị trí công việc</th>
       
@@ -59,7 +59,7 @@
                     <td>{{ i + 1 + (currentPage - 1) * 10 }}</td>
                     <td>{{ job.code }}</td>
                     
-  
+<!--   
                     <td class="action-buttons">
                       <a href="#" class="settings" title="Chỉnh sửa" data-toggle="modal" data-target="#editAccountModal"
                         >
@@ -72,7 +72,7 @@
                       <a href="#" class="info" title="Info" data-toggle="modal" data-target="#productDetailModal">
                         <i class="fa-solid fa-circle-info"></i>
                       </a>
-                    </td>
+                    </td> -->
                    
   
                     <td style="min-width: 100px;">{{ job.date }} </td>

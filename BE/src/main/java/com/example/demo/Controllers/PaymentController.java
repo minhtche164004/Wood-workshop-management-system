@@ -53,12 +53,16 @@ public class PaymentController {
     }
 
     @PostMapping("/submitOrder")
-    public String submidOrder(@RequestParam("amount") int orderTotal,
-                              @RequestParam("orderInfo") String orderInfo,
-                              HttpServletRequest request) {
+    public ResponseEntity<Map<String, String>> submitOrder(@RequestParam("amount") int orderTotal,
+                                                           @RequestParam("orderInfo") String orderInfo,
+                                                           HttpServletRequest request) {
         String baseUrl = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort() + "/api/auth";
         String vnpayUrl = vnPayService.createOrder(orderTotal, orderInfo, baseUrl);
-        return vnpayUrl;
+
+        Map<String, String> response = new HashMap<>();
+        response.put("url", vnpayUrl);
+
+        return ResponseEntity.ok(response);
     }
 
 //    @GetMapping("/vnpay-payment")

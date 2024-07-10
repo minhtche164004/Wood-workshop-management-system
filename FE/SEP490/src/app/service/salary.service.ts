@@ -37,7 +37,7 @@ export class SalaryService {
   }
   multSearchSalary(employeeName: string, fromDate: string, toDate: string, sortDirection: string, position: string): Observable<any> {
     const params = {
-      employeeName: employeeName,
+      username: employeeName,
       fromDate: fromDate,
       toDate: toDate,
       position_id: position,

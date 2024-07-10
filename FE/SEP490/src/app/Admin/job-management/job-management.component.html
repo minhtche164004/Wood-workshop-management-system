@@ -90,16 +90,18 @@
                             <td>{{ product?.price | number: '1.0-3' }}</td>
                             <td>
                                 <ng-container *ngIf="product?.statusJob.type !== 1">
-                                    <select style="width: 100%;" [ngModel]="product?.statusJob.status_id"
-                                        (change)="acceptJob(product?.job_id, product?.statusJob.status_id)">
-                                        <ng-container *ngFor="let status of statusType">
-                                            <option *ngIf="status.type === product.statusJob.type"
-                                                [value]="status.status_id"
+                                    <select style="width: 100%;" [ngModel]="product?.statusJob.status_id" 
+                                            (change)="acceptJob($event, product?.job_id)">
+                                      <ng-container *ngFor="let status of statusType">
+                                        <option *ngIf="status.type === product.statusJob.type" 
+                                                [value]="status.status_id" 
                                                 [disabled]="status.status_id === 4 || status.status_id === 7 || status.status_id === 10">
-                                                {{ status.status_name }}</option>
-                                        </ng-container>
+                                          {{ status.status_name }}
+                                        </option>
+                                      </ng-container>
                                     </select>
-                                </ng-container>
+                                  </ng-container>
+                                  
 
                                 <span *ngIf="product.statusJob.type === 1">Chưa giao việc</span>
 

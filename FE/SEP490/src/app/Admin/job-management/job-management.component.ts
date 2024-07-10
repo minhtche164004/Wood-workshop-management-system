@@ -84,17 +84,17 @@ export class JobManagementComponent implements OnInit {
   editSubMaterial(product: any) {
     console.log('Edit sub-material:', product);
   }
-  acceptJob(jobId: number, statusId: number): void {
+  acceptJob(event: Event, jobId: number): void {
+    const statusId = (event.target as HTMLSelectElement).value;
+    console.log('Job ID:', jobId, 'Status ID:', statusId);
 
-    console.log('Job ID:', jobId);
-    console.log('Status ID:', statusId);
-    if (statusId === 4) {
-      statusId = 6;
-    } else if (statusId === 7) {
-      statusId = 9;
-    } else if (statusId === 10) {
-      statusId = 12;
-    }
+    // if (statusId === 4) {
+    //   statusId = 6;
+    // } else if (statusId === 7) {
+    //   statusId = 9;
+    // } else if (statusId === 10) {
+    //   statusId = 12;
+    // }
     this.jobService.acceptJob(jobId, statusId).subscribe(
       (data) => {
         if (data.code === 1000) {

@@ -35,7 +35,7 @@ export class JobService {
     console.log('Total product for job URL:', url);
     return this.http.post(url, productForm);
   }
-  acceptJob(jobId: number, statusId: number): Observable<any> {
+  acceptJob(jobId: number, statusId: any): Observable<any> {
     const url = `${this.apiAcceptJob}?job_id=${jobId}&status_id=${statusId}`;
     console.log('Accept job URL:', url);
     const payload = {}; // Bạn có thể thêm payload nếu cần thiết

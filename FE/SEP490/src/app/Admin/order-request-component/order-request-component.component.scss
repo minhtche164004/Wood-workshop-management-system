@@ -202,8 +202,16 @@
     font-size: 13px;
   }
   .img_product {
-   max-height: 30%;
-   max-width: 30%;
+   max-height: 100%;
+   max-width: 100%;
+  }
+  .img_product_detail {
+    width: 200px; /* Set the desired width */
+    height: 200px; /* Set the desired height */
+    object-fit: contain; /* This will ensure the image is contained within the specified dimensions */
+  }
+  .img_product_detail.selected {
+    border: 3px solid blue;
   }
   @media (max-width: 768px) {
     .table-wrapper {
@@ -257,10 +265,23 @@
   option[value="option3"] {
     color: purple; /* Màu tím cho Sản Phẩm 3 */
   }
-  .img_product {
-    max-width: 100px;
-    max-height: 100px;
+  .product-image-wrapper {
+    width: 120px;
+    height: 90px;
+    overflow: hidden;
+    position: relative;
+  }
+  
+  .product-image {
+    width: 100%;
+    height: 100%;
     object-fit: cover;
+    transition: transform 0.3s ease-in-out;
+  }
+  
+  .product-image-wrapper:hover .product-image {
+    transform: scale(1.1);
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
   }
   .table td,
   .table th {
@@ -415,3 +436,4 @@
     max-height: 80vh; /* Adjust the percentage as needed */
     overflow-y: auto;
   }
+  

@@ -2,6 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 import { environment } from 'src/app/environments/environment';
+import { WishlistService } from 'src/app/service/wishlist.service';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-product-detail',
@@ -17,7 +19,7 @@ export class ProductDetailComponent implements OnInit {
   largeImageUrl: string = '';
   largeImageUrl_Cate: string = '';
 
-  constructor(private route: ActivatedRoute, private http: HttpClient) {
+  constructor(private route: ActivatedRoute, private http: HttpClient,private wishList: WishlistService,private toastr: ToastrService) {
     this.onTabClick('description');
   }
 
@@ -26,6 +28,27 @@ export class ProductDetailComponent implements OnInit {
       this.productId = +params['id'];
       this.getProductDetails(this.productId);
     });
+    this.shuffleArray(this.categoryProduct);
+  }
+  addToWishlist(productId: number) {  
+   
+    console.log('Product ID:', productId);
+    this.wishList.addWishlist(productId)
+      .subscribe(
+        (data) => {
+          if (data.code === 1000) {
+            console.log('Product added to wishlist:');
+            this.toastr.success('Sản phẩm đã được thêm vào yêu thích!', 'Thành công'); // Success message
+
+          }else if(data.code === 1005){
+            this.toastr.warning('Vui lòng đăng nhập để thêm sản phẩm yêu thích!', 'Lỗi'); // Error message
+          }
+        },
+        (error) => {
+          console.error('Error adding product to wishlist:', error);
+          this.toastr.warning('Vui lòng đăng nhập để thêm sản phẩm yêu thích!', 'Lỗi'); // Error message
+        }
+      );
   }
 
   getProductDetails(id: number) {
@@ -50,7 +73,7 @@ export class ProductDetailComponent implements OnInit {
         (response: any) => {
           this.categoryProduct = response.result;
           this.largeImageUrl_Cate = this.categoryProduct.image;
-  
+          this.categoryProduct = this.shuffleArray(this.categoryProduct);
 
         },
         (error) => {
@@ -74,5 +97,12 @@ export class ProductDetailComponent implements OnInit {
       // Handle the event when the "Thông tin bảo hành" tab is clicked or activated.
       // Add your logic here.
     }
+  }
+  shuffleArray(array: any[]): any[] {
+    for (let i = array.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [array[i], array[j]] = [array[j], array[i]];
+    }
+    return array;
   }
 }

@@ -173,7 +173,8 @@
             <img [routerLink]="['/product-details', item.product.productId]" src="{{ item.product.image }}"
                 alt="Sản phẩm 2">
             <div class="product-info">
-                <h3>Sản Phẩm: {{ item.product.productName }}</h3>
+                <h3> {{ item.product.productName }}</h3>
+                <h3>Mô tả: {{ item.product.description }}</h3>
 
                 <p class="price">Giá Tiền: {{ item.product.price | number: '1.0-3' }} VNĐ</p>
                 <div class="actions">
@@ -218,3 +219,7 @@
 </body>
 
 </html>
+<!-- loadding man` hinh` -->
+<div *ngIf="isLoadding" class="loading-overlay">
+    <div class="spinner"></div>
+  </div>

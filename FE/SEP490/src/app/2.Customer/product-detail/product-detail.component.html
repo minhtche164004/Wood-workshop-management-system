@@ -54,7 +54,7 @@
         <div class="ps-lg-3">
           <h4 class="title text-dark" style="font-size: 24px; text-align: center;">
             {{ productDetails?.productName }}
-          
+
 
           </h4>
           <div class="mb-3">
@@ -76,10 +76,25 @@
 
           <hr />
 
-          <div class="row">
-            <a style="margin-top: 50px;" class="col-md-12" href="https://zalo.me/2628068117103072011"
-              class=" custom-background btn btn-warning shadow-0" target="_blank">Liên hệ người bán</a>
+          <div class="row" style="margin-top: 20px;">
+            <div class="col-md-6 d-flex justify-content-center mb-3">
+              <a class="btn btn-warning shadow-0 custom-background"
+                [routerLink]="['/product-details', productDetails.productId]"
+                (click)="addToWishlist(productDetails.productId)">
+                Thêm vào danh sách yêu thích <i class="fa-solid fa-heart"></i>
+              </a>
+            </div>
+            <div class="col-md-6 d-flex justify-content-center mb-3">
+              <a class="btn btn-warning shadow-0 custom-background" href="https://zalo.me/2628068117103072011"
+                target="_blank">
+                Liên hệ người bán sản phẩm
+              </a>
+            </div>
           </div>
+
+
+
+
 
         </div>
       </main>
@@ -91,19 +106,23 @@
 <section class="bg-light border-top py-2">
   <div class="container">
     <div class="row gx-4">
-      <div class="col-lg-7">
+      <div class="col-lg-9">
         <div class="border rounded-2 px-3 py-2 bg-white">
           <!-- Pills navs -->
-          <ul class="nav nav-pills nav-justified mb-3" id="ex1" role="tablist">
+          <ul class="nav nav-pills nav-justified mb-3" id="product-details-tabs" role="tablist">
             <li class="nav-item" role="presentation">
               <a class="nav-link d-flex align-items-center justify-content-center w-100 active custom-background"
-                 id="ex1-tab-1" data-toggle="pill" href="#ex1-pills-1" role="tab" aria-controls="ex1-pills-1"
-                 aria-selected="true" (click)="onTabClick('description')">Mô Tả</a>
+                 id="description-tab" data-toggle="pill" href="#description-content" role="tab" aria-controls="description-content"
+                 aria-selected="true">
+                <span>Mô Tả</span>
+              </a>
             </li>
             <li class="nav-item" role="presentation">
               <a class="nav-link d-flex align-items-center justify-content-center w-100 custom-background"
-                 id="ex1-tab-2" data-toggle="pill" href="#ex1-pills-2" role="tab" aria-controls="ex1-pills-2"
-                 aria-selected="false" (click)="onTabClick('warranty')">Thông tin bảo hành</a>
+                 id="warranty-tab" data-toggle="pill" href="#warranty-content" role="tab" aria-controls="warranty-content"
+                 aria-selected="false">
+                <span>Thông tin bảo hành</span>
+              </a>
             </li>
           </ul>
           <!-- Pills navs -->
@@ -111,7 +130,7 @@
           <!-- Pills content -->
           <div class="tab-content">
             <!-- Tab 1: Mô Tả -->
-            <div id="ex1-pills-1" role="tabpanel" aria-labelledby="ex1-tab-1">
+            <div class="tab-pane fade in show active" id="description-content" role="tabpanel" aria-labelledby="description-tab">
               <table class="table table-custom">
                 <tr>
                   <td>
@@ -120,9 +139,8 @@
                 </tr>
               </table>
             </div>
-      
             <!-- Tab 2: Thông tin bảo hành -->
-            <div class="tab-pane fade" id="ex1-pills-2" role="tabpanel" aria-labelledby="ex1-tab-2">
+            <div class="tab-pane fade" id="warranty-content" role="tabpanel" aria-labelledby="warranty-tab">
               <p>Sản phẩm được bảo hành 1 năm kể từ ngày mua.</p>
               <ul>
                 <li>Đổi trả miễn phí trong vòng 30 ngày</li>
@@ -135,29 +153,31 @@
         </div>
       </div>
 
-
-      <div class="col-lg-5">
+      <div class="col-lg-3">
         <div class="px-0 border rounded-2 shadow-0">
           <div class="card-body">
             <h5 style="font-size: 20px; margin-bottom: 10px;" class="card-title">Sản phẩm tương tự</h5>
-            <!-- Use ng-container to control the *ngIf -->
-            <ng-container *ngFor="let cate of categoryProduct; let i = index">
-              <div class="d-flex mb-3" *ngIf="i < 4">
-                <a [routerLink]="['/product-details', cate.productId]" class="me-3">
-                  <img [src]="cate.image" style="min-width: 150px; height: 110px;" class="img-md img-thumbnail" />
-                </a>
-                <div class="info">
-                  <a [routerLink]="['/product-details', cate.productId]" class="nav-link mb-1">
-                    {{ cate.productName }}
+            <div class="product-list" style="max-height: 350px; overflow-y: auto;">
+              <ng-container *ngFor="let cate of categoryProduct; let i = index">
+                <div class="d-flex mb-3" *ngIf="i < 8">
+                  <a [routerLink]="['/product-details', cate.productId]" class="me-3">
+                    <div class="product-image-wrapper">
+                      <img [src]="cate.image" class="product-image img-md img-thumbnail" />
+                    </div>
                   </a>
-                  <strong class="text-dark"> {{ cate.price |  number: '1.0-3' }} VNĐ</strong>
+                  <div class="info">
+                    <a [routerLink]="['/product-details', cate.productId]" class="nav-link mb-1 product-name">
+                      {{ cate.productName }}
+                    </a>
+                    <strong class="text-dark product-price">{{ cate.price | number: '1.0-3' }} VNĐ</strong>
+                  </div>
                 </div>
-              </div>
-            </ng-container>
+              </ng-container>
+              
+            </div>
           </div>
         </div>
       </div>
-      
     </div>
   </div>
 </section>

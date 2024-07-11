@@ -2,6 +2,7 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { Component } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
+import { timer } from 'rxjs';
 import { AuthenListService } from 'src/app/service/authen.service';
 interface ApiResponse {
   code: number;
@@ -17,9 +18,11 @@ export class ListRequestProductComponent {
   loginToken: string | null = null; 
   list_request_product: any[] = [];
   currentPage: number = 1;
+  isLoadding: boolean = false; 
   requestForm: FormGroup;
   selectedImages: File[] = [];
   imagesPreview: string[] = [];
+  initialFormValue: any;
   selectedProductIdCurrentDelele: number = 0;
   constructor(private authenListService: AuthenListService, private toastr: ToastrService,private fb: FormBuilder,) {
     
@@ -30,7 +33,17 @@ export class ListRequestProductComponent {
       imageList: ['']
     });
    }
+   initializeForm(): void {
+    this.requestForm = this.fb.group({
+      request_Id: [null],
+      description: [''],
+      status_id: [null],
+      imagesList: [null]
+    });
+  }
+
   ngOnInit(): void {
+    this.initializeForm();
     
     this.getHistoryOrder();
     
@@ -61,16 +74,21 @@ export class ListRequestProductComponent {
     this.selectedProductIdCurrentDelele = requestId;
   }
   deleteRequest() {
+    this.isLoadding = true;
     this.authenListService.deleteRequestProductCustomer(this.selectedProductIdCurrentDelele)
       .subscribe(
         response => {
-          console.log('Xóa thành công', response);
+          
           if (response.code === 1000) {
+            this.isLoadding = false;
             this.toastr.success('Xóa sản phẩm yêu cầu đã đặt thành công!', 'Thành công');
-            window.location.reload();
+            timer(200).subscribe(() => {
+              window.location.reload();
+            });
           }
           const cancelButton = document.querySelector('.btn.btn-secondary[data-dismiss="modal"]') as HTMLElement;
           if (cancelButton) { // Check if the button exists
+            
             cancelButton.click(); // If it exists, click it to close the modal
           }
 
@@ -111,48 +129,54 @@ export class ListRequestProductComponent {
 
     }
   }
-  getDataRequest(requestId: number) {
-    this.requestForm.patchValue({
-      request_Id: requestId,
-      description: null,
-      status_id: null,
-      imagesList: null
-    });
-    this.imagesPreview = [];
-    
-    this.authenListService.getRequestByIdCustomer(requestId)
-      .subscribe(async product => {
-        if (product && product.result) {
-          this.requestForm.patchValue({
-            description: product.result.description,
-            status_id: product.result.status_id,
-            imagesList: product.result.imagesList
-          });
-          if (product.result.imagesList) {
-            this.imagesPreview = product.result.imagesList.map((image: any) => {
-              return image.fullPath;
-            });
-          }
-        }
+    getDataRequest(requestId: number) {
+      this.requestForm.patchValue({
+        request_Id: requestId,
+        description: null,
+        status_id: null,
+        imagesList: null
       });
-  }
-  
+      this.imagesPreview = [];
+      
+      this.authenListService.getRequestByIdCustomer(requestId)
+        .subscribe(async product => {
+          if (product && product.result) {
+            this.requestForm.patchValue({
+              description: product.result.description,
+              status_id: product.result.status_id,
+              imagesList: product.result.imagesList
+            });
+            if (product.result.imagesList) {
+              this.imagesPreview = product.result.imagesList.map((image: any) => {
+                return image.fullPath;
+              });
+            }
+          }
+        });
+    }
+    resetForm(): void {
+      this.requestForm.reset(this.initialFormValue);
+      this.imagesPreview = this.initialFormValue.imagesList ? this.initialFormValue.imagesList.map((image: any) => image.fullPath) : [];
+    }
 
   onEditSubmit(): void {
-
+    this.isLoadding = true;
       const requestData = this.requestForm.value;
       // console.log('Form Data for Edit:', requestData.product_id);
       const updatedRequestProduct = {
         ...requestData,
         images: this.selectedImages
       };
-      console.log('Form Data for updatedProduct:', updatedRequestProduct);
+      // console.log('Form Data for updatedProduct:', updatedRequestProduct);
       this.authenListService.editRequestProductForCustomer(updatedRequestProduct, this.selectedImages, requestData.request_Id)
         .subscribe(
           response => {
-            this.getHistoryOrder();
-            console.log('Update successful', response);
+            this.isLoadding = false;
+
             this.toastr.success('Cập nhật sản phẩm yêu cầu thành công!', 'Thành công');
+            timer(1000).subscribe(() => {
+              window.location.reload();
+            });
             const closeButton = document.querySelector('.btn-mau-do[data-dismiss="modal"]') as HTMLElement;
             if (closeButton) { // Check if the button exists
               closeButton.click(); // If it exists, click it to close the modal
@@ -160,7 +184,8 @@ export class ListRequestProductComponent {
             }
           },
           error => {
-            console.error('Update error', error);
+            this.isLoadding = false;
+            // console.error('Update error', error);
             this.toastr.error('Cập nhật sản phẩm bị lỗi!', 'Lỗi');
             const closeButton = document.querySelector('.btn-mau-do[data-dismiss="modal"]') as HTMLElement;
             if (closeButton) { // Check if the button exists

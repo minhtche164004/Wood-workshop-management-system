@@ -13,7 +13,7 @@ export class ChangePasswordComponent implements OnInit {
 
   formGroup: FormGroup;
   errorMessage: string | null = null;
-
+  isLoadding: boolean = false; 
   constructor(
     private formBuilder: FormBuilder,
     private authenListService: AuthenListService,
@@ -30,13 +30,16 @@ export class ChangePasswordComponent implements OnInit {
   ngOnInit(): void {}
 
   onSubmit(): void {
+    this.isLoadding = true;
     if (this.formGroup.invalid) {
       this.errorMessage = 'Vui lòng điền đầy đủ thông tin.';
+      this.isLoadding = false;
       return;
     }
 
     if (this.formGroup.value.new_pass !== this.formGroup.value.check_pass) {
       // Use ToastrService to show error message
+      this.isLoadding = false;
       this.toastr.error('Mật khẩu mới và xác nhận mật khẩu không khớp.', 'Lỗi xác thực');
       return;
     }
@@ -47,11 +50,13 @@ export class ChangePasswordComponent implements OnInit {
 
     this.authenListService.getChangePass(oldPassword, newPassword).subscribe({
       next: (response) => {
+        this.isLoadding = false;
         console.log('Đổi mật khẩu thành công', response);
         this.toastr.success('Đổi mật khẩu thành công', 'Thành công');
         this.router.navigate(['/homepage']);
       },
       error: (error) => {
+        this.isLoadding = false;
         console.error('Lỗi khi đổi mật khẩu', error);
         if (error.error.code === 1006) {
           this.toastr.error('Mật khẩu cũ không chính xác. Vui lòng thử lại.', 'Lỗi');

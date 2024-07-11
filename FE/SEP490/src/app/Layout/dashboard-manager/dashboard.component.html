@@ -1,7 +1,7 @@
 <section id="sidebar" [ngClass]="status ? 'hide' : ''" class="sidebar">
     <a href="#" class="brand">
         <i class='bx bxs-smile'></i>
-        <span class="text">Người Quản lý</span>
+        <span class="text">Trang Quản lý</span>
     </a>
     <ul class="side-menu top">
         <li>
@@ -28,6 +28,13 @@
                 <span class="text">Quản lý đơn đặt hàng</span>
             </a>
         </li>
+        <li>
+            <a routerLink="/order_request_management" routerLinkActive="active">
+                <i class='bx bx-list-ul'></i>
+                <span class="text"> Quản lý đơn hàng yêu cầu</span>
+            </a>
+        </li>
+       
         <li>
             <a routerLink="/product_management" routerLinkActive="active">
                 <i class='bx bxs-shopping-bag'></i>

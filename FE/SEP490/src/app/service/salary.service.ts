@@ -24,8 +24,8 @@ export class SalaryService {
   getBanks(): Observable<any> {
     return this.http.get<any>(this.apiUrl);
   }
-  getQRBanking(amount: number, accountId: number, username: string, bin_bank: any, orderInfo: string): Observable<string> {
-    const url = `${this.apiQR}?amount=${amount}&accountId=${accountId}&username=${username}&bin_bank=${bin_bank}&orderInfo=${orderInfo}`;
+  getQRBanking(amount: number, accountId: number, username: string, bin_bank: string, orderInfo: string): Observable<string> {
+    const url = `${this.apiQR}?amount=${amount}&accountNo=${accountId}&username=${username}&bin_bank=${bin_bank}&orderInfo=${orderInfo}`;
     
     // Yêu cầu dữ liệu trả về là dạng text (base64 của hình ảnh)
     return this.http.post<string>(url, {}, { responseType: 'text' as 'json' });

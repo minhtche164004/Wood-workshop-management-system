@@ -268,6 +268,7 @@ export class SubMaterialManagementComponent implements OnInit {
         if (data.code === 1000) {
           this.products = data.result;
           //   console.log('Kết quả tìm kiếm Sub-Materials:', this.products);
+          this.isLoadding = false;
         } else {
           console.error('Failed to search sub-materials:', data);
           this.toastr.error('Không thể tìm kiếm sub-materials!', 'Lỗi');

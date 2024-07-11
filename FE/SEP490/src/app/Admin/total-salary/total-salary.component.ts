@@ -35,8 +35,8 @@ export class TotalSalaryComponent implements OnInit {
   isLoadding: boolean = false;
   selectedPositionEmp: any = 0;
   bankList: any[] = [];
- ndChuyenKhoan: string = 'DoGoSyDung thanh toan tien cong (Ma: {{code}})'
- qrImageUrl: string = '';
+  ndChuyenKhoan: string = 'DoGoSyDung thanh toan tien cong (Ma: {{code}})'
+  qrImageUrl: string = '';
   constructor(private dataService: DataService, private http: HttpClient, private toastr: ToastrService, private employeeService: EmployeeService, private jobService: JobService, private fb: FormBuilder, private productListService: ProductListService, private sanitizer: DomSanitizer, private productService: ProductService, private salaryService: SalaryService) { }
 
 
@@ -44,13 +44,13 @@ export class TotalSalaryComponent implements OnInit {
     this.getTotalSalary();
     this.getAllEmployee();
     this.getAllPostionEmp();
-    this.getBankList(); 
+    this.getBankList();
   }
   getBankList(): void {
     this.salaryService.getBanks().subscribe(
       (data) => {
-       this.bankList = data.data;
-      //  console.log('Response from getBanks:', this.bankList);
+        this.bankList = data.data;
+        //  console.log('Response from getBanks:', this.bankList);
         this.isLoadding = false;
       },
       (error) => {
@@ -191,50 +191,60 @@ export class TotalSalaryComponent implements OnInit {
       }
     );
   }
-  getBinByBankNameOrShortName(bankName: string): string | undefined {
+  getBinByBankNameOrShortName(bankName: string): string{
     // Chuyển đổi bankName sang chữ thường để so sánh không phân biệt hoa thường
     const normalizedBankName = bankName.toLowerCase();
-  
+
     // Tìm ngân hàng trong bankList dựa trên shortName hoặc name
     const bankInfo = this.bankList.find(bank =>
       bank.shortName.toLowerCase() === normalizedBankName ||
       bank.name.toLowerCase() === normalizedBankName
     );
-  
-   // console.log('Return BIN:', bankInfo);
+
+    // console.log('Return BIN:', bankInfo);
     return bankInfo ? bankInfo.bin : undefined;
   }
-  getImageQR(){
+  getImageQR() {
     this.salaryService.getBanks().subscribe();
-    
+
   }
   thanhToan(product: any): void {
-    
+    this.isLoadding = true;
     console.log('Thanh toan:', product);
     console.log('Amount: ', product.amount);
     console.log('accountId: ', product.user?.userInfor?.bank_number)
     console.log('username: ', product.user?.username)
     console.log('code: ', product.code)
-    const bankName = product.user?.userInfor?.bank_name;
+   // const bankName = product.user?.userInfor?.bank_name;
     const formattedNdChuyenKhoan = this.ndChuyenKhoan.replace('{{code}}', product.code.toString());
-  
+
     console.log('orderInfo:  ', formattedNdChuyenKhoan);
-    
-    const bin = this.getBinByBankNameOrShortName(bankName);
+
+     const bin = this.getBinByBankNameOrShortName(product.user?.userInfor?.bank_name);
     console.log('BIN:', bin);
-    this.salaryService.getQRBanking(product.amount, product.user?.userInfor?.bank_number, product.user?.username, this.getBinByBankNameOrShortName(bankName), formattedNdChuyenKhoan)
-    .subscribe(
-      (response) => {
-       
-        this.qrImageUrl = response;
-        console.log('QR Image URL:', this.qrImageUrl);
-      },
-      (error) => {
-        console.error('API Error:', error);
-        // Xử lý lỗi nếu có
-      }
-    );
+    this.salaryService.getQRBanking(product.amount, product.user?.userInfor?.bank_number, product.user?.username, bin, formattedNdChuyenKhoan)
+      .subscribe(
+        (response) => {
+
+          this.qrImageUrl = response;
+          console.log('QR Image URL:', this.qrImageUrl);
+          this.isLoadding = false;
+
+        },  
+        (error) => {
+          console.error('API Error:', error);
+          this.toastr.error('Có lỗi xảy ra khi tạo mã QR thanh toán. Vui lòng thử lại sau.', 'Lỗi');
+          // Xử lý lỗi nếu có
+
+
+          $('[data-dismiss="modal"]').click();
+          this.isLoadding = false;
+        }
+
+      );
 
   }
+
 }
- 
+
+

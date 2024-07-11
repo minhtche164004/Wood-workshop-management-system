@@ -108,9 +108,9 @@ export class HeaderComponent implements OnInit {
       this.routerSearch(this.searchKey);
     } else {
       // Xử lý trường hợp không có giá trị nhập (ví dụ: thông báo cho người dùng hoặc đặt lại kết quả tìm kiếm)
-      this.dataService.changeSearchKey(this.searchKey);
-      this.routerSearch(this.searchKey);
-      this.router.navigate(['/product']);
+      // this.dataService.changeSearchKey(this.searchKey);
+      // this.routerSearch(this.searchKey);
+      // this.router.navigate(['/product']);
     }
   }
 

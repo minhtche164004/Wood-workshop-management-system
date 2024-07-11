@@ -33,11 +33,11 @@ public interface AdvancesalaryRepository extends JpaRepository<Advancesalary,Int
             "(:fromDate IS NULL OR a.date >= :fromDate) AND " +
             "(:toDate IS NULL OR a.date <= :toDate) AND " +
             "(a.user.position.position_id IN :position_id OR :position_id IS NULL) AND " +
-            "(:employeeName IS NULL OR a.user.username LIKE %:employeeName%) " +
+            "(:username IS NULL OR a.user.username LIKE %:username%) " +
             "ORDER BY a.date DESC") // Sắp xếp theo ngày giảm dần (từ mới đến cũ)
     List<Advancesalary> filterAdvancesalary(@Param("fromDate") Date fromDate,
                                             @Param("toDate") Date toDate,
                                             @Param("position_id") Integer position_id,
-                                            @Param("employeeName") String employeeName);
+                                            @Param("username") String username);
 
 }

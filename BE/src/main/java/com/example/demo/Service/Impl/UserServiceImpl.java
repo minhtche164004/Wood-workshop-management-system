@@ -153,6 +153,9 @@ public class UserServiceImpl implements UserService {
         if (!checkConditionService.checkPhoneNumber(userDTO.getPhoneNumber())) {
             throw new AppException(ErrorCode.INVALID_FORMAT_PHONE_NUMBER);
         }
+        if (!checkConditionService.checkEmail(userDTO.getFullname())) {
+            throw new AppException(ErrorCode.INVALID_FULL_NAME);
+        }
         informationUserRepository.save(userInfor);
         User user = new User(
                 0,
@@ -236,6 +239,9 @@ public class UserServiceImpl implements UserService {
         if (!checkConditionService.checkUserbyUsername(userDTO.getUsername())) {
             throw new AppException(ErrorCode.USERNAME_EXISTED);
         }
+        if (!checkConditionService.checkEmail(userDTO.getFullname())) {
+            throw new AppException(ErrorCode.INVALID_FULL_NAME);
+        }
 
     }
 
@@ -255,6 +261,9 @@ public class UserServiceImpl implements UserService {
         }
         if (!checkConditionService.checkUserbyUsername(userDTO.getUsername())) {
             throw new AppException(ErrorCode.USERNAME_EXISTED);
+        }
+        if (!checkConditionService.checkEmail(userDTO.getFullname())) {
+            throw new AppException(ErrorCode.INVALID_FULL_NAME);
         }
     }
 
@@ -319,6 +328,9 @@ public class UserServiceImpl implements UserService {
         if (!updateProfileDTO.getUsername().equals(user.getUsername()) &&
                 userRepository.findByUsername(updateProfileDTO.getUsername()).isPresent()) {
             throw new AppException(ErrorCode.USERNAME_EXISTED);
+        }
+        if (!checkConditionService.checkEmail(updateProfileDTO.getFullname())) {
+            throw new AppException(ErrorCode.INVALID_FULL_NAME);
         }
 
         user.setUsername(updateProfileDTO.getUsername());
@@ -389,6 +401,10 @@ userRepository.save(user);
         if (!checkConditionService.checkEmail(userDTO.getEmail())) {
             throw new AppException(ErrorCode.WRONG_FORMAT_EMAIL);
         }
+        if (!checkConditionService.checkEmail(userDTO.getFullname())) {
+            throw new AppException(ErrorCode.INVALID_FULL_NAME);
+        }
+
 
         userRepository.save(user); // Điều này cũng sẽ lưu các thay đổi vào UserInfor liên kết
 

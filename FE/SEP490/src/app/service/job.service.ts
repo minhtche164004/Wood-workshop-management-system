@@ -17,7 +17,10 @@ export class JobService {
   private apiGetStatusJob =`${environment.apiUrl}api/auth/job/getAllStatusJob`
   private apiGetStatusJobByType = `${environment.apiUrl}api/auth/job/getAllStatusType`
   private apiCreateProductForjob = `${environment.apiUrl}api/auth/job/CreateJobs`
- 
+
+  private apiSearchProductByNameOrCode = `${environment.apiUrl}api/auth/job/getListProductJobByNameOrCodeProduct`  //tim viec lam theo san pham co san theo ten
+
+  private apiEditJob = `${environment.apiUrl}api/auth/job/EditJob`
   private apiAcceptJob = `${environment.apiUrl}api/auth/job/acceptJob`
   private apiGetProductSubMaterial = `${environment.apiUrl}api/auth/submaterial/getProductSubMaterialByProductId`;
   private apiCreateExportProd = `${environment.apiUrl}api/auth/submaterial/createExportMaterialProductTotalJob`
@@ -29,6 +32,14 @@ export class JobService {
   getSubMTRProduct(productId: number, mateId: number): Observable<any> {
     const url = `${this.apiGetProductSubMaterial}?id=${productId}&mate_id=${mateId}`;
     return this.http.get<any>(url);
+  }
+
+  editJob(jobId: number, data: any): Observable<any> {
+    return this.http.put(`${this.apiEditJob}?job_id=${jobId}`, data);
+  }
+
+  getProductJobByNameOrCode(key: string): Observable<any> {
+    return this.http.get<any>(`${this.apiSearchProductByNameOrCode}?key=${key}`);
   }
   createExportMaterialProductTotalJob(id:number, mate_id: number, emp_id: number, productForm: any): Observable<any> {
     const url = `${this.apiCreateExportProd}?id=${id}&mate_id=${mate_id}&emp_id=${emp_id}`;
@@ -56,8 +67,8 @@ export class JobService {
     const url = `${this.apiAddJob}/CreateJobs`; // Endpoint for creating jobs
    
     const params = { user_id, p_id, status_id, job_id, type_id };
-    // console.log('Constructed URL:', url);
-    // console.log('Constructed params:', params);
+    console.log('Constructed URL:', url);
+    console.log('Constructed params:', params);
     return this.http.post(url, jobData, { params });
   }
   getStatusJobByType(type: number): Observable<any> {

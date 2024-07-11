@@ -48,7 +48,7 @@ public interface JobService {
    // boolean checkOderDoneOrNot(int order_id);
 
     List<Advancesalary> getAllAdvancesalary();
-    List<Advancesalary> multi_filter_salary(Date fromDate, Date toDate,Integer position_id, String employeeName, String sortDirection);
+    List<Advancesalary> multi_filter_salary(Date fromDate, Date toDate,Integer position_id, String username, String sortDirection);
     List<Advancesalary> getAdvancesalaryByEmployeeId();
     Advancesalary ChangeStatus(int id,boolean check);
 }

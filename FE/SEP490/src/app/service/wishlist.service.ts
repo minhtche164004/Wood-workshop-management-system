@@ -29,16 +29,15 @@ export class WishlistService {
   }
   addWishlist(productId: number): Observable<any> {
     const token = localStorage.getItem('loginToken');
-    console.log("token: ", token)
+  //   console.log("token: ", token)
     if (!token) {
       return throwError(new Error('Login token not found in localStorage.'));
     }
-
     const headers = new HttpHeaders({
       'Authorization': `Bearer ${token}`
     });
 
-    console.log("Authorization header:", headers.get('Authorization'));
+   // console.log("Authorization header:", headers.get('Authorization'));
 
 
     return this.http.post<any>(`${this.apiAddWishlist}?product_id=${productId}`, {}, { headers: headers, withCredentials: true }).pipe(

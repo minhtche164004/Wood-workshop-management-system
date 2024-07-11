@@ -6,6 +6,9 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import redis.clients.jedis.Connection;
 import redis.clients.jedis.Jedis;
 
+import java.sql.Time;
+import java.util.TimeZone;
+
 @SpringBootApplication
 public class Sep490BeApplication {
 
@@ -13,6 +16,7 @@ public class Sep490BeApplication {
 //		Jedis jedis = new Jedis("redis://default:xcHV2iYQow6KxZMxZz4klIoKxgYuytAf@redis-17341.c251.east-us-mz.azure.redns.redis-cloud.com:17341");
 //		jedis.setex("minh",60,"leaddzvl");
 //		System.out.println(jedis.get("minh"));
+		TimeZone.setDefault(TimeZone.getTimeZone("Asia/Ho_Chi_Minh"));
 		SpringApplication.run(Sep490BeApplication.class, args);
 	}
 

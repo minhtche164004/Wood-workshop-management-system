@@ -15,15 +15,20 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 
 import java.math.BigDecimal;
+import java.net.URI;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 @org.springframework.stereotype.Controller
 
@@ -88,12 +93,36 @@ public class PaymentController {
 
     @GetMapping("/vnpay-payment")
     public ResponseEntity<String> GetMapping(HttpServletRequest request) {
+
         int paymentStatus = vnPayService.orderReturn(request);
         String orderInfo = request.getParameter("vnp_OrderInfo");
         String paymentTime = request.getParameter("vnp_PayDate");
         String transactionId = request.getParameter("vnp_TransactionNo");
         String totalPrice = request.getParameter("vnp_Amount");
         Orders orders = orderRepository.findByCode(orderInfo);
+
+        String requestURL = request.getRequestURL().toString();
+        String urlLocalSuccess = "http://localhost:5173/order-vnpay-success?"
+                + "orderInfo=" + orderInfo
+                + "&paymentTime=" + paymentTime
+                + "&transactionId=" + transactionId
+                + "&totalPrice=" + totalPrice;
+        String urlDevelopSuccess = "https://dogosydungs.azurewebsites.net/order-vnpay-success?"
+                + "orderInfo=" + orderInfo
+                + "&paymentTime=" + paymentTime
+                + "&transactionId=" + transactionId
+                + "&totalPrice=" + totalPrice;;
+
+        String urlLocalFail = "http://localhost:5173/order-vnpay-fail?"
+                + "orderInfo=" + orderInfo
+                + "&paymentTime=" + paymentTime
+                + "&transactionId=" + transactionId
+                + "&totalPrice=" + totalPrice;
+        String urlDevelopFail = "https://dogosydungs.azurewebsites.net/order-vnpay-fail?"
+                + "orderInfo=" + orderInfo
+                + "&paymentTime=" + paymentTime
+                + "&transactionId=" + transactionId
+                + "&totalPrice=" + totalPrice;;
 
         BigDecimal totalPriceAsBigDecimal = new BigDecimal(totalPrice).divide(new BigDecimal(100));
 
@@ -113,9 +142,27 @@ public class PaymentController {
             }
             orders.setStatus(statusOrder);
             orderRepository.save(orders);
-            return ResponseEntity.ok("order success");
+
+            if (requestURL.startsWith("http://localhost:8080") || requestURL.startsWith("https://localhost:8080")) {
+                return ResponseEntity.status(HttpStatus.FOUND)
+                        .location(URI.create(urlLocalSuccess))
+                        .build();
+            } else {
+                return ResponseEntity.status(HttpStatus.FOUND)
+                        .location(URI.create(urlDevelopSuccess))
+                        .build();
+            }
+
         } else {
-            return ResponseEntity.badRequest().body("order fail");
+            if (requestURL.startsWith("http://localhost:8080") || requestURL.startsWith("https://localhost:8080")) {
+                return ResponseEntity.status(HttpStatus.FOUND)
+                        .location(URI.create(urlLocalFail))
+                        .build();
+            } else {
+                return ResponseEntity.status(HttpStatus.FOUND)
+                        .location(URI.create(urlDevelopFail))
+                        .build();
+            }
         }
 
     }

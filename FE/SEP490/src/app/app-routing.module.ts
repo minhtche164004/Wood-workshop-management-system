@@ -60,7 +60,9 @@ import { Chart } from 'chart.js';
 import { ChartComponent } from './Admin/chart/chart.component';
 import { ListRequestCustomerComponent } from './Admin/list-request-customer/list-request-customer.component';
 import { ListSalaryEmployeeComponent } from './4.Employee/list-salary-employee/list-salary-employee.component';
-
+//danh` cho order-vnpay
+import { OrderSuccessComponent } from './Order-payment-vnpay/order-success/order-success.component';
+import { OrderFailComponent } from './Order-payment-vnpay/order-fail/order-fail.component';
 
 
 
@@ -123,6 +125,15 @@ const routes: Routes = [
   { path: 'list_job_done', component: ListJobDoneComponent },
   { path: 'list_request_customer', component: ListRequestCustomerComponent },
   { path: 'list_salary_employee', component: ListSalaryEmployeeComponent },
+<<<<<<< HEAD
+=======
+
+  //danh` cho order-vnpay
+  { path: 'order-vnpay-success', component: OrderSuccessComponent },
+  { path: 'order-vnpay-fail', component: OrderFailComponent },
+
+  
+>>>>>>> bb0b858d30ba1dcd3110e45587eee7765bbd169c
   // { path: '', redirectTo: '/homepage', pathMatch: 'full' },
   { path: 'report-cost', component: ReportCostManagementComponent },
   { path: '', redirectTo: '/homepage', pathMatch: 'full' },

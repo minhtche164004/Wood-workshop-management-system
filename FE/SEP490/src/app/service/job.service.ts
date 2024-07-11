@@ -67,8 +67,8 @@ export class JobService {
     const url = `${this.apiAddJob}/CreateJobs`; // Endpoint for creating jobs
    
     const params = { user_id, p_id, status_id, job_id, type_id };
-    // console.log('Constructed URL:', url);
-    // console.log('Constructed params:', params);
+    console.log('Constructed URL:', url);
+    console.log('Constructed params:', params);
     return this.http.post(url, jobData, { params });
   }
   getStatusJobByType(type: number): Observable<any> {

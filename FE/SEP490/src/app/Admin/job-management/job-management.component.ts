@@ -213,6 +213,7 @@ export class JobManagementComponent implements OnInit {
                 this.pForJob = data.result;
                 // console.log('Add product for job:', this.pForJob);
                 this.toastr.success('Thêm sản phẩm sản xuất thành công!', 'Thành công');
+                $('[data-dismiss="modal"]').click();
                 this.ngOnInit();
               } else {
                 console.error('Failed to fetch products:', data);
@@ -227,6 +228,7 @@ export class JobManagementComponent implements OnInit {
         } else if (data.code === 1015) {
           console.error('Failed to fetch products:', data);
           this.toastr.warning('Số lượng nguyên vật liệu trong kho không đủ', 'Lỗi');
+          $('[data-dismiss="modal"]').click();
         }
       },
       (error) => {
@@ -234,11 +236,15 @@ export class JobManagementComponent implements OnInit {
         if (error && error.error && error.error.errors) {
           Object.entries(error.error.errors).forEach(([key, value]) => {
             this.toastr.warning(`${key}: ${value}`, 'Lỗi');
+            $('[data-dismiss="modal"]').click();
           });
+        
         } else if (error && error.message) {
           this.toastr.error(`Có lỗi xảy ra: ${error.message}`, 'Lỗi');
+          $('[data-dismiss="modal"]').click();
         } else {
           this.toastr.error(`Có lỗi xảy ra, vui lòng thử lại.`, 'Lỗi');
+          $('[data-dismiss="modal"]').click();
         }
       }
     );
@@ -267,15 +273,18 @@ export class JobManagementComponent implements OnInit {
           this.pForJob = data.result;
           // console.log('Add product for job:', this.pForJob);
           this.toastr.success('Thêm sản phẩm sản xuất thành công!', 'Thành công');
+          $('[data-dismiss="modal"]').click();
           this.ngOnInit();
         } else {
           console.error('Failed to fetch products:', data);
           this.toastr.error('Thêm sản phẩm sản xuất thất bại!', 'Lỗi');
+          $('[data-dismiss="modal"]').click();
         }
       },
       (error) => {
         console.error('Error fetching products:', error);
         this.toastr.error('Có lỗi xảy ra!', 'Lỗi');
+        $('[data-dismiss="modal"]').click();
       }
     );
   }
@@ -425,7 +434,7 @@ export class JobManagementComponent implements OnInit {
     // console.log("Product ID:", productId);
     // console.log("Material ID:", mateId);
     this.getProductSubMaterial(productId, mateId);
-
+    $('[data-dismiss="modal"]').click();
   }
   getJobEdit(){
     

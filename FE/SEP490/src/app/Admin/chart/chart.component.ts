@@ -30,7 +30,26 @@ export class ChartComponent implements OnInit {
       },
     });
 
+    this.chart = new Chart('canvas3', {
+      type: 'bar',
+      data: {
+        labels: ['Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange'],
+        datasets: [
+          {
+            label: 'My First dataset',
+            data: [12, 19, 3, 5, 2, 3],
+            borderColor: '#3cba9f',
 
+          },
+          {
+            label: 'My second dataset',
+            data: [2, 3, 5, 2, 3, 12],
+            borderColor: '#ffcc00',
+
+          }
+        ]
+      },
+    });
     this.chart = new Chart('canvas2', {
       type: 'pie',
       data: {
@@ -38,7 +57,7 @@ export class ChartComponent implements OnInit {
         datasets: [
           {
             label: 'My First dataset',
-            data: [12,23],
+            data: [0,0,100],
             backgroundColor: [
               'rgb(255, 99, 132)',
               'rgb(54, 162, 235)',

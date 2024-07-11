@@ -73,6 +73,8 @@ import { ChartComponent } from './Admin/chart/chart.component';
 import { NgChartjsModule } from 'ng-chartjs';
 import { ListRequestCustomerComponent } from './Admin/list-request-customer/list-request-customer.component';
 import { ListSalaryEmployeeComponent } from './4.Employee/list-salary-employee/list-salary-employee.component';
+import { OrderSuccessComponent } from './Order-payment-vnpay/order-success/order-success.component';
+import { OrderFailComponent } from './Order-payment-vnpay/order-fail/order-fail.component';
 
 // import { AuthInterceptor } from './service/auth.interceptor';
 @NgModule({
@@ -137,6 +139,8 @@ import { ListSalaryEmployeeComponent } from './4.Employee/list-salary-employee/l
     ChartComponent,
     ListRequestCustomerComponent,
     ListSalaryEmployeeComponent,
+    OrderSuccessComponent,
+    OrderFailComponent,
 
 
   ],

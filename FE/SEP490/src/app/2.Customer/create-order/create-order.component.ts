@@ -218,7 +218,7 @@ export class CreateOrderComponent implements OnInit {
     });
 
     this.loadAllPhoneNumber();
-    this.loadAllProductForCustomer();
+    // this.loadAllProductForCustomer();
   }
 
   loadAllPhoneNumber(): void {
@@ -259,19 +259,19 @@ export class CreateOrderComponent implements OnInit {
             this.wardControl.setValue(customerInfo.wards);
           }, 0);
           //copy value sang cho nguoi nhan
-          // const receiveInfo: ReceiveInfo = data.result; {
+          const receiveInfo: ReceiveInfo = data.result; {
           //   this.fullnameCopy = customerInfo.fullname;
           //   this.phonenumberCopy = customerInfo.phoneNumber;
           //   this.addressCopy = customerInfo.address;
-          //   this.selectedProvinceCopy = this.provinces.find(province => province.name === customerInfo.city_province);
-          //   this.provinceControlCopy.setValue(customerInfo.city_province);
-          //   setTimeout(() => {
-          //     this.districtControlCopy.setValue(customerInfo.district);
-          //   }, 0);
-          //   setTimeout(() => {
-          //     this.wardControlCopy.setValue(customerInfo.wards);
-          //   }, 0);
-          // }
+            this.selectedProvinceCopy = this.provinces.find(province => province.name === customerInfo.city_province);
+            this.provinceControlCopy.setValue(customerInfo.city_province);
+            setTimeout(() => {
+              this.districtControlCopy.setValue(customerInfo.district);
+            }, 0);
+            setTimeout(() => {
+              this.wardControlCopy.setValue(customerInfo.wards);
+            }, 0);
+          }
           //
           this.orderForm.patchValue({
             cusInfo: {

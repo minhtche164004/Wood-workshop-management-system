@@ -63,7 +63,7 @@
                 <i class="fa-solid fa-pen-to-square"></i>
               </a>
               <a href="#" class="delete" title="Xóa" data-toggle="modal" data-target="#confirmDeleteModal"
-                (click)="openConfirmDeleteModal(product.product_id, product.product_name)">
+                (click)="openConfirmDeleteModal(product.id, product.product_name)">
                 <i class="fa-regular fa-trash-can"></i>
               </a>
               <a href="#" class="info" title="Chi tiết" data-toggle="modal" data-target="#productDetailModal"
@@ -189,9 +189,14 @@
 
                 <div class="col-md-6">
 
-                  <h3 [ngStyle]="{'color': errorDetail?._fix ? 'green' : 'red'}">
+                 
                     {{ errorDetail?._fix ? 'Đã khắc phục' : 'Chưa khắc phục' }}
-                  </h3>
+                    <select formControlName="isFixed">
+                      <option [ngValue]="true" [selected]="errorDetail?._fix">Đã khắc phục</option>
+                      <option [ngValue]="false" [selected]="!errorDetail?._fix">Chưa khắc phục</option>
+                    </select>
+                
+                  
 
                 </div>
               </div>
@@ -253,7 +258,7 @@
         </button>
       </div>
       <div class="modal-body" id="confirmDeleteModal">
-        Are you sure you want to delete this product "{{ selectedProductNameCurrentDelele }}" ?
+        Bạn có chắc chắn muốn xóa báo cáo lỗi sản phẩm này hay không?
       </div>
       <div class="modal-footer" id="confirmDeleteModal">
         <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
@@ -344,8 +349,9 @@
 
                 <h3 [ngStyle]="{'color': errorDetail?._fix ? 'green' : 'red'}">
                   {{ errorDetail?._fix ? 'Đã khắc phục' : 'Chưa khắc phục' }}
+                 
                 </h3>
-
+                
               </div>
             </div>
             <div class="col-md-1">

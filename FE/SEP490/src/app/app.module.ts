@@ -70,7 +70,7 @@ import { ListJobDoneComponent } from './Admin/list-job-done/list-job-done.compon
 
 import { ReportCostManagementComponent } from './Admin/report-cost-management/report-cost-management.component';
 import { ChartComponent } from './Admin/chart/chart.component';
-import { NgChartjsModule } from 'ng-chartjs';
+
 import { ListRequestCustomerComponent } from './Admin/list-request-customer/list-request-customer.component';
 import { ListSalaryEmployeeComponent } from './4.Employee/list-salary-employee/list-salary-employee.component';
 
@@ -139,6 +139,7 @@ import { ListSalaryEmployeeComponent } from './4.Employee/list-salary-employee/l
     ListSalaryEmployeeComponent,
 
 
+
   ],
   imports: [
     BrowserModule,
@@ -157,7 +158,8 @@ import { ListSalaryEmployeeComponent } from './4.Employee/list-salary-employee/l
     MatFormFieldModule,
     CalendarModule,
     MatNativeDateModule,
-    NgChartjsModule
+
+    
   ],
   
   providers: [

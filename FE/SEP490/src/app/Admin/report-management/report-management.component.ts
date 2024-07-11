@@ -32,7 +32,7 @@ export class ReportManagementComponent implements OnInit {
       request_product_name: [''],
       solution: [''],
       user_name_order: [''],
-      _fix: [false]
+      _fix: ['']
     });
   }
   originalError: any = {};
@@ -50,7 +50,7 @@ export class ReportManagementComponent implements OnInit {
     request_product_name: null,
     solution: null,
     user_name_order: null,
-    _fix: [false]
+    _fix: null
   };
   selectedProductIdCurrentDelele: number = 0;
   selectedProductNameCurrentDelele: string | null = null;
@@ -67,23 +67,24 @@ export class ReportManagementComponent implements OnInit {
 
   }
   getAllProductError(): void {
+    this.isLoadding = true;
     this.errorProductService.getAllProductError().subscribe(
       (data) => {
         if (data.code === 1000) {
           this.errorProducts = data.result;
-          console.log('Danh sách lỗi sản phẩm ngOninit:', this.errorProducts);
+          console.log('Danh sách lỗi sản phẩm ngOninit:', this.errorProducts);this.isLoadding = false;
         } else {
           console.error('Failed to fetch products:', data);
-          this.toastr.error('Không thể lấy danh sách sản phẩm!', 'Lỗi');
+          this.toastr.error('Không thể lấy danh sách sản phẩm!', 'Lỗi');this.isLoadding = false;
         }
       },
       (error) => {
         console.error('Error fetching products:', error);
-        this.toastr.error('Có lỗi xảy ra!', 'Lỗi');
+        this.toastr.error('Có lỗi xảy ra!', 'Lỗi');this.isLoadding = false;
       }
     );
   }
-  showErrorDetails(productId: any) {
+  showErrorDetails(productId: any) { this.isLoadding = true;
     console.log('errorId: ', productId);
     this.errorProductService.getRrrorDetailById(productId).subscribe(
       (data) => {
@@ -92,18 +93,18 @@ export class ReportManagementComponent implements OnInit {
           console.log('Chi tiết lỗi sản phẩm:', data.result);
         } else {
           console.error('Failed to fetch products:', data);
-          this.toastr.error('Không thể lấy danh sách sản phẩm!', 'Lỗi');
+          this.toastr.error('Không thể lấy danh sách sản phẩm!', 'Lỗi');this.isLoadding = false;
         }
       },
       (error) => {
         console.error('Error fetching products:', error);
-        this.toastr.error('Có lỗi xảy ra!', 'Lỗi');
+        this.toastr.error('Có lỗi xảy ra!', 'Lỗi');this.isLoadding = false;
       }
     );
 
   }
 
-  resetForm() {
+  resetForm() { this.isLoadding = true;
     this.errorForm.reset();
   }
   editProduct(errorid: number) {
@@ -123,7 +124,7 @@ export class ReportManagementComponent implements OnInit {
     //   user_name_order: null,
     //   _fix: null
     // });
-
+    this.isLoadding = true;
     this.errorProductService.getRrrorDetailById(errorid)
       .subscribe((response: any) => {
         
@@ -165,9 +166,9 @@ export class ReportManagementComponent implements OnInit {
                solution: this.selectedError.solution,
                user_name_order: this.selectedError.user_name_order,
                _fix: this.selectedError._fix
-             });
+             });this.isLoadding = false;
         } else {
-          console.error('Failed to fetch products:', response);
+          console.error('Failed to fetch products:', response);this.isLoadding = false;
          // this.toastr.error('Không thể lấy danh sách sản phẩm!', 'Lỗi');
         }
         
@@ -177,38 +178,35 @@ export class ReportManagementComponent implements OnInit {
   
 
 openConfirmDeleteModal(product_id: number, product_name: string): void {
+
   console.log('productId delete: ', product_id);
   this.selectedProductIdCurrentDelele = product_id;
   this.selectedProductNameCurrentDelele = product_name;
+
 }
 deleteProduct() {
+  this.isLoadding = true;
   console.log('productId', this.selectedProductIdCurrentDelele);
-  // this.errorProductService.deleteProductError(this.selectedProductIdCurrentDelele)
-  //   .subscribe(
-  //     response => {
-  //       console.log('Xóa thành công', response);
-  //       if (response.code === 1000) {
-  //         this.toastr.success('Xóa sản phẩm thành công!', 'Thành công');
-  //       }
-  //       const cancelButton = document.querySelector('.btn.btn-secondary[data-dismiss="modal"]') as HTMLElement;
-  //       if (cancelButton) { // Check if the button exists
-  //         cancelButton.click(); // If it exists, click it to close the modal
-  //       }
-
-  //     },
-  //     (error: HttpErrorResponse) => {
-  //       if (error.status === 400 && error.error.code === 1030) {
-  //         this.toastr.error(error.error.message, 'Lỗi');
-  //       } else {
-  //         this.toastr.error("Không thể xoá sản phẩm do sản phẩm đang được sử dụng ở các chức năng khác", 'Lỗi');
-  //       }
-  //       const cancelButton = document.querySelector('.btn.btn-secondary[data-dismiss="modal"]') as HTMLElement;
-  //       if (cancelButton) { // Check if the button exists
-  //         cancelButton.click(); // If it exists, click it to close the modal
-  //       }
-  //       // this.isLoading = false; // Stop the loading spinner on error
-  //     }
-  //   );
+  this.errorProductService.deleteProductError(this.selectedProductIdCurrentDelele)
+    .subscribe(
+      response => {
+        console.log('Xóa thành công', response);
+        if (response.code === 1000) {
+          this.toastr.success('Xóa báo cáo lỗi sản phẩm thành công!', 'Thành công');
+          this.ngOnInit();
+          this.isLoadding = false;
+        }
+        const cancelButton = document.querySelector('.btn.btn-secondary[data-dismiss="modal"]') as HTMLElement;
+        if (cancelButton) { // Check if the button exists
+          cancelButton.click(); // If it exists, click it to close the modal
+        }
+        this.isLoadding = false;
+      },
+      (error) => {
+       
+       
+      }
+    );
   console.log('productId', this.selectedProductIdCurrentDelele);
 }
 
@@ -218,28 +216,31 @@ onEditSubmit(): void {
 
 
 saveChanges(): void {
+  this.isLoadding = true;
   const errorFormData = this.errorForm.value;
   console.log('error edit form:', errorFormData);
   this.errorProductService.editProductError(errorFormData.id,errorFormData).subscribe(
     (response) => {
       if (response.code === 1000) {
         this.toastr.success('Sửa lỗi sản phẩm thành công!', 'Thành công');
-        // this.ngOnInit();
+        $('[data-dismiss="modal"]').click();this.isLoadding = false;
+         this.ngOnInit();
       } else {
         console.error('Failed to edit product:', response);
-        this.toastr.error('Không thể sửa sản phẩm!', 'Lỗi');
+        this.toastr.error('Không thể sửa sản phẩm!', 'Lỗi');this.isLoadding = false;
         $('[data-dismiss="modal"]').click();
       }
     },
     (error) => {
       console.error('Error editing product:', error);
-      this.toastr.error('Có lỗi xảy ra!', 'Lỗi');
+      this.toastr.error('Có lỗi xảy ra!', 'Lỗi');this.isLoadding = false;
     }
   );
   
 }
 
 showProductDetails(error: any) {
+  this.isLoadding = true;
   this.errorForm.patchValue({
     code: error.code,
     code_order: error.code_order,
@@ -256,6 +257,6 @@ showProductDetails(error: any) {
     user_name_order: error.user_name_order,
     _fix: error._fix
   });
-
+  this.isLoadding = false;
 }
 }

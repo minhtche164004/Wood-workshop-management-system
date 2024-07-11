@@ -10,6 +10,7 @@ import { FormBuilder, FormGroup, FormArray, Validators, ReactiveFormsModule } fr
 import { CreateOrderService } from 'src/app/service/create-order.service';
 import { error } from 'jquery';
 interface CustomerInfo {
+  accId : number;
   inforId: number;
   fullname: string;
   address: string;
@@ -60,6 +61,7 @@ interface Ward {
   styleUrls: ['./create-order.component.scss']
 })
 export class CreateOrderComponent implements OnInit {
+  accId: number = 0
   inforId: number = 0;
   fullname: string = ''; // Initialize input1
   phonenumber: string = ''; // Initialize input1
@@ -218,7 +220,7 @@ export class CreateOrderComponent implements OnInit {
     });
 
     this.loadAllPhoneNumber();
-    this.loadAllProductForCustomer();
+    // this.loadAllProductForCustomer();
   }
 
   loadAllPhoneNumber(): void {
@@ -243,12 +245,14 @@ export class CreateOrderComponent implements OnInit {
     this.isForRequestProduct = false;
     this.requests = [];
     this.productList = [];
+    this.accId = 0;
     //
     this.createOrderService.getUserInfoByPhone(phoneNumber).subscribe(
       (data: any) => {
         // console.log('data theo phone:', data.result);
         if (data.code === 1000) {
           const customerInfo: CustomerInfo = data.result;
+          this.accId = customerInfo.accId;
           this.inforId = customerInfo.inforId;
           this.selectedProvince = this.provinces.find(province => province.name === customerInfo.city_province);
           this.provinceControl.setValue(customerInfo.city_province);
@@ -259,22 +263,23 @@ export class CreateOrderComponent implements OnInit {
             this.wardControl.setValue(customerInfo.wards);
           }, 0);
           //copy value sang cho nguoi nhan
-          // const receiveInfo: ReceiveInfo = data.result; {
+          const receiveInfo: ReceiveInfo = data.result; {
           //   this.fullnameCopy = customerInfo.fullname;
           //   this.phonenumberCopy = customerInfo.phoneNumber;
           //   this.addressCopy = customerInfo.address;
-          //   this.selectedProvinceCopy = this.provinces.find(province => province.name === customerInfo.city_province);
-          //   this.provinceControlCopy.setValue(customerInfo.city_province);
-          //   setTimeout(() => {
-          //     this.districtControlCopy.setValue(customerInfo.district);
-          //   }, 0);
-          //   setTimeout(() => {
-          //     this.wardControlCopy.setValue(customerInfo.wards);
-          //   }, 0);
-          // }
+            this.selectedProvinceCopy = this.provinces.find(province => province.name === customerInfo.city_province);
+            this.provinceControlCopy.setValue(customerInfo.city_province);
+            setTimeout(() => {
+              this.districtControlCopy.setValue(customerInfo.district);
+            }, 0);
+            setTimeout(() => {
+              this.wardControlCopy.setValue(customerInfo.wards);
+            }, 0);
+          }
           //
           this.orderForm.patchValue({
             cusInfo: {
+            
               userid: customerInfo.inforId,
               fullname: customerInfo.fullname,
               address: customerInfo.address,
@@ -499,8 +504,10 @@ export class CreateOrderComponent implements OnInit {
         }
       );
     } else {
+      console.log("accid", this.accId)
       // lay danh sach request de autocomplete
-      this.createOrderService.GetAllRequestByUserId(this.inforId).subscribe((data: any) => {
+      this.createOrderService.GetAllRequestByUserId(this.accId).subscribe((data: any) => {
+        console.log(this.accId)
         if (data.code === 1000) {
           this.requests = data?.result;
           console.log('Danh sách request:', this.requests);

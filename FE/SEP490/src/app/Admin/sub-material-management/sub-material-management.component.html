@@ -72,7 +72,7 @@
               <th>Kiểu nguyên vật liệu</th>
               <th>Mô tả nguyên vật liệu</th>
               <th>Số lượng</th>
-              <th>Đơn giá</th>
+              <th>Đơn giá (vnd)</th>
 
             </tr>
           </thead>
@@ -93,12 +93,12 @@
                           </a> -->
 
               </td>
-              <td>{{ product.sub_material_name }}</td>
-              <td>{{ product.material_name }}</td>
+              <td>{{ product.subMaterialName }}</td>
+              <td>{{ product.materialName }}</td>
               <td>{{ product.description }}</td>
               <td style="text-align: center;">{{ product.quantity }}</td>
 
-              <td>{{ product.unit_price | number: '1.0-3'}}</td>
+              <td>{{ product.unitPrice | number: '1.0-3'}}</td>
 
             </tr>
           </tbody>
@@ -142,7 +142,7 @@
               <label for="productCategory">Kiểu vật liệu</label>
               <select class="form-control" name="selectedMaterial" [(ngModel)]="selectedMaterial" id="productCategory">
                 <option [ngValue]="null" disabled selected>Chọn kiểu vật liệu</option>
-                <option *ngFor="let category of categories" [ngValue]="category.materialName">{{ category.materialName
+                <option *ngFor="let category of categories" [ngValue]="category?.materialName">{{ category?.materialName
                   }}</option>
               </select>
             </div>

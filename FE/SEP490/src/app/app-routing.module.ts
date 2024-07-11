@@ -67,6 +67,7 @@ import { OrderFailComponent } from './Order-payment-vnpay/order-fail/order-fail.
 
 
 
+
 const routes: Routes = [
   { path: 'homepage', component: HomepageComponent },
   { path: 'api-province', component: ApiProvinceComponent },
@@ -119,7 +120,7 @@ const routes: Routes = [
   { path: 'autoComplete', component: AutoCompleteComponent },
   { path: 'history_order', component: HistoryOrderComponent },
   { path: 'request_product', component: ListRequestProductComponent },
-
+  
   { path: 'employee', component: ListJobDoneEmployeeComponent },
   { path: 'list_job_done', component: ListJobDoneComponent },
   { path: 'list_request_customer', component: ListRequestCustomerComponent },
@@ -131,7 +132,6 @@ const routes: Routes = [
 
   
   // { path: '', redirectTo: '/homepage', pathMatch: 'full' },
-
   { path: 'report-cost', component: ReportCostManagementComponent },
   { path: '', redirectTo: '/homepage', pathMatch: 'full' },
 

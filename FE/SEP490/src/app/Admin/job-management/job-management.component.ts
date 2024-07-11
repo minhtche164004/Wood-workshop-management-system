@@ -10,6 +10,8 @@ import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { ProductService } from 'src/app/service/product.service';
 import { MatDialog, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import 'jquery';
+
+declare var $: any;
 @Component({
   selector: 'app-job-management',
   templateUrl: './job-management.component.html',
@@ -18,6 +20,7 @@ import 'jquery';
 export class JobManagementComponent implements OnInit {
   products: any[] = [];
   errorForm: FormGroup;
+  editJob: FormGroup;
   keyword = 'productName';
   createJobs: FormGroup;
   productRQs: any[] = [];
@@ -42,8 +45,18 @@ export class JobManagementComponent implements OnInit {
   position: number = 0;
   quantityJobs: FormGroup;
   subMaterialProduct: any[] = [];
+  isProduct: boolean = true; // check product or product request
+  isLoadding: boolean = false;
   constructor(private fb: FormBuilder, private productList: ProductService, private productListService: ProductListService, private jobService: JobService, private toastr: ToastrService, private sanitizer: DomSanitizer) {
     this.createJobs = this.fb.group({
+      job_name: [''],
+      quantity_product: [''],
+      cost: [],
+      description: [''],
+      finish: [''],
+      start: [''],
+    });
+    this.editJob = this.fb.group({
       job_name: [''],
       quantity_product: [''],
       cost: [],
@@ -200,6 +213,7 @@ export class JobManagementComponent implements OnInit {
                 this.pForJob = data.result;
                 // console.log('Add product for job:', this.pForJob);
                 this.toastr.success('Thêm sản phẩm sản xuất thành công!', 'Thành công');
+                $('[data-dismiss="modal"]').click();
                 this.ngOnInit();
               } else {
                 console.error('Failed to fetch products:', data);
@@ -214,6 +228,7 @@ export class JobManagementComponent implements OnInit {
         } else if (data.code === 1015) {
           console.error('Failed to fetch products:', data);
           this.toastr.warning('Số lượng nguyên vật liệu trong kho không đủ', 'Lỗi');
+          $('[data-dismiss="modal"]').click();
         }
       },
       (error) => {
@@ -221,11 +236,15 @@ export class JobManagementComponent implements OnInit {
         if (error && error.error && error.error.errors) {
           Object.entries(error.error.errors).forEach(([key, value]) => {
             this.toastr.warning(`${key}: ${value}`, 'Lỗi');
+            $('[data-dismiss="modal"]').click();
           });
+        
         } else if (error && error.message) {
           this.toastr.error(`Có lỗi xảy ra: ${error.message}`, 'Lỗi');
+          $('[data-dismiss="modal"]').click();
         } else {
           this.toastr.error(`Có lỗi xảy ra, vui lòng thử lại.`, 'Lỗi');
+          $('[data-dismiss="modal"]').click();
         }
       }
     );
@@ -254,15 +273,18 @@ export class JobManagementComponent implements OnInit {
           this.pForJob = data.result;
           // console.log('Add product for job:', this.pForJob);
           this.toastr.success('Thêm sản phẩm sản xuất thành công!', 'Thành công');
+          $('[data-dismiss="modal"]').click();
           this.ngOnInit();
         } else {
           console.error('Failed to fetch products:', data);
           this.toastr.error('Thêm sản phẩm sản xuất thất bại!', 'Lỗi');
+          $('[data-dismiss="modal"]').click();
         }
       },
       (error) => {
         console.error('Error fetching products:', error);
         this.toastr.error('Có lỗi xảy ra!', 'Lỗi');
+        $('[data-dismiss="modal"]').click();
       }
     );
   }
@@ -412,9 +434,44 @@ export class JobManagementComponent implements OnInit {
     // console.log("Product ID:", productId);
     // console.log("Material ID:", mateId);
     this.getProductSubMaterial(productId, mateId);
-
+    $('[data-dismiss="modal"]').click();
   }
+  getJobEdit(){
+    
+  }
+  saveChanges() {
+    this.isLoadding = true;
+    // Here, you can access the updated values from selectedSubMtr2
+    const formData = this.editJob.value;
+    console.log('Updated Job Data:', formData);
+    // this.jobService.editJob(formData.sub_material_id, formData).subscribe(
+    //   (data) => {
+    //     if (data.code === 1000) {
+    //       this.toastr.success('Cập nhật nguyên vật liệu thành công!', 'Thành công');
+    //       this.ngOnInit();
+    //       $('[data-dismiss="modal"]').click();
+    //       this.isLoadding = false;
+    //     } else {
+    //       console.error('Failed to search sub-materials:', data);
+    //       this.toastr.error('Không thể tìm kiếm sub-materials!', 'Lỗi');
+    //       this.isLoadding = false;
+    //     }
+    //   },
+    //   (error) => {
+    //     console.error('Error searching sub-materials:', error);
+    //     this.toastr.error('Có lỗi xảy ra!', 'Lỗi');
+    //     this.isLoadding = false;
+    //   }
+    // )
 
+    // );
+    // Example: You can send the updated data to your API endpoint here
+    // Replace with your actual API call logic
+    // this.yourService.updateSubMaterial(this.selectedSubMtr2).subscribe(response => {
+    //   console.log('Updated successfully:', response);
+    //   // Handle success or error response
+    // });
+  }
   errorJob(product: any): void {
     this.selectedProduct = { ...product };
     //console.log("Sản phẩm được chọn để báo cáo lỗi:", this.selectedProduct);

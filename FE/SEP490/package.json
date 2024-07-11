@@ -31,7 +31,6 @@
     "feather-icons": "^4.29.2",
     "jquery": "^3.7.1",
     "multer": "^1.4.5-lts.1",
-    "ng-chartjs": "^0.2.8",
     "ngx-chartjs": "^0.0.1",
     "ngx-pagination": "^6.0.3",
     "ngx-toastr": "^16.2.0",

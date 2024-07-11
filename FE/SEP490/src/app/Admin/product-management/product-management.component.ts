@@ -417,7 +417,7 @@ export class ProductManagementComponent implements OnInit {
           if (data.code === 1000) {
             this.products = data.result;
             console.log('Lọc sản phẩm thành công:', this.products);
-      //      this.toastr.success('Lọc sản phẩm thành công!', 'Thành công');
+            //      this.toastr.success('Lọc sản phẩm thành công!', 'Thành công');
           } else if (data.code === 1015) {
             this.products = [];
             console.error('Lọc sản phẩm không thành công:', data);
@@ -440,7 +440,7 @@ export class ProductManagementComponent implements OnInit {
             this.toastr.success('Lọc sản phẩm thành công!', 'Thành công');
           } else if (data.code === 1015) {
             this.products = [];
-        //    console.error('Lọc sản phẩm không thành công:', data);
+            //    console.error('Lọc sản phẩm không thành công:', data);
             this.toastr.error('Không tìm thấy sản phẩm phù hợp!', 'Lọc thất bại');
           }
         }
@@ -472,7 +472,7 @@ export class ProductManagementComponent implements OnInit {
     this.productListService.getAllSubMaterialByMaterialIdProduct(materialId).subscribe(
       (data: any) => {
         this.subMaterials[index] = data?.result;
-        // console.log('Sub Materials:', this.subMaterials);
+        console.log('Sub Materials:', this.subMaterials);
       },
       (error) => {
         console.error('Error fetching sub materials:', error);
@@ -620,7 +620,7 @@ export class ProductManagementComponent implements OnInit {
           this.reloadProduct();
           this.isLoadding = false;
           this.toastr.success('Tạo sản phẩm thành công!', 'Thành công');
-          $('[data-dismiss="modal"]').click();        
+          $('[data-dismiss="modal"]').click();
         },
         error => {
           this.isLoadding = false;
@@ -637,7 +637,7 @@ export class ProductManagementComponent implements OnInit {
       description: null,
       price: null,
       category_id: null,
-      
+
       image: null,
       quantity: null,
       imageList: null
@@ -738,11 +738,11 @@ export class ProductManagementComponent implements OnInit {
           this.isLoadding = false;
 
         },
-        (error: HttpErrorResponse) => {
+        (error) => {
           if (error.status === 400 && error.error.code === 1030) {
-            this.toastr.error(error.error.message, 'Lỗi');
+            this.toastr.warning(error.error.message, 'Lỗi');
           } else {
-            this.toastr.error("Không thể xoá sản phẩm do sản phẩm đang được sử dụng ở các chức năng khác", 'Lỗi');
+            this.toastr.error("Không thể xóa sản phẩm", 'Lỗi');
           }
           $('[data-dismiss="modal"]').click();      // tat modal  
           this.isLoadding = false; // Stop the loading spinner on error
@@ -862,7 +862,7 @@ export class ProductManagementComponent implements OnInit {
           error => {
             this.isLoadding = false;
             this.toastr.error('Tạo sản phẩm bị lỗi!', 'Lỗi');
-            
+
           }
         );
     }
@@ -962,11 +962,11 @@ export class ProductManagementComponent implements OnInit {
           this.isLoadding = false;
 
         },
-        (error: HttpErrorResponse) => {
+        (error) => {
           if (error.status === 400 && error.error.code === 1030) {
-            this.toastr.error(error.error.message, 'Lỗi');
+            this.toastr.warning(error.error.message, 'Lỗi');
           } else {
-            this.toastr.error("Không thể xoá sản phẩm do sản phẩm đang được sử dụng ở các chức năng khác", 'Lỗi');
+            this.toastr.error("Không thể xóa sản phẩm", 'Lỗi');
           }
           $('[data-dismiss="modal"]').click();      // tat modal  
 

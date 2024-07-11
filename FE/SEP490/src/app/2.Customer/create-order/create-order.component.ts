@@ -4,9 +4,11 @@ import { FormControl } from '@angular/forms';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { ToastrService } from 'ngx-toastr';
 import { ProductListService } from 'src/app/service/product/product-list.service';
+import { Router } from '@angular/router';
 
 import { FormBuilder, FormGroup, FormArray, Validators, ReactiveFormsModule } from '@angular/forms';
 import { CreateOrderService } from 'src/app/service/create-order.service';
+import { error } from 'jquery';
 interface CustomerInfo {
   inforId: number;
   fullname: string;
@@ -120,7 +122,8 @@ export class CreateOrderComponent implements OnInit {
     private fb: FormBuilder,
     private createOrderService: CreateOrderService,
     private toastr: ToastrService,
-    private productListService: ProductListService
+    private productListService: ProductListService,
+    private router: Router
   ) {
 
     this.productForm = this.fb.group({
@@ -385,20 +388,53 @@ export class CreateOrderComponent implements OnInit {
     const orderData = this.orderForm.value;
     console.log("data order", orderData);
     // const productFormData = this.productForm.value;
-    if(this.orderForm && this.orderForm.valid){
+    if (this.orderForm && this.orderForm.valid && this.productForm
+      && this.productForm.valid && this.orderForm.value.special_order != null
+      && this.orderForm.value.payment_method != null) {
       this.createOrderService.addNewOrder(orderData).subscribe(
         response => {
-          this.isLoadding = false;
+          // this.isLoadding = false;
           this.toastr.success('Tạo đơn hàng thành công!', 'Thành công');
           // this.orderForm.reset();
           console.log('response:', response);
+          if (response.code === 1000 && response.result.paymentMethod) {
+            // Remove spaces from the URL if any
+            const codeWithoutQuotes = response.result.code.replace(/"/g, '');
+
+            this.createOrderService.submitOrder(response.result.deposite, codeWithoutQuotes).subscribe(
+              responseVNPAY => {
+                // console.log('responseVNPAY:', responseVNPAY); 
+                if (responseVNPAY.url) {
+                  this.isLoadding = false;
+                  const sanitizedUrl = responseVNPAY.url.trim().replace(/\s+/g, '');
+                  console.log('sanitizedUrl:', sanitizedUrl);
+                  window.location.href = sanitizedUrl;
+                } else {
+
+                  console.error('Error fetching VNPAY URL:', responseVNPAY);
+                  this.toastr.error('Không thể điều hướng sang VNPAY', 'Lỗi');
+                }
+              },
+              error => {
+                console.error('Error fetching VNPAY URL:', error);
+                this.toastr.error('Có lỗi khi thanh toán qua thẻ!', 'Lỗi');
+                this.isLoadding = false;
+              });
+          }
+
         },
-        error => {
+        (error) => {
           this.isLoadding = false;
-          this.toastr.error('Tạo đơn hàng bị lỗi!', 'Lỗi');
+          console.log("tttt: ", error.error);
+          if (error.error.code == 1029) {
+            this.toastr.error(error.error.message, 'Lỗi');
+          }
+          else {
+            this.toastr.error('Có lỗi xảy ra!', 'Lỗi');
+          }
         }
       );
-    }else{
+    } else {
       this.isLoadding = false;
       this.toastr.error('Vui lòng nhập đầy đủ thông tin!', 'Lỗi');
     }
@@ -408,7 +444,7 @@ export class CreateOrderComponent implements OnInit {
   //phan xu li don hang theo yeu cau hay co san
   onRequestIdSelected(item: any) {
     this.requestId = item.requestId;
-    console.log('requestId:', this.requestId); 
+    console.log('requestId:', this.requestId);
     this.createOrderService.GetAllProductRequestByRequestId(this.requestId).subscribe( // ;ay danh sach product request theo request
       (data) => {
         this.isLoadding = false;
@@ -432,13 +468,13 @@ export class CreateOrderComponent implements OnInit {
     this.isLoadding = true;
     const target = $event.target as HTMLInputElement;
     const value = target.value;
-    console.log("newvalue: ", value);
-  
+    // console.log("newvalue: ", value);
+
     const actualValue = value.split(': ')[1];
-  
-    if(actualValue === '1') {
+
+    if (actualValue === '1') {
       this.isForRequestProduct = true;
-    } else if(actualValue === '0') {
+    } else if (actualValue === '0') {
       this.isForRequestProduct = false;
     }
     console.log('Giá trị mới của isProduct:', this.isForRequestProduct);
@@ -462,7 +498,7 @@ export class CreateOrderComponent implements OnInit {
           this.isLoadding = false;
         }
       );
-    } else {  
+    } else {
       // lay danh sach request de autocomplete
       this.createOrderService.GetAllRequestByUserId(this.inforId).subscribe((data: any) => {
         if (data.code === 1000) {
@@ -507,7 +543,7 @@ export class CreateOrderComponent implements OnInit {
           this.isLoadding = false;
         }
       );
-    } else {  
+    } else {
       // lay danh sach request de autocomplete
       this.createOrderService.GetAllRequestByUserId(this.inforId).subscribe((data: any) => {
         if (data.code === 1000) {

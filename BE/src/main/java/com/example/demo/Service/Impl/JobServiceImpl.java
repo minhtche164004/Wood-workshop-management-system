@@ -317,7 +317,7 @@ public class JobServiceImpl implements JobService {
         processproducterror.setCode(jobs.getCode());
         processproducterror.setIsFixed(false);
 
-        processproducterror.setDescription(productErrorDTO.getDescription());
+        processproducterror.setDescription(productErrorDTO.getDes());
         processproducterror.setSolution(productErrorDTO.getSolution());
 
         Products product = jobs.getProduct(); // Lấy đối tượng Product
@@ -354,7 +354,7 @@ public class JobServiceImpl implements JobService {
     @Override
     public ProductErrorAllDTO EditProductError(int error_id, ProductErrorDTO productErrorDTO) {
         Processproducterror processproducterror = processproducterrorRepository.FindByIdProductErrorId(error_id);
-        processproducterror.setDescription(productErrorDTO.getDescription());
+        processproducterror.setDescription(productErrorDTO.getDes());
         processproducterror.setIsFixed(productErrorDTO.getIsFixed());
         processproducterror.setSolution(productErrorDTO.getSolution());
         processproducterrorRepository.save(processproducterror);
@@ -371,13 +371,20 @@ public class JobServiceImpl implements JobService {
     }
 
     @Override
-    public List<Advancesalary> multi_filter_salary(Date fromDate, Date toDate,Integer position_id, String employeeName, String sortDirection) {
+    public List<Advancesalary> multi_filter_salary(Date fromDate, Date toDate,Integer position_id, String username, String sortDirection) {
         List<Advancesalary> advancesalaryList = new ArrayList<>();
-        if (position_id != null ) {
-            advancesalaryList = advancesalaryRepository.filterAdvancesalary(fromDate, toDate, position_id, employeeName);
+        if (position_id != null ||fromDate != null||toDate != null||username != null) {
+            advancesalaryList = advancesalaryRepository.filterAdvancesalary(fromDate, toDate, position_id, username);
         } else {
             advancesalaryList= advancesalaryRepository.findAll();
         }
+//        if (search != null || categoryId != null || statusId != null || minPrice != null || maxPrice != null) {
+//            productList = productRepository.filterProductsForAdmin(search, categoryId, statusId, minPrice, maxPrice);
+//        } else {
+//            productList = productRepository.findAll();
+//        }
+    //    List<Advancesalary> advancesalaryList = advancesalaryRepository.filterAdvancesalary(fromDate, toDate, position_id, "%" + username + "%");
+
         if (advancesalaryList.isEmpty()) {
             throw new AppException(ErrorCode.NOT_FOUND);
         }

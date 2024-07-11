@@ -63,6 +63,12 @@ public class JobController {
         apiResponse.setResult(jobService.getListRequestProductJob());
         return apiResponse;
     }
+    @GetMapping("/getJobById")
+    public ApiResponse<?> getJobById(@RequestParam("job_id") int job_id) {
+        ApiResponse<Jobs> apiResponse = new ApiResponse<>();
+        apiResponse.setResult(jobService.GetJobById(job_id));
+        return apiResponse;
+    }
 //    //lúc filter các có sẵn thì call api này
     @GetMapping("/getListProductForJob")
     public ApiResponse<?> getListProductForJob() {

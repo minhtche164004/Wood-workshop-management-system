@@ -244,6 +244,15 @@ public class JobServiceImpl implements JobService {
         return jobs;
     }
 
+    @Override
+    public Jobs GetJobById(int job_id) {
+        Jobs jobs = jobRepository.getJobById(job_id);
+        if(jobs == null){
+            throw new AppException(ErrorCode.NOT_FOUND);
+        }
+        return jobs;
+    }
+
 //    @Override
 //    public List<Jobs> GetAllJob() {
 //        List<Jobs> jobsList = jobRepository.findAll();

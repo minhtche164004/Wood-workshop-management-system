@@ -219,3 +219,90 @@
   overflow-x: auto;
   /* Enable horizontal scrolling if needed */
 }
+/* Tùy chỉnh nút */
+.btn {
+  padding: 10px 15px;
+  font-size: 14px;
+  border-radius: 5px;
+  width: auto; /* Đảm bảo kích thước tự động dựa trên nội dung */
+  text-align: center;
+}
+
+/* Tạo hiệu ứng bóng */
+.shadow-0 {
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+/* Đặt màu nền tùy chỉnh nếu cần */
+.custom-background {
+  color: #fff;
+}
+
+/* Tạo khoảng cách giữa các phần tử */
+.mb-3 {
+  margin-bottom: 1rem !important;
+}
+
+/* Căn giữa phần tử trong cột */
+.d-flex {
+  display: flex !important;
+}
+
+.justify-content-center {
+  justify-content: center !important;
+}
+.product-list::-webkit-scrollbar {
+  width: 8px;
+}
+
+.product-list::-webkit-scrollbar-track {
+  background-color: #f1f1f1;
+}
+
+.product-list::-webkit-scrollbar-thumb {
+  background-color: #888;
+  border-radius: 4px;
+}
+
+.product-list::-webkit-scrollbar-thumb:hover {
+  background-color: #555;
+}
+
+.product-name {
+  color: #333;
+  transition: color 0.3s ease;
+}
+
+.product-name:hover {
+  color: #007bff;
+}
+
+.product-price {
+  color: #555;
+  transition: color 0.3s ease;
+}
+
+.product-price:hover {
+  color: #28a745;
+}
+.product-image-wrapper {
+  width: 180px;
+  height: 135px;
+  overflow: hidden;
+  position: relative;
+}
+
+.product-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.3s ease-in-out;
+}
+
+.product-image-wrapper:hover .product-image {
+  transform: scale(1.1);
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+}
+.nav-link:hover span {
+  color: #333; /* Màu chữ khi di chuột đến */
+}

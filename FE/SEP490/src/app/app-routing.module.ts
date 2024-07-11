@@ -60,6 +60,9 @@ import { Chart } from 'chart.js';
 import { ChartComponent } from './Admin/chart/chart.component';
 import { ListRequestCustomerComponent } from './Admin/list-request-customer/list-request-customer.component';
 import { ListSalaryEmployeeComponent } from './4.Employee/list-salary-employee/list-salary-employee.component';
+//danh` cho order-vnpay
+import { OrderSuccessComponent } from './Order-payment-vnpay/order-success/order-success.component';
+import { OrderFailComponent } from './Order-payment-vnpay/order-fail/order-fail.component';
 
 
 
@@ -73,7 +76,7 @@ const routes: Routes = [
   { path: 'admin', component: PageAdminComponent },
   { path: 'verifyMail', component: VerifyMailComponent },
   { path: 'verifyOtp', component: VerifyOtpMailComponent },
-  { path: 'change_pass', component: ForgotPassComponent },
+  { path: 'change_pass', component: ChangePasswordComponent },
   { path: 'user_management', component: UserManagementComponent },
   { path: 'payment-salary', component: PaymentSalaryComponent },
   { path: 'verifyOtp/:email', component: VerifyOtpMailComponent },  // Route with email as a parameter
@@ -117,14 +120,18 @@ const routes: Routes = [
   { path: 'autoComplete', component: AutoCompleteComponent },
   { path: 'history_order', component: HistoryOrderComponent },
   { path: 'request_product', component: ListRequestProductComponent },
-
+  
   { path: 'employee', component: ListJobDoneEmployeeComponent },
   { path: 'list_job_done', component: ListJobDoneComponent },
   { path: 'list_request_customer', component: ListRequestCustomerComponent },
   { path: 'list_salary_employee', component: ListSalaryEmployeeComponent },
+
+  //danh` cho order-vnpay
+  { path: 'order-vnpay-success', component: OrderSuccessComponent },
+  { path: 'order-vnpay-fail', component: OrderFailComponent },
+
   
   // { path: '', redirectTo: '/homepage', pathMatch: 'full' },
-
   { path: 'report-cost', component: ReportCostManagementComponent },
   { path: '', redirectTo: '/homepage', pathMatch: 'full' },
 

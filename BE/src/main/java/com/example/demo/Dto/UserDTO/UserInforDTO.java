@@ -12,6 +12,7 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 public class UserInforDTO {
+    private Integer accId;
     private Integer inforId;
     private String phoneNumber;
     private String fullname;
@@ -25,7 +26,8 @@ public class UserInforDTO {
     private Integer has_Account;
 
     public UserInforDTO(Integer inforId, String phoneNumber, String fullname, String address, String email,
-                        String bank_name, String bank_number, String city_province, String district, String wards, Integer has_Account) {
+                        String bank_name, String bank_number, String city_province, String district, String wards, Integer has_Account, Integer accId) {
+
         this.inforId = inforId;
         this.phoneNumber = phoneNumber;
         this.fullname = fullname;
@@ -37,5 +39,6 @@ public class UserInforDTO {
         this.district = district;
         this.wards = wards;
         this.has_Account = has_Account;
+        this.accId = accId;
     }
 }

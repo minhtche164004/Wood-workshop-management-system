@@ -67,9 +67,6 @@ export class CreateOrderService {
     }
 
     submitOrder(amount: number, orderInfo: string): Observable<any> {
-        // Mã hóa orderInfo để đảm bảo an toàn khi truyền qua URL
-        // const encodedOrderInfo = encodeURIComponent(JSON.stringify(orderInfo));
-        // Tạo URL với các tham số đã mã hóa
         const url = `${this.apiSubmitOrder}?amount=${amount}&orderInfo=${orderInfo}`;
         return this.http.post<any>(url, {});
     }

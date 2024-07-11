@@ -8,6 +8,7 @@ import { timer } from 'rxjs';
   styleUrls: ['./wishlist.component.scss']
 })
 export class WishlistComponent {
+  isLoadding: boolean = false; 
   wishlistItems: any[] = []; // Khai báo mảng để lưu các mục trong wishlist
   deleteId: any; // variable to store supplierId to be deleted
   router: any;
@@ -37,17 +38,17 @@ export class WishlistComponent {
   }
 
   deleteSupplier() {
-    console.log('Delete supplier:', this.deleteId);
-  
+    this.isLoadding = true;
     this.authenListService.deleteWishList(this.deleteId).subscribe(
       response => {
-        console.log('Supplier deleted successfully!', response);
-        this.toastr.success('Nhà cung cấp đã được xóa thành công!', 'Thành công');
+        this.isLoadding = false;
+        this.toastr.success('Xóa sản phẩm yêu thích thành công!', 'Thành công');
         timer(1000).subscribe(() => {
           window.location.reload();
         });
       },
       error => {
+        this.isLoadding = false;
         console.error('Error deleting supplier:', error);
         // Xử lý lỗi (Implement error handling logic)
       }

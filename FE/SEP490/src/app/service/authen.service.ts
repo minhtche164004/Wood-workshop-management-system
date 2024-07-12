@@ -45,8 +45,10 @@ export class AuthenListService {
   private apiUrl_chanegStatusOrder = `${environment.apiUrl}api/auth/order/ChangeStatusOrder`;
   private apiUrl_getFilterStatus = `${environment.apiUrl}api/auth/order/filter-by-status`;
   private apiUrl_getSalaryByEmployeeID = `${environment.apiUrl}api/auth/salary/getSalaryByEmployeeID`;
-  
-  
+  private apiUrl_changeStatusOrderRequest = `${environment.apiUrl}api/auth/order/Cancel_Order`;
+  private apiUrl_getAllStatusOrderRequest = `${environment.apiUrl}api/auth/admin/GetAllStatusRequest`;
+  private apiUrl_cancelOrder = `${environment.apiUrl}api/auth/order/Cancel_Order`;
+ 
   private apiUrl_NameATM = 'https://api.vietqr.io/v2/banks';
   constructor(private http: HttpClient) { }
   isLoggedIn(): boolean {
@@ -105,7 +107,24 @@ export class AuthenListService {
       catchError(this.handleError)
     );
   }
-
+  cancelOrder(orderId: number, specialOrderId: number): Observable<any> {
+    const token = localStorage.getItem('loginToken');
+  
+    if (!token) {
+      return throwError(new Error('Login token not found in localStorage.'));
+    }
+  
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${token}`
+    });
+  
+    const url = `${this.apiUrl_cancelOrder}?order_id=${orderId}&special_order_id=${specialOrderId}`;
+  
+    return this.http.post<any>(url, { headers }).pipe(
+      catchError(this.handleError)
+    );
+  }
+  
 
   getOrderDetailById(order_detail_id: string): Observable<any> {
     const url = `${this.apiUrl_GetOrderDeTailById}?id=${order_detail_id}`;
@@ -425,6 +444,9 @@ export class AuthenListService {
   getAllStatusOrder(): Observable<any[]> {
     return this.http.get<any[]>(this.apiUrl_getAllStatusOrder);
   }
+  getAllStatusOrderRequest(): Observable<any[]> {
+    return this.http.get<any[]>(this.apiUrl_getAllStatusOrderRequest);
+  }
   changeStatusOrder(orderId: string, status_id: string): Observable<any> {
     const token = localStorage.getItem('loginToken');
     if (!token) {
@@ -437,6 +459,22 @@ export class AuthenListService {
     });
 
     const url = `${this.apiUrl_chanegStatusOrder}?orderId=${orderId}&status_id=${status_id}`;
+    return this.http.put<any>(url, null, { headers }).pipe(
+      catchError(this.handleError)
+    );
+  }
+  changeStatusOrderRequest(orderId: string, status_id: string): Observable<any> {
+    const token = localStorage.getItem('loginToken');
+    if (!token) {
+      return throwError(new Error('Login token not found in localStorage.'));
+    }
+
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${token}`,
+      'Content-Type': 'application/json'
+    });
+
+    const url = `${this.apiUrl_changeStatusOrderRequest}?order_id=${orderId}&special_order_id=${status_id}`;
     return this.http.put<any>(url, null, { headers }).pipe(
       catchError(this.handleError)
     );

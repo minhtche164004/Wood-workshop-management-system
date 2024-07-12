@@ -83,17 +83,7 @@ public interface JobRepository extends JpaRepository<Jobs,Integer> {
 
 
 
-    @Query("SELECT new com.example.demo.Dto.OrderDTO.JobProductDTO(" +
-            "j.jobId,o.code, p.requestProductId, p.requestProductName, p.description, p.price, j.status, od.quantity, " +
-            "COALESCE(u.userId, 0), COALESCE(u.username, ''), COALESCE(pos.position_id, 0), COALESCE(pos.position_name, '')) " + // Sử dụng COALESCE
-            "FROM Jobs j " +
-            "LEFT JOIN j.orderdetails od " +
-            "LEFT JOIN od.order o " +
-            "LEFT JOIN od.requestProduct p " +
-            "LEFT JOIN j.user u " +
-            "LEFT JOIN u.position pos " +
-            "WHERE p.requestProductId IS NOT NULL AND j.orderdetails.order.code = :query AND j.job_log = false")
-    List<JobProductDTO> getRequestProductInOrderDetailByCode(@Param("query") String query);
+
 
     @Query("SELECT new com.example.demo.Dto.OrderDTO.JobProductDTO(" +
             "j.jobId,o.code, p.requestProductId, p.requestProductName, p.description, p.price, j.status, od.quantity, " +
@@ -129,6 +119,18 @@ public interface JobRepository extends JpaRepository<Jobs,Integer> {
             "LEFT JOIN u.position pos " +
             "WHERE (p.productName LIKE CONCAT('%', :keyword, '%') OR u.username LIKE CONCAT('%', :keyword, '%')) AND j.job_log = false")
     List<JobProductDTO> getListProductJobByNameOrCodeProduct(@Param("keyword") String keyword);
+
+    @Query("SELECT new com.example.demo.Dto.OrderDTO.JobProductDTO(" +
+            "j.jobId,o.code, p.requestProductId, p.requestProductName, p.description, p.price, j.status, od.quantity, " +
+            "COALESCE(u.userId, 0), COALESCE(u.username, ''), COALESCE(pos.position_id, 0), COALESCE(pos.position_name, '')) " + // Sử dụng COALESCE
+            "FROM Jobs j " +
+            "LEFT JOIN j.orderdetails od " +
+            "LEFT JOIN od.order o " +
+            "LEFT JOIN od.requestProduct p " +
+            "LEFT JOIN j.user u " +
+            "LEFT JOIN u.position pos " +
+            "WHERE p.requestProductId IS NOT NULL AND (j.orderdetails.order.code LIKE CONCAT('%', :keyword, '%') OR j.requestProducts.requestProductName LIKE CONCAT('%', :keyword, '%')) AND j.job_log = false")
+    List<JobProductDTO> getRequestProductInOrderDetailByCode(@Param("keyword") String keyword);
 
 
     @Query("SELECT new com.example.demo.Dto.JobDTO.JobDoneDTO(" +

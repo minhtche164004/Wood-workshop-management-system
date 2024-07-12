@@ -53,11 +53,11 @@ export class ChartComponent implements OnInit {
     this.chart = new Chart('canvas2', {
       type: 'pie',
       data: {
-        labels: ['Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange'],
+        labels: ['Red', 'Blue', 'Yellow' ],
         datasets: [
           {
             label: 'My First dataset',
-            data: [0,0,100],
+            data: [23,43,34],
             backgroundColor: [
               'rgb(255, 99, 132)',
               'rgb(54, 162, 235)',

@@ -32,7 +32,7 @@ export class ReportManagementComponent implements OnInit {
       request_product_name: [''],
       solution: [''],
       user_name_order: [''],
-      _fix: ['']
+      fix: ['false']
     });
   }
   originalError: any = {};
@@ -50,7 +50,7 @@ export class ReportManagementComponent implements OnInit {
     request_product_name: null,
     solution: null,
     user_name_order: null,
-    _fix: null
+    fix: null
   };
   selectedProductIdCurrentDelele: number = 0;
   selectedProductNameCurrentDelele: string | null = null;
@@ -84,24 +84,28 @@ export class ReportManagementComponent implements OnInit {
       }
     );
   }
-  showErrorDetails(productId: any) { this.isLoadding = true;
+  showErrorDetails(productId: any) { 
+    this.isLoadding = true;
     console.log('errorId: ', productId);
     this.errorProductService.getRrrorDetailById(productId).subscribe(
       (data) => {
         if (data.code === 1000) {
           this.errorDetail = data.result;
           console.log('Chi tiết lỗi sản phẩm:', data.result);
+          this.isLoadding = false;
         } else {
           console.error('Failed to fetch products:', data);
-          this.toastr.error('Không thể lấy danh sách sản phẩm!', 'Lỗi');this.isLoadding = false;
+          this.toastr.error('Không thể lấy danh sách sản phẩm!', 'Lỗi');
+          this.isLoadding = false;
         }
       },
       (error) => {
         console.error('Error fetching products:', error);
-        this.toastr.error('Có lỗi xảy ra!', 'Lỗi');this.isLoadding = false;
+        this.toastr.error('Có lỗi xảy ra!', 'Lỗi');
+        this.isLoadding = false;
       }
     );
-
+    
   }
 
   resetForm() { this.isLoadding = true;
@@ -146,7 +150,8 @@ export class ReportManagementComponent implements OnInit {
                request_product_name: errorEdit.request_product_name,
                solution: errorEdit.solution,
                user_name_order: errorEdit.user_name_order,
-               _fix: errorEdit._fix
+               fix: errorEdit.fix
+
              };
             
              this.originalError = { ...this.selectedError };
@@ -165,7 +170,7 @@ export class ReportManagementComponent implements OnInit {
                request_product_name: this.selectedError.request_product_name,
                solution: this.selectedError.solution,
                user_name_order: this.selectedError.user_name_order,
-               _fix: this.selectedError._fix
+               fix: this.selectedError.fix
              });this.isLoadding = false;
         } else {
           console.error('Failed to fetch products:', response);this.isLoadding = false;
@@ -216,26 +221,27 @@ onEditSubmit(): void {
 
 
 saveChanges(): void {
-  this.isLoadding = true;
+  // this.isLoadding = true;
+  console.log('Form Values:', this.errorForm.value);
   const errorFormData = this.errorForm.value;
   console.log('error edit form:', errorFormData);
-  this.errorProductService.editProductError(errorFormData.id,errorFormData).subscribe(
-    (response) => {
-      if (response.code === 1000) {
-        this.toastr.success('Sửa lỗi sản phẩm thành công!', 'Thành công');
-        $('[data-dismiss="modal"]').click();this.isLoadding = false;
-         this.ngOnInit();
-      } else {
-        console.error('Failed to edit product:', response);
-        this.toastr.error('Không thể sửa sản phẩm!', 'Lỗi');this.isLoadding = false;
-        $('[data-dismiss="modal"]').click();
-      }
-    },
-    (error) => {
-      console.error('Error editing product:', error);
-      this.toastr.error('Có lỗi xảy ra!', 'Lỗi');this.isLoadding = false;
-    }
-  );
+  // this.errorProductService.editProductError(errorFormData.id,errorFormData).subscribe(
+  //   (response) => {
+  //     if (response.code === 1000) {
+  //       this.toastr.success('Sửa lỗi sản phẩm thành công!', 'Thành công');
+  //       $('[data-dismiss="modal"]').click();this.isLoadding = false;
+  //        this.ngOnInit();
+  //     } else {
+  //       console.error('Failed to edit product:', response);
+  //       this.toastr.error('Không thể sửa sản phẩm!', 'Lỗi');this.isLoadding = false;
+  //       $('[data-dismiss="modal"]').click();
+  //     }
+  //   },
+  //   (error) => {
+  //     console.error('Error editing product:', error);
+  //     this.toastr.error('Có lỗi xảy ra!', 'Lỗi');this.isLoadding = false;
+  //   }
+  // );
   
 }
 
@@ -255,8 +261,14 @@ showProductDetails(error: any) {
     request_product_name: error.request_product_name,
     solution: error.solution,
     user_name_order: error.user_name_order,
-    _fix: error._fix
+    fix: error.fix
   });
   this.isLoadding = false;
+}
+
+updateFixStatus(newValue: boolean): void {
+  this.errorDetail.fix = newValue;
+  this.errorForm.patchValue({ isFixed: newValue });
+  console.log('New fix status:', newValue);
 }
 }

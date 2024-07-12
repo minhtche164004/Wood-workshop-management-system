@@ -12,12 +12,21 @@ export class SubMaterialService {
   private api_FilterByMaterial = `${environment.apiUrl}api/auth/submaterial/FilterByMaterial`;
 
   private api_getSubMtrById =`${environment.apiUrl}api/auth/submaterial/getSubmaterialById`;
- 
+  private apiNhapExcel = `${environment.apiUrl}api/auth/submaterial/upload-submaterial-data`
   private api_editSubMaterial = `${environment.apiUrl}api/auth/submaterial/editSubMaterial`;
    constructor(private http: HttpClient) { }
 
-
-
+   uploadExcel(file: File): Observable<any> {
+    const formData = new FormData();
+    formData.append('file', file, file.name);
+    return this.http.post(this.apiNhapExcel, formData, {
+      headers: new HttpHeaders({
+        // Nếu bạn cần thêm bất kỳ headers nào khác
+      }),
+      reportProgress: true,
+      observe: 'events'
+    });
+  }
   downloadExcel(): Observable<any> {
     return this.http.get(this.apiDowloadExcel, { responseType: 'blob' });
   }

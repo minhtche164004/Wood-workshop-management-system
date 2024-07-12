@@ -83,16 +83,16 @@
         </tbody>
       </table>
 
-      <!-- <pagination-controls style="justify-content: right; display: flex;"
+      <pagination-controls style="justify-content: right; display: flex;"
           (pageChange)="currentPage = $event"
           previousLabel="Trang trước"
           nextLabel="Trang sau">
         </pagination-controls>
         <div class="clearfix" style="justify-content: right; display: flex;">
           <div class="hint-text">Hiển thị <b>{{ (currentPage - 1) * 10 + 1 }}</b> tới <b>{{ currentPage * 10
-              > products.length ? products.length : currentPage * 10 }}</b> trong tổng <b>{{
-              products.length }}</b> dữ liệu</div>
-        </div> -->
+              > errorProducts.length ? errorProducts.length : currentPage * 10 }}</b> trong tổng <b>{{
+                errorProducts.length }}</b> dữ liệu</div>
+        </div>
 
 
     </div>
@@ -190,11 +190,13 @@
                 <div class="col-md-6">
 
                  
-                    {{ errorDetail?._fix ? 'Đã khắc phục' : 'Chưa khắc phục' }}
-                    <select formControlName="isFixed">
-                      <option [ngValue]="true" [selected]="errorDetail?._fix">Đã khắc phục</option>
-                      <option [ngValue]="false" [selected]="!errorDetail?._fix">Chưa khắc phục</option>
+                  <div class="col-md-6">
+                  <!-- {{ errorDetail?.fix ? 'Đã khắc phục' : 'Chưa khắc phục' }} -->
+                    <select formControlName="fix" [ngModel]="errorDetail?.fix" (ngModelChange)="updateFixStatus($event)">
+                      <option [ngValue]="true" [selected]="errorDetail?.fix">Đã khắc phục</option>
+                      <option [ngValue]="false" [selected]="!errorDetail?.fix">Chưa khắc phục</option>
                     </select>
+                  </div>
                 
                   
 
@@ -240,7 +242,7 @@
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
-        <button type="button" class="btn btn-primary" (click)="saveChanges()">Save changes</button>
+        <button type="button" class="btn btn-primary" (click)="saveChanges()">Lưu thay đổi</button>
       </div>
     </div>
   </div>
@@ -252,7 +254,7 @@
   <div class="modal-dialog" role="document">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="confirmDeleteModalLabel">Confirm Delete</h5>
+        <h5 class="modal-title" id="confirmDeleteModalLabel">Xác nhận xóa sản phẩm</h5>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
@@ -261,8 +263,8 @@
         Bạn có chắc chắn muốn xóa báo cáo lỗi sản phẩm này hay không?
       </div>
       <div class="modal-footer" id="confirmDeleteModal">
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-        <button type="button" class="btn btn-danger" (click)="deleteProduct()">Delete</button>
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Hủy bỏ</button>
+        <button type="button" class="btn btn-danger" (click)="deleteProduct()">Xác nhận</button>
       </div>
     </div>
   </div>

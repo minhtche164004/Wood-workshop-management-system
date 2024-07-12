@@ -200,6 +200,42 @@ public class OrderServiceImpl implements OrderService {
 
         return orders;
     }
+    @Override
+    public String Cancel_Order(int order_id, int special_order_id) {
+        Orders orders = orderRepository.findById(order_id);
+        if(special_order_id == 0){//là hàng có sẵn
+            List<Orderdetails> list = orderDetailRepository.getOrderDetailByOrderId(order_id);
+            for(Orderdetails orderdetails : list){
+              int product_id =  orderdetails.getProduct().getProductId();
+                Products products = productRepository.findById(product_id);
+                products.setQuantity(products.getQuantity()+orderdetails.getProduct().getQuantity());
+                productRepository.save(products);
+            }
+            return null;
+        }
+        if(special_order_id == 1){//là hàng có sẵn
+            List<Orderdetails> list = orderDetailRepository.getOrderDetailByOrderId(order_id);
+            for(Orderdetails orderdetails : list){
+                int request_product_id =  orderdetails.getRequestProduct().getRequestProductId();
+                RequestProducts requestProducts = requestProductRepository.findById(request_product_id);
+                List<Jobs> jobsList = jobRepository.getJobByOrderDetailByOrderCode(orders.getCode());
+                for(Jobs jobs : jobsList){
+                    if(jobs.isJob_log() == false && jobs.getUser() == null){
+                        jobRepository.delete(jobs);
+                        return null;
+                    }
+                    if(jobs.isJob_log()==false && jobs.getUser() != null){
+                        return("Hãy hoàn thành công việc của "+jobs.getUser().getPosition().getPosition_name()+" có tên là "+jobs.getUser().getUsername()+" trước khi huỷ đơn hàng");
+                    }
+                }
+                requestProducts.setQuantity(requestProducts.getQuantity()+orderdetails.getRequestProduct().getQuantity());
+                requestProductRepository.save(requestProducts);
+            }
+            orders.setStatus(statusOrderRepository.findById(6));//set cho nó là đơn hàng bị huỷ
+            orderRepository.save(orders);
+        }
+        return("Huỷ đơn hàng thành công");
+    }
 
     //Tạo Request
     //Tạo Request Product
@@ -708,6 +744,8 @@ public class OrderServiceImpl implements OrderService {
 
         return result;
     }
+
+
 
     private String getAddressLocalComputer(String imagePath) {
         int assetsIndex = imagePath.indexOf("/assets/");

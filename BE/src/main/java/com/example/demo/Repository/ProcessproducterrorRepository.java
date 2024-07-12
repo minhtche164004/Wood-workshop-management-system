@@ -4,6 +4,7 @@ import com.example.demo.Entity.Orderdetails;
 import com.example.demo.Entity.Processproducterror;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -19,4 +20,12 @@ public interface ProcessproducterrorRepository extends JpaRepository<Processprod
 
     @Query("SELECT u FROM Processproducterror u WHERE u.processProductErrorId = :query")
     Processproducterror FindByIdProductErrorId(int query);
+
+    //tổng số lượng sản phẩm lỗi
+    @Query("SELECT SUM(p.quantity) FROM Processproducterror p")
+    Long countTotalQuantityProductError();
+    //tổng số lượng sản phẩm lỗi đã fix
+    @Query("SELECT SUM(p.quantity) FROM Processproducterror p WHERE p.isFixed=true")
+    Long countTotalQuantityProductErrorFixDone();
+
 }

@@ -5,6 +5,7 @@ import { ToastrService } from 'ngx-toastr';
 import { MaterialService } from 'src/app/service/material.service';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { AuthenListService } from '../service/authen.service';
+import { timer } from 'rxjs';
 
 interface ApiResponse {
   code: number;
@@ -35,6 +36,7 @@ supplierName: string,
   styleUrls: ['./supplier-management.component.scss']
 })
 export class SupplierManagementComponent implements OnInit {
+  isLoadding: boolean = false;  
   suppliers: any[] = []; // Array to store supplier data
   currentPage: number = 1;
   searchKey: string = '';
@@ -116,6 +118,7 @@ export class SupplierManagementComponent implements OnInit {
   }
 
   addSupplier(): void {
+    this.isLoadding = true;
     const supplier: Supplier = {
       supplierName: this.supplierName,
       phoneNumber: this.phoneNumber,
@@ -126,19 +129,21 @@ export class SupplierManagementComponent implements OnInit {
       .subscribe(
         (data) => {
           if (data.code === 1000) {
+            this.isLoadding = false;
             this.toastr.success('Nhà cung cấp đã được thêm thành công!', 'Thành công');
-            this.suppliers.push(supplier);
-            this.supplierName = '';
-            this.phoneNumber = '';
-            window.location.reload();
+            timer(200).subscribe(() => {
+              window.location.reload();
+            });
             
           } else {  
-       //     console.error('Failed to add supplier:', data);
+            this.isLoadding = false;
+           console.error('Failed to add supplier:', data);
             this.toastr.error('Có lỗi khi thêm nhà cung cấp!', 'Lỗi');
 
           }
         },
         (error) => {
+          this.isLoadding = false;
           console.error('Error adding supplier:', error);
           this.toastr.error('Có lỗi khi thêm nhà cung cấp!', 'Lỗi');
         }
@@ -151,15 +156,19 @@ export class SupplierManagementComponent implements OnInit {
   }
 
   deleteSupplier() {
+    this.isLoadding = true;
     console.log('Delete supplier:', this.deleteId);
     this.supplierService.deleteSupplier(this.deleteId).subscribe(
       response => {
-        console.log('Supplier deleted successfully!', response);
+        this.isLoadding = false;
+      
         this.toastr.success('Nhà cung cấp đã được xóa thành công!', 'Thành công');
-        this.ngOnInit(); // Refresh the list of suppliers
-        window.location.reload();
+        timer(200).subscribe(() => {
+          window.location.reload();
+        });
       },
       error => {
+        this.isLoadding = false;
         console.error('Error deleting supplier:', error);
         // Handle error logic
       }
@@ -190,7 +199,7 @@ export class SupplierManagementComponent implements OnInit {
       (data) => {
         if (data.code === 1000) {
           this.suplierData = data.result;
-          this.selectedMaterial = this.materials.find(material => material.sub_material_name === this.suplierData.subMaterial.subMaterialName)?.sub_material_id;
+          this.selectedMaterial = this.materials.find(material => material.subMaterialName === this.suplierData.subMaterial.subMaterialName)?.subMaterialId;
           console.log('KVL: ', this.selectedMaterial);
         } else {
           console.error('Failed to fetch supplier data:', data);
@@ -203,16 +212,19 @@ export class SupplierManagementComponent implements OnInit {
   }
 
   EditSupMaterial(): void {
-
+    this.isLoadding = true;
     const editUserRequest: EditUserRequest = this.editSupplierForm.value;
     const userId = this.suplierData.supplierMaterial; // Lấy userId từ userData
     console.log("Data: ", editUserRequest)
     this.authenListService.EditSupplier(userId, editUserRequest).subscribe(
       () => {
-
+        this.isLoadding = false;
         this.toastr.success('Thay đổi thông tin thành công.');
-        window.location.reload();
+        timer(200).subscribe(() => {
+          window.location.reload();
+        });
       (error: any) => {
+        this.isLoadding = false;
         this.toastr.error('Lỗi');
        
       }}

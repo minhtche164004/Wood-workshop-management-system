@@ -7,7 +7,7 @@
         <div class="table-title">
           <div class="row " style="height: 60px;">
             <div class="col-sm-5 ">
-              <h2 style="margin-bottom: 0;">Quản lí sản phẩm yêu cầu</h2>
+              <h2 style="margin-bottom: 0;">Quản lý sản phẩm yêu cầu</h2>
             </div>
             <div class="col-sm-7 text-end d-flex align-items-center justify-content-end">
 
@@ -17,19 +17,19 @@
           <div class="row">
             <div class="col-md-7">
               <div class="input-group mb-3">
-                <!-- product.component.html -->
-                <label>Từ: </label>
+               
+                <!-- <label>Từ: </label>
                 <input style="margin-left: 10px;" type="date" class="form-control" placeholder="Đến: dd/mm/yyyy">
 
                 <label>Đến: </label>
-                <input style="margin-left: 10px;" type="date" class="form-control" placeholder="Đến: dd/mm/yyyy">
+                <input style="margin-left: 10px;" type="date" class="form-control" placeholder="Đến: dd/mm/yyyy"> -->
               </div>
             </div>
             <div class="col-md-5 text-end">
               <div class="input-group mb-3">
                 <!-- product.component.html -->
                 <select>
-                  <option value="null" disabled selected>Kiểu việc làm</option>
+                  <option value="null" disabled selected>Tình trạng hàng</option>
                   <option></option>
                 </select>
 
@@ -49,9 +49,9 @@
 
                   <th style="width: 200px;">STT</th>
                   <th style="width: 200px;">Thao Tác</th>
-                  <th style="width: 250px;">Ảnh sản phẩm</th>
+                  <th style="width: 450px;">Ảnh sản phẩm</th>
                   <th style="width: 250px;">Ngày đặt hàng</th>
-                  <th style="width: 250px;">Mô tả sản phẩm</th>
+                  <th style="width: 450px;">Mô tả sản phẩm</th>
                   <th style="width: 250px;">Tình trạng</th>
                   <th style="width: 250px;">Địa chị cụ thể</th>
                   <th style="width: 250px;">Lí do từ chối</th>
@@ -161,13 +161,16 @@
           </div>
           <div class="form-row">
             <div class="form-group col-md-6" *ngIf="imagesPreview">
-              <img *ngFor="let imageUrl of imagesPreview" [src]="imageUrl" class="previewMultiple">
+              <a *ngFor="let imageUrl of imagesPreview" [href]="imageUrl" target="_blank">
+                <img [src]="imageUrl" class="previewMultiple">
+              </a>
             </div>
           </div>
 
           <div class="modal-footer d-flex justify-content-center">
-            <button type="button" class="btn btn-mau-do" data-dismiss="modal">Hủy</button>
             <button type="submit" class="btn btn-primary">Lưu thay đổi</button>
+            <button type="button" class="btn btn-mau-do" (click)="resetForm()" data-dismiss="modal">Hủy Bỏ</button>
+           
           </div>
 
         </form>
@@ -176,3 +179,6 @@
   </div>
 </div>
 <app-footer></app-footer>
+<div *ngIf="isLoadding" class="loading-overlay">
+  <div class="spinner"></div>
+</div>

@@ -46,6 +46,9 @@ public class Processproducterror {
     @Column(name = "code")
     private String code;
 
+    @Column(name = "quantity")
+    private Integer quantity;
+
 
 }
 /*

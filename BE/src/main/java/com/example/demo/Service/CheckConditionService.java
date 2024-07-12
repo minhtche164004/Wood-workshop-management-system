@@ -32,5 +32,6 @@ public interface CheckConditionService {
     boolean checkInputQuantityInt(int number);
 
    boolean checkInputPrice(BigDecimal number);
+    boolean checkInputQuantityIntForProductError(int number,int current);
 
 }

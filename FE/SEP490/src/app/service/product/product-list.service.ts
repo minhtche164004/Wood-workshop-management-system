@@ -267,7 +267,7 @@ export class ProductListService {
   getMultiFillterProductForCustomer(search: string, categoryId: number, statusId: number, sortDirection: string): Observable<any> {
     const params = {
       search: search,
-      categoryIds: categoryId,
+      categoryId: categoryId,
       statusId: statusId,
       sortDirection: sortDirection
     };
@@ -276,7 +276,7 @@ export class ProductListService {
       .filter(([key, value]) => {
         if (key === 'search' && value === '') return false;
         if (key === 'statusId' && value === 0) return false;
-        if (key === 'categoryIds' && value === 0) return false;
+        if (key === 'categoryId' && value === 0) return false;
         if (key === 'sortDirection' && value === '') return false;
         return value != null;
       })

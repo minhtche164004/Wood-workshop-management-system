@@ -947,7 +947,7 @@ export class ProductManagementComponent implements OnInit {
   }
 
   onEditRequestProductSubmit(): void {
-    if (this.editForm.valid) {
+    // if (this.editForm.valid) {
       const productData = this.editForm.value;
       this.isLoadding = true;
 
@@ -1000,7 +1000,7 @@ export class ProductManagementComponent implements OnInit {
             this.isLoadding = false;
           }
         );
-    }
+    // }
   }
 
   deleteProductRequest() {

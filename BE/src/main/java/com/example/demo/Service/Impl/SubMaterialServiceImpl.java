@@ -384,6 +384,42 @@ public class SubMaterialServiceImpl implements SubMaterialService {
             return ResponseEntity.ok(apiResponse);
         }
     }
+    @Override
+    public List<ProductSubMaterials> EditSubMaterialProduct(int product_id, Map<Integer, Double> subMaterialQuantities) {
+        Products products = productRepository.findById(product_id);
+        List<ProductSubMaterials> list = productSubMaterialsRepository.findByProductID(product_id);
+        List<ProductSubMaterials> productSubMaterialsList = new ArrayList<>();
+        if(!list.isEmpty()){
+            productSubMaterialsRepository.deleteAll(list);
+            for (Map.Entry<Integer, Double> entry : subMaterialQuantities.entrySet()) {
+                int subMaterialId = entry.getKey();
+                double quantity = entry.getValue();
+                SubMaterials subMaterial = subMaterialsRepository.findById1(subMaterialId);
+                ProductSubMaterials productSubMaterial = new ProductSubMaterials(subMaterial, products, quantity);
+                productSubMaterialsList.add(productSubMaterial);
+            }
+            productSubMaterialsRepository.saveAll(productSubMaterialsList);
+        }
+        return productSubMaterialsList;
+    }
+    @Override
+    public List<RequestProductsSubmaterials> EditSubMaterialRequestProduct(int request_product_id, Map<Integer, Double> subMaterialQuantities) {
+        RequestProducts requestProducts = requestProductRepository.findById(request_product_id);
+        List<RequestProductsSubmaterials> list = new ArrayList<>();
+        List<RequestProductsSubmaterials> requestProductsSubmaterialsList = new ArrayList<>();
+        if(!list.isEmpty()) {
+            requestProductsSubmaterialsRepository.deleteAll(list);
+            for (Map.Entry<Integer, Double> entry : subMaterialQuantities.entrySet()) {
+                int subMaterialId = entry.getKey();
+                double quantity = entry.getValue();
+                SubMaterials subMaterial = subMaterialsRepository.findById1(subMaterialId);
+                RequestProductsSubmaterials requestProductsSubmaterials = new RequestProductsSubmaterials(subMaterial, requestProducts, quantity);
+                requestProductsSubmaterialsList.add(requestProductsSubmaterials);
+            }
+            requestProductsSubmaterialsRepository.saveAll(requestProductsSubmaterialsList);
+        }
+        return  requestProductsSubmaterialsList;
+    }
 //    @Override
 //    public List<Employeematerials> createEMaterial(int emp_id, int mate_id, int product_id) {
 //        List<Employeematerials> employeeMaterialsList = new ArrayList<>();

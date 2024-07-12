@@ -45,5 +45,7 @@ public interface SubMaterialService {
 
 //    List<Employeematerials> filterEmployeematerialsByMaterialType(int materialId);
 
+    List<ProductSubMaterials> EditSubMaterialProduct(int product_id, Map<Integer, Double> subMaterialQuantities);
+    List<RequestProductsSubmaterials> EditSubMaterialRequestProduct(int request_product_id, Map<Integer, Double> subMaterialQuantities);
 
 }

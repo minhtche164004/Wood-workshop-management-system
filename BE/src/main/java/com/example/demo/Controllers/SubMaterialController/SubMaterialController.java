@@ -96,6 +96,18 @@ public class SubMaterialController {
         apiResponse.setResult(subMaterialService.SearchByNameorCode(key));
         return apiResponse;
     }
+    @PutMapping("/EditSubMaterialProduct")
+    public ApiResponse<?> EditSubMaterialProduct(@RequestBody CreateExportMaterialProductRequest request) {
+        ApiResponse<List> apiResponse = new ApiResponse<>();
+        apiResponse.setResult(subMaterialService.EditSubMaterialProduct(request.getProductId(), request.getSubMaterialQuantities()));
+        return apiResponse;
+    }
+    @PutMapping("/EditSubMaterialRequestProduct")
+    public ApiResponse<?> EditSubMaterialRequestProduct(@RequestBody CreateExportMaterialProductRequest request) {
+        ApiResponse<List> apiResponse = new ApiResponse<>();
+        apiResponse.setResult(subMaterialService.EditSubMaterialRequestProduct(request.getProductId(), request.getSubMaterialQuantities()));
+        return apiResponse;
+    }
 
     @PostMapping("/upload-submaterial-data")
     public ApiResponse<?> uploadCustomersData(@RequestParam("file") MultipartFile file) {

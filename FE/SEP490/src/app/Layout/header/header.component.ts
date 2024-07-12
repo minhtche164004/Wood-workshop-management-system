@@ -112,6 +112,10 @@ export class HeaderComponent implements OnInit {
       this.dataService.changeSearchKey(this.searchKey);
       this.routerSearch(this.searchKey);
       this.router.navigate(['/product'], { queryParams: {searchKey: this.searchKey} });
+    }else {
+      this.dataService.changeSearchKey(this.searchKey);
+      this.routerSearch(this.searchKey);
+      this.router.navigate(['/product']);
     }
   }
 

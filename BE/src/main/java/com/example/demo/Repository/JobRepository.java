@@ -11,6 +11,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 @Repository
@@ -200,6 +201,16 @@ public interface JobRepository extends JpaRepository<Jobs,Integer> {
             " LEFT JOIN j.orderdetails.order o WHERE p.processProductErrorId = :query")
     ProductErrorAllDTO getProductErrorDetailById(int query);
 
+    //đếm số lượng job theo tháng và năm
+    @Query("SELECT COUNT(*) FROM Jobs j " +
+            "JOIN j.status s " + // Sử dụng JOIN với entity Status_Job
+            "WHERE s.status_name = :status_name " +
+            "AND MONTH(j.timeFinish) = :month " +
+            "AND YEAR(j.timeFinish) = :year")
+    Long countCompletedJobsByMonthAndYear(
+            @Param("status_name") String status_name,
+            @Param("month") int month,
+            @Param("year") int year);
 
 
 

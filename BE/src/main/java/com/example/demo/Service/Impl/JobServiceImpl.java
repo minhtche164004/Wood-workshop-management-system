@@ -10,6 +10,7 @@ import com.example.demo.Entity.*;
 import com.example.demo.Exception.AppException;
 import com.example.demo.Exception.ErrorCode;
 import com.example.demo.Repository.*;
+import com.example.demo.Service.CheckConditionService;
 import com.example.demo.Service.JobService;
 import jakarta.persistence.EntityManager;
 import jakarta.transaction.Transactional;
@@ -55,7 +56,8 @@ public class JobServiceImpl implements JobService {
     private AdvancesalaryRepository advancesalaryRepository;
     @Autowired
     private ModelMapper modelMapper;
-
+    @Autowired
+    private CheckConditionService checkConditionService;
 
     @Override
     public List<JobProductDTO> getListRequestProductJob() {
@@ -325,7 +327,13 @@ public class JobServiceImpl implements JobService {
         processproducterror.setJob(jobs);
         processproducterror.setCode(jobs.getCode());
         processproducterror.setIsFixed(false);
-
+        processproducterror.setQuantity(productErrorDTO.getQuantity());
+        if (!checkConditionService.checkInputQuantityInt(productErrorDTO.getQuantity())) {
+            throw new AppException(ErrorCode.QUANTITY_INVALID);
+        }
+        if(checkConditionService.checkInputQuantityIntForProductError(processproducterror.getQuantity(),jobs.getQuantityProduct())== false){
+            throw new AppException(ErrorCode.INVALID_QUANTITY_PRODUCT_ERROR);
+        }
         processproducterror.setDescription(productErrorDTO.getDes());
         processproducterror.setSolution(productErrorDTO.getSolution());
 
@@ -366,6 +374,7 @@ public class JobServiceImpl implements JobService {
         processproducterror.setDescription(productErrorDTO.getDes());
         processproducterror.setIsFixed(productErrorDTO.getIsFixed());
         processproducterror.setSolution(productErrorDTO.getSolution());
+        processproducterror.setQuantity(productErrorDTO.getQuantity());
         processproducterrorRepository.save(processproducterror);
         return modelMapper.map(processproducterror, ProductErrorAllDTO.class);
     }

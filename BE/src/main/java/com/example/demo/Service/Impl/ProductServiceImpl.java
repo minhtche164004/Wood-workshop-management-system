@@ -329,11 +329,11 @@ public class ProductServiceImpl implements ProductService {
 //
 //        return productList;
 //    }
-    public List<Products> filterProductForCustomer(String search, List<Integer> categoryIds, BigDecimal minPrice, BigDecimal maxPrice, String sortDirection) {
+    public List<Products> filterProductForCustomer(String search, Integer categoryId, BigDecimal minPrice, BigDecimal maxPrice, String sortDirection) {
     List<Products> productList = new ArrayList<>();
 
-    if (search != null || (categoryIds != null && !categoryIds.isEmpty()) || minPrice != null || maxPrice != null) {
-        productList = productRepository.filterProductsForCus(search, categoryIds, minPrice, maxPrice);
+    if (search != null || categoryId != null || minPrice != null || maxPrice != null) {
+        productList = productRepository.filterProductsForCus(search, categoryId, minPrice, maxPrice);
     } else {
         productList = productRepository.ViewProductLandingPage();
     }

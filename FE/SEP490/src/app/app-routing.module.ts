@@ -76,7 +76,7 @@ const routes: Routes = [
   { path: 'admin', component: PageAdminComponent },
   { path: 'verifyMail', component: VerifyMailComponent },
   { path: 'verifyOtp', component: VerifyOtpMailComponent },
-  { path: 'change_pass', component: ForgotPassComponent },
+  { path: 'change_pass', component: ChangePasswordComponent },
   { path: 'user_management', component: UserManagementComponent },
   { path: 'payment-salary', component: PaymentSalaryComponent },
   { path: 'verifyOtp/:email', component: VerifyOtpMailComponent },  // Route with email as a parameter

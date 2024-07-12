@@ -8,7 +8,7 @@
         <div class="table-title">
           <div class="row " style="height: 60px;">
             <div class="col-sm-5 ">
-              <h2 style="margin-bottom: 0;">Quản lý Người Dùng</h2>
+              <h2 style="margin-bottom: 0;">Tra cứu Người Dùng</h2>
             </div>
             <div class="col-sm-7 text-end d-flex align-items-center justify-content-end">
               <a href="#" class="btn btn-secondary btn-sm" data-toggle="modal" data-target="#addAccountModal"
@@ -47,9 +47,9 @@
                   <th>STT</th>
                   <th>Phân quyền</th>
                   <th>Thao tác</th>
-                  <th>Tên tài khoản</th>
+                  <th>Tên đăng nhập</th>
                   <th>Địa chỉ</th>
-                  <th>Tên vị trí</th>
+                  <th>Vị trí đảm nhận</th>
                   <th>Họ tên</th>
                   <th>Gmail</th>
                   <th>Số điện thoại</th>
@@ -70,7 +70,7 @@
                       <i class="fa-regular fa-trash-can"></i>
                     </a>
                     <a href="#" class="info" title="Info" data-toggle="modal" data-target="#productDetailModal">
-                      <i class="fa-solid fa-circle-info"></i>
+                      <i class="fa-solid fa-ellipsis-vertical"></i>
                     </a>
                   </td>
 
@@ -322,25 +322,12 @@
             </div>
             <div class="form-group col-md-6">
               <label for="position">Vị Trí</label>
-              <div *ngIf="isPositionEnabled_Update">
-                <select [(ngModel)]="selectedPosition_Update" formControlName="position_id"
-                  class="form-control form-control-lg">
+              <select [(ngModel)]="selectedPosition_Update" formControlName="position_id" class="form-control form-control-lg">
+                <option disabled *ngFor="let pos of position" [ngValue]="pos.position_id">
+                  {{ pos.position_name }}
+                </option>
+              </select>
             
-                  <option disabled *ngFor="let pos of position" [ngValue]="pos.position_id">
-                    {{ pos.position_name }}
-                  </option>
-                </select>
-              </div>
-              <div *ngIf="!isPositionEnabled_Update">
-          
-                  <select [(ngModel)]="selectedPosition_Update" formControlName="position_id"
-                    class="form-control form-control-lg">
-                    <option disabled *ngFor="let pos of position" [ngValue]="pos.position_id">
-                      {{ pos.position_name }}
-                    </option>
-                 </select>
-             
-              </div>
             </div>
           </div>
           <div class="form-row">

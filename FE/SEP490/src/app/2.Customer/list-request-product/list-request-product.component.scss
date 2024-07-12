@@ -1,6 +1,7 @@
 
 
 .table-container {
+
     overflow-x: auto;
   }
   .container-fluid {
@@ -201,10 +202,10 @@
     margin-top: 10px;
     font-size: 13px;
   }
-  .img_product {
-   max-height: 30%;
-   max-width: 30%;
-  }
+  // .img_product {
+  //  max-height: 60%;
+  //  max-width: 60%;
+  // }
   @media (max-width: 768px) {
     .table-wrapper {
       min-width: 100%;
@@ -259,9 +260,12 @@
     color: purple; /* Màu tím cho Sản Phẩm 3 */
   }
   .img_product {
-    max-width: 100px;
-    max-height: 100px;
-    object-fit: cover;
+    max-height: 100%;
+    max-width: 100%;
+    object-fit: cover; /* Ensures the image covers the container while maintaining aspect ratio */
+    height: 150px; /* Adjust height as necessary */
+    width: 150px; /* Adjust width as necessary */
+    display: block;
   }
   
   .table td,
@@ -375,4 +379,36 @@
   
 
 
-  
+  .btn {
+    /* CSS chung cho tất cả các nút */
+    /* Ví dụ: */
+    padding: 10px;
+    border: none;
+}
+.bg-primary {
+    background-color: #c89551 !important;
+}
+
+.btn-primary {
+    background-color:  #c89551;
+    border-color:  #c89551;
+}
+.btn-mau-do {
+    /* CSS cụ thể cho nút màu đỏ */
+    background: #CC4949;
+    color: white;
+    /* Các thuộc tính khác */
+}
+.image-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.previewMultiple {
+  width: 100px; /* Điều chỉnh kích thước ảnh phù hợp */
+  height: 100px; /* Điều chỉnh kích thước ảnh phù hợp */
+  object-fit: cover;
+  border-radius: 5px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}

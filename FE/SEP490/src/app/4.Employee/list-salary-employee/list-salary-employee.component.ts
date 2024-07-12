@@ -33,26 +33,25 @@ export class ListSalaryEmployeeComponent implements OnInit {
 
   }
   loadAllSalaryByEmployeID() {
-
     this.loginToken = localStorage.getItem('loginToken');
     if (this.loginToken) {
       console.log('Retrieved loginToken:', this.loginToken);
+  
       this.authenListService.getSalaryByEmployeeID().subscribe(
         (data: ApiResponse) => {
           if (data.code === 1000) {
-            this.salary_employee = data.result;
-            console.log('Danh sách lương:', data);
+            this.salary_employee = data.result.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+           
           } else {
-            console.error('Failed to fetch products:', data);
+            console.error('Failed to fetch salary data:', data);
           }
         },
         (error) => {
-          console.error('Error fetching products:', error);
+          console.error('Error fetching salary data:', error);
         }
       );
     } else {
       console.error('No loginToken found in localStorage.');
-
     }
   }
 }

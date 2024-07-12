@@ -10,7 +10,7 @@ import { environment } from '../environments/environment';
 export class OrderRequestService {
   private urlGetAllRequestOrder = `${environment.apiUrl}api/auth/order/GetAllRequest`;
   private urlGetRequestByID = `${environment.apiUrl}api/auth/order/GetRequestById`;
-  private urlGetProductbyID = `${environment.apiUrl}api/auth/order/GetRequestProductById`
+  private urlGetProductbyID = `${environment.apiUrl}api/auth/order/getRequestProductById`
   
   constructor(private http: HttpClient) { }
 

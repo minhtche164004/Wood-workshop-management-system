@@ -128,7 +128,7 @@ public class OrderController {
         return apiResponse;
     }
     @PostMapping("/Cancel_Order")
-    public ApiResponse<?> Cancel_Order(@RequestParam("order_id") int order_id,@RequestParam("special_order_id") int special_order_id) {
+    public ApiResponse<?> Cancel_Order(@RequestParam("order_id") int order_id,@RequestParam("special_order_id") boolean special_order_id) {
         ApiResponse<String> apiResponse = new ApiResponse<>();
         apiResponse.setResult(orderService.Cancel_Order(order_id,special_order_id));
         return apiResponse;

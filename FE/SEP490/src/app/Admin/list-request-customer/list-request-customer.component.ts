@@ -4,6 +4,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { AuthenListService } from 'src/app/service/authen.service';
+import { OrderRequestService } from 'src/app/service/order-request.service';
 interface ApiResponse {
   code: number;
   result: any[];
@@ -31,9 +32,11 @@ export class ListRequestCustomerComponent implements OnInit {
   Accept_Reject_rForm: FormGroup;
   status_request: any[] = [];
   selectedStatus: any = null;
+  orderRqDetails: any;
   constructor(
 
     private authenListService: AuthenListService,
+    private orderRequestService: OrderRequestService,
     private fb: FormBuilder,
     private http: HttpClient,
     private toastr: ToastrService,
@@ -125,6 +128,32 @@ export class ListRequestCustomerComponent implements OnInit {
         console.error('Lỗi khi chỉnh sửa yêu cầu:', error);
       }
     );
+  }
+  viewProductDetails(orderId: number): void {
+    
+  
+    this.orderRequestService.getRequestById(orderId).subscribe(
+      (data) => {
+        if (data.code === 1000) {
+          if (data.result && typeof data.result === 'object') {
+            this.orderRqDetails = data.result;
+            this.orderRqDetails = Array.isArray(data.result) ? data.result : [data.result];
+          } else {
+            this.orderRqDetails = [];
+            console.warn('Unexpected data format for products:', data.result);
+          }
+          console.log('Product List:', this.orderRqDetails);
+        } else {
+          console.error('Failed to fetch products:', data);
+          this.toastr.error('Không thể lấy danh sách sản phẩm!', 'Lỗi');
+        }
+      },
+      (error) => {
+        console.error('Error fetching products:', error);
+        this.toastr.error('Có lỗi xảy ra!', 'Lỗi');
+      }
+    );
+ 
   }
   
 }

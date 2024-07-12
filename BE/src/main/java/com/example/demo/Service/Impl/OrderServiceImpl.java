@@ -201,9 +201,9 @@ public class OrderServiceImpl implements OrderService {
         return orders;
     }
     @Override
-    public String Cancel_Order(int order_id, int special_order_id) {
+    public String Cancel_Order(int order_id, boolean special_order_id) {
         Orders orders = orderRepository.findById(order_id);
-        if(special_order_id == 0){//là hàng có sẵn
+        if(special_order_id == false){//là hàng có sẵn
             List<Orderdetails> list = orderDetailRepository.getOrderDetailByOrderId(order_id);
             for(Orderdetails orderdetails : list){
               int product_id =  orderdetails.getProduct().getProductId();
@@ -211,9 +211,11 @@ public class OrderServiceImpl implements OrderService {
                 products.setQuantity(products.getQuantity()+orderdetails.getProduct().getQuantity());
                 productRepository.save(products);
             }
+            orders.setStatus(statusOrderRepository.findById(6));//set cho nó là đơn hàng bị huỷ
+            orderRepository.save(orders);
             return null;
         }
-        if(special_order_id == 1){//là hàng có sẵn
+        if(special_order_id == true){//là hàng có sẵn
             List<Orderdetails> list = orderDetailRepository.getOrderDetailByOrderId(order_id);
             for(Orderdetails orderdetails : list){
                 int request_product_id =  orderdetails.getRequestProduct().getRequestProductId();

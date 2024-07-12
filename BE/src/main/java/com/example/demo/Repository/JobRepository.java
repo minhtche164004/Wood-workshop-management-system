@@ -203,7 +203,7 @@ public interface JobRepository extends JpaRepository<Jobs,Integer> {
 
     //đếm số lượng job theo tháng và năm
     @Query("SELECT COUNT(*) FROM Jobs j " +
-            "JOIN j.status s " + // Sử dụng JOIN với entity Status_Job
+            "JOIN j.status s " +
             "WHERE s.status_name = :status_name " +
             "AND MONTH(j.timeFinish) = :month " +
             "AND YEAR(j.timeFinish) = :year")

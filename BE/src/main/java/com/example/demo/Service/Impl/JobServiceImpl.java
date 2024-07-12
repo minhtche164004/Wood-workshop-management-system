@@ -437,6 +437,11 @@ public class JobServiceImpl implements JobService {
         return advancesalaryRepository.findById(id);
     }
 
+    @Override
+    public Long CountQuantityOfJob(String status_name, int month, int year) {
+        return jobRepository.countCompletedJobsByMonthAndYear(status_name,month,year);
+    }
+
 
 }
 

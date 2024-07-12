@@ -69,6 +69,14 @@ public class JobController {
         apiResponse.setResult(jobService.GetJobById(job_id));
         return apiResponse;
     }
+
+    @GetMapping("/countCompletedJobsByMonthAndYear")
+    public ApiResponse<?> countCompletedJobsByMonthAndYear(@RequestParam("status_name") String status_name,@RequestParam("month")int month,
+                                                           @RequestParam("year") int year) {
+        ApiResponse<Long> apiResponse = new ApiResponse<>();
+        apiResponse.setResult(jobService.CountQuantityOfJob(status_name,month,year));
+        return apiResponse;
+    }
 //    //lúc filter các có sẵn thì call api này
     @GetMapping("/getListProductForJob")
     public ApiResponse<?> getListProductForJob() {

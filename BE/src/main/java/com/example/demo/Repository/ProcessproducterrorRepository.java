@@ -24,8 +24,8 @@ public interface ProcessproducterrorRepository extends JpaRepository<Processprod
     //tổng số lượng sản phẩm lỗi
     @Query("SELECT SUM(p.quantity) FROM Processproducterror p")
     Long countTotalQuantityProductError();
-
-    @Query("SELECT SUM(p.quantity) FROM Processproducterror p WHERE P.isFixed==true")
+    //tổng số lượng sản phẩm lỗi đã fix
+    @Query("SELECT SUM(p.quantity) FROM Processproducterror p WHERE p.isFixed=true")
     Long countTotalQuantityProductErrorFixDone();
 
 }

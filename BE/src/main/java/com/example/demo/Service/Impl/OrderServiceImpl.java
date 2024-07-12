@@ -205,6 +205,7 @@ public class OrderServiceImpl implements OrderService {
     }
     @Override
     public ResponseEntity<String> Cancel_Order(int order_id, boolean special_order_id) {
+
         Orders orders = orderRepository.findById(order_id);
         if(special_order_id == false){//là hàng có sẵn
             List<Orderdetails> list = orderDetailRepository.getOrderDetailByOrderId(order_id);
@@ -217,7 +218,9 @@ public class OrderServiceImpl implements OrderService {
             orders.setStatus(statusOrderRepository.findById(6));//set cho nó là đơn hàng bị huỷ
             orderRepository.save(orders);
 
+
             return ResponseEntity.ok("Huỷ đơn hàng thành công");
+
         }
         if(special_order_id == true){//là hàng có sẵn
             List<Orderdetails> list = orderDetailRepository.getOrderDetailByOrderId(order_id);

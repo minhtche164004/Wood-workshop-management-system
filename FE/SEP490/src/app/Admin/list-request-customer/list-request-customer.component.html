@@ -1,4 +1,4 @@
-<app-dashboard-admin></app-dashboard-admin>
+<app-dashboard></app-dashboard>
 
 <div class="dashboard-main">
 
@@ -8,7 +8,7 @@
         <div class="table-title">
           <div class="row " style="height: 60px;">
             <div class="col-sm-5 ">
-              <h2 style="margin-bottom: 0;">Quản lý đơn yêu cầu</h2>
+              <h2 style="margin-bottom: 0;">Quản lý đơn hàng yêu cầu</h2>
             </div>
             <div class="col-sm-7 text-end d-flex align-items-center justify-content-end">
               <!-- <a href="#" class="btn btn-secondary btn-sm" data-toggle="modal" data-target="#addAccountModal"
@@ -29,7 +29,7 @@
                     <option *ngFor="let ps of position" [value]="ps.position_id">{{ ps.position_name }}</option>
                   </select> -->
 
-                <input type="text" class="form-control" placeholder="Mã nhân viên">
+                <input type="text" class="form-control" placeholder="Mã đơn hàng">
                 <button class="btn search-button" type="button">
                   <i class="fa fa-search"></i>
                 </button>
@@ -46,17 +46,20 @@
                 <tr>
                   <th>Mã đơn hàng</th>
                   <th>Thao tác</th>
-                  <th>Vị Trí Nhân Viên</th>
-                  <th>Ngày yêu cầu</th>
-                  <th>Duyệt yêu cầu công việc</th>
-                  <th>Mô tả đơn hàng</th>
+                  <th>Ảnh sản phẩm</th>
+                  <th>Mô tả</th>
+                  <th>Tên nhân viên</th>
+                  <th>Vị trí</th>
+                  <th>Tên khách hàng</th>
+
+                  <th>Trạng thái</th>
                 </tr>
               </thead>
               <tbody>
                 <tr
                   *ngFor="let job of list_request_customer | paginate: { itemsPerPage: 10, currentPage: currentPage }; let i = index">
                   <td style="min-width: 150px;">{{ job.code }}</td>
-      
+
 
                   <td class="action-buttons">
                     <a href="#" class="settings" title="Edit" data-toggle="modal" data-target="#editAccountModal"
@@ -64,17 +67,29 @@
 
                       <i class="fa-solid fa-pen-to-square"></i>
                     </a>
-                    <!-- <a href="#" class="accept" title="Chấp nhận" data-toggle="modal" data-target="#acceptModal">
-                        <i class="fas fa-check-circle"></i>
-                      </a>
-                      <a href="#" class="reject" title="Từ chối" data-toggle="modal" data-target="#rejectModal">
-                        <i class="fas fa-times-circle"></i>
-                      </a> -->
+                    <a href="#" class="settings1" title="Chi tiết" data-toggle="modal" data-target="#productDetailModal"
+                      (click)="viewProductDetails(job.requestId)">
+
+                      <i class="fa-solid fa-ellipsis-vertical"></i>
+                    </a>
+                  <td>
+                    <div class="product-image-wrapper">
+                      <img id="phongto" [src]="job.requestImages[0]?.fullPath"
+                        class="product-image img-md img-thumbnail" />
+                    </div>
                   </td>
-                  <td style="min-width: 50px;">{{ job?.user?.position?.position_name }}</td>
-                  <td>{{ job.requestDate | date:'dd/MM/yyyy' }}</td>
-                  <td style="min-width: 100px;">{{ job?.status?.status_name }}</td>
-                  <td style="min-width: 200px;">{{ job.description }}</td>
+
+
+                  <td>{{ job.description }}</td>
+                  <td>{{ job.user.username}}</td>
+                  <td>{{ job.user.position.position_name }}</td>
+
+
+
+                  <td>{{ job.fullname }}</td>
+
+                  <td>{{ job?.status?.status_name }}</td>
+
                 </tr>
               </tbody>
             </table>
@@ -96,7 +111,7 @@
     </div>
   </div>
 </div>
-<form [formGroup]="Accept_Reject_rForm"  (ngSubmit)="EditRequestAccept()">
+<form [formGroup]="Accept_Reject_rForm" (ngSubmit)="EditRequestAccept()">
   <div style="margin: 50px 0px 100px 100px;" class="modal fade" id="editAccountModal" tabindex="-1" role="dialog"
     aria-labelledby="editAccountModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg" role="document">
@@ -108,21 +123,12 @@
           </button>
         </div>
         <div class="modal-body">
-          <div class="form-row">
-            <div class="form-group col-md-12">
-              <label for="username">Lí do từ chối</label>
-              <input formControlName="response" type="text" class="form-control form-control-lg"
-                [(ngModel)]="RequestData.requestId">
-
-            </div>
-
-          </div>
+         
           <div class="row">
             <div class="form-group col-md-12">
-              <label for="role">Vật Liệu</label>
+              <label for="role">Duyệt đơn hàng</label>
               <div>
-                <select [(ngModel)]="selectedStatus" formControlName="status_id"
-                  class="form-control form-control-lg">
+                <select [(ngModel)]="selectedStatus" formControlName="status_id" class="form-control form-control-lg">
                   <option [ngValue]="null" disabled selected>Duyệt đơn</option>
                   <option *ngFor="let st of status_request" [ngValue]="st.status_id">
                     {{ st.status_name }}
@@ -130,6 +136,13 @@
                 </select>
               </div>
             </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group col-md-12">
+              <label for="username">Lí do từ chối</label>
+              <textarea formControlName="response" class="form-control form-control-lg" rows="3" [(ngModel)]="RequestData.requestId"></textarea>
+            </div>
+
           </div>
         </div>
         <div class="modal-footer">
@@ -141,3 +154,75 @@
   </div>
 
 </form>
+
+<div class="modal fade" style="margin-left: 100px;" id="productDetailModal" tabindex="-1" role="dialog"
+  aria-labelledby="productDetailModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content h-auto">
+
+      <div class="modal-body">
+        <div class="container mt-5">
+          <div class="card order-detail-card">
+            <div class="card-header">
+              <h5 class="card-title">Chi tiết đơn hàng</h5>
+            </div>
+            <div class="card-body" *ngFor="let orderRqDetails of orderRqDetails; let i = index">
+              <div class="row">
+                <div class="col-md-6">
+                  <section class="order-summary">
+                    <h2>Thông tin khách hàng</h2>
+                    <p>Tên: <span id="customerName">{{ orderRqDetails.fullname }}</span></p>
+
+                    <p>Số điện thoại: <span id="customerPhone">{{ orderRqDetails.phoneNumber }}</span></p>
+
+                    <p>Địa chỉ cụ thể: <span id="customerPhone">{{ orderRqDetails.address }}</span></p>
+                  </section>
+                </div>
+                <div class="col-md-6">
+                  <section class="order-summary">
+                    <h2>Tóm tắt đơn hàng</h2>
+                    <p>Mô tả chi tiết: <span id="orderCode">{{ orderRqDetails.description }}</span></p>
+                    <p>Ngày đặt hàng: <span id="orderDate">{{ orderRqDetails.requestDate | date: 'dd/MM/yyyy' }}</span>
+                    </p>
+                    <p>Trạng thái đơn hàng: <span id="orderStatus">{{ orderRqDetails.status_name }}</span></p>
+                    <!-- Assuming paymentMethod is part of the details -->
+                    <!-- <p>Phương thức thanh toán: <span id="paymentMethod">{{ orderRqDetails.paymentMethod }}</span></p> -->
+                  </section>
+                </div>
+              </div>
+            </div>
+            <div class="card-body">
+              <div class="row">
+                <div class="col-md-12">
+                  <section class="product-details">
+                    <table class="table table-striped">
+                      <h1>Ảnh sản phẩm</h1>
+                      <tbody>
+                        <tr *ngFor="let product of orderRqDetails; let i = index">
+                          <td>
+                            <div class="image-container" style="height: 250px; max-width: 100%; overflow-x: auto;">
+                              <div class="image-wrapper" style="display: flex; flex-wrap: nowrap;">
+                                <div *ngFor="let image of product.imagesList">
+                                  <img class="img_product_detail" [src]="image.fullPath" alt="Ảnh sản phẩm"
+                                    style="margin-right: 10px; max-width: 250px;">
+                                </div>
+                              </div>
+                            </div>
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </section>
+                </div>
+              </div>
+            </div>
+
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

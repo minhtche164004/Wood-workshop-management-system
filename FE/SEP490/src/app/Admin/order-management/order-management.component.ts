@@ -6,7 +6,7 @@ import { AuthenListService } from 'src/app/service/authen.service';
 import { OrderService } from 'src/app/service/order.service';
 import { ProductListService } from 'src/app/service/product/product-list.service';
 
-
+import { HttpClient } from '@angular/common/http';
 interface ApiResponse {
   code: number;
   result: any[];
@@ -27,7 +27,7 @@ export class OrderManagementComponent implements OnInit {
   selectedCategory: any = null;
   OrderdetailById: any = {};
 
-  constructor(private productListService: ProductListService, private orderService: OrderService,
+  constructor(private http: HttpClient,private productListService: ProductListService, private orderService: OrderService,
     private authenListService: AuthenListService,    private toastr: ToastrService,
   ) { }
 
@@ -37,7 +37,7 @@ export class OrderManagementComponent implements OnInit {
     this.loadStatus();
     this.getOrderStatus();
     this.getAllUser();
-
+ 
   }
   getOrderStatus(): void {
     this.orderService.getOrderStatus().subscribe(
@@ -173,5 +173,17 @@ export class OrderManagementComponent implements OnInit {
         }
       );
   }
-
+  
+  cancelOrder(orderId: number,specialOrderId: number) {
+    this.authenListService.cancelOrder(orderId,specialOrderId).subscribe(
+      (response) => {
+        this.toastr.success('Hủy đơn hàng thành công!', 'Thành công');
+        console.log('Order canceled successfully');
+      },
+      (error) => {
+        this.toastr.error('Hủy đơn hàng không thành công!', 'Thành công');
+        console.error('Error canceling order:', error);
+      }
+    );
+  }
 }

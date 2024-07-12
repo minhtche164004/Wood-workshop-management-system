@@ -101,21 +101,7 @@ export class OrderRequestComponentComponent {
         this.toastr.error('Có lỗi xảy ra!', 'Lỗi');
       }
     );
-    // this.orderRequestService.getRequestById(orderId).subscribe(
-    //   (data) => {
-    //     if (data.code === 1000) {
-    //       this.orderRqDetails = data.result;
-    //       console.log('OrderDetail:', this.orderRqDetails);
-    //     } else {
-    //       console.error('Failed to fetch order details:', data);
-    //       this.toastr.error('Không thể lấy thông tin order detail!', 'Lỗi');
-    //     }
-    //   },
-    //   (error) => {
-    //     console.error('Error fetching order details:', error);
-    //     this.toastr.error('Có lỗi xảy ra!', 'Lỗi');
-    //   }
-    // );
+ 
   }
   
 } 

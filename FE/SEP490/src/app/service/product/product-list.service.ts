@@ -41,7 +41,7 @@ export class ProductListService {
   private getAllMaterial = `${environment.apiUrl}api/auth/getAll`;  // lay cac vat lieu
   private getSubMaterialByMaterialId = `${environment.apiUrl}api/auth/submaterial/FilterByMaterial`;  // lay cac vat lieu con theo vat lieu cha 
   private apiUrl_GetAllStatus = `${environment.apiUrl}api/auth/admin/GetAllStatusUser`;
-
+  private apiUrlEditSubMaterialProduct = `${environment.apiUrl}api/auth/submaterial/EditSubMaterialProduct`;
 
 
   private api_UrlcreateExportMaterialProduct = `${environment.apiUrl}api/auth/submaterial/createExportMaterialProduct`;  // luu 1 san pham can bao nhieu vat lieu
@@ -58,7 +58,7 @@ export class ProductListService {
   private apiUrlEditProductRequest = `${environment.apiUrl}api/auth/product/EditRequestProduct`;
   private apiUrlDeleteProductRequest = `${environment.apiUrl}api/auth/product/deleteRequestProduct`;
   private api_UrlexportMaterialProductByProductRequestId = `${environment.apiUrl}api/auth/product/getRequestProductSubMaterialAndMaterialByRequestProductId`;  // lay tat ca vat lieu can co de tao 1 san pham theo yeu cau 
-
+  private api_UrlEditSubMateialRequestProduct = `${environment.apiUrl}api/auth/submaterial/EditSubMaterialRequestProduct`;
   //
 
   constructor(private http: HttpClient) { }
@@ -252,6 +252,12 @@ export class ProductListService {
     });
   }
 
+  EditSubMaterialProduct(requestData: any): Observable<any> {
+    return this.http.put<any>(this.apiUrlEditSubMaterialProduct, requestData).pipe(
+      catchError(this.handleError)
+    );
+  }
+
   //for request product
   getAllProductRequest(): Observable<any> {
     return this.http.get<any>(this.apiUrlGetProductRequest).pipe(
@@ -381,6 +387,11 @@ export class ProductListService {
     return this.http.get<any>(url).pipe(
       catchError(this.handleError)
     );
+  }
+
+  EditSubMaterialRequestProduct(requestData: any): Observable<any> {
+    return this.http.put<any>(this.api_UrlEditSubMateialRequestProduct, requestData).pipe(
+      catchError(this.handleError));
   }
   //
 }

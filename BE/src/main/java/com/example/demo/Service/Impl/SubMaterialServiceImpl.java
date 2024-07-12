@@ -419,7 +419,6 @@ public class SubMaterialServiceImpl implements SubMaterialService {
         List<RequestProductsSubmaterials> requestProductsSubmaterialsList = new ArrayList<>();
 
             if(!list.isEmpty()) {
-                requestProductsSubmaterialsRepository.deleteAll(list);
                 for (Map.Entry<Integer, Double> entry : subMaterialQuantities.entrySet()) {
                     int subMaterialId = entry.getKey();
                     double quantity = entry.getValue();

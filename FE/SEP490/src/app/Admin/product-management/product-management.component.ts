@@ -269,7 +269,7 @@ export class ProductManagementComponent implements OnInit {
       if (this.isProduct == true) {
         this.productListService.getProducts().subscribe(
           (data) => {
-            this.isLoadding = false;
+            this.isLoadding = false;  
             if (data.code === 1000) {
               this.products = data.result;
               // console.log('Danh sách sản phẩm:', this.products);

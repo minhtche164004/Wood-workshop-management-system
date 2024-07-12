@@ -402,10 +402,9 @@ export class CreateOrderComponent implements OnInit {
           this.toastr.success('Tạo đơn hàng thành công!', 'Thành công');
           // this.orderForm.reset();
           console.log('response:', response);
-          if (response.code === 1000 && response.result.paymentMethod) {
+          if (response.code === 1000 && response.result.paymentMethod == 2) {
             // Remove spaces from the URL if any
             const codeWithoutQuotes = response.result.code.replace(/"/g, '');
-
             this.createOrderService.submitOrder(response.result.deposite, codeWithoutQuotes).subscribe(
               responseVNPAY => {
                 // console.log('responseVNPAY:', responseVNPAY); 
@@ -425,6 +424,8 @@ export class CreateOrderComponent implements OnInit {
                 this.toastr.error('Có lỗi khi thanh toán qua thẻ!', 'Lỗi');
                 this.isLoadding = false;
               });
+          }else{
+            this.isLoadding = false;
           }
 
         },

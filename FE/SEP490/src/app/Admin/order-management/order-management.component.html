@@ -48,17 +48,21 @@
         <table class="table table-striped table-hover">
           <thead>
             <tr>
-              <th  style="min-width: 100px;">Mã đơn hàng</th>
+              <th style="min-width: 100px;">Mã đơn hàng</th>
               <th>Thao tác</th>
               <th>Ngày đặt hàng</th>
               <th>Tình trạng</th>
-              <th style="min-width: 100px;" >Kiểu thanh toán</th>
-              <th style="min-width: 150px;" >Tổng tiền(vnd)</th>
+
+              <th style="min-width: 100px;">Kiểu thanh toán</th>
+              <th style="min-width: 100px;">Số tiền đặt cọc</th>
+              <th style="min-width: 100px;">Số tiền còn cần thanh toán</th>
+              <th style="min-width: 100px;">Tổng tiền(vnd)</th>
+              <th style="min-width: 30px;">Hủy đơn hàng</th>
             </tr>
           </thead>
           <tbody>
             <tr *ngFor="let us of user | paginate: { itemsPerPage: 10, currentPage: currentPage }; let i = index">
-              
+
               <td style=" min-width: 150px;">{{ us?.code}}</td>
               <td class="action-buttons">
                 <a href="#" class="settings" title="Edit" data-toggle="modal" data-target="#editProductModal">
@@ -74,7 +78,7 @@
               <td>{{ us?.orderDate | date:'dd/MM/yyyy' }}</td>
 
 
-              <td>
+              <td  style=" min-width: 150px;">
                 <div class="select-wrapper">
                   <select class="custom-select" (change)="onStatusChange(us.orderId, $event)">
                     <option *ngFor="let status of status_order" [ngStyle]="getStatusColor(status.status_id)"
@@ -86,13 +90,22 @@
               </td>
 
 
-              <td   style=" min-width: 100px;"
+
+              <td style=" min-width: 50px;"
                 [ngStyle]="{'color': us?.paymentMethod === 1 ? 'green' : (us?.paymentMethod === 0 ? 'red' : 'black')}">
                 {{ us?.paymentMethod === 1 ? 'ONLINE' : (us?.paymentMethod === 0 ? 'OFFLINE' : '') }}
               </td>
 
-
-              <td  style="text-align: center; min-width: 100px;">{{ us?.totalAmount | number : '1.0-3' }}</td>
+              <td>{{ us?.deposite | number : '1.0-3' }}</td>
+              <td style="text-align: center; min-width: 100px;">{{ (us?.totalAmount - us?.deposite) | number : '1.0-3'
+                }}</td>
+              <td style="text-align: center; min-width: 100px;">{{ us?.totalAmount | number : '1.0-3' }}</td>
+              <td class="action-buttons">
+                <!-- ... existing action buttons ... -->
+                <button class="btn btn-danger btn-sm" (click)="cancelOrder(us?.orderId,us?.specialOrder)">
+                  <i class="fa-solid fa-times"></i> 
+                </button>
+              </td>
             </tr>
           </tbody>
         </table>

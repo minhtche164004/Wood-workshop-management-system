@@ -32,7 +32,7 @@ import java.util.*;
 @RequiredArgsConstructor
 public class ProductServiceImpl implements ProductService {
     @Autowired
-    private Status_Product_Repository statusRepository;
+    private SubMaterialsRepository subMaterialsRepository;
     @Autowired
     private CategoryRepository categoryRepository;
     @Autowired
@@ -196,6 +196,7 @@ public class ProductServiceImpl implements ProductService {
 //        entityManager.refresh(products); // Làm mới đối tượng products
         return products;
     }
+
 
     @Override
     public List<Products> findByPriceRange(BigDecimal min, BigDecimal max) {
@@ -497,6 +498,8 @@ public class ProductServiceImpl implements ProductService {
         }
         return list;
     }
+
+
 
     @Transactional
     @Override

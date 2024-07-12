@@ -12,6 +12,7 @@ import com.example.demo.Entity.Products;
 import com.example.demo.Entity.RequestProductsSubmaterials;
 import com.example.demo.Entity.SubMaterials;
 import com.example.demo.Response.ApiResponse;
+import com.example.demo.Service.JobService;
 import com.example.demo.Service.ProductService;
 import com.example.demo.Service.SubMaterialService;
 import io.jsonwebtoken.io.IOException;
@@ -43,6 +44,8 @@ public class SubMaterialController {
     private SubMaterialService subMaterialService;
     @Autowired
     private ResourceLoader resourceLoader;
+    @Autowired
+    private JobService jobService;
 
     @GetMapping("/getall")
     public ApiResponse<?> getAllSubMaterials() {
@@ -88,12 +91,30 @@ public class SubMaterialController {
         apiResponse.setResult(subMaterialService.UpdateSub(id,updateSubDTO));
         return apiResponse;
     }
+    @GetMapping("/GetAllMaterialForEmployee")
+    public ApiResponse<?> GetAllMaterialForEmployee() {
+        ApiResponse<List> apiResponse = new ApiResponse<>();
+        apiResponse.setResult(jobService.getAllMaterialForEmployee());
+        return apiResponse;
+    }
 
 
     @GetMapping("/SearchByNameorCode")
     public ApiResponse<?> SearchByNameorCode(@RequestParam("key") String key) {
         ApiResponse<List> apiResponse = new ApiResponse<>();
         apiResponse.setResult(subMaterialService.SearchByNameorCode(key));
+        return apiResponse;
+    }
+    @PutMapping("/EditSubMaterialProduct")
+    public ApiResponse<?> EditSubMaterialProduct(@RequestBody CreateExportMaterialProductRequest request) {
+        ApiResponse<List> apiResponse = new ApiResponse<>();
+        apiResponse.setResult(subMaterialService.EditSubMaterialProduct(request.getProductId(), request.getSubMaterialQuantities()));
+        return apiResponse;
+    }
+    @PutMapping("/EditSubMaterialRequestProduct")
+    public ApiResponse<?> EditSubMaterialRequestProduct(@RequestBody CreateExportMaterialProductRequest request) {
+        ApiResponse<List> apiResponse = new ApiResponse<>();
+        apiResponse.setResult(subMaterialService.EditSubMaterialRequestProduct(request.getProductId(), request.getSubMaterialQuantities()));
         return apiResponse;
     }
 

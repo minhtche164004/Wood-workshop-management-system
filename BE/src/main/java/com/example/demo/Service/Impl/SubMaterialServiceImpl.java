@@ -318,6 +318,10 @@ public class SubMaterialServiceImpl implements SubMaterialService {
                 employeeMaterials.setRequestProductsSubmaterials(requestProductsSubmaterials);
                 employeeMaterials.setEmployee(user);
 
+
+                // Lưu từng đối tượng và thêm vào danh sách kết quả
+                employeeMaterialsList.add(employeeMaterialRepository.save(employeeMaterials));
+
             }
             apiResponse.setResult(Collections.singletonList("Xuất đơn nguyên vật liệu cho đơn hàng thành công"));
             return ResponseEntity.ok(apiResponse);
@@ -383,6 +387,53 @@ public class SubMaterialServiceImpl implements SubMaterialService {
             apiResponse.setResult(Collections.singletonList("Xuất đơn nguyên vật liệu cho đơn hàng thành công"));
             return ResponseEntity.ok(apiResponse);
         }
+    }
+    @Override
+    public List<ProductSubMaterials> EditSubMaterialProduct(int product_id, Map<Integer, Double> subMaterialQuantities) {
+        Products products = productRepository.findById(product_id);
+        List<ProductSubMaterials> list = productSubMaterialsRepository.findByProductID(product_id);
+        List<ProductSubMaterials> productSubMaterialsList = new ArrayList<>();
+            if (!list.isEmpty()) {
+                for (Map.Entry<Integer, Double> entry : subMaterialQuantities.entrySet()) {
+                    int subMaterialId = entry.getKey();
+                    double quantity = entry.getValue();
+                    SubMaterials subMaterial = subMaterialsRepository.findById1(subMaterialId);
+                    ProductSubMaterials productSubMaterial = new ProductSubMaterials(subMaterial, products, quantity);
+                    productSubMaterialsList.add(productSubMaterial);
+                    List<Employeematerials> employeematerialsList = employeeMaterialRepository.findEmployeematerialsByProductId(productSubMaterial.getProductSubMaterialId());
+                    if (employeematerialsList.size() != 0) {
+                        throw new AppException(ErrorCode.EMPLOYEE_MATERIAL_EXISTED);
+                    }
+                }
+                productSubMaterialsRepository.deleteAll(list);
+                productSubMaterialsRepository.saveAll(productSubMaterialsList);
+
+        }
+        return productSubMaterialsList;
+    }
+
+    @Override
+    public List<RequestProductsSubmaterials> EditSubMaterialRequestProduct(int request_product_id, Map<Integer, Double> subMaterialQuantities) {
+        RequestProducts requestProducts = requestProductRepository.findById(request_product_id);
+        List<RequestProductsSubmaterials> list = new ArrayList<>();
+        List<RequestProductsSubmaterials> requestProductsSubmaterialsList = new ArrayList<>();
+
+            if(!list.isEmpty()) {
+                for (Map.Entry<Integer, Double> entry : subMaterialQuantities.entrySet()) {
+                    int subMaterialId = entry.getKey();
+                    double quantity = entry.getValue();
+                    SubMaterials subMaterial = subMaterialsRepository.findById1(subMaterialId);
+                    RequestProductsSubmaterials requestProductsSubmaterials = new RequestProductsSubmaterials(subMaterial, requestProducts, quantity);
+                    requestProductsSubmaterialsList.add(requestProductsSubmaterials);
+                    List<Employeematerials> employeematerialsList = employeeMaterialRepository.findEmployeematerialsByRequestProductId(requestProductsSubmaterials.getRequestProductsSubmaterialsId());
+                    if (employeematerialsList.size() != 0) {
+                        throw new AppException(ErrorCode.EMPLOYEE_MATERIAL_EXISTED);
+                    }
+                }
+                requestProductsSubmaterialsRepository.deleteAll(list);
+                requestProductsSubmaterialsRepository.saveAll(requestProductsSubmaterialsList);
+            }
+        return  requestProductsSubmaterialsList;
     }
 //    @Override
 //    public List<Employeematerials> createEMaterial(int emp_id, int mate_id, int product_id) {

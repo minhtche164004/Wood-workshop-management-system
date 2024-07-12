@@ -6,6 +6,7 @@ import { DataService } from '../service/data.service';
 import { WishlistService } from '../service/wishlist.service';
 import { Subscription } from 'rxjs';
 import { error } from 'jquery';
+import { ActivatedRoute } from '@angular/router';
 
 interface Category {
   categoryId: number;
@@ -39,7 +40,8 @@ export class ProductComponent implements OnInit, OnDestroy {
     private productListService: ProductListService,
     private toastr: ToastrService,
     private router: Router,
-    private wishList: WishlistService
+    private wishList: WishlistService,
+    private activatedRoute: ActivatedRoute
   ) { }
 
   ngOnInit(): void {
@@ -146,7 +148,16 @@ export class ProductComponent implements OnInit, OnDestroy {
         return obj;
       }, {});
 
-    this.router.navigate(['/product'], { queryParams: filteredQueryParams });
+      this.activatedRoute.queryParams.subscribe(params => {
+        if (params['searchKey']) { // neu param co searchKey
+          this.router.navigate(['/product'], { queryParams: { searchKey: params['searchKey'] } });
+        } else { // neu param khong co searchKey
+          this.router.navigate(['/product']);
+          this.searchKey = '';
+        }
+      });
+
+    // this.router.navigate(['/product'], { queryParams: filteredQueryParams });
     this.productListService.getMultiFillterProductForCustomer(this.searchKey, this.selectedCategory, this.selectedStatus, this.selectedSortByPrice)
       .subscribe(
         data => {

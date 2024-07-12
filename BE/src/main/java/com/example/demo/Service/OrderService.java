@@ -10,6 +10,7 @@ import com.example.demo.Dto.RequestDTO.RequestEditCusDTO;
 import com.example.demo.Dto.RequestDTO.RequestEditDTO;
 import com.example.demo.Entity.*;
 import org.junit.runner.Request;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -79,7 +80,8 @@ public interface OrderService {
     RequestProductDTO_Show GetRequestProductByIdWithImage(int id);
     List<RequestProductDTO_Show> GetAllRequestProductWithImage();
 
-   String  Cancel_Order(int order_id,int special_order_id);
+
+   ResponseEntity<String> Cancel_Order(int order_id, boolean special_order_id);
 
 
 

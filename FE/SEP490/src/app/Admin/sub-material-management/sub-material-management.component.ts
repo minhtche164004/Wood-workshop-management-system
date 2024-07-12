@@ -1,4 +1,4 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpEventType, HttpResponse } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { SupplierService } from 'src/app/service/supplier.service';
 import { ToastrService } from 'ngx-toastr';
@@ -31,6 +31,7 @@ export class SubMaterialManagementComponent implements OnInit {
   selectedMaterial: any = null;
   searchKey: string = '';
   categories: any[] = [];
+  selectedFile: File | null = null;
   keyword = 'sub_material_name';
   sub_material_name: string = '';
   SubMaterData: any = {};
@@ -50,6 +51,7 @@ export class SubMaterialManagementComponent implements OnInit {
     quantity: 0,
     unit_price: 0
   };
+  
   editForm: FormGroup;
   createJobs: FormGroup;
   selectedSubMtr2: any = {
@@ -115,7 +117,12 @@ export class SubMaterialManagementComponent implements OnInit {
       }
     );
   }
-  dowloadExcelLink(): void {
+
+  linkDowloadExcel(): void {
+    
+  }
+  dowloadExcelLink(event: Event): void {
+    event.preventDefault(); 
     this.subMaterialService.downloadExcel().subscribe(
       (response) => {
         // Assuming the response is the file data
@@ -283,9 +290,30 @@ export class SubMaterialManagementComponent implements OnInit {
 
 
   }
-
+  onFileSelected(event: any): void {
+    this.selectedFile = event.target.files[0];
+  }
   sanitize(name: string): SafeHtml {
     return this.sanitizer.bypassSecurityTrustHtml(name);
+  }
+  uploadFile(): void {
+    if (this.selectedFile) {
+      this.subMaterialService.uploadExcel(this.selectedFile).subscribe(
+        (event: any) => {
+          if (event.type === HttpEventType.UploadProgress) {
+            const progress = Math.round((100 * event.loaded) / event.total);
+            console.log(`File is ${progress}% uploaded.`);
+          } else if (event instanceof HttpResponse) {
+            console.log('File is completely uploaded!', event.body);
+          }
+        },
+        (error) => {
+          console.error('Upload error:', error);
+        }
+      );
+    } else {
+      console.error('No file selected.');
+    }
   }
 
   selectProduct(product: any): void {

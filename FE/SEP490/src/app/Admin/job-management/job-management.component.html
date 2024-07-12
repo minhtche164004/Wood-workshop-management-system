@@ -282,8 +282,8 @@
 
                                     <tbody>
                                         <tr
-                                            *ngFor="let product of subMaterialProduct">
-                                           
+                                            *ngFor="let product of subMaterialProduct; let i = index" >
+                                            <td>{{ i + 1 }}</td>
                                             <td>{{ product?.sub_name }}</td>
                                             <td>{{ product?.quantity }}</td>
                                             <td>{{ product.quantity * (selectedProduct?.quantity ?? 1) }}</td>

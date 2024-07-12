@@ -84,8 +84,9 @@
                     <thead>
                         <tr>
                             <th>STT</th>
-                            <th>Mã nhân viên</th>
-                            <th>Thao tác</th>
+                            <th>Mã việc</th>
+                            <!-- <th>Thao tác</th> -->
+                             <th>Ngày hoàn thành</th>
                             <th>Tên nhân viên</th>
                             <!-- <th>Nhân viên</th> -->
                             <th>Vị trí</th>
@@ -101,7 +102,8 @@
                             *ngFor="let product of totalSalary | paginate: { itemsPerPage: 10, currentPage: currentPage }; let i = index">
                             <td>{{ i + 1 + (currentPage - 1) * 10 }}</td>
                             <td>{{ product?.code }}</td>
-                            <td class="action-buttons">
+                             <td>{{ product?.date}}</td>
+                            <!-- <td class="action-buttons">
                                 <a href="#" class="settings" title="Chỉnh sửa" data-toggle="modal"
                                     data-target="#editProductModal">
                                     <i class="fa-solid fa-pen-to-square"></i>
@@ -114,7 +116,7 @@
                                     data-target="#productDetailModal">
                                     <i class="fa-solid fa-ellipsis-vertical"></i>
                                 </a>
-                            </td>
+                            </td> -->
                             <td>{{ product?.user?.userInfor?.fullname }}</td>
 
                             <td>{{ product?.user?.position?.position_name }}</td>

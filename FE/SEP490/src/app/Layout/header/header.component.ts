@@ -111,6 +111,7 @@ export class HeaderComponent implements OnInit {
     if (this.searchKey) { // Kiểm tra nếu searchKey có giá trị
       this.dataService.changeSearchKey(this.searchKey);
       this.routerSearch(this.searchKey);
+      this.router.navigate(['/product'], { queryParams: {searchKey: this.searchKey} });
     }
   }
 

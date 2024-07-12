@@ -60,6 +60,12 @@ public class CheckConditionsImpl implements CheckConditionService {
     public boolean checkInputQuantityInt(int number) {
         return number > 0; // Kiểm tra trực tiếp xem số có lớn hơn 0 hay không
     }
+    public boolean checkInputQuantityIntForProductError(int number,int current) {
+        if(number > current){
+            return false;
+        }
+        return true; // Kiểm tra trực tiếp xem số có lớn hơn 0 hay không
+    }
     public boolean checkInputPrice(BigDecimal number) {
         return number.compareTo(BigDecimal.ZERO) > 0;
     }

@@ -17,6 +17,7 @@ import com.example.demo.Service.*;
 import jakarta.persistence.EntityManager;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
@@ -72,6 +73,8 @@ public class OrderServiceImpl implements OrderService {
     private RequestProductsSubmaterialsRepository requestProductsSubmaterialsRepository;
     @Autowired
     private Status_Product_Repository statusProductRepository;
+    @Autowired
+    private ProcessproducterrorRepository processproducterrorRepository;
 
 
     @Override
@@ -201,7 +204,8 @@ public class OrderServiceImpl implements OrderService {
         return orders;
     }
     @Override
-    public String Cancel_Order(int order_id, boolean special_order_id) {
+    public ResponseEntity<String> Cancel_Order(int order_id, boolean special_order_id) {
+
         Orders orders = orderRepository.findById(order_id);
         if(special_order_id == false){//là hàng có sẵn
             List<Orderdetails> list = orderDetailRepository.getOrderDetailByOrderId(order_id);
@@ -213,7 +217,10 @@ public class OrderServiceImpl implements OrderService {
             }
             orders.setStatus(statusOrderRepository.findById(6));//set cho nó là đơn hàng bị huỷ
             orderRepository.save(orders);
-            return null;
+
+
+            return ResponseEntity.ok("Huỷ đơn hàng thành công");
+
         }
         if(special_order_id == true){//là hàng có sẵn
             List<Orderdetails> list = orderDetailRepository.getOrderDetailByOrderId(order_id);
@@ -221,13 +228,16 @@ public class OrderServiceImpl implements OrderService {
                 int request_product_id =  orderdetails.getRequestProduct().getRequestProductId();
                 RequestProducts requestProducts = requestProductRepository.findById(request_product_id);
                 List<Jobs> jobsList = jobRepository.getJobByOrderDetailByOrderCode(orders.getCode());
+
                 for(Jobs jobs : jobsList){
                     if(jobs.isJob_log() == false && jobs.getUser() == null){
+                        List<Processproducterror> processproducterrorList=processproducterrorRepository.getProcessproducterrorByJobId(jobs.getJobId());
+                        processproducterrorRepository.deleteAll(processproducterrorList);
                         jobRepository.delete(jobs);
-                        return null;
+                        return ResponseEntity.ok("Huỷ đơn hàng thành công");
                     }
                     if(jobs.isJob_log()==false && jobs.getUser() != null){
-                        return("Hãy hoàn thành công việc của "+jobs.getUser().getPosition().getPosition_name()+" có tên là "+jobs.getUser().getUsername()+" trước khi huỷ đơn hàng");
+                        return ResponseEntity.badRequest().body("Hãy hoàn thành công việc của "+jobs.getUser().getPosition().getPosition_name()+" có tên là "+jobs.getUser().getUsername()+" trước khi huỷ đơn hàng");
                     }
                 }
                 requestProducts.setQuantity(requestProducts.getQuantity()+orderdetails.getRequestProduct().getQuantity());
@@ -235,8 +245,9 @@ public class OrderServiceImpl implements OrderService {
             }
             orders.setStatus(statusOrderRepository.findById(6));//set cho nó là đơn hàng bị huỷ
             orderRepository.save(orders);
+
         }
-        return("Huỷ đơn hàng thành công");
+        return ResponseEntity.ok("Huỷ đơn hàng thành công");
     }
 
     //Tạo Request

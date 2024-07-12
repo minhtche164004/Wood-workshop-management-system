@@ -264,10 +264,12 @@ export class ProductManagementComponent implements OnInit {
     this.loadMaterials();
 
     if (this.loginToken) {
+      this.isLoadding = true;
       // console.log('Retrieved loginToken:', this.loginToken);
       if (this.isProduct == true) {
         this.productListService.getProducts().subscribe(
           (data) => {
+            this.isLoadding = false;
             if (data.code === 1000) {
               this.products = data.result;
               // console.log('Danh sách sản phẩm:', this.products);

@@ -725,9 +725,14 @@ export class ProductManagementComponent implements OnInit {
           $('[data-dismiss="modal"]').click(); // Đóng modal
         },
         error => {
+          if (error.status === 400 && error.error.code === 1038) {
+            this.toastr.warning(error.error.message, 'Lỗi');
+          } else {
+            this.toastr.error('Cập nhật sản phẩm bị lỗi!', 'Lỗi');
+          }
           console.error('Update error', error);
-          this.toastr.error('Cập nhật sản phẩm bị lỗi!', 'Lỗi');
           this.isLoadding = false;
+          $('[data-dismiss="modal"]').click(); // Đóng modal
         }
       );
     }
@@ -1026,14 +1031,6 @@ export class ProductManagementComponent implements OnInit {
         }
       );
     // console.log('productId', this.selectedProductIdCurrentDelele);
-  }
-
-  @ViewChild('launchModalButton')
-  launchModalButton!: ElementRef;
-
-  openModal() {
-    // S? d?ng tham chi?u này d? kích ho?t click
-    this.launchModalButton.nativeElement.click();
   }
 
 }

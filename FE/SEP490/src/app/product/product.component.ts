@@ -150,10 +150,10 @@ export class ProductComponent implements OnInit, OnDestroy {
 
       this.activatedRoute.queryParams.subscribe(params => {
         if (params['searchKey']) { // neu param co searchKey
-          this.router.navigate(['/product'], { queryParams: { searchKey: params['searchKey'] } });
+          this.router.navigate(['/product'], { queryParams: filteredQueryParams });
         } else { // neu param khong co searchKey
-          this.router.navigate(['/product']);
           this.searchKey = '';
+          this.router.navigate(['/product']);        
         }
       });
 

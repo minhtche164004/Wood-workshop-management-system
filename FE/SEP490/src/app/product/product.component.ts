@@ -134,8 +134,15 @@ export class ProductComponent implements OnInit, OnDestroy {
   }
 
   searchProductCustomer(): void {
+
     const queryParams = {
       searchKey: this.searchKey,
+      category: this.selectedCategory,
+      status: this.selectedStatus,
+      sortByPrice: this.selectedSortByPrice
+    };
+
+    const queryParamsWithoutSearchKey = {
       category: this.selectedCategory,
       status: this.selectedStatus,
       sortByPrice: this.selectedSortByPrice
@@ -148,16 +155,19 @@ export class ProductComponent implements OnInit, OnDestroy {
         return obj;
       }, {});
 
-      this.activatedRoute.queryParams.subscribe(params => {
-        if (params['searchKey']) { // neu param co searchKey
-          this.router.navigate(['/product'], { queryParams: filteredQueryParams });
-        } else { // neu param khong co searchKey
-          this.searchKey = '';
-          this.router.navigate(['/product']);        
-        }
-      });
+      const filteredQueryParamsWithoutSearchKey = Object.fromEntries(
+        Object.entries(queryParamsWithoutSearchKey).filter(([_, value]) => value)
+      );
 
-    // this.router.navigate(['/product'], { queryParams: filteredQueryParams });
+    this.activatedRoute.queryParams.subscribe(params => {
+      if (params['searchKey']) { // neu param co searchKey
+        this.router.navigate(['/product'], { queryParams: filteredQueryParams });
+      }else{
+        this.selectedCategory = 0;
+        this.router.navigate(['/product'], { queryParams: filteredQueryParamsWithoutSearchKey });
+      }
+    });
+
     this.productListService.getMultiFillterProductForCustomer(this.searchKey, this.selectedCategory, this.selectedStatus, this.selectedSortByPrice)
       .subscribe(
         data => {

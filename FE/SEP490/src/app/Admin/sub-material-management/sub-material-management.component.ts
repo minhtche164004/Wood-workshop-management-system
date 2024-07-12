@@ -31,7 +31,7 @@ export class SubMaterialManagementComponent implements OnInit {
   selectedMaterial: any = null;
   searchKey: string = '';
   categories: any[] = [];
-  selectedFile: File | null = null;
+  selectedFile: File | undefined;
   keyword = 'sub_material_name';
   sub_material_name: string = '';
   SubMaterData: any = {};
@@ -132,7 +132,7 @@ export class SubMaterialManagementComponent implements OnInit {
         // Creating an anchor element to trigger download
         const anchor = document.createElement('a');
         anchor.href = url;
-        anchor.download = 'downloaded_file.xlsx'; // Specify the file name here
+        anchor.download = 'Biểu Mẫu Nhập Nguyên Liệu.xlsx'; // Specify the file name here
         document.body.appendChild(anchor); // Append anchor to the body to make it clickable
         anchor.click();
 
@@ -290,32 +290,45 @@ export class SubMaterialManagementComponent implements OnInit {
 
 
   }
-  onFileSelected(event: any): void {
-    this.selectedFile = event.target.files[0];
-  }
+ 
   sanitize(name: string): SafeHtml {
     return this.sanitizer.bypassSecurityTrustHtml(name);
   }
-  uploadFile(): void {
-    if (this.selectedFile) {
-      this.subMaterialService.uploadExcel(this.selectedFile).subscribe(
-        (event: any) => {
-          if (event.type === HttpEventType.UploadProgress) {
-            const progress = Math.round((100 * event.loaded) / event.total);
-            console.log(`File is ${progress}% uploaded.`);
-          } else if (event instanceof HttpResponse) {
-            console.log('File is completely uploaded!', event.body);
-          }
-        },
-        (error) => {
-          console.error('Upload error:', error);
+  uploadFile(file: File) {
+    this.subMaterialService.uploadExcel(file).subscribe(
+      (event: any) => {
+        if (event.type === HttpEventType.UploadProgress) {
+          const progress = Math.round((100 * event.loaded) / event.total);
+          console.log(`File is ${progress}% uploaded.`);
+        } else if (event instanceof HttpResponse) {
+          console.log('File is completely uploaded!', event.body);
+          // Xử lý phản hồi khi tải lên thành công ở đây
         }
-      );
+      },
+      (error) => {
+        console.error('Upload error:', error);
+      }
+    );
+  }
+ 
+  onFileSelected(event: Event) {
+    const inputElement = event.target as HTMLInputElement;
+    if (inputElement.files && inputElement.files.length > 0) {
+      this.selectedFile = inputElement.files[0];
     } else {
+      this.selectedFile = undefined;
       console.error('No file selected.');
     }
   }
 
+  uploadSelectedFile() {
+    if (this.selectedFile) {
+      this.uploadFile(this.selectedFile);
+    } else {
+      console.error('No file selected.');
+    }
+  }
+  
   selectProduct(product: any): void {
     this.isLoadding = true;
     this.selectedSubMtr = product; // Adjust based on your product object structure

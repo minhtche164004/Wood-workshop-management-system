@@ -1,5 +1,5 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { Router } from '@angular/router';
+import { Router , ActivatedRoute} from '@angular/router';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { AuthenListService } from 'src/app/service/authen.service';
 import { FormControl } from '@angular/forms';
@@ -23,8 +23,11 @@ export class HeaderComponent implements OnInit {
   @ViewChild(HeaderComponent, { static: true }) headerComponent: HeaderComponent | undefined;
 
   fullname: string | null = null;
-  constructor(private dataService: DataService, private sanitizer: DomSanitizer, private toastr: ToastrService, private router: Router, private http: HttpClient, private authService: AuthenListService, private productListService: ProductListService) { }
+  constructor(private route: ActivatedRoute, private dataService: DataService, private sanitizer: DomSanitizer, private toastr: ToastrService, private router: Router, private http: HttpClient, private authService: AuthenListService, private productListService: ProductListService) { }
   ngOnInit(): void {
+    this.route.queryParams.subscribe(params => {
+      this.searchKey = params['searchKey'];
+    });
     this.wishlistcount()
     this.authService.getUserProfile().subscribe((data) => {
       this.fullname = data.result.fullname; // Assuming 'result' contains the profile data
@@ -103,16 +106,12 @@ export class HeaderComponent implements OnInit {
     return !this.isLoggedInForm();
   }
   onSearch(): void {
-    console.log('Search key header:', this.searchKey);
+    // console.log('Search key header:', this.searchKey);
 
     if (this.searchKey) { // Kiểm tra nếu searchKey có giá trị
       this.dataService.changeSearchKey(this.searchKey);
       this.routerSearch(this.searchKey);
-    } else {
-
-      this.dataService.changeSearchKey(this.searchKey);
-      this.routerSearch(this.searchKey);
-      this.router.navigate(['/product']);
+      this.router.navigate(['/product'], { queryParams: {searchKey: this.searchKey} });
     }
   }
 
@@ -127,19 +126,19 @@ export class HeaderComponent implements OnInit {
     return this.sanitizer.bypassSecurityTrustHtml(name);
   }
   routerSearch(searchKey: any): void {
-    const queryParams = {
-      searchKey: searchKey,
-    };
+    // const queryParams = {
+    //   searchKey: searchKey,
+    // };
 
-    const filteredQueryParams = Object.entries(queryParams)
-      .filter(([_, value]) => value !== undefined) // Exclude undefined values
-      .reduce<Record<string, string>>((obj, [key, value]) => {
-        // Convert value to string if it's not undefined
-        obj[key] = String(value);
-        return obj;
-      }, {});
+    // const filteredQueryParams = Object.entries(queryParams)
+    //   .filter(([_, value]) => value !== undefined) // Exclude undefined values
+    //   .reduce<Record<string, string>>((obj, [key, value]) => {
+    //     // Convert value to string if it's not undefined
+    //     obj[key] = String(value);
+    //     return obj;
+    //   }, {});
 
-    this.router.navigate(['/product'], { queryParams: filteredQueryParams });
+    this.router.navigate(['/product']);
   }
   selectProduct(product: any): void {
     this.selectedProduct = product; // Điều chỉnh theo cấu trúc đối tượng sản phẩm của bạn
@@ -148,6 +147,11 @@ export class HeaderComponent implements OnInit {
     this.dataService.changeSearchKey(productName);
    this.router.navigate(['/product-details', productId]);
     // this.routerSearch(productName);
+  }
+
+  navigateTo(path: string): void {
+    this.router.navigate([path], { queryParams: {} });
+    this.dataService.clearSearchKey();
   }
 
 

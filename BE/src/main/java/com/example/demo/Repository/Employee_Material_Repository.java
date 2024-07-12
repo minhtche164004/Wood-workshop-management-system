@@ -22,11 +22,19 @@ public interface Employee_Material_Repository extends JpaRepository<Employeemate
     @Query("SELECT u FROM Employeematerials u  WHERE u.employee.userInfor.fullname LIKE CONCAT('%', :keyword, '%')")
     List<Employeematerials> findEmployeematerialsByName(@Param("keyword") String keyword);
 
-    @Query("SELECT e FROM Employeematerials e WHERE e.requestProductsSubmaterials.requestProductsSubmaterialsId = :query")
-    List<Employeematerials> findEmployeematerialsByRequestProductId(int query);
 
-    @Query("SELECT e FROM Employeematerials e WHERE e.productSubMaterial.productSubMaterialId = :query")
+    @Query("SELECT e FROM Employeematerials e" +
+            " LEFT JOIN e.productSubMaterial p" +
+            " LEFT JOIN p.product pr" +
+            " WHERE pr.productId = :query")
     List<Employeematerials> findEmployeematerialsByProductId(int query);
+
+
+    @Query("SELECT e FROM Employeematerials e" +
+            " LEFT JOIN e.requestProductsSubmaterials p" +
+            " LEFT JOIN p.requestProduct pr" +
+            " WHERE pr.requestProductId = :query")
+    List<Employeematerials> findEmployeematerialsByRequestProductId(int query);
 
 
 }

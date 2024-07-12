@@ -393,21 +393,20 @@ public class SubMaterialServiceImpl implements SubMaterialService {
         Products products = productRepository.findById(product_id);
         List<ProductSubMaterials> list = productSubMaterialsRepository.findByProductID(product_id);
         List<ProductSubMaterials> productSubMaterialsList = new ArrayList<>();
-            if (!list.isEmpty()) {
-                for (Map.Entry<Integer, Double> entry : subMaterialQuantities.entrySet()) {
-                    int subMaterialId = entry.getKey();
-                    double quantity = entry.getValue();
-                    SubMaterials subMaterial = subMaterialsRepository.findById1(subMaterialId);
-                    ProductSubMaterials productSubMaterial = new ProductSubMaterials(subMaterial, products, quantity);
-                    productSubMaterialsList.add(productSubMaterial);
-                    List<Employeematerials> employeematerialsList = employeeMaterialRepository.findEmployeematerialsByProductId(productSubMaterial.getProductSubMaterialId());
-                    if (employeematerialsList.size() != 0) {
-                        throw new AppException(ErrorCode.EMPLOYEE_MATERIAL_EXISTED);
-                    }
-                }
-                productSubMaterialsRepository.deleteAll(list);
-                productSubMaterialsRepository.saveAll(productSubMaterialsList);
-
+        List<Employeematerials> list_emp =employeeMaterialRepository.findEmployeematerialsByProductId(product_id);
+        if(!list_emp.isEmpty()){
+            throw new AppException(ErrorCode.EMPLOYEE_MATERIAL_EXISTED);
+        }
+        if(!list.isEmpty()){
+            productSubMaterialsRepository.deleteAll(list);
+            for (Map.Entry<Integer, Double> entry : subMaterialQuantities.entrySet()) {
+                int subMaterialId = entry.getKey();
+                double quantity = entry.getValue();
+                SubMaterials subMaterial = subMaterialsRepository.findById1(subMaterialId);
+                ProductSubMaterials productSubMaterial = new ProductSubMaterials(subMaterial, products, quantity);
+                productSubMaterialsList.add(productSubMaterial);
+            }
+            productSubMaterialsRepository.saveAll(productSubMaterialsList);
         }
         return productSubMaterialsList;
     }
@@ -417,20 +416,19 @@ public class SubMaterialServiceImpl implements SubMaterialService {
         RequestProducts requestProducts = requestProductRepository.findById(request_product_id);
         List<RequestProductsSubmaterials> list = new ArrayList<>();
         List<RequestProductsSubmaterials> requestProductsSubmaterialsList = new ArrayList<>();
-
+        List<Employeematerials> list_emp = employeeMaterialRepository.findEmployeematerialsByRequestProductId(request_product_id);
+        if (!list_emp.isEmpty()) {
+            throw new AppException(ErrorCode.EMPLOYEE_MATERIAL_EXISTED);
+        }
             if(!list.isEmpty()) {
+                requestProductsSubmaterialsRepository.deleteAll(list);
                 for (Map.Entry<Integer, Double> entry : subMaterialQuantities.entrySet()) {
                     int subMaterialId = entry.getKey();
                     double quantity = entry.getValue();
                     SubMaterials subMaterial = subMaterialsRepository.findById1(subMaterialId);
                     RequestProductsSubmaterials requestProductsSubmaterials = new RequestProductsSubmaterials(subMaterial, requestProducts, quantity);
                     requestProductsSubmaterialsList.add(requestProductsSubmaterials);
-                    List<Employeematerials> employeematerialsList = employeeMaterialRepository.findEmployeematerialsByRequestProductId(requestProductsSubmaterials.getRequestProductsSubmaterialsId());
-                    if (employeematerialsList.size() != 0) {
-                        throw new AppException(ErrorCode.EMPLOYEE_MATERIAL_EXISTED);
-                    }
                 }
-                requestProductsSubmaterialsRepository.deleteAll(list);
                 requestProductsSubmaterialsRepository.saveAll(requestProductsSubmaterialsList);
             }
         return  requestProductsSubmaterialsList;

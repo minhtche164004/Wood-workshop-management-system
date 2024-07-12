@@ -76,8 +76,8 @@ export class ProductListService {
       }
     });
   }
-  createProductError(jobId: number, description: string, solution: string): Observable<any> {
-    const body = { description, solution };
+  createProductError(jobId: number, description: string, solution: string, quantity: number): Observable<any> {
+    const body = { description, solution, quantity };
     console.log("create error:  ", body);
     return this.http.post(`${this.apiUrlCreateProductError}?job_id=${jobId}`, body);
   }

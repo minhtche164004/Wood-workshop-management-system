@@ -71,12 +71,13 @@
                 <i class="fa-solid fa-ellipsis-vertical"></i>
               </a>
             </td>
-            <td>{{ product.des }}</td>
+            <td>{{ product?.des }}</td>
             <td>
-              <ng-container *ngIf="product._fix; else notFixed">
+              {{ product.fix }}
+              <!-- <ng-container *ngIf="product._fix; else notFixed">
                 Đã sửa
               </ng-container>
-              <ng-template #notFixed>Chưa sửa</ng-template>
+              <ng-template #notFixed>Chưa sửa</ng-template> -->
             </td>
             <td>{{ product.solution }}</td>
           </tr>
@@ -114,19 +115,15 @@
       </div>
       <div class="modal-body">
         <form [formGroup]="errorForm">
-
-
           <div class="form-group">
             <div class="row">
               <div class="col-md-6">
                 <div class="col-md-6">
                   <label style="font-size: 16px;" for="code">Mã việc làm:</label>
                 </div>
-                <div class="col-md-6">
-                 
+                <div class="col-md-6">         
                   <input type="text" class="form-control" id="code" formControlName="code" name="code" readonly>
                 </div>
-
               </div>
               <div class="col-md-6">
                 <div class="col-md-6">
@@ -138,7 +135,6 @@
                 </div>
               </div>
               <div class="col-md-1">
-
               </div>
               <div class="col-md-10">
                 <hr style="justify-content: space-between;">
@@ -148,8 +144,7 @@
                 <div class="col-md-6">
                   <label style="font-size: 16px;" for="code_order">Mã đơn hàng: </label>
                 </div>
-                <div class="col-md-6">
-                 
+                <div class="col-md-6">           
                   <input type="text" class="form-control" id="code_order" formControlName="code_order" name="code_order" readonly>
                 </div>
               </div>
@@ -168,7 +163,6 @@
                 </div>
               </div>
               <div class="col-md-1">
-
               </div>
               <div class="col-md-10">
                 <hr style="justify-content: space-between;">
@@ -186,24 +180,17 @@
                 <div class="col-md-6">
                   <label style="font-size: 16px;" for="productName">Tình trạng lỗi:</label>
                 </div>
-
-                <div class="col-md-6">
-
-                 
+                <div class="col-md-6">         
                   <div class="col-md-6">
                   <!-- {{ errorDetail?.fix ? 'Đã khắc phục' : 'Chưa khắc phục' }} -->
-                    <select formControlName="fix" [ngModel]="errorDetail?.fix" (ngModelChange)="updateFixStatus($event)">
-                      <option [ngValue]="true" [selected]="errorDetail?.fix">Đã khắc phục</option>
-                      <option [ngValue]="false" [selected]="!errorDetail?.fix">Chưa khắc phục</option>
+                    <select formControlName="isFixed" [ngModel]="errorDetail?.isFixed" (ngModelChange)="updateFixStatus($event)">
+                      <option [ngValue]="true" [selected]="errorDetail?.isFixed">Đã khắc phục</option>
+                      <option [ngValue]="false" [selected]="!errorDetail?.isFixed">Chưa khắc phục</option>
                     </select>
                   </div>
-                
-                  
-
                 </div>
               </div>
               <div class="col-md-1">
-
               </div>
               <div class="col-md-10">
                 <hr style="justify-content: space-between;">
@@ -213,16 +200,12 @@
                   <label style="font-size: 16px;margin-top: 3%;" for="productName">Mô tả lỗi:</label>
                 </div>
                 <div class="col-md-8" style="margin-top:1% ;">
-                  <textarea style="width: 100%; font-size: 16px;" id="des" formControlName="des" name="des" >
-               
+                  <textarea style="width: 100%; font-size: 16px;" id="des" formControlName="des" name="des" >        
                   </textarea>
                 </div>
-
-              </div>
+            </div>
               <div class="col-md-1">
-
-              </div>
-              
+              </div>        
               <div class="row">
                 <div class="col-md-2">
                   <label style="font-size: 16px;margin-top: 3%;" for="productName">Giải pháp:</label>
@@ -230,13 +213,10 @@
                 <div class="col-md-8" style="margin-top:1% ;">
                   <textarea style="width: 100%; font-size: 16px; "id="solution" formControlName="solution" name="solution">
                
-                  </textarea>
-                </div>
-                
+                 </textarea>
+                </div>               
               </div>
             </div>
-
-
           </div>
         </form>
       </div>
@@ -349,8 +329,8 @@
 
               <div class="col-md-6">
 
-                <h3 [ngStyle]="{'color': errorDetail?._fix ? 'green' : 'red'}">
-                  {{ errorDetail?._fix ? 'Đã khắc phục' : 'Chưa khắc phục' }}
+                <h3 [ngStyle]="{'color': errorDetail?.isFixed? 'green' : 'red'}">
+                  {{ errorDetail?.isFixed ? 'Đã khắc phục' : 'Chưa khắc phục' }}
                  
                 </h3>
                 

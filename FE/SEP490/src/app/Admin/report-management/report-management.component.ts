@@ -32,7 +32,7 @@ export class ReportManagementComponent implements OnInit {
       request_product_name: [''],
       solution: [''],
       user_name_order: [''],
-      fix: ['false']
+      isFixed: []
     });
   }
   originalError: any = {};
@@ -50,7 +50,7 @@ export class ReportManagementComponent implements OnInit {
     request_product_name: null,
     solution: null,
     user_name_order: null,
-    fix: null
+    isFixed: null
   };
   selectedProductIdCurrentDelele: number = 0;
   selectedProductNameCurrentDelele: string | null = null;
@@ -72,10 +72,12 @@ export class ReportManagementComponent implements OnInit {
       (data) => {
         if (data.code === 1000) {
           this.errorProducts = data.result;
-          console.log('Danh sách lỗi sản phẩm ngOninit:', this.errorProducts);this.isLoadding = false;
+          console.log('Danh sách lỗi sản phẩm ngOninit:', this.errorProducts);
+          this.isLoadding = false;
         } else {
-          console.error('Failed to fetch products:', data);
-          this.toastr.error('Không thể lấy danh sách sản phẩm!', 'Lỗi');this.isLoadding = false;
+        //  console.error('Failed to fetch products:', data);
+          this.toastr.error('Không thể lấy danh sách sản phẩm!', 'Lỗi');
+          this.isLoadding = false;
         }
       },
       (error) => {
@@ -91,7 +93,7 @@ export class ReportManagementComponent implements OnInit {
       (data) => {
         if (data.code === 1000) {
           this.errorDetail = data.result;
-          console.log('Chi tiết lỗi sản phẩm:', data.result);
+          //console.log('Chi tiết lỗi sản phẩm:', data.result);
           this.isLoadding = false;
         } else {
           console.error('Failed to fetch products:', data);
@@ -111,23 +113,8 @@ export class ReportManagementComponent implements OnInit {
   resetForm() { this.isLoadding = true;
     this.errorForm.reset();
   }
+
   editProduct(errorid: number) {
-    // this.errorForm.patchValue({
-    //   code: null,
-    //   code_order: null,
-    //   des: null,
-    //   employee_name: null,
-    //   id: errorid,
-    //   job_id: null,
-    //   job_name: null,
-    //   product_id: null,
-    //   product_name: null,
-    //   request_product_id: null,
-    //   request_product_name: null,
-    //   solution: null,
-    //   user_name_order: null,
-    //   _fix: null
-    // });
     this.isLoadding = true;
     this.errorProductService.getRrrorDetailById(errorid)
       .subscribe((response: any) => {
@@ -135,10 +122,10 @@ export class ReportManagementComponent implements OnInit {
         if(response.code === 1000){
           const errorEdit = response.result;
           
-          //   console.log('Error Edit:', errorEdit);  
+             console.log('Get Error Edit:', errorEdit);  
              this.selectedError = {
-               code: errorEdit.code,
-               code_order: errorEdit.code_order,
+                code:errorEdit.code,
+                code_order: errorEdit.code_order,
                des: errorEdit.des,
                employee_name: errorEdit.employee_name,
                id: errorEdit.id,
@@ -150,11 +137,11 @@ export class ReportManagementComponent implements OnInit {
                request_product_name: errorEdit.request_product_name,
                solution: errorEdit.solution,
                user_name_order: errorEdit.user_name_order,
-               fix: errorEdit.fix
+               isFixed: errorEdit.isFixed
 
              };
             
-             this.originalError = { ...this.selectedError };
+          //   this.originalError = { ...this.selectedError };
              console.log('Form Values after patchValue:', this.selectedError);
              this.errorForm.patchValue({
                code: this.selectedError.code,
@@ -170,8 +157,9 @@ export class ReportManagementComponent implements OnInit {
                request_product_name: this.selectedError.request_product_name,
                solution: this.selectedError.solution,
                user_name_order: this.selectedError.user_name_order,
-               fix: this.selectedError.fix
-             });this.isLoadding = false;
+               isFixed: this.selectedError.isFixed
+             });
+             this.isLoadding = false;
         } else {
           console.error('Failed to fetch products:', response);this.isLoadding = false;
          // this.toastr.error('Không thể lấy danh sách sản phẩm!', 'Lỗi');
@@ -222,26 +210,26 @@ onEditSubmit(): void {
 
 saveChanges(): void {
   // this.isLoadding = true;
-  console.log('Form Values:', this.errorForm.value);
+ // console.log('Form Values:', this.errorForm.value);
   const errorFormData = this.errorForm.value;
-  console.log('error edit form:', errorFormData);
-  // this.errorProductService.editProductError(errorFormData.id,errorFormData).subscribe(
-  //   (response) => {
-  //     if (response.code === 1000) {
-  //       this.toastr.success('Sửa lỗi sản phẩm thành công!', 'Thành công');
-  //       $('[data-dismiss="modal"]').click();this.isLoadding = false;
-  //        this.ngOnInit();
-  //     } else {
-  //       console.error('Failed to edit product:', response);
-  //       this.toastr.error('Không thể sửa sản phẩm!', 'Lỗi');this.isLoadding = false;
-  //       $('[data-dismiss="modal"]').click();
-  //     }
-  //   },
-  //   (error) => {
-  //     console.error('Error editing product:', error);
-  //     this.toastr.error('Có lỗi xảy ra!', 'Lỗi');this.isLoadding = false;
-  //   }
-  // );
+  console.log('error edit form saveChanges:', errorFormData);
+  this.errorProductService.editProductError(errorFormData.id,errorFormData).subscribe(
+    (response) => {
+      if (response.code === 1000) {
+        this.toastr.success('Sửa lỗi sản phẩm thành công!', 'Thành công');
+        $('[data-dismiss="modal"]').click();this.isLoadding = false;
+         this.ngOnInit();
+      } else {
+        console.error('Failed to edit product:', response);
+        this.toastr.error('Không thể sửa sản phẩm!', 'Lỗi');this.isLoadding = false;
+        $('[data-dismiss="modal"]').click();
+      }
+    },
+    (error) => {
+      console.error('Error editing product:', error);
+      this.toastr.error('Có lỗi xảy ra!', 'Lỗi');this.isLoadding = false;
+    }
+  );
   
 }
 
@@ -261,7 +249,7 @@ showProductDetails(error: any) {
     request_product_name: error.request_product_name,
     solution: error.solution,
     user_name_order: error.user_name_order,
-    fix: error.fix
+    isFixed: error.isFixed
   });
   this.isLoadding = false;
 }

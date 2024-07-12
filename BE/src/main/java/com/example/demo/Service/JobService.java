@@ -5,10 +5,7 @@ import com.example.demo.Dto.JobDTO.JobDoneDTO;
 import com.example.demo.Dto.OrderDTO.JobProductDTO;
 import com.example.demo.Dto.ProductDTO.ProductErrorAllDTO;
 import com.example.demo.Dto.ProductDTO.ProductErrorDTO;
-import com.example.demo.Entity.Advancesalary;
-import com.example.demo.Entity.Jobs;
-import com.example.demo.Entity.Processproducterror;
-import com.example.demo.Entity.Status_Job;
+import com.example.demo.Entity.*;
 import org.springframework.stereotype.Service;
 
 import java.sql.Date;
@@ -54,4 +51,6 @@ public interface JobService {
     Advancesalary ChangeStatus(int id,boolean check);
 
     Long CountQuantityOfJob(String status_name,int month,int year);
+
+    List<Employeematerials> getAllMaterialForEmployee();
 }

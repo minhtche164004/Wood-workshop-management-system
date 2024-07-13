@@ -367,7 +367,7 @@ public class    OrderServiceImpl implements OrderService {
 
     @Override
     public List<Requests> GetAllRequests() {
-        List<Requests> request_list = requestRepository.findAll();
+        List<Requests> request_list = requestRepository.findAllRequest();
         if (request_list.isEmpty()) {
             throw new AppException(ErrorCode.NOT_FOUND);
         }

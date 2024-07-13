@@ -174,8 +174,8 @@ public interface JobRepository extends JpaRepository<Jobs,Integer> {
 
     @Query("SELECT new com.example.demo.Dto.ProductDTO.ProductErrorAllDTO(" +
             "p.processProductErrorId,COALESCE(j.code, 0), COALESCE(p.description, ''),COALESCE(p.isFixed, false),COALESCE(p.solution, ''),COALESCE(j.job_name, ''),COALESCE(j.jobId, 0), " +
-            "COALESCE(pr.productId, 0), COALESCE(pr.productName, ''), COALESCE(rq.requestProductId, 0), COALESCE(rq.requestProductName, ''),j.orderdetails.order.code," +
-            "COALESCE(j.orderdetails.order.userInfor.fullname, ''),COALESCE(j.user.username, ''),COALESCE(ps.position_name, ''),COALESCE(ps.position_id, 0),p.quantity)" + // Sử dụng COALESCE
+            "COALESCE(pr.productId, 0), COALESCE(pr.productName, ''), COALESCE(rq.requestProductId, 0), COALESCE(rq.requestProductName, ''),COALESCE(j.orderdetails.order.code, '')," +
+            "COALESCE(j.orderdetails.order.userInfor.fullname, ''),COALESCE(j.user.username, ''),COALESCE(ps.position_name, ''),COALESCE(ps.position_id, 0),COALESCE(p.quantity, 0))" + // Sử dụng COALESCE
             " FROM Processproducterror p " +
             " LEFT JOIN p.job j" +
             " LEFT JOIN j.product pr"+
@@ -195,8 +195,8 @@ public interface JobRepository extends JpaRepository<Jobs,Integer> {
 
     @Query("SELECT new com.example.demo.Dto.ProductDTO.ProductErrorAllDTO(" +
             "p.processProductErrorId,COALESCE(j.code, 0), COALESCE(p.description, ''),COALESCE(p.isFixed, false),COALESCE(p.solution, ''),COALESCE(j.job_name, ''),COALESCE(j.jobId, 0), " +
-            "COALESCE(pr.productId, 0), COALESCE(pr.productName, ''), COALESCE(rq.requestProductId, 0), COALESCE(rq.requestProductName, ''),j.orderdetails.order.code," +
-            "COALESCE(j.orderdetails.order.userInfor.fullname, ''),COALESCE(j.user.username, ''),COALESCE(ps.position_name, ''),COALESCE(ps.position_id, 0),p.quantity)" + // Sử dụng COALESCE
+            "COALESCE(pr.productId, 0), COALESCE(pr.productName, ''), COALESCE(rq.requestProductId, 0), COALESCE(rq.requestProductName, ''),COALESCE(j.orderdetails.order.code, '')," +
+            "COALESCE(j.orderdetails.order.userInfor.fullname, ''),COALESCE(j.user.username, ''),COALESCE(ps.position_name, ''),COALESCE(ps.position_id, 0),COALESCE(p.quantity, 0))" + // Sử dụng COALESCE
             " FROM Processproducterror p " +
             " LEFT JOIN p.job j" +
             " LEFT JOIN j.product pr"+

@@ -27,8 +27,9 @@ import java.math.BigDecimal;
 
         //  @DecimalMin(value = "0.0", inclusive = false, message = "PRICE_INVALID") // Giá trị tối thiểu lớn hơn 0
         private BigDecimal unitPrice;
+        private String type;
 
-        public SubMaterialViewDTO(int subMaterialId,String subMaterialName, Integer materialId, String description, String materialName, Double quantity, BigDecimal unitPrice) {
+        public SubMaterialViewDTO(int subMaterialId,String subMaterialName, Integer materialId, String description, String materialName, Double quantity, BigDecimal unitPrice,String type) {
             this.subMaterialId=subMaterialId;
             this.subMaterialName = subMaterialName;
             this.materialId = materialId;
@@ -36,6 +37,7 @@ import java.math.BigDecimal;
             this.materialName = materialName;
             this.quantity = quantity;
             this.unitPrice = unitPrice;
+            this.type=type;
         }
 
         public SubMaterialViewDTO(String subMaterialName, String description, Double quantity, BigDecimal unit_price, Integer materialId) {

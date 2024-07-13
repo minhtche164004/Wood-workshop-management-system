@@ -183,12 +183,13 @@
                 </div>
                 <div class="col-md-6">         
                   <div class="col-md-6">
-                  <!-- {{ errorDetail?.fix ? 'Đã khắc phục' : 'Chưa khắc phục' }} -->
+                  {{ errorDetail?.fix ? 'Đã khắc phục' : 'Chưa khắc phục' }}
                     <select formControlName="isFixed" [ngModel]="errorDetail?.isFixed" (ngModelChange)="updateFixStatus($event)">
                       <option [ngValue]="true" [selected]="errorDetail?.isFixed">Đã khắc phục</option>
                       <option [ngValue]="false" [selected]="!errorDetail?.isFixed">Chưa khắc phục</option>
                     </select>
                   </div>
+                  
                 </div>
               </div>
               <div class="col-md-1">

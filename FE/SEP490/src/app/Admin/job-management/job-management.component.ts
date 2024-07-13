@@ -698,16 +698,12 @@ export class JobManagementComponent implements OnInit {
      console.log('Thực hiện tìm kiếm:', searchKey);
      console.log('Category:', selectedCategory);
      this.isLoadding = true;
-    if (selectedCategory === 0) {
+    if (selectedCategory === 1) {
       this.jobService.getProductJobByNameOrCode(searchKey).subscribe( 
         (data) => {
           if (data.code === 1000) {
-            this.products = data.result;
+            this.productRQs = data.result;
             console.log('Danh sách sản phẩm:', this.products);
-            this.isLoadding = false;
-          } else {
-            console.error('Failed to fetch products:', data);
-            this.toastr.error('Không thể lấy danh sách sản phẩm!', 'Lỗi');
             this.isLoadding = false;
           }
         },
@@ -718,8 +714,22 @@ export class JobManagementComponent implements OnInit {
         }
       ); 
       this.isLoadding = false;
-    } else if (selectedCategory === 1) {
-      this.loadProduct(); 
+    } else if (selectedCategory === 0) {
+      this.jobService.seachRequestByName(searchKey).subscribe(
+        (data) => {
+          if (data.code === 1000) {
+            this.productRQs = data.result;
+            console.log('Danh sách sản phẩm request:', this.products);
+            this.isLoadding = false;
+          }
+        },
+        (error) => {
+          console.error('Error fetching products:', error);
+          this.toastr.error('Có lỗi xảy ra!', 'Lỗi'); 
+          this.isLoadding = false;
+        }
+      ); 
+
       this.isLoadding = false;
     }
   }

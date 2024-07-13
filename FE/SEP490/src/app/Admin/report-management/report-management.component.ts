@@ -74,15 +74,12 @@ export class ReportManagementComponent implements OnInit {
           this.errorProducts = data.result;
           console.log('Danh sách lỗi sản phẩm ngOninit:', this.errorProducts);
           this.isLoadding = false;
-        } else {
-        //  console.error('Failed to fetch products:', data);
-          this.toastr.error('Không thể lấy danh sách sản phẩm!', 'Lỗi');
-          this.isLoadding = false;
-        }
+        } 
       },
       (error) => {
         console.error('Error fetching products:', error);
-        this.toastr.error('Có lỗi xảy ra!', 'Lỗi');this.isLoadding = false;
+        this.toastr.error('Có lỗi xảy ra!', 'Lỗi');
+        this.isLoadding = false;
       }
     );
   }
@@ -94,10 +91,6 @@ export class ReportManagementComponent implements OnInit {
         if (data.code === 1000) {
           this.errorDetail = data.result;
           //console.log('Chi tiết lỗi sản phẩm:', data.result);
-          this.isLoadding = false;
-        } else {
-          console.error('Failed to fetch products:', data);
-          this.toastr.error('Không thể lấy danh sách sản phẩm!', 'Lỗi');
           this.isLoadding = false;
         }
       },

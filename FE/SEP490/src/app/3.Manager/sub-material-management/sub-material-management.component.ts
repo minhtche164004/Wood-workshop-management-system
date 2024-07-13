@@ -51,7 +51,7 @@ export class SubMaterialManagementComponent implements OnInit {
     quantity: 0,
     unit_price: 0
   };
-  
+  checkNotFound: boolean = false;
   editForm: FormGroup;
   createJobs: FormGroup;
   selectedSubMtr2: any = {
@@ -273,23 +273,30 @@ export class SubMaterialManagementComponent implements OnInit {
 
 
   searchSubMaterial(): void {
+    this.checkNotFound = false;
     this.isLoadding = true;
     this.materialService.searchSubMaterial(this.searchKey).subscribe(
       (data) => {
         if (data.code === 1000) {
           this.products = data.result;
-          //   console.log('Kết quả tìm kiếm Sub-Materials:', this.products);
+          console.log('Kết quả tìm kiếm Sub-Materials:', this.products);
           this.isLoadding = false;
+          if(this.products.length == 0){
+            this.checkNotFound = true;
+          }
         } else {
-          console.error('Failed to search sub-materials:', data);
-          this.toastr.error('Không thể tìm kiếm sub-materials!', 'Lỗi');
+          console.log('Failed to search sub-materials:', data);
+        //  this.toastr.error('Không thể tìm kiếm sub-materials!', 'Lỗi');
           this.isLoadding = false;
+          this.checkNotFound = true;
         }
+        
       },
       (error) => {
-        console.error('Error searching sub-materials:', error);
+        console.log('Error searching sub-materials:', error);
         this.toastr.error('Có lỗi xảy ra!', 'Lỗi');
-        this.isLoadding = false;
+        this.isLoadding = true;
+        this.checkNotFound = false;
       }
     );
     

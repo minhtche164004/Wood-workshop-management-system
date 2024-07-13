@@ -150,7 +150,9 @@ export class TotalSalaryComponent implements OnInit {
     this.searchSalary();
   }
   previousSearchKey: string = '';
+  checkNotFound: boolean = false;
   searchSalary(): void {
+    this.checkNotFound = false;
     this.isLoadding = true;
     console.log('Search key before search:', this.searchKey);
     if(this.searchKey === '') {
@@ -170,8 +172,9 @@ export class TotalSalaryComponent implements OnInit {
           
         } else {
           console.error('Failed to fetch products:', data); 
-          this.toastr.error('Không tìm thấy lương của nhân viên', 'Lỗi');
+         // this.toastr.error('Không tìm thấy lương của nhân viên', 'Lỗi');
           this.selectedEmp = ''
+          this.checkNotFound = true;
           this.searchKey = '';
         }
         this.isLoadding = false;

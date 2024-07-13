@@ -24,7 +24,7 @@ export class JobService {
   //Dang doi api detJobByJobId  
   private apiGetJobById = `${environment.apiUrl}api/auth/job/getJobById`  //tim viec lam theo san pham co san theo ten
 
-
+  private apiSearchRequestByName = `${environment.apiUrl}api/auth/job/getRequestProductInOrderDetailByCode`  //tim viec lam theo san pham co san theo ten
   private apiEditJob = `${environment.apiUrl}api/auth/job/EditJob`
   private apiAcceptJob = `${environment.apiUrl}api/auth/job/acceptJob`
   private apiGetProductSubMaterial = `${environment.apiUrl}api/auth/submaterial/getProductSubMaterialByProductId`;
@@ -47,7 +47,9 @@ export class JobService {
   }
 
 
-
+  seachRequestByName(key: string): Observable<any> {
+    return this.http.get<any>(`${this.apiSearchRequestByName}?key=${key}`);
+  }
   getSubMTRProductRQ(id: number, mate_id: number): Observable<any> {
     const url = `${this.apiGetSubMaterialOfProductRQ}?id=${id}&mate_id=${mate_id}`;
     return this.http.get<any>(url);

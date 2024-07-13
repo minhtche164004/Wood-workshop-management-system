@@ -99,23 +99,21 @@
                                 <span *ngIf="product.statusJob.type === 1">Chưa giao việc</span>
                                 <span *ngIf="product.statusJob.type === 6">Chờ đặt cọc</span> -->
                                 <ng-container *ngIf="product?.statusJob.type !== 1 && product?.statusJob.type !== 6">
-                                    <select style="width: 100%;" [ngModel]="product?.statusJob.status_id"
-                                        (change)="openModal($event,product?.job_id)">
-                                        <ng-container *ngFor="let status of statusType">
-                                            <option *ngIf="status.type === product.statusJob.type"
-                                                [value]="status.status_id"
+                                    <select class="custom-select" [ngModel]="product?.statusJob.status_id" (change)="openModal($event,product?.job_id)">
+                                      <ng-container *ngFor="let status of statusType">
+                                        <option *ngIf="status.type === product.statusJob.type" [value]="status.status_id"
                                                 [disabled]="status.status_id === 4 || status.status_id === 7 || status.status_id === 10">
-                                                {{ status.status_name }}
-                                            </option>
-                                        </ng-container>
-                                        <button #launchModalButton type="button" class="btn btn-primary d-none"
-                                            data-toggle="modal" data-target="#myModal">
-                                            Launch modal
-                                        </button>
+                                          {{ status.status_name }}
+                                        </option>
+                                      </ng-container>
+                                      <button #launchModalButton type="button" class="btn btn-primary d-none" data-toggle="modal" data-target="#myModal">
+                                        Launch modal
+                                      </button>
                                     </select>
-                                </ng-container>
-                                <span *ngIf="product.statusJob.type === 1">Chưa giao việc</span>
-                                <span *ngIf="product.statusJob.type === 6">Chờ đặt cọc</span>
+                                  </ng-container>
+                                  <span *ngIf="product.statusJob.type === 1">Chưa giao việc</span>
+                                  <span *ngIf="product.statusJob.type === 6">Chờ đặt cọc</span>
+                                  
 
 
 
@@ -132,9 +130,9 @@
                             </td>
                             <td><button class="btn btn-sm" data-toggle="modal" data-target="#errorProduct"
                                     (click)="errorJob(product)"
-                                    [class.btn-outline-primary]="product.statusJob.status_id !== 10 && product.statusJob.status_id !== 7 && product.statusJob.status_id !== 4 && product.statusJob.status_id !== 14"
-                                    [class.btn-danger]="product.statusJob.status_id === 10 || product.statusJob.status_id === 7 || product.statusJob.status_id === 4 || product.statusJob.status_id === 14"
-                                    [disabled]="product.statusJob.status_id === 10 || product.statusJob.status_id === 7 || product.statusJob.status_id === 4 || product.statusJob.status_id === 14">
+                                    [class.btn-outline-primary]="product.statusJob.status_id !== 10 && product.statusJob.status_id !== 7 && product.statusJob.status_id !== 4 && product.statusJob.status_id !== 14 "
+                                    [class.btn-danger]="product.statusJob.status_id === 10 || product.statusJob.status_id === 7 || product.statusJob.status_id === 4 || product.statusJob.status_id === 14 || product.statusJob.type === 1"
+                                    [disabled]="product.statusJob.status_id === 10 || product.statusJob.status_id === 7 || product.statusJob.status_id === 4 || product.statusJob.status_id === 14 || product.statusJob.type === 1">
                                     <i class="fa-solid fa-triangle-exclamation"></i></button></td>
                         </tr>
                     </tbody>

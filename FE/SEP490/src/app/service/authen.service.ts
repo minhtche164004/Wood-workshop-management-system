@@ -107,25 +107,16 @@ export class AuthenListService {
       catchError(this.handleError)
     );
   }
-  cancelOrder(orderId: number, specialOrderId: number): Observable<any> {
-    const token = localStorage.getItem('loginToken');
-  
-    if (!token) {
-      return throwError(new Error('Login token not found in localStorage.'));
-    }
-  
-    const headers = new HttpHeaders({
-      'Authorization': `Bearer ${token}`
-    });
-  
+  cancelOrder(orderId: number, specialOrderId: boolean): Observable<any> {
+
     const url = `${this.apiUrl_cancelOrder}?order_id=${orderId}&special_order_id=${specialOrderId}`;
   
-    return this.http.post<any>(url, { headers }).pipe(
+    return this.http.post<any>(url, { responseType: 'text' }).pipe(
       catchError(this.handleError)
     );
   }
   
-
+  
   getOrderDetailById(order_detail_id: string): Observable<any> {
     const url = `${this.apiUrl_GetOrderDeTailById}?id=${order_detail_id}`;
     return this.http.get<any>(url).pipe(

@@ -1,4 +1,14 @@
-.dashboard-main {
+/* Original code (line 222) */
+.my-element {
+  justify-content: flex-start; /* Or align-items: flex-start; */
+}
+  /* Updated code (line 222) */
+  .my-element {
+    justify-content: flex-start; /* Or align-items: flex-start; */
+  }
+  
+  
+  .dashboard-main {
     color: #566787;
     background: #f5f5f5;
     font-family: 'Varela Round', sans-serif;
@@ -11,11 +21,9 @@
     max-width: 100%;
     padding: 0 15px; // khoảng cách cho các thiết bị nhỏ hơn
   }
-  
   .table-responsive {
     margin: 30px 0;
   }
-  
   .table-wrapper {
     background: #fff;
     padding: 20px 25px;
@@ -169,15 +177,12 @@
     text-align: center;
     padding: 0 6px;
   }
-  
   .pagination li a:hover {
     color: #666;
   }	
-  
   .pagination li.active a, .pagination li.active a.page-link {
     background: #03A9F4;
   }
-  
   .pagination li.active a:hover {        
     background: #0397d6;
   }
@@ -197,8 +202,16 @@
     font-size: 13px;
   }
   .img_product {
-   max-height: 30%;
-   max-width: 30%;
+   max-height: 100%;
+   max-width: 100%;
+  }
+  .img_product_detail {
+    width: 200px; /* Set the desired width */
+    height: 200px; /* Set the desired height */
+    object-fit: contain; /* This will ensure the image is contained within the specified dimensions */
+  }
+  .img_product_detail.selected {
+    border: 3px solid blue;
   }
   @media (max-width: 768px) {
     .table-wrapper {
@@ -242,7 +255,6 @@
   select {
     color: black; /* Màu chữ mặc định cho dropdown */
   }
-  
   /* Thay đổi màu chữ cho từng option */
   option[value="option1"] {
     color: red; /* Màu đỏ cho Sản Phẩm 1 */
@@ -253,29 +265,36 @@
   option[value="option3"] {
     color: purple; /* Màu tím cho Sản Phẩm 3 */
   }
-  .img_product {
-    max-width: 100px;
-    max-height: 100px;
-    object-fit: cover;
+  .product-image-wrapper {
+    width: 120px;
+    height: 90px;
+    overflow: hidden;
+    position: relative;
   }
   
+  .product-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.3s ease-in-out;
+  }
+  
+  .product-image-wrapper:hover .product-image {
+    transform: scale(1.1);
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+  }
   .table td,
   .table th {
     word-wrap: break-word;
     white-space: normal;
   }
-  
   .table td {
     max-width: 100px; /* Adjust this value as needed */
   }
-  
   .action-buttons a {
     display: inline-block;
     margin-right: 3px;
   }
-  
-  
-  
   .table td.action-buttons {
     width: 150px; /* Adjust this value as needed */
   }
@@ -310,7 +329,6 @@
     border: 1px solid #ced4da;
     margin-right: 10px;
   }
-  
   .table-title .search-button {
     height: 36px;
     width: 36px;
@@ -322,24 +340,108 @@
     background-color: #e3f2fd;
     color: #0d6efd;
   }
-  
   .table-title .input-group {
     display: flex;
     align-items: center;
   }
-  
   .table-title .row {
     margin-bottom: 10px;
   }
-  
   .table-title .row:last-child {
     margin-bottom: 0;
   }
-  .table-responsive table {
-    white-space: nowrap; /* Không cho phép xuống dòng */
+  th, td {
+    line-height: 1.5em;  /* Adjust as needed */
+  }
+  button.settings, button.delete, button.info {
+    background: none;
+    border: none;
+    padding: 0;
+    margin: 0;
+    cursor: pointer;
+    color: inherit; /* inherit color from parent for icons */
   }
   
-  .table-responsive td,
-  .table-responsive th {
-    white-space: nowrap; /* Không cho phép xuống dòng */
+  button.settings:hover, button.delete:hover, button.info:hover {
+    text-decoration: underline; /* similar to anchor hover effect */
   }
+  .order-detail-card {
+    border-radius: 10px; /* Rounded corners for a modern look */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
+  }
+  .customer-info h2,
+.order-summary h2,
+.product-details h2 {
+  font-weight: bold; /* Bold font for emphasis */
+  margin-bottom: 15px; /* Add spacing below headers */
+}
+.table {
+    border-collapse: collapse; /* Remove default table borders */
+    width: 100%; /* Make table span the full width */
+  }
+  
+  .table th,
+  .table td {
+    padding: 10px; /* Add padding for better readability */
+    text-align: left; /* Align text to the left */
+    vertical-align: middle; /* Vertically align content in cells */
+  }
+  .card-header {
+    display: flex; /* Enable flexbox layout */
+    align-items: center; /* Align items vertically in the center */
+    justify-content: center; /* Center items horizontally */
+  }
+  
+  .card-header h5 {
+    font-size: 35px; /* Maintain the desired font size */
+    margin: 0; /* Remove default margins for better centering */
+  }
+  
+  .table th {
+    background-color: #f5f5f5; /* Light gray background for headers */
+    font-weight: bold; /* Bold font for headers */
+  }
+  .customer-info p {
+    margin-bottom: 5px; /* Add spacing between paragraphs */
+  }
+  
+  .order-summary p {
+    margin-bottom: 10px; /* Add more spacing for order summary */
+  }
+  
+  .product-details table {
+    border: 1px solid #ddd; /* Add a subtle border to the table */
+  }
+  @media (max-width: 768px) {
+    .product-details table {
+      font-size: 12px; /* Reduce font size for smaller screens */
+    }
+  }
+      /* Increase font size for customer information */
+.customer-info p {
+    font-size: 15px;
+  }
+  
+  /* Increase font size for order summary */
+  .order-summary p {
+    font-size: 15px;
+  }
+  
+  /* Increase font size for product details table */
+  .product-details table td,
+  .product-details table th {
+    font-size: 15px;
+  }
+  .modal-body {
+    max-height: 80vh; /* Adjust the percentage as needed */
+    overflow-y: auto;
+  }
+  .bg-primary {
+    background-color: #20EC4D !important;
+  }
+  
+  .btn-primary {
+    background-color: #20EC4D;
+    border-color: #20EC4D;
+  }
+  

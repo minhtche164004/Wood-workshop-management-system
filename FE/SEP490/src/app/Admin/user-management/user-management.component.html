@@ -65,13 +65,13 @@
                       (click)="getUserData(us.userId)">
                       <i class="fa-solid fa-pen-to-square"></i>
                     </a>
-                    <a href="#" class="delete" title="Delete" data-toggle="modal" data-target="#confirmDeleteModal"(click)="openModal()">
+                    <!-- <a href="#" class="delete" title="Delete" data-toggle="modal" data-target="#confirmDeleteModal"(click)="openModal()">
                       
                       <i class="fa-regular fa-trash-can"></i>
                     </a>
                     <a href="#" class="info" title="Info" data-toggle="modal" data-target="#productDetailModal">
                       <i class="fa-solid fa-ellipsis-vertical"></i>
-                    </a>
+                    </a> -->
                   </td>
 
                   <td>{{ us.username }}</td>
@@ -478,4 +478,8 @@
       </div>
     </div>
   </div>
+</div>
+<!-- loadding man` hinh` -->
+<div *ngIf="isLoadding" class="loading-overlay">
+  <div class="spinner"></div>
 </div>

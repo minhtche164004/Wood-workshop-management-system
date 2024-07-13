@@ -168,24 +168,20 @@
     </header>
 
     <div class="product-container">
-        <div *ngFor="let item of wishlistItems | paginate: { itemsPerPage: 4, currentPage: currentPage }; let i = index"
-            class="product">
-            <img [routerLink]="['/product-details', item.product.productId]" src="{{ item.product.image }}"
-                alt="Sản phẩm 2">
-            <div class="product-info">
-                <h3> {{ item.product.productName }}</h3>
-                <h3>Mô tả: {{ item.product.description }}</h3>
-
-                <p class="price">Giá Tiền: {{ item.product.price | number: '1.0-3' }} VNĐ</p>
-                <div class="actions">
-                    <button class="delete-btn" title="Delete" data-toggle="modal" data-target="#confirmDeleteModal"
-                        (click)="setDeleteId(item.id)">
-                        <i class="fas fa-trash-alt"></i> Xóa
-                    </button>
-                </div>
+        <div *ngFor="let item of wishlistItems | paginate: { itemsPerPage: 4, currentPage: currentPage }; let i = index" class="product">
+          <img [routerLink]="['/product-details', item.product.productId]" [src]="item.product.image" alt="Sản phẩm 2">
+          <div class="product-info">
+            <h3>{{ item.product.productName }}</h3>
+            <h3>Mô tả: {{ item.product.description }}</h3>
+            <p class="price">Giá Tiền: {{ item.product.price | number: '1.0-3' }} VNĐ</p>
+            <div class="actions">
+              <button class="delete-btn" title="Delete" data-toggle="modal" data-target="#confirmDeleteModal" (click)="setDeleteId(item.id)">
+                <i class="fas fa-trash-alt"></i> Xóa
+              </button>
             </div>
+          </div>
         </div>
-    </div>
+      </div>
 
     <div class="pagination">
         <pagination-controls (pageChange)="currentPage = $event" previousLabel="Trang trước" nextLabel="Trang sau">

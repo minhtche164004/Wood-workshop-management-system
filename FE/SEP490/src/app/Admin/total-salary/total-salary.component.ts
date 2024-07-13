@@ -299,5 +299,5 @@ export class TotalSalaryComponent implements OnInit {
       );
 
   }
-}
 
+}

@@ -96,6 +96,7 @@ export class ProductComponent implements OnInit, OnDestroy {
   }
 
   getProduct(): void {
+    this.isLoadding = true;
     this.productListService.getProducts().subscribe(
       data => {
         if (data.code === 1000) {
@@ -103,9 +104,11 @@ export class ProductComponent implements OnInit, OnDestroy {
         } else {
           this.toastr.error('Không thể lấy danh sách sản phẩm!', 'Lỗi');
         }
+        this.isLoadding = false;
       },
       error => {
         this.toastr.error('Có lỗi xảy ra!', 'Lỗi');
+        this.isLoadding = false;
       }
     );
   }
@@ -138,6 +141,7 @@ export class ProductComponent implements OnInit, OnDestroy {
     this.dataService.clearSearchKey();
   }
 
+  notFoundProduct: boolean = false;
   searchProductCustomer(): void {
     this.isLoadding = true;
     const queryParams = {
@@ -178,10 +182,11 @@ export class ProductComponent implements OnInit, OnDestroy {
           this.isLoadding = false;
           if (data.code === 1000) {
             this.products = data.result;
-            this.toastr.success('Lọc sản phẩm thành công!', 'Thành công');
+            // this.toastr.success('Lọc sản phẩm thành công!', 'Thành công');
           } else if (data.code === 1015) {
             this.products = [];
-            this.toastr.error('Không tìm thấy sản phẩm phù hợp!', 'Lọc thất bại');
+            this.notFoundProduct = true;
+            // this.toastr.error('Không tìm thấy sản phẩm phù hợp!', 'Lọc thất bại');
           }
         },
         error => {

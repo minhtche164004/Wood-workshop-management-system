@@ -47,7 +47,7 @@
                   <tr>
                     <th>STT</th>
                     <th>Mã công việc</th>
-                    <th>Thao tác</th>
+                   
                     <th>Vị trí công việc</th>
                     <th>Tên nhân viên</th>
                     <th>Tên vị trí</th>
@@ -62,7 +62,7 @@
                     <td>{{ i + 1 + (currentPage - 1) * 10 }}</td>
                     <td>{{ job.code }}</td>
                     
-  
+<!--   
                     <td class="action-buttons">
                       <a href="#" class="settings" title="Chỉnh sửa" data-toggle="modal" data-target="#editAccountModal"
                         >
@@ -75,17 +75,18 @@
                       <a href="#" class="info" title="Info" data-toggle="modal" data-target="#productDetailModal">
                         <i class="fa-solid fa-circle-info"></i>
                       </a>
-                    </td>
+                    </td> -->
                     <td>{{ job.job_name }}</td>
   
                     <td>{{ job.user_name }}</td>
                     <td style="min-width: 200px;">{{ job.position_name }}</td>
-                    <td style="min-width: 150px;">{{ job.status_job_name }}</td>
+                    <td style="min-width: 270px;">{{ job.status_job_name }}</td>
                    
                     <td style="min-width: 100px; text-align: right;">{{ job.cost | number: '1.0-3'}} </td>
             
-                    <td  style="min-width: 20px; text-align: right;">{{ job.quantity }}</td>
+                    
                     <td style="min-width: 100px;">{{ job.request_name }}</td>
+                    <td  style="min-width: 20px; text-align: right;">{{ job.quantity }}</td>
 
                   </tr>
                 </tbody>
@@ -108,3 +109,7 @@
       </div>
     </div>
   </div>
+  
+<div *ngIf="isLoadding" class="loading-overlay">
+  <div class="spinner"></div>
+</div>

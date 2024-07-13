@@ -30,16 +30,18 @@ public interface AdvancesalaryRepository extends JpaRepository<Advancesalary,Int
     @Query("update Advancesalary u set u.isAdvanceSuccess = ?2 where u.advanceSalaryId = ?1")
     void update_banking(int advanceSalaryId, boolean isAdvanceSuccess);
 
-    @Query("SELECT a FROM Advancesalary a WHERE " +
+
+    //hien tai lay fulllname thay cho username do khong tao DTO de chua fullname
+    @Query("SELECT a FROM Advancesalary a LEFT JOIN a.user.userInfor i WHERE " +
             "(:fromDate IS NULL OR a.date >= :fromDate) AND " +
             "(:toDate IS NULL OR a.date <= :toDate) AND " +
             "(a.user.position.position_id IN :position_id OR :position_id IS NULL) AND " +
-            "(:username IS NULL OR a.user.username LIKE %:username%) " +
-            "ORDER BY a.date DESC") // Sắp xếp theo ngày giảm dần (từ mới đến cũ)
+            "(:fullname IS NULL OR i.fullname LIKE %:fullname%) " +
+            "ORDER BY a.date DESC")
     List<Advancesalary> filterAdvancesalary(@Param("fromDate") Date fromDate,
                                             @Param("toDate") Date toDate,
                                             @Param("position_id") Integer position_id,
-                                            @Param("username") String username);
+                                            @Param("fullname") String fullname);
 
 
 

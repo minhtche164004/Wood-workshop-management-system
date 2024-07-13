@@ -17,6 +17,7 @@ export class ListJobDoneComponent implements OnInit {
   job_admin: any[] = [];
   loginToken: string | null = null;
   currentPage: number = 1;
+  isLoadding: boolean = false;
   constructor(
 
     private authenListService: AuthenListService,
@@ -33,7 +34,7 @@ export class ListJobDoneComponent implements OnInit {
 
   }
   loadAllJobByEmployeID() {
-
+    this.isLoadding = true;
     this.loginToken = localStorage.getItem('loginToken');
     if (this.loginToken) {
       console.log('Retrieved loginToken:', this.loginToken);
@@ -42,16 +43,20 @@ export class ListJobDoneComponent implements OnInit {
           if (data.code === 1000) {
             this.job_admin = data.result;
             console.log('Danh sách đơn hàng:', data);
+            this.isLoadding = false;
           } else {
             console.error('Failed to fetch products:', data);
+            this.isLoadding = false;
           }
         },
         (error) => {
           console.error('Error fetching products:', error);
+          this.isLoadding = false;
         }
       );
     } else {
       console.error('No loginToken found in localStorage.');
+      this.isLoadding = false;
 
     }
   }

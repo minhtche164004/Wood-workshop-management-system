@@ -181,8 +181,10 @@ export class CreateOrderComponent implements OnInit {
   }
 
   ngOnInit() {
+
     this.provincesService.getProvinces().subscribe((data: Province[]) => {
       this.provinces = data;
+      
       // console.log(this.provinces);
     });
     this.addItem();
@@ -225,15 +227,19 @@ export class CreateOrderComponent implements OnInit {
 
   loadAllPhoneNumber(): void {
     // this.phoneList = phoneNumbers;
+    this.isLoadding = true;
     this.createOrderService.getGetListPhoneNumber().subscribe(
       (data: any) => {
         if (data.code === 1000) {
           this.phoneList = data.result;
+          this.isLoadding = false;
           // console.log('phoneList:', this.phoneList);
         }
       },
       (error) => {
         console.error('Error fetching phoneList:', error);
+        this.isLoadding = false;
+
       }
     );
   }

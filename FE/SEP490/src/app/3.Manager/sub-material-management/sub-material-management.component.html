@@ -1,0 +1,254 @@
+<app-dashboard></app-dashboard>
+
+<div class="dashboard-main">
+  <div class="container-fluid">
+    <div class="table-responsive">
+      <div class="table-wrapper">
+        <div class="table-title">
+
+          <div class="row" style="height: 60px;">
+            <div class="col-sm-5">
+              <h2>Quản lí nguyên vật liệu</h2>
+            </div>
+            <div class="col-sm-7 text-end d-flex align-items-center justify-content-end">
+              <a href="#" class="btn btn-secondary" data-toggle="modal" data-target="#addProductModal">
+                <i class="material-icons">&#xE147;</i> <span>Thêm nguyên vật liệu</span>
+              </a>
+              <a href="#" class="btn btn-secondary" (click)="dowloadExcelLink($event)">
+                <span>Xuất Excel</span> <i style="margin-left: 5px;" class="fa-solid fa-file-excel"></i>
+              </a>
+
+            </div>
+          </div>
+          <div class="row" style="height: 40px;">
+            <div class="col-sm-6"></div>
+            <div class="col-sm-6 d-flex justify-content-end">
+
+              <div class="col-md-7 d-flex justify-content-end" style="margin-right: -12%;">
+                <div class="input-group">
+                  <div class="custom-file">
+                    <input type="file" class="custom-file-input" style="max-width: 100%; height: 5%;"
+                      id="inputGroupFile" (change)="onFileSelected($event)">
+                    <label class="custom-file-label" for="inputGroupFile"
+                      [innerHTML]="selectedFile ? selectedFile.name : 'Tải biểu mẫu ...'"></label>
+                  </div>
+
+
+                </div>
+              </div>
+              <div class="col-md-5 d-flex justify-content-end">
+                <button class="btn btn-primary" style="padding: -1%;" (click)="uploadSelectedFile()"
+                  [disabled]="!selectedFile">Nhập từ excel<i class="material-icons">&#xE147;</i></button>
+              </div>
+
+
+
+
+            </div>
+          </div>
+          <table class="table table-striped table-hover">
+
+          </table>
+          <div class="row justify-content-end">
+            <div class="col-md-7">
+              <div class="input-group mb-3">
+                <!-- Chọn product thường hay product request -->
+                <select [(ngModel)]="selectedMaterial" (change)="searchSelectedMaterial(selectedMaterial)"
+                  class="form-select">
+                  <option [ngValue]="null" selected>Tất cả nguyên vật liệu</option>
+                  <option *ngFor="let category of categories" [ngValue]="category.materialId">
+                    {{ category.materialName }}
+                  </option>
+                </select>
+
+                <!-- Tìm kiếm tên sản phẩm -->
+                <ng-autocomplete style="width: 50%; margin-left: 10px;" *ngIf="products" [data]="products"
+                  [searchKeyword]="keyword" placeholder="Nhập tên nguyên vật liệu" historyIdentifier="products"
+                  [(ngModel)]="searchKey" [itemTemplate]="itemTemplate" [notFoundTemplate]="notFoundTemplate"
+                  (selected)="selectProduct($event)">
+                </ng-autocomplete>
+
+                <ng-template #itemTemplate let-item>
+                  <a [innerHTML]="sanitize(item.subMaterialName)"></a>
+                </ng-template>
+
+                <ng-template #notFoundTemplate let-notFound>
+                  <div>No results found!</div>
+                </ng-template>
+
+                <button class="btn search-button ms-2" type="button" (click)="searchSubMaterial()">
+                  <i class="fa fa-search"></i>
+                </button> 
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+        <table class="table table-striped table-hover">
+          <thead>
+            <tr style="text-align: center;">
+              <th>STT</th>
+              <th>Thao tác</th>
+              <th>Tên nguyên vật liệu</th>
+              <th>Kiểu nguyên vật liệu</th>
+              <th>Mô tả nguyên vật liệu</th>
+              <th>Số lượng</th>
+              <th>Đơn giá (vnd)</th>
+
+            </tr>
+          </thead>
+
+          <tbody>
+            <tr
+              *ngFor="let product of products | paginate: { itemsPerPage: 10, currentPage: currentPage }; let i = index">
+              <td>{{ i + 1 + (currentPage - 1) * 10 }}</td>
+              <!--  <td>{{ product.code }}</td> -->
+              <td style="text-align: center;" class="action-buttons">
+                <a href="#" class="settings" title="Edit" data-toggle="modal" data-target="#editSubMaterialModal"
+                  (click)="loadSubMaterialDetails(product.subMaterialId)">
+                  <i class="fa-solid fa-pen-to-square"></i>
+                </a>
+                <!-- <a href="#" class="delete" title="Delete" data-toggle="modal" data-target="#confirmDeleteModal"
+                          >
+                            <i class="fa-regular fa-trash-can"></i>
+                          </a> -->
+
+              </td>
+              <td>{{ product.subMaterialName }}</td>
+              <td>{{ product.materialName }}</td>
+              <td>{{ product.description }}</td>
+              <td style="text-align: center;">{{ product.quantity }}</td>
+
+              <td>{{ product.unitPrice | number: '1.0-3'}}</td>
+
+            </tr>
+          </tbody>
+        </table>
+
+        <pagination-controls style="justify-content: right; display: flex;" (pageChange)="currentPage = $event"
+          previousLabel="Trang trước" nextLabel="Trang sau">
+        </pagination-controls>
+        <div class="clearfix" style="justify-content: right; display: flex;">
+          <div class="hint-text">Hiển thị <b>{{ (currentPage - 1) * 10 + 1 }}</b> tới <b>{{ currentPage * 10
+              > products.length ? products.length : currentPage * 10 }}</b> trong số <b>{{
+              products.length }}</b> dữ liệu</div>
+        </div>
+
+
+      </div>
+    </div>
+  </div>
+
+
+
+  <div class="modal fade" id="addProductModal" tabindex="-1" role="dialog" aria-labelledby="addProductModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title text-center" id="addProductModalLabel">Thêm nguyên vật liệu</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <form>
+            <div class="form-group">
+              <label for="productName">Tên nguyên vật liệu</label>
+              <input type="text" class="form-control" id="productName" placeholder="Nhập tên nguyên vật liệu"
+                [(ngModel)]="sub_material_name" name="sub_material_name">
+            </div>
+
+            <div class="form-group">
+              <label for="productCategory">Kiểu vật liệu</label>
+              <select class="form-control" name="selectedMaterial" [(ngModel)]="selectedMaterial" id="productCategory">
+                <option [ngValue]="null" disabled selected>Chọn kiểu vật liệu</option>
+                <option *ngFor="let category of categories" [ngValue]="category?.materialName">{{ category?.materialName
+                  }}</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="productQuantity">Mô tả</label>
+              <input type="text" class="form-control" id="productQuantity" placeholder="Nhập mô tả nguyên vật liệu"
+                [(ngModel)]="description" name="description">
+            </div>
+            <div class="form-group">
+              <label for="productPrice">Số lượng</label>
+              <input type="number" class="form-control" id="productPrice" placeholder="Enter price"
+                [(ngModel)]="quantity" name="quantity">
+            </div>
+            <div class="form-group">
+              <label for="productImage">Đơn giá</label>
+              <input type="number" class="form-control" id="productPrice" placeholder="Enter price"
+                [(ngModel)]="unit_price" name="unit_price">
+            </div>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
+
+          <button type="submit" (click)="addSubMaterial()" class="btn btn-primary">Lưu thay đổi</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- Modal for Editing Product -->
+  <div class="modal fade" id="editSubMaterialModal" tabindex="-1" role="dialog"
+    aria-labelledby="editSubMaterialModalLabel" aria-hidden="true" style="margin-top: 10%;">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header bg-primary text-white">
+          <h5 class="modal-title" id="editSubMaterialModal">Chỉnh sửa nguyên vật liệu</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <form [formGroup]="editForm">
+            <div class="form-group">
+              <label for="editProductName">Tên nguyên vật liệu</label>
+              <input type="text" class="form-control" id="editProductName" formControlName="subMaterialName">
+            </div>
+            <div class="form-group">
+              <label for="editProductDescription">Mô tả</label>
+              <textarea class="form-control" id="editProductDescription" formControlName="description"></textarea>
+            </div>
+            <div class="row">
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label for="editProductCategory">Kiểu nguyên vật liệu</label>
+                  <input type="text" class="form-control" formControlName="materialName" id="editProductCategory"
+                    readonly>
+
+                </div>
+              </div>
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label for="editProductQuantity">Số lượng</label>
+                  <input type="number" class="form-control" formControlName="quantity" id="editProductQuantity">
+                </div>
+              </div>
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label for="editProductPrice">Đơn giá (vnđ)</label>
+                  <input type="number" class="form-control" formControlName="unitPrice" id="editProductPrice">
+                </div>
+              </div>
+            </div>
+
+
+
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
+          <button type="button" class="btn btn-primary" (click)="saveChanges()">Lưu thay đổi</button>
+        </div>
+
+      </div>
+    </div>
+  </div>
+  <div *ngIf="isLoadding" class="loading-overlay">
+    <div class="spinner"></div>
+  </div>

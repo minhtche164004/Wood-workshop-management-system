@@ -125,7 +125,7 @@ export class JobManagementComponent implements OnInit {
     const statusId = (event.target as HTMLSelectElement).value;
     this.selectedModalJob = jobId.toString();
     console.log('Job ID:', this.selectedModalJob, 'Status ID:', statusId);
-    this.selectedModalId = statusId;
+    //this.selectedModalId = statusId;
     // this.createJobs.reset();  
     // S? d?ng tham chi?u này d? kích ho?t click
     this.launchModalButton.nativeElement.click();
@@ -742,7 +742,7 @@ saveChanges(): void {
     console.log('Thực hiện tìm kiếm:', searchKey);
     console.log('Category:', selectedCategory);
     this.isLoadding = true;
-    if (selectedCategory === 1) {
+    if (selectedCategory === 0) {
       console.log("Tìm kiếm sản phẩm có sẵn")
       this.jobService.getProductJobByNameOrCode(searchKey).subscribe(
         (data) => {
@@ -750,7 +750,8 @@ saveChanges(): void {
             this.productRQs = data.result;
             console.log('Danh sách sản phẩm search:', this.productRQs);
 
-          } else (
+          } 
+          else (
             this.toastr.error('Không tìm thấy sản phẩm!', 'Lỗi')
           )
           this.isLoadding = false;
@@ -762,7 +763,7 @@ saveChanges(): void {
         }
       );
       this.isLoadding = false;
-    } else if (selectedCategory === 0) {
+  } else if (selectedCategory === 1) {
       console.log("Tìm kiếm sản phẩm yêu cầu")
       this.jobService.seachRequestByName(searchKey).subscribe(
         (data) => {

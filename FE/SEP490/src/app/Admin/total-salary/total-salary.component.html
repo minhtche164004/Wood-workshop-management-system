@@ -41,9 +41,10 @@
                                     <input [(ngModel)]="toDate" style="margin-left: 10px;" type="date"
                                         class="form-control" placeholder="Đến: dd/mm/yyyy">
 
-                                    <select [(ngModel)]="selectedPosition" (change)="onSearchPosition(selectedPosition)"
+                                    <select [(ngModel)]="selectedPosition" (change)="searchSalary()"
                                         class="form-select">
-                                        <option [ngValue]="null" selected>Chọn vị trí thợ</option>
+                                        <!-- <option [ngValue]="4" selected disabled>Chọn vị trí</option> -->
+                                        <option value="">Tất cả</option>
                                         <option *ngFor="let category of positionEmpList"
                                             [ngValue]="category.position_id">
                                             {{ category.position_name }}
@@ -84,12 +85,13 @@
                     <thead>
                         <tr>
                             <th>STT</th>
-                            <th>Mã nhân viên</th>
-                            <th>Thao tác</th>
+                            <th>Mã việc</th>
+                            <!-- <th>Thao tác</th> -->
+                             <th>Ngày hoàn thành</th>
                             <th>Tên nhân viên</th>
                             <!-- <th>Nhân viên</th> -->
                             <th>Vị trí</th>
-                            <th style="width: 10%;">Tình trạng</th>
+                            <th>Tình trạng</th>
                             <th>Đơn giá (vnđ)</th>
                             <th>Ngân hàng</th>
                             <th>STK</th>
@@ -101,7 +103,8 @@
                             *ngFor="let product of totalSalary | paginate: { itemsPerPage: 10, currentPage: currentPage }; let i = index">
                             <td>{{ i + 1 + (currentPage - 1) * 10 }}</td>
                             <td>{{ product?.code }}</td>
-                            <td class="action-buttons">
+                             <td>{{ product?.date}}</td>
+                            <!-- <td class="action-buttons">
                                 <a href="#" class="settings" title="Chỉnh sửa" data-toggle="modal"
                                     data-target="#editProductModal">
                                     <i class="fa-solid fa-pen-to-square"></i>
@@ -114,20 +117,15 @@
                                     data-target="#productDetailModal">
                                     <i class="fa-solid fa-ellipsis-vertical"></i>
                                 </a>
-                            </td>
+                            </td> -->
                             <td>{{ product?.user?.userInfor?.fullname }}</td>
 
                             <td>{{ product?.user?.position?.position_name }}</td>
-                            <td style="text-align: center;">
-                                <select [(ngModel)]="product.advanceSuccess"
+                            <td>
+                                <select [(ngModel)]="product.advanceSuccess" style="width: 120%;"
                                     (change)="updateBanking(product.advanceSalaryId,$event)" name="advanceSuccess">
                                     <option [ngValue]="false" disabled>Chưa thanh toán</option>
-                                    <!-- <option [ngValue]="true">Đã thanh toán</option>
-                                    <option *ngFor="let status of advanceSuccessValues" 
-                                            [value]="status.trueValue" 
-                                            [selected]="status.trueValue === product?.advanceSuccess">
-                                      {{ status.displayName }} -->
-                                    <!-- </option> -->
+                                   
                                     <option [value]="true">Đã thanh toán</option>
 
                                 </select>
@@ -241,7 +239,7 @@
                 <img style="width:100%;" [src]="qrImageUrl" class="img-fluid">
             </div>
             <div class="modal-footer text-center justify-content-center"> <!-- Thêm justify-content-center để căn giữa -->
-                <button type="button" class="btn btn-primary">Đã thanh toán</button>
+                <button type="button" class="btn btn-primary" (click)="updateBankingModal(this.selectedBanking)">Đã thanh toán</button>
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Hủy bỏ</button>
             </div>
         </div>

@@ -5,10 +5,7 @@ import com.example.demo.Dto.JobDTO.JobDoneDTO;
 import com.example.demo.Dto.OrderDTO.JobProductDTO;
 import com.example.demo.Dto.ProductDTO.ProductErrorAllDTO;
 import com.example.demo.Dto.ProductDTO.ProductErrorDTO;
-import com.example.demo.Entity.Advancesalary;
-import com.example.demo.Entity.Jobs;
-import com.example.demo.Entity.Processproducterror;
-import com.example.demo.Entity.Status_Job;
+import com.example.demo.Entity.*;
 import org.springframework.stereotype.Service;
 
 import java.sql.Date;
@@ -30,6 +27,7 @@ public interface JobService {
     Jobs CreateJob_Log(int job_id,int status_id);
 
     Jobs EditJobs(JobDTO jobDTO,int job_id);
+    Jobs GetJobById(int job_id);
 
 //    List<Jobs> GetAllJob();
 
@@ -51,4 +49,8 @@ public interface JobService {
     List<Advancesalary> multi_filter_salary(Date fromDate, Date toDate,Integer position_id, String username, String sortDirection);
     List<Advancesalary> getAdvancesalaryByEmployeeId();
     Advancesalary ChangeStatus(int id,boolean check);
+
+    Long CountQuantityOfJob(String status_name,int month,int year);
+
+    List<Employeematerials> getAllMaterialForEmployee();
 }

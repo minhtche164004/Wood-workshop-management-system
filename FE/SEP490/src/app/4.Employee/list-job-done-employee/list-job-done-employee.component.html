@@ -46,15 +46,15 @@
                   <tr>
                     <th>STT</th>
                     <th>Mã công việc</th>
-                    <th>Thao tác</th>
-                    <th>Vị trí công việc</th>
+                  
+                    <th>Mô tả công việc</th>
       
-                    <th>Tên vị trí</th>
+                    <th>Vị trí đảm nhận</th>
                     <th>Tình trạng công việc</th>
-                    <th>Lương(VNĐ)</th>
+                   
                   
                     <th>Sản phẩm</th>
-                    <th>Số lượng</th>
+                    <th   style="min-width: 100px; text-align: right;">Số lượng</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -63,28 +63,17 @@
                     <td>{{ job.code }}</td>
                     
   
-                    <td class="action-buttons">
-                      <a href="#" class="settings" title="Chỉnh sửa" data-toggle="modal" data-target="#editAccountModal"
-                        >
-                        <i class="fa-solid fa-pen-to-square"></i>
-                      </a>
-                      <a href="#" class="delete" title="Delete" data-toggle="modal" data-target="#confirmDeleteModal">
-                        
-                        <i class="fa-regular fa-trash-can"></i>
-                      </a>
-                      <a href="#" class="info" title="Info" data-toggle="modal" data-target="#productDetailModal">
-                        <i class="fa-solid fa-circle-info"></i>
-                      </a>
-                    </td>
+                   
+                   
                     <td>{{ job.job_name }}</td>
   
    
-                    <td style="min-width: 150px;">{{ job.position_name }}</td>
+                    <td style="min-width: 100px;">{{ job.position_name }}</td>
                     <td style="min-width: 150px;">{{ job.status_job_name }}</td>
                    
-                    <td style="min-width: 100px; text-align: right;">{{ job.cost | number: '1.0-3'}} </td>
-                    <td style="min-width: 100px;">{{ job.request_name }}</td>
-                    <td  style="min-width: 20px; text-align: right;">{{ job.quantity }}</td>
+                   
+                    <td style="min-width: 50px;">{{ job.request_name }}</td>
+                    <td  style="min-width: 100px; text-align: right;">{{ job.quantity }}</td>
                   </tr>
                 </tbody>
               </table>

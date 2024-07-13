@@ -19,11 +19,17 @@ export class JobService {
   private apiCreateProductForjob = `${environment.apiUrl}api/auth/job/CreateJobs`
 
   private apiSearchProductByNameOrCode = `${environment.apiUrl}api/auth/job/getListProductJobByNameOrCodeProduct`  //tim viec lam theo san pham co san theo ten
+  private apicreateExportMaterialRequestTotalJob = `${environment.apiUrl}api/auth/submaterial/createExportMaterialRequestTotalJob`  //Dang doi api detJobByJobId
 
+  //Dang doi api detJobByJobId  
+  private apiGetJobById = `${environment.apiUrl}api/auth/job/getJobById`  //tim viec lam theo san pham co san theo ten
+
+  private apiSearchRequestByName = `${environment.apiUrl}api/auth/job/getRequestProductInOrderDetailByCode`  //tim viec lam theo san pham co san theo ten
   private apiEditJob = `${environment.apiUrl}api/auth/job/EditJob`
   private apiAcceptJob = `${environment.apiUrl}api/auth/job/acceptJob`
   private apiGetProductSubMaterial = `${environment.apiUrl}api/auth/submaterial/getProductSubMaterialByProductId`;
   private apiCreateExportProd = `${environment.apiUrl}api/auth/submaterial/createExportMaterialProductTotalJob`
+  private apiGetSubMaterialOfProductRQ = `${environment.apiUrl}api/auth/submaterial/getRequestProductSubMaterialByRequestProductId`
     // user_id={{$random.integer(100)}}&
     // p_id={{$random.integer(100)}}&                                  ?job_id=152&status_id=9
     // status_id={{$random.integer(100)}}`
@@ -31,9 +37,23 @@ export class JobService {
   constructor(private http: HttpClient) { }
   getSubMTRProduct(productId: number, mateId: number): Observable<any> {
     const url = `${this.apiGetProductSubMaterial}?id=${productId}&mate_id=${mateId}`;
+    console.log('URL:', url);
+    return this.http.get<any>(url);
+  }
+  //gam get detail by id 
+  getJobDetailById(jobId: number): Observable<any> {
+    const url = `${this.apiGetJobById}?job_id=${jobId}`;
     return this.http.get<any>(url);
   }
 
+
+  seachRequestByName(key: string): Observable<any> {
+    return this.http.get<any>(`${this.apiSearchRequestByName}?key=${key}`);
+  }
+  getSubMTRProductRQ(id: number, mate_id: number): Observable<any> {
+    const url = `${this.apiGetSubMaterialOfProductRQ}?id=${id}&mate_id=${mate_id}`;
+    return this.http.get<any>(url);
+  }
   editJob(jobId: number, data: any): Observable<any> {
     return this.http.put(`${this.apiEditJob}?job_id=${jobId}`, data);
   }
@@ -43,10 +63,15 @@ export class JobService {
   }
   createExportMaterialProductTotalJob(id:number, mate_id: number, emp_id: number, productForm: any): Observable<any> {
     const url = `${this.apiCreateExportProd}?id=${id}&mate_id=${mate_id}&emp_id=${emp_id}`;
-    console.log('Total product for job URL:', url);
+   // console.log('Total product for job URL:', url);
     return this.http.post(url, productForm);
   }
-  acceptJob(jobId: number, statusId: any): Observable<any> {
+  createExportMaterialRequestTotalJob(id:number, mate_id: number, emp_id: number, productForm: any): Observable<any> {
+    const url = `${this.apicreateExportMaterialRequestTotalJob}?id=${id}&mate_id=${mate_id}&emp_id=${emp_id}`;
+ //   console.log('Total product for job URL:', url);
+    return this.http.post(url, productForm);
+  }
+  acceptJob(jobId: string, statusId: any): Observable<any> {
     const url = `${this.apiAcceptJob}?job_id=${jobId}&status_id=${statusId}`;
     console.log('Accept job URL:', url);
     const payload = {}; // Bạn có thể thêm payload nếu cần thiết

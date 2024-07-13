@@ -10,6 +10,7 @@ import { FormBuilder, FormGroup, FormArray, Validators, ReactiveFormsModule } fr
 import { CreateOrderService } from 'src/app/service/create-order.service';
 import { error } from 'jquery';
 interface CustomerInfo {
+  accId : number;
   inforId: number;
   fullname: string;
   address: string;
@@ -60,6 +61,7 @@ interface Ward {
   styleUrls: ['./create-order.component.scss']
 })
 export class CreateOrderComponent implements OnInit {
+  accId: number = 0
   inforId: number = 0;
   fullname: string = ''; // Initialize input1
   phonenumber: string = ''; // Initialize input1
@@ -243,12 +245,14 @@ export class CreateOrderComponent implements OnInit {
     this.isForRequestProduct = false;
     this.requests = [];
     this.productList = [];
+    this.accId = 0;
     //
     this.createOrderService.getUserInfoByPhone(phoneNumber).subscribe(
       (data: any) => {
         // console.log('data theo phone:', data.result);
         if (data.code === 1000) {
           const customerInfo: CustomerInfo = data.result;
+          this.accId = customerInfo.accId;
           this.inforId = customerInfo.inforId;
           this.selectedProvince = this.provinces.find(province => province.name === customerInfo.city_province);
           this.provinceControl.setValue(customerInfo.city_province);
@@ -275,6 +279,7 @@ export class CreateOrderComponent implements OnInit {
           //
           this.orderForm.patchValue({
             cusInfo: {
+            
               userid: customerInfo.inforId,
               fullname: customerInfo.fullname,
               address: customerInfo.address,
@@ -397,10 +402,9 @@ export class CreateOrderComponent implements OnInit {
           this.toastr.success('Tạo đơn hàng thành công!', 'Thành công');
           // this.orderForm.reset();
           console.log('response:', response);
-          if (response.code === 1000 && response.result.paymentMethod) {
+          if (response.code === 1000 && response.result.paymentMethod == 2) {
             // Remove spaces from the URL if any
             const codeWithoutQuotes = response.result.code.replace(/"/g, '');
-
             this.createOrderService.submitOrder(response.result.deposite, codeWithoutQuotes).subscribe(
               responseVNPAY => {
                 // console.log('responseVNPAY:', responseVNPAY); 
@@ -420,6 +424,8 @@ export class CreateOrderComponent implements OnInit {
                 this.toastr.error('Có lỗi khi thanh toán qua thẻ!', 'Lỗi');
                 this.isLoadding = false;
               });
+          }else{
+            this.isLoadding = false;
           }
 
         },
@@ -499,8 +505,10 @@ export class CreateOrderComponent implements OnInit {
         }
       );
     } else {
+      console.log("accid", this.accId)
       // lay danh sach request de autocomplete
-      this.createOrderService.GetAllRequestByUserId(this.inforId).subscribe((data: any) => {
+      this.createOrderService.GetAllRequestByUserId(this.accId).subscribe((data: any) => {
+        console.log(this.accId)
         if (data.code === 1000) {
           this.requests = data?.result;
           console.log('Danh sách request:', this.requests);

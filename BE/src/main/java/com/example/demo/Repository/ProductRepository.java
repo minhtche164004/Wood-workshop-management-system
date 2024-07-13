@@ -83,13 +83,13 @@ public interface ProductRepository extends JpaRepository<Products, Integer> {
 //                                        @Param("categoryIds") List<Integer> categoryIds,
 //                                        @Param("minPrice") BigDecimal minPrice,
 //                                        @Param("maxPrice") BigDecimal maxPrice);
-    @Query("SELECT p FROM Products p WHERE " +
-       "(p.productName LIKE %:search% OR :search IS NULL) AND " +
-       "(p.categories.categoryId IN :categoryIds OR :categoryIds IS NULL) AND " +
-       "(p.price >= :minPrice OR :minPrice IS NULL) AND " +
-       "(p.price <= :maxPrice OR :maxPrice IS NULL) AND  p.status.status_id = 2 ")
+@Query("SELECT p FROM Products p WHERE " +
+        "(p.productName LIKE %:search% OR :search IS NULL) AND " +
+        "(p.categories.categoryId = :categoryId OR :categoryId IS NULL) AND " +
+        "(p.price >= :minPrice OR :minPrice IS NULL) AND " +
+        "(p.price <= :maxPrice OR :maxPrice IS NULL) AND  p.status.status_id = 2 ")
 List<Products> filterProductsForCus(@Param("search") String search,
-                                    @Param("categoryIds") List<Integer> categoryIds,
+                                    @Param("categoryId") Integer categoryId,
                                     @Param("minPrice") BigDecimal minPrice,
                                     @Param("maxPrice") BigDecimal maxPrice);
 

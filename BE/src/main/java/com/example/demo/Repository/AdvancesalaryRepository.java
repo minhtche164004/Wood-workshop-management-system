@@ -9,6 +9,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.math.BigDecimal;
 import java.sql.Date;
 import java.util.List;
 
@@ -39,5 +40,13 @@ public interface AdvancesalaryRepository extends JpaRepository<Advancesalary,Int
                                             @Param("toDate") Date toDate,
                                             @Param("position_id") Integer position_id,
                                             @Param("username") String username);
+
+
+
+    //tính tổng lương nhân viên phải trả theo tháng và năm
+        @Query("SELECT SUM(a.amount) FROM Advancesalary a WHERE MONTH(a.date) = :month AND YEAR(a.date) = :year")
+        BigDecimal findTotalSalaryByMonthAndYear(@Param("month") int month, @Param("year") int year);
+
+
 
 }

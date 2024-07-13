@@ -32,7 +32,7 @@ import java.util.*;
 @RequiredArgsConstructor
 public class ProductServiceImpl implements ProductService {
     @Autowired
-    private Status_Product_Repository statusRepository;
+    private SubMaterialsRepository subMaterialsRepository;
     @Autowired
     private CategoryRepository categoryRepository;
     @Autowired
@@ -197,6 +197,7 @@ public class ProductServiceImpl implements ProductService {
         return products;
     }
 
+
     @Override
     public List<Products> findByPriceRange(BigDecimal min, BigDecimal max) {
         List<Products> productsList = productRepository.findByPriceRange(min,max);
@@ -328,11 +329,11 @@ public class ProductServiceImpl implements ProductService {
 //
 //        return productList;
 //    }
-    public List<Products> filterProductForCustomer(String search, List<Integer> categoryIds, BigDecimal minPrice, BigDecimal maxPrice, String sortDirection) {
+    public List<Products> filterProductForCustomer(String search, Integer categoryId, BigDecimal minPrice, BigDecimal maxPrice, String sortDirection) {
     List<Products> productList = new ArrayList<>();
 
-    if (search != null || (categoryIds != null && !categoryIds.isEmpty()) || minPrice != null || maxPrice != null) {
-        productList = productRepository.filterProductsForCus(search, categoryIds, minPrice, maxPrice);
+    if (search != null || categoryId != null || minPrice != null || maxPrice != null) {
+        productList = productRepository.filterProductsForCus(search, categoryId, minPrice, maxPrice);
     } else {
         productList = productRepository.ViewProductLandingPage();
     }
@@ -497,6 +498,8 @@ public class ProductServiceImpl implements ProductService {
         }
         return list;
     }
+
+
 
     @Transactional
     @Override

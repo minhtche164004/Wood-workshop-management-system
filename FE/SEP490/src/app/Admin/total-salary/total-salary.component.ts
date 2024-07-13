@@ -28,12 +28,12 @@ export class TotalSalaryComponent implements OnInit {
   employeeList: any[] = [];
   selectedEmp: any = {};
   positionEmpList: any[] = [];
-  selectedPosition: any = 0;
+  selectedPosition: any = '';
   fromDate: string = '';
   toDate: string = '';
   isProduct: boolean = true; // check product or product request
   isLoadding: boolean = false;
-  selectedPositionEmp: any = 0;
+  selectedPositionEmp: any = '';
   bankList: any[] = [];
   ndChuyenKhoan: string = 'DoGoSyDung thanh toan tien cong (Ma: {{code}})'
   qrImageUrl: string = '';
@@ -45,6 +45,7 @@ export class TotalSalaryComponent implements OnInit {
     trueValue: true,
     falseValue: false
   };
+
   constructor(private dataService: DataService, private http: HttpClient, private toastr: ToastrService, private employeeService: EmployeeService, private jobService: JobService, private fb: FormBuilder, private productListService: ProductListService, private sanitizer: DomSanitizer, private productService: ProductService, private salaryService: SalaryService) { }
 
 
@@ -70,25 +71,12 @@ export class TotalSalaryComponent implements OnInit {
   }
   search() {
     this.isLoadding = true;
-    console.log('From Date:', this.fromDate);
-    console.log('To Date:', this.toDate);
-    console.log('Selected Position:', this.selectedPosition);
-    console.log('Keyword:', this.searchKey);
-   
-    this.salaryService.multSearchSalary(this.searchKey, this.fromDate, this.toDate, '', this.selectedPosition).subscribe(
-      (data) => {
-        if (data.code === 1000) {
-          this.totalSalary = data.result;
-          console.log('Total salary: ', this.totalSalary); this.isLoadding = false;
-        } else {
-          console.error('Failed to fetch products:', data); this.isLoadding = false;
-        }
-
-      },
-      (error) => {
-        console.log(error); this.isLoadding = false;
-      }
-    );
+  //  console.log('From Date:', this.fromDate);
+  //  console.log('To Date:', this.toDate);
+   // console.log('Selected Position:', this.selectedPosition);
+   // console.log('Keyword:', this.searchKey);
+    this.previousSearchKey = this.searchKey;
+    this.searchSalary();
 
   }
   getTotalSalary() {
@@ -97,10 +85,8 @@ export class TotalSalaryComponent implements OnInit {
       (data) => {
         if (data.code === 1000) {
           this.totalSalary = data.result;
-          console.log('Total salary: ', this.totalSalary); this.isLoadding = false;
-        } else {
-          console.error('Failed to fetch products:', data); this.isLoadding = false;
-        }
+      //    console.log('Total salary: ', this.totalSalary); this.isLoadding = false;
+        } 
 
       },
       (error) => {
@@ -114,7 +100,7 @@ export class TotalSalaryComponent implements OnInit {
       (data) => {
         if (data.code === 1000) {
           this.positionEmpList = data.result;
-          console.log('Danh sách chuc vu nhan vien: ', this.positionEmpList); this.isLoadding = false;
+       //   console.log('Danh sách chuc vu nhan vien: ', this.positionEmpList); this.isLoadding = false;
         } else {
           console.error('Failed to fetch products:', data); this.isLoadding = false;
         }
@@ -128,7 +114,7 @@ export class TotalSalaryComponent implements OnInit {
       (data) => {
         if (data.code === 1000) {
           this.employeeList = data.result;
-          console.log('Danh sách nhan vien: ', this.employeeList); this.isLoadding = false;
+      //    console.log('Danh sách nhan vien: ', this.employeeList); this.isLoadding = false;
         } else {
           console.error('Failed to fetch products:', data); this.isLoadding = false;
         }
@@ -151,19 +137,26 @@ export class TotalSalaryComponent implements OnInit {
     this.searchSalary();
 
   }
+  previousSearchKey: string = '';
   searchSalary(): void {
     this.isLoadding = true;
-    console.log('Multi search salarary:', this.selectedEmp.username);
-    console.log('Multi search fromDate:', this.fromDate);
-    console.log('Multi search toDate:', this.toDate);
-    console.log('Multi search position:', this.selectedPosition);
-    this.salaryService.multSearchSalary(this.selectedEmp.username, this.startDate , this.endDate,'', this.selectedPosition).subscribe(
+ //   console.log('Search key before search:', this.searchKey);
+  //  console.log('Multi search username:', this.selectedEmp.username);
+   // console.log('Multi search fromDate:', this.fromDate);
+  //  console.log('Multi search toDate:', this.toDate);
+  //  console.log('Multi search position:', this.selectedPosition);
+    this.salaryService.multSearchSalary(this.selectedEmp.username, this.startDate, this.endDate, '', this.selectedPosition).subscribe(
       (data) => {
         if (data.code === 1000) {
           this.totalSalary = data.result;
           console.log('search luong bang ten: ', this.totalSalary); this.isLoadding = false;
+          this.selectedEmp = '';
+          this.searchKey = '';
         } else {
           console.error('Failed to fetch products:', data); this.isLoadding = false;
+          this.toastr.error('Không tìm thấy lương của nhân viên', 'Lỗi');
+          this.selectedEmp = ''
+          this.searchKey = '';
         }
 
       },
@@ -177,10 +170,11 @@ export class TotalSalaryComponent implements OnInit {
     this.salaryService.updateBanking(jobId, newValue).subscribe(
       (data) => {
         if (data.code === 1000) {
-          console.log('Update banking thanh cong'); 
+          console.log('Update banking thanh cong');
           this.toastr.success('Cập nhật trạng thái thanh toán thành công', 'Thành công');
           this.getTotalSalary();
           this.isLoadding = false;
+          
         } else {
           console.error('Failed to fetch products:', data);
           this.toastr.error('Có lỗi xảy ra khi cập nhật trạng thái thanh toán. Vui lòng thử lại sau.', 'Lỗi');
@@ -222,7 +216,7 @@ export class TotalSalaryComponent implements OnInit {
       }
     );
   }
-  getBinByBankNameOrShortName(bankName: string): string{
+  getBinByBankNameOrShortName(bankName: string): string {
     // Chuyển đổi bankName sang chữ thường để so sánh không phân biệt hoa thường
     const normalizedBankName = bankName.toLowerCase();
 
@@ -239,20 +233,44 @@ export class TotalSalaryComponent implements OnInit {
     this.salaryService.getBanks().subscribe();
 
   }
+  updateBankingModal(jobId: any): void {
+    this.isLoadding = true;
+
+    const newValue = true;
+    console.log('Job ID:', jobId , 'newValue:', newValue);
+    this.salaryService.updateBanking(jobId, newValue).subscribe(
+      (data) => {
+        if (data.code === 1000) {
+       //   console.log('Update banking thanh cong');
+          this.toastr.success('Cập nhật trạng thái thanh toán thành công', 'Thành công');
+          this.getTotalSalary();
+          this.isLoadding = false;
+          $('[data-dismiss="modal"]').click();
+        } else {
+      //    console.error('Failed to fetch products:', data);
+          this.toastr.error('Có lỗi xảy ra khi cập nhật trạng thái thanh toán. Vui lòng thử lại sau.', 'Lỗi');
+          $('[data-dismiss="modal"]').click();
+          this.isLoadding = false;
+        }
+      }
+    )
+  }
+
   thanhToan(product: any): void {
     this.isLoadding = true;
     this.qrImageUrl = '';
-    console.log('Thanh toan:', product);
-    console.log('Amount: ', product.amount);
-    console.log('accountId: ', product.user?.userInfor?.bank_number)
-    console.log('username: ', product?.user?.userInfor?.fullname)
-    console.log('code: ', product.code)
-   // const bankName = product.user?.userInfor?.bank_name;
+    // console.log('Thanh toan:', product);
+    // console.log('Amount: ', product.amount);
+    // console.log('accountId: ', product.user?.userInfor?.bank_number)
+    // console.log('username: ', product?.user?.userInfor?.fullname)
+    // console.log('code: ', product.code)
+    this.selectedBanking = product.advanceSalaryId;
+    // const bankName = product.user?.userInfor?.bank_name;
     const formattedNdChuyenKhoan = this.ndChuyenKhoan.replace('{{code}}', product.code.toString());
 
     console.log('orderInfo:  ', formattedNdChuyenKhoan);
 
-     const bin = this.getBinByBankNameOrShortName(product.user?.userInfor?.bank_name);
+    const bin = this.getBinByBankNameOrShortName(product.user?.userInfor?.bank_name);
     console.log('BIN:', bin);
     this.salaryService.getQRBanking(product.amount, product.user?.userInfor?.bank_number, product?.user?.userInfor?.fullname, bin, formattedNdChuyenKhoan)
       .subscribe(
@@ -262,7 +280,7 @@ export class TotalSalaryComponent implements OnInit {
           console.log('QR Image URL:', this.qrImageUrl);
           this.isLoadding = false;
 
-        },  
+        },
         (error) => {
           console.error('API Error:', error);
           this.toastr.error('Có lỗi xảy ra khi tạo mã QR thanh toán. Vui lòng thử lại sau.', 'Lỗi');

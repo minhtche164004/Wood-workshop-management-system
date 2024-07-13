@@ -449,12 +449,12 @@ public class ProductController {
     @GetMapping("/getMultiFillterProductForCustomer")
     public ApiResponse<?> getAllProductForCustomer(
             @RequestParam(required = false) String search,
-            @RequestParam(required = false) List<Integer> categoryIds,
+            @RequestParam(required = false) Integer categoryId,
             @RequestParam(required = false) BigDecimal minPrice,
             @RequestParam(required = false) BigDecimal maxPrice,
             @RequestParam(required = false) String sortDirection){
         ApiResponse<List> apiResponse = new ApiResponse<>();
-        apiResponse.setResult(productService.filterProductForCustomer(search, categoryIds, minPrice, maxPrice, sortDirection));
+        apiResponse.setResult(productService.filterProductForCustomer(search, categoryId, minPrice, maxPrice, sortDirection));
         return apiResponse;
     }
 

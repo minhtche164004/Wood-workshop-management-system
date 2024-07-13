@@ -11,7 +11,7 @@
     </div>
     <div class="shop">
 
-        <div class="container" style="margin-top: -4%;">    
+        <div class="container" style="margin-top: -4%;">
             <div class="row">
                 <div class="col-lg-3 col-12">
                     <div class="filter">
@@ -29,7 +29,7 @@
                                         <div class="accordion-body">
                                             <ul class="category-list">
                                                 <li class="all-sp">
-                                                    <input type="radio" [(ngModel)]="selectedCategory" [value]=""
+                                                    <input type="radio" [(ngModel)]="selectedCategory" [value]="0"
                                                         name="category" id="all" (change)="filterProducts()">
                                                     <label for="all">Tất cả</label>
                                                 </li>
@@ -67,11 +67,11 @@
                             <!-- Ví dụ với input button -->
                             <div style="margin-top: -6%;">
                                 <button class="giacao" [class.selected]="selectedSortByPrice === 'desc'"
-                                style="margin: 5px; padding: 5px;  border: none; background: none;"
+                                    style="margin: 5px; padding: 5px;  border: none; background: none;"
                                     (click)="sortProducts('desc')">Giá cao <i
                                         class="fa-solid fa-arrow-down-wide-short"></i></button>
                                 <button class="giathap" [class.selected]="selectedSortByPrice === 'asc'"
-                                style="margin: 5px; padding: 5px;  border: none; background: none;"
+                                    style="margin: 5px; padding: 5px;  border: none; background: none;"
                                     (click)="sortProducts('asc')">Giá thấp <i
                                         class="fa-solid fa-arrow-up-wide-short"></i></button>
                             </div>
@@ -120,16 +120,22 @@
                         <pagination-controls style="justify-content: right; display: flex;"
                             (pageChange)="currentPage = $event" previousLabel="Trang trước" nextLabel="Trang sau">
                         </pagination-controls>
-                        <div class="hint-text"> <br>Từ sản phẩm <b>{{ (currentPage - 1) * 9 + 1 }}</b> đến
+                        <!-- <div class="hint-text"> <br>Từ sản phẩm <b>{{ (currentPage - 1) * 9 + 1 }}</b> đến
                             <b>{{
                                 currentPage * 9
                                 > products.length ? products.length : currentPage * 9 }}</b> trong tổng số <b>{{
                                 products.length }}</b> sản phẩm
-                        </div>
+                        </div> -->
                     </div>
                 </div>
             </div>
         </div>
+    </div>
+
+
+    <!-- loadding man` hinh` -->
+    <div *ngIf="isLoadding" class="loading-overlay">
+        <div class="spinner"></div>
     </div>
 
 </div>

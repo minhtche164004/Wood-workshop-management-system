@@ -95,6 +95,7 @@ export class UserManagementComponent implements OnInit {
       this.closeButton.nativeElement.click();
     }
   }
+  isLoadding: boolean = false;   //loading when click button
   isModalOpen = false;
   searchKey: string = '';
   addAccountForm: FormGroup;
@@ -158,7 +159,7 @@ export class UserManagementComponent implements OnInit {
       wards: ['', Validators.required]
     });
     this.editUserForm = this.fb.group({
-      user_id: [this.userId],
+      user_id: ['', Validators.required],
       username: ['', Validators.required],
       email: ['', [Validators.required, Validators.email]],
       phoneNumber: ['', Validators.required],
@@ -166,7 +167,7 @@ export class UserManagementComponent implements OnInit {
       fullname: ['', Validators.required],
       status_id: [''],
       position_id: [''],
-      position_name: ['', Validators.required],
+
       role_id: ['', Validators.required],
       bank_name: [''],
       bank_number: [''],
@@ -609,7 +610,9 @@ export class UserManagementComponent implements OnInit {
   }
 
   AddNewAccount(): void {
+    this.isLoadding = true;
     if (!this.validateRegistration()) {
+      this.isLoadding = false;
       return;
     }
     const addNewAccountRequest: AddNewAccount = this.addAccountForm.value;
@@ -617,33 +620,41 @@ export class UserManagementComponent implements OnInit {
 
     this.authenListService.AddNewAccountForAdmin(addNewAccountRequest).subscribe(
       () => {
+        this.isLoadding = false;
         this.toastr.success('Thêm tài khoản người dùng thành công.');
         this.addAccountForm.reset(); // Reset the form after successful addition
         timer(200).subscribe(() => {
           window.location.reload();
         });
-      },
+      }, 
       (error: any) => {
+        this.isLoadding = false;
         console.error('Lỗi khi đăng nhập', error);
         if ( error.error.code === 1019) {
+          this.isLoadding = false;
           this.toastr.error('Tên đăng nhập đã tồn tại',);
         }
         else if ( error.error.code === 1001) {
+          this.isLoadding = false;
           this.toastr.error('Email đã tồn tại',);
         }
       }
     );
   }
   EditUser(): void {
+    this.isLoadding = true;
     if (!this.validateEditUser()) { 
+      this.isLoadding = false;
       return;
     }
     const editUserRequest: EditUserRequest = this.editUserForm.value;
     const userId = this.userData.userId; // Lấy userId từ userData
     console.log("Data: ", editUserRequest)
+    console.log("Data: ", userId)
     this.authenListService.editUserById(userId, editUserRequest).subscribe(
       () => {
-
+      this.isLoadding = false;
+        
         this.toastr.success('Thay đổi thông tin thành công.');
         timer(200).subscribe(() => {
           window.location.reload();
@@ -654,10 +665,11 @@ export class UserManagementComponent implements OnInit {
         // }, 2000); // Delay 1 second before reload
       },
       (error: any) => {
+      this.isLoadding = false;
         
-        // if ( error.error.code === 1033) {
-        //   this.toastr.error('Không thể thay đổi quyền của nhân viên này vì họ đang đảm nhận công việc ở vị trí của họ',);
-        // }
+        if ( error.error.code === 1035) {
+          this.toastr.error('Không thể thay đổi quyền của nhân viên này vì họ đang đảm nhận công việc ở vị trí của họ',);
+        }
        
       }
     );

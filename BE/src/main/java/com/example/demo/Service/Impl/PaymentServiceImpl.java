@@ -201,7 +201,7 @@ public class PaymentServiceImpl implements PaymentService {
         data.put("accountName", username); //username của acc
         data.put("acqId", bin_bank); //mã bin của ngân hàng
         data.put("amount", amout); //số tiền
-        data.put("addInfo", "THANH TOAN " + orderInfo); //nội dung ck
+        data.put("addInfo",  orderInfo); //nội dung ck
         data.put("format", "text");
         data.put("template", "compact2");
 

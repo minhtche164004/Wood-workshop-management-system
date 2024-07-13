@@ -33,6 +33,7 @@ export class ListRequestCustomerComponent implements OnInit {
   status_request: any[] = [];
   selectedStatus: any = null;
   orderRqDetails: any;
+  isLoadding: boolean = false;
   constructor(
 
     private authenListService: AuthenListService,
@@ -43,7 +44,9 @@ export class ListRequestCustomerComponent implements OnInit {
     private router: Router) {
     this.Accept_Reject_rForm = this.fb.group({
       status_id: ['', Validators.required],
-      response: ['']
+      response: [''],
+      fullname: [''],
+      code: ['']
 
 
     });
@@ -58,7 +61,7 @@ export class ListRequestCustomerComponent implements OnInit {
 
   }
   loadAllJobByEmployeID() {
-
+    this.isLoadding = true;
     this.loginToken = localStorage.getItem('loginToken');
     if (this.loginToken) {
       console.log('Retrieved loginToken:', this.loginToken);
@@ -66,33 +69,45 @@ export class ListRequestCustomerComponent implements OnInit {
         (data: ApiResponse) => {
           if (data.code === 1000) {
             this.list_request_customer = data.result;
+            this.isLoadding = false;
+
             console.log('Danh sách đơn hàng:', data);
           } else {
             console.error('Failed to fetch products:', data);
+            this.isLoadding = false;
           }
         },
         (error) => {
           console.error('Error fetching products:', error);
+          this.isLoadding = false;
         }
       );
     } else {
       console.error('No loginToken found in localStorage.');
+      this.isLoadding = false;
 
     }
   }
   getDataRequest(id: string): void {
+    this.isLoadding = true;
     this.authenListService.getRequestById(id).subscribe(
       (data) => {
         if (data.code === 1000) {
           this.RequestData = data.result;
           this.selectedStatus = this.status_request.find(sa => sa.status_id === this.RequestData.status_id)?.status_id;
+          this.isLoadding = false;
+
           console.log('Selected dataaaa: ', this.RequestData);
         } else {
           console.error('Failed to fetch supplier data:', data);
+          this.isLoadding = false;
+
         }
       },
       (error) => {
         console.error('Error fetching supplier data:', error);
+        this.isLoadding = false;
+
       }
     );
   }
@@ -115,47 +130,68 @@ export class ListRequestCustomerComponent implements OnInit {
   }
 
   EditRequestAccept(): void {
+    this.isLoadding = true;
+
     const editUserRequest: EditUserRequest = this.Accept_Reject_rForm.value;
     const requestid = this.RequestData.request_id; // Lấy requestId từ requestData
     console.log("Data: ", editUserRequest);
-  
+
     this.authenListService.EditRequest(requestid, editUserRequest).subscribe(
       () => {
         this.toastr.success('Thay đổi thông tin thành công.');
+        this.isLoadding = false;
+
       },
       (error: any) => {
         this.toastr.error('Lỗi');
         console.error('Lỗi khi chỉnh sửa yêu cầu:', error);
+        this.isLoadding = false;
+
       }
     );
   }
+  onStatusChange() {
+    if (this.selectedStatus !== 3) {
+      this.RequestData.response = '';
+    }
+  }
+
   viewProductDetails(orderId: number): void {
-    
-  
+
+    this.isLoadding = true;
+
     this.orderRequestService.getRequestById(orderId).subscribe(
       (data) => {
         if (data.code === 1000) {
           if (data.result && typeof data.result === 'object') {
             this.orderRqDetails = data.result;
             this.orderRqDetails = Array.isArray(data.result) ? data.result : [data.result];
+            this.isLoadding = false;
+
           } else {
             this.orderRqDetails = [];
             console.warn('Unexpected data format for products:', data.result);
+            this.isLoadding = false;
+
           }
           console.log('Product List:', this.orderRqDetails);
         } else {
           console.error('Failed to fetch products:', data);
+    this.isLoadding = false;
+
           this.toastr.error('Không thể lấy danh sách sản phẩm!', 'Lỗi');
         }
       },
       (error) => {
         console.error('Error fetching products:', error);
+    this.isLoadding = false;
+
         this.toastr.error('Có lỗi xảy ra!', 'Lỗi');
       }
     );
- 
+
   }
-  
+
 }
 
 

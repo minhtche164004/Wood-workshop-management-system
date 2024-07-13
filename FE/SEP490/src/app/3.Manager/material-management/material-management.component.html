@@ -7,7 +7,7 @@
         <div class="table-title">
           <div class="row " style="height: 60px;">
             <div class="col-sm-5 ">
-              <h2 style="margin-bottom: 0;">Quản lí Kiểu vật liệu</h2>
+              <h2 style="margin-bottom: 0;">Quản lý kiểu vật liệu</h2>
             </div>
             <div class="col-sm-7 text-end d-flex align-items-center justify-content-end">
               <a href="#" class="btn btn-secondary" data-toggle="modal" data-target="#addProductModal">
@@ -30,7 +30,7 @@
                 </select> -->
 
 
-                <input type="text" class="form-control" placeholder="Code">
+                <input type="text" class="form-control" placeholder="Tìm kiếm vật liệu">
                 <button class="btn search-button" type="button">
                   <i class="fa fa-search"></i>
                 </button>
@@ -207,4 +207,7 @@
       </div>
     </div>
   </div>
+</div>
+<div *ngIf="isLoadding" class="loading-overlay">
+  <div class="spinner"></div>
 </div>

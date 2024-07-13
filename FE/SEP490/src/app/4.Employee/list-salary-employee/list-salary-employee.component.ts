@@ -17,6 +17,7 @@ export class ListSalaryEmployeeComponent implements OnInit {
   salary_employee: any[] = [];
   loginToken: string | null = null;
   currentPage: number = 1;
+  isLoadding: boolean = false; 
   constructor(
 
     private authenListService: AuthenListService,
@@ -33,6 +34,7 @@ export class ListSalaryEmployeeComponent implements OnInit {
 
   }
   loadAllSalaryByEmployeID() {
+    this.isLoadding = true;
     this.loginToken = localStorage.getItem('loginToken');
     if (this.loginToken) {
       console.log('Retrieved loginToken:', this.loginToken);
@@ -40,18 +42,24 @@ export class ListSalaryEmployeeComponent implements OnInit {
       this.authenListService.getSalaryByEmployeeID().subscribe(
         (data: ApiResponse) => {
           if (data.code === 1000) {
+            this.isLoadding = false;
             this.salary_employee = data.result.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
-           
+          
+            console.log('Retrieved loginToken:',this.salary_employee);
+  
           } else {
             console.error('Failed to fetch salary data:', data);
+            this.isLoadding = false;
           }
         },
         (error) => {
           console.error('Error fetching salary data:', error);
+          this.isLoadding = false;
         }
       );
     } else {
       console.error('No loginToken found in localStorage.');
+      this.isLoadding = false;
     }
   }
 }

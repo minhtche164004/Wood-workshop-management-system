@@ -271,7 +271,7 @@ registerUser(): void {
           if (authorities.includes('CUSTOMER')) {
             this.router.navigateByUrl('/homepage');
           } else if (authorities.includes('ADMIN')) {
-            this.router.navigateByUrl('/admin');
+            this.router.navigateByUrl('/admin_manager_user');
           } else if (authorities.includes('EMPLOYEE')) {
             this.router.navigateByUrl('/employee');
           } else {

@@ -6,5 +6,5 @@ import { Component } from '@angular/core';
   styleUrls: ['./report-cost-management.component.scss']
 })
 export class ReportCostManagementComponent {
-
+  isLoadding: boolean = false;
 }

@@ -4,7 +4,7 @@ import { SupplierService } from 'src/app/service/supplier.service';
 import { ToastrService } from 'ngx-toastr';
 import { MaterialService } from 'src/app/service/material.service';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
-import { AuthenListService } from '../service/authen.service';
+import { AuthenListService } from '../../service/authen.service';
 import { timer } from 'rxjs';
 
 interface ApiResponse {
@@ -26,7 +26,7 @@ interface Supplier {
   phoneNumber: string;
 }
 interface EditUserRequest {
-supplierName: string,
+  supplierName: string,
   phoneNumber: string,
   sub_material_id: string
 }
@@ -36,16 +36,16 @@ supplierName: string,
   styleUrls: ['./supplier-management.component.scss']
 })
 export class SupplierManagementComponent implements OnInit {
-  isLoadding: boolean = false;  
+  isLoadding: boolean = false;
   suppliers: any[] = []; // Array to store supplier data
   currentPage: number = 1;
   searchKey: string = '';
-  supplierName: string = ''; 
+  supplierName: string = '';
   phoneNumber: string = '';
   subMaterialName: string = '';
   subMaterialId: string = '';
   selectedMaterial_Update: any = null; // Assuming selectedRole should be a boolean
-  materials: any[] = []; 
+  materials: any[] = [];
   sub_material: SubMaterial[] = [];
   selectedMaterial: any = null;
   suplierData: any = {};
@@ -55,16 +55,16 @@ export class SupplierManagementComponent implements OnInit {
 
   constructor(private authenListService: AuthenListService,
     private supplierService: SupplierService, private materialService: MaterialService, private toastr: ToastrService, private fb: FormBuilder) {
-      this.editSupplierForm = this.fb.group({
-        supplierName: ['', Validators.required],
-        phoneNumber: ['', [Validators.required, Validators.pattern(/^[0-9]{10}$/)]], // Adjusted phone number validation to regex
-        sub_material_id: ['', Validators.required],
-        subMaterialId: [''], // Add control for subMaterialName
-        subMaterialName: [''], // Add control for subMaterialName
-      });
-    }
+    this.editSupplierForm = this.fb.group({
+      supplierName: ['', Validators.required],
+      phoneNumber: ['', [Validators.required, Validators.pattern(/^[0-9]{10}$/)]], // Adjusted phone number validation to regex
+      sub_material_id: ['', Validators.required],
+      subMaterialId: [''], // Add control for subMaterialName
+      subMaterialName: [''], // Add control for subMaterialName
+    });
+  }
 
-  ngOnInit() { 
+  ngOnInit() {
     this.suplierData = {
       supplierMaterial: '',
       supplierName: '',
@@ -74,19 +74,25 @@ export class SupplierManagementComponent implements OnInit {
     };
     this.loadMaterials();
 
-
+    this.isLoadding = true;
+   
     this.supplierService.getAllSuppliers().subscribe(
+
       (data) => {
         if (data.code === 1000) {
           this.suppliers = data.result;
-         // console.log('Danh sách nhà cung cấp: :', this.suppliers);
+    this.isLoadding = false;
+
+          // console.log('Danh sách nhà cung cấp: :', this.suppliers);
         } else {
           console.error('Failed to fetch products:', data);
+          this.isLoadding = false;
           this.toastr.error('Không thể lấy danh sách nhà cung cấp!', 'Lỗi'); // Display error toast
         }
       },
       (error) => {
         console.error('Error fetching products:', error);
+        this.isLoadding = false;
         this.toastr.error('Có lỗi xảy ra!', 'Lỗi'); // Display generic error toast
       }
     );
@@ -94,24 +100,28 @@ export class SupplierManagementComponent implements OnInit {
 
   searchSupplier(): void {
     console.log("Thực hiện tìm kiếm nhà cung cấp: ", this.searchKey);
+    this.isLoadding = true;
     if (this.searchKey) {
       this.supplierService.findSupplierName(this.searchKey)
         .subscribe(
           (data) => {
             if (data.code === 1000) {
               this.suppliers = data.result;
+              this.isLoadding = false;
               // console.log('Tìm kiếm thành công:', this.suppliers);
               // console.log('searchKey:', this.searchKey);
-              // this.toastr.success('Tìm kiếm nhà sản xuất vật liệu!', 'Thành công');
+              this.toastr.success('Tìm kiếm Nhà cung cấp nguyên vật liệu!', 'Thành công');
             } else if (data.code === 1015) {
               this.suppliers = []; // Clear previous results
               console.error('Tìm kiếm không thành công:', data);
-              this.toastr.error('Không tìm thấy nhà sản xuất vật liệu!', 'Tìm kiếm thất bại');
+              this.isLoadding = false;
+              this.toastr.error('Không tìm thấy Nhà cung cấp nguyên vật liệu!', 'Tìm kiếm thất bại');
               // Handle specific error message
             }
           }
         );
     } else {
+      this.isLoadding = false;
       console.warn('Từ khóa tìm kiếm trống.');
       // Optionally display a message to the user indicating an empty search term
     }
@@ -122,7 +132,7 @@ export class SupplierManagementComponent implements OnInit {
     const supplier: Supplier = {
       supplierName: this.supplierName,
       phoneNumber: this.phoneNumber,
-      sub_material_id: this.selectedMaterial, 
+      sub_material_id: this.selectedMaterial,
     };
     console.log('Supplier Request:', supplier);
     this.supplierService.addNewSupplier(supplier)
@@ -134,10 +144,10 @@ export class SupplierManagementComponent implements OnInit {
             timer(200).subscribe(() => {
               window.location.reload();
             });
-            
-          } else {  
+
+          } else {
             this.isLoadding = false;
-           console.error('Failed to add supplier:', data);
+            console.error('Failed to add supplier:', data);
             this.toastr.error('Có lỗi khi thêm nhà cung cấp!', 'Lỗi');
 
           }
@@ -161,13 +171,17 @@ export class SupplierManagementComponent implements OnInit {
     this.supplierService.deleteSupplier(this.deleteId).subscribe(
       response => {
         this.isLoadding = false;
-      
+
         this.toastr.success('Nhà cung cấp đã được xóa thành công!', 'Thành công');
         timer(200).subscribe(() => {
           window.location.reload();
         });
       },
       error => {
+        if (error.error.code === 1032) {
+
+          this.toastr.error(error.error.message, 'Lỗi xảy ra');
+        }
         this.isLoadding = false;
         console.error('Error deleting supplier:', error);
         // Handle error logic
@@ -180,7 +194,7 @@ export class SupplierManagementComponent implements OnInit {
       (data: any) => {
         if (data.code === 1000) {
           this.materials = data.result;
-         
+
           console.log('Danh sách Vật liệu:', this.materials);
         } else {
           console.error('Dữ liệu trả về không hợp lệ:', data);
@@ -192,8 +206,8 @@ export class SupplierManagementComponent implements OnInit {
     );
   }
 
-  
- 
+
+
   getDatasupplierMaterial(id: string): void {
     this.authenListService.getSupplierById(id).subscribe(
       (data) => {
@@ -223,11 +237,12 @@ export class SupplierManagementComponent implements OnInit {
         timer(200).subscribe(() => {
           window.location.reload();
         });
-      (error: any) => {
-        this.isLoadding = false;
-        this.toastr.error('Lỗi');
-       
-      }}
+        (error: any) => {
+          this.isLoadding = false;
+          this.toastr.error('Lỗi');
+
+        }
+      }
     );
   }
 

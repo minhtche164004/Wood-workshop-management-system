@@ -8,7 +8,7 @@
           <div class="table-title">
             <div class="row " style="height: 60px;">
               <div class="col-sm-5 ">
-                <h2 style="margin-bottom: 0;"> Tra cứu việc làm đã giao</h2>
+                <h2 style="margin-bottom: 0;"> Tra cứu  việc làm</h2>
               </div>
               <div class="col-sm-7 text-end d-flex align-items-center justify-content-end">
                 <!-- <a href="#" class="btn btn-secondary btn-sm" data-toggle="modal" data-target="#addAccountModal"
@@ -24,12 +24,12 @@
               <div class="col-md-5 text-end">
                 <div class="input-group mb-3">
                   <!-- product.component.html -->
-                  <!-- <select [ngModel]="selectedCategory">
-                    <option value="null" disabled selected>Phân quyền</option>
-                    <option *ngFor="let ps of position" [value]="ps.position_id">{{ ps.position_name }}</option>
-                  </select> -->
+                  <select >
+                    <option value="null" disabled selected>Tình trạng công việc</option>
+                  
+                  </select>
   
-                  <input type="text" class="form-control" placeholder="Mã nhân viên" >
+                  <input type="text" class="form-control" placeholder="Mã công việc" >
                   <button class="btn search-button" type="button" >
                     <i class="fa fa-search"></i>
                   </button>
@@ -53,7 +53,7 @@
                     <th>Tình trạng công việc</th>
                    
                   
-                    <th>Sản phẩm</th>
+                    <th>Sản phẩm </th>
                     <th   style="min-width: 100px; text-align: right;">Số lượng</th>
                   </tr>
                 </thead>
@@ -94,4 +94,7 @@
         </div>
       </div>
     </div>
+  </div>
+  <div *ngIf="isLoadding" class="loading-overlay">
+    <div class="spinner"></div>
   </div>

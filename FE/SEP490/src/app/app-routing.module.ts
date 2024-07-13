@@ -14,19 +14,19 @@ import { VerifyMailComponent } from './forgotPassword/verify-mail/verify-mail.co
 import { ApiProvinceComponent } from './api-province/api-province.component';
 import { ProductListComponent } from './product-list/product-list.component';
 import { VerifyOtpMailComponent } from './forgotPassword/verify-otp-mail/verify-otp-mail.component';
-import { ProductManagementComponent } from './Admin/product-management/product-management.component';
+import { ProductManagementComponent } from './3.Manager/product-management/product-management.component';
 import { ViewProfileComponent } from './2.Customer/view-profile/view-profile.component';
 import { FileUploadComponent } from './file-upload/file-upload.component';
-import { SubMaterialManagementComponent } from './Admin/sub-material-management/sub-material-management.component';
-import { SupplierManagementComponent } from './supplier-management/supplier-management.component';
-import { OrderDetailManagementComponent } from './Admin/order-detail-management/order-detail-management.component';
-import { OrderRequestComponentComponent } from './Admin/order-request-component/order-request-component.component';
-import { OrderRqDetailComponent } from './Admin/order-rq-detail/order-rq-detail.component';
+import { SubMaterialManagementComponent } from './3.Manager/sub-material-management/sub-material-management.component';
+import { SupplierManagementComponent } from './3.Manager/supplier-management/supplier-management.component';
+import { OrderDetailManagementComponent } from './3.Manager/order-detail-management/order-detail-management.component';
+import { OrderRequestComponentComponent } from './3.Manager/order-request-component/order-request-component.component';
+import { OrderRqDetailComponent } from './3.Manager/order-rq-detail/order-rq-detail.component';
 import { OrderRequiredComponent } from './2.Customer/order-required/order-required.component';
 import { CreateOrderComponent } from './2.Customer/create-order/create-order.component';
-import { OrderManagementComponent } from './Admin/order-management/order-management.component';
+import { OrderManagementComponent } from './3.Manager/order-management/order-management.component';
 import { ProductDetailComponent } from './2.Customer/product-detail/product-detail.component';
-import { JobManagementComponent } from './Admin/job-management/job-management.component';
+import { JobManagementComponent } from './3.Manager/job-management/job-management.component';
 
 
 import { ForgotPassComponent } from './forgotPassword/forgot-pass/forgot-pass.component';
@@ -42,23 +42,23 @@ import { WishlistComponent } from './2.Customer/wishlist/wishlist.component';
 import { TemplateComponent } from './2.Customer/template/template.component';
 
 import { BillComponent } from './bill/bill.component';
-import { MaterialManagementComponent } from './Admin/material-management/material-management.component';
-import { ReportManagementComponent } from './Admin/report-management/report-management.component';
-import { AdvancedBillManagementComponent } from './Admin/advanced-bill-management/advanced-bill-management.component';
-import { FeedbackDefectiveComponent } from './Admin/feedback-defective/feedback-defective.component';
-import { TotalSalaryComponent } from './Admin/total-salary/total-salary.component';
+import { MaterialManagementComponent } from './3.Manager/material-management/material-management.component';
+import { ReportManagementComponent } from './3.Manager/report-management/report-management.component';
+import { AdvancedBillManagementComponent } from './3.Manager/advanced-bill-management/advanced-bill-management.component';
+import { FeedbackDefectiveComponent } from './3.Manager/feedback-defective/feedback-defective.component';
+import { TotalSalaryComponent } from './3.Manager/total-salary/total-salary.component';
 import { AutoCompleteComponent } from './auto-complete/auto-complete.component';
-import { HistoryOrderComponent } from './Admin/history-order/history-order.component';
+import { HistoryOrderComponent } from './2.Customer/history-order/history-order.component';
 
 import { ListRequestProductComponent } from './2.Customer/list-request-product/list-request-product.component';
 import { DashboardComponent } from './Layout/dashboard-manager/dashboard.component';
 import { ListJobDoneEmployeeComponent } from './4.Employee/list-job-done-employee/list-job-done-employee.component';
 import { ListJobDoneComponent } from './Admin/list-job-done/list-job-done.component';
 
-import { ReportCostManagementComponent } from './Admin/report-cost-management/report-cost-management.component';
+import { ReportCostManagementComponent } from './3.Manager/report-cost-management/report-cost-management.component';
 import { Chart } from 'chart.js';
 import { ChartComponent } from './Admin/chart/chart.component';
-import { ListRequestCustomerComponent } from './Admin/list-request-customer/list-request-customer.component';
+import { ListRequestCustomerComponent } from './3.Manager/list-request-customer/list-request-customer.component';
 import { ListSalaryEmployeeComponent } from './4.Employee/list-salary-employee/list-salary-employee.component';
 //danh` cho order-vnpay
 import { OrderSuccessComponent } from './Order-payment-vnpay/order-success/order-success.component';
@@ -77,7 +77,7 @@ const routes: Routes = [
   { path: 'verifyMail', component: VerifyMailComponent },
   { path: 'verifyOtp', component: VerifyOtpMailComponent },
   { path: 'change_pass', component: ChangePasswordComponent },
-  { path: 'user_management', component: UserManagementComponent },
+  { path: 'admin_manager_user', component: UserManagementComponent },
   { path: 'payment-salary', component: PaymentSalaryComponent },
   { path: 'verifyOtp/:email', component: VerifyOtpMailComponent },  // Route with email as a parameter
   { path: 'change_pass/:email', component: ForgotPassComponent },  // Route with email as a parameter

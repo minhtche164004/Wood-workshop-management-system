@@ -56,16 +56,16 @@ export class TotalSalaryComponent implements OnInit {
     this.getBankList();
   }
   getBankList(): void {
-    this.isLoadding = true;
+   
     this.salaryService.getBanks().subscribe(
       (data) => {
         this.bankList = data.data;
         //  console.log('Response from getBanks:', this.bankList);
-        this.isLoadding = false;
+       
       },
       (error) => {
         console.error('Error from getBanks:', error);
-        this.isLoadding = false;
+        
       }
     );
   }
@@ -116,7 +116,8 @@ export class TotalSalaryComponent implements OnInit {
           this.employeeList = data.result;
       //    console.log('Danh sách nhan vien: ', this.employeeList); this.isLoadding = false;
         } else {
-          console.error('Failed to fetch products:', data); this.isLoadding = false;
+          console.error('Failed to fetch products:', data);
+           this.isLoadding = false;
         }
 
       },
@@ -259,6 +260,7 @@ export class TotalSalaryComponent implements OnInit {
   thanhToan(product: any): void {
     this.isLoadding = true;
     this.qrImageUrl = '';
+
     // console.log('Thanh toan:', product);
     // console.log('Amount: ', product.amount);
     // console.log('accountId: ', product.user?.userInfor?.bank_number)

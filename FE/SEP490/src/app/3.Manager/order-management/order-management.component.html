@@ -65,24 +65,25 @@
 
               <td style=" min-width: 150px;">{{ us?.code}}</td>
               <td class="action-buttons">
-                <a href="#" class="settings" title="Edit" data-toggle="modal" data-target="#editProductModal">
+                <!-- <a href="#" class="settings" title="Edit" data-toggle="modal" data-target="#editProductModal">
                   <i class="fa-solid fa-pen-to-square"></i>
-                </a>
+                </a> -->
                 <a href="#" class="info" title="Info" data-toggle="modal" data-target="#productDetailModal"
                   (click)="getOrDetailById(us?.orderId)">
                   <i class="fa-solid fa-circle-info"></i>
                 </a>
-                <!-- Dropdown for changing status -->
 
+                <!-- Dropdown for changing status -->
               </td>
               <td>{{ us?.orderDate | date:'dd/MM/yyyy' }}</td>
 
 
-              <td  style=" min-width: 150px;">
+              <td style="min-width: 150px;">
                 <div class="select-wrapper">
                   <select class="custom-select" (change)="onStatusChange(us.orderId, $event)">
-                    <option *ngFor="let status of status_order" [ngStyle]="getStatusColor(status.status_id)"
-                      [value]="status.status_id" [selected]="status.status_id === us?.status.status_id">
+                    <option *ngFor="let status of status_order"
+                      [value]="status.status_id" [selected]="status.status_id === us?.status.status_id"
+                      [disabled]="status.status_id === 1 || status.status_id === 3 || status.status_id === 6">
                       {{ status.status_name }}
                     </option>
                   </select>
@@ -93,19 +94,24 @@
 
               <td style=" min-width: 50px;"
                 [ngStyle]="{'color': us?.paymentMethod === 1 ? 'green' : (us?.paymentMethod === 0 ? 'red' : 'black')}">
-                {{ us?.paymentMethod === 1 ? 'ONLINE' : (us?.paymentMethod === 0 ? 'OFFLINE' : '') }}
+                {{ us?.paymentMethod === 1 ? 'Chuyển khoản' : (us?.paymentMethod === 0 ? 'Tiền mặt' : '') }}
               </td>
 
               <td>{{ us?.deposite | number : '1.0-3' }}</td>
-              <td style="text-align: center; min-width: 100px;">{{ (us?.totalAmount - us?.deposite) | number : '1.0-3'
+              <td>{{ (us?.totalAmount - us?.deposite) | number : '1.0-3'
                 }}</td>
-              <td style="text-align: center; min-width: 100px;">{{ us?.totalAmount | number : '1.0-3' }}</td>
-              <td class="action-buttons">
-                <!-- ... existing action buttons ... -->
-                <button class="btn btn-danger btn-sm" (click)="cancelOrder(us?.orderId,us?.specialOrder)">
-                  <i class="fa-solid fa-times"></i> 
-                </button>
+              <td>{{ us?.totalAmount | number : '1.0-3' }}</td>
+              <td >
+                <a href="#" class="delete" title="Delete" data-toggle="modal" data-target="#confirmDeleteModal" 
+                  (click)="setOrderForCancellation(us?.orderId, us?.specialOrder)">
+                  <i class="fa-solid fa-times"></i>
+                </a>
+                <!-- <button class="delete-btn" title="Hủy" data-toggle="modal" data-target="#confirmDeleteModal"
+                  (click)="setOrderForCancellation(us?.orderId, us?.specialOrder)">
+                  <i class="fa-solid fa-time"></i> 
+                </button> -->
               </td>
+
             </tr>
           </tbody>
         </table>
@@ -226,7 +232,7 @@
   </div>
 </div>
 <!-- Modal for Delete Product -->
-<div class="modal fade" id="confirmDeleteModal" tabindex="-1" role="dialog" aria-labelledby="confirmDeleteModalLabel"
+<!-- <div class="modal fade" id="confirmDeleteModal" tabindex="-1" role="dialog" aria-labelledby="confirmDeleteModalLabel"
   aria-hidden="true">
   <div class="modal-dialog" role="document">
     <div class="modal-content">
@@ -245,7 +251,7 @@
       </div>
     </div>
   </div>
-</div>
+</div> -->
 <!-- Modal for Product Detail -->
 <div class="modal fade" id="productDetailModal" tabindex="-1" role="dialog" aria-labelledby="productDetailModalLabel"
   aria-hidden="true">
@@ -276,4 +282,31 @@
       </div>
     </div>
   </div>
+</div>
+
+
+
+<div class="modal fade" id="confirmDeleteModal" tabindex="-1" role="dialog" aria-labelledby="confirmDeleteModalLabel"
+  aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="confirmDeleteModalLabel">Xác nhận muốn hủy đơn hàng</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        Bạn có chắc muốn hủy đơn hàng này không ?
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Hủy </button>
+        <button type="button" class="btn btn-primary"(click)="confirmCancel()">Xác nhận</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div *ngIf="isLoadding" class="loading-overlay">
+  <div class="spinner"></div>
 </div>

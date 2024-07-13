@@ -203,23 +203,30 @@ export class UserManagementComponent implements OnInit {
     this.loadPosition();
     this.loadStatus();
     this.loadAllBankName();
+    this.isLoadding = true;
     if (this.loginToken) {
 
       this.productListService.getAllUser().subscribe(
         (data: ApiResponse) => {
           if (data.code === 1000) {
             this.user = data.result;
-
+            this.isLoadding = false;
           } else {
             console.error('Failed to fetch products:', data);
+            this.isLoadding = false;
+
           }
         },
         (error) => {
           console.error('Error fetching products:', error);
+          this.isLoadding = false;
+
         }
       );
     } else {
       console.error('No loginToken found in localStorage.');
+      this.isLoadding = false;
+
     }
     this.addAccountForm.get('city')?.valueChanges.subscribe(provinceName => {
       const selectedProvince = this.provinces.find(province => province.name === provinceName);
@@ -260,24 +267,32 @@ export class UserManagementComponent implements OnInit {
     this.onRoleChangeUpdate(); // gọi hàm này khi form vừa được khởi tạo
   }
   loadAllRole(): void {
+    this.isLoadding = true;
     this.productListService.getAllRole().subscribe(
       (data: any) => {
         if (data.code === 1000) {
           this.role = data.result as Role[];
+          this.isLoadding = false;
         } else {
           console.error('Invalid data returned:', data);
+          this.isLoadding = false;
+
         }
       },
       (error) => {
         console.error('Error fetching roles:', error);
+        this.isLoadding = false;
+
       }
     );
   }
   loadAllRoleEmployee(): void {
+    this.isLoadding = true;
     this.productListService.getAllRole().subscribe(
       (data: any) => {
         if (data.code === 1000) {
           this.role = data.result as Role[];
+          this.isLoadding = false;
 
           // Filter roles based on roleId == 4
           this.role = this.role.filter(role => role.roleId === 4);
@@ -286,10 +301,14 @@ export class UserManagementComponent implements OnInit {
           console.log('Filtered roles:', this.role);
         } else {
           console.error('Invalid data returned:', data);
+          this.isLoadding = false;
+
         }
       },
       (error) => {
         console.error('Error fetching roles:', error);
+        this.isLoadding = false;
+
       }
     );
   }
@@ -384,7 +403,7 @@ export class UserManagementComponent implements OnInit {
     } else {
       this.isPositionEnabled = true;
     }
-  } 
+  }
   onRoleChangeUpdate() {
     if (this.selectedRole === 4) {
       this.isPositionEnabled_Update = true;
@@ -429,7 +448,7 @@ export class UserManagementComponent implements OnInit {
     const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
     return emailRegex.test(email);
   }
-  
+
   validatePhoneNumber(phoneNumber: string): boolean {
     const phoneNumberRegex = /^[0-9]{10,12}$/;
     return phoneNumberRegex.test(phoneNumber);
@@ -504,8 +523,8 @@ export class UserManagementComponent implements OnInit {
       this.toastr.error('Không được bỏ trống trường Phường / Xã  ');
       return false;
     }
-    
-    
+
+
     const email = this.addAccountForm.controls['email'].value;
     const phoneNumber = this.addAccountForm.controls['phoneNumber'].value;
     const username = this.addAccountForm.controls['username'].value;
@@ -587,12 +606,12 @@ export class UserManagementComponent implements OnInit {
       this.toastr.error('Không được bỏ trống trường Phường / Xã  ');
       return false;
     }
-    
-    
+
+
     const email = this.editUserForm.controls['email'].value;
     const phoneNumber = this.editUserForm.controls['phoneNumber'].value;
     const username = this.editUserForm.controls['username'].value;
-   
+
     if (!this.validateUsername(username)) {
       this.toastr.error('Tên đăng nhập không hợp lệ.', 'Lỗi');
       return false;
@@ -626,15 +645,15 @@ export class UserManagementComponent implements OnInit {
         timer(200).subscribe(() => {
           window.location.reload();
         });
-      }, 
+      },
       (error: any) => {
         this.isLoadding = false;
         console.error('Lỗi khi đăng nhập', error);
-        if ( error.error.code === 1019) {
+        if (error.error.code === 1019) {
           this.isLoadding = false;
           this.toastr.error('Tên đăng nhập đã tồn tại',);
         }
-        else if ( error.error.code === 1001) {
+        else if (error.error.code === 1001) {
           this.isLoadding = false;
           this.toastr.error('Email đã tồn tại',);
         }
@@ -643,7 +662,7 @@ export class UserManagementComponent implements OnInit {
   }
   EditUser(): void {
     this.isLoadding = true;
-    if (!this.validateEditUser()) { 
+    if (!this.validateEditUser()) {
       this.isLoadding = false;
       return;
     }
@@ -653,8 +672,8 @@ export class UserManagementComponent implements OnInit {
     console.log("Data: ", userId)
     this.authenListService.editUserById(userId, editUserRequest).subscribe(
       () => {
-      this.isLoadding = false;
-        
+        this.isLoadding = false;
+
         this.toastr.success('Thay đổi thông tin thành công.');
         timer(200).subscribe(() => {
           window.location.reload();
@@ -665,16 +684,16 @@ export class UserManagementComponent implements OnInit {
         // }, 2000); // Delay 1 second before reload
       },
       (error: any) => {
-      this.isLoadding = false;
-        
-        if ( error.error.code === 1035) {
+        this.isLoadding = false;
+
+        if (error.error.code === 1035) {
           this.toastr.error('Không thể thay đổi quyền của nhân viên này vì họ đang đảm nhận công việc ở vị trí của họ',);
         }
-       
+
       }
     );
   }
-  
+
   SearchUserByNameorAddress(): void {
     console.log("Thực hiện tìm kiếm sản phẩm: ", this.searchKey);
 
@@ -690,11 +709,11 @@ export class UserManagementComponent implements OnInit {
               this.user = [];
               console.error('Tìm kiếm không thành công:', data);
               this.toastr.error('Không tìm thấy sản phẩm!', 'Tìm kiếm thất bại');
-            } 
+            }
           }
-        ); 
-    } else{
-      
+        );
+    } else {
+
       this.loadAllUsers();
     }
   }

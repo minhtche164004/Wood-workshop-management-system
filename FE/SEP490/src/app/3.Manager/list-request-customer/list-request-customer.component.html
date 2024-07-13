@@ -73,11 +73,12 @@
                       <i class="fa-solid fa-ellipsis-vertical"></i>
                     </a>
                   <td>
-                    <div class="product-image-wrapper">
-                      <img id="phongto" [src]="job.requestImages[0]?.fullPath"
-                        class="product-image img-md img-thumbnail" />
-                    </div>
+                    
+                  <a [href]="job.requestImages[0]?.fullPath" target="_blank">
+                    <img class="img_product" [src]="job.requestImages[0]?.fullPath" alt="Ảnh đại diện">
+                  </a>
                   </td>
+                    
 
 
                   <td>{{ job.description }}</td>
@@ -117,41 +118,55 @@
     <div class="modal-dialog modal-lg" role="document">
       <div class="modal-content">
         <div class="modal-header">
-          <h5 class="modal-title" id="editAccountModalLabel">Duyệt công việc</h5>
+          <h5 class="modal-title" id="editAccountModalLabel">Cập nhật yêu cầu đặt hàng</h5>
           <button type="button" class="close" data-dismiss="modal" aria-label="Close">
             <span aria-hidden="true">&times;</span>
           </button>
         </div>
         <div class="modal-body">
-         
           <div class="row">
             <div class="form-group col-md-12">
-              <label for="role">Duyệt đơn hàng</label>
+              <label for="approvalStatus">Duyệt đơn hàng</label>
               <div>
-                <select [(ngModel)]="selectedStatus" formControlName="status_id" class="form-control form-control-lg">
-                  <option [ngValue]="null" disabled selected>Duyệt đơn</option>
-                  <option *ngFor="let st of status_request" [ngValue]="st.status_id">
+                <select [(ngModel)]="selectedStatus" (ngModelChange)="onStatusChange()" formControlName="status_id" class="form-control form-control-lg">
+                  <option *ngFor="let st of status_request" [ngValue]="st.status_id" [disabled]="st.status_id === 1">
                     {{ st.status_name }}
                   </option>
                 </select>
               </div>
             </div>
           </div>
+          <!-- <div class="form-row">
+            <div class="form-group col-md-6">
+              <label for="fullname">Mã đơn đặt</label>
+              <input formControlName="code"  [readonly]="selectedStatus !== 5" class="form-control form-control-lg"
+                     [(ngModel)]="RequestData.code">
+            </div>
+            <div class="form-group col-md-6">
+              <label for="fullname">Tên khách hàng</label>
+              <input formControlName="fullname"  [readonly]="selectedStatus !== 5" class="form-control form-control-lg"
+                     [(ngModel)]="RequestData.fullname">
+            </div>
+          </div> -->
           <div class="form-row">
             <div class="form-group col-md-12">
-              <label for="username">Lí do từ chối</label>
-              <textarea formControlName="response" class="form-control form-control-lg" rows="3" [(ngModel)]="RequestData.requestId"></textarea>
+              <label for="response">Lí do từ chối đơn hàng</label>
+              <textarea formControlName="response" class="form-control form-control-lg" rows="3"
+                        [(ngModel)]="RequestData.response"
+                        [readonly]="selectedStatus !== 3"></textarea>
             </div>
-
           </div>
         </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-mau-do" data-dismiss="modal" #closeButton>Đóng</button>
-          <button type="submit" class="btn btn-primary">Lưu Thay Đổi</button>
-        </div>
+
+     
+      <div class="modal-footer">
+        <button type="button" class="btn btn-mau-do" data-dismiss="modal" #closeButton>Hủy bỏ</button>
+        <button type="submit" class="btn btn-primary">Lưu Thay Đổi</button>
       </div>
     </div>
+    </div>
   </div>
+
 
 </form>
 
@@ -203,8 +218,9 @@
                             <div class="image-container" style="height: 250px; max-width: 100%; overflow-x: auto;">
                               <div class="image-wrapper" style="display: flex; flex-wrap: nowrap;">
                                 <div *ngFor="let image of product.imagesList">
-                                  <img class="img_product_detail" [src]="image.fullPath" alt="Ảnh sản phẩm"
-                                    style="margin-right: 10px; max-width: 250px;">
+                                  <a [href]="image.fullPath" target="_blank">
+                                    <img class="img_product_detail" [src]="image.fullPath" alt="Ảnh sản phẩm" style="margin-right: 10px; max-width: 250px;">
+                                  </a>
                                 </div>
                               </div>
                             </div>
@@ -225,4 +241,7 @@
       </div>
     </div>
   </div>
+</div>
+<div *ngIf="isLoadding" class="loading-overlay">
+  <div class="spinner"></div>
 </div>

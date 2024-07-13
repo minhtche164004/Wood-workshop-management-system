@@ -47,7 +47,7 @@
             <th>Thao tác</th>
             <th>Mô tả lỗi</th>
             <th>Tình trạng</th>
-
+            <th style="text-align: center;">Số sản phẩm lỗi</th>
             <th>Giải pháp</th>
           </tr>
         </thead>
@@ -79,6 +79,7 @@
               </ng-container>
               <ng-template #notFixed>Chưa sửa</ng-template> -->
             </td>
+            <td style="text-align: center;">{{ product?.quantity }}</td>
             <td>{{ product.solution }}</td>
           </tr>
         </tbody>

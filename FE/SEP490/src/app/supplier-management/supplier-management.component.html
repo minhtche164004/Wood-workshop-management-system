@@ -51,19 +51,19 @@
             *ngFor="let supplier of suppliers | paginate: { itemsPerPage: 10, currentPage: currentPage }; let i = index">
             <td>{{ i + 1 + (currentPage - 1) * 10 }}</td>
             <td class="action-buttons">
-              <a href="#" class="settings" title="Edit" data-toggle="modal" data-target="#editAccountModal"
+              <a href="#" class="settings" title="Chỉnh sửa thông tin" data-toggle="modal" data-target="#editAccountModal"
                 (click)="getDatasupplierMaterial(supplier.supplierMaterial)">
 
                 <i class="fa-solid fa-pen-to-square"></i>
               </a>
-              <a href="#" class="delete" title="Delete" data-toggle="modal" data-target="#confirmDeleteModal"
+              <a href="#" class="delete" title="Xóa nhà cung cấp" data-toggle="modal" data-target="#confirmDeleteModal"
                 (click)="setDeleteId(supplier.supplierMaterial)">
                 <i class="fa-regular fa-trash-can"></i>
               </a>
 
-              <a href="#" class="info" title="Info" data-toggle="modal" data-target="#productDetailModal">
+              <!-- <a href="#" class="info" title="Info" data-toggle="modal" data-target="#productDetailModal">
                 <i class="fa-solid fa-circle-info"></i>
-              </a>
+              </a> -->
             </td>
 
             <td>{{ supplier.supplierName }}</td>
@@ -77,7 +77,7 @@
   </div>
 
   <pagination-controls style="justify-content: right; display: flex;" (pageChange)="currentPage = $event"
-    previousLabel="Trang trước" nextLabel="Trang sau">
+    previousLabel="Trang trước" nextLabel="Trang sau"  [maxSize]="3">
   </pagination-controls>
   <div class="clearfix" style="justify-content: right; display: flex;">
     <div class="hint-text">Hiển thị <b>{{ (currentPage - 1) * 10 + 1 }}</b> tới <b>{{ currentPage * 10
@@ -157,7 +157,7 @@
               </div>
             </div>
             <div class="row">
-              <div class="form-group col-md-12">
+              <div class="form-group col-md-6">
                 <label for="role">Vật Liệu</label>
                 <div>
                   <select [(ngModel)]="selectedMaterial" formControlName="sub_material_id"
@@ -201,7 +201,7 @@
     </div>
   </div>
   <!-- Modal for Product Detail -->
-  <div class="modal fade" id="productDetailModal" tabindex="-1" role="dialog" aria-labelledby="productDetailModalLabel"
+  <!-- <div class="modal fade" id="productDetailModal" tabindex="-1" role="dialog" aria-labelledby="productDetailModalLabel"
     aria-hidden="true">
     <div class="modal-dialog modal-lg" role="document">
       <div class="modal-content">
@@ -233,4 +233,4 @@
   </div>
   <div *ngIf="isLoadding" class="loading-overlay">
     <div class="spinner"></div>
-  </div>
+  </div> -->

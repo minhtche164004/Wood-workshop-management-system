@@ -177,7 +177,7 @@ export class JobManagementComponent implements OnInit {
   //   console.log('export emp_id: ', emp_id);
 
   // }
-
+ 
   openConfirmChangeStatusJob(product: any): void {
 
     this.selectedProduct = { ...product };
@@ -640,10 +640,11 @@ export class JobManagementComponent implements OnInit {
   }
   createErrorJob() {
     this.isLoadding = true;
+   
     const jobId = this.selectedProduct.job_id; // Hoặc lấy từ giá trị khác nếu cần
     console.log('Job ID:', jobId);
     const formValues = this.errorForm.value;
-
+   
     console.log('Form values:', formValues);
     this.productListService.createProductError(
       jobId,
@@ -672,6 +673,7 @@ export class JobManagementComponent implements OnInit {
         }
         
       );
+      this.errorForm.reset();
   }
   getProductSubMaterial(productId: number, mateId: number) {
     this.jobService.getSubMTRProduct(productId, mateId).subscribe(
@@ -691,20 +693,40 @@ export class JobManagementComponent implements OnInit {
       }
     );
   }
+  // hàm search api bằng produc thawojc product rq
   onSearch(selectedCategory: number, searchKey: string): void {
      console.log('Thực hiện tìm kiếm:', searchKey);
      console.log('Category:', selectedCategory);
      this.isLoadding = true;
     if (selectedCategory === 0) {
-      this.loadProductRQForJob(); this.isLoadding = false;
+      this.jobService.getProductJobByNameOrCode(searchKey).subscribe( 
+        (data) => {
+          if (data.code === 1000) {
+            this.products = data.result;
+            console.log('Danh sách sản phẩm:', this.products);
+            this.isLoadding = false;
+          } else {
+            console.error('Failed to fetch products:', data);
+            this.toastr.error('Không thể lấy danh sách sản phẩm!', 'Lỗi');
+            this.isLoadding = false;
+          }
+        },
+        (error) => {
+          console.error('Error fetching products:', error);
+          this.toastr.error('Có lỗi xảy ra!', 'Lỗi'); 
+          this.isLoadding = false;
+        }
+      ); 
+      this.isLoadding = false;
     } else if (selectedCategory === 1) {
-      this.loadProduct(); this.isLoadding = false;
+      this.loadProduct(); 
+      this.isLoadding = false;
     }
   }
-  onSearchInput(cate: number,searchKey: any){
-    console.log("Selected cate: ", cate)
-    console.log("Search key: ", searchKey)
-  }
+  // onSearchInput(cate: number,searchKey: any){
+  //   console.log("Selected cate: ", cate)
+  //   console.log("Search key: ", searchKey)
+  // }
   loadPosition3(product: any) {
     this.selectedProduct = { ...product };
     this.type = this.selectedProduct.statusJob.type;

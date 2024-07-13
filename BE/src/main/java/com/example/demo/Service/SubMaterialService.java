@@ -1,6 +1,7 @@
 package com.example.demo.Service;
 
 //import com.example.demo.Dto.JobDTO.Employee_MaterialDTO;
+import com.example.demo.Dto.JobDTO.Employee_MaterialDTO;
 import com.example.demo.Dto.MaterialDTO.MaterialDTO;
 import com.example.demo.Dto.ProductDTO.QuantityTotalDTO;
 import com.example.demo.Dto.SubMaterialDTO.*;
@@ -37,9 +38,9 @@ public interface SubMaterialService {
     List<ReProduct_SubmaterialDTO> getRequestProductSubMaterialByRequestProductId(int id,int material_id);
 
    // List<Employeematerials> createEMaterial(int emp_id,int mate_id,int product_id);
-    List<Employeematerials> getAllEmpMate();
+    List<Employee_MaterialDTO> getAllEmpMate();
 
-    List<Employeematerials> findEmployeematerialsByName(String key);
+    List<Employee_MaterialDTO> findEmployeematerialsByName(String key);
 
     SubMaterialViewDTO EditSubMaterial(int id,SubMaterialViewDTO subMaterialViewDTO);
 

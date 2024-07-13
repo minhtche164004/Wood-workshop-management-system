@@ -8,15 +8,20 @@ import redis.clients.jedis.*;
 public class RedisConfig {
 
 
+    private volatile static JedisPooled redisInstance;
     public synchronized static JedisPooled getRedisInstance() {
-
-        HostAndPort address = new HostAndPort("redis-17341.c251.east-us-mz.azure.redns.redis-cloud.com", 17341);
-        JedisClientConfig config = DefaultJedisClientConfig.builder()
-                .user("default")
-                .password("xcHV2iYQow6KxZMxZz4klIoKxgYuytAf")
-                .build();
-        JedisPooled jedisPooled = new JedisPooled(address, config);
-        return jedisPooled;
+        if(redisInstance != null){
+            return redisInstance;
+        }
+        else {
+            HostAndPort address = new HostAndPort("redis-17341.c251.east-us-mz.azure.redns.redis-cloud.com", 17341);
+            JedisClientConfig config = DefaultJedisClientConfig.builder()
+                    .user("default")
+                    .password("xcHV2iYQow6KxZMxZz4klIoKxgYuytAf")
+                    .build();
+            redisInstance = new JedisPooled(address, config);
+        }
+        return redisInstance;
     }
 
     public static void main(String[] args) {

@@ -21,7 +21,7 @@ declare var $: any;
 })
 
 export class TotalSalaryComponent implements OnInit {
-  keyword = 'username';
+  keyword = 'fullname';
   searchKey: string = '';
   totalSalary: any[] = [];
   currentPage: number = 1;
@@ -50,22 +50,23 @@ export class TotalSalaryComponent implements OnInit {
 
 
   ngOnInit(): void {
-    this.getTotalSalary();
+   
     this.getAllEmployee();
     this.getAllPostionEmp();
     this.getBankList();
+    this.getTotalSalary();
   }
   getBankList(): void {
-   
+   // this.isLoadding = true;
     this.salaryService.getBanks().subscribe(
       (data) => {
         this.bankList = data.data;
         //  console.log('Response from getBanks:', this.bankList);
-       
+      //  this.isLoadding = false;
       },
       (error) => {
         console.error('Error from getBanks:', error);
-        
+      //  this.isLoadding = false;
       }
     );
   }
@@ -74,7 +75,7 @@ export class TotalSalaryComponent implements OnInit {
   //  console.log('From Date:', this.fromDate);
   //  console.log('To Date:', this.toDate);
    // console.log('Selected Position:', this.selectedPosition);
-   // console.log('Keyword:', this.searchKey);
+    console.log('Keyword:', this.searchKey);
     this.previousSearchKey = this.searchKey;
     this.searchSalary();
 
@@ -85,7 +86,8 @@ export class TotalSalaryComponent implements OnInit {
       (data) => {
         if (data.code === 1000) {
           this.totalSalary = data.result;
-      //    console.log('Total salary: ', this.totalSalary); this.isLoadding = false;
+      //    console.log('Total salary: ', this.totalSalary); 
+      this.isLoadding = false;
         } 
 
       },
@@ -95,72 +97,89 @@ export class TotalSalaryComponent implements OnInit {
     );
   }
   getAllPostionEmp(): void {
-    this.isLoadding = true;
+  //  this.isLoadding = true;
     this.employeeService.getAllPostionEmp().subscribe(
       (data) => {
         if (data.code === 1000) {
           this.positionEmpList = data.result;
        //   console.log('Danh sách chuc vu nhan vien: ', this.positionEmpList); this.isLoadding = false;
         } else {
-          console.error('Failed to fetch products:', data); this.isLoadding = false;
+          console.error('Failed to fetch products:', data); 
+          //this.isLoadding = false;
         }
 
       },
     )
   }
+  employeeFullnames: any[] = [];
+  employeeInfoList: { fullname: any}[] = [];
   getAllEmployee(): void {
     this.isLoadding = true;
     this.employeeService.getAllEmployee().subscribe(
       (data) => {
         if (data.code === 1000) {
           this.employeeList = data.result;
-      //    console.log('Danh sách nhan vien: ', this.employeeList); this.isLoadding = false;
+          
+          this.employeeInfoList = this.employeeList.map(employee => {
+            return {
+              fullname: employee.userInfor?.fullname,
+            };
+          });
+          
+          console.log('fullname: ', this.employeeInfoList); 
+          this.isLoadding = false;
         } else {
           console.error('Failed to fetch products:', data);
-           this.isLoadding = false;
+          // this.isLoadding = false;
         }
 
       },
       (error) => {
-        console.log(error); this.isLoadding = false;
+        console.log(error); 
+        //this.isLoadding = false;
       }
     );
   }
   sanitize(name: string): SafeHtml {
     return this.sanitizer.bypassSecurityTrustHtml(name);
   }
-  selectEvent(item: any) {
 
-  }
   selectEmp(product: any): void {
     this.selectedEmp = product; // Adjust based on your product object structure
-    console.log('Lương nhân viên:', this.selectedEmp.username);
+    console.log('Lương nhân viên:', this.selectedEmp.fullname);
     this.searchSalary();
-
   }
   previousSearchKey: string = '';
   searchSalary(): void {
     this.isLoadding = true;
- //   console.log('Search key before search:', this.searchKey);
+    console.log('Search key before search:', this.searchKey);
+    if(this.searchKey === '') {
+      this.searchKey = this.selectedEmp.fullname
+    } 
   //  console.log('Multi search username:', this.selectedEmp.username);
    // console.log('Multi search fromDate:', this.fromDate);
   //  console.log('Multi search toDate:', this.toDate);
   //  console.log('Multi search position:', this.selectedPosition);
-    this.salaryService.multSearchSalary(this.selectedEmp.username, this.startDate, this.endDate, '', this.selectedPosition).subscribe(
+    this.salaryService.multSearchSalary(this.searchKey, this.startDate, this.endDate, '', this.selectedPosition).subscribe(
       (data) => {
         if (data.code === 1000) {
           this.totalSalary = data.result;
-          console.log('search luong bang ten: ', this.totalSalary); this.isLoadding = false;
+          console.log('search luong bang ten: ', this.totalSalary); 
           this.selectedEmp = '';
           this.searchKey = '';
+          
         } else {
-          console.error('Failed to fetch products:', data); this.isLoadding = false;
+          console.error('Failed to fetch products:', data); 
           this.toastr.error('Không tìm thấy lương của nhân viên', 'Lỗi');
           this.selectedEmp = ''
           this.searchKey = '';
         }
-
+        this.isLoadding = false;
       },
+      (error) => {
+        console.log(error);
+        this.isLoadding = false;
+      }
     )
   }
   updateBanking(jobId: number, event: Event): void {

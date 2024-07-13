@@ -74,7 +74,8 @@ public enum ErrorCode {
     EXISTED_WISHLIST(1034,"Sản phẩm đã tồn tại trong danh sách yêu thích, không cần thêm vào nữa  ",HttpStatus.BAD_REQUEST),
     INVALID_FULL_NAME(1035,"Tên không được có chữ số",HttpStatus.BAD_REQUEST),
     INVALID_QUANTITY_PRODUCT_ERROR(1036,"Không được nhập quá số lượng sản phẩm làm theo công việc ",HttpStatus.BAD_REQUEST),
-    QUANTITY_INVALID(1024,"Số lượng phải là số nguyên và lớn hơn 0 , nhập sai định dạng ",HttpStatus.BAD_REQUEST)
+    QUANTITY_INVALID(1024,"Số lượng phải là số nguyên và lớn hơn 0 , nhập sai định dạng ",HttpStatus.BAD_REQUEST),
+    EMPLOYEE_MATERIAL_EXISTED(1038,"Sản phẩm đã được giao nguyên vật liệu cho nhân viên, không thể chỉnh sửa",HttpStatus.BAD_REQUEST)
 
     // OTP_EXPIRED(1013,"OTP has expired! A new OTP has been sent to your email",HttpStatus.EXPECTATION_FAILED),
     ;

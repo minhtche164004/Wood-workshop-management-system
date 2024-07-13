@@ -32,19 +32,14 @@
                                 </select>
                                 <input type="text" class="form-control" placeholder="Tìm kiếm sản phẩm..."
                                     [(ngModel)]="searchKey" name="search">
-                                <button class="btn search-button" type="submit">
+                                <button class="btn search-button" type="submit"
+                                    (click)="onSearch(selectedCategory, searchKey)">
                                     <i class="fa fa-search"></i>
                                 </button>
                             </div>
-
-
                         </div>
-
                     </div>
-
                 </div>
-
-
                 <table class="table table-striped table-hover">
                     <thead>
                         <tr>
@@ -52,7 +47,7 @@
                             <th>Mã đơn hàng</th>
                             <th>Thao tác</th>
                             <th>Tên sản phẩm</th>
-                            <th>Loại sản phẩm</th>
+
                             <th>Số lượng</th>
                             <th>Đơn giá (vnd)</th>
                             <th>Trạng thái</th>
@@ -67,12 +62,12 @@
                         <tr
                             *ngFor="let product of productRQs | paginate: { itemsPerPage: 10, currentPage: currentPage }; let i = index">
                             <td>{{ i + 1 + (currentPage - 1) * 10 }}</td>
-                            <td>{{ product?.code ? product.code : 'Không có mã đơn hàng' }}
+                            <td>{{ product?.code }}
                             </td>
 
                             <td class="action-buttons">
                                 <a href="#" class="settings" title="Chỉnh sửa" data-toggle="modal"
-                                    data-target="#editProductJobModal" (click)="editSubMaterial(product)">
+                                    data-target="#editProductJobModal" (click)="editJobDetail(product.job_id)">
                                     <i class="fa-solid fa-pen-to-square"></i>
                                 </a>
                                 <a href="#" class="delete" title="Xóa" data-toggle="modal"
@@ -80,55 +75,65 @@
                                     <i class="fa-regular fa-trash-can"></i>
                                 </a>
                                 <a style="margin-left: 10px;" title="Chi tiết" data-toggle="modal"
-                                    data-target="#productDetailModal">
+                                    data-target="#detailJobModal" (click)="showJobDetail(product)">
                                     <i class="fa-solid fa-ellipsis-vertical"></i>
                                 </a>
                             </td>
                             <td>{{ product?.product_name }}</td>
-                            <td>Loại sản phẩm</td>
+
                             <td>{{ product?.quantity }}</td>
                             <td>{{ product?.price | number: '1.0-3' }}</td>
                             <td>
-                                <ng-container *ngIf="product?.statusJob.type !== 1">
-                                    <select style="width: 100%;" [ngModel]="product?.statusJob.status_id" 
+                                <!-- <ng-container *ngIf="product?.statusJob.type !== 1 && product?.statusJob.type !== 6">
+                                    <select style="width: 100%;" [ngModel]="product?.statusJob.status_id"
                                             (change)="acceptJob($event, product?.job_id)">
+                                        <ng-container *ngFor="let status of statusType">
+                                            <option *ngIf="status.type === product.statusJob.type"
+                                                    [value]="status.status_id"
+                                                    [disabled]="status.status_id === 4 || status.status_id === 7 || status.status_id === 10">
+                                                {{ status.status_name }}
+                                            </option>
+                                        </ng-container>
+                                    </select>
+                                </ng-container>
+                                <span *ngIf="product.statusJob.type === 1">Chưa giao việc</span>
+                                <span *ngIf="product.statusJob.type === 6">Chờ đặt cọc</span> -->
+                                <ng-container *ngIf="product?.statusJob.type !== 1 && product?.statusJob.type !== 6">
+                                    <select class="custom-select" [ngModel]="product?.statusJob.status_id" (change)="openModal($event,product?.job_id)">
                                       <ng-container *ngFor="let status of statusType">
-                                        <option *ngIf="status.type === product.statusJob.type" 
-                                                [value]="status.status_id" 
+                                        <option *ngIf="status.type === product.statusJob.type" [value]="status.status_id"
                                                 [disabled]="status.status_id === 4 || status.status_id === 7 || status.status_id === 10">
                                           {{ status.status_name }}
                                         </option>
                                       </ng-container>
+                                      <button #launchModalButton type="button" class="btn btn-primary d-none" data-toggle="modal" data-target="#myModal">
+                                        Launch modal
+                                      </button>
                                     </select>
                                   </ng-container>
+                                  <span *ngIf="product.statusJob.type === 1">Chưa giao việc</span>
+                                  <span *ngIf="product.statusJob.type === 6">Chờ đặt cọc</span>
                                   
-
-                                <span *ngIf="product.statusJob.type === 1">Chưa giao việc</span>
 
 
 
                             </td>
-
                             <td>{{ product?.user_name }}</td>
                             <td>
-
                                 <button style="margin-left: -10px; size: 15px;" data-toggle="modal"
                                     data-target="#assignJobModal" (click)="manageJob(product)" class="btn btn-sm"
-                                    [class.btn-outline-primary]="product.statusJob.status_id !== 10 && product.statusJob.status_id !== 7 && product.statusJob.status_id !== 4"
-                                    [class.btn-danger]="product.statusJob.status_id === 10 || product.statusJob.status_id === 7 || product.statusJob.status_id === 4"
-                                    [disabled]="product.statusJob.status_id === 10 || product.statusJob.status_id === 7 || product.statusJob.status_id === 4">
+                                    [class.btn-outline-primary]="product.statusJob.status_id !== 10 && product.statusJob.status_id !== 7 && product.statusJob.status_id !== 4 && product.statusJob.status_id !== 14"
+                                    [class.btn-danger]="product.statusJob.status_id === 10 || product.statusJob.status_id === 7 || product.statusJob.status_id === 4 || product.statusJob.status_id === 14"
+                                    [disabled]="product.statusJob.status_id === 10 || product.statusJob.status_id === 7 || product.statusJob.status_id === 4 || product.statusJob.status_id === 14">
                                     Giao việc
                                 </button>
-
-
-
                             </td>
                             <td><button class="btn btn-sm" data-toggle="modal" data-target="#errorProduct"
                                     (click)="errorJob(product)"
-                                    [class.btn-outline-primary]="product.statusJob.status_id !== 10 && product.statusJob.status_id !== 7 && product.statusJob.status_id !== 4"
-                                    [class.btn-danger]="product.statusJob.status_id === 10 || product.statusJob.status_id === 7 || product.statusJob.status_id === 4"
-                                    [disabled]="product.statusJob.status_id === 10 || product.statusJob.status_id === 7 || product.statusJob.status_id === 4"><i
-                                        class="fa-solid fa-triangle-exclamation"></i></button></td>
+                                    [class.btn-outline-primary]="product.statusJob.status_id !== 10 && product.statusJob.status_id !== 7 && product.statusJob.status_id !== 4 && product.statusJob.status_id !== 14 "
+                                    [class.btn-danger]="product.statusJob.status_id === 10 || product.statusJob.status_id === 7 || product.statusJob.status_id === 4 || product.statusJob.status_id === 14 || product.statusJob.type === 1"
+                                    [disabled]="product.statusJob.status_id === 10 || product.statusJob.status_id === 7 || product.statusJob.status_id === 4 || product.statusJob.status_id === 14 || product.statusJob.type === 1">
+                                    <i class="fa-solid fa-triangle-exclamation"></i></button></td>
                         </tr>
                     </tbody>
 
@@ -147,6 +152,24 @@
         </div>
     </div>
 </div>
+<div class="modal fade" id="myModal" tabindex="-1" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="myModal">Cập nhật trạng thái việc làm</h5>
+                <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                Bạn có chắc chắn muốn cập nhật trạng thái việc làm? 
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
+                <button type="button" class="btn btn-primary" (click)="acceptJob(selectedModalJob,selectedModalId)">Chắc chắn</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 <!-- assignJobModal -->
 <div class="modal fade" id="assignJobModal" role="dialog" aria-labelledby="assignJobModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered modal-lg">
@@ -156,7 +179,6 @@
                 <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body p-4">
-
                 <form [formGroup]="createJobs" (ngSubmit)="createNewJob()">
                     <!-- Content of the form -->
                     <div class="container">
@@ -281,8 +303,7 @@
                                     </thead>
 
                                     <tbody>
-                                        <tr
-                                            *ngFor="let product of subMaterialProduct; let i = index" >
+                                        <tr *ngFor="let product of subMaterialProduct; let i = index">
                                             <td>{{ i + 1 }}</td>
                                             <td>{{ product?.sub_name }}</td>
                                             <td>{{ product?.quantity }}</td>
@@ -296,8 +317,8 @@
                                 <div class="customer-info">
                                     <h5>Mô tả chi tiết yêu cầu việc làm</h5>
                                     <textarea class="form-control" rows="6" formControlName="description"
-                                        name="jobDescription" [(ngModel)]="jobDescription"
-                                        placeholder="Nhập mô tả chi tiết..."></textarea>
+                                        name="jobDescription" 
+                                        placeholder="Nhập mô tả chi tiết..." required></textarea>
                                 </div>
                             </div>
                         </div>
@@ -313,7 +334,150 @@
         </div>
     </div>
 </div>
+<!-- Detail job -->
+<div class="modal fade" id="detailJobModal" role="dialog" aria-labelledby="detailJobModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content">
+            <div class="modal-header bg-primary text-white">
+                <h5 class="modal-title" id="detailJobModalLabel">Thông tin việc làm</h5>
+                <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body p-4">
+                <form [formGroup]="detailJob">
+                    <!-- Content of the form -->
+                    <div class="container">
+                        <div class="card order-detail-card">
+                            <div class="card-body p-4">
+                                <!-- Employee information -->
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <section class="customer-info mb-4">
+                                            <h5 style="text-align: center;">Thông tin nhân viên</h5>
+                                            <div class="row">
+                                                <div class="col-md-6">
+                                                    <p>
+                                                        <strong>Tên nhân viên:</strong>
+                                                    </p>
+                                                </div>
+                                                <div class="col-md-6">
 
+                                                    {{ selectedJob.user_name }}
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-md-6">
+                                                    <p>
+                                                        <strong>Số lượng:</strong>
+                                                    </p>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <!-- {{ selectedProduct.quantity }}  -->
+                                                    {{ selectedJob.quantityProduct }}
+
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-md-6">
+                                                    <strong>Giá công khoán:</strong>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    {{ selectedJob.cost }}
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-md-6">
+                                                    <strong>Ngày yêu cầu hoàn thành công việc: </strong>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <!-- <input type="date" placeholder="dd / mm / YYYY" name="start"
+                                                        formControlName="start"> -->
+
+                                                </div>
+                                            </div>
+
+
+
+                                        </section>
+                                    </div>
+
+                                    <div class="col-md-6">
+                                        <section class="order-summary mb-4">
+                                            <h5 style="text-align: center;">Mô tả việc làm</h5>
+                                            <div class="row">
+                                                <div class="col-md-6">
+                                                    <strong>Mã đơn hàng:</strong>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    {{ selectedJob.code }}
+                                                </div>
+                                            </div>
+
+                                            <div class="row">
+                                                <div class="col-md-6">
+                                                    <strong>Tên công việc:</strong>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    {{ selectedJob.job_name}}
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-md-6">
+                                                    <strong>Ngày yêu cầu hoàn thành công việc:</strong>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <input type="date" formControlName="finish"
+                                                        placeholder="Nhập ngày hoàn thành công việc " required>
+                                                </div>
+                                            </div>
+
+                                        </section>
+                                    </div>
+                                </div>
+                                <table style="text-align: center;" class="table table-striped table-hover">
+                                    <thead>
+                                        <tr>
+                                            <th>STT</th>
+                                            <th>Tên nguyên liệu</th>
+                                            <th>Số lượng / sản phẩm</th>
+                                            <th>Tổng số lượng </th>
+                                            <th>Đơn vị</th>
+
+                                        </tr>
+                                    </thead>
+
+                                    <tbody>
+                                        <tr *ngFor="let product of subMaterialProduct; let i = index">
+                                            <td>{{ i + 1 }}</td>
+                                            <td>{{ product?.sub_name }}</td>
+                                            <td>{{ product?.quantity }}</td>
+                                            <td>{{ product.quantity * (selectedProduct?.quantity ?? 1) }}</td>
+                                            <td>{{ product?.sub_type }}</td>
+                                        </tr>
+                                    </tbody>
+
+                                </table>
+                                <!-- Job description -->
+                                <div class="customer-info">
+                                    <h5>Mô tả chi tiết yêu cầu việc làm</h5>
+                                    <textarea class="form-control" rows="6" readonly
+                                        placeholder="Nhập mô tả chi tiết..."
+                                        required>{{ selectedJob.description }}</textarea>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Modal footer -->
+                    <div class="modal-footer">
+                        <!-- <button type="submit" class="btn btn-primary">Tạo việc</button> -->
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
 
 <div class="modal fade" style="margin-top: 15%;" id="addProductModal" tabindex="-1" role="dialog"
     aria-labelledby="addProductModalLabel" aria-hidden="true">
@@ -358,40 +522,20 @@
                             <input type="number" class="form-control" id="productPrice" formControlName="quantity">
                         </div>
                     </div>
-                    
+                    <div class="modal-footer d-flex justify-content-center">
+                        <button type="submit" class="btn btn-primary">Thêm mới</button>
+                        <button type="button" class="btn btn-mau-do" data-dismiss="modal">Hủy</button>
+
+                    </div>
                 </form>
-                <div class="modal-footer d-flex justify-content-center">
-                    <button type="submit" class="btn btn-primary">Lưu thay đổi</button>
-                    <button type="button" class="btn btn-mau-do" data-dismiss="modal">Hủy</button>
-                    
-                </div>
+
             </div>
         </div>
     </div>
 </div>
 
-<div class="modal fade" id="confirmChangeStatusJob" tabindex="-1" role="dialog"
-    aria-labelledby="confirmChangeStatusJobLabel" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header bg-primary text-white">
-                <h5 class="modal-title" id="confirmChangeStatusJobLabel">Thay đổi trạng thái việc làm</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                Bạn có chắc chắn muốn thay đổi trạng thái việc làm? "{{ confirmStatus }}" ?
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Hủy bỏ</button>
-                <button type="button" class="btn btn-primary" (click)="changeStatusJob()">Xác nhận</button>
-            </div>
-        </div>
-    </div>
-</div>
 
-<div class="modal fade" style="margin-top: 15%;" id="errorProduct" tabindex="-1" role="dialog"
+<div class="modal fade" style="margin-top: 5%;" id="errorProduct" tabindex="-1" role="dialog"
     aria-labelledby="errorProductLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-wide" role="document">
         <div class="modal-content">
@@ -404,7 +548,7 @@
                 </button>
             </div>
             <div class="modal-body">
-                <form [formGroup]="errorForm" (ngSubmit)="onSubmit()">
+                <form [formGroup]="errorForm" (ngSubmit)="createErrorJob()">
                     <div class="row">
                         <div style="display: flex;">
                             <div class="col-md-6">
@@ -436,6 +580,15 @@
                                 </div>
 
                             </div>
+                            <div class="col-md-6">
+                                <div class="col-md-6">
+                                    <h3 style="color: black;">Số lượng sản phẩm lỗi:</h3>
+                                </div>
+                                <div class="col-md-6">
+                                    <input formControlName="quantity" type="number" required>
+                                </div>
+
+                            </div>
                         </div>
                     </div>
 
@@ -443,18 +596,18 @@
                         <div class="row" style="margin-left: 7px; margin-top: 18px;">
                             <h3 style="color: black;">Mô tả lỗi: </h3>
                             <textarea class="form-control" formControlName="description" id="description"
-                                name="description" rows="10" style="height: 100px;" cols="5"></textarea>
+                                name="description" rows="10" style="height: 100px;" cols="5" required></textarea>
                         </div>
                         <div class="row" style="margin-left: 7px; margin-top: 18px;">
                             <h3 style="color: black;">Giải pháp: </h3>
                             <textarea class="form-control" formControlName="solution" id="solution" name="solution"
-                                rows="10" style="height: 100px;" cols="5"></textarea>
+                                rows="10" style="height: 100px;" cols="5" required></textarea>
                         </div>
                     </div>
 
                     <div class="modal-footer d-flex justify-content-center">
                         <button type="button" class="btn btn-mau-do" data-dismiss="modal">Hủy</button>
-                        <button type="submit" class="btn btn-primary">Lưu thay đổi</button>
+                        <button type="submit" class="btn btn-primary">Tạo báo cáo</button>
                     </div>
                 </form>
             </div>
@@ -464,49 +617,172 @@
 
 
 <!-- Modal for Editing Product -->
-<div class="modal fade" id="editProductJobModal" tabindex="-1" role="dialog"
-    aria-labelledby="editProductJobModalLabel" aria-hidden="true">
-    <div class="modal-dialog" role="document">
+<div class="modal fade" id="editProductJobModal" tabindex="-1" role="dialog" aria-labelledby="editProductJobModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
         <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="editProductJobModal">Chỉnh sửa nguyên vật liệu</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
+            <div class="modal-header bg-primary text-white">
+                <h5 class="modal-title" id="assignJobModalLabel">Chi tiết giao việc làm</h5>
+                <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close"></button>
             </div>
-            <div class="modal-body">
-                <form>
-                    <div class="form-group">
-                        <label for="editProductName">Tên nguyên vật liệu</label>
-                        <input type="text" class="form-control" id="editProductName"
-                            formControlName="sub_material_name">
-                    </div>
-                    <div class="form-group">
-                        <label for="editProductDescription">Mô tả</label>
-                        <textarea class="form-control" id="editProductDescription"
-                            formControlName="description"></textarea>
-                    </div>
-                    <div class="form-group">
-                        <label for="editProductCategory">Kiểu nguyên vật liệu</label>
-                        <input type="text" class="form-control" formControlName="material_name" id="editProductCategory"
-                            readonly>
+            <div class="modal-body p-4">
 
+                <form [formGroup]="createJobs" (ngSubmit)="createNewJob()">
+                    <!-- Content of the form -->
+                    <div class="container">
+                        <div class="card order-detail-card">
+                            <div class="card-body p-4">
+                                <!-- Employee information -->
+                                <div class="row">
+                                    <div class="col-md-6">
+
+                                        <section class="customer-info mb-4">
+
+                                            <h5 style="text-align: center;">Thông tin nhân viên</h5>
+
+
+                                            <div class="row">
+                                                <div class="col-md-6">
+                                                    <p>
+                                                        <strong>Tên nhân viên:</strong>
+                                                    </p>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <!-- {{this.selectedProduct.type_id}}
+                                                    {{this.selectedProduct.user_id}} -->
+
+                                                    <select class="form-select" [(ngModel)]="selectedEmployee"
+                                                        name="selectedEmployee"
+                                                        (change)="onChangeSelectedEmployee($event)">
+                                                        <option [value]="null" disabled selected>Chọn nhân viên</option>
+                                                        <option *ngFor="let employee of positionEmployees"
+                                                            [value]="employee.userId">
+                                                            {{ employee.username }} : {{ employee.userId }}
+                                                        </option>
+                                                    </select>
+
+
+
+                                                </div>
+                                            </div>
+
+                                            <div class="row">
+                                                <div class="col-md-6">
+                                                    <p>
+                                                        <strong>Số lượng:</strong>
+                                                    </p>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <!-- {{ selectedProduct.quantity }}  -->
+                                                    {{ this.selectedProduct.quantity }}
+
+                                                </div>
+                                            </div>
+
+
+                                            <div class="row">
+                                                <div class="col-md-6">
+                                                    <strong>Giá công khoán:</strong>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <input type="number" name="costJob" formControlName="cost"
+                                                        >
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-md-6">
+                                                    <strong>Ngày yêu cầu hoàn thành công việc: </strong>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <input type="date" placeholder="dd / mm / YYYY" name="start"
+                                                        formControlName="start">
+                                                </div>
+                                            </div>
+
+
+
+                                        </section>
+                                    </div>
+
+                                    <div class="col-md-6">
+                                        <section class="order-summary mb-4">
+                                            <h5 style="text-align: center;">Mô tả việc làm</h5>
+                                            <div class="row">
+                                                <div class="col-md-6">
+                                                    <strong>Mã đơn hàng:</strong>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    {{ selectedProduct.code }}
+                                                </div>
+                                            </div>
+
+                                            <div class="row">
+                                                <div class="col-md-6">
+                                                    <strong>Tên công việc:</strong>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <input type="text" formControlName="job_name"
+                                                        placeholder="Nhập tên công việc">
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-md-6">
+                                                    <strong>Ngày yêu cầu hoàn thành công việc:</strong>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <input type="date" formControlName="finish"
+                                                        placeholder="Nhập ngày hoàn thành công việc ">
+                                                </div>
+                                            </div>
+
+                                        </section>
+                                    </div>
+                                </div>
+                                <table style="text-align: center;" class="table table-striped table-hover">
+                                    <thead>
+                                        <tr>
+                                            <th>STT</th>
+                                            <th>Tên nguyên liệu</th>
+                                            <th>Số lượng / sản phẩm</th>
+                                            <th>Tổng số lượng </th>
+                                            <th>Đơn vị</th>
+
+                                        </tr>
+                                    </thead>
+
+                                    <tbody>
+                                        <tr *ngFor="let product of subMaterialProduct; let i = index">
+                                            <td>{{ i + 1 }}</td>
+                                            <td>{{ product?.sub_name }}</td>
+                                            <td>{{ product?.quantity }}</td>
+                                            <td>{{ product.quantity * (selectedProduct?.quantity ?? 1) }}</td>
+                                            <td>{{ product?.sub_type }}</td>
+                                        </tr>
+                                    </tbody>
+
+                                </table>
+                                <!-- Job description -->
+                                <div class="customer-info">
+                                    <h5>Mô tả chi tiết yêu cầu việc làm</h5>
+                                    <textarea class="form-control" rows="6" formControlName="description"
+                                        name="jobDescription"
+                                        
+                                        placeholder="Nhập mô tả chi tiết..."></textarea>
+                                </div>
+                            </div>
+                        </div>
                     </div>
-                    <div class="form-group">
-                        <label for="editProductQuantity">Số lượng</label>
-                        <input type="number" class="form-control" formControlName="quantity" id="editProductQuantity">
-                    </div>
-                    <div class="form-group">
-                        <label for="editProductPrice">Đơn giá (vnđ)</label>
-                        <input type="number" class="form-control" formControlName="unit_price" id="editProductPrice">
+
+                    <!-- Modal footer -->
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-primary">Tạo việc</button>
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Hủy</button>
                     </div>
                 </form>
             </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
-                <button type="button" class="btn btn-primary" (click)="saveChanges()">Lưu thay đổi</button>
-            </div>
-
         </div>
     </div>
-</div>
+
+    <div *ngIf="isLoadding" class="loading-overlay">
+        <div class="spinner"></div>
+    </div>

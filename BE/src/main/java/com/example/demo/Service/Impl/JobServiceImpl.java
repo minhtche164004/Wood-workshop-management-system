@@ -58,6 +58,8 @@ public class JobServiceImpl implements JobService {
     private ModelMapper modelMapper;
     @Autowired
     private CheckConditionService checkConditionService;
+    @Autowired
+    private Employee_Material_Repository employeeMaterialRepository;
 
     @Override
     public List<JobProductDTO> getListRequestProductJob() {
@@ -440,6 +442,15 @@ public class JobServiceImpl implements JobService {
     @Override
     public Long CountQuantityOfJob(String status_name, int month, int year) {
         return jobRepository.countCompletedJobsByMonthAndYear(status_name,month,year);
+    }
+
+    @Override
+    public List<Employeematerials> getAllMaterialForEmployee() {
+        List<Employeematerials> list = employeeMaterialRepository.findAll();
+        if(list == null){
+            throw new AppException(ErrorCode.NOT_FOUND);
+        }
+        return list;
     }
 
 

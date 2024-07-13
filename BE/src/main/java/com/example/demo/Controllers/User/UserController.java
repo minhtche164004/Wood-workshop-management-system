@@ -34,6 +34,7 @@ public class UserController {
     @PutMapping("/UpdateProfile")
     public ApiResponse<?> UpdateProfile(@RequestBody UpdateProfileDTO updateProfileDTO){
         ApiResponse<UserDTO> apiResponse= new ApiResponse<>();
+        jedis.del("UserProfile");
         apiResponse.setResult(userService.UpdateProfile(updateProfileDTO));
         return apiResponse;
     }

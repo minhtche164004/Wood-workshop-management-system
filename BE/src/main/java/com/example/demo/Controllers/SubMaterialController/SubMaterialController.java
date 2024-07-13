@@ -1,6 +1,7 @@
 package com.example.demo.Controllers.SubMaterialController;
 
 //import com.example.demo.Dto.JobDTO.Employee_MaterialDTO;
+import com.example.demo.Config.RedisConfig;
 import com.example.demo.Dto.ProductDTO.CreateExportMaterialProductRequest;
 import com.example.demo.Dto.ProductDTO.ProductDTO;
 import com.example.demo.Dto.ProductDTO.QuantityTotalDTO;
@@ -12,6 +13,7 @@ import com.example.demo.Entity.Products;
 import com.example.demo.Entity.RequestProductsSubmaterials;
 import com.example.demo.Entity.SubMaterials;
 import com.example.demo.Response.ApiResponse;
+import com.example.demo.Service.JobService;
 import com.example.demo.Service.ProductService;
 import com.example.demo.Service.SubMaterialService;
 import io.jsonwebtoken.io.IOException;
@@ -28,6 +30,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import redis.clients.jedis.JedisPooled;
 
 import java.net.MalformedURLException;
 import java.nio.file.Path;
@@ -43,6 +46,9 @@ public class SubMaterialController {
     private SubMaterialService subMaterialService;
     @Autowired
     private ResourceLoader resourceLoader;
+    @Autowired
+    private JobService jobService;
+    private static final JedisPooled jedis = RedisConfig.getRedisInstance();
 
     @GetMapping("/getall")
     public ApiResponse<?> getAllSubMaterials() {
@@ -88,6 +94,12 @@ public class SubMaterialController {
         apiResponse.setResult(subMaterialService.UpdateSub(id,updateSubDTO));
         return apiResponse;
     }
+    @GetMapping("/GetAllMaterialForEmployee")
+    public ApiResponse<?> GetAllMaterialForEmployee() {
+        ApiResponse<List> apiResponse = new ApiResponse<>();
+        apiResponse.setResult(jobService.getAllMaterialForEmployee());
+        return apiResponse;
+    }
 
 
     @GetMapping("/SearchByNameorCode")
@@ -99,12 +111,14 @@ public class SubMaterialController {
     @PutMapping("/EditSubMaterialProduct")
     public ApiResponse<?> EditSubMaterialProduct(@RequestBody CreateExportMaterialProductRequest request) {
         ApiResponse<List> apiResponse = new ApiResponse<>();
+        jedis.del("all_sub_mate_product");
         apiResponse.setResult(subMaterialService.EditSubMaterialProduct(request.getProductId(), request.getSubMaterialQuantities()));
         return apiResponse;
     }
     @PutMapping("/EditSubMaterialRequestProduct")
     public ApiResponse<?> EditSubMaterialRequestProduct(@RequestBody CreateExportMaterialProductRequest request) {
         ApiResponse<List> apiResponse = new ApiResponse<>();
+        jedis.del("all_sub_mate_re_product");
         apiResponse.setResult(subMaterialService.EditSubMaterialRequestProduct(request.getProductId(), request.getSubMaterialQuantities()));
         return apiResponse;
     }

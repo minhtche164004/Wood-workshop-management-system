@@ -266,21 +266,7 @@ public class SubMaterialServiceImpl implements SubMaterialService {
 //        return employeematerialsList;
 //    }
 
-    @Transactional
-    @Override
-    public List<ProductSubMaterials> createExportMaterialProduct(int productId, Map<Integer, Double> subMaterialQuantities) {
-        Products product = productRepository.findById(productId);
-        List<ProductSubMaterials> productSubMaterialsList = new ArrayList<>();
-        for (Map.Entry<Integer, Double> entry : subMaterialQuantities.entrySet()) {
-            int subMaterialId = entry.getKey();
-            double quantity = entry.getValue();
-            SubMaterials subMaterial = subMaterialsRepository.findById1(subMaterialId);
-            ProductSubMaterials productSubMaterial = new ProductSubMaterials(subMaterial, product, quantity);
-            productSubMaterialsList.add(productSubMaterial);
-        }
-        productSubMaterialsRepository.saveAll(productSubMaterialsList);
-        return productSubMaterialsList;
-    }
+
 
     @Transactional
     @Override
@@ -318,10 +304,29 @@ public class SubMaterialServiceImpl implements SubMaterialService {
                 employeeMaterials.setRequestProductsSubmaterials(requestProductsSubmaterials);
                 employeeMaterials.setEmployee(user);
 
+
+                // Lưu từng đối tượng và thêm vào danh sách kết quả
+                employeeMaterialsList.add(employeeMaterialRepository.save(employeeMaterials));
+
             }
             apiResponse.setResult(Collections.singletonList("Xuất đơn nguyên vật liệu cho đơn hàng thành công"));
             return ResponseEntity.ok(apiResponse);
         }
+    }
+    @Transactional
+    @Override
+    public List<ProductSubMaterials> createExportMaterialProduct(int productId, Map<Integer, Double> subMaterialQuantities) {
+        Products product = productRepository.findById(productId);
+        List<ProductSubMaterials> productSubMaterialsList = new ArrayList<>();
+        for (Map.Entry<Integer, Double> entry : subMaterialQuantities.entrySet()) {
+            int subMaterialId = entry.getKey();
+            double quantity = entry.getValue();
+            SubMaterials subMaterial = subMaterialsRepository.findById1(subMaterialId);
+            ProductSubMaterials productSubMaterial = new ProductSubMaterials(subMaterial, product, quantity);
+            productSubMaterialsList.add(productSubMaterial);
+        }
+        productSubMaterialsRepository.saveAll(productSubMaterialsList);
+        return productSubMaterialsList;
     }
 
     @Transactional
@@ -389,8 +394,15 @@ public class SubMaterialServiceImpl implements SubMaterialService {
         Products products = productRepository.findById(product_id);
         List<ProductSubMaterials> list = productSubMaterialsRepository.findByProductID(product_id);
         List<ProductSubMaterials> productSubMaterialsList = new ArrayList<>();
+        List<Employeematerials> list_emp =employeeMaterialRepository.findEmployeematerialsByProductId(product_id);
+        if(!list_emp.isEmpty()){
+            throw new AppException(ErrorCode.EMPLOYEE_MATERIAL_EXISTED);
+        }
         if(!list.isEmpty()){
-            productSubMaterialsRepository.deleteAll(list);
+            for(ProductSubMaterials re :list){
+                productSubMaterialsRepository.deleteProductSubMaterialsById(re.getProductSubMaterialId()); // Xóa trước khi thêm mới
+            }
+//            productSubMaterialsRepository.deleteAll(list);
             for (Map.Entry<Integer, Double> entry : subMaterialQuantities.entrySet()) {
                 int subMaterialId = entry.getKey();
                 double quantity = entry.getValue();
@@ -402,13 +414,21 @@ public class SubMaterialServiceImpl implements SubMaterialService {
         }
         return productSubMaterialsList;
     }
+
+
     @Override
     public List<RequestProductsSubmaterials> EditSubMaterialRequestProduct(int request_product_id, Map<Integer, Double> subMaterialQuantities) {
         RequestProducts requestProducts = requestProductRepository.findById(request_product_id);
-        List<RequestProductsSubmaterials> list = new ArrayList<>();
+        List<RequestProductsSubmaterials> list = requestProductsSubmaterialsRepository.findByRequestProductID(request_product_id);
         List<RequestProductsSubmaterials> requestProductsSubmaterialsList = new ArrayList<>();
-        if(!list.isEmpty()) {
-            requestProductsSubmaterialsRepository.deleteAll(list);
+        List<Employeematerials> list_emp = employeeMaterialRepository.findEmployeematerialsByRequestProductId(request_product_id);
+        if (!list_emp.isEmpty()) {
+            throw new AppException(ErrorCode.EMPLOYEE_MATERIAL_EXISTED);
+        }
+        if (!list.isEmpty()) {
+            for(RequestProductsSubmaterials re :list){
+                requestProductsSubmaterialsRepository.deleteRequestProductSubMaterialsById(re.getRequestProductsSubmaterialsId()); // Xóa trước khi thêm mới
+            }
             for (Map.Entry<Integer, Double> entry : subMaterialQuantities.entrySet()) {
                 int subMaterialId = entry.getKey();
                 double quantity = entry.getValue();
@@ -418,8 +438,19 @@ public class SubMaterialServiceImpl implements SubMaterialService {
             }
             requestProductsSubmaterialsRepository.saveAll(requestProductsSubmaterialsList);
         }
-        return  requestProductsSubmaterialsList;
+        else{
+            for (Map.Entry<Integer, Double> entry : subMaterialQuantities.entrySet()) {
+                int subMaterialId = entry.getKey();
+                double quantity = entry.getValue();
+                SubMaterials subMaterial = subMaterialsRepository.findById1(subMaterialId);
+                RequestProductsSubmaterials requestProductsSubmaterials = new RequestProductsSubmaterials(subMaterial, requestProducts, quantity);
+                requestProductsSubmaterialsList.add(requestProductsSubmaterials);
+            }
+            requestProductsSubmaterialsRepository.saveAll(requestProductsSubmaterialsList);
+        }
+        return requestProductsSubmaterialsList;
     }
+
 //    @Override
 //    public List<Employeematerials> createEMaterial(int emp_id, int mate_id, int product_id) {
 //        List<Employeematerials> employeeMaterialsList = new ArrayList<>();

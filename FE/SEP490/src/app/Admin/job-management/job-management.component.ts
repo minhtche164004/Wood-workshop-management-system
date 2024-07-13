@@ -118,6 +118,7 @@ export class JobManagementComponent implements OnInit {
   }
   selectedModalJob: string = '';
   selectedModalId: string = '';
+  
   openModal(event: Event, jobId: number) {
     this.isLoadding = true;
     console.log('event:', event);
@@ -129,6 +130,11 @@ export class JobManagementComponent implements OnInit {
     // S? d?ng tham chi?u này d? kích ho?t click
     this.launchModalButton.nativeElement.click();
   }
+
+  cancelChangeStatusJob() {
+    this.selectedModalId = '';
+  }
+
   acceptJob(jobId: string, statusId: string): void {
     this.isLoadding = true
 

@@ -21,7 +21,7 @@ declare var $: any;
 })
 
 export class TotalSalaryComponent implements OnInit {
-  keyword = 'username';
+  keyword = 'userInfor.fullname';
   searchKey: string = '';
   totalSalary: any[] = [];
   currentPage: number = 1;
@@ -117,7 +117,7 @@ export class TotalSalaryComponent implements OnInit {
       (data) => {
         if (data.code === 1000) {
           this.employeeList = data.result;
-      //    console.log('Danh sách nhan vien: ', this.employeeList); this.isLoadding = false;
+          console.log('Danh sách nhan vien: ', this.employeeList); this.isLoadding = false;
         } else {
           console.error('Failed to fetch products:', data);
           // this.isLoadding = false;

@@ -165,7 +165,7 @@
                 Bạn có chắc chắn muốn cập nhật trạng thái việc làm? 
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
+                <button type="button" class="btn btn-secondary" (click)="cancelChangeStatusJob()" data-dismiss="modal">Đóng</button>
                 <button type="button" class="btn btn-primary" (click)="acceptJob(selectedModalJob,selectedModalId)">Chắc chắn</button>
             </div>
         </div>

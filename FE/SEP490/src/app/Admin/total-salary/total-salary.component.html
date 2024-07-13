@@ -60,7 +60,7 @@
                                         </ng-autocomplete>
 
                                         <ng-template #itemTemplate let-item>
-                                            <a [innerHTML]="sanitize(item.username)"></a>
+                                            <a [innerHTML]="sanitize(item.userInfor?.fullname)"></a>
                                         </ng-template>
 
                                         <ng-template #notFoundTemplate let-notFound>

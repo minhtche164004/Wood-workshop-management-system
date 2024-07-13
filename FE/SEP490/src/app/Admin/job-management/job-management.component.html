@@ -9,10 +9,12 @@
                             <h2>Quản lí Sản Xuất</h2>
                         </div>
                         <div class="col-sm-7 text-end" style="text-align: center;">
-                            <a href="#" class="btn btn-secondary" data-toggle="modal" data-target="#addProductModal">
-                                <i class="material-icons">&#xE147;</i> <span>Thêm Sản Phẩm
-                                </span>
-                            </a>
+                            <!-- {{ selectedCategory }} -->
+                            <div *ngIf="selectedCategory != 0">
+                              <a href="#" class="btn btn-secondary" data-toggle="modal" data-target="#addProductModal">
+                                <i class="material-icons">&#xE147;</i> <span>Thêm Sản Phẩm</span>
+                              </a>
+                            </div>
                         </div>
                     </div>
 
@@ -140,7 +142,7 @@
                 </table>
 
                 <pagination-controls style="justify-content: right; display: flex;" (pageChange)="currentPage = $event"
-                    previousLabel="Trang trước" nextLabel="Trang sau">
+                    previousLabel="Trang trước" nextLabel="Trang sau" [maxSize]="4">
                 </pagination-controls>
                 <div class="clearfix" style="justify-content: right; display: flex;">
                     <div class="hint-text">Hiển thị <b>{{ (currentPage - 1) * 10 + 1 }}</b> tới <b>{{ currentPage * 10
@@ -386,12 +388,12 @@
                                             </div>
                                             <div class="row">
                                                 <div class="col-md-6">
-                                                    <strong>Ngày yêu cầu hoàn thành công việc: </strong>
+                                                    <strong>Ngày nhận công việc: </strong>
                                                 </div>
                                                 <div class="col-md-6">
                                                     <!-- <input type="date" placeholder="dd / mm / YYYY" name="start"
-                                                        formControlName="start"> -->
-
+                                                        formControlName="timeStart"> -->
+                                                        {{ selectedJob.timeStart | date:'dd / MM / yyyy' }}
                                                 </div>
                                             </div>
 
@@ -422,11 +424,10 @@
                                             </div>
                                             <div class="row">
                                                 <div class="col-md-6">
-                                                    <strong>Ngày yêu cầu hoàn thành công việc:</strong>
+                                                    <strong>Ngày yêu cầu hoàn thành:</strong>
                                                 </div>
                                                 <div class="col-md-6">
-                                                    <input type="date" formControlName="finish"
-                                                        placeholder="Nhập ngày hoàn thành công việc " required>
+                                                    {{ selectedJob.timeFinish | date:'dd / MM / yyyy' }}
                                                 </div>
                                             </div>
 
@@ -484,7 +485,7 @@
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header bg-primary text-white">
-                <h5 class="modal-title" id="addProductModal">Thêm sản phẩm sản xuất</h5>
+                <h5 class="modal-title" id="addProductModal">Thêm sản phẩm để sản xuất</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
@@ -622,12 +623,12 @@
     <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
         <div class="modal-content">
             <div class="modal-header bg-primary text-white">
-                <h5 class="modal-title" id="assignJobModalLabel">Chi tiết giao việc làm</h5>
+                <h5 class="modal-title" id="assignJobModalLabel">Cập nhật giao việc làm</h5>
                 <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body p-4">
 
-                <form [formGroup]="createJobs" (ngSubmit)="createNewJob()">
+                <form [formGroup]="editJob" (ngSubmit)="saveChanges()">
                     <!-- Content of the form -->
                     <div class="container">
                         <div class="card order-detail-card">
@@ -650,19 +651,7 @@
                                                 <div class="col-md-6">
                                                     <!-- {{this.selectedProduct.type_id}}
                                                     {{this.selectedProduct.user_id}} -->
-
-                                                    <select class="form-select" [(ngModel)]="selectedEmployee"
-                                                        name="selectedEmployee"
-                                                        (change)="onChangeSelectedEmployee($event)">
-                                                        <option [value]="null" disabled selected>Chọn nhân viên</option>
-                                                        <option *ngFor="let employee of positionEmployees"
-                                                            [value]="employee.userId">
-                                                            {{ employee.username }} : {{ employee.userId }}
-                                                        </option>
-                                                    </select>
-
-
-
+                                                    <input type="text" class="form-control" id="job_name" formControlName="job_name" readonly>
                                                 </div>
                                             </div>
 
@@ -674,7 +663,8 @@
                                                 </div>
                                                 <div class="col-md-6">
                                                     <!-- {{ selectedProduct.quantity }}  -->
-                                                    {{ this.selectedProduct.quantity }}
+                                                    <input type="text" class="form-control" id="quantity_product" formControlName="quantity_product" readonly>
+                                          
 
                                                 </div>
                                             </div>
@@ -691,7 +681,7 @@
                                             </div>
                                             <div class="row">
                                                 <div class="col-md-6">
-                                                    <strong>Ngày yêu cầu hoàn thành công việc: </strong>
+                                                    <strong>Ngày nhận việc: </strong>
                                                 </div>
                                                 <div class="col-md-6">
                                                     <input type="date" placeholder="dd / mm / YYYY" name="start"
@@ -727,7 +717,7 @@
                                             </div>
                                             <div class="row">
                                                 <div class="col-md-6">
-                                                    <strong>Ngày yêu cầu hoàn thành công việc:</strong>
+                                                    <strong>Ngày hoàn thành công việc:</strong>
                                                 </div>
                                                 <div class="col-md-6">
                                                     <input type="date" formControlName="finish"
@@ -775,8 +765,9 @@
 
                     <!-- Modal footer -->
                     <div class="modal-footer">
-                        <button type="submit" class="btn btn-primary">Tạo việc</button>
+                        
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Hủy</button>
+                        <button type="submit" class="btn btn-primary">Lưu thay đổi</button>
                     </div>
                 </form>
             </div>

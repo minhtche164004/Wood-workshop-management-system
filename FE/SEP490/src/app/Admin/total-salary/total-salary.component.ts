@@ -50,22 +50,23 @@ export class TotalSalaryComponent implements OnInit {
 
 
   ngOnInit(): void {
-    this.getTotalSalary();
+   
     this.getAllEmployee();
     this.getAllPostionEmp();
     this.getBankList();
+    this.getTotalSalary();
   }
   getBankList(): void {
-    this.isLoadding = true;
+   // this.isLoadding = true;
     this.salaryService.getBanks().subscribe(
       (data) => {
         this.bankList = data.data;
         //  console.log('Response from getBanks:', this.bankList);
-        this.isLoadding = false;
+      //  this.isLoadding = false;
       },
       (error) => {
         console.error('Error from getBanks:', error);
-        this.isLoadding = false;
+      //  this.isLoadding = false;
       }
     );
   }
@@ -85,7 +86,8 @@ export class TotalSalaryComponent implements OnInit {
       (data) => {
         if (data.code === 1000) {
           this.totalSalary = data.result;
-      //    console.log('Total salary: ', this.totalSalary); this.isLoadding = false;
+      //    console.log('Total salary: ', this.totalSalary); 
+      this.isLoadding = false;
         } 
 
       },
@@ -95,14 +97,15 @@ export class TotalSalaryComponent implements OnInit {
     );
   }
   getAllPostionEmp(): void {
-    this.isLoadding = true;
+  //  this.isLoadding = true;
     this.employeeService.getAllPostionEmp().subscribe(
       (data) => {
         if (data.code === 1000) {
           this.positionEmpList = data.result;
        //   console.log('Danh sách chuc vu nhan vien: ', this.positionEmpList); this.isLoadding = false;
         } else {
-          console.error('Failed to fetch products:', data); this.isLoadding = false;
+          console.error('Failed to fetch products:', data); 
+          //this.isLoadding = false;
         }
 
       },
@@ -116,12 +119,14 @@ export class TotalSalaryComponent implements OnInit {
           this.employeeList = data.result;
       //    console.log('Danh sách nhan vien: ', this.employeeList); this.isLoadding = false;
         } else {
-          console.error('Failed to fetch products:', data); this.isLoadding = false;
+          console.error('Failed to fetch products:', data);
+          // this.isLoadding = false;
         }
 
       },
       (error) => {
-        console.log(error); this.isLoadding = false;
+        console.log(error); 
+        //this.isLoadding = false;
       }
     );
   }

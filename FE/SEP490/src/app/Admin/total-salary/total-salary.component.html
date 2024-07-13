@@ -87,7 +87,7 @@
                             <th>STT</th>
                             <th>Mã việc</th>
                             <!-- <th>Thao tác</th> -->
-                             <th>Ngày hoàn thành</th>
+                            <th>Ngày hoàn thành</th>
                             <th>Tên nhân viên</th>
                             <!-- <th>Nhân viên</th> -->
                             <th>Vị trí</th>
@@ -103,7 +103,7 @@
                             *ngFor="let product of totalSalary | paginate: { itemsPerPage: 10, currentPage: currentPage }; let i = index">
                             <td>{{ i + 1 + (currentPage - 1) * 10 }}</td>
                             <td>{{ product?.code }}</td>
-                             <td>{{ product?.date}}</td>
+                            <td>{{ product?.date}}</td>
                             <!-- <td class="action-buttons">
                                 <a href="#" class="settings" title="Chỉnh sửa" data-toggle="modal"
                                     data-target="#editProductModal">
@@ -125,7 +125,7 @@
                                 <select [(ngModel)]="product.advanceSuccess" style="width: 120%;"
                                     (change)="updateBanking(product.advanceSalaryId,$event)" name="advanceSuccess">
                                     <option [ngValue]="false" disabled>Chưa thanh toán</option>
-                                   
+
                                     <option [value]="true">Đã thanh toán</option>
 
                                 </select>
@@ -135,11 +135,13 @@
                             <td>{{ product?.amount | number: '1.0-3'}}</td>
                             <td>{{ product?.user?.userInfor?.bank_name }}</td>
                             <td>{{ product?.user?.userInfor?.bank_number }}</td>
-                            <td> <button class="btn" [ngClass]="{'btn-primary': !product?.advanceSuccess, 'btn-secondary': product?.advanceSuccess}"
-                                data-toggle="modal" data-target="#QRPAY" (click)="thanhToan(product)" [disabled]="product?.advanceSuccess">
-                          <i class="fa-solid fa-money-bill-transfer"></i>
-                        </button>
-                        
+                            <td> <button class="btn"
+                                    [ngClass]="{'btn-primary': !product?.advanceSuccess, 'btn-secondary': product?.advanceSuccess}"
+                                    data-toggle="modal" data-target="#QRPAY" (click)="thanhToan(product)"
+                                    [disabled]="product?.advanceSuccess">
+                                    <i class="fa-solid fa-money-bill-transfer"></i>
+                                </button>
+
                             </td>
                         </tr>
                     </tbody>
@@ -147,14 +149,15 @@
                 </table>
 
                 <pagination-controls style="justify-content: right; display: flex; color: black;"
-                    (pageChange)="currentPage = $event" previousLabel="Trang trước" nextLabel="Trang sau">
+                    (pageChange)="currentPage = $event" previousLabel="Trang trước" nextLabel="Trang sau" [maxSize]="5">
                 </pagination-controls>
                 <div class="clearfix" style="justify-content: right; display: flex;">
                     <div class="hint-text">Hiển thị <b>{{ (currentPage - 1) * 10 + 1 }}</b> tới <b>{{
-                            currentPage * 10
-                            > totalSalary.length ? totalSalary.length : currentPage * 10 }}</b> trong tổng <b>{{
+                            currentPage * 10 > totalSalary.length ? totalSalary.length : currentPage * 10 }}</b> trong
+                        tổng <b>{{
                             totalSalary.length }}</b> bản ghi</div>
                 </div>
+
 
             </div>
         </div>
@@ -238,8 +241,10 @@
             <div class="modal-body text-center p-4">
                 <img style="width:100%;" [src]="qrImageUrl" class="img-fluid">
             </div>
-            <div class="modal-footer text-center justify-content-center"> <!-- Thêm justify-content-center để căn giữa -->
-                <button type="button" class="btn btn-primary" (click)="updateBankingModal(this.selectedBanking)">Đã thanh toán</button>
+            <div class="modal-footer text-center justify-content-center">
+                <!-- Thêm justify-content-center để căn giữa -->
+                <button type="button" class="btn btn-primary" (click)="updateBankingModal(this.selectedBanking)">Đã
+                    thanh toán</button>
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Hủy bỏ</button>
             </div>
         </div>

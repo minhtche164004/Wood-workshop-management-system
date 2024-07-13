@@ -90,7 +90,7 @@ export class ReportManagementComponent implements OnInit {
       (data) => {
         if (data.code === 1000) {
           this.errorDetail = data.result;
-          //console.log('Chi tiết lỗi sản phẩm:', data.result);
+          console.log('Chi tiết lỗi sản phẩm:', data.result);
           this.isLoadding = false;
         }
       },
@@ -130,7 +130,7 @@ export class ReportManagementComponent implements OnInit {
                request_product_name: errorEdit.request_product_name,
                solution: errorEdit.solution,
                user_name_order: errorEdit.user_name_order,
-               isFixed: errorEdit.isFixed
+               isFixed: errorEdit.fix
 
              };
             
@@ -181,12 +181,14 @@ deleteProduct() {
           this.toastr.success('Xóa báo cáo lỗi sản phẩm thành công!', 'Thành công');
           this.ngOnInit();
           this.isLoadding = false;
+          $('[data-dismiss="modal"]').click();
         }
         const cancelButton = document.querySelector('.btn.btn-secondary[data-dismiss="modal"]') as HTMLElement;
         if (cancelButton) { // Check if the button exists
           cancelButton.click(); // If it exists, click it to close the modal
         }
         this.isLoadding = false;
+        $('[data-dismiss="modal"]').click();this.isLoadding = false;
       },
       (error) => {
        
@@ -247,9 +249,4 @@ showProductDetails(error: any) {
   this.isLoadding = false;
 }
 
-updateFixStatus(newValue: boolean): void {
-  this.errorDetail.fix = newValue;
-  this.errorForm.patchValue({ isFixed: newValue });
-  console.log('New fix status:', newValue);
-}
 }

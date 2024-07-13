@@ -69,13 +69,13 @@ export class ProductComponent implements OnInit, OnDestroy {
   }
 
   addToWishlist(productId: number): void {
-    this.wishList.addWishlist(productId).subscribe(
+    this.wishList.addWishlist(productId).subscribe( 
       data => {
         console.log('data:', data);
         if (data.code === 1000) {
           this.toastr.success('Sản phẩm đã được thêm vào yêu thích!', 'Thành công');
         } else if (data.code === 1034) {
-          this.toastr.success('Sản phẩm đã tồn tại trong danh sách yêu thích!', 'Thành công');
+          this.toastr.error('Sản phẩm đã được thêm vào yêu thích!', 'Thành công');
         } else {
           console.log("data.code: ", data.code);
           this.toastr.warning('Vui lòng đăng nhập để thêm sản phẩm yêu thích!', 'Lỗi');

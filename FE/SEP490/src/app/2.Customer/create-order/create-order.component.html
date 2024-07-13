@@ -239,7 +239,7 @@
                                         </div>
                                     </div>
                                     <hr>
-                                    <div class="form-group">
+                                    <div class="form-group" *ngIf="inforId != 0">
                                         <label style="font-size: 16px;" for="special_order">Loại đơn hàng</label>
                                         <select class="form-control" id="special_order" formControlName="special_order"
                                             (change)="onIsProductChange($event)">
@@ -271,11 +271,12 @@
                                     <hr>
                                     <div class="col-md-12">
                                         <form [formGroup]="productForm">
-                                            <div formArrayName="productItems">
+                                            <div formArrayName="productItems" class="form-group">
                                                 <div *ngFor="let productItem of productItems.controls; let i = index"
                                                     [formGroupName]="i" class="row mb-3">
 
-                                                    <div *ngIf="!isForRequestProduct" class="ng-autocomplete" class="col-md-8 mb-5">
+                                                    <div *ngIf="!isForRequestProduct" class="ng-autocomplete"
+                                                        class="col-md-8 mb-5">
                                                         <label>Tên sản phẩm</label>
                                                         <ng-autocomplete *ngIf="productList" [data]="productList"
                                                             [searchKeyword]="keywordProduct"
@@ -294,7 +295,8 @@
                                                         </ng-template>
                                                     </div>
 
-                                                    <div *ngIf="isForRequestProduct" class="ng-autocomplete" class="col-md-8 mb-5">
+                                                    <div *ngIf="isForRequestProduct" class="ng-autocomplete"
+                                                        class="col-md-8 mb-5">
                                                         <label>Tên sản phẩm</label>
                                                         <ng-autocomplete *ngIf="productList" [data]="productList"
                                                             [searchKeyword]="keywordProductRequest"
@@ -331,8 +333,6 @@
                                                     </div>
                                                     <!-- Nút xóa -->
                                                     <div class="col-md-1 d-flex align-items-center">
-                                                        <div class="form-group"></div>
-                                                        <label></label>
                                                         <button type="button" class="btn btn-danger"
                                                             (click)="removeItem(i)">Xóa</button>
                                                     </div>
@@ -356,7 +356,7 @@
                                             formControlName="payment_method">
                                             <option [ngValue]="null" disabled selected>Phương thức thanh toán</option>
                                             <option [ngValue]="1">Thanh toán bằng tiền mặt</option>
-                                            <option [ngValue]="0">Thanh toán qua thẻ</option>
+                                            <option [ngValue]="2">Thanh toán qua thẻ</option>
                                         </select>
                                     </div>
 

@@ -37,6 +37,14 @@ export class TotalSalaryComponent implements OnInit {
   bankList: any[] = [];
   ndChuyenKhoan: string = 'DoGoSyDung thanh toan tien cong (Ma: {{code}})'
   qrImageUrl: string = '';
+  startDate: string = '';
+  endDate: string = '';
+  position: number = 0;
+  selectedBanking: any;
+  advanceSuccessValues: any = {
+    trueValue: true,
+    falseValue: false
+  };
   constructor(private dataService: DataService, private http: HttpClient, private toastr: ToastrService, private employeeService: EmployeeService, private jobService: JobService, private fb: FormBuilder, private productListService: ProductListService, private sanitizer: DomSanitizer, private productService: ProductService, private salaryService: SalaryService) { }
 
 
@@ -47,6 +55,7 @@ export class TotalSalaryComponent implements OnInit {
     this.getBankList();
   }
   getBankList(): void {
+    this.isLoadding = true;
     this.salaryService.getBanks().subscribe(
       (data) => {
         this.bankList = data.data;
@@ -65,8 +74,8 @@ export class TotalSalaryComponent implements OnInit {
     console.log('To Date:', this.toDate);
     console.log('Selected Position:', this.selectedPosition);
     console.log('Keyword:', this.searchKey);
-
-    this.salaryService.multSearchSalary(this.searchKey, this.fromDate, this.toDate, '').subscribe(
+   
+    this.salaryService.multSearchSalary(this.searchKey, this.fromDate, this.toDate, '', this.selectedPosition).subscribe(
       (data) => {
         if (data.code === 1000) {
           this.totalSalary = data.result;
@@ -144,8 +153,11 @@ export class TotalSalaryComponent implements OnInit {
   }
   searchSalary(): void {
     this.isLoadding = true;
-    console.log('Selected emp:', this.selectedEmp.username);
-    this.salaryService.multSearchSalary(this.selectedEmp.username, '', '', '').subscribe(
+    console.log('Multi search salarary:', this.selectedEmp.username);
+    console.log('Multi search fromDate:', this.fromDate);
+    console.log('Multi search toDate:', this.toDate);
+    console.log('Multi search position:', this.selectedPosition);
+    this.salaryService.multSearchSalary(this.selectedEmp.username, this.startDate , this.endDate,'', this.selectedPosition).subscribe(
       (data) => {
         if (data.code === 1000) {
           this.totalSalary = data.result;
@@ -157,7 +169,26 @@ export class TotalSalaryComponent implements OnInit {
       },
     )
   }
-
+  updateBanking(jobId: number, event: Event): void {
+    this.isLoadding = true;
+    const newValue = (event.target as HTMLSelectElement).value;
+    console.log('Giá trị được chọn:', newValue);
+    console.log('Job ID:', jobId);
+    this.salaryService.updateBanking(jobId, newValue).subscribe(
+      (data) => {
+        if (data.code === 1000) {
+          console.log('Update banking thanh cong'); 
+          this.toastr.success('Cập nhật trạng thái thanh toán thành công', 'Thành công');
+          this.getTotalSalary();
+          this.isLoadding = false;
+        } else {
+          console.error('Failed to fetch products:', data);
+          this.toastr.error('Có lỗi xảy ra khi cập nhật trạng thái thanh toán. Vui lòng thử lại sau.', 'Lỗi');
+          this.isLoadding = false;
+        }
+      }
+    )
+  }
   onChangeSearch(event: any) {
     this.isLoadding = true;
     this.selectedEmp = event.target.value;
@@ -170,7 +201,7 @@ export class TotalSalaryComponent implements OnInit {
     this.isLoadding = true;
     this.selectedPosition = selectedPosition;
     console.log('Selected position:', this.selectedPosition);
-    this.countJobByUserId(this.selectedPosition);
+    this.searchSalary();
   }
   countJobByUserId(id: number): void {
     this.isLoadding = true;
@@ -210,10 +241,11 @@ export class TotalSalaryComponent implements OnInit {
   }
   thanhToan(product: any): void {
     this.isLoadding = true;
+    this.qrImageUrl = '';
     console.log('Thanh toan:', product);
     console.log('Amount: ', product.amount);
     console.log('accountId: ', product.user?.userInfor?.bank_number)
-    console.log('username: ', product.user?.username)
+    console.log('username: ', product?.user?.userInfor?.fullname)
     console.log('code: ', product.code)
    // const bankName = product.user?.userInfor?.bank_name;
     const formattedNdChuyenKhoan = this.ndChuyenKhoan.replace('{{code}}', product.code.toString());
@@ -222,7 +254,7 @@ export class TotalSalaryComponent implements OnInit {
 
      const bin = this.getBinByBankNameOrShortName(product.user?.userInfor?.bank_name);
     console.log('BIN:', bin);
-    this.salaryService.getQRBanking(product.amount, product.user?.userInfor?.bank_number, product.user?.username, bin, formattedNdChuyenKhoan)
+    this.salaryService.getQRBanking(product.amount, product.user?.userInfor?.bank_number, product?.user?.userInfor?.fullname, bin, formattedNdChuyenKhoan)
       .subscribe(
         (response) => {
 
@@ -246,5 +278,3 @@ export class TotalSalaryComponent implements OnInit {
   }
 
 }
-
-

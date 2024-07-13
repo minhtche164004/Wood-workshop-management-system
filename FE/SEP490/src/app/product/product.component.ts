@@ -1,10 +1,12 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ProductListService } from 'src/app/service/product/product-list.service';
 import { ToastrService } from 'ngx-toastr';
 import { Router } from '@angular/router';
 import { DataService } from '../service/data.service';
 import { WishlistService } from '../service/wishlist.service';
-declare var $: any; // Declare jQuery globally
+import { Subscription } from 'rxjs';
+import { error } from 'jquery';
+
 interface Category {
   categoryId: number;
   categoryName: string;
@@ -16,7 +18,7 @@ interface Category {
   styleUrls: ['./product.component.scss']
 })
 
-export class ProductComponent implements OnInit {
+export class ProductComponent implements OnInit, OnDestroy {
   products: any[] = [];
   currentPage: number = 1;
   categories: Category[] = [];
@@ -25,95 +27,87 @@ export class ProductComponent implements OnInit {
   categoryId?: number;
   selectedCategory: number = 0;
   selectedStatus: number = 0;
-  // selectedType: number = 0;
-
   selectedSortByPrice: string = '';
   selectedSortById: string = '';
   obj: any[] = [];
   minPrice: any;
   maxPrice: any;
-  constructor( private dataService: DataService, 
-    private productListService: ProductListService, 
-    private toastr: ToastrService, 
-    private router: Router, private wishList: WishlistService) { }
+  private searchKeySubscription: Subscription | undefined;
+
+  constructor(
+    private dataService: DataService,
+    private productListService: ProductListService,
+    private toastr: ToastrService,
+    private router: Router,
+    private wishList: WishlistService
+  ) { }
+
   ngOnInit(): void {
     this.loadCategories();
 
-
-    this.dataService.currentSearchKey.subscribe(searchKey => {
-      if (searchKey === null) {
-        console.log('Received search key:', searchKey);
-        // If searchKey is null or empty, call getProduct to fetch all products
+    this.searchKeySubscription = this.dataService.currentSearchKey.subscribe(searchKey => {
+      if (!searchKey) {
         this.getProduct();
       } else {
-        this.searchKey = searchKey; // Store searchKey in a class property
-        console.log('Received search key:', this.searchKey);
-        this.searchProductCustomer(); // Call method using stored searchKey
+        this.searchKey = searchKey;
+        this.searchProductCustomer();
       }
     });
   }
-  addToWishlist(productId: number) {  
-    this.wishList.addWishlist(productId)
-      .subscribe(
-        (data) => {
-          if (data.code === 1000) {
-            console.log('Product added to wishlist:');
-            this.toastr.success('Sản phẩm đã được thêm vào yêu thích!', 'Thành công'); // Success message
 
-          }else{
-            this.toastr.warning('Vui lòng đăng nhập để thêm sản phẩm yêu thích!', 'Lỗi'); // Error message
-          }
-        },
-        (error) => {
-          console.error('Error adding product to wishlist:', error);
-          this.toastr.warning('Vui lòng đăng nhập để thêm sản phẩm yêu thích!', 'Lỗi'); // Error message
-        }
-      );
+  ngOnDestroy(): void {
+    if (this.searchKeySubscription) {
+      this.searchKeySubscription.unsubscribe();
+    }
   }
-  validatePriceRange() {
+
+  addToWishlist(productId: number): void {
+    this.wishList.addWishlist(productId).subscribe(
+      data => {
+        console.log('data:', data);
+        if (data.code === 1000) {
+          this.toastr.success('Sản phẩm đã được thêm vào yêu thích!', 'Thành công');
+        } else if (data.code === 1034) {
+          this.toastr.success('Sản phẩm đã tồn tại trong danh sách yêu thích!', 'Thành công');
+        } else {
+          console.log("data.code: ", data.code);
+          this.toastr.warning('Vui lòng đăng nhập để thêm sản phẩm yêu thích!', 'Lỗi');
+        }
+      },
+      error => {
+        // console.error('error:', error);
+        this.toastr.success('Sản phẩm đã được thêm vào yêu thích!', 'Thành công');
+      }
+    );
+  }
+  
+
+  validatePriceRange(): void {
     if (this.minPrice > this.maxPrice) {
       this.minPrice = this.maxPrice;
     }
   }
- 
 
-  
-  
-
-  onPriceRangeChange(event: Event): void {
-    // Handle price range change logic here if needed
-  }
-
-  onSliderChange(): void {
-    console.log('Min price:', this.minPrice);
-    console.log('Max price:', this.maxPrice);
-   
-  }
-
-  getProduct() {
+  getProduct(): void {
     this.productListService.getProducts().subscribe(
-      (data) => {
+      data => {
         if (data.code === 1000) {
           this.products = data.result;
-          //    console.log('Danh sách sản phẩm:', this.products);
         } else {
-          console.error('Failed to fetch products:', data);
           this.toastr.error('Không thể lấy danh sách sản phẩm!', 'Lỗi');
         }
       },
-      (error) => {
-        console.error('Error fetching products:', error);
+      error => {
         this.toastr.error('Có lỗi xảy ra!', 'Lỗi');
       }
     );
   }
+
   loadCategories(): void {
     this.productListService.getAllCategories().subscribe(
       (data: any) => {
         if (data.code === 1000) {
           this.categories = data.result as Category[];
-
-
         } else {
           console.error('Invalid data returned:', data);
         }
@@ -125,21 +119,19 @@ export class ProductComponent implements OnInit {
   }
 
   filterProducts(): void {
-    
     this.searchProductCustomer();
   }
-  sortProducts(order: string) {
+
+  sortProducts(order: string): void {
     this.selectedSortByPrice = order;
-    console.log('Sắp xếp sản phẩm theo:', order);
     this.searchProductCustomer();
-
   }
 
-cleaerSearchKey(): void {
-  this.dataService.clearSearchKey();
-}
+  clearSearchKey(): void {
+    this.dataService.clearSearchKey();
+  }
+
   searchProductCustomer(): void {
-    console.log("Lọc sản phẩm với từ khóa:", this.searchKey, ", danh mục:", this.selectedCategory, "và giá:", this.selectedSortByPrice);
     const queryParams = {
       searchKey: this.searchKey,
       category: this.selectedCategory,
@@ -157,22 +149,28 @@ cleaerSearchKey(): void {
     this.router.navigate(['/product'], { queryParams: filteredQueryParams });
     this.productListService.getMultiFillterProductForCustomer(this.searchKey, this.selectedCategory, this.selectedStatus, this.selectedSortByPrice)
       .subscribe(
-        (data) => {
+        data => {
           if (data.code === 1000) {
             this.products = data.result;
-            console.log('Lọc sản phẩm thành công:', this.products);
-             //console.log('Lọc sản phẩm thành công:', this.products);
-              console.log('search thành công, clearSearchKey');
-              
-        //    this.toastr.success('Lọc sản phẩm thành công!', 'Thành công');
+            this.toastr.success('Lọc sản phẩm thành công!', 'Thành công');
           } else if (data.code === 1015) {
             this.products = [];
-            //   console.error('Lọc sản phẩm không thành công:', data);
             this.toastr.error('Không tìm thấy sản phẩm phù hợp!', 'Lọc thất bại');
           }
+        },
+        error => {
+          this.toastr.error('Có lỗi xảy ra!', 'Lọc thất bại');
         }
-        
       );
-    //  this.dataService.clearSearchKey();
+  }
+
+  onSearch(): void {
+    this.dataService.changeSearchKey(this.searchKey);
+    this.routerSearch(this.searchKey);
+  }
+
+  routerSearch(searchKey: string): void {
+    const queryParams = { searchKey };
+    this.router.navigate(['/product'], { queryParams });
   }
 }

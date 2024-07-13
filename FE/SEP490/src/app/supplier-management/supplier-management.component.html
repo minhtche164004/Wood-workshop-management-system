@@ -108,8 +108,8 @@
               <label for="productName" style="margin-right: 20px;">Kiểu vật liệu</label>
               <select name="selectedMaterial" [(ngModel)]="selectedMaterial">
                 <option [ngValue]="null" disabled selected>Chọn danh mục</option>
-                <option *ngFor="let category of materials" [ngValue]="category.sub_material_id">{{
-                  category.sub_material_name }}
+                <option *ngFor="let category of materials" [ngValue]="category.subMaterialId">{{
+                  category.subMaterialName }}
                 </option>
               </select>
             </div>

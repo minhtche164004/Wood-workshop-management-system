@@ -72,7 +72,7 @@
 
                             <td class="action-buttons">
                                 <a href="#" class="settings" title="Chỉnh sửa" data-toggle="modal"
-                                    data-target="#editProductModal" (click)="editSubMaterial(product)">
+                                    data-target="#editProductJobModal" (click)="editSubMaterial(product)">
                                     <i class="fa-solid fa-pen-to-square"></i>
                                 </a>
                                 <a href="#" class="delete" title="Xóa" data-toggle="modal"
@@ -90,16 +90,18 @@
                             <td>{{ product?.price | number: '1.0-3' }}</td>
                             <td>
                                 <ng-container *ngIf="product?.statusJob.type !== 1">
-                                    <select style="width: 100%;" [ngModel]="product?.statusJob.status_id"
-                                        (change)="acceptJob(product?.job_id, product?.statusJob.status_id)">
-                                        <ng-container *ngFor="let status of statusType">
-                                            <option *ngIf="status.type === product.statusJob.type"
-                                                [value]="status.status_id"
+                                    <select style="width: 100%;" [ngModel]="product?.statusJob.status_id" 
+                                            (change)="acceptJob($event, product?.job_id)">
+                                      <ng-container *ngFor="let status of statusType">
+                                        <option *ngIf="status.type === product.statusJob.type" 
+                                                [value]="status.status_id" 
                                                 [disabled]="status.status_id === 4 || status.status_id === 7 || status.status_id === 10">
-                                                {{ status.status_name }}</option>
-                                        </ng-container>
+                                          {{ status.status_name }}
+                                        </option>
+                                      </ng-container>
                                     </select>
-                                </ng-container>
+                                  </ng-container>
+                                  
 
                                 <span *ngIf="product.statusJob.type === 1">Chưa giao việc</span>
 
@@ -280,8 +282,8 @@
 
                                     <tbody>
                                         <tr
-                                            *ngFor="let product of subMaterialProduct | paginate: { itemsPerPage: 10, currentPage: currentPage }; let i = index">
-                                            <td>{{ i + 1 + (currentPage - 1) * 10 }}</td>
+                                            *ngFor="let product of subMaterialProduct">
+                                           
                                             <td>{{ product?.sub_name }}</td>
                                             <td>{{ product?.quantity }}</td>
                                             <td>{{ product.quantity * (selectedProduct?.quantity ?? 1) }}</td>
@@ -462,12 +464,12 @@
 
 
 <!-- Modal for Editing Product -->
-<div class="modal fade" id="editSubMaterialModal" tabindex="-1" role="dialog"
-    aria-labelledby="editSubMaterialModalLabel" aria-hidden="true">
+<div class="modal fade" id="editProductJobModal" tabindex="-1" role="dialog"
+    aria-labelledby="editProductJobModalLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="editSubMaterialModal">Chỉnh sửa nguyên vật liệu</h5>
+                <h5 class="modal-title" id="editProductJobModal">Chỉnh sửa nguyên vật liệu</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
@@ -502,7 +504,7 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
-                <button type="button" class="btn btn-primary">Lưu thay đổi</button>
+                <button type="button" class="btn btn-primary" (click)="saveChanges()">Lưu thay đổi</button>
             </div>
 
         </div>

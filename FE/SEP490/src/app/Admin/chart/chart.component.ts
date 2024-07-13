@@ -1,46 +1,76 @@
-import { Component } from '@angular/core';
-import { ChartData, ChartOptions } from 'chart.js';
+import { Component, OnInit } from '@angular/core';
+import { Chart } from 'chart.js';
 
 @Component({
   selector: 'app-chart',
   templateUrl: './chart.component.html',
   styleUrls: ['./chart.component.scss']
 })
-export class ChartComponent {
-  barChartData: ChartData<'bar'> = {
-    labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
-    datasets: [
-      {
-        label: 'Bar Chart Example',
-        backgroundColor: '#42A5F5',
-        borderColor: '#1E88E5',
-        data: [65, 59, 80, 81, 56, 55, 40]
-      }
-    ]
-  };
+export class ChartComponent implements OnInit {
+  chart: any = [];
+  ngOnInit(): void {
+    this.chart = new Chart('canvas', {
+      type: 'line',
+      data: {
+        labels: ['Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange'],
+        datasets: [
+          {
+            label: 'My First dataset',
+            data: [12, 19, 3, 5, 2, 3],
+            borderColor: '#3cba9f',
 
-  barChartOptions: ChartOptions<'bar'> = {
-    responsive: true,
-    maintainAspectRatio: false,
-    scales: {
-      x: { beginAtZero: true },
-      y: { beginAtZero: true }
-    }
-  };
+          },
+          {
+            label: 'My second dataset',
+            data: [2, 3, 5, 2, 3, 12],
+            borderColor: '#ffcc00',
 
-  pieChartData: ChartData<'pie'> = {
-    labels: ['Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange'],
-    datasets: [
-      {
-        label: 'Pie Chart Example',
-        backgroundColor: ['#FF6384', '#36A2EB', '#FFCE56', '#4BC0C0', '#9966FF', '#FF9F40'],
-        data: [300, 50, 100, 40, 120, 80]
-      }
-    ]
-  };
+          }
+        ]
+      },
+    });
 
-  pieChartOptions: ChartOptions<'pie'> = {
-    responsive: true,
-    maintainAspectRatio: false
-  };
+    this.chart = new Chart('canvas3', {
+      type: 'bar',
+      data: {
+        labels: ['Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange'],
+        datasets: [
+          {
+            label: 'My First dataset',
+            data: [12, 19, 3, 5, 2, 3],
+            borderColor: '#3cba9f',
+
+          },
+          {
+            label: 'My second dataset',
+            data: [2, 3, 5, 2, 3, 12],
+            borderColor: '#ffcc00',
+
+          }
+        ]
+      },
+    });
+    this.chart = new Chart('canvas2', {
+      type: 'pie',
+      data: {
+        labels: ['Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange'],
+        datasets: [
+          {
+            label: 'My First dataset',
+            data: [0,0,100],
+            backgroundColor: [
+              'rgb(255, 99, 132)',
+              'rgb(54, 162, 235)',
+              'rgb(255, 205, 86)'
+            ],
+            hoverOffset: 4
+          }
+       
+        ]
+      },
+
+    });
+
+  }
 }
+

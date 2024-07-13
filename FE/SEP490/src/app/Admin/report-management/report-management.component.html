@@ -63,7 +63,7 @@
                 <i class="fa-solid fa-pen-to-square"></i>
               </a>
               <a href="#" class="delete" title="Xóa" data-toggle="modal" data-target="#confirmDeleteModal"
-                (click)="openConfirmDeleteModal(product.product_id, product.product_name)">
+                (click)="openConfirmDeleteModal(product.id, product.product_name)">
                 <i class="fa-regular fa-trash-can"></i>
               </a>
               <a href="#" class="info" title="Chi tiết" data-toggle="modal" data-target="#productDetailModal"
@@ -107,7 +107,7 @@
   <div class="modal-dialog modal-dialog-wide" role="document">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="editProductModalLabel">Chỉnh sửa sản phẩm</h5>
+        <h5 class="modal-title" id="editProductModalLabel">Chỉnh sửa lỗi sản phẩm</h5>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
@@ -123,6 +123,7 @@
                   <label style="font-size: 16px;" for="code">Mã việc làm:</label>
                 </div>
                 <div class="col-md-6">
+                 
                   <input type="text" class="form-control" id="code" formControlName="code" name="code" readonly>
                 </div>
 
@@ -132,7 +133,7 @@
                   <label style="font-size: 16px;" for="job_name">Tên việc làm:</label>
                 </div>
                 <div class="col-md-6">
-                  <h3>{{ errorDetail?.job_name }}</h3>
+                 
                   <input type="text" class="form-control" id="job_name" formControlName="job_name" readonly>
                 </div>
               </div>
@@ -148,7 +149,7 @@
                   <label style="font-size: 16px;" for="code_order">Mã đơn hàng: </label>
                 </div>
                 <div class="col-md-6">
-                  <h3>{{errorDetail?.code_order}}</h3>
+                 
                   <input type="text" class="form-control" id="code_order" formControlName="code_order" name="code_order" readonly>
                 </div>
               </div>
@@ -188,9 +189,14 @@
 
                 <div class="col-md-6">
 
-                  <h3 [ngStyle]="{'color': errorDetail?._fix ? 'green' : 'red'}">
+                 
                     {{ errorDetail?._fix ? 'Đã khắc phục' : 'Chưa khắc phục' }}
-                  </h3>
+                    <select formControlName="isFixed">
+                      <option [ngValue]="true" [selected]="errorDetail?._fix">Đã khắc phục</option>
+                      <option [ngValue]="false" [selected]="!errorDetail?._fix">Chưa khắc phục</option>
+                    </select>
+                
+                  
 
                 </div>
               </div>
@@ -200,17 +206,31 @@
               <div class="col-md-10">
                 <hr style="justify-content: space-between;">
               </div>
-              <div>
-                <label style="font-size: 16px;margin-top: 3%;" for="productName">Mô tả lỗi:</label>
-                <textarea style="width: 100%; font-size: 16px;" id="des" formControlName="des" name="des" >
+              <div class="row">
+                <div class="col-md-2">
+                  <label style="font-size: 16px;margin-top: 3%;" for="productName">Mô tả lỗi:</label>
+                </div>
+                <div class="col-md-8" style="margin-top:1% ;">
+                  <textarea style="width: 100%; font-size: 16px;" id="des" formControlName="des" name="des" >
                
-              </textarea>
+                  </textarea>
+                </div>
+
               </div>
-              <div>
-                <label style="font-size: 16px;margin-top: 3%;" for="productName">Giải pháp:</label>
-                <textarea style="width: 100%; font-size: 16px; "id="solution" formControlName="solution" name="solution">
+              <div class="col-md-1">
+
+              </div>
+              
+              <div class="row">
+                <div class="col-md-2">
+                  <label style="font-size: 16px;margin-top: 3%;" for="productName">Giải pháp:</label>
+                </div>
+                <div class="col-md-8" style="margin-top:1% ;">
+                  <textarea style="width: 100%; font-size: 16px; "id="solution" formControlName="solution" name="solution">
                
-              </textarea>
+                  </textarea>
+                </div>
+                
               </div>
             </div>
 
@@ -238,7 +258,7 @@
         </button>
       </div>
       <div class="modal-body" id="confirmDeleteModal">
-        Are you sure you want to delete this product "{{ selectedProductNameCurrentDelele }}" ?
+        Bạn có chắc chắn muốn xóa báo cáo lỗi sản phẩm này hay không?
       </div>
       <div class="modal-footer" id="confirmDeleteModal">
         <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
@@ -329,8 +349,9 @@
 
                 <h3 [ngStyle]="{'color': errorDetail?._fix ? 'green' : 'red'}">
                   {{ errorDetail?._fix ? 'Đã khắc phục' : 'Chưa khắc phục' }}
+                 
                 </h3>
-
+                
               </div>
             </div>
             <div class="col-md-1">
@@ -363,4 +384,7 @@
       </div>
     </div>
   </div>
+</div>
+<div *ngIf="isLoadding" class="loading-overlay">
+  <div class="spinner"></div>
 </div>

@@ -15,6 +15,7 @@ export class ProductDetailComponent implements OnInit {
   productDetails: any = {};
   categoryProduct: any= {};
   largeImageUrl: string = '';
+  largeImageUrl_Cate: string = '';
 
   constructor(private route: ActivatedRoute, private http: HttpClient) {
     this.onTabClick('description');
@@ -48,7 +49,7 @@ export class ProductDetailComponent implements OnInit {
       .subscribe(
         (response: any) => {
           this.categoryProduct = response.result;
-        
+          this.largeImageUrl_Cate = this.categoryProduct.image;
   
 
         },

@@ -27,14 +27,28 @@
   .table-responsive th {
     white-space: nowrap; /* Không cho phép xuống dòng */
   }
-  .table-wrapper {
-    background: #fff;
-    padding: 20px 25px;
-    border-radius: 3px;
-    box-shadow: 0 1px 1px rgba(0,0,0,.05);
-    min-width: 1000px; // Cho màn hình lớn
-  }
-  
+ /* styles.css or the relevant component stylesheet */
+.table-wrapper {
+  background: #fff;
+  padding: 20px 25px;
+  border-radius: 3px;
+  box-shadow: 0 1px 1px rgba(0,0,0,.05);
+  overflow-x: auto; /* Enable horizontal scrolling */
+  min-width: 1000px; /* For larger screens */
+}
+
+.table {
+  width: 100%; /* Ensure the table takes full width of the wrapper */
+  white-space: nowrap; /* Prevent text from wrapping */
+}
+
+.table th, .table td {
+  vertical-align: middle; /* Vertically align content */
+  white-space: nowrap; /* Prevent text from wrapping */
+  overflow: hidden; /* Hide overflow content */
+  text-overflow: ellipsis; /* Show ellipsis for overflow content */
+}
+
   .table-title {
     padding-bottom: 15px;
     background: #299be4;
@@ -270,11 +284,11 @@
     object-fit: cover;
   }
   
-  .table td,
-  .table th {
-    word-wrap: break-word;
-    white-space: normal;
-  }
+  // .table td,
+  // .table th {
+  //   word-wrap: break-word;
+  //   white-space: normal;
+  // }
   
   .table td {
     max-width: 100px; /* Adjust this value as needed */
@@ -386,7 +400,14 @@
     width: 100%;
   }
 
-
+  .bg-primary {
+    background-color: #20EC4D !important;
+  }
+  
+  .btn-primary {
+    background-color: #20EC4D;
+    border-color: #20EC4D;
+  }
 
   .modal-header {
     background-color: #007bff; /* Example blue color */

@@ -570,7 +570,7 @@ export class JobManagementComponent implements OnInit {
     let mate_id = job.position_id;
     console.log('Mate ID:', mate_id);
     console.log('Product ID:', job.product_id);
-    // this.isLoadding = true;  
+     this.isLoadding = true;  
     this.jobService.getSubMTRProduct(job.product_id, mate_id).subscribe(  //thay bang api goi job product submaterial
       (data) => {
         if (data.code === 1000) {
@@ -581,9 +581,11 @@ export class JobManagementComponent implements OnInit {
           console.error('Failed to fetch products:', data);
           this.toastr.error('Không thể lấy danh sách vật liệu sản phẩm!', 'Lỗi');
         }
+        this.isLoadding = false;  
       },
       (error) => {
         console.error('Error fetching sub-material data:', error);
+        this.isLoadding = false;
       }
     )
     this.jobService.getJobDetailById(job.job_id).subscribe(

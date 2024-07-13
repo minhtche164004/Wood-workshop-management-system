@@ -72,7 +72,7 @@
                   <td>{{ hs?.status.status_name}}</td>
                   <td
                     [ngStyle]="{'color': hs?.paymentMethod === 1 ? 'green' : (hs?.paymentMethod === 0 ? 'red' : 'black')}">
-                    {{ hs?.paymentMethod === 1 ? 'ONLINE' : (hs?.paymentMethod === 0 ? 'OFFLINE' : '') }}
+                    {{ hs?.paymentMethod === 1 ? 'Chuyển khoản' : (hs?.paymentMethod === 0 ? 'Tiền mặt' : '') }}
                   </td>
                   <td>{{ hs?.totalAmount | number : '1.0-3' }}</td>
                 </tr>

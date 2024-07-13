@@ -49,6 +49,7 @@
                     <!-- <th>Thao tác</th> -->
                     <th>Ngày nhận lương</th>
                     <th>Vị trí công việc</th>
+                    <th>Thanh toán</th>
       
                     <th>Tiền lương</th>
    
@@ -77,6 +78,9 @@
   
                     <td style="min-width: 100px;">{{ job.date }} </td>
                     <td style="min-width: 150px;">{{ job.user.position.position_name }}</td>
+                    <td style="min-width: 150px;">
+                      {{ job.advanceSuccess ? 'Đã thanh toán' : 'Chưa thanh toán' }}
+                    </td>
                     <td style="min-width: 150px;">{{ job.amount | number: '1.0-3'}} VNĐ</td>
                    
                   
@@ -100,4 +104,7 @@
         </div>
       </div>
     </div>
+  </div>
+  <div *ngIf="isLoadding" class="loading-overlay">
+    <div class="spinner"></div>
   </div>

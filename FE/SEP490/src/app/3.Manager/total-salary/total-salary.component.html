@@ -52,15 +52,15 @@
                                     </select>
 
                                     <div class="ng-autocomplete" style="width: 30%; margin-left: 5px;">
-                                        <ng-autocomplete *ngIf="employeeList" [data]="employeeList"
+                                        <ng-autocomplete *ngIf="employeeInfoList" [data]="employeeInfoList"
                                             [searchKeyword]="keyword" placeholder="Nhập tên nhân viên tìm kiếm"
-                                            [(ngModel)]="searchKey" historyIdentifier="employeeList"
+                                            [(ngModel)]="searchKey" historyIdentifier="employeeFullnames"
                                             [itemTemplate]="itemTemplate" [notFoundTemplate]="notFoundTemplate"
                                             (selected)="selectEmp($event)">
                                         </ng-autocomplete>
 
                                         <ng-template #itemTemplate let-item>
-                                            <a [innerHTML]="sanitize(item.userInfor?.fullname)"></a>
+                                            <a [innerHTML]="sanitize(item.fullname)"></a>
                                         </ng-template>
 
                                         <ng-template #notFoundTemplate let-notFound>
@@ -254,4 +254,4 @@
 
 <div *ngIf="isLoadding" class="loading-overlay">
     <div class="spinner"></div>
-</div>
+  </div>

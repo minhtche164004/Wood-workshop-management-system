@@ -200,10 +200,7 @@ table.table .avatar {
   font-size: 13px;
 }
 
-.img_product {
-  max-height: 30%;
-  max-width: 30%;
-}
+
 
 @media (max-width: 768px) {
   .table-wrapper {
@@ -266,11 +263,6 @@ option[value="option3"] {
   /* Màu tím cho Sản Phẩm 3 */
 }
 
-.img_product {
-  max-width: 100px;
-  max-height: 100px;
-  object-fit: cover;
-}
 
 .table td,
 .table th {
@@ -406,6 +398,15 @@ button.info:hover {
 .img_product_detail.selected {
   border: 3px solid blue;
 }
+.img_product {
+  max-height: 30%;
+  max-width: 30%;
+ }
+ .img_product {
+   max-width: 100px;
+   max-height: 100px;
+   object-fit: cover;
+ }
 /* styles.css or the relevant component stylesheet */
 .status-0 {
   color: red; /* You can change this to your desired color */
@@ -417,4 +418,12 @@ button.info:hover {
 
 .status-2 {
   color: blue; /* You can change this to your desired color */
+}
+.bg-primary {
+  background-color: #20EC4D !important;
+}
+
+.btn-primary {
+  background-color: #20EC4D;
+  border-color: #20EC4D;
 }

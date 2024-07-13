@@ -74,15 +74,7 @@ export class ReportManagementComponent implements OnInit {
           this.errorProducts = data.result;
           console.log('Danh sách lỗi sản phẩm ngOninit:', this.errorProducts);
           this.isLoadding = false;
-<<<<<<< HEAD:FE/SEP490/src/app/3.Manager/report-management/report-management.component.ts
-        } else {
-          console.error('Failed to fetch products:', data);
-          this.toastr.error('Không thể lấy danh sách sản phẩm!', 'Lỗi');
-          this.isLoadding = false;
-        }
-=======
         } 
->>>>>>> 672507650b5d30e07a71d3760b90544dbdd008fc:FE/SEP490/src/app/Admin/report-management/report-management.component.ts
       },
       (error) => {
         console.error('Error fetching products:', error);

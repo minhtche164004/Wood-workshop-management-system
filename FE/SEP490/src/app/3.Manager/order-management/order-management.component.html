@@ -78,17 +78,21 @@
               <td>{{ us?.orderDate | date:'dd/MM/yyyy' }}</td>
 
 
-              <td style="min-width: 150px;">
+              <td style="min-width: 200px;">
                 <div class="select-wrapper">
-                  <select class="custom-select" (change)="onStatusChange(us.orderId, $event)">
+                  <select class="custom-select" [disabled]="us?.status.status_id === 6 || us?.status.status_id === 5
+                  || us?.status.status_id === 1
+                  || us?.status.status_id === 3" (change)="onStatusChange(us.orderId, $event)">
                     <option *ngFor="let status of status_order"
-                      [value]="status.status_id" [selected]="status.status_id === us?.status.status_id"
+                      [value]="status.status_id"
+                      [selected]="status.status_id === us?.status.status_id"
                       [disabled]="status.status_id === 1 || status.status_id === 3 || status.status_id === 6">
                       {{ status.status_name }}
                     </option>
                   </select>
                 </div>
               </td>
+    
 
 
 

@@ -47,6 +47,8 @@ public class ModelMapperConfig {
                 .addMapping(src -> src.getUserInfor().getAddress(), UpdateProfileDTO::setAddress)
                 .addMapping(src -> src.getUserInfor().getCity_province(), UpdateProfileDTO::setCity)
                 .addMapping(src -> src.getUserInfor().getDistrict(), UpdateProfileDTO::setDistrict)
+                .addMapping(src -> src.getRole().getRoleId(), UpdateProfileDTO::setRole_id)
+                .addMapping(src -> src.getRole().getRoleName(), UpdateProfileDTO::setRole_name)
                 .addMapping(src -> src.getUserInfor().getWards(), UpdateProfileDTO::setWards);
 
 

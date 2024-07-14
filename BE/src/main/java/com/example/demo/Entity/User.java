@@ -38,8 +38,8 @@ public class User  {
     @Temporal(TemporalType.DATE)
     private Date hireDate;
 
-    @ManyToOne(cascade = CascadeType.ALL,fetch = FetchType.EAGER)
-   @JsonIgnore
+    @ManyToOne(cascade = CascadeType.ALL)
+//   @JsonIgnore
     @JoinColumn(name = "role_id")
     private Role role;
 

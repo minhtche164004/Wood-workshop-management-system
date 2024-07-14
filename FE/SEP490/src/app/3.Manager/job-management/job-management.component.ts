@@ -118,8 +118,10 @@ export class JobManagementComponent implements OnInit {
   }
   selectedModalJob: string = '';
   selectedModalId: string = '';
-  
-  openModal(event: Event, jobId: number) {
+
+  indexStatus: number = 0;
+
+  openModal(event: Event, jobId: number, index: number): void {
     this.isLoadding = true;
     console.log('event:', event);
     const statusId = (event.target as HTMLSelectElement).value;
@@ -129,6 +131,19 @@ export class JobManagementComponent implements OnInit {
     // this.createJobs.reset();  
     // S? d?ng tham chi?u này d? kích ho?t click
     this.launchModalButton.nativeElement.click();
+    this.indexStatus = index;
+    // console.log("indexStatus:", this.indexStatus);
+  }
+
+  closeModal() {
+    var element = document.getElementById("mySelect"+this.indexStatus);
+    if (element instanceof HTMLSelectElement) {
+      element.selectedIndex = 0;
+      // console.log('element.value', element.options[element.selectedIndex].value);
+      // console.log('element.selectedIndex', element.selectedIndex);
+    }
+    // console.log('Close modal');
+
   }
 
   cancelChangeStatusJob() {

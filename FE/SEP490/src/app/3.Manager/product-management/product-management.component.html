@@ -586,7 +586,6 @@
               <select class="form-control" formControlName="status_id">
                 <option [ngValue]="0" disabled selected>Chọn trạng thái</option>
                 <option *ngFor="let status of statuses" [ngValue]="status.status_id">{{ status.status_name }}</option>
-                <option value="null">Tất cả trạng thái</option>
               </select>
             </div>
           </div>
@@ -769,7 +768,6 @@
               <select class="form-control" formControlName="status_id">
                 <option [ngValue]="0" disabled selected>Chọn trạng thái</option>
                 <option *ngFor="let status of statuses" [ngValue]="status.status_id">{{ status.status_name }}</option>
-                <option value="null">Tất cả trạng thái</option>
               </select>
             </div>
           </div>

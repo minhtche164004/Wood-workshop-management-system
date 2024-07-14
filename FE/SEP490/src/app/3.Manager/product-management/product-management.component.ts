@@ -666,7 +666,7 @@ export class ProductManagementComponent implements OnInit {
         this.imagesPreview = product.result.imageList.map((image: any) => {
           return image.fullPath;
         });
-        // console.log('Thumbnailpre:', this.imagesPreview);
+        // console.log('Thumbnailpre:', product.result);
       });
     this.populateFormWithData(productId);
 

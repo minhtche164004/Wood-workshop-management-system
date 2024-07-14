@@ -10,6 +10,8 @@ import { JobService } from 'src/app/service/job.service';
 import { ProductService } from 'src/app/service/product.service';
 import { ProductListService } from 'src/app/service/product/product-list.service';
 import { SalaryService } from 'src/app/service/salary.service';
+import { StatisticService } from 'src/app/service/statistic.service';
+
 interface UserInfo {
   inforId: number;
   phoneNumber: string;
@@ -37,161 +39,271 @@ interface User {
   hireDate: string;
   userInfor: UserInfo;
 }
+
 @Component({
   selector: 'app-chart',
   templateUrl: './chart.component.html',
   styleUrls: ['./chart.component.scss']
 })
 export class ChartComponent implements OnInit {
-  constructor(private dataService: DataService, private http: HttpClient, private toastr: ToastrService, private employeeService: EmployeeService, private jobService: JobService, private fb: FormBuilder, private productListService: ProductListService, private sanitizer: DomSanitizer, private productService: ProductService, private salaryService: SalaryService) { }
+  constructor(
+    private dataService: DataService, 
+    private statistic: StatisticService, 
+    private http: HttpClient, 
+    private toastr: ToastrService, 
+    private employeeService: EmployeeService, 
+    private jobService: JobService, 
+    private fb: FormBuilder, 
+    private productListService: ProductListService, 
+    private sanitizer: DomSanitizer, 
+    private productService: ProductService, 
+    private salaryService: SalaryService
+  ) { }
+
   chart: any = [];
-  keyword = 'username';
-  searchKey: string = '';
-  totalSalary: any[] = [];
-  currentPage: number = 1;
-  employeeList: any[] = [];
-  selectedEmp: any = {};
-  positionEmpList: any[] = [];
-  selectedPosition: any = '';
-  fromDate: string = '';
-  toDate: string = '';
-  isProduct: boolean = true; // check product or product request
-  isLoadding: boolean = false;
-  selectedPositionEmp: any = '';
-  bankList: any[] = [];
-  ndChuyenKhoan: string = 'DoGoSyDung thanh toan tien cong (Ma: {{code}})'
-  qrImageUrl: string = '';
-  startDate: string = '';
-  endDate: string = '';
-  position: number = 0;
-  selectedBanking: any;
+  positionLabels = ['Thợ Mộc', 'Thợ Nhám', 'Thợ Sơn', 'Không đảm nhận vị trí'];
+  countEmp: number = 0;
+  totalAmouneOrderHaveDone: number = 0;
+  totalOrder: number = 0;
+  totalSpecialOrder: number = 0;
+  percentSpecialOrder: number = 0;
+  percentOrder: number = 0;
+  totalProduct: number = 0;
+  percentEmpPos1: number = 0;
+  percentEmpPos2: number = 0;
+  percentEmpPos3: number = 0;
+  percentEmpPos4: number = 0;
+  isLoading: boolean = false;
+  months = ['Tháng 1', 'Tháng 2', 'Tháng 3', 'Tháng 4', 'Tháng 5', 'Tháng 6', 'Tháng 7', 'Tháng 8', 'Tháng 9', 'Tháng 10', 'Tháng 11', 'Tháng 12'];
   ngOnInit(): void {
-    this.getAllEmployee();
-    this.getAllJobRQ(); 
-    this.loadProduct();
-    this.chart = new Chart('canvas', {
-      type: 'line',
+    this.loadData();
+  }
+  
+  loadData() {
+    this.isLoading = true; // Hiển thị loading
+    this.getTotalOrder().then(() => {
+      Promise.all([
+        this.TotalAmountOrderHaveDone(),
+        this.getTotalAmountSubMaterial(),
+        this.getTotalSpecialOrder(),
+        this.getTotalProduct(),
+        this.getAllEmployee()
+      ]).then(() => {
+        this.updateEmployeePositions().then(() => {
+          this.initializeCharts();
+          this.isLoading = false; // Ẩn loading
+        }).catch(err => {
+          this.isLoading = false;
+          console.error(err);
+        });
+      }).catch(err => {
+        this.isLoading = false;
+        console.error(err);
+      });
+    }).catch(err => {
+      this.isLoading = false;
+      console.error(err);
+    });
+  }
+
+  initializeCharts() {
+    this.chart = new Chart('canvas2', {
+      type: 'pie',
       data: {
-        labels: ['Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange'],
+        labels: this.positionLabels,
         datasets: [
           {
-            label: 'My First dataset',
-            data: [12, 19, 3, 5, 2, 3],
-            borderColor: '#3cba9f',
-
-          },
-          {
-            label: 'My second dataset',
-            data: [2, 3, 5, 2, 3, 12],
-            borderColor: '#ffcc00',
-
+            label: 'Nhân viên',
+            data: [this.totalEmpPos1, this.totalEmpPos2, this.totalEmpPos3, this.totalEmpPos4],
+            backgroundColor: [
+              'rgb(255, 99, 132)',
+              'rgb(54, 162, 235)',
+              'rgb(255, 205, 86)',
+              'rgb(75, 192, 192)'
+            ],
+            hoverOffset: 4
           }
         ]
       },
     });
 
     this.chart = new Chart('canvas3', {
-      type: 'bar',
-      data: {
-        labels: ['Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange'],
-        datasets: [
-          {
-            label: 'My First dataset',
-            data: [12, 19, 3, 5, 2, 3],
-            borderColor: '#3cba9f',
-
-          },
-          {
-            label: 'My second dataset',
-            data: [2, 3, 5, 2, 3, 12],
-            borderColor: '#ffcc00',
-
-          }
-        ]
-      },
-    });
-    this.chart = new Chart('canvas2', {
       type: 'pie',
       data: {
-        labels: ['Red', 'Blue', 'Yellow' ],
+        labels: ['Đơn hàng thường', 'Đơn hàng đặc biệt'],
         datasets: [
           {
-            label: 'My First dataset',
-            data: [23,43,34],
+            label: 'Đơn hàng',
+            data: [this.totalNormalOrder, this.totalSpecialOrder],
             backgroundColor: [
               'rgb(255, 99, 132)',
               'rgb(54, 162, 235)',
-              'rgb(255, 205, 86)'
             ],
             hoverOffset: 4
           }
-       
         ]
       },
+    });
+    this.chart = new Chart('canvas5', {
+      type: 'pie',
+      data: {
+        labels: ['Sản phẩm có sẵn', 'Sản phẩm theo yêu cầu'],
+        datasets: [
+          {
+            label: 'Sản phẩm',
+            data: [this.totalNormalOrder, this.totalSpecialOrder],
+            backgroundColor: [
+              'rgb(255, 99, 132)',
+              'rgb(54, 162, 235)',
+            ],
+            hoverOffset: 4
+          }
+        ]
+      },
+    });
 
+    this.chart = new Chart('canvas', {
+      type: 'bar',
+      data: {
+        labels: this.months,
+        datasets: [
+          {
+            label: 'Sản phẩm có sẵn',
+            data: [12, 19, 3, 5, 2, 3, 4, 2, 3, 1, 3, 2],
+            backgroundColor: 'rgb(54, 162, 235)',
+          },
+          {
+            label: 'Sản phẩm đặt riêng',
+            data: [5, 3, 13, 8, 11, 9, 14, 6, 10, 12, 14, 7],
+            backgroundColor: 'rgb(255, 99, 132)',
+          },
+        ]
+      },
+    });
+
+    this.chart = new Chart('canvas4', {
+      type: 'line',
+      data: {
+        labels: this.months,
+        datasets: [{
+          label: 'Đơn hàng sản phẩm có sẵn',
+          data: [12, 19, 3, 5, 10, 12, 8, 5, 9, 10, 12, 10],
+          fill: false,
+          borderColor: 'rgb(75, 192, 192)',
+          backgroundColor: 'rgb(75, 192, 192)',
+          tension: 0.1
+        },
+        {
+          label: 'Đơn đặt hàng sản phẩm theo yêu cầu',
+          data: [5, 3, 13, 8, 11, 9, 14, 6, 10, 12, 14, 7],
+          fill: false,
+          borderColor: 'rgb(255, 99, 132)',
+          backgroundColor: 'rgb(255, 99, 132)',
+          tension: 0.1
+        },    
+      ]},
+        //stepSixe = 5
+    //   options: {
+    //     scales: {
+    //         y: {
+    //             beginAtZero: true, // Bắt đầu từ 0
+    //             ticks: {
+    //                 stepSize: 5 // Đặt bước nhảy là 5
+    //             }
+    //         }
+    //     }
+    // }
     });
 
   }
-  countEmp: number = 0;
-  jobProductRQs: any[] = [];
-  countJobProductRQs: number = 0;
-  jobProducts: any[] = [];
-  countJobProducts: number = 0;
-  getAllJobRQ(): void {
-    this.jobService.getListProductRQ().subscribe(
-      (data) => {
-        if (data.code === 1000) {
-          this.jobProductRQs = data.result;
-          this.countJobProductRQs = this.jobProductRQs.length;
-          console.log('Sp đặc biệt cho job:', this.jobProductRQs);
-        } else {
-          console.error('Failed to fetch products:', data);
-          this.toastr.error('Không thể lấy danh sách sản phẩm!', 'Lỗi');
-        }
-      },
-      (error) => {
-        console.error('Error fetching products:', error);
-        this.toastr.error('Có lỗi xảy ra!', 'Lỗi');
-      }
-    );
+
+  TotalAmountOrderHaveDone() {
+    return new Promise<void>((resolve, reject) => {
+      this.statistic.getTotalAmountOrderHaveDone().subscribe((data) => {
+        this.totalAmouneOrderHaveDone = data.result;
+        resolve();
+      }, err => reject(err));
+    });
   }
-  loadProduct() {
-    this.jobService.getListProduct().subscribe(
-      (data) => {
-        if (data.code === 1000) {
-          this.jobProducts = data.result;
-          this.countJobProducts = this.jobProducts.length;
-          // console.log('Sp cho job:', this.productRQs);
-        } else {
-      //   console.error('Failed to fetch products:', data);
-          this.toastr.error('Không thể lấy danh sách sản phẩm!', 'Lỗi');
-        }
-      },
-      (error) => {
-       // console.error('Error fetching products:', error);
-        this.toastr.error('Có lỗi xảy ra!', 'Lỗi');
-      }
-    );
+
+  getAllEmployee() {
+    return new Promise<void>((resolve, reject) => {
+      this.employeeService.getAllEmployee().subscribe((data) => {
+        this.countEmp = data.result.length;
+        resolve();
+      }, err => reject(err));
+    });
   }
-  getAllEmployee(): void {
-    this.isLoadding = true;
-    this.employeeService.getAllEmployee().subscribe(
-      (data) => {
-        if (data.code === 1000) {
-          this.employeeList = data.result;
-          this.countEmp = this.employeeList.length;
-          console.log('Tong nhan vien: ', this.countEmp); this.isLoadding = false;
-      //    console.log('Danh sách nhan vien: ', this.employeeList); this.isLoadding = false;
+  totalAmountSubMaterial: number = 0;
+  getTotalAmountSubMaterial() {
+    return new Promise<void>((resolve, reject) => {
+      this.statistic.getTotalAmountSubMaterial().subscribe((data) => {
+        console.log("totalAmountSubMaterial: ", data.result);
+        this.totalAmountSubMaterial = data.result;
+        resolve();
+      }, err => reject(err));
+    });
+  }
+
+  getTotalOrder() {
+    return new Promise<void>((resolve, reject) => {
+      this.statistic.getTotalOrder().subscribe((data) => {
+        this.totalOrder = data.result;
+        console.log("totalOrder: ", this.totalOrder);
+        resolve();
+      }, err => reject(err));
+    });
+  }
+
+  getTotalSpecialOrder() {
+    return new Promise<void>((resolve, reject) => {
+      this.statistic.getCountSpecialOrder().subscribe((data) => {
+        this.totalSpecialOrder = data.result;
+        console.log("totalSpecialOrder", this.totalSpecialOrder);
+        
+        if (this.totalOrder !== 0) {
+          this.percentSpecialOrder = (this.totalSpecialOrder / this.totalOrder) * 100;
+          this.percentOrder = 100 - this.percentSpecialOrder;
+          this.totalNormalOrder = this.totalOrder - this.totalSpecialOrder;
         } else {
-          console.error('Failed to fetch products:', data); this.isLoadding = false;
+          this.percentSpecialOrder = 0;
+          this.percentOrder = 0;
         }
 
-      },
-      (error) => {
-        console.log(error); this.isLoadding = false;
-      }
-    );
+        console.log("percentSpecialOrder", this.percentSpecialOrder);
+        console.log("percentOrder", this.percentOrder);
+        resolve();
+      }, err => reject(err));
+    });
   }
+  totalNormalOrder: number = 0;
   
+  getTotalProduct() {
+    return new Promise<void>((resolve, reject) => {
+      this.statistic.getCountProduct().subscribe((data) => {
+        this.totalProduct = data.result;
+        resolve();
+      }, err => reject(err));
+    });
+  }
+  totalEmpPos1: number = 0;
+  totalEmpPos2: number = 0;
+  totalEmpPos3: number = 0;
+  totalEmpPos4: number = 0;
+  
+  updateEmployeePositions() {
+    return Promise.all([
+      this.statistic.countEmployeeWithTypePosition(1).toPromise(),
+      this.statistic.countEmployeeWithTypePosition(2).toPromise(),
+      this.statistic.countEmployeeWithTypePosition(3).toPromise(),
+      this.statistic.countEmployeeWithTypePosition(4).toPromise()
+    ]).then(results => {
+      this.totalEmpPos1 = results[0].result;
+      this.totalEmpPos2 = results[1].result ;
+      this.totalEmpPos3 = results[2].result ;
+      this.totalEmpPos4 = results[3].result ;
+    }).catch(err => {
+      console.error(err);
+    });
+  }
 }
-

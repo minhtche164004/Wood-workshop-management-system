@@ -68,7 +68,7 @@
                                         </ng-template>
                                     </div>
 
-                                    <button class="btn search-button ms-2" type="button" (click)="search()">
+                                    <button class="btn search-button ms-2" type="button" (click)="searchSalary()">
                                         <i class="fa fa-search"></i>
                                     </button>
                                 </div>
@@ -107,7 +107,7 @@
                           <td>{{ product?.user?.userInfor?.fullname }}</td>
                           <td>{{ product?.user?.position?.position_name }}</td>
                           <td>
-                            <select [(ngModel)]="product.advanceSuccess" style="width: 120%;" (change)="updateBanking(product.advanceSalaryId,$event)" name="advanceSuccess">
+                            <select class="custom-select" [(ngModel)]="product.advanceSuccess" style="width: 120%;" (change)="updateBanking(product.advanceSalaryId,$event)" name="advanceSuccess">
                               <option [ngValue]="false" disabled>Chưa thanh toán</option>
                               <option [value]="true">Đã thanh toán</option>
                             </select>

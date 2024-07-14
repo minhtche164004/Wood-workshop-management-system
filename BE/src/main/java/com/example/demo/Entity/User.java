@@ -38,13 +38,13 @@ public class User  {
     @Temporal(TemporalType.DATE)
     private Date hireDate;
 
-    @ManyToOne(cascade = CascadeType.ALL,fetch = FetchType.EAGER)
+    @ManyToOne(cascade = CascadeType.ALL)
    @JsonIgnore
     @JoinColumn(name = "role_id")
     private Role role;
 
     @OneToOne(cascade = CascadeType.ALL,fetch = FetchType.EAGER)// tức là khi tạo User thì infor cũng đc tạo
-//    @JsonIgnore
+    @JsonIgnore
     @JoinColumn(name = "infor_id")
     private UserInfor userInfor;
 

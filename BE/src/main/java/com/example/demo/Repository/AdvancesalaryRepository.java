@@ -76,8 +76,12 @@ public interface AdvancesalaryRepository extends JpaRepository<Advancesalary,Int
 
 
     //số lượng sản phẩm có sẵn
-    @Query("SELECT COUNT(*) FROM Products p")
+    @Query("SELECT SUM(p.quantity) FROM Products p")
     Long countProduct();
+
+    //số lượng sản phẩm làm theo yêu cầu
+    @Query("SELECT SUM(p.quantity) FROM RequestProducts p")
+    Long countRequestProduct();
 
     //số lượng đơn hàng theo yêu cầu
     @Query("SELECT COUNT(*) FROM Orders o WHERE o.specialOrder = TRUE")

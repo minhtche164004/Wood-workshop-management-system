@@ -57,20 +57,26 @@
             <div class="collapse navbar-collapse justify-content-center" id="navbarSupportedContent">
                 <ul class="navbar-nav mb-2 mb-lg-0 justify-content-center">
                     <li class="nav-item">
-                        <a class="nav-link active" aria-current="page" (click)="navigateTo('/homepage')">Trang chủ</a>
+                        <a class="nav-link active" aria-current="page" (click)="navigateTo('/homepage')"
+                            style="cursor: pointer;">Trang chủ</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link active" aria-current="page" (click)="navigateTo('/product')">Sản phẩm</a>
+                        <a class="nav-link active" aria-current="page" (click)="navigateTo('/product')"
+                            style="cursor: pointer;">Sản phẩm</a>
                     </li>
                     <li class="nav-item">
-                        <a routerLink="/contact" class="nav-link active" aria-current="page">Liên hệ</a>
+                        <a class="nav-link active" aria-current="page" (click)="navigateTo('/contact')"
+                            style="cursor: pointer;">Liên hệ</a>
                     </li>
                     <li class="nav-item">
-                        <a routerLink="/about-us" class="nav-link active" aria-current="page">Giới thiệu</a>
+                        <a class="nav-link active" aria-current="page" (click)="navigateTo('/about-us')"
+                            style="cursor: pointer;">Giới thiệu</a>
                     </li>
                     <ng-container *ngIf="isLoggedIn(); else loggedOutLinks">
                         <li class="nav-item">
-                            <a routerLink="/order_rq" class="nav-link active" aria-current="page">Đặt hàng</a>
+                            <a class="nav-link active" aria-current="page" (click)="navigateTo('/order_rq')"
+                            style="cursor: pointer;">Đặt
+                                hàng</a>
                         </li>
                     </ng-container>
                     <ng-template #loggedOutLinks>

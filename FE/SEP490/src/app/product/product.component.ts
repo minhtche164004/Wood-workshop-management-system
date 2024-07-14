@@ -50,15 +50,31 @@ export class ProductComponent implements OnInit, OnDestroy {
     this.loadCategories();
 
     this.searchKeySubscription = this.dataService.currentSearchKey.subscribe(searchKey => {
-      this.selectedCategory = 0;
-      this.selectedSortByPrice = '';
-      this.selectedStatus = 0;
-      if (!searchKey) {
-        this.getProduct();
-      } else {
-        this.searchKey = searchKey;
-        this.searchProductCustomer();
-      }
+
+      this.activatedRoute.queryParams.subscribe(params => {
+        this.selectedCategory = params['category'] || 0;
+        this.selectedSortByPrice = params['sortByPrice'] || '';
+        this.selectedStatus = params['status'] || 0;
+        this.searchKey = params['searchKey'] || '';
+
+        if (!searchKey && (this.selectedCategory || this.selectedSortByPrice || this.selectedStatus || this.searchKey)) {
+          // this.searchKey = searchKey;
+          this.searchProductCustomer();
+          return;
+        }
+        else if(!searchKey){
+          this.getProduct();
+          return;
+        }
+        else {
+          this.selectedCategory = 0;
+          this.selectedSortByPrice = '';
+          this.selectedStatus = 0;
+          this.searchKey = searchKey || params['searchKey'];;
+          this.searchProductCustomer();
+          return;
+        }
+      });
     });
   }
 
@@ -69,7 +85,7 @@ export class ProductComponent implements OnInit, OnDestroy {
   }
 
   addToWishlist(productId: number): void {
-    this.wishList.addWishlist(productId).subscribe( 
+    this.wishList.addWishlist(productId).subscribe(
       data => {
         console.log('data:', data);
         if (data.code === 1000) {
@@ -87,7 +103,7 @@ export class ProductComponent implements OnInit, OnDestroy {
       }
     );
   }
-  
+
 
   validatePriceRange(): void {
     if (this.minPrice > this.maxPrice) {
@@ -164,14 +180,14 @@ export class ProductComponent implements OnInit, OnDestroy {
         return obj;
       }, {});
 
-      const filteredQueryParamsWithoutSearchKey = Object.fromEntries(
-        Object.entries(queryParamsWithoutSearchKey).filter(([_, value]) => value)
-      );
+    const filteredQueryParamsWithoutSearchKey = Object.fromEntries(
+      Object.entries(queryParamsWithoutSearchKey).filter(([_, value]) => value)
+    );
 
     this.activatedRoute.queryParams.subscribe(params => {
       if (params['searchKey']) { // neu param co searchKey
         this.router.navigate(['/product'], { queryParams: filteredQueryParams });
-      }else{
+      } else {
         this.router.navigate(['/product'], { queryParams: filteredQueryParamsWithoutSearchKey });
       }
     });
@@ -183,6 +199,7 @@ export class ProductComponent implements OnInit, OnDestroy {
           if (data.code === 1000) {
             this.products = data.result;
             // this.toastr.success('Lọc sản phẩm thành công!', 'Thành công');
+            this.notFoundProduct = false;
           } else if (data.code === 1015) {
             this.products = [];
             this.notFoundProduct = true;

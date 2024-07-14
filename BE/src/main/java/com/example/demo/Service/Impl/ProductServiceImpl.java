@@ -4,6 +4,7 @@ import com.example.demo.Dto.ProductDTO.*;
 import com.example.demo.Dto.RequestDTO.RequestProductEditDTO;
 import com.example.demo.Dto.SubMaterialDTO.SubMateProductDTO;
 import com.example.demo.Dto.SubMaterialDTO.SubMateProductRequestDTO;
+import com.example.demo.Dto.SubMaterialDTO.SubMaterialViewDTO;
 import com.example.demo.Entity.*;
 import com.example.demo.Exception.AppException;
 import com.example.demo.Exception.ErrorCode;
@@ -252,13 +253,13 @@ public class ProductServiceImpl implements ProductService {
 
 
     @Override
-    public ProductDTO_Show GetProductByIdWithImage(int id) {
+    public ProductDetailDTO GetProductByIdWithImage(int id) {
         List<Productimages> productimagesList = productImageRepository.findImageByProductId(id);
         Products products = productRepository.findById(id);
         if (products == null) {
             throw new AppException(ErrorCode.NOT_FOUND);
         }
-        ProductDTO_Show productDTOShow = new ProductDTO_Show();
+        ProductDetailDTO productDTOShow = new ProductDetailDTO();
         if (productimagesList == null) {
             productDTOShow.setImageList(null);
         }
@@ -278,7 +279,7 @@ public class ProductServiceImpl implements ProductService {
             productimages.setFullPath(getAddressLocalComputer(productimages.getFullPath()));
             processedImages.add(productimages); // Thêm vào danh sách mới
         }
-        List<String> list = productSubMaterialsRepository.GetSubNameByProductId(id);
+        List<SubMaterialViewDTO> list = productSubMaterialsRepository.GetSubMaterialByProductId(id);
         if (list.isEmpty()) {
             productDTOShow.setSub_material_name(null);
         }

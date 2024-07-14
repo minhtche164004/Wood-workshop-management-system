@@ -118,17 +118,32 @@ export class JobManagementComponent implements OnInit {
   }
   selectedModalJob: string = '';
   selectedModalId: string = '';
-  
-  openModal(event: Event, jobId: number) {
+
+  indexStatus: number = 0;
+
+  openModal(event: Event, jobId: number, index: number): void {
     this.isLoadding = true;
     console.log('event:', event);
     const statusId = (event.target as HTMLSelectElement).value;
     this.selectedModalJob = jobId.toString();
     console.log('Job ID:', this.selectedModalJob, 'Status ID:', statusId);
-    this.selectedModalId = statusId;
+    //this.selectedModalId = statusId;
     // this.createJobs.reset();  
     // S? d?ng tham chi?u này d? kích ho?t click
     this.launchModalButton.nativeElement.click();
+    this.indexStatus = index;
+    // console.log("indexStatus:", this.indexStatus);
+  }
+
+  closeModal() {
+    var element = document.getElementById("mySelect"+this.indexStatus);
+    if (element instanceof HTMLSelectElement) {
+      element.selectedIndex = 0;
+      // console.log('element.value', element.options[element.selectedIndex].value);
+      // console.log('element.selectedIndex', element.selectedIndex);
+    }
+    // console.log('Close modal');
+
   }
 
   cancelChangeStatusJob() {
@@ -754,7 +769,8 @@ saveChanges(): void {
             this.productRQs = data.result;
             console.log('Danh sách sản phẩm search:', this.productRQs);
 
-          } else (
+          } 
+          else (
             this.toastr.error('Không tìm thấy sản phẩm!', 'Lỗi')
           )
           this.isLoadding = false;
@@ -766,7 +782,7 @@ saveChanges(): void {
         }
       );
       this.isLoadding = false;
-    } else if (selectedCategory === 0) {
+  } else if (selectedCategory === 0) {
       console.log("Tìm kiếm sản phẩm yêu cầu")
       this.jobService.seachRequestByName(searchKey).subscribe(
         (data) => {

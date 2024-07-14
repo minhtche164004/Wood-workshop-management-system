@@ -24,4 +24,7 @@ public class UpdateProfileDTO implements Serializable {
     private String district;
     private String wards;
 
+    private int role_id;
+    private String role_name;
+
 }

@@ -52,7 +52,7 @@ export class SupplierManagementComponent implements OnInit {
   editSupplierForm: FormGroup;
   materialControl = new FormControl();
   deleteId: any; // variable to store supplierId to be deleted
-
+  checkNotFound: boolean = false;
   constructor(private authenListService: AuthenListService,
     private supplierService: SupplierService, private materialService: MaterialService, private toastr: ToastrService, private fb: FormBuilder) {
     this.editSupplierForm = this.fb.group({
@@ -100,6 +100,7 @@ export class SupplierManagementComponent implements OnInit {
 
   searchSupplier(): void {
     console.log("Thực hiện tìm kiếm nhà cung cấp: ", this.searchKey);
+    this.checkNotFound = false;
     this.isLoadding = true;
     if (this.searchKey) {
       this.supplierService.findSupplierName(this.searchKey)
@@ -108,21 +109,22 @@ export class SupplierManagementComponent implements OnInit {
             if (data.code === 1000) {
               this.suppliers = data.result;
               this.isLoadding = false;
-              // console.log('Tìm kiếm thành công:', this.suppliers);
-              // console.log('searchKey:', this.searchKey);
-              this.toastr.success('Tìm kiếm Nhà cung cấp nguyên vật liệu!', 'Thành công');
+             
             } else if (data.code === 1015) {
               this.suppliers = []; // Clear previous results
-              console.error('Tìm kiếm không thành công:', data);
+          //    console.error('Tìm kiếm không thành công:', data);
               this.isLoadding = false;
-              this.toastr.error('Không tìm thấy Nhà cung cấp nguyên vật liệu!', 'Tìm kiếm thất bại');
+              this.checkNotFound = true;
+           //   this.toastr.error('Không tìm thấy Nhà cung cấp nguyên vật liệu!', 'Tìm kiếm thất bại');
               // Handle specific error message
             }
           }
         );
     } else {
       this.isLoadding = false;
-      console.warn('Từ khóa tìm kiếm trống.');
+      console.error('Empty search term');
+      this.checkNotFound = false;
+    //  this.ngOnInit();
       // Optionally display a message to the user indicating an empty search term
     }
   }

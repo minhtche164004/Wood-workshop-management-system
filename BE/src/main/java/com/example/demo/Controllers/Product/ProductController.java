@@ -161,7 +161,7 @@ public class ProductController {
 
     @GetMapping("/ViewDetailProductById")
     public ApiResponse<?> GetProductByIdWithImage(@RequestParam("id") int id) {
-        ApiResponse<ProductDTO_Show> apiResponse = new ApiResponse<>();
+        ApiResponse<ProductDetailDTO> apiResponse = new ApiResponse<>();
         apiResponse.setResult(productService.GetProductByIdWithImage(id));
         return apiResponse;
     }

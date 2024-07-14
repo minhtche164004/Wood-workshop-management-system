@@ -36,63 +36,74 @@
         </div>
       </div>
 
-      <table class="table table-striped table-hover">
-        <thead>
-          <tr>
-            <th>STT</th>
-            <th>Thao tác</th>
-            <th>Tên nhà cung cấp</th>
-            <th>Tên Kiểu Vật Liệu</th>
-            <th>Số điện thoại</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr
-            *ngFor="let supplier of suppliers | paginate: { itemsPerPage: 10, currentPage: currentPage }; let i = index">
-            <td>{{ i + 1 + (currentPage - 1) * 10 }}</td>
-            <td class="action-buttons">
-              <a href="#" class="settings" title="Chỉnh sửa thông tin" data-toggle="modal" data-target="#editAccountModal"
-                (click)="getDatasupplierMaterial(supplier.supplierMaterial)">
-
-                <i class="fa-solid fa-pen-to-square"></i>
-              </a>
-              <a href="#" class="delete" title="Xóa nhà cung cấp" data-toggle="modal" data-target="#confirmDeleteModal"
-                (click)="setDeleteId(supplier.supplierMaterial)">
-                <i class="fa-regular fa-trash-can"></i>
-              </a>
-
-              <!-- <a href="#" class="info" title="Info" data-toggle="modal" data-target="#productDetailModal">
-                <i class="fa-solid fa-circle-info"></i>
-              </a> -->
-            </td>
-
-            <td>{{ supplier.supplierName }}</td>
-            <td>{{ supplier?.subMaterial?.subMaterialName }}</td>
-
-            <td>{{ supplier.phoneNumber }}</td>
-          </tr>
-        </tbody>
-      </table>
+      <div *ngIf="!checkNotFound">
+        <table class="table table-striped table-hover">
+          <thead>
+            <tr>
+              <th>STT</th>
+              <th>Thao tác</th>
+              <th>Tên nhà cung cấp</th>
+              <th>Tên Kiểu Vật Liệu</th>
+              <th>Số điện thoại</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let supplier of suppliers | paginate: { itemsPerPage: 10, currentPage: currentPage }; let i = index">
+              <td>{{ i + 1 + (currentPage - 1) * 10 }}</td>
+              <td class="action-buttons">
+                <a href="#" class="settings" title="Chỉnh sửa thông tin" data-toggle="modal" data-target="#editAccountModal"
+                  (click)="getDatasupplierMaterial(supplier.supplierMaterial)">
+                  <i class="fa-solid fa-pen-to-square"></i>
+                </a>
+                <a href="#" class="delete" title="Xóa nhà cung cấp" data-toggle="modal" data-target="#confirmDeleteModal"
+                  (click)="setDeleteId(supplier.supplierMaterial)">
+                  <i class="fa-regular fa-trash-can"></i>
+                </a>
+              </td>
+              <td>{{ supplier.supplierName }}</td>
+              <td>{{ supplier?.subMaterial?.subMaterialName }}</td>
+              <td>{{ supplier.phoneNumber }}</td>
+            </tr>
+          </tbody>
+        </table>
+      
+        <!-- Pagination controls -->
+        <pagination-controls style="justify-content: right; display: flex;" (pageChange)="currentPage = $event"
+          previousLabel="Trang trước" nextLabel="Trang sau" [maxSize]="3">
+        </pagination-controls>
+      
+        <!-- Display data information -->
+        <div class="clearfix" style="justify-content: right; display: flex;">
+          <div class="hint-text">Hiển thị <b>{{ (currentPage - 1) * 10 + 1 }}</b> tới <b>{{ currentPage * 10
+              > suppliers.length ? suppliers.length : currentPage * 10 }}</b> trong số <b>{{ suppliers.length }}</b> dữ liệu
+          </div>
+        </div>
+      </div>
+      
+      <!-- Display no data message -->
+      <div *ngIf="checkNotFound">
+        <div style="background-color: white;">
+          <div class="d-flex justify-content-center align-items-center" style="height: 200px;">
+            <img src="https://encrypted-tbn2.gstatic.com/images?q=tbn:ANd9GcSG53pYn6cpXaiwT_q6IM45P-rXg5dUw67XqRmr9-vtsbMoHnCG"
+              alt="Not Found" style="width: 150px; height: 150px; object-fit: cover;">
+            <p class="text-center">404 Not Found!</p>
+          </div>
+        </div>
+      </div>
+      
     </div>
   </div>
 
-  <pagination-controls style="justify-content: right; display: flex;" (pageChange)="currentPage = $event"
-    previousLabel="Trang trước" nextLabel="Trang sau"  [maxSize]="3">
-  </pagination-controls>
-  <div class="clearfix" style="justify-content: right; display: flex;">
-    <div class="hint-text">Hiển thị <b>{{ (currentPage - 1) * 10 + 1 }}</b> tới <b>{{ currentPage * 10
-        > suppliers.length ? suppliers.length : currentPage * 10 }}</b> trong số <b>{{
-        suppliers.length }}</b> dữ liệu</div>
-  </div>
+ 
   <!-- Modal for Add Product -->
   <div class="modal fade" id="addProductModal" tabindex="-1" role="dialog" aria-labelledby="addProductModalLabel"
     aria-hidden="true">
 
     <div class="modal-dialog" role="document">
       <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title text-center" (click)="loadMaterials()" id="addProductModalLabel">Thêm nhà cung cấp
-          </h5>
+        <div class="modal-header bg-primary text-white">
+          <h2 class="modal-title text-center" (click)="loadMaterials()" id="addProductModalLabel">Thêm nhà cung cấp
+          </h2>
           <button type="button" class="close" data-dismiss="modal" aria-label="Close">
             <span aria-hidden="true">&times;</span>
           </button>
@@ -136,7 +147,7 @@
       aria-labelledby="editAccountModalLabel" aria-hidden="true">
       <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
-          <div class="modal-header">
+          <div class="modal-header bg-primary text-white">
             <h5 class="modal-title" id="editAccountModalLabel">Sửa thông tin nhà cung cấp</h5>
             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
               <span aria-hidden="true">&times;</span>
@@ -184,8 +195,8 @@
     aria-hidden="true">
     <div class="modal-dialog" role="document">
       <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title" id="confirmDeleteModalLabel">Xác nhận xóa</h5>
+        <div class="modal-header bg-primary text-white">
+          <h2 class="modal-title" id="confirmDeleteModalLabel">Xác nhận xóa</h2>
           <button type="button" class="close" data-dismiss="modal" aria-label="Close">
             <span aria-hidden="true">&times;</span>
           </button>
@@ -234,3 +245,7 @@
   <div *ngIf="isLoadding" class="loading-overlay">
     <div class="spinner"></div>
   </div> -->
+
+  <div *ngIf="isLoadding" class="loading-overlay">
+    <div class="spinner"></div>
+  </div>

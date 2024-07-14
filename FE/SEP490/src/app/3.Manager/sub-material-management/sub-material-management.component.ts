@@ -51,7 +51,7 @@ export class SubMaterialManagementComponent implements OnInit {
     quantity: 0,
     unit_price: 0
   };
-  
+  checkNotFound: boolean = false;
   editForm: FormGroup;
   createJobs: FormGroup;
   selectedSubMtr2: any = {
@@ -122,6 +122,7 @@ export class SubMaterialManagementComponent implements OnInit {
     
   }
   dowloadExcelLink(event: Event): void {
+    this.isLoadding = true;
     event.preventDefault(); 
     this.subMaterialService.downloadExcel().subscribe(
       (response) => {
@@ -132,16 +133,18 @@ export class SubMaterialManagementComponent implements OnInit {
         // Creating an anchor element to trigger download
         const anchor = document.createElement('a');
         anchor.href = url;
-        anchor.download = 'Biểu Mẫu Nhập Nguyên Liệu.xlsx'; // Specify the file name here
+        anchor.download = 'dowload.xlsx'; // Specify the file name here
         document.body.appendChild(anchor); // Append anchor to the body to make it clickable
         anchor.click();
 
         // Clean up
         document.body.removeChild(anchor);
         window.URL.revokeObjectURL(url); // Revoke the blob URL to free up resources
+        this.isLoadding = false;
       },
       (error) => {
         console.error('Download error:', error);
+        this.isLoadding = false;
       }
     );
   }
@@ -270,26 +273,33 @@ export class SubMaterialManagementComponent implements OnInit {
 
 
   searchSubMaterial(): void {
+    this.checkNotFound = false;
     this.isLoadding = true;
     this.materialService.searchSubMaterial(this.searchKey).subscribe(
       (data) => {
         if (data.code === 1000) {
           this.products = data.result;
-          //   console.log('Kết quả tìm kiếm Sub-Materials:', this.products);
+          console.log('Kết quả tìm kiếm Sub-Materials:', this.products);
           this.isLoadding = false;
+          if(this.products.length == 0){
+            this.checkNotFound = true;
+          }
         } else {
-          console.error('Failed to search sub-materials:', data);
-          this.toastr.error('Không thể tìm kiếm sub-materials!', 'Lỗi');
+          console.log('Failed to search sub-materials:', data);
+        //  this.toastr.error('Không thể tìm kiếm sub-materials!', 'Lỗi');
           this.isLoadding = false;
+          this.checkNotFound = true;
         }
+        
       },
       (error) => {
-        console.error('Error searching sub-materials:', error);
+        console.log('Error searching sub-materials:', error);
         this.toastr.error('Có lỗi xảy ra!', 'Lỗi');
-        this.isLoadding = false;
+        this.isLoadding = true;
+        this.checkNotFound = false;
       }
     );
-
+    
 
   }
  
@@ -297,6 +307,7 @@ export class SubMaterialManagementComponent implements OnInit {
     return this.sanitizer.bypassSecurityTrustHtml(name);
   }
   uploadFile(file: File) {
+    this.isLoadding = true;
     this.subMaterialService.uploadExcel(file).subscribe(
       (event: any) => {
         if (event.type === HttpEventType.UploadProgress) {
@@ -306,14 +317,17 @@ export class SubMaterialManagementComponent implements OnInit {
           console.log('File is completely uploaded!', event.body);
           // Xử lý phản hồi khi tải lên thành công ở đây
         }
+        this.isLoadding = false;
       },
       (error) => {
         console.error('Upload error:', error);
+        this.isLoadding = false;
       }
     );
   }
  
   onFileSelected(event: Event) {
+    this.isLoadding = true;
     const inputElement = event.target as HTMLInputElement;
     if (inputElement.files && inputElement.files.length > 0) {
       this.selectedFile = inputElement.files[0];
@@ -321,6 +335,7 @@ export class SubMaterialManagementComponent implements OnInit {
       this.selectedFile = undefined;
       console.error('No file selected.');
     }
+    this.isLoadding = false;
   }
 
   uploadSelectedFile() {

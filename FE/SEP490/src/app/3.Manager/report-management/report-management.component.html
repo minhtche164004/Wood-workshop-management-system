@@ -73,11 +73,11 @@
             </td>
             <td>{{ product?.des }}</td>
             <td>
-              {{ product.fix }}
-              <!-- <ng-container *ngIf="product._fix; else notFixed">
-                Đã sửa
+              <!-- {{ product.fix }} -->
+              <ng-container *ngIf="product.fix; else notFixed">
+                Đã khắc phục
               </ng-container>
-              <ng-template #notFixed>Chưa sửa</ng-template> -->
+              <ng-template #notFixed>Chưa khắc phục</ng-template>
             </td>
             <td style="text-align: center;">{{ product?.quantity }}</td>
             <td>{{ product.solution }}</td>
@@ -109,7 +109,7 @@
   <div class="modal-dialog modal-dialog-wide" role="document">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="editProductModalLabel">Chỉnh sửa lỗi sản phẩm</h5>
+        <h2 class="modal-title" id="editProductModalLabel">Chỉnh sửa lỗi sản phẩm</h2>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
@@ -183,8 +183,8 @@
                 </div>
                 <div class="col-md-6">         
                   <div class="col-md-6">
-                  {{ errorDetail?.fix ? 'Đã khắc phục' : 'Chưa khắc phục' }}
-                    <select formControlName="isFixed" [ngModel]="errorDetail?.isFixed" (ngModelChange)="updateFixStatus($event)">
+                
+                    <select formControlName="isFixed" [ngModel]="errorDetail?.isFixed" >
                       <option [ngValue]="true" [selected]="errorDetail?.isFixed">Đã khắc phục</option>
                       <option [ngValue]="false" [selected]="!errorDetail?.isFixed">Chưa khắc phục</option>
                     </select>
@@ -236,7 +236,7 @@
   <div class="modal-dialog" role="document">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="confirmDeleteModalLabel">Xác nhận xóa sản phẩm</h5>
+        <h2 class="modal-title" id="confirmDeleteModalLabel">Xác nhận xóa sản phẩm</h2>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
@@ -260,7 +260,7 @@
     <div class="modal-content">
       <div class="modal-header">
         <h5 class="modal-title" id="productDetailModalLabel">
-          <h1>Chi tiết lỗi sản phẩm</h1>
+          <h2>Chi tiết lỗi sản phẩm</h2>
         </h5>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>

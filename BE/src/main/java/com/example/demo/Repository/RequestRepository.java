@@ -25,6 +25,10 @@ public interface RequestRepository extends JpaRepository<Requests,Integer> {
     @Query("SELECT u FROM Requests u WHERE u.requestId = :query")
     Requests findById(int query);
 
+
+    @Query("SELECT u FROM Requests u WHERE u.status.status_id = 1")
+    List<Requests> findAllRequest();
+
 //    @Query("SELECT u FROM Requests u WHERE u.requestId = :query")
 //    Requests findByRequestProductId(int query);
 

@@ -1,6 +1,7 @@
 package com.example.demo.Service.Impl;
 
 //import com.example.demo.Dto.JobDTO.Employee_MaterialDTO;
+import com.example.demo.Dto.JobDTO.Employee_MaterialDTO;
 import com.example.demo.Dto.MaterialDTO.MaterialDTO;
 import com.example.demo.Dto.ProductDTO.QuantityTotalDTO;
 import com.example.demo.Dto.SubMaterialDTO.*;
@@ -228,8 +229,8 @@ public class SubMaterialServiceImpl implements SubMaterialService {
 
 
     @Override
-    public List<Employeematerials> getAllEmpMate() {
-        List<Employeematerials> employeematerialsList = employeeMaterialRepository.findAll();
+    public List<Employee_MaterialDTO> getAllEmpMate() {
+        List<Employee_MaterialDTO> employeematerialsList = employeeMaterialRepository.getAllEmployeeMate();
         if(employeematerialsList == null){
             throw new AppException(ErrorCode.NOT_FOUND);
         }
@@ -237,8 +238,8 @@ public class SubMaterialServiceImpl implements SubMaterialService {
     }
 
     @Override
-    public List<Employeematerials> findEmployeematerialsByName(String key) {
-        List<Employeematerials> employeematerialsList = employeeMaterialRepository.findEmployeematerialsByName(key);
+    public List<Employee_MaterialDTO> findEmployeematerialsByName(String key) {
+        List<Employee_MaterialDTO> employeematerialsList = employeeMaterialRepository.getAllEmployeeMateByNameEmployee(key);
         if(employeematerialsList == null){
             throw new AppException(ErrorCode.NOT_FOUND);
         }

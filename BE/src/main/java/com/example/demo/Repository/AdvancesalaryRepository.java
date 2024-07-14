@@ -45,9 +45,73 @@ public interface AdvancesalaryRepository extends JpaRepository<Advancesalary,Int
 
 
 
+    //------------------------thống kê ----------------------------------------//
+
+    //    //đếm số lượng order theo tháng và năm
+//    @Query("SELECT COUNT(*) FROM Orders o " +
+//            "JOIN o.status s " +
+//            "WHERE s.status_name = :status_name " +
+//            "AND MONTH(o.timeFinish) = :month " +
+//            "AND YEAR(j.timeFinish) = :year")
+//    Long countCompletedOrderByMonthAndYear(
+//            @Param("status_name") String status_name,
+//            @Param("month") int month,
+//            @Param("year") int year);
+
     //tính tổng lương nhân viên phải trả theo tháng và năm
-        @Query("SELECT SUM(a.amount) FROM Advancesalary a WHERE MONTH(a.date) = :month AND YEAR(a.date) = :year")
-        BigDecimal findTotalSalaryByMonthAndYear(@Param("month") int month, @Param("year") int year);
+    @Query("SELECT SUM(a.amount) FROM Advancesalary a WHERE MONTH(a.date) = :month AND YEAR(a.date) = :year")
+    BigDecimal findTotalSalaryByMonthAndYear(@Param("month") int month, @Param("year") int year);
+
+    //đếm số lượng job theo tháng và năm
+    @Query("SELECT COUNT(*) FROM Jobs j " +
+            "JOIN j.status s " +
+            "WHERE s.status_name = :status_name " +
+            "AND MONTH(j.timeFinish) = :month " +
+            "AND YEAR(j.timeFinish) = :year")
+    Long countCompletedJobsByMonthAndYear(
+            @Param("status_name") String status_name,
+            @Param("month") int month,
+            @Param("year") int year);
+
+
+
+    //số lượng sản phẩm có sẵn
+    @Query("SELECT COUNT(*) FROM Products p")
+    Long countProduct();
+
+    //số lượng đơn hàng theo yêu cầu
+    @Query("SELECT COUNT(*) FROM Orders o WHERE o.specialOrder = TRUE")
+    Long countSpecialOrder();
+
+    //tổng số lượng đơn hàng
+    @Query("SELECT COUNT(*) FROM Orders o")
+    Long countTotalOrder();
+
+    //số lượng đơn hàng theo status(đã hoàn thành, đã đặt cọc, chưa đặt cọc, ...)
+    @Query("SELECT COUNT(*) FROM Orders o WHERE o.status.status_id = :query")
+    Long countOrderHaveDone(int query);
+
+    // đếm số lượng nhân viên theo vị trí (thợ mộc , thợ sơn , thợ nhám)
+    @Query("SELECT COUNT(*) FROM User u WHERE u.position.position_id = :query")
+    Long countEmployeeWithTypePosition(int query);
+
+    //tổng tiền các đơn hàng đã hoàn thành(status_id là 5, tức là đã hoàn thành)
+    @Query("SELECT SUM(o.totalAmount) FROM Orders o WHERE o.status.status_id = 5")
+    BigDecimal totalAmountOrderHaveDone();
+
+    //tổng số tiền nhập nguyên vật liệu
+    @Query("SELECT SUM(s.quantity*s.unitPrice) FROM SubMaterials s")
+    BigDecimal totalAmountSubMaterial();
+
+
+
+
+
+
+
+
+
+
 
 
 

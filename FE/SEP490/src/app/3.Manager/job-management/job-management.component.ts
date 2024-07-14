@@ -757,7 +757,7 @@ saveChanges(): void {
     console.log('Thực hiện tìm kiếm:', searchKey);
     console.log('Category:', selectedCategory);
     this.isLoadding = true;
-    if (selectedCategory === 0) {
+    if (selectedCategory === 1) {
       console.log("Tìm kiếm sản phẩm có sẵn")
       this.jobService.getProductJobByNameOrCode(searchKey).subscribe(
         (data) => {
@@ -778,7 +778,7 @@ saveChanges(): void {
         }
       );
       this.isLoadding = false;
-  } else if (selectedCategory === 1) {
+  } else if (selectedCategory === 0) {
       console.log("Tìm kiếm sản phẩm yêu cầu")
       this.jobService.seachRequestByName(searchKey).subscribe(
         (data) => {

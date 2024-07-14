@@ -30,25 +30,24 @@ export class ProductDetailComponent implements OnInit {
     });
     this.shuffleArray(this.categoryProduct);
   }
-  addToWishlist(productId: number) {  
-   
-    console.log('Product ID:', productId);
-    this.wishList.addWishlist(productId)
-      .subscribe(
-        (data) => {
-          if (data.code === 1000) {
-            console.log('Product added to wishlist:');
-            this.toastr.success('Sản phẩm đã được thêm vào yêu thích!', 'Thành công'); // Success message
-
-          }else if(data.code === 1005){
-            this.toastr.warning('Vui lòng đăng nhập để thêm sản phẩm yêu thích!', 'Lỗi'); // Error message
-          }
-        },
-        (error) => {
-          console.error('Error adding product to wishlist:', error);
-          this.toastr.warning('Vui lòng đăng nhập để thêm sản phẩm yêu thích!', 'Lỗi'); // Error message
+  addToWishlist(productId: number): void {
+    this.wishList.addWishlist(productId).subscribe( 
+      data => {
+        console.log('data:', data);
+        if (data.code === 1000) {
+          this.toastr.success('Sản phẩm đã được thêm vào yêu thích!', 'Thành công');
+        } else if (data.code === 1034) {
+          this.toastr.error('Sản phẩm đã được thêm vào yêu thích!', 'Thành công');
+        } else {
+          console.log("data.code: ", data.code);
+          this.toastr.warning('Vui lòng đăng nhập để thêm sản phẩm yêu thích!', 'Lỗi');
         }
-      );
+      },
+      error => {
+        // console.error('error:', error);
+        this.toastr.success('Sản phẩm đã được thêm vào yêu thích!', 'Thành công');
+      }
+    );
   }
 
   getProductDetails(id: number) {

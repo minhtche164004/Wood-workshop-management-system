@@ -39,12 +39,12 @@ public class User  {
     private Date hireDate;
 
     @ManyToOne(cascade = CascadeType.ALL)
-//   @JsonIgnore
+   @JsonIgnore
     @JoinColumn(name = "role_id")
     private Role role;
 
     @OneToOne(cascade = CascadeType.ALL,fetch = FetchType.EAGER)// tức là khi tạo User thì infor cũng đc tạo
-//    @JsonIgnore
+    @JsonIgnore
     @JoinColumn(name = "infor_id")
     private UserInfor userInfor;
 

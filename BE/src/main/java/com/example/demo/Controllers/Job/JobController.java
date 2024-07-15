@@ -346,21 +346,6 @@ public class JobController {
     @GetMapping("/getAllProductError")
     public ApiResponse<?> getAllProductError() {
         ApiResponse<List> apiResponse = new ApiResponse<>();
-//        String cacheKey = "all_product_error";
-//        List<ProductErrorAllDTO> jobsList;
-//        String cachedData = jedis.get(cacheKey);
-//        Gson gson = new GsonBuilder().setDateFormat("MMM dd, yyyy").create();
-//        if (cachedData != null) {
-//            Type type = new TypeToken<List<Processproducterror>>() {
-//            }.getType();
-//
-//            jobsList = gson.fromJson(cachedData, type);
-//        } else {
-//            jobsList = jobService.getAllProductError();
-//            String jsonData = gson.toJson(jobsList);
-//            jedis.set(cacheKey, jsonData);
-//            jedis.expire(cacheKey, 1200);
-//        }
         apiResponse.setResult(jobService.getAllProductError());
         return apiResponse;
     }

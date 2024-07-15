@@ -51,8 +51,8 @@ public class AdminController {
     private Status_Product_Repository statusProductRepository;
     @Autowired
     private Status_Order_Repository statusOrderRepository;
-    @Autowired
-    private Status_Request_Repository statusRequestRepository;
+//    @Autowired
+//    private Status_Request_Repository statusRequestRepository;
 
 
     private static final JedisPooled jedis = RedisConfig.getRedisInstance();
@@ -137,12 +137,12 @@ public class AdminController {
         apiResponse.setResult(statusProductRepository.getAllStatus());
         return apiResponse;
     }
-    @GetMapping("/GetAllStatusRequest")
-    public ApiResponse<?> GetStatusRequest() {
-        ApiResponse<List> apiResponse = new ApiResponse<>();
-        apiResponse.setResult(statusRequestRepository.getAllStatus());
-        return apiResponse;
-    }
+//    @GetMapping("/GetAllStatusRequest")
+//    public ApiResponse<?> GetStatusRequest() {
+//        ApiResponse<List> apiResponse = new ApiResponse<>();
+//        apiResponse.setResult(statusRequestRepository.getAllStatus());
+//        return apiResponse;
+//    }
 
     @GetMapping("/SearchUserByNameorAddress")
     public ApiResponse<?> SearchUserByName(@RequestParam(value = "query", required = false) String query) {

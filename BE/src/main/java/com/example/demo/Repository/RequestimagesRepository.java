@@ -17,15 +17,15 @@ import java.util.List;
 @EnableJpaRepositories
 public interface RequestimagesRepository extends JpaRepository<Requestimages,Integer> {
 
-    @Query("SELECT pri FROM Requestimages pri WHERE pri.requests.requestId = :requestId")
+    @Query("SELECT pri FROM Requestimages pri WHERE pri.orders.orderId = :requestId")
     List<Requestimages> findById(@Param("requestId") int requestId);
 
     @Transactional
     @Modifying
-    @Query("DELETE FROM Requestimages p WHERE p.requests.requestId = :requestId")
+    @Query("DELETE FROM Requestimages p WHERE p.orders.orderId = :requestId")
     void deleteRequestImages(@Param("requestId") int requestId);
 
-    @Query("SELECT p FROM Requestimages p WHERE p.requests.requestId = :requestId")
+    @Query("SELECT p FROM Requestimages p WHERE p.orders.orderId = :requestId")
     List<Requestimages> findRequestImageByRequestId(@Param("requestId") int requestId);
 
 }

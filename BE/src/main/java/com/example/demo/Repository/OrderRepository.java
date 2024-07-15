@@ -43,6 +43,47 @@ public interface OrderRepository extends JpaRepository<Orders,Integer> {
     @Query("update Orders u set u.status.status_id = ?2 where u.orderId = ?1")
     void UpdateStatusOrder(int orderId, int status_id);
 
+        @Query("SELECT u FROM Orders u WHERE u.userInfor.user.userId = :query ")
+    List<Orders> findByUserId(int query);
+
+        @Transactional
+    @Modifying
+    @Query("UPDATE Orders u SET u.status.status_id = :status_id WHERE u.userInfor.user.userId = :requestId")
+    void updateStatus(@Param("requestId") int requestId, @Param("status_id") int status_id);
+
+
+        @Transactional
+    @Modifying
+    @Query("update Orders u set u.description = ?2 where u.orderId = ?1")
+    void updateRequest(int requestId,String description);
+
+
+
+//    @Query(value = "SELECT p.* FROM requests p WHERE p.code LIKE :prefix% ORDER BY p.code DESC LIMIT 1", nativeQuery = true)
+//    Requests findRequestTop(@Param("prefix") String prefix);
+
+//    @Query("SELECT u FROM Requests u WHERE u.requestId = :query")
+//    Requests findById(int query);
+
+
+//    @Query("SELECT u FROM Requests u WHERE u.status.status_id = 1")
+//    List<Requests> findAllRequest();
+
+//    @Query("SELECT u FROM Requests u WHERE u.status.status_id = 2")
+//    List<Requests> findAllRequestAccept();
+
+//    @Query("SELECT u FROM Requests u WHERE u.requestId = :query")
+//    Requests findByRequestProductId(int query);
+
+
+
+//    @Query("SELECT u FROM Requests u WHERE u.user.userId = :query AND u.status.status_id = 2")
+//    List<Requests> findByUserId(int query);
+
+
+
+
+
 
 
 

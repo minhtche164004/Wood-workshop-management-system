@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class ProductErrorDTO {
 //    private String code;
-    private String des;
+    private String description;
     private String solution;
     private Boolean isFixed;
     private Integer quantity;

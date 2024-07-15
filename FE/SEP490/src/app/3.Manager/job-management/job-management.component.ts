@@ -122,7 +122,7 @@ export class JobManagementComponent implements OnInit {
   indexStatus: number = 0;
 
   openModal(event: Event, jobId: number, index: number): void {
-    this.isLoadding = true;
+
     console.log('event:', event);
     const statusId = (event.target as HTMLSelectElement).value;
     this.selectedModalJob = jobId.toString();

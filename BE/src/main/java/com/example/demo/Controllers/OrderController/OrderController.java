@@ -95,6 +95,13 @@ public class OrderController {
         return apiResponse;
 
     }
+    @GetMapping("/GetAllRequestAccept")
+    public ApiResponse<?> GetAllRequestAccept() {
+        ApiResponse<List> apiResponse = new ApiResponse<>();
+        apiResponse.setResult(orderService.GetAllRequestsAccept());
+        return apiResponse;
+
+    }
     @PutMapping(value ="/CustomerEditRequest" ,consumes = MediaType.MULTIPART_FORM_DATA_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ApiResponse<?> CustomerEditRequest(@RequestParam(value="request_id") int request_id,
                                               @RequestPart("requestEditCusDTO") RequestEditCusDTO requestEditCusDTO,

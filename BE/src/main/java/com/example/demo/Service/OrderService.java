@@ -26,6 +26,7 @@ public interface OrderService {
     List<RequestProducts> GetAllProductRequest();
 
     List<Requests> GetAllRequests();
+    List<Requests> GetAllRequestsAccept();
 
     Requests getRequestById(int id);
 

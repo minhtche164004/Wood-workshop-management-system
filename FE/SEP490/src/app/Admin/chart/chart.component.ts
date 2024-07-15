@@ -61,7 +61,7 @@ export class ChartComponent implements OnInit {
   ) { }
 
   chart: any = [];
-  positionLabels = ['Thợ Mộc', 'Thợ Nhám', 'Thợ Sơn', 'Không đảm nhận vị trí'];
+  positionLabels = ['Thợ Mộc', 'Thợ Nhám', 'Thợ Sơn'];
   countEmp: number = 0;
   totalAmouneOrderHaveDone: number = 0;
   totalOrder: number = 0;
@@ -114,12 +114,12 @@ export class ChartComponent implements OnInit {
         datasets: [
           {
             label: 'Nhân viên',
-            data: [this.totalEmpPos1, this.totalEmpPos2, this.totalEmpPos3, this.totalEmpPos4],
+            data: [this.totalEmpPos1, this.totalEmpPos2, this.totalEmpPos3],
             backgroundColor: [
               'rgb(255, 99, 132)',
               'rgb(54, 162, 235)',
               'rgb(255, 205, 86)',
-              'rgb(75, 192, 192)'
+             
             ],
             hoverOffset: 4
           }

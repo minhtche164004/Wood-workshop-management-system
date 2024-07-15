@@ -10,6 +10,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 @RestController
@@ -78,4 +80,11 @@ public class StatisticController {
         apiResponse.setResult(statisticService.totalAmountSubMaterial());
         return apiResponse;
     }
+    @GetMapping("/findTotalCostSubMaterialByMonthAndYear")
+    public ApiResponse<?> findTotalCostSubMaterialByMonthAndYear(@RequestParam("month") int month,@RequestParam("year") int year) {
+        ApiResponse<BigDecimal> apiResponse = new ApiResponse<>();
+        apiResponse.setResult(statisticService.findTotalSubMaterialByMonthAndYear(month,year));
+        return apiResponse;
+    }
+
 }

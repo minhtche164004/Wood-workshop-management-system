@@ -48,6 +48,8 @@ export class JobService {
 
 
   seachRequestByName(key: string): Observable<any> {
+    const url = `${this.apiSearchRequestByName}?key=${key}`;
+    console.log('URL:', url);
     return this.http.get<any>(`${this.apiSearchRequestByName}?key=${key}`);
   }
   getSubMTRProductRQ(id: number, mate_id: number): Observable<any> {

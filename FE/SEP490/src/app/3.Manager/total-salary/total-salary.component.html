@@ -107,7 +107,7 @@
                           <td>{{ product?.user?.userInfor?.fullname }}</td>
                           <td>{{ product?.user?.position?.position_name }}</td>
                           <td>
-                            <select class="custom-select" [(ngModel)]="product.advanceSuccess" style="width: 120%;" (change)="updateBanking(product.advanceSalaryId,$event)" name="advanceSuccess">
+                            <select class="custom-select" [(ngModel)]="product.advanceSuccess" style="width: 120%;" (change)="updateBanking(product.advanceSalaryId, $event)" name="advanceSuccess">
                               <option [ngValue]="false" disabled>Chưa thanh toán</option>
                               <option [value]="true">Đã thanh toán</option>
                             </select>
@@ -125,6 +125,7 @@
                           </td>
                         </tr>
                       </tbody>
+                      
                     </table>
                   
                     <!-- Pagination controls -->

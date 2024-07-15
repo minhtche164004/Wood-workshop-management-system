@@ -64,6 +64,7 @@ import { ListSalaryEmployeeComponent } from './4.Employee/list-salary-employee/l
 import { OrderSuccessComponent } from './Order-payment-vnpay/order-success/order-success.component';
 import { OrderFailComponent } from './Order-payment-vnpay/order-fail/order-fail.component';
 import { AuthGuard } from './AuthGuard';
+import { EmployeeSubmaterialManagementComponent } from './employee-submaterial-management/employee-submaterial-management.component';
 
 
 
@@ -121,7 +122,7 @@ const routes: Routes = [
   { path: 'autoComplete', component: AutoCompleteComponent },
   { path: 'history_order', component: HistoryOrderComponent },
   { path: 'request_product', component: ListRequestProductComponent },
-  
+  { path: 'employee-submaterial-management', component: EmployeeSubmaterialManagementComponent },
   { path: 'employee', component: ListJobDoneEmployeeComponent },
   { path: 'list_job_done', component: ListJobDoneComponent },
   { path: 'list_request_customer', component: ListRequestCustomerComponent },

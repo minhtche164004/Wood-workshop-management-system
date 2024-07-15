@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders, HttpErrorResponse } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpErrorResponse, HttpParams } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { environment } from 'src/app/environments/environment';
@@ -15,7 +15,9 @@ export class EmployeeService {
 
   private apiCountJobById = `${environment.apiUrl}api/auth/job/countJobsByUserId`;
 
-  private apiGetAllSubMaterialForEmp = `${environment.apiUrl}api/auth/submaterial/GetAllMaterialForEmployee`;
+  private apiGetAllSubMaterialForEmp = `${environment.apiUrl}api/auth/submaterial/getAllEmpMate`;
+
+  private apiSearchMTREmployee = `${environment.apiUrl}api/auth`;
   constructor(private http: HttpClient) { }
 
   getAllEmployee(): Observable<any> {
@@ -24,7 +26,11 @@ export class EmployeeService {
    
    );
   }
-
+  searchEmployeeByName(name: string): Observable<any> {
+    const params = new HttpParams().set('key', name);
+    const url = `${this.apiSearchMTREmployee}/submaterial/findEmployeematerialsByNameEmployee`;
+    return this.http.get<any>(url, { params });
+  }
   getSubMaterialForEmp(): Observable<any> {
     return this.http.get<any>(this.apiGetAllSubMaterialForEmp).pipe(
       catchError(this.handleError)

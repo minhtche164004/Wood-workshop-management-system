@@ -246,14 +246,23 @@
                                             </div>
                                         </div>
                                         <hr>
-                                        <div class="form-group" *ngIf="inforId != 0">
-                                            <label style="font-size: 16px;" for="special_order">Loại đơn hàng</label>
-                                            <select class="form-control" id="special_order"
-                                                formControlName="special_order" (change)="onIsProductChange($event)">
-                                                <option [ngValue]="null" disabled selected>Loại đơn hàng</option>
-                                                <option [ngValue]="0">Đơn hàng dành cho sản phẩm có sẵn</option>
-                                                <option [ngValue]="1">Đơn hàng dành cho sản phẩm theo yêu cầu</option>
-                                            </select>
+                                        <div class="form-group"  class="row" *ngIf="inforId != 0">
+                                            
+                                            <div class="col-md-6">
+                                                <label style="font-size: 16px;" for="special_order">Loại đơn hàng</label>
+                                                <select class="form-control" id="special_order"
+                                                    formControlName="special_order" (change)="onIsProductChange($event)">
+                                                    <option [ngValue]="null" disabled selected>Loại đơn hàng</option>
+                                                    <option [ngValue]="0">Đơn hàng dành cho sản phẩm có sẵn</option>
+                                                    <option [ngValue]="1">Đơn hàng dành cho sản phẩm theo yêu cầu</option>
+                                                </select>
+                                            </div>
+
+                                            <div class="col-md-6">
+                                                <label style="font-size: 16px;" for="special_order">Ngày hoàn thành</label>
+                                                <input class="form-control" type="date" placeholder="Nhập ngày hoàn thành" formControlName="orderFinish">
+                                            </div>
+
                                         </div>
 
                                         <div class="form-group" *ngIf="isForRequestProduct">
@@ -626,14 +635,23 @@
                                             </div>
                                         </div>
                                         <hr>
-                                        <div class="form-group" *ngIf="inforId != 0">
-                                            <label style="font-size: 16px;" for="special_order">Loại đơn hàng</label>
-                                            <select class="form-control" id="special_order"
-                                                formControlName="special_order" (change)="onIsProductChange($event)">
-                                                <option [ngValue]="null" disabled selected>Loại đơn hàng</option>
-                                                <option [ngValue]="0">Đơn hàng dành cho sản phẩm có sẵn</option>
-                                                <option [ngValue]="1">Đơn hàng dành cho sản phẩm theo yêu cầu</option>
-                                            </select>
+                                        <div class="form-group"  class="row" *ngIf="inforId != 0">
+                                            
+                                            <div class="col-md-6">
+                                                <label style="font-size: 16px;" for="special_order">Loại đơn hàng</label>
+                                                <select class="form-control" id="special_order"
+                                                    formControlName="special_order" (change)="onIsProductChange($event)">
+                                                    <option [ngValue]="null" disabled selected>Loại đơn hàng</option>
+                                                    <option [ngValue]="0">Đơn hàng dành cho sản phẩm có sẵn</option>
+                                                    <option [ngValue]="1">Đơn hàng dành cho sản phẩm theo yêu cầu</option>
+                                                </select>
+                                            </div>
+
+                                            <div class="col-md-6">
+                                                <label style="font-size: 16px;" for="special_order">Ngày hoàn thành</label>
+                                                <input class="form-control" type="date" placeholder="Nhập ngày hoàn thành" formControlName="orderFinish">
+                                            </div>
+
                                         </div>
 
                                         <div class="form-group" *ngIf="isForRequestProduct">

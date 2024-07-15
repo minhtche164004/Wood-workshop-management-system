@@ -13,7 +13,7 @@ import { error } from 'jquery';
 import { AuthenListService } from 'src/app/service/authen.service';
 
 interface CustomerInfo {
-  accId : number;
+  accId: number;
   inforId: number;
   fullname: string;
   address: string;
@@ -159,6 +159,7 @@ export class CreateOrderComponent implements OnInit {
       }),
       orderDetail: this.productForm,
       payment_method: [null],
+      orderFinish: ['']
 
     });
 
@@ -190,7 +191,7 @@ export class CreateOrderComponent implements OnInit {
 
     this.provincesService.getProvinces().subscribe((data: Province[]) => {
       this.provinces = data;
-      
+
       // console.log(this.provinces);
     });
     this.addItem();
@@ -232,12 +233,12 @@ export class CreateOrderComponent implements OnInit {
 
   }
 
-  currentRole : string = '';
+  currentRole: string = '';
 
-  getRole(): void{
+  getRole(): void {
     this.authenListService.getUserProfile().subscribe(
       (data: any) => {
-          this.currentRole = data.result?.role_name;
+        this.currentRole = data.result?.role_name;
 
       },
       (error) => {
@@ -291,9 +292,9 @@ export class CreateOrderComponent implements OnInit {
           }, 0);
           //copy value sang cho nguoi nhan
           const receiveInfo: ReceiveInfo = data.result; {
-          //   this.fullnameCopy = customerInfo.fullname;
-          //   this.phonenumberCopy = customerInfo.phoneNumber;
-          //   this.addressCopy = customerInfo.address;
+            //   this.fullnameCopy = customerInfo.fullname;
+            //   this.phonenumberCopy = customerInfo.phoneNumber;
+            //   this.addressCopy = customerInfo.address;
             this.selectedProvinceCopy = this.provinces.find(province => province.name === customerInfo.city_province);
             this.provinceControlCopy.setValue(customerInfo.city_province);
             setTimeout(() => {
@@ -306,7 +307,7 @@ export class CreateOrderComponent implements OnInit {
           //
           this.orderForm.patchValue({
             cusInfo: {
-            
+
               userid: customerInfo.inforId,
               fullname: customerInfo.fullname,
               address: customerInfo.address,
@@ -422,7 +423,8 @@ export class CreateOrderComponent implements OnInit {
     // const productFormData = this.productForm.value;
     if (this.orderForm && this.orderForm.valid && this.productForm
       && this.productForm.valid && this.orderForm.value.special_order != null
-      && this.orderForm.value.payment_method != null) {
+      && this.orderForm.value.payment_method != null
+      && this.orderForm.value.orderFinish != null) {
       this.createOrderService.addNewOrder(orderData).subscribe(
         response => {
           // this.isLoadding = false;
@@ -451,7 +453,7 @@ export class CreateOrderComponent implements OnInit {
                 this.toastr.error('Có lỗi khi thanh toán qua thẻ!', 'Lỗi');
                 this.isLoadding = false;
               });
-          }else{
+          } else {
             this.isLoadding = false;
           }
 

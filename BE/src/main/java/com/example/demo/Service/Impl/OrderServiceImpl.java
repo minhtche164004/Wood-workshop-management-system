@@ -79,6 +79,8 @@ public class    OrderServiceImpl implements OrderService {
 
     @Override
     public Orders AddOrder(RequestOrder requestOrder) {
+        Map<String, String> errors = new HashMap<>(); //hashmap cho error
+
         LocalDate currentDate = LocalDate.now();
         java.sql.Date sqlCompletionTime = java.sql.Date.valueOf(currentDate); // Chuyển đổi sang java.sql.Date
 
@@ -136,8 +138,14 @@ public class    OrderServiceImpl implements OrderService {
                     orderdetail.setProduct(productRepository.findById(item.getId()));
                     orderdetail.setQuantity(item.getQuantity()); //set quantity
                     orderdetail.setUnitPrice(item.getPrice()); //set unit price
+
                     if (orderdetail.getProduct().getQuantity() < item.getQuantity()) {
-                        throw new AppException(ErrorCode.OUT_OF_STOCK);
+//                        throw new AppException(ErrorCode.OUT_OF_STOCK);
+                        int b = orderdetail.getProduct().getQuantity();
+                        int c = item.getQuantity();
+                        int a = c-b;
+                        String errorMessage = String.format("Sản phẩm có mã sản phẩm là:" +orderdetail.getProduct().getCode()+" đang thiếu số lượng để đủ cho đơn hàng là " +a+" cái");
+                        errors.put(orderdetail.getProduct().getCode(), errorMessage);
                     }
                     product.setQuantity(product.getQuantity() - item.getQuantity());
                     productRepository.save(product);

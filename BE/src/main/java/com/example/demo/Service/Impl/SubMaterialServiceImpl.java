@@ -292,7 +292,9 @@ public class SubMaterialServiceImpl implements SubMaterialService {
             SubMaterials subMaterial = requestProductsSubmaterials.getSubMaterial();
             double currentQuantity = subMaterial.getQuantity();
             if (quantity > currentQuantity) {
-                errors.put(subMaterial.getSubMaterialName(), "Không đủ số lượng");
+                double a = quantity-currentQuantity;
+                String errorMessage = String.format("Không đủ số lượng, thiếu %.2f %s", a, subMaterial.getMaterial().getType());
+                errors.put(subMaterial.getSubMaterialName(), errorMessage);
                 //continue;
             }
         }
@@ -370,7 +372,10 @@ public class SubMaterialServiceImpl implements SubMaterialService {
             SubMaterials subMaterial = productSubMaterials.getSubMaterial();
             double currentQuantity = subMaterial.getQuantity();
             if (quantity > currentQuantity) {
-                errors.put(subMaterial.getSubMaterialName(), "Không đủ số lượng");
+                double a = quantity-currentQuantity;
+                String errorMessage = String.format("Không đủ số lượng, thiếu %.2f %s", a, subMaterial.getMaterial().getType());
+                errors.put(subMaterial.getSubMaterialName(), errorMessage);
+             //   errors.put(subMaterial.getSubMaterialName(), "Không đủ số lượng");
                 //continue;
             }
         }

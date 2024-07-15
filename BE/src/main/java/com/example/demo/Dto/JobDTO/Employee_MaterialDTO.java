@@ -12,7 +12,7 @@ import java.util.Date;
 public class Employee_MaterialDTO {
     private int empMaterialId;
     private Integer userId;
-    private String username;
+    private String fullname;
     private String  position_name;
     private int  subMaterialId;
     private String subMaterialName;
@@ -21,10 +21,10 @@ public class Employee_MaterialDTO {
     private String code; //mã job
 
 
-    public Employee_MaterialDTO(int empMaterialId,Integer userId, String username, String position_name, int subMaterialId, String subMaterialName, double quantity, Date timeStart, String code) {
+    public Employee_MaterialDTO(int empMaterialId,Integer userId, String fullname, String position_name, int subMaterialId, String subMaterialName, double quantity, Date timeStart, String code) {
         this.empMaterialId = empMaterialId;
         this.userId=userId;
-        this.username=username;
+        this.fullname=fullname;
         this.position_name = position_name;
         this.subMaterialId = subMaterialId;
         this.subMaterialName = subMaterialName;

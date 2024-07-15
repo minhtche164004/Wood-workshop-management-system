@@ -63,6 +63,7 @@ import { ListSalaryEmployeeComponent } from './4.Employee/list-salary-employee/l
 //danh` cho order-vnpay
 import { OrderSuccessComponent } from './Order-payment-vnpay/order-success/order-success.component';
 import { OrderFailComponent } from './Order-payment-vnpay/order-fail/order-fail.component';
+import { AuthGuard } from './AuthGuard';
 
 
 
@@ -73,17 +74,17 @@ const routes: Routes = [
   { path: 'api-province', component: ApiProvinceComponent },
   { path: 'login', component: RegisterComponent },
   { path: 'otp', component: VerifyOtpComponent },
-  { path: 'admin', component: PageAdminComponent },
+  { path: 'admin', component: UserManagementComponent },
   { path: 'verifyMail', component: VerifyMailComponent },
   { path: 'verifyOtp', component: VerifyOtpMailComponent },
   { path: 'change_pass', component: ChangePasswordComponent },
-  { path: 'admin_manager_user', component: UserManagementComponent },
+  { path: 'admin_manager_user', component: UserManagementComponent , canActivate: [AuthGuard], data: { roles: ['ADMIN'] }},
   { path: 'payment-salary', component: PaymentSalaryComponent },
   { path: 'verifyOtp/:email', component: VerifyOtpMailComponent },  // Route with email as a parameter
   { path: 'change_pass/:email', component: ForgotPassComponent },  // Route with email as a parameter
   { path: 'product', component: ProductComponent }, // Add route for ProductComponent
   { path: 'productsList', component: ProductListComponent },
-  { path: 'product_management', component: ProductManagementComponent },
+  { path: 'product_management', component: ProductManagementComponent, canActivate: [AuthGuard], data: { roles: ['MANAGER'] } },
   { path: 'order_rq', component: OrderRequiredComponent },
   { path: 'supplier_management', component: SupplierManagementComponent },
   { path: 'profile', component: ViewProfileComponent },
@@ -110,7 +111,7 @@ const routes: Routes = [
 
   { path: 'ds', component: DashboardComponent },
 
-  { path: 'chart', component: ChartComponent },
+  { path: 'static-report', component: ChartComponent, canActivate: [AuthGuard], data: { roles: ['MANAGER'] }  },
   { path: 'material_management', component: MaterialManagementComponent },
   { path: 'report_management', component: ReportManagementComponent },
   { path: 'report_management/:id', component: ReportManagementComponent },
@@ -136,7 +137,6 @@ const routes: Routes = [
   { path: '', redirectTo: '/homepage', pathMatch: 'full' },
 
   { path: '**', redirectTo: '/homepage', pathMatch: 'full' },
-
 
 ];
 

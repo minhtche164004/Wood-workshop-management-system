@@ -64,15 +64,34 @@
 
 
           <div *ngIf="productDetails" class="row">
-
-            <dt class="col-3">Màu sắc</dt>
-            <dd class="col-9">Màu nâu</dd>
             <dt class="col-3">Loại sản phẩm:</dt>
-            <dd class="col-9">{{ productDetails?.categories?.categoryName }}</dd>
-            <dt class="col-3">Kích thước</dt>
-            <dd class="col-9">4m2</dd>
-
+            <dd class="col-9"><label for="">{{ productDetails?.categories?.categoryName }}</label></dd>
+            <dt class="col-3">Loại gỗ sử dụng:</dt>
+            <dd class="col-9">
+              <label *ngIf="listWoodMaterial.length>0">
+                <label *ngFor="let submaterial of listWoodMaterial">
+                  {{submaterial}}<label *ngIf="submaterial!=listWoodMaterial[listWoodMaterial.length-1]">,&nbsp;</label>
+                </label>
+              </label>
+              <label *ngIf="listWoodMaterial.length==0">
+                Sản phẩm không có gỗ
+              </label>
+            </dd>
+            <dt class="col-3">Màu sơn:</dt>
+            <dd class="col-9">
+              <label *ngIf="listPaintMaterial.length>0">
+                <label *ngFor="let submaterial of listPaintMaterial">
+                  {{submaterial}}<label *ngIf="submaterial!=listPaintMaterial[listPaintMaterial.length-1]">,&nbsp;</label>
+                </label>
+              </label>
+              <label *ngIf="listPaintMaterial.length==0">
+                Sản phẩm không có sơn
+              </label>
+            </dd>
+            <dt class="col-3">Trạng thái</dt>
+            <dd class="col-9"><label for="">{{productDetails.quantity?"Còn hàng":"Hết hàng"}}</label></dd>
           </div>
+
 
           <hr />
 
@@ -112,25 +131,26 @@
           <ul class="nav nav-pills nav-justified mb-3" id="product-details-tabs" role="tablist">
             <li class="nav-item" role="presentation">
               <a class="nav-link d-flex align-items-center justify-content-center w-100 active custom-background"
-                 id="description-tab" data-toggle="pill" href="#description-content" role="tab" aria-controls="description-content"
-                 aria-selected="true">
+                id="description-tab" data-toggle="pill" href="#description-content" role="tab"
+                aria-controls="description-content" aria-selected="true">
                 <span>Mô Tả</span>
               </a>
             </li>
             <li class="nav-item" role="presentation">
               <a class="nav-link d-flex align-items-center justify-content-center w-100 custom-background"
-                 id="warranty-tab" data-toggle="pill" href="#warranty-content" role="tab" aria-controls="warranty-content"
-                 aria-selected="false">
+                id="warranty-tab" data-toggle="pill" href="#warranty-content" role="tab"
+                aria-controls="warranty-content" aria-selected="false">
                 <span>Thông tin bảo hành</span>
               </a>
             </li>
           </ul>
           <!-- Pills navs -->
-      
+
           <!-- Pills content -->
           <div class="tab-content">
             <!-- Tab 1: Mô Tả -->
-            <div class="tab-pane fade in show active" id="description-content" role="tabpanel" aria-labelledby="description-tab">
+            <div class="tab-pane fade in show active" id="description-content" role="tabpanel"
+              aria-labelledby="description-tab">
               <table class="table table-custom">
                 <tr>
                   <td>
@@ -173,7 +193,7 @@
                   </div>
                 </div>
               </ng-container>
-              
+
             </div>
           </div>
         </div>

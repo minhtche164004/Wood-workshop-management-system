@@ -32,7 +32,7 @@ public interface ProductService {
 
     List<Products> findProductByNameCode(String key);
 
-    ProductDTO_Show GetProductByIdWithImage(int id);
+    ProductDetailDTO GetProductByIdWithImage(int id);
 
     Products UpdateStatusProduct(int product_id, int status_id);
 

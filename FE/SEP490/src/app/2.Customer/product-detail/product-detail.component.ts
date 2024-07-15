@@ -18,7 +18,8 @@ export class ProductDetailComponent implements OnInit {
   categoryProduct: any= {};
   largeImageUrl: string = '';
   largeImageUrl_Cate: string = '';
-
+  listWoodMaterial: string[] = [];
+  listPaintMaterial: string[] = [];
   constructor(private route: ActivatedRoute, private http: HttpClient,private wishList: WishlistService,private toastr: ToastrService) {
     this.onTabClick('description');
   }
@@ -58,6 +59,19 @@ export class ProductDetailComponent implements OnInit {
           this.categoryId = this.productDetails.categories.categoryId;
           this.largeImageUrl = this.productDetails.image;
           console.log('Product details:', this.productDetails);
+          // console.log(this.productDetails.sub_material_name);
+          // if(this.productDetails.sub_material_name.length)
+          this.listWoodMaterial = [];
+          this.listPaintMaterial = [];
+          this.productDetails.sub_material_name.map((submaterial: any)=>{
+            if(submaterial.materialId == 1){
+              this.listWoodMaterial.push(submaterial.subMaterialName)
+            }
+            if(submaterial.materialId == 4){
+              this.listPaintMaterial.push(submaterial.subMaterialName)
+            }
+          })
+
           console.log('CategoryID:', this.categoryId);
           this.getCategoryProducts(this.categoryId);
         },

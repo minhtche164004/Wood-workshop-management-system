@@ -369,7 +369,11 @@ export class JobManagementComponent implements OnInit {
     this.createJobs.reset();
     const quantity = this.productForm.get('quantity')?.value;
     if (this.selectedProduct === null) {
-      this.toastr.error('Please select a product');
+      this.toastr.error('Hãy chọn một sản phẩm');
+      return;
+    }
+    if (quantity <= 0) {
+      this.toastr.error('Có lỗi xảy ra!', 'Lỗi');
       return;
     }
     // console.log('Selected product for job:', this.selectedProduct.productId);
@@ -585,7 +589,7 @@ export class JobManagementComponent implements OnInit {
     let mate_id = job.position_id;
     console.log('Mate ID:', mate_id);
     console.log('Product ID:', job.product_id);
-     this.isLoadding = true;  
+    // this.isLoadding = true;  
     this.jobService.getSubMTRProduct(job.product_id, mate_id).subscribe(  //thay bang api goi job product submaterial
       (data) => {
         if (data.code === 1000) {
@@ -735,6 +739,7 @@ saveChanges(): void {
   getProductSubMaterial(productId: number, mateId: number) {
     this.isLoadding = true;
     this.jobService.getSubMTRProduct(productId, mateId).subscribe(
+
       data => {
         // Handle the data as needed
         if (data.code === 1000) {
@@ -757,8 +762,7 @@ saveChanges(): void {
     console.log('Thực hiện tìm kiếm:', searchKey);
     console.log('Category:', selectedCategory);
     this.isLoadding = true;
-    if (selectedCategory === 0) {
-      console.log("Tìm kiếm sản phẩm có sẵn")
+    if (selectedCategory === 1) {
       this.jobService.getProductJobByNameOrCode(searchKey).subscribe(
         (data) => {
           if (data.code === 1000) {
@@ -778,7 +782,7 @@ saveChanges(): void {
         }
       );
       this.isLoadding = false;
-  } else if (selectedCategory === 1) {
+  } else if (selectedCategory === 0) {
       console.log("Tìm kiếm sản phẩm yêu cầu")
       this.jobService.seachRequestByName(searchKey).subscribe(
         (data) => {

@@ -49,17 +49,54 @@ export class ProductComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.loadCategories();
 
+    this.activatedRoute.queryParams.subscribe(params => {
+      this.searchKey = params['searchKey'] || "";
+      this.selectedCategory = params['category'] || 0;
+      this.selectedSortByPrice = params['sortByPrice'] || '';
+    });
+
     this.searchKeySubscription = this.dataService.currentSearchKey.subscribe(searchKey => {
-      this.selectedCategory = 0;
-      this.selectedSortByPrice = '';
-      this.selectedStatus = 0;
-      if (!searchKey) {
+
+      if (!searchKey && (this.searchKey === '' || this.selectedCategory !== 0 || this.selectedSortByPrice !== '')) {
+        this.searchProductCustomer();
+        const queryParamsWithSearchKey = {
+          searchKey: this.searchKey,
+          category: this.selectedCategory,
+          sortByPrice: this.selectedSortByPrice
+        };
+
+        const filteredQueryParamsWithSearchKey = Object.fromEntries(
+          Object.entries(queryParamsWithSearchKey).filter(([_, value]) => value)
+        );
+
+        this.router.navigate(['/product'], { queryParams: filteredQueryParamsWithSearchKey });
+      }
+      else if (!searchKey) {
+        this.selectedCategory = 0;
+        this.selectedSortByPrice = '';
+        this.selectedStatus = 0;
         this.getProduct();
-      } else {
+      }
+      else {
+        this.selectedCategory = 0;
+        this.selectedSortByPrice = '';
+        this.selectedStatus = 0;
         this.searchKey = searchKey;
         this.searchProductCustomer();
       }
     });
+
+    // this.searchKeySubscription = this.dataService.currentSearchKey.subscribe(searchKey => {
+    //   this.selectedCategory = 0;
+    //   this.selectedSortByPrice = '';
+    //   this.selectedStatus = 0;
+    //   if (!searchKey) {
+    //     this.getProduct();
+    //   } else {
+    //     this.searchKey = searchKey;
+    //     this.searchProductCustomer();
+    //   }
+    // });
   }
 
   ngOnDestroy(): void {
@@ -69,7 +106,7 @@ export class ProductComponent implements OnInit, OnDestroy {
   }
 
   addToWishlist(productId: number): void {
-    this.wishList.addWishlist(productId).subscribe( 
+    this.wishList.addWishlist(productId).subscribe(
       data => {
         console.log('data:', data);
         if (data.code === 1000) {
@@ -87,7 +124,7 @@ export class ProductComponent implements OnInit, OnDestroy {
       }
     );
   }
-  
+
 
   validatePriceRange(): void {
     if (this.minPrice > this.maxPrice) {
@@ -164,14 +201,14 @@ export class ProductComponent implements OnInit, OnDestroy {
         return obj;
       }, {});
 
-      const filteredQueryParamsWithoutSearchKey = Object.fromEntries(
-        Object.entries(queryParamsWithoutSearchKey).filter(([_, value]) => value)
-      );
+    const filteredQueryParamsWithoutSearchKey = Object.fromEntries(
+      Object.entries(queryParamsWithoutSearchKey).filter(([_, value]) => value)
+    );
 
     this.activatedRoute.queryParams.subscribe(params => {
       if (params['searchKey']) { // neu param co searchKey
         this.router.navigate(['/product'], { queryParams: filteredQueryParams });
-      }else{
+      } else {
         this.router.navigate(['/product'], { queryParams: filteredQueryParamsWithoutSearchKey });
       }
     });
@@ -182,6 +219,7 @@ export class ProductComponent implements OnInit, OnDestroy {
           this.isLoadding = false;
           if (data.code === 1000) {
             this.products = data.result;
+            this.notFoundProduct = false;
             // this.toastr.success('Lọc sản phẩm thành công!', 'Thành công');
           } else if (data.code === 1015) {
             this.products = [];

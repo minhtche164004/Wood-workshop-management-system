@@ -127,7 +127,7 @@ export class JobManagementComponent implements OnInit {
     const statusId = (event.target as HTMLSelectElement).value;
     this.selectedModalJob = jobId.toString();
     console.log('Job ID:', this.selectedModalJob, 'Status ID:', statusId);
-    //this.selectedModalId = statusId;
+    this.selectedModalId = statusId;
     // this.createJobs.reset();  
     // S? d?ng tham chi?u này d? kích ho?t click
     this.launchModalButton.nativeElement.click();
@@ -147,7 +147,7 @@ export class JobManagementComponent implements OnInit {
   }
 
   cancelChangeStatusJob() {
-    this.selectedModalId = '';
+    this.selectedModalId = '';  
   }
 
   acceptJob(jobId: string, statusId: string): void {
@@ -757,8 +757,10 @@ saveChanges(): void {
       }
     );
   }
+  checkNotFound: boolean = false;
   // hàm search api bằng produc thawojc product rq
   onSearch(selectedCategory: number, searchKey: string): void {
+    this.checkNotFound = false;
     console.log('Thực hiện tìm kiếm:', searchKey);
     console.log('Category:', selectedCategory);
     this.isLoadding = true;
@@ -772,18 +774,21 @@ saveChanges(): void {
           } 
           else (
             this.toastr.error('Không tìm thấy sản phẩm!', 'Lỗi')
+            
           )
           this.isLoadding = false;
+          this.checkNotFound = true;
         },
         (error) => {
-          console.error('Error fetching products:', error);
+          console.log('Error fetching products:', error);
           this.toastr.error('Có lỗi xảy ra!', 'Lỗi');
           this.isLoadding = false;
+          this.checkNotFound = true;
         }
       );
       this.isLoadding = false;
   } else if (selectedCategory === 0) {
-      console.log("Tìm kiếm sản phẩm yêu cầu")
+      console.log("Tìm kiếm sản phẩm yêu cầu: ", searchKey)
       this.jobService.seachRequestByName(searchKey).subscribe(
         (data) => {
           if (data.code === 1000) {
@@ -794,9 +799,10 @@ saveChanges(): void {
           this.isLoadding = false;
         },
         (error) => {
-          console.error('Error fetching products:', error);
+          console.log('Error fetching products:', error);
           this.toastr.error('Có lỗi xảy ra!', 'Lỗi');
           this.isLoadding = false;
+          this.checkNotFound = true;
         }
       );
 

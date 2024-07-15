@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { ToastrService } from 'ngx-toastr';
 import { JobService } from 'src/app/service/job.service';
@@ -21,6 +21,8 @@ declare var $: any;
 })
 
 export class TotalSalaryComponent implements OnInit {
+  @ViewChild('launchModalButton')
+  launchModalButton!: ElementRef;
   keyword = 'fullname';
   searchKey: string = '';
   totalSalary: any[] = [];
@@ -41,6 +43,7 @@ export class TotalSalaryComponent implements OnInit {
   endDate: string = '';
   position: number = 0;
   selectedBanking: any;
+  
   advanceSuccessValues: any = {
     trueValue: true,
     falseValue: false
@@ -76,7 +79,7 @@ export class TotalSalaryComponent implements OnInit {
     //  console.log('To Date:', this.toDate);
     // console.log('Selected Position:', this.selectedPosition);
     console.log('Keyword:', this.searchKey);
- 
+
     this.searchSalary();
 
   }
@@ -86,7 +89,7 @@ export class TotalSalaryComponent implements OnInit {
       (data) => {
         if (data.code === 1000) {
           this.totalSalary = data.result;
-          //    console.log('Total salary: ', this.totalSalary); 
+          console.log('Total salary: ', this.totalSalary);
           this.isLoadding = false;
         }
 
@@ -146,7 +149,7 @@ export class TotalSalaryComponent implements OnInit {
 
   selectEmp(product: any): void {
     this.selectedEmp = product;
-     // Clear the search key before performing the search
+    // Clear the search key before performing the search
     console.log('Selected employee:', this.selectedEmp.fullname);
     this.searchKey = this.selectedEmp.fullname;
     this.searchSalary();
@@ -162,7 +165,7 @@ export class TotalSalaryComponent implements OnInit {
     // if (this.searchKey === '') {
     //   this.searchKey = this.selectedEmp.fullname
     // }
-   
+
     this.salaryService.multSearchSalary(this.searchKey, this.startDate, this.endDate, '', this.selectedPosition).subscribe(
       (data) => {
         if (data.code === 1000) {
@@ -174,9 +177,9 @@ export class TotalSalaryComponent implements OnInit {
         } else {
           console.error('Failed to fetch products:', data);
           // this.toastr.error('Không tìm thấy lương của nhân viên', 'Lỗi');
-         
+
           this.checkNotFound = true;
-         
+
         }
         this.isLoadding = false;
       },
@@ -186,6 +189,7 @@ export class TotalSalaryComponent implements OnInit {
       }
     )
   }
+
   updateBanking(jobId: number, event: Event): void {
     this.isLoadding = true;
     const newValue = (event.target as HTMLSelectElement).value;
@@ -281,7 +285,7 @@ export class TotalSalaryComponent implements OnInit {
     )
   }
 
-  thanhToan(product: any): void {
+    thanhToan(product: any): void {
     this.isLoadding = true;
     this.qrImageUrl = '';
 
@@ -301,18 +305,14 @@ export class TotalSalaryComponent implements OnInit {
     this.salaryService.getQRBanking(product.amount, product.user?.userInfor?.bank_number, product?.user?.userInfor?.fullname, bin, formattedNdChuyenKhoan)
       .subscribe(
         (response) => {
-
           this.qrImageUrl = response;
           console.log('QR Image URL:', this.qrImageUrl);
           this.isLoadding = false;
-
         },
         (error) => {
           console.error('API Error:', error);
           this.toastr.error('Có lỗi xảy ra khi tạo mã QR thanh toán. Vui lòng thử lại sau.', 'Lỗi');
           // Xử lý lỗi nếu có
-
-
           $('[data-dismiss="modal"]').click();
           this.isLoadding = false;
         }

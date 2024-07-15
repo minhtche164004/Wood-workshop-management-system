@@ -73,6 +73,7 @@ import { ListRequestCustomerComponent } from './3.Manager/list-request-customer/
 import { ListSalaryEmployeeComponent } from './4.Employee/list-salary-employee/list-salary-employee.component';
 import { OrderSuccessComponent } from './Order-payment-vnpay/order-success/order-success.component';
 import { OrderFailComponent } from './Order-payment-vnpay/order-fail/order-fail.component';
+import { EmployeeSubmaterialManagementComponent } from './employee-submaterial-management/employee-submaterial-management.component';
 // import { AuthInterceptor } from './service/auth.interceptor';
 @NgModule({
 
@@ -138,6 +139,7 @@ import { OrderFailComponent } from './Order-payment-vnpay/order-fail/order-fail.
     ListSalaryEmployeeComponent,
     OrderSuccessComponent,
     OrderFailComponent,
+    EmployeeSubmaterialManagementComponent,
 
 
   ],

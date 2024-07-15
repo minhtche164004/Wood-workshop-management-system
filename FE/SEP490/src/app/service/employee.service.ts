@@ -14,10 +14,19 @@ export class EmployeeService {
   private apiGetAllPosition = `${environment.apiUrl}api/auth/admin/GetAllPosition`;
 
   private apiCountJobById = `${environment.apiUrl}api/auth/job/countJobsByUserId`;
+
+  private apiGetAllSubMaterialForEmp = `${environment.apiUrl}api/auth/submaterial/GetAllMaterialForEmployee`;
   constructor(private http: HttpClient) { }
 
   getAllEmployee(): Observable<any> {
     return this.http.get<any>(this.apiGetAllEmployee).pipe(
+      catchError(this.handleError)
+   
+   );
+  }
+
+  getSubMaterialForEmp(): Observable<any> {
+    return this.http.get<any>(this.apiGetAllSubMaterialForEmp).pipe(
       catchError(this.handleError)
     );
   }

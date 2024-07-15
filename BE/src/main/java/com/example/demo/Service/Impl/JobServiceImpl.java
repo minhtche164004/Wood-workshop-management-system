@@ -137,7 +137,12 @@ public class JobServiceImpl implements JobService {
         jobs.setCode(code);
         jobs.setJob_log(false);
         jobRepository.save(jobs);
-        jobRepository.delete(jobs_order_detail);
+//        List<Processproducterror> processproducterrorList = processproducterrorRepository.getProcessproducterrorByJobId(job_id);
+//        for(Processproducterror p : processproducterrorList){
+//            processproducterrorRepository.delete(p);
+//        }
+//        jobRepository.delete(jobs_order_detail);
+
         return jobs;
     }
 
@@ -462,6 +467,13 @@ public class JobServiceImpl implements JobService {
             throw new AppException(ErrorCode.NOT_FOUND);
         }
         return list;
+    }
+
+    @Override
+    public boolean checkErrorOfJobHaveFixDoneOrNot(int job_id) {
+        List<Processproducterror> list = processproducterrorRepository.getProcessproducterrorByJobIdHaveFixNotDone(job_id);
+        if(list != null) return false;
+        return true;
     }
 
 

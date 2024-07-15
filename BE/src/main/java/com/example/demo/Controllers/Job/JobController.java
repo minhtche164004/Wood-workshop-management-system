@@ -70,6 +70,13 @@ public class JobController {
         return apiResponse;
     }
 
+    @GetMapping("/checkErrorOfJobHaveFixDoneOrNot")
+    public ApiResponse<?> checkErrorOfJobHaveFixDoneOrNot(@RequestParam("job_id") int job_id) {
+        ApiResponse<Boolean> apiResponse = new ApiResponse<>();
+        apiResponse.setResult(jobService.checkErrorOfJobHaveFixDoneOrNot(job_id));
+        return apiResponse;
+    }
+
     @GetMapping("/countCompletedJobsByMonthAndYear")
     public ApiResponse<?> countCompletedJobsByMonthAndYear(@RequestParam("status_name") String status_name,@RequestParam("month")int month,
                                                            @RequestParam("year") int year) {

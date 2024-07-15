@@ -43,9 +43,15 @@ public class User  {
     @JoinColumn(name = "role_id")
     private Role role;
 
-    @OneToOne(cascade = CascadeType.ALL,fetch = FetchType.EAGER)// tức là khi tạo User thì infor cũng đc tạo
-    @JsonIgnore
+//    @OneToOne(cascade = CascadeType.ALL,fetch = FetchType.EAGER)// tức là khi tạo User thì infor cũng đc tạo
+//    @JsonIgnore
+//    @JoinColumn(name = "infor_id")
+//    private UserInfor userInfor;
+
+    // Trong lớp User:
+    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinColumn(name = "infor_id")
+    @JsonManagedReference
     private UserInfor userInfor;
 
 

@@ -11,6 +11,8 @@ import org.springframework.stereotype.Repository;
 
 import java.math.BigDecimal;
 import java.sql.Date;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 @Repository
@@ -107,16 +109,33 @@ public interface AdvancesalaryRepository extends JpaRepository<Advancesalary,Int
     @Query("SELECT SUM(s.quantity*s.unitPrice) FROM SubMaterials s")
     BigDecimal totalAmountSubMaterial();
 
-
-
-
-
-
-
-
-
-
-
-
+    //tính số lượng tiền nhập nguyên liệu theo tháng và năm
+    @Query("SELECT SUM(s.quantity*s.unitPrice) FROM SubMaterials s WHERE MONTH(s.create_date) = :month AND YEAR(s.create_date) = :year")
+    BigDecimal findTotalSubMaterialByMonthAndYear(@Param("month") int month, @Param("year") int year);
 
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

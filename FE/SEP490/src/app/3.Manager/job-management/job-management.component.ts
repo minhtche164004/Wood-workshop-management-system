@@ -152,9 +152,9 @@ export class JobManagementComponent implements OnInit {
 
   acceptJob(jobId: string, statusId: string): void {
     this.isLoadding = true
-
     console.log('Job ID:', jobId, 'Status ID:', statusId);
     this.createJobs.reset();
+    console.log('selected cate: ', this.selectedCategory);
     // if (statusId === 4) {
     //   statusId = 6;
     // } else if (statusId === 7) {
@@ -162,27 +162,25 @@ export class JobManagementComponent implements OnInit {
     // } else if (statusId === 10) {
     //   statusId = 12;
     // }
-
+    if(this.selectedCategory === 1){
+      console.log('SP có sẵn');
+      
+    } else if(this.selectedCategory === 0){
+    console.log('SP không có sẵn');
+    }
 
     this.jobService.acceptJob(jobId, statusId).subscribe(
       (data) => {
         if (data.code === 1000) {
           this.toastr.success('Cập nhật trạng thái làm việc thành công!', 'Thành công');
           console.log('Đổi trạng thái job thành công'); this.isLoadding = false;
-          this.productListService.getProducts().subscribe(
-            (data) => {
-              if (data.code === 1000) {
-                this.products = data.result; this.isLoadding = false;
-                // console.log('Danh sách sản phẩm:', this.products);
-                $('[data-dismiss="modal"]').click();
-              }
-            },
-            (error) => {
-              console.error('Error fetching products:', error);
-              this.isLoadding = false;
-              $('[data-dismiss="modal"]').click();
-            }
-          );
+          if(this.selectedCategory === 1){
+            console.log('SP có sẵn');
+            this.loadProduct();
+          } else if(this.selectedCategory === 0){
+          console.log('SP không có sẵn');
+          this.loadProductRQForJob();
+          }
         } else {
           this.toastr.error('Cập nhật trạng thái làm việc thất bại!', 'Lỗi');
           console.error('Failed to fetch products:', data); this.isLoadding = false;
@@ -195,12 +193,6 @@ export class JobManagementComponent implements OnInit {
     );
   }
 
-  // exportProductTotalJob(id: number, mate_id: number, emp_id: number, productForm: any) {
-  //   console.log('export id: ', id);
-  //   console.log('export mate_id: ', mate_id);
-  //   console.log('export emp_id: ', emp_id);
-
-  // }
 
   openConfirmChangeStatusJob(product: any): void {
 
@@ -272,8 +264,8 @@ export class JobManagementComponent implements OnInit {
                 if (data.code === 1000) {
                   this.pForJob = data.result;
                   // console.log('Add product for job:', this.pForJob);
-                  this.toastr.success('Thêm sản phẩm sản xuất thành công!', 'Thành công');
-                  $('[data-dismiss="modal"]').click();
+               
+                  
                   this.isLoadding = false;
                   this.loadProduct();
                 }
@@ -281,6 +273,7 @@ export class JobManagementComponent implements OnInit {
               (error) => {
                 console.error('Error fetching products:', error);
                 this.toastr.error('Có lỗi xảy ra!', 'Lỗi'); this.isLoadding = false;
+                $('[data-dismiss="modal"]').click();
               }
             );
           } else if (data.code === 1015) {
@@ -377,8 +370,6 @@ export class JobManagementComponent implements OnInit {
       return;
     }
     // console.log('Selected product for job:', this.selectedProduct.productId);
-
-
     this.jobService.addProductForJob(this.selectedProduct.productId, quantity).subscribe(
 
       (data) => {
@@ -564,6 +555,8 @@ export class JobManagementComponent implements OnInit {
 
     $('[data-dismiss="modal"]').click(); this.isLoadding = false;
   }
+
+
   getSubMTRProductRQ(id: number, mate_id: number) {
     this.jobService.getSubMTRProductRQ(id, mate_id).subscribe(
       (data) => {
@@ -705,7 +698,6 @@ saveChanges(): void {
     const jobId = this.selectedProduct.job_id; // Hoặc lấy từ giá trị khác nếu cần
     console.log('Job ID:', jobId);
     const formValues = this.errorForm.value;
-
     console.log('Form values:', formValues);
     this.productListService.createProductError(
       jobId,
@@ -713,10 +705,12 @@ saveChanges(): void {
       formValues.solution,
       formValues.quantity
     )
+    
       .subscribe(
         (data) => {
+          console.log('Form values:', formValues);
           if (data.code === 1000) {
-
+            
             console.log('Thêm lỗi sản phẩm thành công:');
             this.toastr.success('Thêm lỗi sản phẩm thành công!', 'Thành công');
             $('[data-dismiss="modal"]').click(); this.isLoadding = false;

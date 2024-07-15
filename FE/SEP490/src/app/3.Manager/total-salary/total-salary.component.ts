@@ -284,7 +284,10 @@ export class TotalSalaryComponent implements OnInit {
       }
     )
   }
-
+  confirmThanhToan(): void {
+    console.log('Confirm thanh toan: ', this.selectedBanking);
+   
+  }
     thanhToan(product: any): void {
     this.isLoadding = true;
     this.qrImageUrl = '';

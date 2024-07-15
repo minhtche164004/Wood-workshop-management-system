@@ -54,4 +54,6 @@ public interface JobService {
     Long CountQuantityOfJob(String status_name,int month,int year);
 
     List<Employeematerials> getAllMaterialForEmployee();
+
+    boolean checkErrorOfJobHaveFixDoneOrNot(int job_id);
 }

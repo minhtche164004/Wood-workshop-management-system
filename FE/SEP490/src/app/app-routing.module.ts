@@ -112,7 +112,8 @@ const routes: Routes = [
 
   { path: 'ds', component: DashboardComponent },
 
-  { path: 'static-report', component: ChartComponent, canActivate: [AuthGuard], data: { roles: ['MANAGER'] }  },
+  // { path: 'static-report', component: ChartComponent, canActivate: [AuthGuard], data: { roles: ['MANAGER'] }  },
+  { path: 'static-report', component: ChartComponent},
   { path: 'material_management', component: MaterialManagementComponent },
   { path: 'report_management', component: ReportManagementComponent },
   { path: 'report_management/:id', component: ReportManagementComponent },

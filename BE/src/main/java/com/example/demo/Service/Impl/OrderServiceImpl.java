@@ -100,6 +100,7 @@ public class    OrderServiceImpl implements OrderService {
         orders.setOrderDate(sqlCompletionTime);
         Status_Order statusOrder = statusOrderRepository.findById(1);//tự set cho nó là 1
         orders.setStatus(statusOrder);
+        orders.setOrderFinish(requestOrder.getOrderFinish()); // set ngay hoan thanh order
         orders.setPaymentMethod(requestOrder.getPayment_method()); //1 là trả tiền trực tiếp, 2 là chuyển khoản
         orders.setAddress(requestOrder.getCusInfo().getAddress());
         orders.setFullname(requestOrder.getCusInfo().getFullname());

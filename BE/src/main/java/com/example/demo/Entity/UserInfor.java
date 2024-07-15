@@ -27,7 +27,7 @@ public class UserInfor {
     @Column(name = "address")
     private String address;
 
-    @JsonIgnore
+   // @JsonIgnore
     @OneToOne(mappedBy = "userInfor")
     @JsonBackReference
     private User user;
@@ -49,6 +49,11 @@ public class UserInfor {
 
     @Column(name = "has_Account")
     private Integer has_Account;  //1 là đã có account , 0 là chưa có
+
+//    // Trong lớp UserInfor:
+//    @OneToOne(mappedBy = "userInfor")
+//    @JsonBackReference
+//    private User user;
 
 
 //    public UserInfor(String fullname, String phoneNumber, String address) {

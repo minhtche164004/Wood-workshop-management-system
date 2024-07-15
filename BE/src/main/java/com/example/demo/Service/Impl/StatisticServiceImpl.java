@@ -1,16 +1,24 @@
 package com.example.demo.Service.Impl;
 
+import com.example.demo.Entity.SubMaterials;
 import com.example.demo.Repository.AdvancesalaryRepository;
+import com.example.demo.Repository.SubMaterialsRepository;
 import com.example.demo.Service.StatisticService;
+import com.nimbusds.jwt.util.DateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.List;
 
 @Service
 public class StatisticServiceImpl implements StatisticService {
     @Autowired
     private AdvancesalaryRepository advancesalaryRepository;
+    @Autowired
+    private SubMaterialsRepository subMaterialsRepository;
 
     @Override
     public BigDecimal findTotalSalaryByMonthAndYear(int month, int year) {
@@ -60,4 +68,11 @@ public class StatisticServiceImpl implements StatisticService {
     public BigDecimal totalAmountSubMaterial() {
         return advancesalaryRepository.totalAmountSubMaterial();
     }
+    @Override
+    public BigDecimal findTotalSubMaterialByMonthAndYear(int year, int month) {
+          return advancesalaryRepository.findTotalSubMaterialByMonthAndYear(year, month);
+
+    }
+
+
 }

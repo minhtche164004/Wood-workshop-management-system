@@ -36,6 +36,7 @@ public interface JobService {
     List<Jobs> getJobWasDone();
     List<JobDoneDTO> filterJobWasDoneByEmployeeName(String keyword);
     List<JobDoneDTO> findAllJobForDoneByEmployeeID();
+    List<JobDoneDTO> findAllJobForDoneByEmployeeIDWithJobCode(String query);
     List<Status_Job> getAllStatusJob();
 
 

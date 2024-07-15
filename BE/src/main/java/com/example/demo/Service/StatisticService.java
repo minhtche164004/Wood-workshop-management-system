@@ -1,5 +1,6 @@
 package com.example.demo.Service;
 
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -16,5 +17,6 @@ public interface StatisticService {
     Long countEmployeeWithTypePosition(int query);
     BigDecimal totalAmountOrderHaveDone();
     BigDecimal totalAmountSubMaterial();
+    BigDecimal findTotalSubMaterialByMonthAndYear(int year, int month);
 
 }

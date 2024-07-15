@@ -23,6 +23,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.regex.Pattern;
@@ -72,10 +73,14 @@ public class SubMaterialServiceImpl implements SubMaterialService {
 
     @Override
     public SubMaterials addNew(SubMaterialDTO subMaterialDTO) {
+        LocalDate today = LocalDate.now();
+        Date create =  Date.from(today.atStartOfDay(ZoneId.systemDefault()).toInstant());
+
         SubMaterials subMaterials = new SubMaterials();
         subMaterials.setSubMaterialName(subMaterialDTO.getSub_material_name());
         Materials materials = materialRepository.findByName(subMaterialDTO.getMaterial_name());
         subMaterials.setMaterial(materials);
+        subMaterials.setCreate_date(create);
         subMaterials.setQuantity(subMaterialDTO.getQuantity());
         subMaterials.setUnitPrice(subMaterialDTO.getUnit_price());
         subMaterials.setDescription(subMaterialDTO.getDescription());
@@ -100,6 +105,8 @@ public class SubMaterialServiceImpl implements SubMaterialService {
 
     @Transactional
     public void saveSubMaterialToDatabase(MultipartFile file) {
+        LocalDate today = LocalDate.now();
+        Date create =  Date.from(today.atStartOfDay(ZoneId.systemDefault()).toInstant());
         if (ExcelUploadService.isValidExcelFile(file)) {
             try {
                 List<SubMaterialDTO> subMaterialDTOs = ExcelUploadService.getSubMaterialDataFromExcel(file.getInputStream());
@@ -137,6 +144,7 @@ public class SubMaterialServiceImpl implements SubMaterialService {
                         subMaterials.setSubMaterialName(subMaterialName);
                         // Lấy Material (nên kiểm tra null để tránh lỗi)
                         Materials materials = materialRepository.findByName(materialName);
+                        subMaterials.setCreate_date(create);
                         subMaterials.setMaterial(materials);
                         subMaterials.setQuantity(dto.getQuantity());
                         subMaterials.setUnitPrice(dto.getUnit_price());

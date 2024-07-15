@@ -9,6 +9,9 @@ import { Router } from '@angular/router';
 import { FormBuilder, FormGroup, FormArray, Validators, ReactiveFormsModule } from '@angular/forms';
 import { CreateOrderService } from 'src/app/service/create-order.service';
 import { error } from 'jquery';
+
+import { AuthenListService } from 'src/app/service/authen.service';
+
 interface CustomerInfo {
   accId : number;
   inforId: number;
@@ -125,7 +128,8 @@ export class CreateOrderComponent implements OnInit {
     private createOrderService: CreateOrderService,
     private toastr: ToastrService,
     private productListService: ProductListService,
-    private router: Router
+    private router: Router,
+    private authenListService: AuthenListService
   ) {
 
     this.productForm = this.fb.group({
@@ -180,7 +184,9 @@ export class CreateOrderComponent implements OnInit {
     }
   }
 
-  ngOnInit() {
+  async ngOnInit() {
+
+    await this.getRole();
 
     this.provincesService.getProvinces().subscribe((data: Province[]) => {
       this.provinces = data;
@@ -223,6 +229,21 @@ export class CreateOrderComponent implements OnInit {
 
     this.loadAllPhoneNumber();
     // this.loadAllProductForCustomer();
+
+  }
+
+  currentRole : string = '';
+
+  getRole(): void{
+    this.authenListService.getUserProfile().subscribe(
+      (data: any) => {
+          this.currentRole = data.result?.role_name;
+
+      },
+      (error) => {
+        console.error('Error fetching role:', error);
+      }
+    );
   }
 
   loadAllPhoneNumber(): void {

@@ -347,7 +347,7 @@ public class JobServiceImpl implements JobService {
         if(checkConditionService.checkInputQuantityIntForProductError(processproducterror.getQuantity(),jobs.getQuantityProduct())== false){
             throw new AppException(ErrorCode.INVALID_QUANTITY_PRODUCT_ERROR);
         }
-        processproducterror.setDescription(productErrorDTO.getDes());
+        processproducterror.setDescription(productErrorDTO.getDescription());
         processproducterror.setSolution(productErrorDTO.getSolution());
 
         Products product = jobs.getProduct(); // Lấy đối tượng Product
@@ -384,7 +384,7 @@ public class JobServiceImpl implements JobService {
     @Override
     public ProductErrorAllDTO EditProductError(int error_id, ProductErrorDTO productErrorDTO) {
         Processproducterror processproducterror = processproducterrorRepository.FindByIdProductErrorId(error_id);
-        processproducterror.setDescription(productErrorDTO.getDes());
+        processproducterror.setDescription(productErrorDTO.getDescription());
         processproducterror.setIsFixed(productErrorDTO.getIsFixed());
         processproducterror.setSolution(productErrorDTO.getSolution());
         processproducterror.setQuantity(productErrorDTO.getQuantity());

@@ -318,6 +318,17 @@ public class JobServiceImpl implements JobService {
     }
 
     @Override
+    public List<JobDoneDTO> findAllJobForDoneByEmployeeIDWithJobCode(String query) {
+        UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        User user = userRepository.getUserByUsername(userDetails.getUsername());
+        List<JobDoneDTO> jobsList = jobRepository.findAllJobForDoneByEmployeeIDWithJobCode(user.getUserId(),query);
+        if(jobsList == null ){
+            throw new AppException(ErrorCode.NOT_FOUND);
+        }
+        return jobsList;
+    }
+
+    @Override
     public List<Status_Job> getAllStatusJob() {
         return statusJobRepository.getAllStatus();
     }

@@ -83,8 +83,7 @@
                   <select class="custom-select" [disabled]="us?.status.status_id === 6 || us?.status.status_id === 5
                   || us?.status.status_id === 1
                   || us?.status.status_id === 3" (change)="onStatusChange(us.orderId, $event)">
-                    <option *ngFor="let status of status_order"
-                      [value]="status.status_id"
+                    <option *ngFor="let status of status_order" [value]="status.status_id"
                       [selected]="status.status_id === us?.status.status_id"
                       [disabled]="status.status_id === 1 || status.status_id === 3 || status.status_id === 6">
                       {{ status.status_name }}
@@ -92,7 +91,7 @@
                   </select>
                 </div>
               </td>
-    
+
 
 
 
@@ -105,8 +104,8 @@
               <td>{{ (us?.totalAmount - us?.deposite) | number : '1.0-3'
                 }}</td>
               <td>{{ us?.totalAmount | number : '1.0-3' }}</td>
-              <td >
-                <a href="#" class="delete" title="Delete" data-toggle="modal" data-target="#confirmDeleteModal" 
+              <td>
+                <a href="#" class="delete" title="Delete" data-toggle="modal" data-target="#confirmDeleteModal"
                   (click)="setOrderForCancellation(us?.orderId, us?.specialOrder)">
                   <i class="fa-solid fa-times"></i>
                 </a>
@@ -305,7 +304,7 @@
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-dismiss="modal">Hủy </button>
-        <button type="button" class="btn btn-primary"(click)="confirmCancel()">Xác nhận</button>
+        <button type="button" class="btn btn-primary" (click)="confirmCancel()">Xác nhận</button>
       </div>
     </div>
   </div>

@@ -382,6 +382,15 @@ public class    OrderServiceImpl implements OrderService {
         return request_list;
     }
 
+    @Override
+    public List<Requests> GetAllRequestsAccept() {
+        List<Requests> request_list = requestRepository.findAllRequestAccept();
+        if (request_list.isEmpty()) {
+            throw new AppException(ErrorCode.NOT_FOUND);
+        }
+        return request_list;
+    }
+
 //    @Override
 //    public RequestProductAllDTO GetProductRequestById(int id) {
 //        List<Product_Requestimages> productRequestimagesList = productRequestimagesRepository.findById(id);

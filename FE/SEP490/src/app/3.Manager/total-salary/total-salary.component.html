@@ -243,16 +243,18 @@
             </div>
             <div class="modal-footer text-center justify-content-center">
                 <!-- Thêm justify-content-center để căn giữa -->
-                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#myModal" (click)="confirmThanhToan()">Đã
+                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#myModal"
+                    (click)="confirmThanhToan()">Đã
                     thanh toán</button>
-                    <!-- updateBankingModal(this.selectedBanking) -->
+                <!-- updateBankingModal(this.selectedBanking) -->
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Hủy bỏ</button>
             </div>
         </div>
     </div>
 </div>
 
-<div class="modal fade" id="myModal" tabindex="-1" aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
+<div class="modal fade" id="myModal" tabindex="-1" aria-labelledby="myModalLabel" aria-hidden="true"
+    data-backdrop="static" data-keyboard="false">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
@@ -263,9 +265,8 @@
                 Bạn có chắc chắn muốn cập nhật trạng thái việc làm?
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" 
-                    data-dismiss="modal">Đóng</button>
-                <button type="button" class="btn btn-primary"  (click)="updateBankingModal(selectedBanking)">Chắc
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
+                <button type="button" class="btn btn-primary" (click)="updateBankingModal(selectedBanking)">Chắc
                     chắn</button>
             </div>
         </div>

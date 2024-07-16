@@ -10,6 +10,7 @@ import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { ProductService } from 'src/app/service/product.service';
 import { MatDialog, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import 'jquery';
+import { EmployeeService } from 'src/app/service/employee.service';
 
 declare var $: any;
 
@@ -55,7 +56,7 @@ export class JobManagementComponent implements OnInit {
   isLoadding: boolean = false;
   jobList: any[] = [];
 
-  constructor(private fb: FormBuilder, private productList: ProductService, private productListService: ProductListService, private jobService: JobService, private toastr: ToastrService, private sanitizer: DomSanitizer) {
+  constructor(private fb: FormBuilder, private employeeService: EmployeeService,private productList: ProductService, private productListService: ProductListService, private jobService: JobService, private toastr: ToastrService, private sanitizer: DomSanitizer) {
     this.createJobs = this.fb.group({
       job_name: [''],
       quantity_product: [''],
@@ -115,7 +116,7 @@ export class JobManagementComponent implements OnInit {
     this.loadProductRQForJob();
     this.loadStatusByType();
     this.loadProductNgOn();
-  
+    this.getAllPostionEmp();
   }
   selectedModalJob: string = '';
   selectedModalId: string = '';
@@ -288,7 +289,7 @@ export class JobManagementComponent implements OnInit {
             );
           } else if (data.code === 1015) {
             console.error('Failed to fetch products:', data);
-            this.toastr.warning('Số lượng nguyên vật liệu trong kho không đủ', 'Lỗi');
+            this.toastr.warning('Số lượng nguyên vật liệu trong kho không đủ', 'Thông báo');
             $('[data-dismiss="modal"]').click(); this.isLoadding = false;
             
           }
@@ -341,7 +342,7 @@ export class JobManagementComponent implements OnInit {
             );
           } else if (data.code === 1015) {
             console.error('Failed to fetch products:', data);
-            this.toastr.warning('Số lượng nguyên vật liệu trong kho không đủ', 'Lỗi');
+            this.toastr.warning('Số lượng nguyên vật liệu trong kho không đủ', 'Thông báo');
             $('[data-dismiss="modal"]').click(); this.isLoadding = false;
           }
         },
@@ -503,6 +504,7 @@ export class JobManagementComponent implements OnInit {
       (data) => {
         if (data.code === 1000) {
           this.productRQs = data.result;
+          console.log('Sp cho job:', this.productRQs);
         } else {
           console.error('Failed to fetch products:', data);
           this.toastr.error('Không thể lấy danh sách sản phẩm!', 'Lỗi');
@@ -627,10 +629,30 @@ export class JobManagementComponent implements OnInit {
 
   //   this.isLoadding = false;
   // }
+  selected_productName: string = '';
+  positionEmpList: any[] = [];
+  selectedPosition: any = {};
+  getAllPostionEmp(): void {
+    //  this.isLoadding = true;
+    this.employeeService.getAllPostionEmp().subscribe(
+      (data) => {
+        if (data.code === 1000) {
+          this.positionEmpList = data.result;
+          //   console.log('Danh sách chuc vu nhan vien: ', this.positionEmpList); this.isLoadding = false;
+        } else {
+          console.error('Failed to fetch products:', data);
+          //this.isLoadding = false;
+        }
+
+      },
+    )
+  }
   showJobDetail(job: any) {
     let mate_id = job.position_id;
     console.log('Mate ID:', mate_id);
     console.log('Product ID:', job.product_id);
+    console.log('productName:', job.product_name);
+    this.selected_productName = job.product_name;
     // this.isLoadding = true;  
     this.jobService.getSubMTRProduct(job.product_id, mate_id).subscribe(  //thay bang api goi job product submaterial
       (data) => {

@@ -67,7 +67,7 @@ export class OrderManagementComponent implements OnInit {
           if (data.code === 1000) {
             this.user = data.result;
             this.isLoadding = false;
-            console.log('Danh sách người dùng:', this.user);
+            // console.log('Danh sách người dùng:', this.user);
 
           } else {
             console.error('Failed to fetch products:', data);
@@ -102,22 +102,22 @@ export class OrderManagementComponent implements OnInit {
       }
     );
   }
-  loadStatus(): void {
-    this.authenListService.getAllStatusOrder().subscribe(
-      (data: any) => {
-        if (data.code === 1000) {
-          this.status_order = data.result;
-          console.log('Danh sách trạng thái:', this.status_order);
-        } else {
-          console.error('Dữ liệu trả về không hợp lệ:', data);
+    loadStatus(): void {
+      this.authenListService.getAllStatusOrder().subscribe(
+        (data: any) => {
+          if (data.code === 1000) {
+            this.status_order = data.result;
+            console.log('Danh sách trạng thái:', this.status_order);
+          } else {
+            console.error('Dữ liệu trả về không hợp lệ:', data);
+          }
+        },
+        (error) => {
+          console.error('Lỗi khi lấy danh sách Loại:', error);
         }
-      },
-      (error) => {
-        console.error('Lỗi khi lấy danh sách Loại:', error);
-      }
-    );
+      );
 
-  }
+    }
   getOrDetailById(order_detail_id: string): void {
     this.isLoadding = true;
 

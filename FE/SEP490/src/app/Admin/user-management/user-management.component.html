@@ -17,18 +17,18 @@
                 <span class="align-middle">Thêm Người Dùng</span>
               </a>
             </div>
-          </div>
+          </div> 
 
           <div class="row">
             <div class="col-md-7"></div> <!-- Dummy column to push the search box to the right -->
             <div class="col-md-5 text-end">
               <div class="input-group mb-3">
                 <!-- product.component.html -->
-                <select [ngModel]="selectedCategory">
-                  <option value="null" disabled selected>Phân quyền</option>
-                  <option *ngFor="let ps of position" [value]="ps.position_id">{{ ps.position_name }}</option>
-                </select>
 
+                <select [(ngModel)]="selectedRoleFilter" (change)="filterRole()">
+                  <option value="null"  selected>Tất cả vai trò</option>
+                   <option *ngFor="let ps of position" [value]="ps.position_id">{{ ps.position_name }}</option>
+                </select>
                 <input type="text" class="form-control" placeholder="Mã người dùng,Tên" [(ngModel)]="searchKey">
                 <button class="btn search-button" type="button" (click)="SearchUserByNameorAddress()">
                   <i class="fa fa-search"></i>

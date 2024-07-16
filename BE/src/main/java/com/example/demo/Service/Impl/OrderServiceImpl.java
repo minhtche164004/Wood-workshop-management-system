@@ -45,14 +45,14 @@ public class    OrderServiceImpl implements OrderService {
     private CheckConditionService checkConditionService;
     @Autowired
     private UserRepository userRepository;
-    @Autowired
-    private Status_Request_Repository statusRequestRepository;
+//    @Autowired
+//    private Status_Request_Repository statusRequestRepository;
     @Autowired
     private UploadImageService uploadImageService;
     @Autowired
     private RequestProductRepository requestProductRepository;
-    @Autowired
-    private RequestRepository requestRepository;
+//    @Autowired
+//    private RequestRepository requestRepository;
     @Autowired
     private Product_RequestimagesRepository productRequestimagesRepository;
     @Autowired
@@ -262,8 +262,8 @@ public class    OrderServiceImpl implements OrderService {
     //Tạo Request
     //Tạo Request Product
     @Override
-    public Requests AddNewRequest(RequestDTO requestDTO, MultipartFile[] multipartFiles) {
-        Requests requests = new Requests();
+    public Orders AddNewRequest(RequestDTO requestDTO, MultipartFile[] multipartFiles) {
+        Orders requests = new Orders();
         UserDetails userDetails =(UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         User user =userRepository.getUserByUsername(userDetails.getUsername());
         //lấy thông tin thằng đang login
@@ -272,13 +272,12 @@ public class    OrderServiceImpl implements OrderService {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("ddMMyy");
         String dateString = today.format(formatter);
         Date requestDate = Date.from(today.atStartOfDay(ZoneId.systemDefault()).toInstant());
-        requests.setUser(user);
-        Status_Request statusRequest =statusRequestRepository.findById(1).get();//nghĩa là request đang chờ phê duyệt
-        requests.setRequestDate(requestDate); //lấy time hiện tại
+        requests.setUserInfor(user.getUserInfor());
+        Status_Order statusRequest =statusOrderRepository.findById(7);//nghĩa là request đang chờ phê duyệt
+        requests.setOrderDate(requestDate); //lấy time hiện tại
         requests.setDescription(requestDTO.getDescription());
         requests.setStatus(statusRequest);
         requests.setAddress(requestDTO.getAddress());
-        requests.setEmail(requestDTO.getEmail());
         requests.setFullname(requestDTO.getFullname());
         requests.setPhoneNumber(requestDTO.getPhoneNumber());
         requests.setResponse("");
@@ -286,24 +285,29 @@ public class    OrderServiceImpl implements OrderService {
         requests.setDistrict(requestDTO.getDistrict_province());
         requests.setWards(requestDTO.getWards_province());
 
-        Requests lastRequest = requestRepository.findRequestTop(dateString + "RQ");
-        int count = lastRequest != null ? Integer.parseInt(lastRequest.getCode().substring(8)) + 1 : 1;
-        String code = dateString + "RQ" + String.format("%03d", count);
+        Orders lastOrder = orderRepository.findOrderTop(dateString + "OD");
+        int count = lastOrder != null ? Integer.parseInt(lastOrder.getCode().substring(8)) + 1 : 1;
+        String code = dateString + "OD" + String.format("%03d", count);
         requests.setCode(code);
+
+//        Requests lastRequest = requestRepository.findRequestTop(dateString + "RQ");
+//        int count = lastRequest != null ? Integer.parseInt(lastRequest.getCode().substring(8)) + 1 : 1;
+//        String code = dateString + "RQ" + String.format("%03d", count);
+//        requests.setCode(code);
         if (!checkConditionService.checkInputName(requestDTO.getFullname())) {
             throw new AppException(ErrorCode.INVALID_FORMAT_NAME);
         }
 
-        requests = requestRepository.save(requests);
-        uploadImageService.uploadFileRequest(multipartFiles, requests.getRequestId());
+        requests = orderRepository.save(requests);
+        uploadImageService.uploadFileRequest(multipartFiles, requests.getOrderId());
 
         return requests;
     }
 
     @Transactional
     @Override
-    public Requests EditRequest(int request_id, RequestEditCusDTO requestEditDTO, MultipartFile[] multipartFiles) throws IOException {
-        Requests requests = requestRepository.findById(request_id);
+    public Orders EditRequest(int request_id, RequestEditCusDTO requestEditDTO, MultipartFile[] multipartFiles) throws IOException {
+        Orders requests = orderRepository.findById(request_id);
         if (multipartFiles != null && Arrays.stream(multipartFiles).anyMatch(file -> file != null && !file.isEmpty())) {
             List<Requestimages> requestimagesList= requestimagesRepository.findRequestImageByRequestId(request_id);
             for(Requestimages requestimages : requestimagesList){
@@ -312,18 +316,19 @@ public class    OrderServiceImpl implements OrderService {
                 cloudinaryService.deleteImage(id_image);
             }
             requestimagesRepository.deleteRequestImages(request_id); // Xóa những ảnh trước đó
-            uploadImageService.uploadFileRequest(multipartFiles, requests.getRequestId());
+            uploadImageService.uploadFileRequest(multipartFiles, requests.getOrderId());
         }
-        requestRepository.updateRequest(request_id,
+        orderRepository.updateRequest(request_id,
                 requestEditDTO.getDescription()
         );
         entityManager.refresh(requests); // Làm mới đối tượng products
         return requests;
     }
-    @Override
-    public Requests getRequestById(int id) {
-        return requestRepository.findById(id);
-    }
+
+//    @Override
+//    public Requests getRequestById(int id) {
+//        return requestRepository.findById(id);
+//    }
 
     @Override
     public RequestProducts getRequestProductsById(int id) {
@@ -333,7 +338,7 @@ public class    OrderServiceImpl implements OrderService {
     @Transactional
     @Override
     public void Approve_Reject_Request(int id, int status_id) {
-        requestRepository.updateStatus(id, status_id);
+        orderRepository.updateStatus(id, status_id);
     }
 
     //Tạo Request Product
@@ -348,8 +353,8 @@ public class    OrderServiceImpl implements OrderService {
         requestProducts.setStatus(status);
         requestProducts.setQuantity(requestProductDTO.getQuantity());
         requestProducts.setCompletionTime(requestProductDTO.getCompletionTime());
-        Requests requests = requestRepository.findById(requestProductDTO.getRequest_id());
-        requestProducts.setRequests(requests);
+        Orders requests = orderRepository.findById(requestProductDTO.getRequest_id());
+        requestProducts.setOrders(requests);
         if (!checkConditionService.checkInputName(requestProductDTO.getRequestProductName())) {
             throw new AppException(ErrorCode.INVALID_FORMAT_NAME);
         }
@@ -374,23 +379,23 @@ public class    OrderServiceImpl implements OrderService {
 
 
 
-    @Override
-    public List<Requests> GetAllRequests() {
-        List<Requests> request_list = requestRepository.findAllRequest();
-        if (request_list.isEmpty()) {
-            throw new AppException(ErrorCode.NOT_FOUND);
-        }
-        return request_list;
-    }
-
-    @Override
-    public List<Requests> GetAllRequestsAccept() {
-        List<Requests> request_list = requestRepository.findAllRequestAccept();
-        if (request_list.isEmpty()) {
-            throw new AppException(ErrorCode.NOT_FOUND);
-        }
-        return request_list;
-    }
+//    @Override
+//    public List<Requests> GetAllRequests() {
+//        List<Requests> request_list = requestRepository.findAllRequest();
+//        if (request_list.isEmpty()) {
+//            throw new AppException(ErrorCode.NOT_FOUND);
+//        }
+//        return request_list;
+//    }
+//
+//    @Override
+//    public List<Requests> GetAllRequestsAccept() {
+//        List<Requests> request_list = requestRepository.findAllRequestAccept();
+//        if (request_list.isEmpty()) {
+//            throw new AppException(ErrorCode.NOT_FOUND);
+//        }
+//        return request_list;
+//    }
 
 //    @Override
 //    public RequestProductAllDTO GetProductRequestById(int id) {
@@ -416,38 +421,38 @@ public class    OrderServiceImpl implements OrderService {
 //        return requestProductAllDTO;
 //    }
 
-    @Override
-    public RequestAllDTO GetRequestById(int id) {
-        List<Requestimages> requestimagesList = requestimagesRepository.findById(id);
-        Requests requests = requestRepository.findById(id);
-        if (requests == null) {
-            throw new AppException(ErrorCode.NOT_FOUND);
-        }
-        RequestAllDTO requestAllDTO = new RequestAllDTO();
-        requestAllDTO.setRequest_id(requests.getRequestId());
-
-        requestAllDTO.setUser_id(requests.getUser().getUserId());
-        requestAllDTO.setRequestDate(requests.getRequestDate());
-        requestAllDTO.setResponse(requests.getResponse());
-        requestAllDTO.setPhoneNumber(requests.getPhoneNumber());
-        requestAllDTO.setFullname(requests.getFullname());
-        requestAllDTO.setEmail(requests.getEmail());
-        requestAllDTO.setAddress(requests.getAddress());
-        requestAllDTO.setCity_province(requests.getCity_province());
-        requestAllDTO.setStatus_id(requests.getStatus().getStatus_id());
-        requestAllDTO.setStatus_name(requests.getStatus().getStatus_name());
-        requestAllDTO.setDistrict(requests.getDistrict());
-        requestAllDTO.setWards(requests.getWards());
-        requestAllDTO.setDescription(requests.getDescription());
-        List<Requestimages> processedImages = new ArrayList<>(); // Danh sách mới
-        for (Requestimages requestimages : requestimagesList) {
-            requestimages.setFullPath(requestimages.getFullPath());
-            processedImages.add(requestimages); // Thêm vào danh sách mới
-        }
-        requestAllDTO.setImagesList(processedImages); // Gán danh sách mới vào DTO
-
-        return requestAllDTO;
-    }
+//    @Override
+//    public RequestAllDTO GetRequestById(int id) {
+//        List<Requestimages> requestimagesList = requestimagesRepository.findById(id);
+//        Requests requests = requestRepository.findById(id);
+//        if (requests == null) {
+//            throw new AppException(ErrorCode.NOT_FOUND);
+//        }
+//        RequestAllDTO requestAllDTO = new RequestAllDTO();
+//        requestAllDTO.setRequest_id(requests.getRequestId());
+//
+//        requestAllDTO.setUser_id(requests.getUser().getUserId());
+//        requestAllDTO.setRequestDate(requests.getRequestDate());
+//        requestAllDTO.setResponse(requests.getResponse());
+//        requestAllDTO.setPhoneNumber(requests.getPhoneNumber());
+//        requestAllDTO.setFullname(requests.getFullname());
+//        requestAllDTO.setEmail(requests.getEmail());
+//        requestAllDTO.setAddress(requests.getAddress());
+//        requestAllDTO.setCity_province(requests.getCity_province());
+//        requestAllDTO.setStatus_id(requests.getStatus().getStatus_id());
+//        requestAllDTO.setStatus_name(requests.getStatus().getStatus_name());
+//        requestAllDTO.setDistrict(requests.getDistrict());
+//        requestAllDTO.setWards(requests.getWards());
+//        requestAllDTO.setDescription(requests.getDescription());
+//        List<Requestimages> processedImages = new ArrayList<>(); // Danh sách mới
+//        for (Requestimages requestimages : requestimagesList) {
+//            requestimages.setFullPath(requestimages.getFullPath());
+//            processedImages.add(requestimages); // Thêm vào danh sách mới
+//        }
+//        requestAllDTO.setImagesList(processedImages); // Gán danh sách mới vào DTO
+//
+//        return requestAllDTO;
+//    }
 
     @Override
     public List<Orders> GetAllOrder() {
@@ -543,12 +548,12 @@ public class    OrderServiceImpl implements OrderService {
 
     @Transactional
     @Override
-    public Requests ManagerEditRequest(int request_id, RequestEditDTO requestEditDTO) {
-        Requests requests = requestRepository.findById(request_id);
-        Status_Request statusRequest = statusRequestRepository.getById(requestEditDTO.getStatus_id());
+    public Orders ManagerEditRequest(int request_id, RequestEditDTO requestEditDTO) {
+        Orders requests = orderRepository.findById(request_id);
+        Status_Order statusRequest = statusOrderRepository.getById(requestEditDTO.getStatus_id());
         requests.setStatus(statusRequest);
         requests.setResponse(requestEditDTO.getResponse());
-        requestRepository.save(requests);
+        orderRepository.save(requests);
         //  entityManager.refresh(requests);
         return requests;
     }
@@ -575,7 +580,7 @@ public class    OrderServiceImpl implements OrderService {
 
     @Override
     public void deleteRequestById(int requestId) {
-        requestRepository.deleteById(requestId);
+        orderRepository.deleteById(requestId);
     }
 
     @Transactional
@@ -642,9 +647,9 @@ public class    OrderServiceImpl implements OrderService {
             requestProductDTOShow.setPrice(requestProducts.getPrice());
             requestProductDTOShow.setCompletionTime(requestProducts.getCompletionTime());
             requestProductDTOShow.setStatus(requestProducts.getStatus());
-            int request_id = requestProducts.getRequests().getRequestId();
+            int request_id = requestProducts.getOrders().getOrderId();
             System.out.println(request_id);
-            Requests requests= requestRepository.findById(request_id);
+            Orders requests= orderRepository.findById(request_id);
             requestProductDTOShow.setRequest_id(request_id);
             requestProductDTOShow.setCode(requests.getCode());
             List<Product_Requestimages> imageList = productRequestimagesList.stream()
@@ -683,23 +688,23 @@ public class    OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public List<Requests> GetAllRequestByUserId() {
+    public List<Orders> GetAllRequestByUserId() {
         UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         User user = userRepository.getUserByUsername(userDetails.getUsername());
-        List<Requests> list = requestRepository.findByUserId(user.getUserId());
+        List<Orders> list = orderRepository.findByUserId(user.getUserId());
         if(list == null ){
             throw new AppException(ErrorCode.NOT_FOUND);
         }
         return list;
     }
-    @Override
-    public List<Requests> GetAllRequestByAccountId(int acc_id) {
-        List<Requests> list = requestRepository.findByUserId(acc_id);
-        if(list == null ){
-            throw new AppException(ErrorCode.NOT_FOUND);
-        }
-        return list;
-    }
+//    @Override
+//    public List<Requests> GetAllRequestByAccountId(int acc_id) {
+//        List<Requests> list = requestRepository.findByUserId(acc_id);
+//        if(list == null ){
+//            throw new AppException(ErrorCode.NOT_FOUND);
+//        }
+//        return list;
+//    }
 
     @Override
     public RequestProductDTO_Show GetRequestProductByIdWithImage(int id) {
@@ -719,8 +724,8 @@ public class    OrderServiceImpl implements OrderService {
         requestProductDTOShow.setQuantity(requestProducts.getQuantity());
         requestProductDTOShow.setCompletionTime(requestProducts.getCompletionTime());
         requestProductDTOShow.setStatus(requestProducts.getStatus());
-        int request_id = requestProducts.getRequests().getRequestId();
-        Requests requests= requestRepository.findById(request_id);
+        int request_id = requestProducts.getOrders().getOrderId();
+        Orders requests= orderRepository.findById(request_id);
         requestProductDTOShow.setRequest_id(request_id);
         requestProductDTOShow.setCode(requests.getCode());
 //        requestProductDTOShow.setRequests(requests);
@@ -755,9 +760,9 @@ public class    OrderServiceImpl implements OrderService {
             requestProductDTOShow.setPrice(requestProducts.getPrice());
             requestProductDTOShow.setCompletionTime(requestProducts.getCompletionTime());
             requestProductDTOShow.setStatus(requestProducts.getStatus());
-            int request_id = requestProducts.getRequests().getRequestId();
+            int request_id = requestProducts.getOrders().getOrderId();
             System.out.println(request_id);
-            Requests requests= requestRepository.findById(request_id);
+            Orders requests= orderRepository.findById(request_id);
             requestProductDTOShow.setRequest_id(request_id);
             requestProductDTOShow.setCode(requests.getCode());
 //            requestProductDTOShow.setRequests(requests);

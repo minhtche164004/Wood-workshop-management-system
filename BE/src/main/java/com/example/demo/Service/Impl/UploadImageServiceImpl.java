@@ -34,8 +34,10 @@ public class UploadImageServiceImpl implements UploadImageService {
     private ProductRepository productRepository;
     @Autowired
     private RequestProductRepository requestProductRepository;
+//    @Autowired
+//    private RequestRepository requestRepository;
     @Autowired
-    private RequestRepository requestRepository;
+    private OrderRepository orderRepository;
     @Autowired
     private CheckConditionService checkConditionService;
     @Autowired
@@ -154,9 +156,9 @@ public List<ProductImageDTO> uploadFileRequestProduct(MultipartFile[] multipartF
     //up image cua request
     //up cho request product
     @Override
-    public List<ProductImageDTO> uploadFileRequest(MultipartFile[] multipartFiles, int request_id) {
+    public List<ProductImageDTO> uploadFileRequest(MultipartFile[] multipartFiles, int order_id) {
         // Tìm request tương ứng với request_id
-        Requests request = requestRepository.findById(request_id);
+        Orders request = orderRepository.findById(order_id);
 
 
             // Nếu không tìm thấy request, ném ra ngoại lệ
@@ -183,28 +185,13 @@ public List<ProductImageDTO> uploadFileRequestProduct(MultipartFile[] multipartF
                                 // Tải ảnh lên Cloudinary
                                 Map result = cloudinaryService.upload(file, "product_images");
                                 String cloudinaryUrl = (String) result.get("secure_url"); // Lấy URL từ kết quả trả về
-//                                // Đọc nội dung tệp tin thành mảng byte
-//                                byte[] bytes = file.getBytes();
-//
-//                                // Tạo tên tệp mới để tránh trùng lặp
-//                                var fileNameUpload = FilenameUtils.removeExtension(filename) + "_" + Calendar.getInstance().getTimeInMillis() + "." + fileExtension;
-//
-//                                // Ghi tệp tin vào thư mục upload với tên tệp mới
-//                                String projectDir = Paths.get("").toAbsolutePath().toString().replace("\\", "/");
-//                                Path projectDirPath = Paths.get(projectDir);
-//                                Path parentDir = projectDirPath.getParent(); // Lấy thư mục cha
-//                                String desiredPath = parentDir.toString(); // Chuyển đổi thành chuỗi
-//                                String absoluteUploadPath = desiredPath + uploadPath;
-//                                Path filePath = Paths.get(absoluteUploadPath, fileNameUpload);
-//                                Files.write(filePath, bytes);
-
                                 // Tạo đối tượng Requestimages để lưu thông tin ảnh vào cơ sở dữ liệu
                                 Requestimages fileUpload = new Requestimages();
                                 fileUpload.setImage_name(filename);
                                 fileUpload.setFileOriginalName(FilenameUtils.removeExtension(filename));
                                 fileUpload.setExtension_name(fileExtension);
                                 fileUpload.setFullPath(cloudinaryUrl);
-                                fileUpload.setRequests(request); // Liên kết ảnh với request
+                                fileUpload.setOrders(request); // Liên kết ảnh với request
 
                                 // Thêm đối tượng Requestimages vào danh sách
                                 fileUploads.add(fileUpload);
@@ -233,7 +220,7 @@ public List<ProductImageDTO> uploadFileRequestProduct(MultipartFile[] multipartF
                         dto.setImage_name(image.getImage_name());
                         dto.setFullPath(image.getFullPath());
                         dto.setFileOriginalName(image.getFileOriginalName());
-                        dto.setProduct_id(image.getRequests().getRequestId());
+                        dto.setProduct_id(image.getOrders().getOrderId());
                         productImageDTOs.add(dto);
                     }
 
@@ -351,7 +338,7 @@ public List<ProductImageDTO> uploadFileRequestProduct(MultipartFile[] multipartF
     public List<ProductImageDTO> uploadFile_Request(List<String> imageUrls, int requestId) {
         // Thay đổi đầu vào thành danh sách URL ảnh từ Cloudinary
 
-        Requests request = requestRepository.findById(requestId);
+        Orders request = orderRepository.findById(requestId);
 
         if (request == null) {
             throw new AppException(ErrorCode.NOT_FOUND);
@@ -367,7 +354,7 @@ public List<ProductImageDTO> uploadFileRequestProduct(MultipartFile[] multipartF
             Requestimages requestImage = new Requestimages();
             requestImage.setImage_name(FilenameUtils.getName(imageUrl)); // Lấy tên tệp từ URL
             requestImage.setFullPath(imageUrl); // Lưu trữ trực tiếp URL Cloudinary
-            requestImage.setRequests(request);
+            requestImage.setOrders(request);
             requestImages.add(requestImage);
         }
 
@@ -380,7 +367,7 @@ public List<ProductImageDTO> uploadFileRequestProduct(MultipartFile[] multipartF
             dto.setProductImageId(image.getProductImageId());
             dto.setImage_name(image.getImage_name());
             dto.setFullPath(image.getFullPath()); // Đây là URL Cloudinary
-            dto.setProduct_id(image.getRequests().getRequestId());
+            dto.setProduct_id(image.getOrders().getOrderId());
             productImageDTOs.add(dto);
         }
 

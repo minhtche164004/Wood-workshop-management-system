@@ -46,8 +46,12 @@ public class RequestProducts {
 
 // @OneToMany(mappedBy = "requestProducts")
 // private List<Product_Requestimages> productRequestimages;
+//    @ManyToOne
+//    @JoinColumn(name = "request_id", referencedColumnName = "request_id")
+//    private Requests requests;
+
     @ManyToOne
-    @JoinColumn(name = "request_id", referencedColumnName = "request_id")
-    private Requests requests;
+    @JoinColumn(name = "order_id", referencedColumnName = "order_id")
+    private Orders  orders;
 
 }

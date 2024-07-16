@@ -25,18 +25,18 @@ public interface OrderService {
 
     List<RequestProducts> GetAllProductRequest();
 
-    List<Requests> GetAllRequests();
-    List<Requests> GetAllRequestsAccept();
+  //  List<Orders> GetAllRequests();
+   // List<Orders> GetAllRequestsAccept();
 
-    Requests getRequestById(int id);
+  //  Orders getRequestById(int id);
 
     RequestProducts getRequestProductsById(int id);
 
-    void Approve_Reject_Request(int id, int status_id);
+   void Approve_Reject_Request(int id, int status_id);
 
   //  RequestProductAllDTO GetProductRequestById(int id);
 
-    RequestAllDTO GetRequestById(int id);
+   // RequestAllDTO GetRequestById(int id);
 
     List<Orders> GetAllOrder();
 
@@ -53,14 +53,14 @@ public interface OrderService {
 
     RequestProducts AddNewProductRequest(RequestProductDTO requestProductDTO, MultipartFile[] multipartFiles);
 
-    Requests AddNewRequest(RequestDTO requestDTO, MultipartFile[] multipartFiles);
+    Orders AddNewRequest(RequestDTO requestDTO, MultipartFile[] multipartFiles);
 
 //    Requests EditRequest(int request_id, RequestEditDTO requestEditDTO,MultipartFile[] multipartFiles) throws IOException;
 
     public List<OrderDetailWithJobStatusDTO> getOrderDetailByOrderId(int order_id);
 
-    Requests EditRequest(int request_id, RequestEditCusDTO requestEditDTO, MultipartFile[] multipartFiles) throws IOException;
-    Requests ManagerEditRequest(int request_id, RequestEditDTO requestEditDTO);
+    Orders EditRequest(int request_id, RequestEditCusDTO requestEditDTO, MultipartFile[] multipartFiles) throws IOException;
+    Orders ManagerEditRequest(int request_id, RequestEditDTO requestEditDTO);
 //    Requests CustomerEditRequest(int request_id , Requests requests);
 
     OrderDetailDTO getOrderDetailById(int id);
@@ -75,8 +75,8 @@ public interface OrderService {
 
     List<RequestProducts> findByPriceRange(BigDecimal min, BigDecimal max);
     List<RequestProducts> GetAllProductRequestByUserId();
-    List<Requests> GetAllRequestByUserId();
-    List<Requests> GetAllRequestByAccountId(int acc_id);
+    List<Orders> GetAllRequestByUserId();
+   // List<Orders> GetAllRequestByAccountId(int acc_id);
 
     RequestProductDTO_Show GetRequestProductByIdWithImage(int id);
     List<RequestProductDTO_Show> GetAllRequestProductWithImage();

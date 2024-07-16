@@ -1,7 +1,7 @@
 package com.example.demo.Repository;
 
 import com.example.demo.Entity.Status_Product;
-import com.example.demo.Entity.Status_Request;
+
 import com.example.demo.Entity.Status_User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;

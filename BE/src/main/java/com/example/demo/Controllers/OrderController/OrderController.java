@@ -81,41 +81,41 @@ public class OrderController {
         return apiResponse;
 
     }
-    @GetMapping("/GetAllRequestByAccountId")
-    public ApiResponse<?> GetAllRequestByAccountId(@RequestParam("acc_id") int acc_id) {
-        ApiResponse<List> apiResponse = new ApiResponse<>();
-        apiResponse.setResult(orderService.GetAllRequestByAccountId(acc_id));
-        return apiResponse;
-
-    }
-    @GetMapping("/GetAllRequest")
-    public ApiResponse<?> GetAllRequest() {
-        ApiResponse<List> apiResponse = new ApiResponse<>();
-        apiResponse.setResult(orderService.GetAllRequests());
-        return apiResponse;
-
-    }
-    @GetMapping("/GetAllRequestAccept")
-    public ApiResponse<?> GetAllRequestAccept() {
-        ApiResponse<List> apiResponse = new ApiResponse<>();
-        apiResponse.setResult(orderService.GetAllRequestsAccept());
-        return apiResponse;
-
-    }
+//    @GetMapping("/GetAllRequestByAccountId")
+//    public ApiResponse<?> GetAllRequestByAccountId(@RequestParam("acc_id") int acc_id) {
+//        ApiResponse<List> apiResponse = new ApiResponse<>();
+//        apiResponse.setResult(orderService.GetAllRequestByAccountId(acc_id));
+//        return apiResponse;
+//
+//    }
+//    @GetMapping("/GetAllRequest")
+//    public ApiResponse<?> GetAllRequest() {
+//        ApiResponse<List> apiResponse = new ApiResponse<>();
+//        apiResponse.setResult(orderService.GetAllRequests());
+//        return apiResponse;
+//
+//    }
+//    @GetMapping("/GetAllRequestAccept")
+//    public ApiResponse<?> GetAllRequestAccept() {
+//        ApiResponse<List> apiResponse = new ApiResponse<>();
+//        apiResponse.setResult(orderService.GetAllRequestsAccept());
+//        return apiResponse;
+//
+//    }
     @PutMapping(value ="/CustomerEditRequest" ,consumes = MediaType.MULTIPART_FORM_DATA_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ApiResponse<?> CustomerEditRequest(@RequestParam(value="request_id") int request_id,
                                               @RequestPart("requestEditCusDTO") RequestEditCusDTO requestEditCusDTO,
                                               @RequestPart("files") MultipartFile[] files) throws Exception {
-        ApiResponse<Requests> apiResponse = new ApiResponse<>();
+        ApiResponse<Orders> apiResponse = new ApiResponse<>();
         apiResponse.setResult(orderService.EditRequest(request_id,requestEditCusDTO,files));
         return apiResponse;
     }
-    @GetMapping("/GetRequestById")
-    public ApiResponse<?> GetRequestById(@RequestParam("id") int id) {
-        ApiResponse<RequestAllDTO> apiResponse = new ApiResponse<>();
-        apiResponse.setResult(orderService.GetRequestById(id));
-        return apiResponse;
-    }
+//    @GetMapping("/GetRequestById")
+//    public ApiResponse<?> GetRequestById(@RequestParam("id") int id) {
+//        ApiResponse<RequestAllDTO> apiResponse = new ApiResponse<>();
+//        apiResponse.setResult(orderService.GetRequestById(id));
+//        return apiResponse;
+//    }
     @GetMapping("/GetOrderById")
     public ApiResponse<?> GetOrderById(@RequestParam("id") int id) {
         ApiResponse<Orders> apiResponse = new ApiResponse<>();
@@ -176,7 +176,7 @@ public class OrderController {
             @RequestPart("requestDTO") RequestDTO requestDTO,
             @RequestPart("files") MultipartFile[] files
     ) {
-        ApiResponse<Requests> apiResponse = new ApiResponse<>();
+        ApiResponse<Orders> apiResponse = new ApiResponse<>();
         apiResponse.setResult(orderService.AddNewRequest(requestDTO, files));
         return apiResponse;
     }
@@ -201,7 +201,7 @@ public class OrderController {
     }
     @PutMapping("ManagerEditRequest")
     public ApiResponse<?> ManagerEditRequest(@RequestParam("request_id") int request_id,@RequestBody RequestEditDTO requestEditDTO){
-        ApiResponse<Requests> apiResponse = new ApiResponse<>();
+        ApiResponse<Orders> apiResponse = new ApiResponse<>();
         apiResponse.setResult(orderService.ManagerEditRequest(request_id,requestEditDTO));
         return apiResponse;
     }
@@ -284,7 +284,7 @@ public class OrderController {
     public ApiResponse<?> deleteRequest(@RequestParam("requestId") int requestId){
         ApiResponse apiResponse = new ApiResponse<>();
         orderService.deleteRequestById(requestId);
-        apiResponse.setResult("Xoá yêu cầu thành công!!!");
+        apiResponse.setResult("Xoá đơn hàng yêu cầu thành công!!!");
         return apiResponse;
     }
 

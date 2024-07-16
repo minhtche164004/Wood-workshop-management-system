@@ -137,11 +137,11 @@ public class JobServiceImpl implements JobService {
         jobs.setCode(code);
         jobs.setJob_log(false);
         jobRepository.save(jobs);
-//        List<Processproducterror> processproducterrorList = processproducterrorRepository.getProcessproducterrorByJobId(job_id);
-//        for(Processproducterror p : processproducterrorList){
-//            processproducterrorRepository.delete(p);
-//        }
-//        jobRepository.delete(jobs_order_detail);
+        List<Processproducterror> processproducterrorList = processproducterrorRepository.getProcessproducterrorByJobId(job_id);
+        for(Processproducterror p : processproducterrorList){
+            processproducterrorRepository.delete(p);
+        }
+        jobRepository.delete(jobs_order_detail);
 
         return jobs;
     }

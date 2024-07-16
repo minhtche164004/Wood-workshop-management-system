@@ -3,7 +3,7 @@ package com.example.demo.Repository;
 import com.example.demo.Dto.ProductDTO.RequestProductAllDTO;
 import com.example.demo.Entity.Products;
 import com.example.demo.Entity.RequestProducts;
-import com.example.demo.Entity.Requests;
+
 import jakarta.transaction.Transactional;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
@@ -24,7 +24,7 @@ public interface RequestProductRepository extends JpaRepository<RequestProducts,
     @Query("SELECT u FROM RequestProducts u WHERE u.requestProductId = :query")
     RequestProducts findById(int query);
 
-    @Query("SELECT u FROM RequestProducts u WHERE u.requests.requestId = :query")
+    @Query("SELECT u FROM RequestProducts u WHERE u.orders.orderId = :query")
     List<RequestProducts> findByRequestId(int query);
 
     @Transactional
@@ -49,7 +49,7 @@ public interface RequestProductRepository extends JpaRepository<RequestProducts,
     @Query("SELECT u FROM RequestProducts u WHERE u.requestProductId = :query")
     Optional<RequestProducts> findByIdJob(int query);
 
-    @Query("SELECT u FROM RequestProducts u WHERE u.requests.user.userId = :query")
+    @Query("SELECT u FROM RequestProducts u WHERE u.orders.userInfor.user.userId = :query")
     List<RequestProducts> findByUserId(int query);
 
 

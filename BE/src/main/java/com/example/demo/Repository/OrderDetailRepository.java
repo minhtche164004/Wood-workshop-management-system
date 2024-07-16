@@ -45,9 +45,9 @@ public interface OrderDetailRepository extends JpaRepository<Orderdetails, Integ
 
 
 
-    @Query("SELECT r.user.email FROM Orderdetails od " +
+    @Query("SELECT r.userInfor.user.email FROM Orderdetails od " +
             "LEFT JOIN od.requestProduct rp " +
-            "LEFT JOIN rp.requests r " +
+            "LEFT JOIN rp.orders r " +
             "WHERE od.order.orderId = :orderId")
     String getOrderDetailsByOrderIdForSendMail(@Param("orderId") int orderId);
 

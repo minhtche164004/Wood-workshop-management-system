@@ -61,7 +61,7 @@ export class StatisticService {
     return this.http.get<any>(url, { params });
   }
 
-  getCompletedJobsByMonthAndYear(statusName: number, month: number, year: number): Observable<any> {
+  getCompletedJobsByMonthAndYear(statusName: any, month: number, year: number): Observable<any> {
     const params = {
       status_name: statusName,
       month: month,

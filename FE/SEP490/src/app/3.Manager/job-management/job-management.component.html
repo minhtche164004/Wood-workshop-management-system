@@ -48,7 +48,7 @@
                     <thead>
                         <tr>
                             <th>STT</th>
-                            <th>Mã đơn hàng</th>
+                            <!-- <th>Mã đơn hàng</th> -->
                             <th>Thao tác</th>
                             <th>Tên sản phẩm</th>
 
@@ -63,47 +63,27 @@
                     </thead>
 
                     <tbody>
-                        <tr
-                            *ngFor="let product of productRQs | paginate: { itemsPerPage: 10, currentPage: currentPage }; let i = index">
+                        <tr *ngFor="let product of productRQs | paginate: { itemsPerPage: 10, currentPage: currentPage }; let i = index"
+                            [ngClass]="{'bg-warning': errorCheckResults[product.job_id] === true}">
                             <td>{{ i + 1 + (currentPage - 1) * 10 }}</td>
-                            <td>{{ product?.code }}
-                            </td>
-
+                            <!-- <td>{{ product?.code }}</td> -->
                             <td class="action-buttons">
                                 <a href="#" class="settings" title="Chỉnh sửa" data-toggle="modal"
                                     data-target="#editProductJobModal" (click)="editJobDetail(product.job_id)">
                                     <i class="fa-solid fa-pen-to-square"></i>
                                 </a>
-                                <!-- <a href="#" class="delete" title="Xóa" data-toggle="modal"
-                                    data-target="#confirmDeleteModal">
-                                    <i class="fa-regular fa-trash-can"></i>
-                                </a> -->
                                 <a style="margin-left: 10px;" title="Chi tiết" data-toggle="modal"
                                     data-target="#detailJobModal" (click)="showJobDetail(product)">
                                     <i class="fa-solid fa-ellipsis-vertical"></i>
                                 </a>
                             </td>
                             <td>{{ product?.product_name }}</td>
-
                             <td>{{ product?.quantity }}</td>
                             <td>{{ product?.price | number: '1.0-3' }}</td>
                             <td>
-                                <!-- <ng-container *ngIf="product?.statusJob.type !== 1 && product?.statusJob.type !== 6">
-                                    <select style="width: 100%;" [ngModel]="product?.statusJob.status_id"
-                                            (change)="acceptJob($event, product?.job_id)">
-                                        <ng-container *ngFor="let status of statusType">
-                                            <option *ngIf="status.type === product.statusJob.type"
-                                                    [value]="status.status_id"
-                                                    [disabled]="status.status_id === 4 || status.status_id === 7 || status.status_id === 10">
-                                                {{ status.status_name }}
-                                            </option>
-                                        </ng-container>
-                                    </select>
-                                </ng-container>
-                                <span *ngIf="product.statusJob.type === 1">Chưa giao việc</span>
-                                <span *ngIf="product.statusJob.type === 6">Chờ đặt cọc</span> -->
                                 <ng-container *ngIf="product?.statusJob.type !== 1 && product?.statusJob.type !== 6">
-                                    <select id="mySelect{{i}}" class="custom-select" [ngModel]="product?.statusJob.status_id"
+                                    <select id="mySelect{{i}}" class="custom-select"
+                                        [ngModel]="product?.statusJob.status_id"
                                         (change)="openModal($event,product?.job_id, i)">
                                         <ng-container *ngFor="let status of statusType">
                                             <option *ngIf="status.type === product.statusJob.type"
@@ -120,7 +100,6 @@
                                 </ng-container>
                                 <span *ngIf="product.statusJob.type === 1">Chưa giao việc</span>
                                 <span *ngIf="product.statusJob.type === 6">Chờ đặt cọc</span>
-
                             </td>
                             <td>{{ product?.user_name }}</td>
                             <td>
@@ -132,13 +111,17 @@
                                     Giao việc
                                 </button>
                             </td>
-                            <td><button class="btn btn-sm" data-toggle="modal" data-target="#errorProduct"
+                            <td>
+                                <button class="btn btn-sm" data-toggle="modal" data-target="#errorProduct"
                                     (click)="errorJob(product)"
                                     [class.btn-outline-primary]="product.statusJob.status_id !== 10 && product.statusJob.status_id !== 7 && product.statusJob.status_id !== 4 && product.statusJob.status_id !== 14 "
                                     [class.btn-danger]="product.statusJob.status_id === 10 || product.statusJob.status_id === 7 || product.statusJob.status_id === 4 || product.statusJob.status_id === 14 || product.statusJob.type === 1"
-                                    [disabled]="product.statusJob.status_id === 10 || product.statusJob.status_id === 7 || product.statusJob.status_id === 4 || product.statusJob.status_id === 14 || product.statusJob.type === 1">
-                                    <i class="fa-solid fa-triangle-exclamation"></i></button></td>
+                                    [disabled]="product.statusJob.status_id === 6 || product.statusJob.status_id === 9 || product.statusJob.status_id === 12 || product.statusJob.status_id === 14 || product.statusJob.type === 1">
+                                    <i class="fa-solid fa-triangle-exclamation"></i>
+                                </button>
+                            </td>
                         </tr>
+
                     </tbody>
 
                 </table>
@@ -161,7 +144,7 @@
                             style="display: flex; justify-content: center; align-items: center; height: 100%;">
                             <img src="https://encrypted-tbn2.gstatic.com/images?q=tbn:ANd9GcSG53pYn6cpXaiwT_q6IM45P-rXg5dUw67XqRmr9-vtsbMoHnCG"
                                 alt="" class="product-img" style="width: 150px; height: 150px; object-fit: cover;">
-                            <p class="name-product text-center">404 Not Found   !</p>
+                            <p class="name-product text-center">404 Not Found !</p>
                         </div>
                     </div>
                 </div>
@@ -169,19 +152,21 @@
         </div>
     </div>
 </div>
-<div class="modal fade" id="myModal" tabindex="-1" aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
+<div class="modal fade" id="myModal" tabindex="-1" aria-labelledby="myModalLabel" aria-hidden="true"
+    data-backdrop="static" data-keyboard="false">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
                 <h2 class="modal-title" id="myModal">Cập nhật trạng thái việc làm</h2>
-                <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close" (click)="closeModal()"></button>
+                <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close"
+                    (click)="closeModal()"></button>
             </div>
             <div class="modal-body">
                 Bạn có chắc chắn muốn cập nhật trạng thái việc làm?
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" (click)="cancelChangeStatusJob()"
-                    data-dismiss="modal" (click)="closeModal()">Đóng</button>
+                <button type="button" class="btn btn-secondary" (click)="cancelChangeStatusJob()" data-dismiss="modal"
+                    (click)="closeModal()">Đóng</button>
                 <button type="button" class="btn btn-primary" (click)="acceptJob(selectedModalJob,selectedModalId)">Chắc
                     chắn</button>
             </div>
@@ -195,7 +180,8 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h2 class="modal-title" id="assignJobModalLabel">Chi tiết giao việc làm</h2>
-                <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close"></button>
+                <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close"
+                    (click)="cancelAssign()"></button>
             </div>
             <div class="modal-body p-4">
                 <form [formGroup]="createJobs" (ngSubmit)="createNewJob()">
@@ -240,7 +226,7 @@
                                             <div class="row">
                                                 <div class="col-md-6">
                                                     <p>
-                                                        <strong>Số lượng:</strong>
+                                                        <strong>Số lượng sản phẩm:</strong>
                                                     </p>
                                                 </div>
                                                 <div class="col-md-6">
@@ -260,15 +246,7 @@
                                                         [(ngModel)]="costJob">
                                                 </div>
                                             </div>
-                                            <div class="row">
-                                                <div class="col-md-6">
-                                                    <strong>Ngày yêu cầu hoàn thành công việc: </strong>
-                                                </div>
-                                                <div class="col-md-6">
-                                                    <input type="date" placeholder="dd / mm / YYYY" name="start"
-                                                        formControlName="start">
-                                                </div>
-                                            </div>
+                                          
 
 
 
@@ -291,14 +269,33 @@
                                                 <div class="col-md-6">
                                                     <strong>Tên công việc:</strong>
                                                 </div>
-                                                <div class="col-md-6">
+                                                <!-- <div class="col-md-6">
                                                     <input type="text" formControlName="job_name"
                                                         placeholder="Nhập tên công việc">
+                                                </div> -->
+                                                <div class="col-md-6">
+                                                    <select formControlName="job_name" class="form-select">
+                                                        <option value="">Tất cả</option>
+                                                        <option *ngFor="let category of positionEmpList" [ngValue]="category.position_id">
+                                                            {{ category.position_name }}
+                                                        </option>
+                                                    </select>
                                                 </div>
+                                                
+                                               
                                             </div>
                                             <div class="row">
+                                                <div class="row">
+                                                    <div class="col-md-6">
+                                                        <strong>Nhận việc trước ngày: </strong>
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        <input type="date" placeholder="dd / mm / YYYY" name="start"
+                                                            formControlName="start">
+                                                    </div>
+                                                </div>
                                                 <div class="col-md-6">
-                                                    <strong>Ngày yêu cầu hoàn thành công việc:</strong>
+                                                    <strong>Hoàn thành trước ngày:</strong>
                                                 </div>
                                                 <div class="col-md-6">
                                                     <input type="date" formControlName="finish"
@@ -314,7 +311,7 @@
                                         <tr>
                                             <th>STT</th>
                                             <th>Tên nguyên liệu</th>
-                                            <th>Số lượng / sản phẩm</th>
+                                            <th>Khối lượng</th>
                                             <th>Tổng số lượng </th>
                                             <th>Đơn vị</th>
 
@@ -345,7 +342,8 @@
                     <!-- Modal footer -->
                     <div class="modal-footer">
                         <button type="submit" class="btn btn-primary">Tạo việc</button>
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Hủy</button>
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal"
+                            (click)="cancelAssign()">Hủy</button>
                     </div>
                 </form>
             </div>
@@ -370,18 +368,22 @@
                                 <div class="row">
                                     <div class="col-md-6">
                                         <section class="customer-info mb-4">
-                                            <h5 style="text-align: center;">Thông tin nhân viên</h5>
+                                            <h5 style="text-align: center;">Thông tin sản phẩm</h5>
                                             <div class="row">
-
+                                                <div class="col-md-6">
+                                                    <p>
+                                                        <strong>Tên sản phẩm:</strong>
+                                                    </p>
+                                                </div>
                                                 <div class="col-md-6">
 
-                                                    {{ selectedJob.user_name }}
+                                                    {{ selected_productName }}
                                                 </div>
                                             </div>
                                             <div class="row">
                                                 <div class="col-md-6">
                                                     <p>
-                                                        <strong>Số lượng:</strong>
+                                                        <strong>Số lượng sản phẩm:</strong>
                                                     </p>
                                                 </div>
                                                 <div class="col-md-6">
@@ -398,16 +400,7 @@
                                                     {{ selectedJob.cost }}
                                                 </div>
                                             </div>
-                                            <div class="row">
-                                                <div class="col-md-6">
-                                                    <strong>Ngày nhận công việc: </strong>
-                                                </div>
-                                                <div class="col-md-6">
-                                                    <!-- <input type="date" placeholder="dd / mm / YYYY" name="start"
-                                                        formControlName="timeStart"> -->
-                                                    {{ selectedJob.timeStart | date:'dd / MM / yyyy' }}
-                                                </div>
-                                            </div>
+                                           
 
 
 
@@ -428,19 +421,32 @@
 
                                             <div class="row">
                                                 <div class="col-md-6">
-                                                    <strong>Tên công việc:</strong>
+                                                    <strong>Tên việc làm:</strong>
                                                 </div>
                                                 <div class="col-md-6">
-                                                    {{ selectedJob.job_name}}
+                                                    {{ selectedJob.job_name }}
                                                 </div>
                                             </div>
                                             <div class="row">
-                                                <div class="col-md-6">
-                                                    <strong>Ngày yêu cầu hoàn thành:</strong>
+                                                <div class="row">
+                                                    <div class="col-md-6">
+                                                        <strong>Ngày nhận công việc: </strong>
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        <!-- <input type="date" placeholder="dd / mm / YYYY" name="start"
+                                                            formControlName="timeStart"> -->
+                                                        {{ selectedJob.timeStart | date:'dd / MM / yyyy' }}
+                                                    </div>
                                                 </div>
-                                                <div class="col-md-6">
-                                                    {{ selectedJob.timeFinish | date:'dd / MM / yyyy' }}
+                                                <div class="row">
+                                                    <div class="col-md-6">
+                                                        <strong>Hoàn thành trước ngày:</strong>
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        {{ selectedJob.timeFinish | date:'dd / MM / yyyy' }}
+                                                    </div>
                                                 </div>
+                                               
                                             </div>
 
                                         </section>
@@ -451,7 +457,7 @@
                                         <tr>
                                             <th>STT</th>
                                             <th>Tên nguyên liệu</th>
-                                            <th>Số lượng / sản phẩm</th>
+                                            <th>Khối lượng</th>
                                             <th>Tổng số lượng </th>
                                             <th>Đơn vị</th>
 
@@ -671,7 +677,7 @@
                                             <div class="row">
                                                 <div class="col-md-6">
                                                     <p>
-                                                        <strong>Số lượng:</strong>
+                                                        <strong>Số lượng sản phẩm:</strong>
                                                     </p>
                                                 </div>
                                                 <div class="col-md-6">
@@ -746,7 +752,7 @@
                                         <tr>
                                             <th>STT</th>
                                             <th>Tên nguyên liệu</th>
-                                            <th>Số lượng / sản phẩm</th>
+                                            <th>Khối lượng</th>
                                             <th>Tổng số lượng </th>
                                             <th>Đơn vị</th>
 
@@ -784,7 +790,7 @@
             </div>
         </div>
     </div>
-
-    <div *ngIf="isLoadding" class="loading-overlay">
-        <div class="spinner"></div>
-    </div>
+</div>
+<div *ngIf="isLoadding" class="loading-overlay">
+    <div class="spinner"></div>
+</div>

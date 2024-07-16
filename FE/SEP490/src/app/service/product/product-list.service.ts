@@ -53,7 +53,7 @@ export class ProductListService {
   private apiUrl_getMultiFillterRequestProductForAdmin = `${environment.apiUrl}api/auth/product/getMultiFillterRequestProductForAdmin`;
   private apiUrlAddNewProductRequest = `${environment.apiUrl}api/auth/order/AddNewRequestProduct`;
   private api_UrlcreateExportMaterialProductRequest = `${environment.apiUrl}api/auth/submaterial/createExportMaterialProductRequest`;  // lay 1 san pham can bao nhieu vat lieu
-  private apiUrl_getAllRequest = `${environment.apiUrl}api/auth/order/GetAllRequest`;
+  private apiUrl_getAllRequest = `${environment.apiUrl}api/auth/order/GetAllRequestAccept`;
   private apiUrlGetProductRequestByProductRequestId = `${environment.apiUrl}api/auth/order/getRequestProductById`;
   private apiUrlEditProductRequest = `${environment.apiUrl}api/auth/product/EditRequestProduct`;
   private apiUrlDeleteProductRequest = `${environment.apiUrl}api/auth/product/deleteRequestProduct`;

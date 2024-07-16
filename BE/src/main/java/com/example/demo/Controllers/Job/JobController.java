@@ -70,6 +70,13 @@ public class JobController {
         return apiResponse;
     }
 
+    @GetMapping("/checkErrorOfJobHaveFixDoneOrNot")
+    public ApiResponse<?> checkErrorOfJobHaveFixDoneOrNot(@RequestParam("job_id") int job_id) {
+        ApiResponse<Boolean> apiResponse = new ApiResponse<>();
+        apiResponse.setResult(jobService.checkErrorOfJobHaveFixDoneOrNot(job_id));
+        return apiResponse;
+    }
+
     @GetMapping("/countCompletedJobsByMonthAndYear")
     public ApiResponse<?> countCompletedJobsByMonthAndYear(@RequestParam("status_name") String status_name,@RequestParam("month")int month,
                                                            @RequestParam("year") int year) {
@@ -248,6 +255,13 @@ public class JobController {
         return apiResponse;
     }
 
+    @GetMapping("/findAllJobForDoneByEmployeeIDWithJobCode")
+    public ApiResponse<?> findAllJobForDoneByEmployeeIDWithJobCode(@RequestParam("query") String query) {
+        ApiResponse<List> apiResponse = new ApiResponse<>();
+        apiResponse.setResult(jobService.findAllJobForDoneByEmployeeIDWithJobCode(query));
+        return apiResponse;
+    }
+
 //    @GetMapping("/getListJobWasDone")
 //    public ApiResponse<?> getJobWasDone() {
 //        ApiResponse<List> apiResponse = new ApiResponse<>();
@@ -332,21 +346,6 @@ public class JobController {
     @GetMapping("/getAllProductError")
     public ApiResponse<?> getAllProductError() {
         ApiResponse<List> apiResponse = new ApiResponse<>();
-//        String cacheKey = "all_product_error";
-//        List<ProductErrorAllDTO> jobsList;
-//        String cachedData = jedis.get(cacheKey);
-//        Gson gson = new GsonBuilder().setDateFormat("MMM dd, yyyy").create();
-//        if (cachedData != null) {
-//            Type type = new TypeToken<List<Processproducterror>>() {
-//            }.getType();
-//
-//            jobsList = gson.fromJson(cachedData, type);
-//        } else {
-//            jobsList = jobService.getAllProductError();
-//            String jsonData = gson.toJson(jobsList);
-//            jedis.set(cacheKey, jsonData);
-//            jedis.expire(cacheKey, 1200);
-//        }
         apiResponse.setResult(jobService.getAllProductError());
         return apiResponse;
     }

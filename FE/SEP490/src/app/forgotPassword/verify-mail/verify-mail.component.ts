@@ -64,7 +64,8 @@ export class VerifyMailComponent implements OnInit {
         if (typeof response === 'string' && response.includes('Check OTP đã được gửi đến gmail!')) {
           console.log('Email verified successfully');
           this.toastr.success('Kiểm tra mã OTP đã được gửi đến email!', 'Thành công');
-          this.router.navigate(['/verifyOtp', { email: this.email }]);
+          this.router.navigate(['/verifyOtp'], { state: { email: this.email } });
+
         } else {
           console.error('Email verification failed: Unexpected response', response);
           this.errorMessage = 'Unexpected response from server.';

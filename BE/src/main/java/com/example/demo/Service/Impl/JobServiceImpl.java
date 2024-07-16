@@ -137,7 +137,12 @@ public class JobServiceImpl implements JobService {
         jobs.setCode(code);
         jobs.setJob_log(false);
         jobRepository.save(jobs);
+        List<Processproducterror> processproducterrorList = processproducterrorRepository.getProcessproducterrorByJobId(job_id);
+        for(Processproducterror p : processproducterrorList){
+            processproducterrorRepository.delete(p);
+        }
         jobRepository.delete(jobs_order_detail);
+
         return jobs;
     }
 
@@ -318,6 +323,17 @@ public class JobServiceImpl implements JobService {
     }
 
     @Override
+    public List<JobDoneDTO> findAllJobForDoneByEmployeeIDWithJobCode(String query) {
+        UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        User user = userRepository.getUserByUsername(userDetails.getUsername());
+        List<JobDoneDTO> jobsList = jobRepository.findAllJobForDoneByEmployeeIDWithJobCode(user.getUserId(),query);
+        if(jobsList == null ){
+            throw new AppException(ErrorCode.NOT_FOUND);
+        }
+        return jobsList;
+    }
+
+    @Override
     public List<Status_Job> getAllStatusJob() {
         return statusJobRepository.getAllStatus();
     }
@@ -336,7 +352,7 @@ public class JobServiceImpl implements JobService {
         if(checkConditionService.checkInputQuantityIntForProductError(processproducterror.getQuantity(),jobs.getQuantityProduct())== false){
             throw new AppException(ErrorCode.INVALID_QUANTITY_PRODUCT_ERROR);
         }
-        processproducterror.setDescription(productErrorDTO.getDes());
+        processproducterror.setDescription(productErrorDTO.getDescription());
         processproducterror.setSolution(productErrorDTO.getSolution());
 
         Products product = jobs.getProduct(); // Lấy đối tượng Product
@@ -373,7 +389,7 @@ public class JobServiceImpl implements JobService {
     @Override
     public ProductErrorAllDTO EditProductError(int error_id, ProductErrorDTO productErrorDTO) {
         Processproducterror processproducterror = processproducterrorRepository.FindByIdProductErrorId(error_id);
-        processproducterror.setDescription(productErrorDTO.getDes());
+        processproducterror.setDescription(productErrorDTO.getDescription());
         processproducterror.setIsFixed(productErrorDTO.getIsFixed());
         processproducterror.setSolution(productErrorDTO.getSolution());
         processproducterror.setQuantity(productErrorDTO.getQuantity());
@@ -451,6 +467,13 @@ public class JobServiceImpl implements JobService {
             throw new AppException(ErrorCode.NOT_FOUND);
         }
         return list;
+    }
+
+    @Override
+    public boolean checkErrorOfJobHaveFixDoneOrNot(int job_id) {
+        List<Processproducterror> list = processproducterrorRepository.getProcessproducterrorByJobIdHaveFixNotDone(job_id);
+        if(list != null) return false;
+        return true;
     }
 
 

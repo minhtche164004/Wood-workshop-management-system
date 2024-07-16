@@ -29,9 +29,16 @@ public class Requestimages {
 
     @Column(name="full_path")
     private String fullPath;
+//
+//    @ManyToOne
+//    @JsonIgnore
+//    @JoinColumn(name = "request_id")
+//    private Requests requests;
 
     @ManyToOne
     @JsonIgnore
-    @JoinColumn(name = "request_id")
-    private Requests requests;
+    @JoinColumn(name = "order_id")
+    private Orders orders;
+
+
 }

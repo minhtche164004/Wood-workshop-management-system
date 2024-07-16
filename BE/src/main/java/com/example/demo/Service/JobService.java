@@ -36,6 +36,7 @@ public interface JobService {
     List<Jobs> getJobWasDone();
     List<JobDoneDTO> filterJobWasDoneByEmployeeName(String keyword);
     List<JobDoneDTO> findAllJobForDoneByEmployeeID();
+    List<JobDoneDTO> findAllJobForDoneByEmployeeIDWithJobCode(String query);
     List<Status_Job> getAllStatusJob();
 
 
@@ -53,4 +54,6 @@ public interface JobService {
     Long CountQuantityOfJob(String status_name,int month,int year);
 
     List<Employeematerials> getAllMaterialForEmployee();
+
+    boolean checkErrorOfJobHaveFixDoneOrNot(int job_id);
 }

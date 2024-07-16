@@ -61,7 +61,7 @@ export class ChartComponent implements OnInit {
   ) { }
 
   chart: any = [];
-  positionLabels = ['Thợ Mộc', 'Thợ Nhám', 'Thợ Sơn', 'Không đảm nhận vị trí'];
+  positionLabels = ['Thợ Mộc', 'Thợ Nhám', 'Thợ Sơn'];
   countEmp: number = 0;
   totalAmouneOrderHaveDone: number = 0;
   totalOrder: number = 0;
@@ -75,10 +75,13 @@ export class ChartComponent implements OnInit {
   percentEmpPos4: number = 0;
   isLoading: boolean = false;
   months = ['Tháng 1', 'Tháng 2', 'Tháng 3', 'Tháng 4', 'Tháng 5', 'Tháng 6', 'Tháng 7', 'Tháng 8', 'Tháng 9', 'Tháng 10', 'Tháng 11', 'Tháng 12'];
+  data: any[] = []; // Array to store data for each month
+  chartData: any;
   ngOnInit(): void {
     this.loadData();
   }
-  
+  getJobByMonthAndYear() {
+  }
   loadData() {
     this.isLoading = true; // Hiển thị loading
     this.getTotalOrder().then(() => {
@@ -104,6 +107,7 @@ export class ChartComponent implements OnInit {
       this.isLoading = false;
       console.error(err);
     });
+    
   }
 
   initializeCharts() {
@@ -114,12 +118,12 @@ export class ChartComponent implements OnInit {
         datasets: [
           {
             label: 'Nhân viên',
-            data: [this.totalEmpPos1, this.totalEmpPos2, this.totalEmpPos3, this.totalEmpPos4],
+            data: [this.totalEmpPos1, this.totalEmpPos2, this.totalEmpPos3],
             backgroundColor: [
               'rgb(255, 99, 132)',
               'rgb(54, 162, 235)',
               'rgb(255, 205, 86)',
-              'rgb(75, 192, 192)'
+             
             ],
             hoverOffset: 4
           }

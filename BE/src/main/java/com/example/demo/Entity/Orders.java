@@ -9,6 +9,7 @@ import java.math.BigDecimal;
 import java.sql.Time;
 import java.sql.Timestamp;
 import java.util.Date;
+import java.util.List;
 import java.util.Objects;
 
 @Data
@@ -70,6 +71,15 @@ public class Orders {
 
     @Column(name = "order_finish")
     private Date orderFinish;
+
+    @Column(name = "response") //tương tự như bên class request
+    private String response;
+
+    @Column(name = "description") //tương tự như bên class request
+    private String description;
+
+    @OneToMany(mappedBy = "orders", cascade = CascadeType.ALL)
+    private List<Requestimages> requestImages;
 
 
 }

@@ -30,6 +30,8 @@ export class JobService {
   private apiGetProductSubMaterial = `${environment.apiUrl}api/auth/submaterial/getProductSubMaterialByProductId`;
   private apiCreateExportProd = `${environment.apiUrl}api/auth/submaterial/createExportMaterialProductTotalJob`
   private apiGetSubMaterialOfProductRQ = `${environment.apiUrl}api/auth/submaterial/getRequestProductSubMaterialByRequestProductId`
+  private apicheckErrorOfJobHaveFixDoneOrNot = `${environment.apiUrl}api/auth/job/checkErrorOfJobHaveFixDoneOrNot`
+
     // user_id={{$random.integer(100)}}&
     // p_id={{$random.integer(100)}}&                                  ?job_id=152&status_id=9
     // status_id={{$random.integer(100)}}`
@@ -46,8 +48,12 @@ export class JobService {
     return this.http.get<any>(url);
   }
 
-
+  checkErrorOfJob(jobId: number): Observable<any> {
+    return this.http.get<any>(`${this.apicheckErrorOfJobHaveFixDoneOrNot}?job_id=${jobId}`);
+  }
   seachRequestByName(key: string): Observable<any> {
+    const url = `${this.apiSearchRequestByName}?key=${key}`;
+    console.log('URL:', url);
     return this.http.get<any>(`${this.apiSearchRequestByName}?key=${key}`);
   }
   getSubMTRProductRQ(id: number, mate_id: number): Observable<any> {

@@ -21,7 +21,7 @@ export class ReportManagementComponent implements OnInit {
     this.errorForm = this.fb.group({
       code: [''],
       code_order: [''],
-      des: [''],
+      description: [''],
       employee_name: [''],
       id: [],
       job_id: [],
@@ -39,7 +39,7 @@ export class ReportManagementComponent implements OnInit {
   selectedError: any = {
     code: null,
     code_order: null,
-    des: null,
+    description: null,
     employee_name: null,
     id: null,
     job_id: null,
@@ -119,7 +119,7 @@ export class ReportManagementComponent implements OnInit {
              this.selectedError = {
                 code:errorEdit.code,
                 code_order: errorEdit.code_order,
-               des: errorEdit.des,
+                description: errorEdit.des,
                employee_name: errorEdit.employee_name,
                id: errorEdit.id,
                job_id: errorEdit.job_id,
@@ -139,7 +139,7 @@ export class ReportManagementComponent implements OnInit {
              this.errorForm.patchValue({
                code: this.selectedError.code,
                code_order: this.selectedError.code_order,
-               des: this.selectedError.des,
+               description: this.selectedError.description,
                employee_name: this.selectedError.employee_name,
                id: this.selectedError.id,
                job_id: this.selectedError.job_id,
@@ -233,7 +233,7 @@ showProductDetails(error: any) {
   this.errorForm.patchValue({
     code: error.code,
     code_order: error.code_order,
-    des: error.des,
+    description: error.description,
     employee_name: error.employee_name,
     id: error.id,
     job_id: error.job_id,

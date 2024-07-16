@@ -7,7 +7,7 @@
                 <div class="table-title">
                     <div class="row" style="height: 60px;">
                         <div class="col-sm-5">
-                            <h2>Tổng lương nhân viên</h2>
+                            <h2>Quản lý lương công khoán</h2>
                         </div>
                         <div class="col-sm-7 text-end d-flex align-items-center justify-content-end">
                             <!-- <a href="#" class="btn btn-secondary" data-toggle="modal" data-target="#addProductModal">
@@ -83,74 +83,86 @@
 
                 <div *ngIf="!checkNotFound">
                     <table class="table table-striped table-hover">
-                      <!-- Table header -->
-                      <thead>
-                        <tr>
-                          <th>STT</th>
-                          <th>Mã việc</th>
-                          <th>Ngày hoàn thành</th>
-                          <th>Tên nhân viên</th>
-                          <th>Vị trí</th>
-                          <th>Tình trạng</th>
-                          <th>Đơn giá (vnđ)</th>
-                          <th>Ngân hàng</th>
-                          <th>STK</th>
-                          <th>Thanh toán</th>
-                        </tr>
-                      </thead>
-                      <!-- Table body -->
-                      <tbody>
-                        <tr *ngFor="let product of totalSalary | paginate: { itemsPerPage: 10, currentPage: currentPage }; let i = index">
-                          <td>{{ i + 1 + (currentPage - 1) * 10 }}</td>
-                          <td>{{ product?.code }}</td>
-                          <td>{{ product?.date }}</td>
-                          <td>{{ product?.user?.userInfor?.fullname }}</td>
-                          <td>{{ product?.user?.position?.position_name }}</td>
-                          <td>
-                            <select class="custom-select" [(ngModel)]="product.advanceSuccess" style="width: 120%;" (change)="updateBanking(product.advanceSalaryId,$event)" name="advanceSuccess">
-                              <option [ngValue]="false" disabled>Chưa thanh toán</option>
-                              <option [value]="true">Đã thanh toán</option>
-                            </select>
-                          </td>
-                          <td>{{ product?.amount | number: '1.0-3'}}</td>
-                          <td>{{ product?.user?.userInfor?.bank_name }}</td>
-                          <td>{{ product?.user?.userInfor?.bank_number }}</td>
-                          <td>
-                            <button class="btn"
-                                    [ngClass]="{'btn-primary': !product?.advanceSuccess, 'btn-secondary': product?.advanceSuccess}"
-                                    data-toggle="modal" data-target="#QRPAY" (click)="thanhToan(product)"
-                                    [disabled]="product?.advanceSuccess">
-                              <i class="fa-solid fa-money-bill-transfer"></i>
-                            </button>
-                          </td>
-                        </tr>
-                      </tbody>
+                        <!-- Table header -->
+                        <thead>
+                            <tr>
+                                <th>STT</th>
+                                <th>Mã việc</th>
+                                <th>Ngày hoàn thành</th>
+                                <th>Tên nhân viên</th>
+                                <th>Vị trí</th>
+                                <th>Tình trạng</th>
+                                <th>Đơn giá (vnđ)</th>
+                                <th>Ngân hàng</th>
+                                <th>STK</th>
+                                <th>Thanh toán</th>
+                            </tr>
+                        </thead>
+                        <!-- Table body -->
+                        <tbody>
+                            <tr
+                                *ngFor="let product of totalSalary | paginate: { itemsPerPage: 10, currentPage: currentPage }; let i = index">
+                                <td>{{ i + 1 + (currentPage - 1) * 10 }}</td>
+                                <td>{{ product?.code }}</td>
+                                <td>{{ product?.date }}</td>
+                                <td>{{ product?.user?.userInfor?.fullname }}</td>
+                                <td>{{ product?.user?.position?.position_name }}</td>
+                                <td>
+                                    <select class="custom-select" [(ngModel)]="product.advanceSuccess"
+                                        style="width: 120%;" (change)="updateBanking(product.advanceSalaryId, $event)"
+                                        name="advanceSuccess">
+                                        <option [ngValue]="false" disabled>Chưa thanh toán</option>
+                                        <option [value]="true">Đã thanh toán</option>
+                                    </select>
+                                </td>
+                                <td>{{ product?.amount | number: '1.0-3'}}</td>
+                                <td>{{ product?.user?.userInfor?.bank_name }}</td>
+                                <td>{{ product?.user?.userInfor?.bank_number }}</td>
+                                <td>
+                                    <button class="btn"
+                                        [ngClass]="{'btn-primary': !product?.advanceSuccess, 'btn-secondary': product?.advanceSuccess}"
+                                        data-toggle="modal" data-target="#QRPAY" (click)="thanhToan(product)"
+                                        [disabled]="product?.advanceSuccess">
+                                        <i class="fa-solid fa-money-bill-transfer"></i>
+                                    </button>
+                                </td>
+                            </tr>
+                        </tbody>
+
                     </table>
-                  
+
                     <!-- Pagination controls -->
-                    <pagination-controls style="justify-content: right; display: flex;" (pageChange)="currentPage = $event"
-                                          previousLabel="Trang trước" nextLabel="Trang sau" [maxSize]="4">
+                    <pagination-controls style="justify-content: right; display: flex;"
+                        (pageChange)="currentPage = $event" previousLabel="Trang trước" nextLabel="Trang sau"
+                        [maxSize]="4">
                     </pagination-controls>
-                  
+
                     <!-- Display data information -->
                     <div class="clearfix" style="justify-content: right; display: flex;">
-                      <div class="hint-text">
-                        Hiển thị <b>{{ (currentPage - 1) * 10 + 1 }}</b> tới <b>{{ currentPage * 10 > totalSalary.length ? totalSalary.length : currentPage * 10 }}</b> trong tổng <b>{{ totalSalary.length }}</b> dữ liệu
-                      </div>
+                        <div class="hint-text">
+                            Hiển thị <b>{{ (currentPage - 1) * 10 + 1 }}</b> tới <b>{{ currentPage * 10 >
+                                totalSalary.length ? totalSalary.length : currentPage * 10 }}</b> trong tổng <b>{{
+                                totalSalary.length }}</b> dữ liệu
+                        </div>
                     </div>
-                  </div>
-                  
-                  <!-- Display 404 Not Found if no data -->
-                  <div *ngIf="checkNotFound">
+                </div>
+
+                <!-- Display 404 Not Found if no data -->
+                <div *ngIf="checkNotFound">
                     <div style="background-color: white;">
-                      <div class="d-flex justify-content-center align-items-center" style="height: 200px;">
-                        <img src="https://encrypted-tbn2.gstatic.com/images?q=tbn:ANd9GcSG53pYn6cpXaiwT_q6IM45P-rXg5dUw67XqRmr9-vtsbMoHnCG"
-                             alt="Not Found" style="width: 150px; height: 150px; object-fit: cover;">
-                        <p class="text-center">404 Not Found!</p>
-                      </div>
+                        <div class="d-flex justify-content-center align-items-center" style="height: 200px;">
+                            <img src="https://encrypted-tbn2.gstatic.com/images?q=tbn:ANd9GcSG53pYn6cpXaiwT_q6IM45P-rXg5dUw67XqRmr9-vtsbMoHnCG"
+                                alt="Not Found" style="width: 150px; height: 150px; object-fit: cover;">
+                            <p class="text-center">404 Not Found!</p>
+                        </div>
                     </div>
-                  </div>
-                  
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
 <div class="modal fade" id="assignJobModal" role="d" aria-labelledby="assignJobModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered modal-lg">
         <div class="modal-content">
@@ -231,15 +243,35 @@
             </div>
             <div class="modal-footer text-center justify-content-center">
                 <!-- Thêm justify-content-center để căn giữa -->
-                <button type="button" class="btn btn-primary" (click)="updateBankingModal(this.selectedBanking)">Đã
+                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#myModal"
+                    (click)="confirmThanhToan()">Đã
                     thanh toán</button>
+                <!-- updateBankingModal(this.selectedBanking) -->
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Hủy bỏ</button>
             </div>
         </div>
     </div>
 </div>
 
-
+<div class="modal fade" id="myModal" tabindex="-1" aria-labelledby="myModalLabel" aria-hidden="true"
+    data-backdrop="static" data-keyboard="false">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title" id="myModal">Cập nhật trạng thái việc làm</h2>
+                <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                Bạn có chắc chắn muốn cập nhật trạng thái việc làm?
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
+                <button type="button" class="btn btn-primary" (click)="updateBankingModal(selectedBanking)">Chắc
+                    chắn</button>
+            </div>
+        </div>
+    </div>
+</div>
 <div *ngIf="isLoadding" class="loading-overlay">
     <div class="spinner"></div>
 </div>

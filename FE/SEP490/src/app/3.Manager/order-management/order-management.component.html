@@ -80,12 +80,23 @@
               <!-- [disabled]="us?.status.status_id === 6 || us?.status.status_id === 5
               || us?.status.status_id === 1
               || us?.status.status_id === 3"  -->
-              <td style="min-width: 200px;">
+              <td style="min-width: 200px;" *ngIf="us?.totalAmount === null">
                 <div class="select-wrapper">
-                  <select class="custom-select" (change)="onStatusChange(us.orderId, $event)">
+                  <select [disabled]="us?.status.status_id !== 5 && us?.status.status_id !== 4" class="custom-select" (change)="onStatusChange(us.orderId, $event)">
+                    <option *ngFor="let status of status_order" [value]="status.status_id" 
+                      [selected]="status.status_id === us?.status.status_id"
+                      [hidden]="status.status_id !== 7 && status.status_id !== 8">
+                      {{ status.status_name }}
+                    </option>
+                  </select>
+                </div>
+              </td>
+              <td style="min-width: 200px;" *ngIf="us?.totalAmount !== null">
+                <div class="select-wrapper">
+                  <select [disabled]="us?.status.status_id !== 5 && us?.status.status_id !== 4" class="custom-select" (change)="onStatusChange(us.orderId, $event)">
                     <option *ngFor="let status of status_order" [value]="status.status_id"
                       [selected]="status.status_id === us?.status.status_id"
-                      [disabled]="status.status_id === 1 || status.status_id === 3 || status.status_id === 6">
+                      [disabled]="status.status_id !== 5">
                       {{ status.status_name }}
                     </option>
                   </select>
@@ -106,15 +117,16 @@
               <td>{{ us?.totalAmount | number : '1.0-3' }}</td>
               <td>
                 <a href="#" class="delete" title="Delete" data-toggle="modal" data-target="#confirmDeleteModal"
-                  (click)="setOrderForCancellation(us?.orderId, us?.specialOrder)">
+                  (click)="setOrderForCancellation(us?.orderId, us?.specialOrder)"
+                  *ngIf="us?.status?.status_id === 7">
                   <i class="fa-solid fa-times"></i>
                 </a>
                 <!-- <button class="delete-btn" title="Hủy" data-toggle="modal" data-target="#confirmDeleteModal"
-                  (click)="setOrderForCancellation(us?.orderId, us?.specialOrder)">
+                  (click)="setOrderForCancellation(us?.orderId, us?.specialOrder)"
+                  *ngIf="us?.status?.status_id !== 7">
                   <i class="fa-solid fa-time"></i> 
                 </button> -->
               </td>
-
             </tr>
           </tbody>
         </table>

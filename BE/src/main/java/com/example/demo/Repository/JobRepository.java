@@ -154,8 +154,22 @@ public interface JobRepository extends JpaRepository<Jobs,Integer> {
             " JOIN j.status s" +
             " LEFT JOIN j.product pr" +
             " LEFT JOIN j.requestProducts rp" +
-            " WHERE j.job_log = true AND u.userId = :userId")
+            " WHERE  u.userId = :userId")
+    //j.job_log = true AND
     List<JobDoneDTO> findAllJobForDoneByEmployeeID(int userId);
+
+    @Query("SELECT new com.example.demo.Dto.JobDTO.JobDoneDTO(" +
+            "j.jobId, j.job_name, u.userId, u.username,COALESCE(p.position_id, 0) ,COALESCE(p.position_name, '') , s.status_id, s.status_name, j.cost, " +
+            "COALESCE(pr.productId, 0), COALESCE(pr.productName, ''), COALESCE(rp.requestProductId, 0), COALESCE(rp.requestProductName, ''), j.quantityProduct,j.code)" + // Sử dụng COALESCE
+            " FROM Jobs j" +
+            " JOIN j.user u" +
+            " JOIN u.position p" +
+            " JOIN j.status s" +
+            " LEFT JOIN j.product pr" +
+            " LEFT JOIN j.requestProducts rp" +
+            " WHERE  u.userId = :userId AND j.code = :query")
+        //j.job_log = true AND
+    List<JobDoneDTO> findAllJobForDoneByEmployeeIDWithJobCode(int userId,String query);
 
     @Query("SELECT new com.example.demo.Dto.JobDTO.JobDoneDTO(" +
             "j.jobId, j.job_name, u.userId, u.username, p.position_id, p.position_name, s.status_id, s.status_name, j.cost, " +
@@ -172,16 +186,45 @@ public interface JobRepository extends JpaRepository<Jobs,Integer> {
 
 
 
-    @Query("SELECT new com.example.demo.Dto.ProductDTO.ProductErrorAllDTO(" +
-            "p.processProductErrorId,COALESCE(j.code, 0), COALESCE(p.description, ''),COALESCE(p.isFixed, false),COALESCE(p.solution, ''),COALESCE(j.job_name, ''),COALESCE(j.jobId, 0), " +
-            "COALESCE(pr.productId, 0), COALESCE(pr.productName, ''), COALESCE(rq.requestProductId, 0), COALESCE(rq.requestProductName, ''),COALESCE(j.orderdetails.order.code, '')," +
-            "COALESCE(j.orderdetails.order.userInfor.fullname, ''),COALESCE(j.user.username, ''),COALESCE(ps.position_name, ''),COALESCE(ps.position_id, 0),COALESCE(p.quantity, 0))" + // Sử dụng COALESCE
-            " FROM Processproducterror p " +
-            " LEFT JOIN p.job j" +
-            " LEFT JOIN j.product pr"+
-            " LEFT JOIN j.user.position ps"+
-            " LEFT JOIN j.requestProducts rq")
-    List<ProductErrorAllDTO> getAllProductError();
+//    @Query("SELECT new com.example.demo.Dto.ProductDTO.ProductErrorAllDTO(" +
+//            "p.processProductErrorId,COALESCE(j.code, 0), COALESCE(p.description, ''),COALESCE(p.isFixed, false),COALESCE(p.solution, ''),COALESCE(j.job_name, ''),COALESCE(j.jobId, 0), " +
+//            "COALESCE(pr.productId, 0), COALESCE(pr.productName, ''), COALESCE(rq.requestProductId, 0), COALESCE(rq.requestProductName, ''),COALESCE(j.orderdetails.order.code, '')," +
+//            "COALESCE(j.orderdetails.order.userInfor.fullname, ''),COALESCE(j.user.username, ''),COALESCE(ps.position_name, ''),COALESCE(ps.position_id, 0),COALESCE(p.quantity, 0))" + // Sử dụng COALESCE
+//            " FROM Processproducterror p " +
+//            " LEFT JOIN p.job j" +
+//            " LEFT JOIN j.product pr"+
+//            " LEFT JOIN j.user.position ps"+
+//            " LEFT JOIN j.requestProducts rq")
+//    List<ProductErrorAllDTO> getAllProductError();
+@Query("SELECT new com.example.demo.Dto.ProductDTO.ProductErrorAllDTO(" +
+        "p.processProductErrorId, " +
+        "COALESCE(j.code, 0), " +
+        "COALESCE(p.description, ''), " +
+        "COALESCE(p.isFixed, false), " +
+        "COALESCE(p.solution, ''), " +
+        "COALESCE(j.job_name, ''), " +
+        "COALESCE(j.jobId, 0), " +
+        "COALESCE(pr.productId, 0), " +
+        "COALESCE(pr.productName, ''), " +
+        "COALESCE(rq.requestProductId, 0), " +
+        "COALESCE(rq.requestProductName, ''), " +
+        "COALESCE(o.code, ''), " +
+        "COALESCE(ui.fullname, ''), " +
+        "COALESCE(j.user.username, ''), " +
+        "COALESCE(ps.position_name, ''), " +
+        "COALESCE(ps.position_id, 0), " +
+        "COALESCE(p.quantity, 0)) " +
+        "FROM Processproducterror p " +
+        "LEFT JOIN p.job j " +
+        "LEFT JOIN j.product pr " +
+        "LEFT JOIN j.user.position ps " +
+        "LEFT JOIN j.requestProducts rq " +
+        "LEFT JOIN j.orderdetails od " +
+        "LEFT JOIN od.order o " + // Sửa đổi đường dẫn đến orders
+        "LEFT JOIN o.userInfor ui")
+List<ProductErrorAllDTO> getAllProductError();
+
+
 //    @Query("SELECT new com.example.demo.Dto.ProductDTO.ProductErrorAllDTO(" +
 //            "p.processProductErrorId, CAST(COALESCE(j.code, '0') AS string), COALESCE(p.description, ''), CAST(p.isFixed AS boolean), COALESCE(p.solution, ''), COALESCE(j.job_name, ''), COALESCE(j.jobId, 0), " +
 //            "COALESCE(pr.productId, 0), COALESCE(pr.productName, ''), COALESCE(rq.requestProductId, 0), COALESCE(rq.requestProductName, ''), COALESCE(j.orderdetails.order.code, '')," +
@@ -194,16 +237,33 @@ public interface JobRepository extends JpaRepository<Jobs,Integer> {
 
 
     @Query("SELECT new com.example.demo.Dto.ProductDTO.ProductErrorAllDTO(" +
-            "p.processProductErrorId,COALESCE(j.code, 0), COALESCE(p.description, ''),COALESCE(p.isFixed, false),COALESCE(p.solution, ''),COALESCE(j.job_name, ''),COALESCE(j.jobId, 0), " +
-            "COALESCE(pr.productId, 0), COALESCE(pr.productName, ''), COALESCE(rq.requestProductId, 0), COALESCE(rq.requestProductName, ''),COALESCE(j.orderdetails.order.code, '')," +
-            "COALESCE(j.orderdetails.order.userInfor.fullname, ''),COALESCE(j.user.username, ''),COALESCE(ps.position_name, ''),COALESCE(ps.position_id, 0),COALESCE(p.quantity, 0))" + // Sử dụng COALESCE
-            " FROM Processproducterror p " +
-            " LEFT JOIN p.job j" +
-            " LEFT JOIN j.product pr"+
-            " LEFT JOIN j.user.position ps"+
-            " LEFT JOIN j.requestProducts rq"+
-            " LEFT JOIN j.orderdetails.order o WHERE p.processProductErrorId = :query")
+            "p.processProductErrorId, " +
+            "COALESCE(j.code, 0), " +
+            "COALESCE(p.description, ''), " +
+            "COALESCE(p.isFixed, false), " +
+            "COALESCE(p.solution, ''), " +
+            "COALESCE(j.job_name, ''), " +
+            "COALESCE(j.jobId, 0), " +
+            "COALESCE(pr.productId, 0), " +
+            "COALESCE(pr.productName, ''), " +
+            "COALESCE(rq.requestProductId, 0), " +
+            "COALESCE(rq.requestProductName, ''), " +
+            "COALESCE(o.code, ''), " +
+            "COALESCE(ui.fullname, ''), " +
+            "COALESCE(j.user.username, ''), " +
+            "COALESCE(ps.position_name, ''), " +
+            "COALESCE(ps.position_id, 0), " +
+            "COALESCE(p.quantity, 0)) " +
+            "FROM Processproducterror p " +
+            "LEFT JOIN p.job j " +
+            "LEFT JOIN j.product pr " +
+            "LEFT JOIN j.user.position ps " +
+            "LEFT JOIN j.requestProducts rq " +
+            "LEFT JOIN j.orderdetails od " +
+            "LEFT JOIN od.order o " + // Sửa đổi đường dẫn đến orders
+            "LEFT JOIN o.userInfor ui WHERE p.processProductErrorId = :query")
     ProductErrorAllDTO getProductErrorDetailById(int query);
+
 
     //đếm số lượng job theo tháng và năm
     @Query("SELECT COUNT(*) FROM Jobs j " +

@@ -64,6 +64,7 @@ import { ListSalaryEmployeeComponent } from './4.Employee/list-salary-employee/l
 import { OrderSuccessComponent } from './Order-payment-vnpay/order-success/order-success.component';
 import { OrderFailComponent } from './Order-payment-vnpay/order-fail/order-fail.component';
 import { AuthGuard } from './AuthGuard';
+import { EmployeeSubmaterialManagementComponent } from './employee-submaterial-management/employee-submaterial-management.component';
 
 
 
@@ -81,7 +82,8 @@ const routes: Routes = [
   { path: 'admin_manager_user', component: UserManagementComponent , canActivate: [AuthGuard], data: { roles: ['ADMIN'] }},
   { path: 'payment-salary', component: PaymentSalaryComponent },
   { path: 'verifyOtp/:email', component: VerifyOtpMailComponent },  // Route with email as a parameter
-  { path: 'forgot_pass/:email', component: ForgotPassComponent },  // Route with email as a parameter
+  { path: 'forgot_pass/:email', component: ForgotPassComponent },
+
   { path: 'product', component: ProductComponent , canActivate: [AuthGuard], data: { roles: ['MANAGER'] }}, 
   { path: 'productsList', component: ProductListComponent , canActivate: [AuthGuard], data: { roles: ['MANAGER'] }}, 
   { path: 'product_management', component: ProductManagementComponent, canActivate: [AuthGuard], data: { roles: ['MANAGER'] } },
@@ -134,9 +136,9 @@ const routes: Routes = [
   
   // { path: '', redirectTo: '/homepage', pathMatch: 'full' },
   { path: 'report-cost', component: ReportCostManagementComponent },
-  { path: '', redirectTo: '/homepage', pathMatch: 'full' },
+  // { path: '', redirectTo: '/homepage', pathMatch: 'full' },
 
-  { path: '**', redirectTo: '/homepage', pathMatch: 'full' },
+  // { path: '**', redirectTo: '/homepage', pathMatch: 'full' },
 
 ];
 

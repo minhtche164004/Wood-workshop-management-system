@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { CanActivate, ActivatedRouteSnapshot, RouterStateSnapshot, Router } from '@angular/router';
+import { ToastrService } from 'ngx-toastr';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { AuthenListService } from 'src/app/service/authen.service';
@@ -9,7 +10,7 @@ import { AuthenListService } from 'src/app/service/authen.service';
 })
 export class AuthGuard implements CanActivate {
 
-  constructor(private authenListService: AuthenListService, private router: Router) { }
+  constructor(private toastr: ToastrService,private authenListService: AuthenListService, private router: Router) { }
 
   canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<boolean> | Promise<boolean> | boolean {
     const expectedRoles = route.data['roles'];
@@ -21,6 +22,7 @@ export class AuthGuard implements CanActivate {
           return true;
         } else {
           this.router.navigate(['/homepage']);
+          this.toastr.error('Vai trò của bạn không hợp lệ',);
           return false;
         }
       })

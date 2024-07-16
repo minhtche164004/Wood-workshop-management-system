@@ -95,6 +95,7 @@ export class UserManagementComponent implements OnInit {
       this.closeButton.nativeElement.click();
     }
   }
+  selectedRoleFilter: any = null;
   isLoadding: boolean = false;   //loading when click button
   isModalOpen = false;
   searchKey: string = '';
@@ -204,30 +205,7 @@ export class UserManagementComponent implements OnInit {
     this.loadStatus();
     this.loadAllBankName();
     this.isLoadding = true;
-    if (this.loginToken) {
-
-      this.productListService.getAllUser().subscribe(
-        (data: ApiResponse) => {
-          if (data.code === 1000) {
-            this.user = data.result;
-            this.isLoadding = false;
-          } else {
-            console.error('Failed to fetch products:', data);
-            this.isLoadding = false;
-
-          }
-        },
-        (error) => {
-          console.error('Error fetching products:', error);
-          this.isLoadding = false;
-
-        }
-      );
-    } else {
-      console.error('No loginToken found in localStorage.');
-      this.isLoadding = false;
-
-    }
+ 
     this.addAccountForm.get('city')?.valueChanges.subscribe(provinceName => {
       const selectedProvince = this.provinces.find(province => province.name === provinceName);
       this.districts = selectedProvince ? selectedProvince.districts : [];
@@ -265,6 +243,34 @@ export class UserManagementComponent implements OnInit {
       this.onRoleChangeUpdate();
     });
     this.onRoleChangeUpdate(); // gọi hàm này khi form vừa được khởi tạo
+    this.loadAllAcountByAdmin();
+  }
+
+  loadAllAcountByAdmin():void{
+    if (this.loginToken) {
+
+      this.productListService.getAllUser().subscribe(
+        (data: ApiResponse) => {
+          if (data.code === 1000) {
+            this.user = data.result;
+            this.isLoadding = false;
+          } else {
+            console.error('Failed to fetch products:', data);
+            this.isLoadding = false;
+
+          }
+        },
+        (error) => {
+          console.error('Error fetching products:', error);
+          this.isLoadding = false;
+
+        }
+      );
+    } else {
+      console.error('No loginToken found in localStorage.');
+      this.isLoadding = false;
+
+    }
   }
   loadAllRole(): void {
     this.isLoadding = true;
@@ -639,12 +645,12 @@ export class UserManagementComponent implements OnInit {
 
     this.authenListService.AddNewAccountForAdmin(addNewAccountRequest).subscribe(
       () => {
-        this.isLoadding = false;
         this.toastr.success('Thêm tài khoản người dùng thành công.');
+        this.loadAllAcountByAdmin();
+        this.isLoadding = false;
+        
         this.addAccountForm.reset(); // Reset the form after successful addition
-        timer(200).subscribe(() => {
-          window.location.reload();
-        });
+        $('[data-dismiss="modal"]').click();
       },
       (error: any) => {
         this.isLoadding = false;
@@ -672,12 +678,11 @@ export class UserManagementComponent implements OnInit {
     console.log("Data: ", userId)
     this.authenListService.editUserById(userId, editUserRequest).subscribe(
       () => {
+        this.loadAllAcountByAdmin();
         this.isLoadding = false;
-
+        $('[data-dismiss="modal"]').click();
         this.toastr.success('Thay đổi thông tin thành công.');
-        timer(200).subscribe(() => {
-          window.location.reload();
-        });
+       
         // this.ngAfterViewInit();
         // setTimeout(() => {
         //   window.location.reload();
@@ -731,5 +736,30 @@ export class UserManagementComponent implements OnInit {
     // Code to delete the product
     console.log('Deleting product...');
     this.closeModal();
+  }
+  filterRole(): void {
+    console.log(this.selectedRoleFilter);
+    this.isLoadding = true;
+  
+    if (this.selectedRoleFilter === 'null') {
+      this.loadAllAcountByAdmin();
+    } else {
+      this.authenListService.getFilterRole(this.selectedRoleFilter)
+        .subscribe(
+          (data) => {
+            if (data.code === 1000) {
+              this.user = data.result;
+              console.log('Lọc vai trò thành công:', this.user);
+              this.isLoadding = false;
+              this.toastr.success('Lọc vai trò thành công!', 'Thành công');
+            } else if (data.code === 1015) {
+              this.user = [];
+              console.error('Lọc vai trò không thành công:', data);
+              this.isLoadding = false;
+              this.toastr.error('Không tìm thấy vai trò phù hợp!', 'Lọc thất bại');
+            }
+          }
+        );
+    }
   }
 }

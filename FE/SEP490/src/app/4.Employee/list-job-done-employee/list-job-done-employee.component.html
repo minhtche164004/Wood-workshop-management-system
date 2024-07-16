@@ -52,9 +52,11 @@
                     <th>Vị trí đảm nhận</th>
                     <th>Tình trạng công việc</th>
                    
+                   
                   
                     <th>Sản phẩm </th>
                     <th   style="min-width: 100px; text-align: right;">Số lượng</th>
+                    <th>Tiền công (VNĐ)</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -70,10 +72,13 @@
    
                     <td style="min-width: 100px;">{{ job.position_name }}</td>
                     <td style="min-width: 150px;">{{ job.status_job_name }}</td>
+         
                    
                    
                     <td style="min-width: 50px;">{{ job.request_name }}</td>
                     <td  style="min-width: 100px; text-align: right;">{{ job.quantity }}</td>
+                    <td style="min-width: 150px;">{{ job.cost |  number : '1.0-3'}} </td>
+
                   </tr>
                 </tbody>
               </table>

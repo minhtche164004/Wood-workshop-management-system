@@ -7,7 +7,7 @@
         <div class="table-title">
           <div class="row " style="height: 60px;">
             <div class="col-sm-5 ">
-              <h2 style="margin-bottom: 0;">Quản lý kiểu vật liệu</h2>
+              <h2 style="margin-bottom: 0;">Danh mục vật liệu</h2>
             </div>
             <div class="col-sm-7 text-end d-flex align-items-center justify-content-end">
               <a href="#" class="btn btn-secondary" data-toggle="modal" data-target="#addProductModal">
@@ -94,7 +94,7 @@
   <div class="modal-dialog" role="document">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title text-center" id="addProductModalLabel">Thêm kiểu vật liệu</h5>
+        <h5 class="modal-title text-center" id="addProductModalLabel">Thêm danh mục vật liệu</h5>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
@@ -103,12 +103,12 @@
         <div class="modal-body">
 
           <div class="form-group">
-            <label for="productName">Tên nhà cung cấp</label>
+            <label for="productName">Danh mục vật liệu mới</label>
             <input type="text" class="form-control" name="materialName" id="materialName"
               placeholder="Nhập tên vật liệu" [(ngModel)]="materialName" required>
           </div>
           <div class="form-group">
-            <label for="productName">Tên nhà cung cấp</label>
+            <label for="productName">Tên danh mục</label>
             <input type="text" class="form-control" name="type" id="type" placeholder="Nhập kiểu vật liệu"
               [(ngModel)]="type" required>
           </div>

@@ -75,10 +75,13 @@ export class ChartComponent implements OnInit {
   percentEmpPos4: number = 0;
   isLoading: boolean = false;
   months = ['Tháng 1', 'Tháng 2', 'Tháng 3', 'Tháng 4', 'Tháng 5', 'Tháng 6', 'Tháng 7', 'Tháng 8', 'Tháng 9', 'Tháng 10', 'Tháng 11', 'Tháng 12'];
+  data: any[] = []; // Array to store data for each month
+  chartData: any;
   ngOnInit(): void {
     this.loadData();
   }
-  
+  getJobByMonthAndYear() {
+  }
   loadData() {
     this.isLoading = true; // Hiển thị loading
     this.getTotalOrder().then(() => {
@@ -104,6 +107,7 @@ export class ChartComponent implements OnInit {
       this.isLoading = false;
       console.error(err);
     });
+    
   }
 
   initializeCharts() {

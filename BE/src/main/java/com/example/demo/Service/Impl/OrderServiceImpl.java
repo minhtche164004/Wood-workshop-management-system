@@ -163,7 +163,7 @@ public class    OrderServiceImpl implements OrderService {
             orders.setTotalAmount(total);
             orders.setSpecialOrder(false);
         }
-        if (requestOrder.getSpecial_order() == 1) {//là hàng có sẵn
+        if (requestOrder.getSpecial_order() == 1) {//là hàng ko có sẵn
 
             BigDecimal total = BigDecimal.ZERO; // Khởi tạo total là 0
             List<ProductItem> requestProductItems = requestOrder.getOrderDetail().getProductItems();
@@ -231,7 +231,7 @@ public class    OrderServiceImpl implements OrderService {
             return ResponseEntity.ok("Huỷ đơn hàng thành công");
 
         }
-        if(special_order_id == true){//là hàng có sẵn
+        if(special_order_id == true){//là hàng ko có sẵn
             List<Orderdetails> list = orderDetailRepository.getOrderDetailByOrderId(order_id);
             for(Orderdetails orderdetails : list){
                 int request_product_id =  orderdetails.getRequestProduct().getRequestProductId();
@@ -277,13 +277,15 @@ public class    OrderServiceImpl implements OrderService {
         requests.setOrderDate(requestDate); //lấy time hiện tại
         requests.setDescription(requestDTO.getDescription());
         requests.setStatus(statusRequest);
-        requests.setAddress(requestDTO.getAddress());
+        requests.setAddress(requestDTO.getAddress()); //thông tin người đặt sẽ bắt theo infor_id, còn thông tin người nhận với đơn hàng đẳc biệt sẽ cho người đặt nhập
         requests.setFullname(requestDTO.getFullname());
         requests.setPhoneNumber(requestDTO.getPhoneNumber());
-        requests.setResponse("");
         requests.setCity_province(requestDTO.getCity_province());
         requests.setDistrict(requestDTO.getDistrict_province());
         requests.setWards(requestDTO.getWards_province());
+        requests.setResponse("");
+
+        requests.setSpecialOrder(true);//đặt cho đơn hàng theo yêu cầu là đơn hàng đặc biệt
 
         Orders lastOrder = orderRepository.findOrderTop(dateString + "OD");
         int count = lastOrder != null ? Integer.parseInt(lastOrder.getCode().substring(8)) + 1 : 1;
@@ -546,17 +548,7 @@ public class    OrderServiceImpl implements OrderService {
     }
 
 
-    @Transactional
-    @Override
-    public Orders ManagerEditRequest(int request_id, RequestEditDTO requestEditDTO) {
-        Orders requests = orderRepository.findById(request_id);
-        Status_Order statusRequest = statusOrderRepository.getById(requestEditDTO.getStatus_id());
-        requests.setStatus(statusRequest);
-        requests.setResponse(requestEditDTO.getResponse());
-        orderRepository.save(requests);
-        //  entityManager.refresh(requests);
-        return requests;
-    }
+
 
 //    @Override
 //    public Requests CustomerEditRequest(int request_id, Requests requests) {
@@ -581,6 +573,17 @@ public class    OrderServiceImpl implements OrderService {
     @Override
     public void deleteRequestById(int requestId) {
         orderRepository.deleteById(requestId);
+    }
+    @Transactional
+    @Override
+    public Orders ManagerEditRequest(int request_id, RequestEditDTO requestEditDTO) {
+        Orders requests = orderRepository.findById(request_id);
+        Status_Order statusRequest = statusOrderRepository.getById(requestEditDTO.getStatus_id());
+        requests.setStatus(statusRequest);
+        requests.setResponse(requestEditDTO.getResponse());
+        orderRepository.save(requests);
+        //  entityManager.refresh(requests);
+        return requests;
     }
 
     @Transactional

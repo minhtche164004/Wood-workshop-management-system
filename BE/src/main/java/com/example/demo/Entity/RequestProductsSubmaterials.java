@@ -31,9 +31,14 @@ public class RequestProductsSubmaterials {
     @Column(name = "quantity")
     private Double quantity;
 
-    public RequestProductsSubmaterials(SubMaterials subMaterial, RequestProducts requestProduct, Double quantity) {
+    @ManyToOne // Đánh dấu mối quan hệ Many-to-One
+    @JoinColumn(name = "input_id", referencedColumnName = "input_id") // Liên kết với input_id của InputSubMaterial
+    private InputSubMaterial inputSubMaterial; // Thêm trường để lưu InputSubMaterial
+
+    public RequestProductsSubmaterials(SubMaterials subMaterial, RequestProducts requestProduct, Double quantity,InputSubMaterial inputSubMaterial) {
         this.subMaterial = subMaterial;
         this.requestProduct = requestProduct;
         this.quantity = quantity;
+        this.inputSubMaterial=inputSubMaterial;
     }
 }

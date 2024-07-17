@@ -54,6 +54,7 @@ public class OrderController {
     @Autowired
     private WhiteListService whiteListService;
     private final OrderRepository orderRepository;
+    private static final JedisPooled jedis = RedisConfig.getRedisInstance();
 
 //    @GetMapping("/GetAllProductRequest")
 //    public ApiResponse<?> GetAllProductRequest() {

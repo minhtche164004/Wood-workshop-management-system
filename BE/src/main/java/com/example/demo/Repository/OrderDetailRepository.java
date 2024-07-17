@@ -35,7 +35,8 @@ public interface OrderDetailRepository extends JpaRepository<Orderdetails, Integ
             "COALESCE(rp.requestProductId, 0), " +
             "COALESCE(rp.requestProductName, ''), " +
             "od.unitPrice, " +
-            "od.quantity " +
+            "od.quantity," +
+            "od.order " +
             ") " +
             "FROM Orderdetails od " +
             "LEFT JOIN od.product p " +

@@ -17,5 +17,9 @@ export class DashboardComponent implements OnInit{
   {
     this.status = !this.status;       
   }
+  sidebarVisible: boolean = true;
 
+  toggleSidebar() {
+    this.sidebarVisible = !this.sidebarVisible;
+  }
 }

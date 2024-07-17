@@ -1,5 +1,5 @@
 
-import { Component, OnInit } from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { ToastrService } from 'ngx-toastr';
 import { timer } from 'rxjs';
 import { AuthenListService } from 'src/app/service/authen.service';
@@ -18,6 +18,8 @@ interface ApiResponse {
   styleUrls: ['./order-management.component.scss']
 })
 export class OrderManagementComponent implements OnInit {
+  @ViewChild('launchModalButton')
+  launchModalButton!: ElementRef;
   user: any[] = [];
   userStatus: any[] = [];
   loginToken: string | null = null;
@@ -29,6 +31,7 @@ export class OrderManagementComponent implements OnInit {
   isLoadding: boolean = false;
   selectedOrderId: number | null = null;
   selectedSpecialOrder: boolean | null = null;
+  activeModal: any;
   constructor(private http: HttpClient, private productListService: ProductListService, private orderService: OrderService,
     private authenListService: AuthenListService, private toastr: ToastrService,
   ) { }
@@ -40,6 +43,31 @@ export class OrderManagementComponent implements OnInit {
     this.getOrderStatus();
     this.getAllUser();
 
+  }
+  selectedModalJob: string = '';
+  selectedModalId: string = '';
+  indexStatus: number = 0;
+  previousStatusId: string= '';
+  cancelChangeStatusJob() {
+    this.selectedModalId = '';  
+  }
+
+  openModal(orderId: number,event: Event, index: number): void {
+
+    console.log('event:', event);
+    const statusId = (event.target as HTMLSelectElement).value;
+    this.selectedModalJob = orderId.toString();
+    console.log('Job ID:', this.selectedModalJob, 'Status ID:', statusId);
+    this.selectedModalId = statusId;
+    // this.createJobs.reset();  
+    // S? d?ng tham chi?u này d? kích ho?t click
+    this.launchModalButton.nativeElement.click();
+    this.indexStatus = index;
+    // console.log("indexStatus:", this.indexStatus);
+  }
+
+  closeModal() {
+    this.getAllUser();
   }
   getOrderStatus(): void {
     this.orderService.getOrderStatus().subscribe(
@@ -137,21 +165,24 @@ export class OrderManagementComponent implements OnInit {
 
   }
 
-  onStatusChange(orderId: string, event: Event): void {
-    const statusId = (event.target as HTMLSelectElement).value;
-    this.changeStatus(orderId, statusId);
-  }
+  // onStatusChange(orderId: string, event: Event): void {
+  //   const statusId = (event.target as HTMLSelectElement).value;
+  //   this.changeStatus(orderId, statusId);
+  // }
 
   changeStatus(orderId: string, statusId: string): void {
+    this.isLoadding = true;
     this.authenListService.changeStatusOrder(orderId, statusId).subscribe(
       response => {
+        this.isLoadding = false;
         console.log('Order status changed', response);
         this.toastr.success('Thay đổi tình trạng công việc thành công.');
-        // timer(200).subscribe(() => {
-        //   window.location.reload();
-        // });
+        this.getAllUser();
+        $('[data-dismiss="modal"]').click();
       },
       error => {
+        this.isLoadding = false;
+
         console.error('Error changing order status', error);
       }
     );

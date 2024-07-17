@@ -14,7 +14,38 @@
     padding: 10px;
     border: none;
   }
+
+  .equal-size {
+    min-width: 150px; /* Điều chỉnh giá trị này để thay đổi kích thước tối thiểu của các nút */
+    padding: 0.75rem 1.25rem; /* Điều chỉnh giá trị này để thay đổi kích thước nút */
+    font-size: 1.25rem;
+    line-height: 1.5;
+    border-radius: 0.3rem;
+  }
+  a {
+    cursor: pointer;
+    color: #495057;
+    transition: color 0.3s ease;
+  }
   
+  a:hover {
+    cursor: pointer;
+    color: #007bff;
+  }
+  .previewMultiple {
+    width: calc(80% / 2);
+    height: auto; 
+    max-width: calc(400px / 3); 
+    display: inline-flex;
+    padding-left: 2%;
+    padding-bottom: 2%;
+  }
+  .disabled {
+    opacity: 0.5;
+    pointer-events: none;
+    background-color: #e9ecef;
+    color: inherit; 
+  }
   .btn-mau-do {
     background: #cc4949; /* Red button color */
     color: white;
@@ -34,7 +65,7 @@
     padding: 20px 0; /* Khoảng cách lề trên và dưới */
 
   }
-
+ 
   .input-with-icon {
     position: relative;
   }
@@ -86,5 +117,5 @@
   /* Màu sắc khác có thể thêm vào theo yêu cầu */
 
   .form-group label{
-  font-size: 14px;
+  font-size: 19px;
 }

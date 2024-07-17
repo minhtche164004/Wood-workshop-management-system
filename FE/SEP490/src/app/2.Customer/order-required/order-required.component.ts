@@ -30,6 +30,7 @@ interface Ward {
   styleUrls: ['./order-required.component.scss']
 })
 export class OrderRequiredComponent implements OnInit {
+  imagesPreview: string[] = [];
   isLoadding: boolean = false;   //loading when click button
   uploadForm: FormGroup;
   userProfile: any = {};
@@ -38,7 +39,7 @@ export class OrderRequiredComponent implements OnInit {
   districts: District[] = [];
   wards: Ward[] = [];
 
-
+  selectedFiles: File[] = [];
   provinceControl = new FormControl();
   districtControl = new FormControl();
   wardControl = new FormControl();
@@ -48,6 +49,7 @@ export class OrderRequiredComponent implements OnInit {
   
   selectedImages: File[] = [];
 
+  isDisabled: boolean = false;
   constructor(
     private toastr: ToastrService,
     private productListService: ProductListService,
@@ -72,7 +74,10 @@ export class OrderRequiredComponent implements OnInit {
   ngOnInit() {
     this.loadData();
   }
-
+  onResetImage() {
+    this.selectedImages = [];
+    this.imagesPreview = [];
+  }
   loadData() {
     this.authenListService.getUserProfile().subscribe((data) => {
       this.userProfile = data.result;
@@ -129,6 +134,19 @@ export class OrderRequiredComponent implements OnInit {
   }
   onImagesSelected(event: any): void {
     this.selectedImages = Array.from(event.target.files);
+
+    const files: File[] = Array.from(event.target.files as FileList);
+    if (event.target.files && event.target.files.length) {
+      // xoa list preview cu    
+      this.imagesPreview = [];
+
+      // Create and store URLs for preview
+      files.forEach((file: File) => {
+        const url = URL.createObjectURL(file);
+        this.imagesPreview.push(url);
+      });
+
+    }
   }
 
   onFilesSelected(event: any): void {
@@ -142,13 +160,13 @@ export class OrderRequiredComponent implements OnInit {
     }
   }
 
-  onSubmit(): void {
+  onSubmit1(): void {
     this.isLoadding = true;
     if (this.uploadForm.valid && this.selectedImages.length) {
       const productData = this.uploadForm.value;
-      // console.log('Form Data:', productData);
+      console.log('Form Data:', productData);
   
-      // console.log('Selected Images:', this.selectedImages);
+      console.log('Selected Images:', this.selectedImages);
   
       this.authenListService.uploadProductRequired(productData, this.selectedImages)
         .subscribe(

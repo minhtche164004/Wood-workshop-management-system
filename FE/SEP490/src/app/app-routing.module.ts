@@ -84,7 +84,12 @@ const routes: Routes = [
   { path: 'verifyOtp/:email', component: VerifyOtpMailComponent },  // Route with email as a parameter
   { path: 'forgot_pass/:email', component: ForgotPassComponent },
 
+
   { path: 'product', component: ProductComponent , }, 
+
+  { path: 'employee-submaterial-management', component: EmployeeSubmaterialManagementComponent },
+
+
   { path: 'productsList', component: ProductListComponent , canActivate: [AuthGuard], data: { roles: ['MANAGER'] }}, 
   { path: 'product_management', component: ProductManagementComponent, canActivate: [AuthGuard], data: { roles: ['MANAGER'] } },
   { path: 'order_rq', component: OrderRequiredComponent ,}, 

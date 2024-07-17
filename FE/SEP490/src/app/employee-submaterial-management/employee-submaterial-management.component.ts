@@ -128,7 +128,7 @@ export class EmployeeSubmaterialManagementComponent implements OnInit {
       (data) => {
         if (data.code === 1000) {
           this.employeeList = data.result;
-
+         // console.log('Employee list:', this.employeeList);
           this.employeeInfoList = this.employeeList.map(employee => {
             return {
               fullname: employee.userInfor?.fullname,

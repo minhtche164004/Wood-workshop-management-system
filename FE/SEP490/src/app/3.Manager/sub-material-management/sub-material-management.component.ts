@@ -154,7 +154,7 @@ export class SubMaterialManagementComponent implements OnInit {
       (data) => {
         if (data.code === 1000) {
           this.categories = data.result;
-          console.log('Danh sách Materials:', this.categories);
+   //       console.log('Danh sách Materials:', this.categories);
           this.isLoadding = false;
         } else {
           console.error('Failed to fetch materials:', data);
@@ -279,7 +279,7 @@ export class SubMaterialManagementComponent implements OnInit {
       (data) => {
         if (data.code === 1000) {
           this.products = data.result;
-          console.log('Kết quả tìm kiếm Sub-Materials:', this.products);
+     //     console.log('Kết quả tìm kiếm Sub-Materials:', this.products);
           this.isLoadding = false;
           if(this.products.length == 0){
             this.checkNotFound = true;

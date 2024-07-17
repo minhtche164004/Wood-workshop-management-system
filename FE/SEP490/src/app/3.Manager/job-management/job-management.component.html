@@ -53,7 +53,7 @@
                             <th>Tên sản phẩm</th>
 
                             <th>Số lượng</th>
-                            <th>Đơn giá (vnd)</th>
+                            <th>Đơn giá sản phẩm(vnd)</th>
                             <th>Trạng thái</th>
                             <th>Nhân viên</th>
                             <th>Giao việc</th>
@@ -68,10 +68,14 @@
                             <td>{{ i + 1 + (currentPage - 1) * 10 }}</td>
                             <!-- <td>{{ product?.code }}</td> -->
                             <td class="action-buttons">
-                                <a href="#" class="settings" title="Chỉnh sửa" data-toggle="modal"
-                                    data-target="#editProductJobModal" (click)="editJobDetail(product.job_id)">
-                                    <i class="fa-solid fa-pen-to-square"></i>
-                                </a>
+                                <ng-container
+                                    *ngIf="product.statusJob.status_id !== 6 && product.statusJob.status_id !== 9 && product.statusJob.status_id !== 12">
+                                    <a href="#" class="settings" title="Chỉnh sửa" data-toggle="modal"
+                                        data-target="#editProductJobModal"
+                                        (click)="editJobDetail(product, product.job_id)">
+                                        <i class="fa-solid fa-pen-to-square"></i>
+                                    </a>
+                                </ng-container>
                                 <a style="margin-left: 10px;" title="Chi tiết" data-toggle="modal"
                                     data-target="#detailJobModal" (click)="showJobDetail(product)">
                                     <i class="fa-solid fa-ellipsis-vertical"></i>
@@ -214,12 +218,10 @@
                                                         <option [value]="null" disabled selected>Chọn nhân viên</option>
                                                         <option *ngFor="let employee of positionEmployees"
                                                             [value]="employee.userId">
-                                                            {{ employee.username }} : {{ employee.userId }}
+                                                            {{ employee.username }} : {{ employee.userId }} :
+                                                            {{employee.position?.position_name}}
                                                         </option>
                                                     </select>
-
-
-
                                                 </div>
                                             </div>
 
@@ -235,8 +237,6 @@
 
                                                 </div>
                                             </div>
-
-
                                             <div class="row">
                                                 <div class="col-md-6">
                                                     <strong>Giá công khoán:</strong>
@@ -246,10 +246,6 @@
                                                         [(ngModel)]="costJob">
                                                 </div>
                                             </div>
-                                          
-
-
-
                                         </section>
                                     </div>
 
@@ -266,23 +262,23 @@
                                             </div>
 
                                             <div class="row">
-                                                <div class="col-md-6">
+                                                <!-- <div class="col-md-6">
                                                     <strong>Tên công việc:</strong>
-                                                </div>
+                                                </div> -->
                                                 <!-- <div class="col-md-6">
                                                     <input type="text" formControlName="job_name"
                                                         placeholder="Nhập tên công việc">
                                                 </div> -->
-                                                <div class="col-md-6">
+                                                <!-- <div class="col-md-6">
                                                     <select formControlName="job_name" class="form-select">
                                                         <option value="">Tất cả</option>
                                                         <option *ngFor="let category of positionEmpList" [ngValue]="category.position_id">
                                                             {{ category.position_name }}
                                                         </option>
                                                     </select>
-                                                </div>
-                                                
-                                               
+                                                </div> -->
+
+
                                             </div>
                                             <div class="row">
                                                 <div class="row">
@@ -400,7 +396,7 @@
                                                     {{ selectedJob.cost }}
                                                 </div>
                                             </div>
-                                           
+
 
 
 
@@ -425,7 +421,22 @@
                                                 </div>
                                                 <div class="col-md-6">
                                                     {{ selectedJob.job_name }}
+                                                    <ng-container *ngIf="selectedJob.job_name === 1; else otherContent">
+                                                        Làm mộc
+                                                    </ng-container>
+                                                    <ng-template #otherContent>
+                                                        <ng-container
+                                                            *ngIf="selectedJob.job_name === 2; else anotherContent">
+                                                            Đánh nhám
+                                                        </ng-container>
+                                                        <ng-template #anotherContent>
+                                                            <ng-container *ngIf="selectedJob.job_name === 3">
+                                                                Phun sơn
+                                                            </ng-container>
+                                                        </ng-template>
+                                                    </ng-template>
                                                 </div>
+
                                             </div>
                                             <div class="row">
                                                 <div class="row">
@@ -446,7 +457,7 @@
                                                         {{ selectedJob.timeFinish | date:'dd / MM / yyyy' }}
                                                     </div>
                                                 </div>
-                                               
+
                                             </div>
 
                                         </section>
@@ -669,8 +680,7 @@
                                                 <div class="col-md-6">
                                                     <!-- {{this.selectedProduct.type_id}}
                                                     {{this.selectedProduct.user_id}} -->
-                                                    <input type="text" class="form-control" id="job_name"
-                                                        formControlName="job_name" readonly>
+                                                    {{ user_name}}
                                                 </div>
                                             </div>
 
@@ -730,8 +740,8 @@
                                                     <strong>Tên công việc:</strong>
                                                 </div>
                                                 <div class="col-md-6">
-                                                    <input type="text" formControlName="job_name"
-                                                        placeholder="Nhập tên công việc">
+                                                    <input type="text" class="form-control" formControlName="job_name"
+                                                        readonly>
                                                 </div>
                                             </div>
                                             <div class="row">

@@ -15,6 +15,20 @@
   box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
   z-index: 1;
 }
+@media (max-width: 768px) {
+    .header-icon, .header-contact {
+        text-align: center;
+        margin-bottom: 10px;
+    }
+
+    .header-contact ul {
+        justify-content: center;
+    }
+
+    .header-contact li {
+        margin: 0 10px;
+    }
+}
 
 .dropdown-content a {
   color: black;

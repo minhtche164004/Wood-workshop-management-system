@@ -33,7 +33,6 @@ import { ForgotPassComponent } from './forgotPassword/forgot-pass/forgot-pass.co
 import { ChangePasswordComponent } from './2.Customer/change-password/change-password.component';
 
 
-
 import { ContactComponent } from './contact/contact.component';
 import { AboutUsComponent } from './about-us/about-us.component';
 import { EmployeeJobComponent } from './employee-job/employee-job.component';

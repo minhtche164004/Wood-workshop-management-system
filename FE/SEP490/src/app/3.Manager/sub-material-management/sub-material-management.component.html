@@ -21,13 +21,12 @@
             </div>
             <div class="col-md-3"> 
               <div class="input-group">
-                <div class="custom-file">
-                  <input type="file" class="custom-file-input" style="height: 40px; width: auto;" id="inputGroupFile" (change)="onFileSelectedAndUpload($event)">
-                  <label class="custom-file-label" for="inputGroupFile" [innerHTML]="selectedFile ? selectedFile.name : 'Tải biểu mẫu ...'"></label>
-                </div>
+                  <div class="custom-file">
+                      <input type="file" class="custom-file-input custom-file-input-custom" id="inputGroupFile" (change)="onFileSelectedAndUpload($event)">
+                      <label class="custom-file-label custom-file-label-custom" for="inputGroupFile" [innerHTML]="selectedFile ? selectedFile.name : 'Tải biểu mẫu ...'"></label>
+                  </div>
               </div>
-              
-            </div>
+          </div>
           </div>
           <table class="table table-striped table-hover">
 

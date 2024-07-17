@@ -60,7 +60,7 @@ export class JobService {
     const url = `${this.apiGetSubMaterialOfProductRQ}?id=${id}&mate_id=${mate_id}`;
     return this.http.get<any>(url);
   }
-  editJob(jobId: number, data: any): Observable<any> {
+  editJob(jobId: any, data: any): Observable<any> {
     return this.http.put(`${this.apiEditJob}?job_id=${jobId}`, data);
   }
 

@@ -108,12 +108,18 @@
                                 <td>{{ product?.user?.userInfor?.fullname }}</td>
                                 <td>{{ product?.user?.position?.position_name }}</td>
                                 <td>
-                                    <select class="custom-select" [(ngModel)]="product.advanceSuccess"
-                                        style="width: 120%;" (change)="updateBanking(product.advanceSalaryId, $event)"
+                                    <select class="custom-select" [(ngModel)]="product.advanceSuccess"style="width: 120%;" 
+                                    
+                                       (change)="modalThanhToan(product, $event)"
                                         name="advanceSuccess">
                                         <option [ngValue]="false" disabled>Chưa thanh toán</option>
                                         <option [value]="true">Đã thanh toán</option>
+                                        <button #launchModalButton type="button" class="btn btn-primary d-none"
+                                            data-toggle="modal" data-target="#myModal">
+                                            Launch modal
+                                        </button>
                                     </select>
+
                                 </td>
                                 <td>{{ product?.amount | number: '1.0-3'}}</td>
                                 <td>{{ product?.user?.userInfor?.bank_name }}</td>
@@ -133,8 +139,7 @@
 
                     <!-- Pagination controls -->
                     <pagination-controls style="justify-content: right; display: flex;"
-                        (pageChange)="currentPage = $event" previousLabel="Trang trước" nextLabel="Trang sau"
-                        >
+                        (pageChange)="currentPage = $event" previousLabel="Trang trước" nextLabel="Trang sau">
                     </pagination-controls>
 
                     <!-- Display data information -->
@@ -258,14 +263,14 @@
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h2 class="modal-title" id="myModal">Cập nhật trạng thái việc làm</h2>
+                <h2 class="modal-title" id="myModal">Cập nhật trạng thái thanh toán</h2>
                 <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                Bạn có chắc chắn muốn cập nhật trạng thái việc làm?
+                Bạn có chắc chắn muốn cập nhật trạng thái từ "Chưa thanh toán" thành "Đã thanh toán"?
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
+                <button type="button" class="btn btn-secondary" (click)="closeModal()" data-dismiss="modal">Đóng</button>
                 <button type="button" class="btn btn-primary" (click)="updateBankingModal(selectedBanking)">Chắc
                     chắn</button>
             </div>
@@ -273,6 +278,27 @@
     </div>
 </div>
 
+<!-- <div class="modal fade" id="myModal2" tabindex="-1" aria-labelledby="myModal2Label" aria-hidden="true"
+    data-backdrop="static" data-keyboard="false">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title" id="myModal">Cập nhật trạng thái việc làm</h2>
+                <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close"
+                    (click)="closeModal()"></button>
+            </div>
+            <div class="modal-body">
+                Bạn có chắc chắn muốn cập nhật trạng thái việc làm?
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal"
+                    (click)="closeModal()">Đóng</button>
+                <button type="button" class="btn btn-primary">Chắc
+                    chắn</button>
+            </div>
+        </div>
+    </div>
+</div> -->
 <div *ngIf="isLoadding" class="loading-overlay">
     <div class="spinner"></div>
 </div>

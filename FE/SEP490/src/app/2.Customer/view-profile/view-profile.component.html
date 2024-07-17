@@ -50,8 +50,8 @@
               </div>
             </div>
 
-                            
-           
+
+
 
 
             <div class="row mb-3">
@@ -62,31 +62,37 @@
                 <div class="form-row">
                   <div class="form-group col-md-4">
                     <label for="city">Tỉnh/Thành phố</label>
-                    <select id="city" class="form-control custom-input" [formControl]="provinceControl" [(ngModel)]="userProfile.city" *ngIf="isEditing">
+                    <select id="city" class="form-control custom-input" [formControl]="provinceControl"
+                      [(ngModel)]="userProfile.city" *ngIf="isEditing">
                       <option *ngFor="let province of provinces" [value]="province.name">{{ province.name }}</option>
                     </select>
-                    <select id="city" class="form-control custom-input" [(ngModel)]="userProfile.city" [disabled]="!isEditing" *ngIf="!isEditing">
+                    <select id="city" class="form-control custom-input" [(ngModel)]="userProfile.city"
+                      [disabled]="!isEditing" *ngIf="!isEditing">
                       <option *ngFor="let province of provinces" [value]="province.name">{{ province.name }}</option>
                     </select>
                   </div>
                   <div class="form-group col-md-4">
                     <label for="district">Quận/Huyện</label>
-                    <select id="district" class="form-control custom-input" [(ngModel)]="userProfile.district" [formControl]="districtControl" *ngIf="isEditing">
+                    <select id="district" class="form-control custom-input" [(ngModel)]="userProfile.district"
+                      [formControl]="districtControl" *ngIf="isEditing">
                       <option [ngValue]="null" disabled selected>Chọn Quận/Huyện</option>
                       <option *ngFor="let district of districts" [value]="district.name">{{ district.name }}</option>
                     </select>
-                    <select id="district" class="form-control custom-input" [(ngModel)]="userProfile.district" [disabled]="!isEditing" *ngIf="!isEditing">
+                    <select id="district" class="form-control custom-input" [(ngModel)]="userProfile.district"
+                      [disabled]="!isEditing" *ngIf="!isEditing">
                       <option [ngValue]="null" disabled selected>Chọn Quận/Huyện</option>
                       <option *ngFor="let district of districts" [value]="district.name">{{ district.name }}</option>
                     </select>
                   </div>
                   <div class="form-group col-md-4">
                     <label for="wards">Phường/Xã</label>
-                    <select id="wards" class="form-control custom-input" [(ngModel)]="userProfile.wards" [formControl]="wardControl" *ngIf="isEditing">
+                    <select id="wards" class="form-control custom-input" [(ngModel)]="userProfile.wards"
+                      [formControl]="wardControl" *ngIf="isEditing">
                       <option [ngValue]="null" disabled selected>Chọn Phường/Xã</option>
                       <option *ngFor="let ward of wards" [value]="ward.name">{{ ward.name }}</option>
                     </select>
-                    <select id="wards" class="form-control custom-input" [(ngModel)]="userProfile.wards" [disabled]="!isEditing" *ngIf="!isEditing">
+                    <select id="wards" class="form-control custom-input" [(ngModel)]="userProfile.wards"
+                      [disabled]="!isEditing" *ngIf="!isEditing">
                       <option [ngValue]="null" disabled selected>Chọn Phường/Xã</option>
                       <option *ngFor="let ward of wards" [value]="ward.name">{{ ward.name }}</option>
                     </select>
@@ -99,8 +105,8 @@
 
 
               </div>
-             
-            
+
+
 
 
             </div>
@@ -128,14 +134,16 @@
                 </div>
               </div>
             </div>
-          </div> 
+          </div>
         </div>
       </div>
     </div>
   </div>
   <div class="zalo-chat-widget" data-oaid="2628068117103072011" data-welcome-message="Rất vui khi được hỗ trợ bạn!"
     data-autopopup="0" data-width="" data-height=""></div>
-  <app-footer></app-footer>
+</div>
 <div *ngIf="isLoadding" class="loading-overlay">
   <div class="spinner"></div>
 </div>
+
+<app-footer></app-footer>

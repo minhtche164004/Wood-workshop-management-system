@@ -128,13 +128,12 @@ export class JobManagementComponent implements OnInit {
     console.log('event:', event);
     const statusId = (event.target as HTMLSelectElement).value;
     this.selectedModalJob = jobId.toString();
-    //    console.log('Job ID:', this.selectedModalJob, 'Status ID:', statusId);
+  
     this.selectedModalId = statusId;
-    // this.createJobs.reset();  
-    // S? d?ng tham chi?u này d? kích ho?t click
+ 
     this.launchModalButton.nativeElement.click();
     this.indexStatus = index;
-    // console.log("indexStatus:", this.indexStatus);
+   
   }
 
   closeModal() {

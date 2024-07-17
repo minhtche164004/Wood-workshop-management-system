@@ -292,7 +292,8 @@ public class OrderController {
     public ApiResponse<?> ChangeStatusOrder(@RequestParam("orderId") int orderId,@RequestParam("status_id") int status_id){
         ApiResponse<String> apiResponse = new ApiResponse<>();
         orderService.ChangeStatusOrder(orderId,status_id);
-        apiResponse.setResult("Sửa status của đơn hàng thành công");
+      //  apiResponse.setResult("Sửa status của đơn hàng thành công");
+        apiResponse.setResult(orderService.ChangeStatusOrder(orderId,status_id));
         return apiResponse;
     }
 }

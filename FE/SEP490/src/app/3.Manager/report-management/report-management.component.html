@@ -63,7 +63,7 @@
                 <i class="fa-solid fa-pen-to-square"></i>
               </a>
               <a href="#" class="delete" title="Xóa" data-toggle="modal" data-target="#confirmDeleteModal"
-                (click)="openConfirmDeleteModal(product.id, product.product_name)">
+                (click)="openConfirmDeleteModal(product.id, product.product_name, product.code)">
                 <i class="fa-regular fa-trash-can"></i>
               </a>
               <a href="#" class="info" title="Chi tiết" data-toggle="modal" data-target="#productDetailModal"
@@ -241,9 +241,10 @@
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
-      <div class="modal-body" id="confirmDeleteModal">
-        Bạn có chắc chắn muốn xóa báo cáo lỗi sản phẩm này hay không?
-      </div>
+      <div class="modal-body text-center" style="font-size: 16px;" id="confirmDeleteModal">
+        Bạn chắc chắn muốn xóa báo cáo lỗi có mã <span style="color: red;"><b>{{ selectedReportCode }}</b></span>?
+    </div>
+    
       <div class="modal-footer" id="confirmDeleteModal">
         <button type="button" class="btn btn-secondary" data-dismiss="modal">Hủy bỏ</button>
         <button type="button" class="btn btn-danger" (click)="deleteProduct()">Xác nhận</button>

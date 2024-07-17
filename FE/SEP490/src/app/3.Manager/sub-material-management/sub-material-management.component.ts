@@ -90,7 +90,7 @@ export class SubMaterialManagementComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    console.log("Bắt đầu chạy sub-material-management.component.ts")
+   // console.log("Bắt đầu chạy sub-material-management.component.ts")
     this.getAllMaterials();
     this.getAllSubMaterials();
 
@@ -154,7 +154,7 @@ export class SubMaterialManagementComponent implements OnInit {
       (data) => {
         if (data.code === 1000) {
           this.categories = data.result;
-          console.log('Danh sách Materials:', this.categories);
+   //       console.log('Danh sách Materials:', this.categories);
           this.isLoadding = false;
         } else {
           console.error('Failed to fetch materials:', data);
@@ -279,7 +279,7 @@ export class SubMaterialManagementComponent implements OnInit {
       (data) => {
         if (data.code === 1000) {
           this.products = data.result;
-          console.log('Kết quả tìm kiếm Sub-Materials:', this.products);
+     //     console.log('Kết quả tìm kiếm Sub-Materials:', this.products);
           this.isLoadding = false;
           if(this.products.length == 0){
             this.checkNotFound = true;
@@ -306,7 +306,60 @@ export class SubMaterialManagementComponent implements OnInit {
   sanitize(name: string): SafeHtml {
     return this.sanitizer.bypassSecurityTrustHtml(name);
   }
-  uploadFile(file: File) {
+  // uploadFile(file: File) {
+  //   this.isLoadding = true;
+  //   this.subMaterialService.uploadExcel(file).subscribe(
+  //     (event: any) => {
+  //       if (event.type === HttpEventType.UploadProgress) {
+  //         const progress = Math.round((100 * event.loaded) / event.total);
+  //         console.log(`File is ${progress}% uploaded.`);
+  //       } else if (event instanceof HttpResponse) {
+  //         console.log('File is completely uploaded!', event.body);
+  //         // Xử lý phản hồi khi tải lên thành công ở đây
+  //       }
+  //       this.isLoadding = false;
+  //     },
+  //     (error) => {
+  //       console.error('Upload error:', error);
+  //       this.isLoadding = false;
+  //     }
+  //   );
+  // }
+ 
+  // onFileSelected(event: Event) {
+  //   this.isLoadding = true;
+  //   const inputElement = event.target as HTMLInputElement;
+  //   if (inputElement.files && inputElement.files.length > 0) {
+  //     this.selectedFile = inputElement.files[0];
+  //   } else {
+  //     this.selectedFile = undefined;
+  //     console.error('No file selected.');
+  //   }
+  //   this.isLoadding = false;
+  // }
+
+  // uploadSelectedFile() {
+  //   if (this.selectedFile) {
+  //     this.uploadFile(this.selectedFile);
+  //   } else {
+  //     console.error('No file selected.');
+  //   }
+  // }
+  
+
+  onFileSelectedAndUpload(event: Event) {
+    this.isLoadding = true;
+    const inputElement = event.target as HTMLInputElement;
+    if (inputElement.files && inputElement.files.length > 0) {
+      this.selectedFile = inputElement.files[0];
+      this.uploadFile(this.selectedFile, inputElement);
+    } else {
+      this.selectedFile = undefined;
+      console.error('No file selected.');
+      this.isLoadding = false;
+    }
+  }
+  uploadFile(file: File, inputElement: HTMLInputElement) {
     this.isLoadding = true;
     this.subMaterialService.uploadExcel(file).subscribe(
       (event: any) => {
@@ -314,38 +367,27 @@ export class SubMaterialManagementComponent implements OnInit {
           const progress = Math.round((100 * event.loaded) / event.total);
           console.log(`File is ${progress}% uploaded.`);
         } else if (event instanceof HttpResponse) {
+          this.toastr.success('Cập nhật nguyên vật liệu thành công!', 'Thành công');
           console.log('File is completely uploaded!', event.body);
-          // Xử lý phản hồi khi tải lên thành công ở đây
+          this.getAllSubMaterials();
+          this.resetFileInput(inputElement); // Reset file input
         }
         this.isLoadding = false;
       },
       (error) => {
         console.error('Upload error:', error);
+        this.toastr.error('Tải lên thất bại!', 'Lỗi');
         this.isLoadding = false;
+        this.getAllMaterials();
+        this.resetFileInput(inputElement); // Reset file input
       }
     );
   }
- 
-  onFileSelected(event: Event) {
-    this.isLoadding = true;
-    const inputElement = event.target as HTMLInputElement;
-    if (inputElement.files && inputElement.files.length > 0) {
-      this.selectedFile = inputElement.files[0];
-    } else {
-      this.selectedFile = undefined;
-      console.error('No file selected.');
-    }
-    this.isLoadding = false;
-  }
 
-  uploadSelectedFile() {
-    if (this.selectedFile) {
-      this.uploadFile(this.selectedFile);
-    } else {
-      console.error('No file selected.');
-    }
-  }
-  
+resetFileInput(inputElement: HTMLInputElement) {
+  inputElement.value = ''; // Reset the file input
+  this.selectedFile = undefined; // Optionally reset the selected file in the component
+}
   selectProduct(product: any): void {
     this.isLoadding = true;
     this.selectedSubMtr = product; // Adjust based on your product object structure

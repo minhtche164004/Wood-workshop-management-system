@@ -30,6 +30,7 @@ import java.math.BigDecimal;
 import java.nio.file.Paths;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 @RestController
 @RequestMapping("/api/auth/product/")
@@ -54,6 +55,8 @@ public class ProductController {
     @Autowired
     private Status_Product_Repository statusProductRepository;
     private static final JedisPooled jedis = RedisConfig.getRedisInstance();
+//    @Autowired
+//    private Gson gson;
 
     //    @PreAuthorize("hasAnyAuthority('ADMIN')")
     @GetMapping("/getAllProductForCustomer")
@@ -385,7 +388,9 @@ public class ProductController {
             @RequestPart("files") MultipartFile[] files
     ) throws Exception {
         ApiResponse<RequestProducts> apiResponse = new ApiResponse<>();
-        jedis.del("all_products_admin");
+//        jedis.del("all_products_admin");
+        Set<String> keys = jedis.keys("filtered_products:*");
+        jedis.del(keys.toArray(new String[0]));
         apiResponse.setResult(productService.EditRequestProduct(productId,requestProductEditDTO,files));
         return apiResponse;
     }
@@ -408,13 +413,7 @@ public class ProductController {
       return apiResponse;
     }
 
-    @DeleteMapping("/deleteRequestProduct")
-    public ApiResponse<?> deleteRequestProduct(@RequestParam("id") int product_id) {
-        ApiResponse<String> apiResponse = new ApiResponse<>();
-        productService.DeleteRequestProduct(product_id);
-        apiResponse.setResult("Xoá thành công");
-        return apiResponse;
-    }
+
 
 
 
@@ -458,6 +457,7 @@ public class ProductController {
         return apiResponse;
     }
 
+
     @GetMapping("/getMultiFillterProductForAdmin")
     public ApiResponse<?>  getAllProductForAdmin(
             @RequestParam(required = false) String search,
@@ -472,6 +472,16 @@ public class ProductController {
 
     }
 
+    @DeleteMapping("/deleteRequestProduct")
+    public ApiResponse<?> deleteRequestProduct(@RequestParam("id") int product_id) {
+        ApiResponse<String> apiResponse = new ApiResponse<>();
+        // Xóa tất cả các key cache có pattern "filtered_products:*"
+        Set<String> keys = jedis.keys("filtered_products:*");
+        jedis.del(keys.toArray(new String[0]));
+        productService.DeleteRequestProduct(product_id);
+        apiResponse.setResult("Xoá thành công");
+        return apiResponse;
+    }
     @GetMapping("/getMultiFillterRequestProductForAdmin")
     public ApiResponse<?> getAllRequestProductForAdmin(
             @RequestParam(required = false) String search,
@@ -479,12 +489,40 @@ public class ProductController {
             @RequestParam(required = false) BigDecimal minPrice,
             @RequestParam(required = false) BigDecimal maxPrice,
             @RequestParam(required = false) String sortDirection
-         ){
+    ) {
         ApiResponse<List> apiResponse = new ApiResponse<>();
-        apiResponse.setResult(orderService.filterRequestProductsForAdmin(search, statusId, minPrice, maxPrice, sortDirection));
+//        Set<String> keys = jedis.keys("filtered_products:*");
+//        jedis.del(keys.toArray(new String[0]));
+        // Tạo key cache dựa trên tham số đầu vào (xử lý null)
+        String cacheKey = String.format(
+                "filtered_products:%s:%s:%s:%s:%s",
+                search != null ? search : "",
+                statusId != null ? statusId : -1,
+                minPrice != null ? minPrice : 0,
+                maxPrice != null ? maxPrice : 0,
+                sortDirection != null ? sortDirection : ""
+        );
+        Gson gson = new GsonBuilder().setDateFormat("MMM dd, yyyy").create();
+            String cachedData = jedis.get(cacheKey);
+            if (cachedData != null) {
+                Type type = new TypeToken<List<RequestProductDTO_Show>>() {}.getType(); // Thay Product bằng kiểu dữ liệu sản phẩm của bạn
+
+                List<RequestProductDTO_Show> products = gson.fromJson(cachedData, type);
+                apiResponse.setResult(products);
+            } else {
+                List<RequestProductDTO_Show> products = orderService.filterRequestProductsForAdmin(
+                        search, statusId, minPrice, maxPrice, sortDirection
+                );
+                apiResponse.setResult(products);
+
+                // Lưu vào cache Redis (xử lý null)
+            //    Gson gson = new GsonBuilder().setDateFormat("MMM dd, yyyy").serializeNulls().create();
+                String jsonData = gson.toJson(products);
+                jedis.set(cacheKey, jsonData);
+                jedis.expire(cacheKey, 1800); // Thời gian sống của cache là 30 phút (1800 giây)
+            }
         return apiResponse;
     }
-
 
     @GetMapping("/getProductSubMaterialAndMaterialByProductId")
     public ApiResponse<?> getProductSubMaterialAndMaterialByProductId(@RequestParam("id") int id) {

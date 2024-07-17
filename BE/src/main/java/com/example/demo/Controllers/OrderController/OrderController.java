@@ -54,6 +54,7 @@ public class OrderController {
     @Autowired
     private WhiteListService whiteListService;
     private final OrderRepository orderRepository;
+    private static final JedisPooled jedis = RedisConfig.getRedisInstance();
 
 //    @GetMapping("/GetAllProductRequest")
 //    public ApiResponse<?> GetAllProductRequest() {
@@ -292,7 +293,8 @@ public class OrderController {
     public ApiResponse<?> ChangeStatusOrder(@RequestParam("orderId") int orderId,@RequestParam("status_id") int status_id){
         ApiResponse<String> apiResponse = new ApiResponse<>();
         orderService.ChangeStatusOrder(orderId,status_id);
-        apiResponse.setResult("Sửa status của đơn hàng thành công");
+      //  apiResponse.setResult("Sửa status của đơn hàng thành công");
+        apiResponse.setResult(orderService.ChangeStatusOrder(orderId,status_id));
         return apiResponse;
     }
 }

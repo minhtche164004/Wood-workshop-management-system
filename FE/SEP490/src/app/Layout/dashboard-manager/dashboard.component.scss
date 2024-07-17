@@ -3,13 +3,26 @@
   }
   
   .sidebar {
-    width: 250px;
+    width: 30%;
     background: #343a40;
     color: #fff;
     height: 100vh;
     padding: 20px;
   
   }
+  .sidebar {
+    transition: all 0.3s;
+  }
+  
+  .sidebar.hide {
+    transform: translateX(-250px); /* or use display: none; based on your design */
+  }
+  
+  .icon {
+    cursor: pointer;
+    /* Add any additional styling for the icon */
+  }
+  
   a{
     text-decoration: none;
   }

@@ -27,9 +27,21 @@ public class StatisticController {
         return apiResponse;
     }
     @GetMapping("/countCompletedJobsByMonthAndYear")
-    public ApiResponse<?> countCompletedJobsByMonthAndYear(@RequestParam("status_name") String status_name,@RequestParam("month") int month,@RequestParam("year") int year) {
+    public ApiResponse<?> countCompletedJobsByMonthAndYear(@RequestParam("status_id") int status_id,@RequestParam("month") int month,@RequestParam("year") int year) {
         ApiResponse<Long> apiResponse = new ApiResponse<>();
-        apiResponse.setResult(statisticService.countCompletedJobsByMonthAndYear(status_name,month, year));
+        apiResponse.setResult(statisticService.countCompletedJobsByMonthAndYear(status_id,month, year));
+        return apiResponse;
+    }
+    @GetMapping("/countCompletedJobsForProductByMonthAndYear")
+    public ApiResponse<?> countCompletedJobsForProductByMonthAndYear(@RequestParam("status_id") int status_id,@RequestParam("month") int month,@RequestParam("year") int year) {
+        ApiResponse<Integer> apiResponse = new ApiResponse<>();
+        apiResponse.setResult(statisticService.countCompletedJobsForProductByMonthAndYear(status_id,month, year));
+        return apiResponse;
+    }
+    @GetMapping("/countCompletedJobsForRequestProductByMonthAndYear")
+    public ApiResponse<?> countCompletedJobsForRequestProductByMonthAndYear(@RequestParam("status_id") int status_id,@RequestParam("month") int month,@RequestParam("year") int year) {
+        ApiResponse<Integer> apiResponse = new ApiResponse<>();
+        apiResponse.setResult(statisticService.countCompletedJobsForRequestProductByMonthAndYear(status_id,month, year));
         return apiResponse;
     }
     @GetMapping("/countProduct")
@@ -50,12 +62,20 @@ public class StatisticController {
         apiResponse.setResult(statisticService.countSpecialOrder());
         return apiResponse;
     }
-    @GetMapping("/countTotalOrder")
-    public ApiResponse<?> countTotalOrder() {
+    @GetMapping("/countTotalOrderByMonthAndYear")
+    public ApiResponse<?> countTotalOrderByMonthAndYear(@RequestParam("month") int month,@RequestParam("year") int year) {
         ApiResponse<Long> apiResponse = new ApiResponse<>();
-        apiResponse.setResult(statisticService.countTotalOrder());
+        apiResponse.setResult(statisticService.countTotalOrderByMonthAndYear(month,year));
         return apiResponse;
     }
+    @GetMapping("/countCompletedOrderByMonthAndYear")
+    public ApiResponse<?> countCompletedOrderByMonthAndYear(@RequestParam("month") int month,@RequestParam("year") int year) {
+        ApiResponse<Long> apiResponse = new ApiResponse<>();
+        apiResponse.setResult(statisticService.countCompletedOrderByMonthAndYear(month,year));
+        return apiResponse;
+    }
+
+
     @GetMapping("/countOrderHaveDone")
     public ApiResponse<?> countOrderHaveDone(@RequestParam("query") int query) {
         ApiResponse<Long> apiResponse = new ApiResponse<>();

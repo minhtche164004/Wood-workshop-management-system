@@ -31,7 +31,7 @@
 
                 <!-- product.component.html -->
                 <select [(ngModel)]="selectedCategory" (change)="filterStatus()">
-                  <option value="null" disabled selected>Tất cả đơn hàng</option>
+                  <option value="null" selected>Tất cả đơn hàng</option>
                   <option *ngFor="let ps of userStatus" [value]="ps.status_id">{{ ps.status_name }}</option>
                 </select>
 
@@ -52,7 +52,6 @@
               <th>Thao tác</th>
               <th>Ngày đặt hàng</th>
               <th>Tình trạng</th>
-
               <th style="min-width: 100px;">Kiểu thanh toán</th>
               <th style="min-width: 100px;">Số tiền đặt cọc</th>
               <th style="min-width: 100px;">Số tiền còn cần thanh toán</th>
@@ -69,7 +68,7 @@
                   <i class="fa-solid fa-pen-to-square"></i>
                 </a> -->
                 <a href="#" class="info" title="Info" data-toggle="modal" data-target="#productDetailModal"
-                  (click)="getOrDetailById(us?.orderId)">
+                  (click)="getOrderDetail(us)">
                   <i class="fa-solid fa-circle-info"></i>
                 </a>
 
@@ -82,27 +81,34 @@
               || us?.status.status_id === 3"  -->
               <td style="min-width: 200px;" *ngIf="us?.totalAmount === null">
                 <div class="select-wrapper">
-                  <select [disabled]="us?.status.status_id !== 5 && us?.status.status_id !== 4" class="custom-select" (change)="onStatusChange(us.orderId, $event)">
-                    <option *ngFor="let status of status_order" [value]="status.status_id" 
-                      [selected]="status.status_id === us?.status.status_id"
+                  <select id="mySelect{{i}}" [disabled]=" us?.status.status_id !== 4
+                  && us?.status.status_id !== 7
+                  " class="custom-select" (change)="openModal(us.orderId, $event,i)">
+                    <option *ngFor="let status of status_order" [value]="status.status_id"
+                      [selected]="status.status_id === us?.status.status_id" [disabled]="status.status_id !== 8"
                       [hidden]="status.status_id !== 7 && status.status_id !== 8">
                       {{ status.status_name }}
                     </option>
                   </select>
                 </div>
               </td>
+
+
               <td style="min-width: 200px;" *ngIf="us?.totalAmount !== null">
                 <div class="select-wrapper">
-                  <select [disabled]="us?.status.status_id !== 5 && us?.status.status_id !== 4" class="custom-select" (change)="onStatusChange(us.orderId, $event)">
+                  <select id="mySelect{{i}}" [disabled]=" us?.status.status_id !== 4" class="custom-select"
+                    (change)="openModal(us.orderId, $event,i)">
                     <option *ngFor="let status of status_order" [value]="status.status_id"
-                      [selected]="status.status_id === us?.status.status_id"
-                      [disabled]="status.status_id !== 5">
+                      [selected]="status.status_id === us?.status.status_id" [disabled]="status.status_id !== 5 ">
                       {{ status.status_name }}
                     </option>
                   </select>
+                  <button #launchModalButton type="button" class="btn btn-primary d-none" data-toggle="modal"
+                    data-target="#myModal">
+                    Launch modal
+                  </button>
                 </div>
               </td>
-
 
 
 
@@ -117,8 +123,7 @@
               <td>{{ us?.totalAmount | number : '1.0-3' }}</td>
               <td>
                 <a href="#" class="delete" title="Delete" data-toggle="modal" data-target="#confirmDeleteModal"
-                  (click)="setOrderForCancellation(us?.orderId, us?.specialOrder)"
-                  *ngIf="us?.status?.status_id === 7">
+                  (click)="setOrderForCancellation(us?.orderId, us?.specialOrder)" *ngIf="us?.status?.status_id === 7">
                   <i class="fa-solid fa-times"></i>
                 </a>
                 <!-- <button class="delete-btn" title="Hủy" data-toggle="modal" data-target="#confirmDeleteModal"
@@ -273,7 +278,7 @@
   <div class="modal-dialog modal-lg" role="document">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="productDetailModalLabel">Xem đơn hàng chi tiết</h5>
+        <h5 class="modal-title" id="productDetailModalLabel">Xem chi tiết đơn hàng</h5>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
@@ -281,10 +286,9 @@
       <div class="modal-body">
         <div class="row">
           <div class="col-md-2">
-
           </div>
           <div class="col-md-10">
-            <h4 class="text-primary mb-4">Tên Sản Phẩm: {{ OrderdetailById.product_name }}</h4>
+            <h4 class="mb-4">Tên Sản Phẩm: {{ OrderdetailById.product_name }}</h4>
             <p class="mb-2"><strong>Mã đơn chi tiết:</strong> {{ OrderdetailById.order_detail_id }}</p>
             <p class="mb-2"><strong>Sản phẩm yêu cầu:</strong> {{ OrderdetailById.request_product_name }}</p>
             <p class="mb-2"><strong>Số lượng:</strong> {{ OrderdetailById.quantity }}</p>
@@ -322,6 +326,26 @@
   </div>
 </div>
 
+
+<div class="modal fade" id="myModal" tabindex="-1" aria-labelledby="myModalLabel" aria-hidden="true"
+  data-backdrop="static" data-keyboard="false">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2 class="modal-title" id="myModal">Cập nhật trạng thái đơn hàng</h2>
+        <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close" (click)="closeModal()"></button>
+      </div>
+      <div class="modal-body">
+        Bạn có chắc chắn muốn cập nhật trạng thái đơn hàng này?
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal" (click)="closeModal()">Đóng</button>
+        <button type="button" class="btn btn-primary" (click)="changeStatus(selectedModalJob,selectedModalId)">Chắc
+          chắn</button>
+      </div>
+    </div>
+  </div>
+</div>
 <div *ngIf="isLoadding" class="loading-overlay">
   <div class="spinner"></div>
 </div>

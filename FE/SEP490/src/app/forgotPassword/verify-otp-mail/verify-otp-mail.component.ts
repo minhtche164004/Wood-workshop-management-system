@@ -55,7 +55,8 @@ export class VerifyOtpMailComponent implements OnInit {
           if (response.includes('OTP verified')) {
             console.log('OTP verified successfully');
             this.toastr.success('Xác nhận mã OTP thành công! Bạn có thể thay đổi mật khẩu', 'Thành công');
-            this.router.navigate(['/change_pass', { email: this.email }]);
+            this.router.navigate(['/forgot_pass',  this.email]);
+
           } else {
             console.error('Unexpected response from server');
             this.errorMessage = 'Unexpected response from server.';

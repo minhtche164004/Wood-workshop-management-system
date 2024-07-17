@@ -460,9 +460,9 @@ public class ProductServiceImpl implements ProductService {
     }
 
     private void validateProductDTO1(ProductAddDTO productAddDTO) {
-        if (!checkConditionService.checkInputName(productAddDTO.getProduct_name())) {
-            throw new AppException(ErrorCode.INVALID_FORMAT_NAME);
-        }
+//        if (!checkConditionService.checkInputName(productAddDTO.getProduct_name())) {
+//            throw new AppException(ErrorCode.INVALID_FORMAT_NAME);
+//        }
 //        if (!checkConditionService.checkInputQuantityInt(productDTO1.getQuantity())) {
 //            throw new AppException(ErrorCode.QUANTITY_INVALID);
 //        }
@@ -472,9 +472,9 @@ public class ProductServiceImpl implements ProductService {
     }
 
     private void validateProductEditDTO(ProductEditDTO productEditDTO) {
-        if (!checkConditionService.checkInputName(productEditDTO.getProduct_name())) {
-            throw new AppException(ErrorCode.INVALID_FORMAT_NAME);
-        }
+//        if (!checkConditionService.checkInputName(productEditDTO.getProduct_name())) {
+//            throw new AppException(ErrorCode.INVALID_FORMAT_NAME);
+//        }
 //        if (!checkConditionService.checkInputQuantityInt(productDTO1.getQuantity())) {
 //            throw new AppException(ErrorCode.QUANTITY_INVALID);
 //        }

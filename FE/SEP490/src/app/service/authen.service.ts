@@ -48,7 +48,8 @@ export class AuthenListService {
   private apiUrl_changeStatusOrderRequest = `${environment.apiUrl}api/auth/order/Cancel_Order`;
   private apiUrl_getAllStatusOrderRequest = `${environment.apiUrl}api/auth/admin/GetAllStatusRequest`;
   private apiUrl_cancelOrder = `${environment.apiUrl}api/auth/order/Cancel_Order`;
- 
+  private apiUrl_getFilterRole = `${environment.apiUrl}api/auth/admin/FilterByPosition`;
+
   private apiUrl_NameATM = 'https://api.vietqr.io/v2/banks';
   constructor(private http: HttpClient) { }
   isLoggedIn(): boolean {
@@ -487,6 +488,28 @@ export class AuthenListService {
       .join('&');
 
     const url = `${this.apiUrl_getFilterStatus}?${queryString}`;
+    console.log(url);
+    return this.http.get<any>(url).pipe(
+      catchError(this.handleError)
+    );
+  }
+  getFilterRole(query : number): Observable<any> {
+    const params = {
+     
+      query : query,
+ 
+    };
+
+    const queryString = Object.entries(params)
+      .filter(([key, value]) => {
+
+        if (key === 'query' && value === 0) return false;
+        return value != null;
+      })
+      .map(([key, value]) => `${encodeURIComponent(key)}=${encodeURIComponent(value)}`)
+      .join('&');
+
+    const url = `${this.apiUrl_getFilterRole}?${queryString}`;
     console.log(url);
     return this.http.get<any>(url).pipe(
       catchError(this.handleError)

@@ -250,16 +250,12 @@ export class RegisterComponent implements OnInit {
   }
   onLogin(): void {
     this.isLoading = true;
-    console.log('Bắt đầu quá trình đăng nhập');
-    console.log('Tên đăng nhập:', this.loginObj.username);
-    console.log('Mật khẩu:', this.loginObj.password);
-
     this.http.post(`${environment.apiUrl}api/auth/login`, this.loginObj).subscribe(
       (response: any) => {
         console.log('Truy cập API đăng nhập thành công');
         if (response.code === 1000) {
           console.log('Đăng nhập thành công:', response.code);
-          this.toastr.success('Đăng nhập thành công!', 'Thành công');
+         
           const token = response.result.token;
           console.log('Access Token:', token);
           localStorage.setItem('loginToken', token);
@@ -270,12 +266,16 @@ export class RegisterComponent implements OnInit {
           const authorities = userData.authorities.map((authority: { authority: any }) => authority.authority);
           if (authorities.includes('CUSTOMER')) {
             this.router.navigateByUrl('/homepage');
+            this.toastr.success('Đăng nhập thành công!', 'Thành công');
           } else if (authorities.includes('MANAGER')) {
             this.router.navigateByUrl('/static-report');
+            this.toastr.success('Đăng nhập thành công!', 'Thành công');
           } else if (authorities.includes('ADMIN')) {
             this.router.navigateByUrl('/admin_manager_user');
+            this.toastr.success('Đăng nhập thành công!', 'Thành công');
           } else if (authorities.includes('EMPLOYEE')) {
             this.router.navigateByUrl('/employee');
+            this.toastr.success('Đăng nhập thành công!', 'Thành công');
           } else {
             console.error('Vai trò người dùng không hợp lệ:', authorities);
             this.toastr.error('Vai trò người dùng không hợp lệ', 'Lỗi cố khi thực hiện đăng nhập');

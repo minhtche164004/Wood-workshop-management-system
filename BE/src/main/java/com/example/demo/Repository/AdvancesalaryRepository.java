@@ -75,22 +75,22 @@ public interface AdvancesalaryRepository extends JpaRepository<Advancesalary,Int
     //đếm số lượng job theo tháng và năm
     @Query("SELECT COUNT(*) FROM Jobs j " +
             "JOIN j.status s " +
-            "WHERE s.status_name = :status_name " +
+            "WHERE s.status_id = :status_id " +
             "AND MONTH(j.timeFinish) = :month " +
             "AND YEAR(j.timeFinish) = :year")
     Long countCompletedJobsByMonthAndYear(
-            @Param("status_name") String status_name,
+            @Param("status_id") int status_id,
             @Param("month") int month,
             @Param("year") int year);
 
     //đếm số lượng sản phẩm có trong job theo tháng và năm
     @Query("SELECT SUM(j.quantityProduct) FROM Jobs j " +
             "JOIN j.status s " +
-            "WHERE s.status_name = :status_name AND j.product IS NOT NULL AND j.job_log = TRUE " +
+            "WHERE s.status_id = :status_id AND j.product IS NOT NULL AND j.job_log = TRUE " +
             "AND MONTH(j.timeFinish) = :month " +
             "AND YEAR(j.timeFinish) = :year")
     Integer countCompletedJobsForProductByMonthAndYear(
-            @Param("status_name") String status_name,
+            @Param("status_id") int status_id,
             @Param("month") int month,
             @Param("year") int year);
 
@@ -98,11 +98,11 @@ public interface AdvancesalaryRepository extends JpaRepository<Advancesalary,Int
     //đếm số lượng sản phẩm có trong  job theo tháng và năm
     @Query("SELECT SUM(j.quantityProduct) FROM Jobs j " +
             "JOIN j.status s " +
-            "WHERE s.status_name = :status_name AND j.requestProducts IS NOT NULL AND j.job_log = TRUE " +
+            "WHERE s.status_id = :status_id AND j.requestProducts IS NOT NULL AND j.job_log = TRUE " +
             "AND MONTH(j.timeFinish) = :month " +
             "AND YEAR(j.timeFinish) = :year")
     Integer countCompletedJobsForRequestProductByMonthAndYear(
-            @Param("status_name") String status_name,
+            @Param("status_id") int status_id,
             @Param("month") int month,
             @Param("year") int year);
 

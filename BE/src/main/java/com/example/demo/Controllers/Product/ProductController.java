@@ -55,8 +55,8 @@ public class ProductController {
     @Autowired
     private Status_Product_Repository statusProductRepository;
     private static final JedisPooled jedis = RedisConfig.getRedisInstance();
-    @Autowired
-    private Gson gson;
+//    @Autowired
+//    private Gson gson;
 
     //    @PreAuthorize("hasAnyAuthority('ADMIN')")
     @GetMapping("/getAllProductForCustomer")
@@ -491,7 +491,8 @@ public class ProductController {
             @RequestParam(required = false) String sortDirection
     ) {
         ApiResponse<List> apiResponse = new ApiResponse<>();
-
+//        Set<String> keys = jedis.keys("filtered_products:*");
+//        jedis.del(keys.toArray(new String[0]));
         // Tạo key cache dựa trên tham số đầu vào (xử lý null)
         String cacheKey = String.format(
                 "filtered_products:%s:%s:%s:%s:%s",
@@ -501,9 +502,11 @@ public class ProductController {
                 maxPrice != null ? maxPrice : 0,
                 sortDirection != null ? sortDirection : ""
         );
+        Gson gson = new GsonBuilder().setDateFormat("MMM dd, yyyy").create();
             String cachedData = jedis.get(cacheKey);
             if (cachedData != null) {
                 Type type = new TypeToken<List<RequestProductDTO_Show>>() {}.getType(); // Thay Product bằng kiểu dữ liệu sản phẩm của bạn
+
                 List<RequestProductDTO_Show> products = gson.fromJson(cachedData, type);
                 apiResponse.setResult(products);
             } else {
@@ -513,7 +516,7 @@ public class ProductController {
                 apiResponse.setResult(products);
 
                 // Lưu vào cache Redis (xử lý null)
-                Gson gson = new GsonBuilder().serializeNulls().create();
+            //    Gson gson = new GsonBuilder().setDateFormat("MMM dd, yyyy").serializeNulls().create();
                 String jsonData = gson.toJson(products);
                 jedis.set(cacheKey, jsonData);
                 jedis.expire(cacheKey, 1800); // Thời gian sống của cache là 30 phút (1800 giây)

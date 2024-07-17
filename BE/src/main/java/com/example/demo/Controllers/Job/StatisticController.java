@@ -27,21 +27,21 @@ public class StatisticController {
         return apiResponse;
     }
     @GetMapping("/countCompletedJobsByMonthAndYear")
-    public ApiResponse<?> countCompletedJobsByMonthAndYear(@RequestParam("status_name") String status_name,@RequestParam("month") int month,@RequestParam("year") int year) {
+    public ApiResponse<?> countCompletedJobsByMonthAndYear(@RequestParam("status_id") int status_id,@RequestParam("month") int month,@RequestParam("year") int year) {
         ApiResponse<Long> apiResponse = new ApiResponse<>();
-        apiResponse.setResult(statisticService.countCompletedJobsByMonthAndYear(status_name,month, year));
+        apiResponse.setResult(statisticService.countCompletedJobsByMonthAndYear(status_id,month, year));
         return apiResponse;
     }
     @GetMapping("/countCompletedJobsForProductByMonthAndYear")
-    public ApiResponse<?> countCompletedJobsForProductByMonthAndYear(@RequestParam("status_name") String status_name,@RequestParam("month") int month,@RequestParam("year") int year) {
+    public ApiResponse<?> countCompletedJobsForProductByMonthAndYear(@RequestParam("status_id") int status_id,@RequestParam("month") int month,@RequestParam("year") int year) {
         ApiResponse<Integer> apiResponse = new ApiResponse<>();
-        apiResponse.setResult(statisticService.countCompletedJobsForProductByMonthAndYear(status_name,month, year));
+        apiResponse.setResult(statisticService.countCompletedJobsForProductByMonthAndYear(status_id,month, year));
         return apiResponse;
     }
     @GetMapping("/countCompletedJobsForRequestProductByMonthAndYear")
-    public ApiResponse<?> countCompletedJobsForRequestProductByMonthAndYear(@RequestParam("status_name") String status_name,@RequestParam("month") int month,@RequestParam("year") int year) {
+    public ApiResponse<?> countCompletedJobsForRequestProductByMonthAndYear(@RequestParam("status_id") int status_id,@RequestParam("month") int month,@RequestParam("year") int year) {
         ApiResponse<Integer> apiResponse = new ApiResponse<>();
-        apiResponse.setResult(statisticService.countCompletedJobsForRequestProductByMonthAndYear(status_name,month, year));
+        apiResponse.setResult(statisticService.countCompletedJobsForRequestProductByMonthAndYear(status_id,month, year));
         return apiResponse;
     }
     @GetMapping("/countProduct")

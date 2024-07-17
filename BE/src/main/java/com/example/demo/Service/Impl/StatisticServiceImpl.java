@@ -26,16 +26,16 @@ public class StatisticServiceImpl implements StatisticService {
     }
 
     @Override
-    public Long countCompletedJobsByMonthAndYear(String status_name, int month, int year) {
-        return advancesalaryRepository.countCompletedJobsByMonthAndYear(status_name,month,year);
+    public Long countCompletedJobsByMonthAndYear(int status_id, int month, int year) {
+        return advancesalaryRepository.countCompletedJobsByMonthAndYear(status_id,month,year);
     }
     @Override
-    public Integer countCompletedJobsForProductByMonthAndYear(String status_name, int month, int year) {
-        return advancesalaryRepository.countCompletedJobsForProductByMonthAndYear(status_name,month,year);
+    public Integer countCompletedJobsForProductByMonthAndYear(int status_id, int month, int year) {
+        return advancesalaryRepository.countCompletedJobsForProductByMonthAndYear(status_id,month,year);
     }
     @Override
-    public Integer countCompletedJobsForRequestProductByMonthAndYear(String status_name, int month, int year) {
-        return advancesalaryRepository.countCompletedJobsForRequestProductByMonthAndYear(status_name,month,year);
+    public Integer countCompletedJobsForRequestProductByMonthAndYear(int status_id, int month, int year) {
+        return advancesalaryRepository.countCompletedJobsForRequestProductByMonthAndYear(status_id,month,year);
     }
 
     @Override

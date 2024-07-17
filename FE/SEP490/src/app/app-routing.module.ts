@@ -82,11 +82,16 @@ const routes: Routes = [
   { path: 'payment-salary', component: PaymentSalaryComponent },
   { path: 'verifyOtp/:email', component: VerifyOtpMailComponent },  // Route with email as a parameter
   { path: 'forgot_pass/:email', component: ForgotPassComponent },
+
+
+  { path: 'product', component: ProductComponent , }, 
+
   { path: 'employee-submaterial-management', component: EmployeeSubmaterialManagementComponent },
-  { path: 'product', component: ProductComponent , canActivate: [AuthGuard], data: { roles: ['MANAGER'] }}, 
+
+
   { path: 'productsList', component: ProductListComponent , canActivate: [AuthGuard], data: { roles: ['MANAGER'] }}, 
   { path: 'product_management', component: ProductManagementComponent, canActivate: [AuthGuard], data: { roles: ['MANAGER'] } },
-  { path: 'order_rq', component: OrderRequiredComponent , canActivate: [AuthGuard], data: { roles: ['CUSTOMER'] }}, 
+  { path: 'order_rq', component: OrderRequiredComponent ,}, 
   { path: 'supplier_management', component: SupplierManagementComponent , canActivate: [AuthGuard], data: { roles: ['MANAGER'] }}, 
   { path: 'profile', component: ViewProfileComponent },
   { path: 'submtr_management', component: SubMaterialManagementComponent , canActivate: [AuthGuard], data: { roles: ['MANAGER'] }}, 
@@ -135,9 +140,8 @@ const routes: Routes = [
   
   // { path: '', redirectTo: '/homepage', pathMatch: 'full' },
   { path: 'report-cost', component: ReportCostManagementComponent },
-  // { path: '', redirectTo: '/homepage', pathMatch: 'full' },
-
-  // { path: '**', redirectTo: '/homepage', pathMatch: 'full' },
+  { path: '', redirectTo: '/homepage', pathMatch: 'full' },
+  { path: '**', redirectTo: '/homepage', pathMatch: 'full' },
 
 ];
 

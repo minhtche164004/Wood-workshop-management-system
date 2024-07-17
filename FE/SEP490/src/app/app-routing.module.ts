@@ -83,7 +83,7 @@ const routes: Routes = [
   { path: 'payment-salary', component: PaymentSalaryComponent },
   { path: 'verifyOtp/:email', component: VerifyOtpMailComponent },  // Route with email as a parameter
   { path: 'forgot_pass/:email', component: ForgotPassComponent },
-
+  { path: 'employee-submaterial-management', component: EmployeeSubmaterialManagementComponent },
   { path: 'product', component: ProductComponent , canActivate: [AuthGuard], data: { roles: ['MANAGER'] }}, 
   { path: 'productsList', component: ProductListComponent , canActivate: [AuthGuard], data: { roles: ['MANAGER'] }}, 
   { path: 'product_management', component: ProductManagementComponent, canActivate: [AuthGuard], data: { roles: ['MANAGER'] } },

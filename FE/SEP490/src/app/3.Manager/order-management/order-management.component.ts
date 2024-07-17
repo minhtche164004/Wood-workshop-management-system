@@ -46,7 +46,7 @@ export class OrderManagementComponent implements OnInit {
       (data: any) => {
         if (data.code === 1000) {
           this.userStatus = data.result;
-          console.log('Danh sách status don hang', this.userStatus);
+       //   console.log('Danh sách status don hang', this.userStatus);
         } else {
           console.error('Dữ liệu trả về không hợp lệ:', data);
         }
@@ -67,7 +67,9 @@ export class OrderManagementComponent implements OnInit {
           if (data.code === 1000) {
             this.user = data.result;
             this.isLoadding = false;
-            // console.log('Danh sách người dùng:', this.user);
+
+      //      console.log('Danh sách order:', this.user);
+
 
           } else {
             console.error('Failed to fetch products:', data);
@@ -92,7 +94,7 @@ export class OrderManagementComponent implements OnInit {
       (data: any) => {
         if (data.code === 1000) {
           this.position = data.result;
-          console.log('Danh sách Loại:', this.position);
+        //  console.log('Danh sách Loại:', this.position);
         } else {
           console.error('Dữ liệu trả về không hợp lệ:', data);
         }
@@ -107,7 +109,7 @@ export class OrderManagementComponent implements OnInit {
         (data: any) => {
           if (data.code === 1000) {
             this.status_order = data.result;
-            console.log('Danh sách trạng thái:', this.status_order);
+        //    console.log('Danh sách trạng thái:', this.status_order);
           } else {
             console.error('Dữ liệu trả về không hợp lệ:', data);
           }
@@ -126,7 +128,7 @@ export class OrderManagementComponent implements OnInit {
         this.OrderdetailById = data.result;
         this.isLoadding = false;
 
-        console.log('OrderdetailById:', this.OrderdetailById);
+      //  console.log('OrderdetailById:', this.OrderdetailById);
       },
       (error) => {
         console.error('Error fetching user data:', error);
@@ -136,7 +138,11 @@ export class OrderManagementComponent implements OnInit {
     );
 
   }
-
+  selectedOrder: any = {};
+  getOrderDetail(order: any){
+    this.selectedOrder = order;
+    console.log('Order:', this.selectedOrder);
+  }
   onStatusChange(orderId: string, event: Event): void {
     const statusId = (event.target as HTMLSelectElement).value;
     this.changeStatus(orderId, statusId);

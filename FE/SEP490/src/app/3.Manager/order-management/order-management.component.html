@@ -52,7 +52,6 @@
               <th>Thao tác</th>
               <th>Ngày đặt hàng</th>
               <th>Tình trạng</th>
-
               <th style="min-width: 100px;">Kiểu thanh toán</th>
               <th style="min-width: 100px;">Số tiền đặt cọc</th>
               <th style="min-width: 100px;">Số tiền còn cần thanh toán</th>
@@ -69,7 +68,7 @@
                   <i class="fa-solid fa-pen-to-square"></i>
                 </a> -->
                 <a href="#" class="info" title="Info" data-toggle="modal" data-target="#productDetailModal"
-                  (click)="getOrDetailById(us?.orderId)">
+                  (click)="getOrderDetail(us)">
                   <i class="fa-solid fa-circle-info"></i>
                 </a>
 
@@ -273,7 +272,7 @@
   <div class="modal-dialog modal-lg" role="document">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="productDetailModalLabel">Xem đơn hàng chi tiết</h5>
+        <h5 class="modal-title" id="productDetailModalLabel">Xem chi tiết đơn hàng</h5>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
@@ -284,7 +283,7 @@
 
           </div>
           <div class="col-md-10">
-            <h4 class="text-primary mb-4">Tên Sản Phẩm: {{ OrderdetailById.product_name }}</h4>
+            <h4 class="mb-4">Tên Sản Phẩm: {{ OrderdetailById.product_name }}</h4>
             <p class="mb-2"><strong>Mã đơn chi tiết:</strong> {{ OrderdetailById.order_detail_id }}</p>
             <p class="mb-2"><strong>Sản phẩm yêu cầu:</strong> {{ OrderdetailById.request_product_name }}</p>
             <p class="mb-2"><strong>Số lượng:</strong> {{ OrderdetailById.quantity }}</p>

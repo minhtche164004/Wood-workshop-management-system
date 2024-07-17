@@ -231,17 +231,19 @@ public class    OrderServiceImpl implements OrderService {
             return ResponseEntity.ok("Huỷ đơn hàng thành công");
 
         }
-        if(special_order_id == true){//là hàng ko có sẵn
+        if(special_order_id == true){//là hàng ko có sẵn (nếu jb đang làm dở thì cho làm cho xong , còn nếu job chưa giao việc thì xoá nó đi )
             List<Orderdetails> list = orderDetailRepository.getOrderDetailByOrderId(order_id);
             for(Orderdetails orderdetails : list){
-                int request_product_id =  orderdetails.getRequestProduct().getRequestProductId();
-                RequestProducts requestProducts = requestProductRepository.findById(request_product_id);
+//                int request_product_id =  orderdetails.getRequestProduct().getRequestProductId();
+//                RequestProducts requestProducts = requestProductRepository.findById(request_product_id);
                 List<Jobs> jobsList = jobRepository.getJobByOrderDetailByOrderCode(orders.getCode());
 
                 for(Jobs jobs : jobsList){
                     if(jobs.isJob_log() == false && jobs.getUser() == null){
                         List<Processproducterror> processproducterrorList=processproducterrorRepository.getProcessproducterrorByJobId(jobs.getJobId());
-                        processproducterrorRepository.deleteAll(processproducterrorList);
+                        for(Processproducterror processproducterror : processproducterrorList){
+                            processproducterrorRepository.delete(processproducterror);
+                        }
                         jobRepository.delete(jobs);
                         return ResponseEntity.ok("Huỷ đơn hàng thành công");
                     }
@@ -249,8 +251,8 @@ public class    OrderServiceImpl implements OrderService {
                         return ResponseEntity.badRequest().body("Hãy hoàn thành công việc của "+jobs.getUser().getPosition().getPosition_name()+" có tên là "+jobs.getUser().getUsername()+" trước khi huỷ đơn hàng");
                     }
                 }
-                requestProducts.setQuantity(requestProducts.getQuantity()+orderdetails.getRequestProduct().getQuantity());
-                requestProductRepository.save(requestProducts);
+//                requestProducts.setQuantity(requestProducts.getQuantity()+orderdetails.getRequestProduct().getQuantity());
+//                requestProductRepository.save(requestProducts);
             }
             orders.setStatus(statusOrderRepository.findById(6));//set cho nó là đơn hàng bị huỷ
             orderRepository.save(orders);
@@ -588,11 +590,17 @@ public class    OrderServiceImpl implements OrderService {
 
     @Transactional
     @Override
-    public void ChangeStatusOrder(int orderId, int status_id) {
+    public String ChangeStatusOrder(int orderId, int status_id) {
         //send mail cho những đơn hàng đặt theo yêu cầu , vì đơn hàng mau có sẵn thì mua luôn rồi, trả tiền luôn r cần đéo gì nữa mà phải theo dõi tình trạng đơn hàng
         orderRepository.UpdateStatusOrder(orderId,status_id);
         Status_Order statusOrder =statusOrderRepository.findById(status_id);
         Orders orders = orderRepository.findById(orderId);
+        List<Jobs> list_jobs = jobRepository.getJobByOrderDetailByOrderCode(orders.getCode());
+        for(Jobs job : list_jobs){
+            if(job.getStatus().getStatus_id() != 13) { //tức là công việc đã hoàn thành
+                return "Đơn hàng chưa hoàn thành công việc !";
+            }
+        }
         if(orders.getSpecialOrder() == true){
             String email=orderDetailRepository.getOrderDetailsByOrderIdForSendMail(orderId);
             String code = orders.getCode();
@@ -610,6 +618,7 @@ public class    OrderServiceImpl implements OrderService {
                     .build();
             emailService.sendSimpleMessage(mailBody);
         }
+        return "Thay đổi trạng thái đơn hàng thành công";
     }
 
 

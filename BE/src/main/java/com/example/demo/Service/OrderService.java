@@ -68,7 +68,7 @@ public interface OrderService {
 
     void deleteRequestById(int requestId);
 
-    void ChangeStatusOrder(int orderId, int status_id);
+ String ChangeStatusOrder(int orderId, int status_id);
 
 
     List<RequestProductDTO_Show> filterRequestProductsForAdmin(String search,Integer statusId, BigDecimal minPrice, BigDecimal maxPrice, String sortDirection);

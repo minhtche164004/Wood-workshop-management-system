@@ -29,6 +29,14 @@ public class StatisticServiceImpl implements StatisticService {
     public Long countCompletedJobsByMonthAndYear(String status_name, int month, int year) {
         return advancesalaryRepository.countCompletedJobsByMonthAndYear(status_name,month,year);
     }
+    @Override
+    public Integer countCompletedJobsForProductByMonthAndYear(String status_name, int month, int year) {
+        return advancesalaryRepository.countCompletedJobsForProductByMonthAndYear(status_name,month,year);
+    }
+    @Override
+    public Integer countCompletedJobsForRequestProductByMonthAndYear(String status_name, int month, int year) {
+        return advancesalaryRepository.countCompletedJobsForRequestProductByMonthAndYear(status_name,month,year);
+    }
 
     @Override
     public Long countProduct() {
@@ -45,8 +53,12 @@ public class StatisticServiceImpl implements StatisticService {
     }
 
     @Override
-    public Long countTotalOrder() {
-        return advancesalaryRepository.countTotalOrder();
+    public Long countTotalOrderByMonthAndYear(int month, int year) {
+        return advancesalaryRepository.countTotalOrderByMonthAndYear( month,  year);
+    }
+    @Override
+    public Long countCompletedOrderByMonthAndYear(int month, int year) {
+        return advancesalaryRepository.countCompletedOrderByMonthAndYear( month,  year);
     }
 
     @Override

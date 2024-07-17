@@ -40,10 +40,10 @@
     padding-left: 2%;
     padding-bottom: 2%;
   }
-  .disabled {
+  .disabled.select {
     opacity: 0.5;
     pointer-events: none;
-    background-color: #e9ecef;
+    background-color: red;
     color: inherit; 
   }
   .btn-mau-do {
@@ -118,4 +118,7 @@
 
   .form-group label{
   font-size: 19px;
+}
+.form-control{
+  font-size: 13px;
 }

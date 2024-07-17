@@ -1,7 +1,7 @@
 // Component Code
 import { Component, OnInit } from '@angular/core';
 import { ProvincesService } from 'src/app/service/provinces.service';
-import { FormArray, FormBuilder, FormControl, FormGroup } from '@angular/forms';
+import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
 import { ProductListService } from '../../service/product/product-list.service';
 import { AuthenListService } from '../../service/authen.service';
@@ -50,6 +50,7 @@ export class OrderRequiredComponent implements OnInit {
   selectedImages: File[] = [];
 
   isDisabled: boolean = false;
+ 
   constructor(
     private toastr: ToastrService,
     private productListService: ProductListService,
@@ -57,6 +58,10 @@ export class OrderRequiredComponent implements OnInit {
     private provincesService: ProvincesService,
     private authenListService: AuthenListService,
   ) {
+    this.provinceControl = new FormControl('', Validators.required);
+    this.districtControl = new FormControl('', Validators.required);
+    this.wardControl = new FormControl('', Validators.required);
+
     this.uploadForm = this.fb.group({
       status_id: [0],
       response: [''],
@@ -64,15 +69,25 @@ export class OrderRequiredComponent implements OnInit {
       phoneNumber: [''],
       fullname: [''],
       address: [''],
-      city_province: [''],
-      district_province: [''],
-      wards_province: [''],
+      city_province:  [''],
+      district_province:  [''],
+      wards_province:  [''],
       files: this.fb.array([]),
       email: ['']
     });
+    
   }
   ngOnInit() {
     this.loadData();
+    this.updateControls1();
+  
+    
+  }
+  updateControls1() {
+    // Disable/enable the form controls based on your logic
+    this.provinceControl.disable();
+    this.districtControl.disable();
+    this.wardControl.disable();
   }
   onResetImage() {
     this.selectedImages = [];
@@ -164,7 +179,7 @@ export class OrderRequiredComponent implements OnInit {
     this.isLoadding = true;
     if (this.uploadForm.valid && this.selectedImages.length) {
       const productData = this.uploadForm.value;
-      console.log('Form Data:', productData);
+      console.log('Form Data order:', productData);
   
       console.log('Selected Images:', this.selectedImages);
   
@@ -173,9 +188,9 @@ export class OrderRequiredComponent implements OnInit {
           response => {
             this.isLoadding = false;
             this.toastr.success('Đặt hàng thành công!', 'Thành công');
-            timer(1000).subscribe(() => {
-              window.location.reload();
-            });
+            // timer(1000).subscribe(() => {
+            //   window.location.reload();
+            // });
           },
           error => {
             this.isLoadding = false;

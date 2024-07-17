@@ -31,7 +31,7 @@
 
                 <!-- product.component.html -->
                 <select [(ngModel)]="selectedCategory" (change)="filterStatus()">
-                  <option value="null" disabled selected>Tất cả đơn hàng</option>
+                  <option value="null" selected>Tất cả đơn hàng</option>
                   <option *ngFor="let ps of userStatus" [value]="ps.status_id">{{ ps.status_name }}</option>
                 </select>
 
@@ -81,7 +81,7 @@
               || us?.status.status_id === 3"  -->
               <td style="min-width: 200px;" *ngIf="us?.totalAmount === null">
                 <div class="select-wrapper">
-                  <select  id="mySelect{{i}}" [disabled]=" us?.status.status_id !== 4
+                  <select id="mySelect{{i}}" [disabled]=" us?.status.status_id !== 4
                   && us?.status.status_id !== 7
                   " class="custom-select" (change)="openModal(us.orderId, $event,i)">
                     <option *ngFor="let status of status_order" [value]="status.status_id"
@@ -328,25 +328,23 @@
 
 
 <div class="modal fade" id="myModal" tabindex="-1" aria-labelledby="myModalLabel" aria-hidden="true"
-    data-backdrop="static" data-keyboard="false">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h2 class="modal-title" id="myModal">Cập nhật trạng thái đơn hàng</h2>
-                <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close"
-                    (click)="closeModal()"></button>
-            </div>
-            <div class="modal-body"> 
-                Bạn có chắc chắn muốn cập nhật trạng thái đơn hàng này?
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary"  data-dismiss="modal"
-                    (click)="closeModal()">Đóng</button>
-                <button type="button" class="btn btn-primary" (click)="changeStatus(selectedModalJob,selectedModalId)">Chắc
-                    chắn</button>
-            </div>
-        </div>
+  data-backdrop="static" data-keyboard="false">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2 class="modal-title" id="myModal">Cập nhật trạng thái đơn hàng</h2>
+        <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close" (click)="closeModal()"></button>
+      </div>
+      <div class="modal-body">
+        Bạn có chắc chắn muốn cập nhật trạng thái đơn hàng này?
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal" (click)="closeModal()">Đóng</button>
+        <button type="button" class="btn btn-primary" (click)="changeStatus(selectedModalJob,selectedModalId)">Chắc
+          chắn</button>
+      </div>
     </div>
+  </div>
 </div>
 <div *ngIf="isLoadding" class="loading-overlay">
   <div class="spinner"></div>

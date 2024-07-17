@@ -47,12 +47,12 @@ export class OrderManagementComponent implements OnInit {
   selectedModalJob: string = '';
   selectedModalId: string = '';
   indexStatus: number = 0;
-  previousStatusId: string= '';
+  previousStatusId: string = '';
   cancelChangeStatusJob() {
-    this.selectedModalId = '';  
+    this.selectedModalId = '';
   }
 
-  openModal(orderId: number,event: Event, index: number): void {
+  openModal(orderId: number, event: Event, index: number): void {
 
     console.log('event:', event);
     const statusId = (event.target as HTMLSelectElement).value;
@@ -74,7 +74,7 @@ export class OrderManagementComponent implements OnInit {
       (data: any) => {
         if (data.code === 1000) {
           this.userStatus = data.result;
-       //   console.log('Danh sách status don hang', this.userStatus);
+          //   console.log('Danh sách status don hang', this.userStatus);
         } else {
           console.error('Dữ liệu trả về không hợp lệ:', data);
         }
@@ -96,7 +96,7 @@ export class OrderManagementComponent implements OnInit {
             this.user = data.result;
             this.isLoadding = false;
 
-      //      console.log('Danh sách order:', this.user);
+            //      console.log('Danh sách order:', this.user);
 
 
           } else {
@@ -122,7 +122,7 @@ export class OrderManagementComponent implements OnInit {
       (data: any) => {
         if (data.code === 1000) {
           this.position = data.result;
-        //  console.log('Danh sách Loại:', this.position);
+          //  console.log('Danh sách Loại:', this.position);
         } else {
           console.error('Dữ liệu trả về không hợp lệ:', data);
         }
@@ -132,22 +132,22 @@ export class OrderManagementComponent implements OnInit {
       }
     );
   }
-    loadStatus(): void {
-      this.authenListService.getAllStatusOrder().subscribe(
-        (data: any) => {
-          if (data.code === 1000) {
-            this.status_order = data.result;
-        //    console.log('Danh sách trạng thái:', this.status_order);
-          } else {
-            console.error('Dữ liệu trả về không hợp lệ:', data);
-          }
-        },
-        (error) => {
-          console.error('Lỗi khi lấy danh sách Loại:', error);
+  loadStatus(): void {
+    this.authenListService.getAllStatusOrder().subscribe(
+      (data: any) => {
+        if (data.code === 1000) {
+          this.status_order = data.result;
+          //    console.log('Danh sách trạng thái:', this.status_order);
+        } else {
+          console.error('Dữ liệu trả về không hợp lệ:', data);
         }
-      );
+      },
+      (error) => {
+        console.error('Lỗi khi lấy danh sách Loại:', error);
+      }
+    );
 
-    }
+  }
   getOrDetailById(order_detail_id: string): void {
     this.isLoadding = true;
 
@@ -156,7 +156,7 @@ export class OrderManagementComponent implements OnInit {
         this.OrderdetailById = data.result;
         this.isLoadding = false;
 
-      //  console.log('OrderdetailById:', this.OrderdetailById);
+        //  console.log('OrderdetailById:', this.OrderdetailById);
       },
       (error) => {
         console.error('Error fetching user data:', error);
@@ -167,7 +167,7 @@ export class OrderManagementComponent implements OnInit {
 
   }
   selectedOrder: any = {};
-  getOrderDetail(order: any){
+  getOrderDetail(order: any) {
     this.selectedOrder = order;
     console.log('Order:', this.selectedOrder);
   }
@@ -207,29 +207,36 @@ export class OrderManagementComponent implements OnInit {
         return { 'color': 'black' };
     }
   }
-
   filterStatus(): void {
     console.log(this.selectedCategory);
     this.isLoadding = true;
 
-    this.authenListService.getFilterStatus(this.selectedCategory)
-      .subscribe(
-        (data) => {
-          if (data.code === 1000) {
-            this.user = data.result;
-            console.log('Lọc đơn hàng thành công:', this.user);
-            this.isLoadding = false;
-            this.toastr.success('Lọc đơn hàng thành công!', 'Thành công');
 
+    const selectedStatusOption = this.userStatus.find(status => status.status_id === this.selectedCategory);
+    if (selectedStatusOption !== null) {
+      this.authenListService.getFilterStatus(this.selectedCategory)
+        .subscribe(
+          (data) => {
+            if (data.code === 1000) {
+              this.user = data.result;
+              this.isLoadding = false;
+              this.toastr.success('Lọc đơn hàng thành công!', 'Thành công');
+            } else if (data.code === 1015) {
+              this.user = [];
+              console.error('Lọc đơn hàng không thành công:', data);
+              this.isLoadding = false;
+              this.toastr.error('Không tìm thấy đơn hàng phù hợp!', 'Lọc thất bại');
+            }
+          },
+          
+        );
+    } else {
+      // The selected category doesn't exist in the userStatus array, so we'll fetch all user data
+      this.getAllUser();
+      this.isLoadding = false;
+      this.toastr.success('Lọc đơn hàng thành công!', 'Thành công');
+    }
 
-          } else if (data.code === 1015) {
-            this.user = [];
-            console.error('Lọc đơn hàng không thành công:', data);
-            this.isLoadding = false;
-            this.toastr.error('Không tìm thấy đơn hàng phù hợp!', 'Lọc thất bại');
-          }
-        }
-      );
   }
   setOrderForCancellation(orderId: number | null, specialOrder: boolean | null) {
     this.selectedOrderId = orderId;

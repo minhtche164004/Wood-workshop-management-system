@@ -8,7 +8,7 @@
         <div class="card-body">
           <div class="e-profile">
             <ul class="nav nav-tabs">
-              <li >
+              <li>
                 <h2 style="font-size: 30px;">Đặt hàng theo yêu cầu</h2>
               </li>
             </ul>
@@ -51,8 +51,7 @@
                                 <select class="form-control" formControlName="city_province"
                                   [(ngModel)]="userProfile.city" [formControl]="provinceControl" required>
                                   <option [ngValue]="null" disabled selected>Tỉnh / Thành Phố</option>
-                                  <option disabled *ngFor="let province of provinces" [ngValue]="province.name">{{
-                                    province.name
+                                  <option *ngFor="let province of provinces" [ngValue]="province.name">{{ province.name
                                     }}</option>
                                 </select>
                               </div>
@@ -61,9 +60,8 @@
                               <div class="form-group">
                                 <select class="form-control" formControlName="district_province"
                                   [(ngModel)]="userProfile.district" [formControl]="districtControl" required>
-                                  <option disabled selected [ngValue]="null">Chọn Quận/Huyện</option>
-                                  <option disabled *ngFor="let district of districts" [ngValue]="district.name">{{
-                                    district.name
+                                  <option disabled selected [ngValue]="null" >Chọn Quận/Huyện</option>
+                                  <option *ngFor="let district of districts" [ngValue]="district.name">{{ district.name
                                     }}</option>
                                 </select>
                               </div>
@@ -72,21 +70,24 @@
                               <div class="form-group">
                                 <select class="form-control" formControlName="wards_province"
                                   [(ngModel)]="userProfile.wards" [formControl]="wardControl" required>
-                                  <option disabled selected [ngValue]="null">Chọn Phường/Xã</option>
+                                  <option disabled selected [ngValue]="null" >Chọn Phường/Xã</option>
 
-                                  <option disabled *ngFor="let ward of wards" [ngValue]="ward.name">{{ ward.name }}
-                                  </option>
+                                  <option *ngFor="let ward of wards" [ngValue]="ward.name">{{ ward.name }}</option>
                                 </select>
                               </div>
                             </div>
                           </div>
                         </div>
+                      
+                     
+                     
+                        
                       </div>
                       <div class="row mb-3">
                         <div class="col">
                           <div class="form-group">
                             <label>Địa chỉ cụ thể</label>
-                            <input class="form-control" type="text" [(ngModel)]="userProfile.address"
+                            <input readonly class="form-control" type="text" [(ngModel)]="userProfile.address"
                               formControlName="address">
                           </div>
                         </div>
@@ -94,19 +95,18 @@
                       <div class="row mb-3">
                         <div class="col-md-6">
                           <label style="font-size: 16px;" for="thumbnailImage">Ảnh minh họa</label>
-                          <input type="file" class="form-control-file" id="thumbnailImage" multiple (change)="onImagesSelected($event)">
-                          <div *ngFor="let file of selectedFiles">
-                            {{ file.name }}
-                          </div>
+                          <input type="file" class="form-control" id="thumbnailImage" multiple
+                            (change)="onImagesSelected($event)">
+
                         </div>
-                        <div class="col-md-6 form-group col-md-2 d-flex align-items-end">
+                        <div class="col-md-6  d-flex align-items-end">
                           <a (click)="onResetImage()"
-                             style="height: calc(2.25rem + 2px); padding: 0.375rem 0.75rem; font-size: 1rem; line-height: 1.5; border-radius: 0.25rem; border: 1px solid #ced4da; background-color: #fff; color: #495057; cursor: pointer;">
+                            style="height: calc(2.25rem + 2px); padding: 0.375rem 0.75rem; font-size: 1rem; line-height: 1.5; border-radius: 0.25rem; border: 1px solid #ced4da; background-color: #fff; color: #495057; cursor: pointer;">
                             Làm mới
                           </a>
                         </div>
                       </div>
-                     
+
 
                       <div class="form-row">
                         <div class="form-group col-md-6" *ngIf="selectedImages">
@@ -120,7 +120,7 @@
                         <div class="col">
                           <div class="form-group">
                             <label>Mô tả đơn hàng</label>
-                            <textarea class="form-control" formControlName="description" rows="5"
+                            <textarea class="form-control"formControlName="description" rows="5"
                               placeholder=""></textarea>
                           </div>
                         </div>
@@ -130,7 +130,8 @@
                       <div class="row" style="margin-bottom: 10px;">
                         <div class="col d-flex justify-content-center">
                           <button class="btn btn-primary btn-lg mx-5 equal-size" type="submit">Gửi</button>
-                          <button class="btn btn-mau-do btn-lg mx-5 equal-size" (click)="onCancel()" type="button">Hủy Bỏ</button>
+                          <button class="btn btn-mau-do btn-lg mx-5 equal-size" (click)="onCancel()" type="button">Hủy
+                            Bỏ</button>
                         </div>
                       </div>
                     </div>

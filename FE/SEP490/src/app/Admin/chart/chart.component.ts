@@ -310,4 +310,6 @@ export class ChartComponent implements OnInit {
       console.error(err);
     });
   }
+
+  
 }

@@ -67,7 +67,7 @@ export class OrderManagementComponent implements OnInit {
           if (data.code === 1000) {
             this.user = data.result;
             this.isLoadding = false;
-            console.log('Danh sách người dùng:', this.user);
+            console.log('Danh sách order:', this.user);
 
           } else {
             console.error('Failed to fetch products:', data);

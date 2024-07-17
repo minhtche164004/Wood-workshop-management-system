@@ -598,11 +598,11 @@ public class    OrderServiceImpl implements OrderService {
         List<Jobs> list_jobs = jobRepository.getJobByOrderDetailByOrderCode(orders.getCode());
         for(Jobs job : list_jobs){
             if(job.getStatus().getStatus_id() != 13) { //tức là công việc đã hoàn thành
-                return "Đơn hàng chưa hoàn thành công việc !";
+                return "Đơn hàng chưa hoàn thành công việc, không thể sửa trạng thái đơn hàng !";
             }
         }
         if(orders.getSpecialOrder() == true){
-            String email=orderDetailRepository.getOrderDetailsByOrderIdForSendMail(orderId);
+            String email=orderDetailRepository.getMailOrderForSendMail(orderId);
             String code = orders.getCode();
             SimpleDateFormat dateFormatter = new SimpleDateFormat("dd/MM/yyyy");
             String time_finish = dateFormatter.format(orders.getOrderFinish());

@@ -51,6 +51,10 @@ public interface OrderDetailRepository extends JpaRepository<Orderdetails, Integ
             "WHERE od.order.orderId = :orderId")
     String getOrderDetailsByOrderIdForSendMail(@Param("orderId") int orderId);
 
+    @Query("SELECT od.userInfor.user.email FROM Orders od " +
+            "WHERE od.orderId = :orderId")
+    String getMailOrderForSendMail(@Param("orderId") int orderId);
+
 
 
 

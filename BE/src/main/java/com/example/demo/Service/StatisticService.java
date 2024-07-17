@@ -12,11 +12,16 @@ public interface StatisticService {
     Long countProduct();
     Long countRequestProduct();
     Long countSpecialOrder();
-    Long countTotalOrder();
+    Long countTotalOrderByMonthAndYear(int month, int year);
+    Long countCompletedOrderByMonthAndYear(int month, int year);
     Long countOrderHaveDone(int query);
     Long countEmployeeWithTypePosition(int query);
     BigDecimal totalAmountOrderHaveDone();
     BigDecimal totalAmountSubMaterial();
     BigDecimal findTotalSubMaterialByMonthAndYear(int year, int month);
+    Integer countCompletedJobsForProductByMonthAndYear(String status_name,int month, int year);
+    Integer countCompletedJobsForRequestProductByMonthAndYear(String status_name,int month, int year);
+
+
 
 }

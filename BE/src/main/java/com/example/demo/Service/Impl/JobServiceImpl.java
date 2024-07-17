@@ -249,7 +249,7 @@ public class JobServiceImpl implements JobService {
         jobs.setTimeFinish(jobDTO.getFinish());
         jobs.setTimeStart(jobDTO.getStart());
         jobRepository.save(jobs);
-        entityManager.refresh(jobs);
+//        entityManager.refresh(jobs);
         return jobs;
     }
 

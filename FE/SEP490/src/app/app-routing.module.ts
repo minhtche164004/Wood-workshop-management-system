@@ -97,7 +97,7 @@ const routes: Routes = [
   { path: 'supplier_management', component: SupplierManagementComponent , canActivate: [AuthGuard], data: { roles: ['MANAGER'] }}, 
   { path: 'profile', component: ViewProfileComponent },
   { path: 'submtr_management', component: SubMaterialManagementComponent , canActivate: [AuthGuard], data: { roles: ['MANAGER'] }}, 
-  { path: 'create_order', component: CreateOrderComponent , canActivate: [AuthGuard] }, 
+  { path: 'create_order', component: CreateOrderComponent }, 
   { path: 'upload', component: FileUploadComponent },
   { path: 'product_list', component: ProductListComponent },
   { path: 'order_detail_management', component: OrderDetailManagementComponent , canActivate: [AuthGuard], data: { roles: ['MANAGER'] }  },

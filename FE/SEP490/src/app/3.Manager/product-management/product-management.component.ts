@@ -123,6 +123,8 @@ export class ProductManagementComponent implements OnInit {
   imagesPreviewRequest: string[] = [];
 
 
+  //form danh` cho up list request product theo order
+  listRequestProductForm: FormGroup;
   constructor(
     private fb: FormBuilder,
     private productListService: ProductListService,
@@ -132,6 +134,12 @@ export class ProductManagementComponent implements OnInit {
     private router: Router,
     private location: Location
   ) {
+
+    this.listRequestProductForm = this.fb.group({
+      itemsRProduct: this.fb.array([])
+    });
+
+
     this.uploadForm = this.fb.group({
 
       request_id: [],// id cua product request
@@ -226,7 +234,8 @@ export class ProductManagementComponent implements OnInit {
     this.uploadForm.reset();
   }
 
-  //phan formGroup cua add productt
+  //phan formGroup cua add product
+  //phan` danh` cho material
   get items(): FormArray {
     return this.materialForm.get('items') as FormArray;
   }
@@ -246,6 +255,30 @@ export class ProductManagementComponent implements OnInit {
     items.removeAt(index);
     this.onRemoveMaterial(index);
   }
+  //
+  //phan` danh cho request product theo order
+  get itemsRProduct(): FormArray {
+    return this.listRequestProductForm.get('itemsRProduct') as FormArray;
+  }
+
+  addItemRProduct(): void {
+    this.itemsRProduct.push(this.fb.group({
+      request_id: [this.idOrder],
+      requestProductName: ['', Validators.required],
+      quantity: [0, Validators.required],
+      completionTime: ['', Validators.required],
+      description: ['', Validators.required],
+      price: [0, Validators.required],
+
+    }));
+  }
+
+  removeItemRProduct(index: number) {
+    const items = this.listRequestProductForm.get('itemsRProduct') as FormArray;
+    items.removeAt(index);
+    this.onRemoveMaterial(index);
+  }
+  //
   //phan formGroup cua edit productt
 
   populateFormWithData(productId: number) {
@@ -403,7 +436,7 @@ export class ProductManagementComponent implements OnInit {
 
 
     if (this.loginToken) {
-      this.isLoadding = true;
+      // this.isLoadding = true;
       // console.log('Retrieved loginToken:', this.loginToken);
       if (this.isProduct == true) {
         this.productListService.getProducts().subscribe(
@@ -423,22 +456,22 @@ export class ProductManagementComponent implements OnInit {
           }
         );
       } else {
-        this.productListService.getAllProductRequest().subscribe(
-          (data) => {
-            this.isLoadding = false;
-            if (data.code === 1000) {
-              this.products = data.result;
-              console.log('Danh sách sản phẩm theo yeu cau:', this.products);
-            } else {
-              console.error('Failed to fetch products:', data);
-              this.toastr.error('Không thể lấy danh sách sản phẩm!', 'Lỗi');
-            }
-          },
-          (error) => {
-            console.error('Error fetching products:', error);
-            this.toastr.error('Có lỗi xảy ra! Không thể lấy danh sách sản phẩm theo yêu cầu', 'Lỗi');
-          }
-        );
+        // this.productListService.getAllProductRequest().subscribe(
+        //   (data) => {
+        //     this.isLoadding = false;
+        //     if (data.code === 1000) {
+        //       this.products = data.result;
+        //       console.log('Danh sách sản phẩm theo yeu cau:', this.products);
+        //     } else {
+        //       console.error('Failed to fetch products:', data);
+        //       this.toastr.error('Không thể lấy danh sách sản phẩm!', 'Lỗi');
+        //     }
+        //   },
+        //   (error) => {
+        //     console.error('Error fetching products:', error);
+        //     this.toastr.error('Có lỗi xảy ra! Không thể lấy danh sách sản phẩm theo yêu cầu', 'Lỗi');
+        //   }
+        // );
       }
 
     } else {
@@ -1013,59 +1046,59 @@ export class ProductManagementComponent implements OnInit {
   }
 
   onSubmitProductRequest() {
-    console.log('Form Data for Product Request:', this.uploadForm.value);
-    if (this.uploadForm.valid && this.selectedImages.length) {
-      this.isLoadding = true;
-      const productRequestData = this.uploadForm.value;
+    console.log('Form Data for Product Request:', this.listRequestProductForm.value);
+    // if (this.uploadForm.valid && this.selectedImages.length) {
+    //   this.isLoadding = true;
+    //   const productRequestData = this.uploadForm.value;
 
-      if (productRequestData.price) {
-        productRequestData.price = Number(productRequestData.price.replace(/,/g, ''));
-      }
+    //   if (productRequestData.price) {
+    //     productRequestData.price = Number(productRequestData.price.replace(/,/g, ''));
+    //   }
 
-      productRequestData.request_id = this.idOrder;
-      console.log('data goc:', this.materialForm.value);
-      var temp = this.materialForm.value;
+    //   productRequestData.request_id = this.idOrder;
+    //   console.log('data goc:', this.materialForm.value);
+    //   var temp = this.materialForm.value;
 
-      // tach lay quantity va subMaterialId
-      var processedData = temp.items.map((item: MaterialItem) => (
-        [(item.subMaterialId as string), item.quantity]
-      ));
-      // convert thanh dang map
-      const transformedObject: { [key: string]: number } = {};
+    //   // tach lay quantity va subMaterialId
+    //   var processedData = temp.items.map((item: MaterialItem) => (
+    //     [(item.subMaterialId as string), item.quantity]
+    //   ));
+    //   // convert thanh dang map
+    //   const transformedObject: { [key: string]: number } = {};
 
-      for (const [subMaterialId, quantity] of processedData) {
-        transformedObject[subMaterialId] = quantity;
-      }
+    //   for (const [subMaterialId, quantity] of processedData) {
+    //     transformedObject[subMaterialId] = quantity;
+    //   }
 
-      this.productListService.addNewProductRequest(productRequestData, this.selectedImages)
-        .pipe(concatMap(response => {
+    //   this.productListService.addNewProductRequest(productRequestData, this.selectedImages)
+    //     .pipe(concatMap(response => {
 
-          console.log('response:', response);
-          const transformedData = {
-            productId: response.result.requestProductId,
-            subMaterialQuantities: transformedObject
-          };
-          console.log("transformedData:", transformedData);
-          return this.productListService.createExportMaterialProductRequest(transformedData);
-        }))
-        .subscribe(
-          response => {
-            this.location.replaceState('/product_management');
-            this.isProduct = false;
-            this.reloadProductRequest();
-            this.isLoadding = false;
-            this.toastr.success('Tạo sản phẩm theo yêu cầu thành công!', 'Thành công');
-            $('[data-dismiss="modal"]').click();      // tat modal  
-          },
-          error => {
-            this.isLoadding = false;
-            this.toastr.error('Tạo sản phẩm bị lỗi!', 'Lỗi');
+    //       console.log('response:', response);
+    //       const transformedData = {
+    //         productId: response.result.requestProductId,
+    //         subMaterialQuantities: transformedObject
+    //       };
+    //       console.log("transformedData:", transformedData);
+    //       return this.productListService.createExportMaterialProductRequest(transformedData);
+    //     }))
+    //     .subscribe(
+    //       response => {
+    //         this.location.replaceState('/product_management');
+    //         this.isProduct = false;
+    //         this.reloadProductRequest();
+    //         this.isLoadding = false;
+    //         this.toastr.success('Tạo sản phẩm theo yêu cầu thành công!', 'Thành công');
+    //         $('[data-dismiss="modal"]').click();      // tat modal  
+    //       },
+    //       error => {
+    //         this.isLoadding = false;
+    //         this.toastr.error('Tạo sản phẩm bị lỗi!', 'Lỗi');
 
-          }
-        );
+    //       }
+    //     );
 
 
-    }
+    // }
   }
 
   editProductRequest(productId: number) {

@@ -66,7 +66,7 @@
                   <i class="fa-solid fa-pen-to-square"></i>
                 </a> -->
                 <a href="#" class="info" title="Info" data-toggle="modal" data-target="#productDetailModal"
-                  (click)="getOrderDetail(us)">
+                  (click)="getOrDetailById(us?.orderId)">
                   <i class="fa-solid fa-circle-info"></i>
                 </a>
                 <a href="/product_management/{{ us?.orderId }}" class="info" title="Thêm sản phẩm">
@@ -151,7 +151,6 @@
 </div>
 
 
-
 <div class="modal fade" id="productDetailModal" tabindex="-1" role="dialog" aria-labelledby="productDetailModalLabel"
   aria-hidden="true">
   <div class="modal-dialog modal-lg" role="document">
@@ -162,9 +161,9 @@
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
-      <div class="modal-body">
+      <div class="modal-body" style="font-size: 16px;">
         <div class="row">
-          <div class="col-md-2">
+          <!-- <div class="col-md-2">
           </div>
           <div class="col-md-10">
             <h4 class="mb-4">Tên Sản Phẩm: {{ OrderdetailById.product_name }}</h4>
@@ -172,6 +171,31 @@
             <p class="mb-2"><strong>Sản phẩm yêu cầu:</strong> {{ OrderdetailById.request_product_name }}</p>
             <p class="mb-2"><strong>Số lượng:</strong> {{ OrderdetailById.quantity }}</p>
             <p class="mb-2"><strong>Giá:</strong> {{ OrderdetailById.price | number:'1.0-3' }} VNĐ </p>
+          </div> -->
+          <div class="col-md-9">
+            <div class="col-md-9">
+              Đơn hàng: {{OrderdetailById.orders?.code}} 
+              <br>
+              {{OrderdetailById.orders?.orderDate | date:'dd/MM/yyyy'}}
+            </div>
+            <div>
+              Tình trạng: {{OrderdetailById.orders?.status?.status_name}}
+            </div>
+            <div class="col-md-6">
+              <div class="card">
+                <div class="card-header">
+                  Khách hàng
+                </div>
+                <div class="card-body">
+                  <h5 class="card-title">{{ OrderdetailById.orders?.userInfor.fullname}}</h5>
+                  <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
+                  <a href="#" class="btn btn-primary">Go somewhere</a>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-3">
+             
           </div>
         </div>
       </div>
@@ -184,8 +208,7 @@
 
 
 
-<div class="modal fade" id="confirmDeleteModal" tabindex="-1" role="dialog" aria-labelledby="confirmDeleteModalLabel"
-  aria-hidden="true">
+<div class="modal fade" id="confirmDeleteModal" tabindex="-1" role="dialog" aria-labelledby="confirmDeleteModalLabel" aria-hidden="true">
   <div class="modal-dialog" role="document">
     <div class="modal-content">
       <div class="modal-header">
@@ -195,15 +218,19 @@
         </button>
       </div>
       <div class="modal-body">
-        Bạn có chắc muốn hủy đơn hàng này không ?
+        <div class="form-group">
+          <label for="cancelReason">Lý do từ chối đơn hàng:</label>
+          <textarea class="form-control" id="cancelReason" [(ngModel)]="cancelReason" rows="4" required></textarea>
+        </div>
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">Hủy </button>
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Hủy</button>
         <button type="button" class="btn btn-primary" (click)="confirmCancel()">Xác nhận</button>
       </div>
     </div>
   </div>
 </div>
+
 
 
 <div class="modal fade" id="myModal" tabindex="-1" aria-labelledby="myModalLabel" aria-hidden="true"

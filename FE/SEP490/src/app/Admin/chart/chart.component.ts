@@ -61,7 +61,13 @@ export class ChartComponent implements OnInit {
   ) { }
 
   chart: any = [];
-  positionLabels = ['Thợ Mộc', 'Thợ Nhám', 'Thợ Sơn'];
+  chart2: any = [];
+  chart3: any = [];
+  chart4: any = [];
+  chart5: any = [];
+  chart10: any = [];
+  emmpChart: any = [];
+  positionLabels = [];
   countEmp: number = 0;
   totalAmouneOrderHaveDone: number = 0;
   totalOrder: number = 0;
@@ -74,6 +80,8 @@ export class ChartComponent implements OnInit {
   percentEmpPos3: number = 0;
   percentEmpPos4: number = 0;
   isLoading: boolean = false;
+
+  totalRQProduct: number = 0;
   months = ['Tháng 1', 'Tháng 2', 'Tháng 3', 'Tháng 4', 'Tháng 5', 'Tháng 6', 'Tháng 7', 'Tháng 8', 'Tháng 9', 'Tháng 10', 'Tháng 11', 'Tháng 12'];
   data: any[] = []; // Array to store data for each month
   chartData: any;
@@ -81,6 +89,24 @@ export class ChartComponent implements OnInit {
     this.loadData();
   }
   getJobByMonthAndYear() {
+  }
+  getAllPostionEmp(): void {
+    this.employeeService.getAllPostionEmp().subscribe(
+      (data) => {
+        if (data.code === 1000) {
+          this.positionLabels = data.result.map((item: any) => item.position_name);
+          console.log('Danh sách chức vụ nhân viên: ', this.positionLabels);
+        } else {
+          console.error('Failed to fetch products:', data);
+          // Handle error as needed
+        }
+      },
+      (error) => {
+        console.error('Error fetching employee positions:', error);
+        // Handle error as needed
+      }
+    );
+    
   }
   loadData() {
     this.isLoading = true; // Hiển thị loading
@@ -90,7 +116,11 @@ export class ChartComponent implements OnInit {
         this.getTotalAmountSubMaterial(),
         this.getTotalSpecialOrder(),
         this.getTotalProduct(),
-        this.getAllEmployee()
+        this.getAllEmployee(),
+        this.getAllDataForYear(2024),
+        this.getAllPostionEmp(),
+      
+
       ]).then(() => {
         this.updateEmployeePositions().then(() => {
           this.initializeCharts();
@@ -111,27 +141,31 @@ export class ChartComponent implements OnInit {
   }
 
   initializeCharts() {
-    this.chart = new Chart('canvas2', {
+    if (this.emmpChart instanceof Chart) {
+      this.emmpChart.destroy();
+    }
+  
+    this.emmpChart = new Chart("canvas1", {
       type: 'pie',
       data: {
         labels: this.positionLabels,
         datasets: [
           {
             label: 'Nhân viên',
-            data: [this.totalEmpPos1, this.totalEmpPos2, this.totalEmpPos3],
+            data: [this.totalEmpPos1, this.totalEmpPos2, this.totalEmpPos3, this.totalEmpPos4],
             backgroundColor: [
               'rgb(255, 99, 132)',
               'rgb(54, 162, 235)',
               'rgb(255, 205, 86)',
-             
+              'rgb(255, 100, 16)',
             ],
             hoverOffset: 4
           }
         ]
       },
     });
-
-    this.chart = new Chart('canvas3', {
+    this.emmpChart.update();
+    this.chart2 = new Chart('canvas2', {
       type: 'pie',
       data: {
         labels: ['Đơn hàng thường', 'Đơn hàng đặc biệt'],
@@ -148,50 +182,50 @@ export class ChartComponent implements OnInit {
         ]
       },
     });
-    this.chart = new Chart('canvas5', {
+    this.chart3 = new Chart('canvas3', {
       type: 'pie',
       data: {
         labels: ['Sản phẩm có sẵn', 'Sản phẩm theo yêu cầu'],
         datasets: [
           {
             label: 'Sản phẩm',
-            data: [this.totalNormalOrder, this.totalSpecialOrder],
+            data: [this.totalProduct, this.totalRQProduct],
             backgroundColor: [
               'rgb(255, 99, 132)',
               'rgb(54, 162, 235)',
             ],
-            hoverOffset: 4
+            hoverOffset: 2
           }
         ]
       },
     });
 
-    this.chart = new Chart('canvas', {
+    this.chart4 = new Chart('canvas4', {
       type: 'bar',
       data: {
         labels: this.months,
         datasets: [
           {
             label: 'Sản phẩm có sẵn',
-            data: [12, 19, 3, 5, 2, 3, 4, 2, 3, 1, 3, 2],
+            data: this.productCounts,
             backgroundColor: 'rgb(54, 162, 235)',
           },
           {
             label: 'Sản phẩm đặt riêng',
-            data: [5, 3, 13, 8, 11, 9, 14, 6, 10, 12, 14, 7],
+            data: this.productRequestCounts,
             backgroundColor: 'rgb(255, 99, 132)',
           },
         ]
       },
     });
 
-    this.chart = new Chart('canvas4', {
+    this.chart5 = new Chart('canvas5', {
       type: 'line',
       data: {
         labels: this.months,
         datasets: [{
           label: 'Đơn hàng sản phẩm có sẵn',
-          data: [12, 19, 3, 5, 10, 12, 8, 5, 9, 10, 12, 10],
+          data: [this.productCounts],
           fill: false,
           borderColor: 'rgb(75, 192, 192)',
           backgroundColor: 'rgb(75, 192, 192)',
@@ -229,7 +263,15 @@ export class ChartComponent implements OnInit {
       }, err => reject(err));
     });
   }
-
+  getCountRQProduct() {
+    return new Promise<void>((resolve, reject) => {
+      this.statistic.getCountRQProduct().subscribe((data) => {
+        this.totalRQProduct = data.result;
+        console.log("totalRQProduct: ", this.totalRQProduct);
+        resolve();
+      }, err => reject(err));
+    });
+  }
   getAllEmployee() {
     return new Promise<void>((resolve, reject) => {
       this.employeeService.getAllEmployee().subscribe((data) => {
@@ -242,7 +284,7 @@ export class ChartComponent implements OnInit {
   getTotalAmountSubMaterial() {
     return new Promise<void>((resolve, reject) => {
       this.statistic.getTotalAmountSubMaterial().subscribe((data) => {
-        console.log("totalAmountSubMaterial: ", data.result);
+     //   console.log("totalAmountSubMaterial: ", data.result);
         this.totalAmountSubMaterial = data.result;
         resolve();
       }, err => reject(err));
@@ -274,8 +316,8 @@ export class ChartComponent implements OnInit {
           this.percentOrder = 0;
         }
 
-        console.log("percentSpecialOrder", this.percentSpecialOrder);
-        console.log("percentOrder", this.percentOrder);
+        // console.log("percentSpecialOrder", this.percentSpecialOrder);
+        // console.log("percentOrder", this.percentOrder);
         resolve();
       }, err => reject(err));
     });
@@ -288,7 +330,13 @@ export class ChartComponent implements OnInit {
         this.totalProduct = data.result;
         resolve();
       }, err => reject(err));
+      this.statistic.getCountRQProduct().subscribe((data) => {
+        this.totalRQProduct = data.result;
+        console.log("totalRQProduct: ", this.totalRQProduct);
+        resolve();
+      }, err => reject(err));
     });
+  
   }
   totalEmpPos1: number = 0;
   totalEmpPos2: number = 0;
@@ -306,10 +354,63 @@ export class ChartComponent implements OnInit {
       this.totalEmpPos2 = results[1].result ;
       this.totalEmpPos3 = results[2].result ;
       this.totalEmpPos4 = results[3].result ;
+      // console.log('totalEmpPos1:', this.totalEmpPos1);
+      // console.log('totalEmpPos2:', this.totalEmpPos2);
+      // console.log('totalEmpPos3:', this.totalEmpPos3);
+      // console.log('totalEmpPos4:', this.totalEmpPos4);
     }).catch(err => {
       console.error(err);
     });
   }
-
+  productCounts: number[] = [];
+  productRequestCounts: number[] = [];
+ 
+  getProductRequestByMonthAndYear(month: number, year: number): Promise<void> {
+    return new Promise<void>((resolve, reject) => {
+      this.statistic.countProductRequestByMonthYear(13, month, year).subscribe((data) => {
+        if (data.result === null || data.result === undefined) {
+          data.result = 0;
+        }
+      //  console.log(`getProductRequestByMonthAndYear result for ${month}/${year}: `, data.result);
+        this.productRequestCounts.push(data.result);
+        resolve();
+      }, err => {
+     //   console.error(`getProductRequestByMonthAndYear error for ${month}/${year}: `, err);
+        reject(err);
+      });
+    });
+  }
+  
+  getProductByMonthAndYear(month: number, year: number): Promise<void> {
+    return new Promise<void>((resolve, reject) => {
+      this.statistic.countProductByMonthYear(month, 1, year).subscribe((data) => {
+        if (data.result === null || data.result === undefined) {
+          data.result = 0;
+        }
+       // console.log(`getProductByMonthAndYear result for ${month}/${year}: `, data.result);
+        this.productCounts.push(data.result);
+        resolve();
+      }, err => {
+      //  console.error(`getProductByMonthAndYear error for ${month}/${year}: `, err);
+        reject(err);
+      });
+    });
+  }
+  
+  getAllDataForYear(year: number) {
+    const promises = [];
+    for (let month = 1; month <= 12; month++) {
+      promises.push(this.getProductByMonthAndYear(month, year));
+      promises.push(this.getProductRequestByMonthAndYear(month, year));
+    }
+    Promise.all(promises).then(() => {
+      // console.log('All data retrieved successfully.');
+      // console.log('Product Counts:', this.productCounts);
+      // console.log('Product Request Counts:', this.productRequestCounts);
+      this.initializeCharts(); // Call to initialize charts with the fetched data
+    }).catch(err => {
+      console.error('Error retrieving data:', err);
+    });
+  }
   
 }

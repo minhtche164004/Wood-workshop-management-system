@@ -23,6 +23,8 @@ public interface StatisticService {
     Integer countCompletedJobsForProductByMonthAndYear(int status_id,int month, int year);
     Integer countCompletedJobsForRequestProductByMonthAndYear(int status_id,int month, int year);
     Long countTotalOrder();
+    Long countCompletedProductOnOrderByMonthAndYear(int year, int month);
+    Long countCompletedRequestProductOnOrderByMonthAndYear(int year, int month);
 
 
 

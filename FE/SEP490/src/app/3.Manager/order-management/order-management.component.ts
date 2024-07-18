@@ -38,6 +38,7 @@ export class OrderManagementComponent implements OnInit {
   selectedOrderId: number | null = null;
   selectedSpecialOrder: boolean | null = null;
   activeModal: any;
+  cancelReason: string = '';
   constructor(private http: HttpClient, private productListService: ProductListService, private orderService: OrderService,
     private authenListService: AuthenListService, private toastr: ToastrService,
   ) { }
@@ -77,7 +78,7 @@ export class OrderManagementComponent implements OnInit {
     // const element = document.getElementById("mySelect" + this.indexStatus) as HTMLSelectElement;
     // if (element) {
     //   element.value = this.saveInitialValue.toString();
-      
+
     // }
     const statusId = (event.target as HTMLSelectElement).value;
     this.selectedModalId = statusId;
@@ -110,7 +111,6 @@ export class OrderManagementComponent implements OnInit {
             this.user = data.result;
             this.isLoadding = false;
 
-            
 
 
           } else {
@@ -132,23 +132,23 @@ export class OrderManagementComponent implements OnInit {
     }
   }
   realoadgetAllUser(): void {
-    
-      this.productListService.getAllOrder().subscribe(
-        (data: ApiResponse) => {
-          if (data.code === 1000) {
-            this.user = data.result;
-          } else {
-            console.error('Failed to fetch products:', data);
-            
-          }
-        },
-        (error) => {
-          console.error('Error fetching products:', error);
-          
+
+    this.productListService.getAllOrder().subscribe(
+      (data: ApiResponse) => {
+        if (data.code === 1000) {
+          this.user = data.result;
+        } else {
+          console.error('Failed to fetch products:', data);
 
         }
-      );
-  
+      },
+      (error) => {
+        console.error('Error fetching products:', error);
+
+
+      }
+    );
+
   }
   loadPosition(): void {
     this.productListService.getAllPosition().subscribe(
@@ -183,13 +183,13 @@ export class OrderManagementComponent implements OnInit {
   }
   getOrDetailById(order_detail_id: string): void {
     this.isLoadding = true;
-
+    console.log('Order_detail_id:', order_detail_id);
     this.authenListService.getOrderDetailById(order_detail_id).subscribe(
       (data) => {
         this.OrderdetailById = data.result;
         this.isLoadding = false;
 
-        //  console.log('OrderdetailById:', this.OrderdetailById);
+        console.log('OrderdetailById:', this.OrderdetailById);
       },
       (error) => {
         console.error('Error fetching user data:', error);
@@ -200,9 +200,9 @@ export class OrderManagementComponent implements OnInit {
 
   }
   selectedOrder: any = {};
-  getOrderDetail(order: any) {
-    this.selectedOrder = order;
-    console.log('Order:', this.selectedOrder);
+  getOrderDetail(orderId: number): void {
+
+    console.log('OrderID:', this.selectedOrder);
   }
   onStatusChange(orderId: string, event: Event): void {
     const statusId = (event.target as HTMLSelectElement).value;
@@ -216,7 +216,7 @@ export class OrderManagementComponent implements OnInit {
         this.realoadgetAllUser();
         console.log('Order status changed', response);
         this.toastr.success('Thay đổi tình trạng công việc thành công.');
-      
+
         $('[data-dismiss="modal"]').click();
         this.isLoadding = false;
       },
@@ -245,27 +245,27 @@ export class OrderManagementComponent implements OnInit {
   filterStatus(): void {
     console.log(this.selectedCategory);
     this.isLoadding = true;
-      this.authenListService.getFilterStatus(this.selectedCategory)
-        .subscribe(
-          (data) => {
-            if (data.code === 1000) {
-              this.user = data.result;
-              this.isLoadding = false;
-              this.toastr.success('Lọc đơn hàng thành công!', 'Thành công');
-            } else if (data.code === 1015) {
-             
-              this.isLoadding = false;
-              this.toastr.error('Lọc đơn hàng thất bại!', 'Thành công');
-            }
-            else  {
-              this.realoadgetAllUser();
-              this.isLoadding = false;
-              this.toastr.success('Lọc đơn hàng thành công!', 'Thành công');
-            }
-          },
-          
-        );
-   
+    this.authenListService.getFilterStatus(this.selectedCategory)
+      .subscribe(
+        (data) => {
+          if (data.code === 1000) {
+            this.user = data.result;
+            this.isLoadding = false;
+            this.toastr.success('Lọc đơn hàng thành công!', 'Thành công');
+          } else if (data.code === 1015) {
+
+            this.isLoadding = false;
+            this.toastr.error('Lọc đơn hàng thất bại!', 'Thành công');
+          }
+          else {
+            this.realoadgetAllUser();
+            this.isLoadding = false;
+            this.toastr.success('Lọc đơn hàng thành công!', 'Thành công');
+          }
+        },
+
+      );
+
 
   }
   setOrderForCancellation(orderId: number | null, specialOrder: boolean | null) {
@@ -275,29 +275,22 @@ export class OrderManagementComponent implements OnInit {
   confirmCancel() {
     this.isLoadding = true;
     if (this.selectedOrderId !== null && this.selectedSpecialOrder !== null) {
-      this.authenListService.cancelOrder(this.selectedOrderId, this.selectedSpecialOrder).subscribe({
-        next: (response: string) => {
-          this.toastr.success(response, 'Success');
-          // Close the modal
+      this.authenListService.cancelOrder(this.selectedOrderId, this.selectedSpecialOrder, this.cancelReason).subscribe({
+        next: (response) => {
+
+          this.toastr.success('Hủy đơn hàng thành công');
           this.isLoadding = false;
-          const closeModalButton = document.querySelector('.btn-close') as HTMLElement;
+          const closeModalButton = document.querySelector('.close') as HTMLElement;
           if (closeModalButton) {
             closeModalButton.click();
           }
+          $('[data-dismiss="modal"]').click();
         },
         error: (error: HttpErrorResponse) => {
-          if (error.status === 400) {
-            const errorMessage = typeof error.error === 'string' ? error.error : 'Unexpected error';
-            this.isLoadding = false;
-            this.toastr.warning(errorMessage, 'Lỗi');
-          } else {
-            const responseText = error.error.text || 'Unexpected error';
-            this.isLoadding = false;
-            this.toastr.success(responseText);
-            timer(1000).subscribe(() => {
-              window.location.reload();
-            });
-          }
+          this.isLoadding = false;
+          this.toastr.success('Hủy đơn hàng thành công');
+          this.realoadgetAllUser();
+          $('[data-dismiss="modal"]').click();
         }
       });
     }

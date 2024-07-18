@@ -13,6 +13,7 @@ public interface StatisticService {
     Long countRequestProduct();
     Long countSpecialOrder();
     Long countTotalOrderByMonthAndYear(int month, int year);
+    Long countTotalSpecialOrderByMonthAndYear(int month, int year);
     Long countCompletedOrderByMonthAndYear(int month, int year);
     Long countOrderHaveDone(int query);
     Long countEmployeeWithTypePosition(int query);

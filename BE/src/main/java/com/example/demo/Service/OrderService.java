@@ -37,13 +37,13 @@ public interface OrderService {
 
    // RequestAllDTO GetRequestById(int id);
 
-    List<Orders> GetAllOrder();
+    List<OderDTO> GetAllOrder();
 
-    List<Orders> FindByNameOrCode(String key);
+    List<OderDTO> FindByNameOrCode(String key);
 
-    List<Orders> FilterByDate(Date from, Date to);
+    List<OderDTO> FilterByDate(Date from, Date to);
 
-    List<Orders> FilterByStatus(int status_id);
+    List<OderDTO> FilterByStatus(int status_id);
 
     List<Orders> HistoryOrder();
     Orders getOrderById(int order_id);

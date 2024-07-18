@@ -168,6 +168,7 @@ export class TotalSalaryComponent implements OnInit {
       (data) => {
         if (data.code === 1000) {
           this.totalSalary = data.result;
+          this.currentPage = 1;
           console.log('search luong bang ten: ', this.totalSalary);
           //this.selectedEmp = '';
           //     this.searchKey = '';

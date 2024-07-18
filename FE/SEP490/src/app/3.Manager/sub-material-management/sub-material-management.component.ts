@@ -278,6 +278,7 @@ export class SubMaterialManagementComponent implements OnInit {
     this.materialService.searchSubMaterial(this.searchKey).subscribe(
       (data) => {
         if (data.code === 1000) {
+          this.currentPage = 1;
           this.products = data.result;
      //     console.log('Kết quả tìm kiếm Sub-Materials:', this.products);
           this.isLoadding = false;
@@ -426,6 +427,7 @@ resetFileInput(inputElement: HTMLInputElement) {
       (data) => {
         if (data.code === 1000) {
           this.products = data.result;
+          this.currentPage = 1;
           //    this.toastr.success('Vật liệu ' + this.selectedMaterial.materialName + ' thành công!', 'Thành công');
           console.log('Kết quả lọc Sub-Materials:', this.products);
         } else {

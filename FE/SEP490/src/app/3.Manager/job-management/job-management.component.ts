@@ -848,6 +848,7 @@ JOBID: number = 0;
         (data) => {
           if (data.code === 1000) {
             this.productRQs = data.result;
+            this.currentPage = 1;
             console.log('Danh sách sản phẩm search:', this.productRQs);
 
           }

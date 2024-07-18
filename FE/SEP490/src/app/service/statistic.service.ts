@@ -28,8 +28,28 @@ export class StatisticService {
   private apiCountProductByMonthYear = `${environment.apiUrl}api/auth/statistic`;
 
   private apiCountProductRQByMonthYear = `${environment.apiUrl}api/auth/statistic`;
+
+  private apiCountTotalOrderByMonthAndYear = `${environment.apiUrl}api/auth/statistic/countTotalOrderByMonthAndYear`
+
+  private apiCountTotalSpecOrderByMonthAndYear = `${environment.apiUrl}api/auth/statistic/countTotalSpecialOrderByMonthAndYear`
   constructor(private http: HttpClient) { }
 
+  countTotalOrderByMonthAndYear(month: number, year: number): Observable<any> {
+    const params = new HttpParams()
+      
+      .set('month', month.toString())
+      .set('year', year.toString());
+
+    return this.http.get(`${this.apiCountTotalOrderByMonthAndYear}`, { params });
+  }
+  countTotalSpecOrderByMonthAndYear(month: number, year: number): Observable<any> {
+    const params = new HttpParams()
+      
+      .set('month', month.toString())
+      .set('year', year.toString());
+
+    return this.http.get(`${this.apiCountTotalSpecOrderByMonthAndYear}`, { params });
+  }
   getTotalAmountOrderHaveDone(): Observable<any> {
     return this.http.get<any>(this.apiTotalAmountOrderHaveDone);
   }

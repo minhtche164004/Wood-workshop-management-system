@@ -218,6 +218,7 @@ export class OrderManagementComponent implements OnInit {
         .subscribe(
           (data) => {
             if (data.code === 1000) {
+              this.currentPage = 1;
               this.user = data.result;
               this.isLoadding = false;
               this.toastr.success('Lọc đơn hàng thành công!', 'Thành công');

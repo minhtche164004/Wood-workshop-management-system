@@ -8,6 +8,7 @@ import { AddNewAccount } from '../Admin/user-management/user-management.componen
   providedIn: 'root'
 })
 export class AuthenListService {
+  cancelReason: string ='';
   private apiUrl_ViewProfile = `${environment.apiUrl}api/auth/user/ViewProfile`;
   private apiUrl_UpdateProfile = `${environment.apiUrl}api/auth/user/UpdateProfile`;
   private apiUrl_ChangePass = `${environment.apiUrl}api/auth/user/ChangePass`;
@@ -108,15 +109,14 @@ export class AuthenListService {
       catchError(this.handleError)
     );
   }
-  cancelOrder(orderId: number, specialOrderId: boolean): Observable<any> {
-
+  cancelOrder(orderId: number, specialOrderId: boolean, cancelReason: string): Observable<string> {
     const url = `${this.apiUrl_cancelOrder}?order_id=${orderId}&special_order_id=${specialOrderId}`;
-  
-    return this.http.post<any>(url, { responseType: 'text' }).pipe(
+    const headers = new HttpHeaders({ 'Content-Type': 'text/plain' });
+
+    return this.http.post<string>(url, cancelReason, { headers }).pipe(
       catchError(this.handleError)
     );
   }
-  
   
   getOrderDetailById(order_detail_id: string): Observable<any> {
     const url = `${this.apiUrl_GetOrderDeTailById}?id=${order_detail_id}`;

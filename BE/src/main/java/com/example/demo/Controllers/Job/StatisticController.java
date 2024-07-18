@@ -74,6 +74,20 @@ public class StatisticController {
         apiResponse.setResult(statisticService.countTotalOrderByMonthAndYear(month,year));
         return apiResponse;
     }
+
+    @GetMapping("/countCompletedProductOnOrderByMonthAndYear")
+    public ApiResponse<?> countCompletedProductOnOrderByMonthAndYear(@RequestParam("month") int month,@RequestParam("year") int year) {
+        ApiResponse<Long> apiResponse = new ApiResponse<>();
+        apiResponse.setResult(statisticService.countCompletedProductOnOrderByMonthAndYear(month,year));
+        return apiResponse;
+    }
+
+    @GetMapping("/countCompletedRequestProductOnOrderByMonthAndYear")
+    public ApiResponse<?> countCompletedRequestProductOnOrderByMonthAndYear(@RequestParam("month") int month,@RequestParam("year") int year) {
+        ApiResponse<Long> apiResponse = new ApiResponse<>();
+        apiResponse.setResult(statisticService.countCompletedRequestProductOnOrderByMonthAndYear(month,year));
+        return apiResponse;
+    }
     @GetMapping("/countTotalSpecialOrderByMonthAndYear")
     public ApiResponse<?> countTotalSpecialOrderByMonthAndYear(@RequestParam("month") int month,@RequestParam("year") int year) {
         ApiResponse<Long> apiResponse = new ApiResponse<>();

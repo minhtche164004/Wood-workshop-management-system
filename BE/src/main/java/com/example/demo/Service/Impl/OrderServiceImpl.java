@@ -210,7 +210,7 @@ public class    OrderServiceImpl implements OrderService {
         return orders;
     }
     @Override
-    public ResponseEntity<String> Cancel_Order(int order_id, boolean special_order_id) {
+    public ResponseEntity<String> Cancel_Order(int order_id, boolean special_order_id,String response) {
 
         Orders orders = orderRepository.findById(order_id);
         if(special_order_id == false){//là hàng có sẵn
@@ -222,6 +222,7 @@ public class    OrderServiceImpl implements OrderService {
                 productRepository.save(products);
             }
             orders.setStatus(statusOrderRepository.findById(6));//set cho nó là đơn hàng bị huỷ
+            orders.setResponse(response);
             orderRepository.save(orders);
 
 
@@ -252,6 +253,7 @@ public class    OrderServiceImpl implements OrderService {
 //                requestProductRepository.save(requestProducts);
             }
             orders.setStatus(statusOrderRepository.findById(6));//set cho nó là đơn hàng bị huỷ
+            orders.setResponse(response);
             orderRepository.save(orders);
 
         }

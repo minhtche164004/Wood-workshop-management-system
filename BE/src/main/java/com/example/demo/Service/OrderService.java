@@ -81,7 +81,7 @@ public interface OrderService {
     List<RequestProductDTO_Show> GetAllRequestProductWithImage();
 
 
-   ResponseEntity<String> Cancel_Order(int order_id, boolean special_order_id);
+   ResponseEntity<String> Cancel_Order(int order_id, boolean special_order_id,String response);
 
 
 

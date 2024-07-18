@@ -135,10 +135,11 @@ public class OrderController {
         return apiResponse;
     }
     @PostMapping("/Cancel_Order")
-    public ResponseEntity<String> Cancel_Order(@RequestParam("order_id") int order_id,@RequestParam("special_order_id") boolean special_order_id) {
+    public ResponseEntity<String> Cancel_Order(@RequestParam("order_id") int order_id,@RequestParam("special_order_id") boolean special_order_id,
+                                               @RequestBody String response) {
       //  ApiResponse<ResponseEntity<?>> apiResponse = new ApiResponse<>();
       //  apiResponse.setResult(orderService.Cancel_Order(order_id,special_order_id));
-        return orderService.Cancel_Order(order_id,special_order_id);
+        return orderService.Cancel_Order(order_id,special_order_id,response);
     }
     @GetMapping("/GetWhiteListByUser")
     public ApiResponse<?> GetWhiteListByUser() {

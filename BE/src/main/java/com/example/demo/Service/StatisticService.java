@@ -21,6 +21,7 @@ public interface StatisticService {
     BigDecimal findTotalSubMaterialByMonthAndYear(int year, int month);
     Integer countCompletedJobsForProductByMonthAndYear(int status_id,int month, int year);
     Integer countCompletedJobsForRequestProductByMonthAndYear(int status_id,int month, int year);
+    Long countTotalOrder();
 
 
 

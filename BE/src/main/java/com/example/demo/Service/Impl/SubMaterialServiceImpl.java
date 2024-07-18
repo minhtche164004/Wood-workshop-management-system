@@ -115,40 +115,57 @@ public class SubMaterialServiceImpl implements SubMaterialService {
     }
 
     @Transactional
-    public void saveSubMaterialToDatabase(MultipartFile file) {
+    public List<ExcelError> saveSubMaterialToDatabase(MultipartFile file) {
         LocalDate today = LocalDate.now();
         Date create =  Date.from(today.atStartOfDay(ZoneId.systemDefault()).toInstant());
+        List<ExcelError> errors = new ArrayList<>(); // Khởi tạo danh sách lỗi
+
         if (ExcelUploadService.isValidExcelFile(file)) {
             try {
-                List<SubMaterialDTO> subMaterialDTOs = ExcelUploadService.getSubMaterialDataFromExcel(file.getInputStream());
+                List<SubMaterialDTO> subMaterialDTOs = ExcelUploadService.getSubMaterialDataFromExcel(file.getInputStream(),errors);
                 List<SubMaterials> subMaterialsList = new ArrayList<>();
 
                 int countSubMaterials = subMaterialDTOs.size();
                 int i = 1;
                 HashMap<Integer, String> codeCount = generateMultipleCode(countSubMaterials);
+                int rowIndex = 1; // Bắt đầu từ hàng 1 (vì hàng 0 là tiêu đề)
                 for (SubMaterialDTO dto : subMaterialDTOs) {
+                    rowIndex++; // Tăng số hàng trước khi xử lý từng dòng
+
                     String subMaterialName = dto.getSub_material_name();
                     String materialName = dto.getMaterial_name(); // Lấy tên vật liệu từ DTO
+                    BigDecimal unit_price = dto.getUnit_price();
 
                     SubMaterials existingSubMaterial = subMaterialsRepository.findBySubmaterialNameAndMaterialName(
                             subMaterialName, materialName); // Tìm kiếm theo cả tên và vật liệu
-
-                    if (existingSubMaterial != null) {
+                   // SubMaterials existingSubMaterialPrice=subMaterialsRepository.findBySubmaterialNameAndMaterialNameAndPrice(subMaterialName, materialName,unit_price);
+                    if (existingSubMaterial != null && existingSubMaterial.getUnitPrice() == dto.getUnit_price()) {
                         // Nếu đã tồn tại SubMaterial với tên và vật liệu này, cập nhật số lượng
                         existingSubMaterial.setQuantity(existingSubMaterial.getQuantity() + dto.getQuantity());
                         subMaterialsList.add(existingSubMaterial); // Thêm vào danh sách để save sau
-                    } else {
+                    }
+                    if(existingSubMaterial != null && existingSubMaterial.getUnitPrice() != dto.getUnit_price()){
+                        InputSubMaterial input = new InputSubMaterial();
+                        input.setSubMaterials(existingSubMaterial);
+                        input.setUnit_price(dto.getUnit_price());
+                        input.setQuantity(existingSubMaterial.getQuantity());
+                        input.setDate_input(create);
+                        inputSubMaterialRepository.save(input);
+                        existingSubMaterial.setQuantity(existingSubMaterial.getQuantity());
+                        existingSubMaterial.setUnitPrice(dto.getUnit_price());
+                        subMaterialsList.add(existingSubMaterial); // Thêm vào danh sách để save sau
+                    }else {
                         // Nếu chưa tồn tại, tạo SubMaterial mới với đầy đủ thuộc tính
 
                         // Thực hiện các kiểm tra điều kiện
                         if (!checkConditionService.checkInputName(dto.getSub_material_name())) {
-                            throw new AppException(ErrorCode.INVALID_FORMAT_NAME);
+                            errors.add(new ExcelError(rowIndex, 1, "Tên không hợp lệ"));
                         }
                         if (!checkConditionService.checkInputQuantity(dto.getQuantity())) {
-                            throw new AppException(ErrorCode.QUANTITY_INVALID);
+                            errors.add(new ExcelError(rowIndex, 4, "Số lượng không hợp lệ"));
                         }
                         if (!checkConditionService.checkInputPrice(dto.getUnit_price())) {
-                            throw new AppException(ErrorCode.PRICE_INVALID);
+                            errors.add(new ExcelError(rowIndex, 5, "Đơn giá không hợp lệ"));
                         }
 
                         SubMaterials subMaterials = new SubMaterials();
@@ -171,6 +188,7 @@ public class SubMaterialServiceImpl implements SubMaterialService {
                 throw new AppException(ErrorCode.FILE_EXCEL_INVALID);
             }
         }
+        return errors; // Trả về danh sách lỗi
     }
 
     @Transactional

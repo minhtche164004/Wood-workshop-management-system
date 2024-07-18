@@ -664,10 +664,10 @@ public class    OrderServiceImpl implements OrderService {
             Orders requests= orderRepository.findById(request_id);
             requestProductDTOShow.setRequest_id(request_id);
             requestProductDTOShow.setCode(requests.getCode());
-            List<String> imageList = productRequestimagesList.stream()
+            List<Product_Requestimages> imageList = productRequestimagesList.stream()
                     .map(img -> {
                         img.setFullPath(getAddressLocalComputer(img.getFullPath()));
-                        return img.getFullPath();
+                        return img;
                     })
                     .toList();
             requestProductDTOShow.setImageList(imageList);
@@ -741,10 +741,10 @@ public class    OrderServiceImpl implements OrderService {
         requestProductDTOShow.setRequest_id(request_id);
         requestProductDTOShow.setCode(requests.getCode());
 //        requestProductDTOShow.setRequests(requests);
-        List<String> processedImages = new ArrayList<>(); // Danh sách mới
+        List<Product_Requestimages> processedImages = new ArrayList<>(); // Danh sách mới
         for (Product_Requestimages productimages : productRequestimagesList) {
             productimages.setFullPath(getAddressLocalComputer(productimages.getFullPath()));
-            processedImages.add(productimages.getFullPath()); // Thêm vào danh sách mới
+            processedImages.add(productimages); // Thêm vào danh sách mới
         }
         List<String> list = requestProductsSubmaterialsRepository.GetSubNameByProductId(id);
         if (list.isEmpty()) {
@@ -778,10 +778,10 @@ public class    OrderServiceImpl implements OrderService {
             requestProductDTOShow.setRequest_id(request_id);
             requestProductDTOShow.setCode(requests.getCode());
 //            requestProductDTOShow.setRequests(requests);
-            List<String> imageList = productRequestimagesList.stream()
+            List<Product_Requestimages> imageList = productRequestimagesList.stream()
                     .map(img -> {
                         img.setFullPath(getAddressLocalComputer(img.getFullPath()));
-                        return img.getFullPath();
+                        return img;
                     })
                     .toList();
             requestProductDTOShow.setImageList(imageList);

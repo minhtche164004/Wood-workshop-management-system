@@ -19,8 +19,7 @@ public class RequestProductDTO_Show {
     private BigDecimal price;
     private Date completionTime;
     private Status_Product status;
- //   private List<Product_Requestimages> imageList;
-    private List<String> imageList;
+    private List<Product_Requestimages> imageList;
     private List<String> sub_material_name;
 //    private Requests requests;
     private String code;

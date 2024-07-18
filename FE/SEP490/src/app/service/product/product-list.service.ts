@@ -61,6 +61,9 @@ export class ProductListService {
   private api_UrlEditSubMateialRequestProduct = `${environment.apiUrl}api/auth/submaterial/EditSubMaterialRequestProduct`;
   //
 
+  //api danh` cho order dac biet
+  private apiUrlGetOrderById = `${environment.apiUrl}api/auth/order/GetOrderById`;
+
   constructor(private http: HttpClient) { }
   uploadProduct(productData: any, thumbnail: File, images: File[]): Observable<any> {
     const formData = new FormData();
@@ -394,4 +397,14 @@ export class ProductListService {
       catchError(this.handleError));
   }
   //
+
+  //for order
+
+  getOrderById(orderId: number): Observable<any> {
+    const url = `${this.apiUrlGetOrderById}?id=${orderId}`;
+    return this.http.get<any>(url).pipe(
+      catchError(this.handleError)
+    );
+  }
+
 }

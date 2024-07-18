@@ -51,13 +51,11 @@ export class TotalSalaryComponent implements OnInit {
 
   constructor(private dataService: DataService, private http: HttpClient, private toastr: ToastrService, private employeeService: EmployeeService, private jobService: JobService, private fb: FormBuilder, private productListService: ProductListService, private sanitizer: DomSanitizer, private productService: ProductService, private salaryService: SalaryService) { }
 
-
   ngOnInit(): void {
-
     this.getAllEmployee();
     this.getAllPostionEmp();
     this.getBankList();
-    this.getTotalSalary();
+  //  this.getTotalSalary();
   }
   getBankList(): void {
     // this.isLoadding = true;
@@ -288,6 +286,13 @@ export class TotalSalaryComponent implements OnInit {
     console.log('Confirm thanh toan: ', this.selectedBanking);
    
   }
+  modalThanhToan(job: any, event: Event): void {
+    console.log('Job salary modal:', job);
+    const newValue2 = (event.target as HTMLSelectElement).value;
+    console.log('Giá trị được chọn:', newValue2);
+    this.launchModalButton.nativeElement.click();
+  
+  }
     thanhToan(product: any): void {
     this.isLoadding = true;
     this.qrImageUrl = '';
@@ -322,6 +327,9 @@ export class TotalSalaryComponent implements OnInit {
 
       );
 
+  }
+  closeModal() {
+      this.getTotalSalary();
   }
 
 }

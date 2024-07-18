@@ -1,94 +1,87 @@
 <div class="header">
     <div class="top-header">
-        <div class="container">
-            <div class="row">
-                <div class="col-6">
-                    <div class="header-icon">
-                        <ul class="d-flex">
-                            <li class="contact">
-                                <label class="header_link" style="color: white;" *ngIf="fullname">
-                                    Xin chào, {{fullname}}
-                                </label>
-                            </li>
-                        </ul>
-                    </div>
+        <div class="row">
+            <div class="col-md-6">
+                <div class="header-icon">
+                    <ul class="d-flex">
+                        <li class="contact">
+                            <label class="header_link" style="color: white; margin-top: 3%;" *ngIf="fullname">
+                                Xin chào, {{fullname}}
+                            </label>
+                        </li>
+                    </ul>
                 </div>
-                <div class="col-6">
-                    <div class="header-contact">
-                        <ul class="d-flex justify-content-end">
-                            <li class="contact">
-                                <a class="header_link"
-                                    href="https://www.google.com/maps/place/%C4%90%E1%BB%93+g%E1%BB%97+S%E1%BB%B9+Dung/@18.531967,105.655959,16z/data=!4m6!3m5!1s0x3139c9005e9aace9:0xb6e01106407b1be6!8m2!3d18.5319666!4d105.6559593!16s%2Fg%2F11vsh89tcc?hl=vi&entry=ttu"
-                                    class="header-shop-map" target="_blank">
-                                    <i class="fas fa-map-marker-alt"></i>
-                                    Hệ thống cửa hàng
-                                </a>
-                            </li>
-                            <li class="contact">
-                                <a class="header_link" href="tel:+84948539479" class="header-shop-phone">
-                                    <i class="fas fa-phone"></i>
-                                    (+84)0948539479
-                                </a>
-                            </li>
-                            <li class="header_link" class="contact">
-                                <a href="mailto:anhvubui382@gmail.com" class="header-shop-support">
-                                    <i class="fas fa-envelope"></i>
-                                    anhvubui382@gmail.com
-                                </a>
-                            </li>
-                        </ul>
-                    </div>
+            </div>
+            <div class="col-md-6">
+                <div class="header-contact">
+                    <ul class="d-flex justify-content-end" style="margin-right: 6%; margin-top: 1%;">
+                        <li class="contact">
+                            <a class="header_link" style="text-decoration: none;"
+                                href="https://www.google.com/maps/place/%C4%90%E1%BB%93+g%E1%BB%97+S%E1%BB%B9+Dung/@18.531967,105.655959,16z/data=!4m6!3m5!1s0x3139c9005e9aace9:0xb6e01106407b1be6!8m2!3d18.5319666!4d105.6559593!16s%2Fg%2F11vsh89tcc?hl=vi&entry=ttu"
+                                class="header-shop-map" target="_blank">
+                                <i class="fas fa-map-marker-alt"></i>
+                                Hệ thống cửa hàng
+                            </a>
+                        </li>
+                        <li class="contact">
+                            <a class="header_link" style="text-decoration: none;" href="tel:+84948539479"
+                                class="header-shop-phone">
+                                <i class="fas fa-phone"></i>
+                                (+84)0948539479
+                            </a>
+                        </li>
+                        <li class="contact">
+                            <a href="mailto:anhvubui382@gmail.com" style="text-decoration: none;"
+                                class="header-shop-support">
+                                <i class="fas fa-envelope"></i>
+                                anhvubui382@gmail.com
+                            </a>
+                        </li>
+                    </ul>
                 </div>
             </div>
         </div>
+        
+        
     </div>
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
         <div class="container-fluid">
-            <a class="navbar-brand" href="index.html">
-                <img src="assets/img/logomain-removebg-preview.png" class="logo img-fluid" alt="Logo"
-                    style="max-height: 100px; margin-left: 50px; margin-top: -20px;">
-
-            </a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
-                data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false"
-                aria-label="Toggle navigation">
+           
+                <a class="navbar-brand" href="index.html">
+                    <img src="assets/img/logomain-removebg-preview.png" class="logo img-fluid" alt="Logo" style="max-height: 100px;">
+                </a>
+           
+       
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
+                aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
             <div class="collapse navbar-collapse justify-content-center" id="navbarSupportedContent">
                 <ul class="navbar-nav mb-2 mb-lg-0 justify-content-center">
                     <li class="nav-item">
-                        <a class="nav-link active" aria-current="page" (click)="navigateTo('/homepage')"
-                            style="cursor: pointer;">Trang chủ</a>
+                        <a class="nav-link active" aria-current="page" routerLink="/homepage" style="cursor: pointer;">Trang chủ</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link active" aria-current="page" (click)="navigateTo('/product')"
-                            style="cursor: pointer;">Sản phẩm</a>
+                        <a class="nav-link active" aria-current="page" (click)="navigateTo('/product')" style="cursor: pointer;">Sản phẩm</a>
                     </li>
+                    <!-- <li class="nav-item">
+                        <a class="nav-link active" aria-current="page" (click)="navigateTo('/contact')" style="cursor: pointer;">Liên hệ</a>
+                    </li> -->
                     <li class="nav-item">
-                        <a class="nav-link active" aria-current="page" (click)="navigateTo('/contact')"
-                            style="cursor: pointer;">Liên hệ</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link active" aria-current="page" (click)="navigateTo('/about-us')"
-                            style="cursor: pointer;">Giới thiệu</a>
+                        <a class="nav-link active" aria-current="page" routerLink="/about-us" style="cursor: pointer;">Giới thiệu</a>
                     </li>
                     <ng-container *ngIf="isLoggedIn(); else loggedOutLinks">
                         <li class="nav-item">
-                            <a class="nav-link active" aria-current="page" (click)="navigateTo('/order_rq')"
-                            style="cursor: pointer;">Đặt
-                                hàng</a>
+                            <a class="nav-link active" aria-current="page" routerLink="/order_rq" style="cursor: pointer;">Đặt hàng</a>
                         </li>
                     </ng-container>
                     <ng-template #loggedOutLinks>
                         <!-- Add your logged-out links here -->
                     </ng-template>
-                    <ng-template #loggedOutLinks>
-
-                    </ng-template>
                 </ul>
             </div>
-
-            <ul class="icon-nav d-flex justify-content-end" style="margin-right: 60px; margin-top: 2%;">
+    
+            <ul class="icon-nav d-flex" style="margin-right: 10%; margin-top: 2%;">
                 <div class="dropdown">
                     <a class="icon-buy" href="" data-bs-toggle="modal" data-bs-target="#exampleModal">
                         <i class="fas fa-user-alt"></i>
@@ -102,11 +95,11 @@
                             <a routerLink="/change_pass">Đổi mật khẩu</a>
                             <a routerLink="/request_product">Danh sách theo yêu cầu</a>
                             <a routerLink="/history_order">Lịch sử đơn hàng</a>
-                            <a (click)="onLogout()"  style="cursor: pointer;">Đăng xuất</a>
+                            <a (click)="onLogout()" style="cursor: pointer;">Đăng xuất</a>
                         </ng-template>
                     </div>
                 </div>
-
+    
                 <li>
                     <a class="icon-buy" href="/wishlist">
                         <i class="fa-solid fa-heart"></i>
@@ -114,9 +107,10 @@
                     </a>
                 </li>
             </ul>
-
+    
         </div>
     </nav>
+    
     <div class="container-fluid search-bar-container" style="margin-top: -2%;">
         <div class="row">
             <div class="col-12 d-flex justify-content-center">

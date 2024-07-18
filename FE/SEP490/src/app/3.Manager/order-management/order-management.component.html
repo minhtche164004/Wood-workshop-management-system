@@ -31,11 +31,10 @@
 
                 <!-- product.component.html -->
                 <select [(ngModel)]="selectedCategory" (change)="filterStatus()">
-                  <option value="null" selected>Chọn đơn hàng</option>
+                  <option value="null" selected>Tất cả đơn hàng</option>
                   <option *ngFor="let ps of userStatus" [value]="ps.status_id">{{ ps.status_name }}</option>
-                  <option value="">Tất cả đơn hàng</option>
+               
                 </select>
-
                 <input type="text" class="form-control" placeholder="Mã đơn hàng">
                 <button class="btn search-button" type="button">
                   <i class="fa fa-search"></i>
@@ -43,9 +42,7 @@
               </div>
             </div>
           </div>
-
         </div>
-
         <table class="table table-striped table-hover">
           <thead>
             <tr>
@@ -86,11 +83,11 @@
               || us?.status.status_id === 3"  -->
               <td style="min-width: 200px;" *ngIf="us?.totalAmount === null">
                 <div class="select-wrapper">
-                  <select id="mySelect{{i}}" [disabled]="us?.status.status_id !== 4 && us?.status.status_id !== 7"
-                    class="custom-select" (focus)="saveInitialValue(us.status.status_id, i)"
+                  <select id="mySelect{{i}}" [disabled]="us?.status_id !== 4 && us?.status_id !== 7"
+                    class="custom-select" (focus)="saveInitialValue(us.status_id, i)"
                     (change)="openModal(us.orderId, $event, i)">
                     <option *ngFor="let status of status_order" [value]="status.status_id"
-                      [selected]="status.status_id === us?.status.status_id" [disabled]="status.status_id !== 8"
+                      [selected]="status.status_id === us?.status_id" [disabled]="status.status_id !== 8"
                       [hidden]="status.status_id !== 7 && status.status_id !== 8">
                       {{ status.status_name }}
                     </option>
@@ -102,10 +99,10 @@
 
               <td style="min-width: 200px;" *ngIf="us?.totalAmount !== null">
                 <div class="select-wrapper">
-                  <select id="mySelect{{i}}" [disabled]=" us?.status.status_id !== 4" class="custom-select"
+                  <select id="mySelect{{i}}" [disabled]=" us?.status_id !== 4" class="custom-select"
                     (change)="openModal(us.orderId, $event,i)">
                     <option *ngFor="let status of status_order" [value]="status.status_id"
-                      [selected]="status.status_id === us?.status.status_id" [disabled]="status.status_id !== 5 ">
+                      [selected]="status.status_id === us?.status_id" [disabled]="status.status_id !== 5 ">
                       {{ status.status_name }}
                     </option>
                   </select>
@@ -129,7 +126,7 @@
               <td>{{ us?.totalAmount | number : '1.0-3' }}</td>
               <td>
                 <a href="#" class="delete" title="Delete" data-toggle="modal" data-target="#confirmDeleteModal"
-                  (click)="setOrderForCancellation(us?.orderId, us?.specialOrder)" *ngIf="us?.status?.status_id === 7">
+                  (click)="setOrderForCancellation(us?.orderId, us?.specialOrder)" *ngIf="us?.status_id === 7">
                   <i class="fa-solid fa-times"></i>
                 </a>
               </td>

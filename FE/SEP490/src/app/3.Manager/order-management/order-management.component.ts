@@ -245,8 +245,6 @@ export class OrderManagementComponent implements OnInit {
   filterStatus(): void {
     console.log(this.selectedCategory);
     this.isLoadding = true;
- 
- 
       this.authenListService.getFilterStatus(this.selectedCategory)
         .subscribe(
           (data) => {

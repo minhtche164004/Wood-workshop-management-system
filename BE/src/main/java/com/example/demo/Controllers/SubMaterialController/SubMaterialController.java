@@ -125,9 +125,9 @@ public class SubMaterialController {
 
     @PostMapping("/upload-submaterial-data")
     public ApiResponse<?> uploadCustomersData(@RequestParam("file") MultipartFile file) {
-        ApiResponse<String> apiResponse = new ApiResponse<>();
-        subMaterialService.saveSubMaterialToDatabase(file);
-        apiResponse.setResult("Đọc file thành công , dữ liệu đã đưọc thêm vào ");
+        ApiResponse<List> apiResponse = new ApiResponse<>();
+
+        apiResponse.setResult(subMaterialService.saveSubMaterialToDatabase(file));
         return apiResponse;
     }
 

@@ -1,17 +1,14 @@
 package com.example.demo.Controllers.OrderController;
 
 import com.example.demo.Config.RedisConfig;
-import com.example.demo.Dto.OrderDTO.JobProductDTO;
+import com.example.demo.Dto.OrderDTO.*;
 
-import com.example.demo.Dto.OrderDTO.OrderDetailDTO;
-import com.example.demo.Dto.OrderDTO.OrderDetailWithJobStatusDTO;
 import com.example.demo.Dto.ProductDTO.ProductEditDTO;
 import com.example.demo.Dto.ProductDTO.RequestProductDTO_Show;
 import com.example.demo.Dto.RequestDTO.RequestAllDTO;
 import com.example.demo.Dto.ProductDTO.RequestProductAllDTO;
 import com.example.demo.Dto.ProductDTO.RequestProductDTO;
 import com.example.demo.Dto.RequestDTO.RequestDTO;
-import com.example.demo.Dto.OrderDTO.RequestOrder;
 import com.example.demo.Dto.RequestDTO.RequestEditCusDTO;
 import com.example.demo.Dto.RequestDTO.RequestEditDTO;
 import com.example.demo.Entity.*;
@@ -38,6 +35,7 @@ import java.io.IOException;
 import java.lang.reflect.Type;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/auth/order/")
@@ -157,11 +155,14 @@ public class OrderController {
     }
     @PostMapping(value = "/AddNewRequestProduct", consumes = MediaType.MULTIPART_FORM_DATA_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ApiResponse<?> AddNewRequestProduct(
-            @RequestPart("productDTO") RequestProductDTO requestProductDTO,
-            @RequestPart("files") MultipartFile[] files
+            @RequestPart("requestProductsWithFiles") RequestProductWithFiles[] requestProductsWithFiles,
+            @RequestPart("requestSpecialOrder") RequestSpecialOrder requestSpecialOrder,
+            @RequestPart("order_id") int order_id
+
+
     ) {
-        ApiResponse<RequestProducts> apiResponse = new ApiResponse<>();
-        apiResponse.setResult(orderService.AddNewProductRequest(requestProductDTO, files));
+        ApiResponse<List> apiResponse = new ApiResponse<>();
+        apiResponse.setResult(orderService.AddNewProductRequest(requestProductsWithFiles,requestSpecialOrder,order_id));
         return apiResponse;
     }
     @PostMapping("/Approve_Reject_Request")

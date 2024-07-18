@@ -1,11 +1,9 @@
 package com.example.demo.Service;
 
-import com.example.demo.Dto.OrderDTO.OrderDetailDTO;
-import com.example.demo.Dto.OrderDTO.OrderDetailWithJobStatusDTO;
+import com.example.demo.Dto.OrderDTO.*;
 import com.example.demo.Dto.RequestDTO.RequestAllDTO;
 import com.example.demo.Dto.ProductDTO.*;
 import com.example.demo.Dto.RequestDTO.RequestDTO;
-import com.example.demo.Dto.OrderDTO.RequestOrder;
 import com.example.demo.Dto.RequestDTO.RequestEditCusDTO;
 import com.example.demo.Dto.RequestDTO.RequestEditDTO;
 import com.example.demo.Entity.*;
@@ -18,6 +16,7 @@ import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public interface OrderService {
@@ -51,7 +50,7 @@ public interface OrderService {
 
     List<Orderdetails> getAllOrderDetail();
 
-    RequestProducts AddNewProductRequest(RequestProductDTO requestProductDTO, MultipartFile[] multipartFiles);
+    List<RequestProducts> AddNewProductRequest(RequestProductWithFiles[] requestProductsWithFiles, RequestSpecialOrder requestSpecialOrder, int order_id);
 
     Orders AddNewRequest(RequestDTO requestDTO, MultipartFile[] multipartFiles);
 

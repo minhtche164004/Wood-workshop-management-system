@@ -38,7 +38,7 @@ public class SubMaterialServiceImpl implements SubMaterialService {
 
     @Autowired
     private MaterialRepository materialRepository;
-  
+
     @Autowired
     private CheckConditionService checkConditionService;
 
@@ -60,7 +60,7 @@ public class SubMaterialServiceImpl implements SubMaterialService {
     private InputSubMaterialRepository inputSubMaterialRepository;
 
     LocalDate today = LocalDate.now();
-    Date create =  Date.from(today.atStartOfDay(ZoneId.systemDefault()).toInstant());
+    Date create = Date.from(today.atStartOfDay(ZoneId.systemDefault()).toInstant());
 
     @Override
     public List<SubMaterialViewDTO> getAll() {
@@ -70,7 +70,7 @@ public class SubMaterialServiceImpl implements SubMaterialService {
     @Override
     public List<SubMaterialViewDTO> FilterByMaterial(int material_id) {
         List<SubMaterialViewDTO> subMaterialsList = subMaterialsRepository.findSubMaterialIdByMaterial(material_id);
-        if(subMaterialsList.isEmpty()){
+        if (subMaterialsList.isEmpty()) {
             throw new AppException(ErrorCode.NOT_FOUND);
         }
         return subMaterialsList;
@@ -117,12 +117,12 @@ public class SubMaterialServiceImpl implements SubMaterialService {
     @Transactional
     public List<ExcelError> saveSubMaterialToDatabase(MultipartFile file) {
         LocalDate today = LocalDate.now();
-        Date create =  Date.from(today.atStartOfDay(ZoneId.systemDefault()).toInstant());
+        Date create = Date.from(today.atStartOfDay(ZoneId.systemDefault()).toInstant());
         List<ExcelError> errors = new ArrayList<>(); // Khởi tạo danh sách lỗi
 
         if (ExcelUploadService.isValidExcelFile(file)) {
             try {
-                List<SubMaterialDTO> subMaterialDTOs = ExcelUploadService.getSubMaterialDataFromExcel(file.getInputStream(),errors);
+                List<SubMaterialDTO> subMaterialDTOs = ExcelUploadService.getSubMaterialDataFromExcel(file.getInputStream(), errors);
                 List<SubMaterials> subMaterialsList = new ArrayList<>();
 
                 int countSubMaterials = subMaterialDTOs.size();
@@ -138,13 +138,13 @@ public class SubMaterialServiceImpl implements SubMaterialService {
 
                     SubMaterials existingSubMaterial = subMaterialsRepository.findBySubmaterialNameAndMaterialName(
                             subMaterialName, materialName); // Tìm kiếm theo cả tên và vật liệu
-                   // SubMaterials existingSubMaterialPrice=subMaterialsRepository.findBySubmaterialNameAndMaterialNameAndPrice(subMaterialName, materialName,unit_price);
+                    // SubMaterials existingSubMaterialPrice=subMaterialsRepository.findBySubmaterialNameAndMaterialNameAndPrice(subMaterialName, materialName,unit_price);
                     if (existingSubMaterial != null && existingSubMaterial.getUnitPrice() == dto.getUnit_price()) {
                         // Nếu đã tồn tại SubMaterial với tên và vật liệu này, cập nhật số lượng
                         existingSubMaterial.setQuantity(existingSubMaterial.getQuantity() + dto.getQuantity());
                         subMaterialsList.add(existingSubMaterial); // Thêm vào danh sách để save sau
                     }
-                    if(existingSubMaterial != null && existingSubMaterial.getUnitPrice() != dto.getUnit_price()){
+                    if (existingSubMaterial != null && existingSubMaterial.getUnitPrice() != dto.getUnit_price()) {
                         InputSubMaterial input = new InputSubMaterial();
                         input.setSubMaterials(existingSubMaterial);
                         input.setUnit_price(dto.getUnit_price());
@@ -154,7 +154,7 @@ public class SubMaterialServiceImpl implements SubMaterialService {
                         existingSubMaterial.setQuantity(existingSubMaterial.getQuantity());
                         existingSubMaterial.setUnitPrice(dto.getUnit_price());
                         subMaterialsList.add(existingSubMaterial); // Thêm vào danh sách để save sau
-                    }else {
+                    } else {
                         // Nếu chưa tồn tại, tạo SubMaterial mới với đầy đủ thuộc tính
 
                         // Thực hiện các kiểm tra điều kiện
@@ -224,16 +224,18 @@ public class SubMaterialServiceImpl implements SubMaterialService {
                 .map(sub -> modelMapper.map(sub, SubMaterialNameDTO.class))
                 .collect(Collectors.toList());
     }
+
     @Override
-    public List<SubMaterialViewDTO> SearchByNameorCode(String key){
+    public List<SubMaterialViewDTO> SearchByNameorCode(String key) {
         return subMaterialsRepository.findSubMaterialsByNameCode(key);
     }
+
     @Transactional
     @Override
-    public UpdateSubDTO UpdateSub(int id, UpdateSubDTO updateSubDTO){
+    public UpdateSubDTO UpdateSub(int id, UpdateSubDTO updateSubDTO) {
         SubMaterials subMaterials = subMaterialsRepository.findById1(id);
-        subMaterialsRepository.updateSubMaterials(id, updateSubDTO.getSub_material_name(),updateSubDTO.getDescription()
-        , updateSubDTO.getQuantity(),updateSubDTO.getUnit_price());
+        subMaterialsRepository.updateSubMaterials(id, updateSubDTO.getSub_material_name(), updateSubDTO.getDescription()
+                , updateSubDTO.getQuantity(), updateSubDTO.getUnit_price());
         //thêm submaterial và bảng InputSubMaterial để lưu lại giá
         InputSubMaterial input = new InputSubMaterial();
         input.setSubMaterials(subMaterials);
@@ -241,31 +243,31 @@ public class SubMaterialServiceImpl implements SubMaterialService {
         input.setQuantity(updateSubDTO.getQuantity());
         input.setDate_input(create);
         inputSubMaterialRepository.save(input);
-        return modelMapper.map(subMaterials,UpdateSubDTO.class);
+        return modelMapper.map(subMaterials, UpdateSubDTO.class);
     }
 
     @Override
     public SubMaterialViewDTO getSubMaterialById(int sub_material_id) {
         SubMaterialViewDTO subMaterials = subMaterialsRepository.findSubMaterialsById(sub_material_id);
-        if(subMaterials == null){
+        if (subMaterials == null) {
             throw new AppException(ErrorCode.NOT_FOUND);
         }
         return subMaterials;
     }
 
     @Override
-    public List<Product_SubmaterialDTO> getProductSubMaterialByProductId(int id,int material_id) {
-        List<Product_SubmaterialDTO> productSubMaterialsList = productSubMaterialsRepository.getProductSubMaterialByProductIdAndTypeMate(id,material_id);
-        if(productSubMaterialsList == null){
+    public List<Product_SubmaterialDTO> getProductSubMaterialByProductId(int id, int material_id) {
+        List<Product_SubmaterialDTO> productSubMaterialsList = productSubMaterialsRepository.getProductSubMaterialByProductIdAndTypeMate(id, material_id);
+        if (productSubMaterialsList == null) {
             throw new AppException(ErrorCode.NOT_FOUND);
         }
         return productSubMaterialsList;
     }
 
     @Override
-    public List<ReProduct_SubmaterialDTO> getRequestProductSubMaterialByRequestProductId(int id,int material_id) {
-        List<ReProduct_SubmaterialDTO> requestProductsSubmaterialsList = requestProductsSubmaterialsRepository.getRequestProductSubMaterialByProductIdAndTypeMate(id,material_id);
-        if(requestProductsSubmaterialsList == null){
+    public List<ReProduct_SubmaterialDTO> getRequestProductSubMaterialByRequestProductId(int id, int material_id) {
+        List<ReProduct_SubmaterialDTO> requestProductsSubmaterialsList = requestProductsSubmaterialsRepository.getRequestProductSubMaterialByProductIdAndTypeMate(id, material_id);
+        if (requestProductsSubmaterialsList == null) {
             throw new AppException(ErrorCode.NOT_FOUND);
         }
         return requestProductsSubmaterialsList;
@@ -275,7 +277,7 @@ public class SubMaterialServiceImpl implements SubMaterialService {
     @Override
     public List<Employee_MaterialDTO> getAllEmpMate() {
         List<Employee_MaterialDTO> employeematerialsList = employeeMaterialRepository.getAllEmployeeMate();
-        if(employeematerialsList == null){
+        if (employeematerialsList == null) {
             throw new AppException(ErrorCode.NOT_FOUND);
         }
         return employeematerialsList;
@@ -284,7 +286,7 @@ public class SubMaterialServiceImpl implements SubMaterialService {
     @Override
     public List<Employee_MaterialDTO> findEmployeematerialsByName(String key) {
         List<Employee_MaterialDTO> employeematerialsList = employeeMaterialRepository.getAllEmployeeMateByNameEmployee(key);
-        if(employeematerialsList == null){
+        if (employeematerialsList == null) {
             throw new AppException(ErrorCode.NOT_FOUND);
         }
         return employeematerialsList;
@@ -321,12 +323,11 @@ public class SubMaterialServiceImpl implements SubMaterialService {
 //    }
 
 
-
     @Transactional
     @Override
-    public ResponseEntity<ApiResponse<List<String>>> createExportMaterialRequestTotalJob(int productId,int mate_id,  QuantityTotalDTO quantityTotalDTO,int emp_id) {
+    public ResponseEntity<ApiResponse<List<String>>> createExportMaterialRequestTotalJob(int productId, int mate_id, QuantityTotalDTO quantityTotalDTO, int emp_id) {
         //lấy các ProductSubMaterials tạo nên product có id kia
-        List<RequestProductsSubmaterials> requestProductsSubmaterialsList = requestProductsSubmaterialsRepository.findByRequestProductIDAndMate(productId,mate_id);
+        List<RequestProductsSubmaterials> requestProductsSubmaterialsList = requestProductsSubmaterialsRepository.findByRequestProductIDAndMate(productId, mate_id);
         List<Employeematerials> employeeMaterialsList = new ArrayList<>();
         User user = userRepository.findByIdCheck(emp_id);
         Map<String, String> errors = new HashMap<>(); //hashmap cho error
@@ -337,7 +338,7 @@ public class SubMaterialServiceImpl implements SubMaterialService {
             SubMaterials subMaterial = requestProductsSubmaterials.getSubMaterial();
             double currentQuantity = subMaterial.getQuantity();
             if (quantity > currentQuantity) {
-                double a = quantity-currentQuantity;
+                double a = quantity - currentQuantity;
                 String errorMessage = String.format("Không đủ số lượng, thiếu %.2f %s", a, subMaterial.getMaterial().getType());
                 errors.put(subMaterial.getSubMaterialName(), errorMessage);
                 //continue;
@@ -369,6 +370,7 @@ public class SubMaterialServiceImpl implements SubMaterialService {
             return ResponseEntity.ok(apiResponse);
         }
     }
+
     @Transactional
     @Override
     public List<ProductSubMaterials> createExportMaterialProduct(int productId, Map<Integer, Double> subMaterialQuantities) {
@@ -378,30 +380,46 @@ public class SubMaterialServiceImpl implements SubMaterialService {
             int subMaterialId = entry.getKey();
             double quantity = entry.getValue();
             SubMaterials subMaterial = subMaterialsRepository.findById1(subMaterialId);
-            InputSubMaterial input=inputSubMaterialRepository.findLatestInputSubMaterialBySubMaterialId(subMaterialId);//lấy giá mới cập nhật
-            ProductSubMaterials productSubMaterial = new ProductSubMaterials(subMaterial, product, quantity,input);
+            InputSubMaterial input = inputSubMaterialRepository.findLatestInputSubMaterialBySubMaterialId(subMaterialId);//lấy giá mới cập nhật
+            ProductSubMaterials productSubMaterial = new ProductSubMaterials(subMaterial, product, quantity, input);
             productSubMaterialsList.add(productSubMaterial);
         }
         productSubMaterialsRepository.saveAll(productSubMaterialsList);
         return productSubMaterialsList;
     }
 
-    @Transactional
     @Override
-    public List<RequestProductsSubmaterials> createExportMaterialProductRequest(int request_product_id, Map<Integer, Double> subMaterialQuantities) {
-        RequestProducts requestProducts = requestProductRepository.findById(request_product_id);
-        List<RequestProductsSubmaterials> requestProductsSubmaterialsList = new ArrayList<>();
-        for (Map.Entry<Integer, Double> entry : subMaterialQuantities.entrySet()) {
-            int subMaterialId = entry.getKey();
-            double quantity = entry.getValue();
-            SubMaterials subMaterial = subMaterialsRepository.findById1(subMaterialId);
-            InputSubMaterial input=inputSubMaterialRepository.findLatestInputSubMaterialBySubMaterialId(subMaterialId);//lấy giá mới cập nhật
-            RequestProductsSubmaterials requestProductsSubmaterials = new RequestProductsSubmaterials(subMaterial, requestProducts, quantity,input);
-            requestProductsSubmaterialsList.add(requestProductsSubmaterials);
+    @Transactional
+    public List<List<RequestProductsSubmaterials>> createExportMaterialProductRequest(List<Integer> request_product_id, List<Map<Integer, Double>> subMaterialQuantities) {
+        List<List<RequestProductsSubmaterials>> list = new ArrayList<>();
+      //  List<List<Integer>> list2 = new ArrayList<>();
+        int index = 0; // Khởi tạo biến đếm
+        for (int i = 0; i<request_product_id.size();i++) {
+            Integer id = request_product_id.get(i);
+            RequestProducts requestProducts = requestProductRepository.findByIdInteger(id);
+            List<RequestProductsSubmaterials> requestProductsSubmaterialsList = new ArrayList<>();
+            // Lấy subMaterialQuantities tương ứng với requestProductId
+            Map<Integer, Double> subMaterialQuantitiesForProduct = subMaterialQuantities.get(index);
+            index++; // Tăng biến đếm cho requestProductId tiếp theo
+
+            for (Map.Entry<Integer, Double> entry : subMaterialQuantitiesForProduct.entrySet()) {
+                int subMaterialId = entry.getKey();
+                double quantity = entry.getValue();
+                SubMaterials subMaterial = subMaterialsRepository.findById1(subMaterialId);
+                InputSubMaterial input = inputSubMaterialRepository.findLatestInputSubMaterialBySubMaterialId(subMaterialId);
+                RequestProductsSubmaterials requestProductsSubmaterials = new RequestProductsSubmaterials(subMaterial, requestProducts, quantity, input);
+                requestProductsSubmaterialsList.add(requestProductsSubmaterials);
+            }
+            list.add(requestProductsSubmaterialsList);
+            requestProductsSubmaterialsRepository.saveAll(requestProductsSubmaterialsList);
         }
-        requestProductsSubmaterialsRepository.saveAll(requestProductsSubmaterialsList);
-        return  requestProductsSubmaterialsList;
+        return list;
     }
+
+
+
+
+
     @Transactional
     @Override
     public ResponseEntity<ApiResponse<List<String>>> createExportMaterialProductTotalJob(int productId,int mate_id, QuantityTotalDTO quantityTotalDTO,int emp_id) {

@@ -64,6 +64,10 @@ public class StatisticServiceImpl implements StatisticService {
     public Long countCompletedOrderByMonthAndYear(int month, int year) {
         return advancesalaryRepository.countCompletedOrderByMonthAndYear( month,  year);
     }
+    @Override
+    public Long countTotalSpecialOrderByMonthAndYear(int month, int year) {
+        return advancesalaryRepository.countTotalSpecialOrderByMonthAndYear( month,  year);
+    }
 
     @Override
     public Long countOrderHaveDone(int query) {

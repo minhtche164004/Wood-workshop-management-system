@@ -19,13 +19,15 @@ export class StatisticService {
 
   private apiCountProduct = `${environment.apiUrl}api/auth/statistic/countProduct`
 
+  private apiCountRQProduct = `${environment.apiUrl}api/auth/statistic/countRequestProduct`
+
   private apiCountEmployeeWithTypePosition = `${environment.apiUrl}api/auth/statistic/countEmployeeWithTypePosition`
 
   private apiCountCompletedJobsByMonthAndYear = `${environment.apiUrl}api/auth/statistic/countCompletedJobsByMonthAndYear`
 
-  private apiCountProductByMonthYear = `${environment.apiUrl}$api/auth/statistic`;
+  private apiCountProductByMonthYear = `${environment.apiUrl}api/auth/statistic`;
 
-  private apiCountProductRQByMonthYear = `${environment.apiUrl}$api/auth/statistic/`;
+  private apiCountProductRQByMonthYear = `${environment.apiUrl}api/auth/statistic`;
   constructor(private http: HttpClient) { }
 
   getTotalAmountOrderHaveDone(): Observable<any> {
@@ -56,6 +58,9 @@ export class StatisticService {
   getCountProduct(): Observable<any> {
     return this.http.get<any>(this.apiCountProduct);
   }
+  getCountRQProduct(): Observable<any> {
+    return this.http.get<any>(this.apiCountRQProduct);
+  }
   countProductByMonthYear(status_id: number, month: number, year: number): Observable<any> {
     const params = new HttpParams()
       .set('status_id', status_id.toString())
@@ -71,7 +76,7 @@ export class StatisticService {
       .set('month', month.toString())
       .set('year', year.toString());
 
-    return this.http.get(`${this.apiCountProductByMonthYear}/countCompletedJobsForRequestProductByMonthAndYear`, { params });
+    return this.http.get(`${this.apiCountProductRQByMonthYear}/countCompletedJobsForRequestProductByMonthAndYear`, { params });
   }
   countEmployeeWithTypePosition(query: number): Observable<any> {
     const url = `${this.apiCountEmployeeWithTypePosition}`;

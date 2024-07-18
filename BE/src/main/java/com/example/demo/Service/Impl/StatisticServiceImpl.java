@@ -43,6 +43,10 @@ public class StatisticServiceImpl implements StatisticService {
         return advancesalaryRepository.countProduct();
     }
     @Override
+    public Long countTotalOrder() {
+        return advancesalaryRepository.countTotalOrder();
+    }
+    @Override
     public Long countRequestProduct() {
         return advancesalaryRepository.countRequestProduct();
     }
@@ -59,6 +63,10 @@ public class StatisticServiceImpl implements StatisticService {
     @Override
     public Long countCompletedOrderByMonthAndYear(int month, int year) {
         return advancesalaryRepository.countCompletedOrderByMonthAndYear( month,  year);
+    }
+    @Override
+    public Long countTotalSpecialOrderByMonthAndYear(int month, int year) {
+        return advancesalaryRepository.countTotalSpecialOrderByMonthAndYear( month,  year);
     }
 
     @Override

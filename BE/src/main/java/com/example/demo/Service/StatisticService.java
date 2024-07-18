@@ -13,6 +13,7 @@ public interface StatisticService {
     Long countRequestProduct();
     Long countSpecialOrder();
     Long countTotalOrderByMonthAndYear(int month, int year);
+    Long countTotalSpecialOrderByMonthAndYear(int month, int year);
     Long countCompletedOrderByMonthAndYear(int month, int year);
     Long countOrderHaveDone(int query);
     Long countEmployeeWithTypePosition(int query);
@@ -21,6 +22,7 @@ public interface StatisticService {
     BigDecimal findTotalSubMaterialByMonthAndYear(int year, int month);
     Integer countCompletedJobsForProductByMonthAndYear(int status_id,int month, int year);
     Integer countCompletedJobsForRequestProductByMonthAndYear(int status_id,int month, int year);
+    Long countTotalOrder();
 
 
 

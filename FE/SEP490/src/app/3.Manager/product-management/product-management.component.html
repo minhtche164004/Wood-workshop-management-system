@@ -17,8 +17,9 @@
                 <span class="align-middle">Thêm sản phẩm</span>
               </a>
               <!-- Them san pham trong bang request product theo yeu cau -->
-              <a *ngIf="!isProduct" href="#" class="btn btn-secondary btn-sm" data-toggle="modal"
-                data-target="#addRequestProductModal" style="font-size: 14px;" (click)="resetFormAdd()">
+              <a id="addRequestProductButton" *ngIf="!isProduct" href="#" class="btn btn-secondary btn-sm"
+                data-toggle="modal" data-target="#addRequestProductModal" style="font-size: 14px;"
+                (click)="resetFormAdd()">
                 <i class="material-icons align-middle" style="font-size: 18px;">&#xE147;</i>
                 <span class="align-middle">Thêm sản phẩm theo yêu cầu</span>
               </a>
@@ -164,7 +165,7 @@
               </td>
               <td>
                 <a [href]="product.imageList[0]?.fullPath" target="_blank">
-                  <img class="img_product" [src]="product.imageList[0]" alt="Ảnh đại diện">
+                  <img class="img_product" [src]="product.imageList[0]?.fullPath" alt="Ảnh đại diện">
                 </a>
               </td>
               <td>{{ product.completionTime }}</td>
@@ -185,16 +186,14 @@
               products.length }}</b> entries</div>
         </div> -->
 
-        <pagination-controls style="justify-content: right; display: flex;"
-        (pageChange)="currentPage = $event"
-        previousLabel="Trang trước"
-        nextLabel="Trang sau">
-      </pagination-controls>
-      <div class="clearfix" style="justify-content: right; display: flex;">
-        <div class="hint-text">Hiển thị <b>{{ (currentPage - 1) * 10 + 1 }}</b> tới <b>{{ currentPage * 10
-            > products.length ? products.length : currentPage * 10 }}</b> trong tổng <b>{{
+        <pagination-controls style="justify-content: right; display: flex;" (pageChange)="currentPage = $event"
+          previousLabel="Trang trước" nextLabel="Trang sau">
+        </pagination-controls>
+        <div class="clearfix" style="justify-content: right; display: flex;">
+          <div class="hint-text">Hiển thị <b>{{ (currentPage - 1) * 10 + 1 }}</b> tới <b>{{ currentPage * 10
+              > products.length ? products.length : currentPage * 10 }}</b> trong tổng <b>{{
               products.length }}</b> dữ liệu</div>
-      </div>
+        </div>
 
       </div>
     </div>
@@ -209,33 +208,35 @@
       <div class="modal-header">
         <h2 class="modal-title">Thêm sản phẩm</h2>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-    </div>
+      </div>
       <div class="modal-body">
-       <!-- <label style="font-size: 32px;" for="productName">Thêm sản phẩm</label> -->
+        <!-- <label style="font-size: 32px;" for="productName">Thêm sản phẩm</label> -->
         <form [formGroup]="uploadForm" (ngSubmit)="onSubmit()">
           <div class="form-group">
-            <label style="font-size: 16px;" for="productName">Tên sản phẩm</label>
+            <label style="font-size: 16px;" for="productName">Tên sản phẩm<span
+                class="required-asterisk">*</span></label>
             <input type="text" class="form-control" id="productName" formControlName="product_name">
           </div>
           <div class="form-group">
-            <label style="font-size: 16px;" for="productDescription">Mô tả</label>
+            <label style="font-size: 16px;" for="productDescription">Mô tả<span
+                class="required-asterisk">*</span></label>
             <textarea class="form-control" id="productDescription" rows="3" formControlName="description"></textarea>
           </div>
-          <div class="form-group">
-            <label style="font-size: 16px;" for="productCategory">Kiểu sản phẩm</label>
-            <select class="form-control" id="productCategory" formControlName="category_id">
-              <option [ngValue]="null" disabled selected>Loại sản phẩm</option>
-              <option *ngFor="let category of categories" [ngValue]="category.categoryId">{{ category.categoryName }}
-              </option>
-            </select>
-          </div>
+
           <div class="form-row">
             <div class="form-group col-md-6">
-              <label style="font-size: 16px;" for="productPrice">Đơn giá</label>
-              <input type="number" min="0" class="form-control" id="productPrice" formControlName="price">
+              <label style="font-size: 16px;" for="productCategory">Kiểu sản phẩm<span
+                  class="required-asterisk">*</span></label>
+              <select class="form-control" id="productCategory" formControlName="category_id">
+                <option [ngValue]="null" disabled selected>Loại sản phẩm</option>
+                <option *ngFor="let category of categories" [ngValue]="category.categoryId">{{ category.categoryName }}
+                </option>
+              </select>
             </div>
+
             <div class="form-group col-md-6">
-              <label style="font-size: 16px;" for="selectedStatus">Tình trạng</label>
+              <label style="font-size: 16px;" for="selectedStatus">Tình trạng<span
+                  class="required-asterisk">*</span></label>
               <select class="form-control" id="selectedStatus">
                 <option disabled selected>Chọn trạng thái</option>
                 <option *ngFor="let status of statuses" [ngValue]="status.status_id">{{ status.status_name }}</option>
@@ -244,7 +245,8 @@
           </div>
           <div class="form-row">
             <div class="form-group col-md-4">
-              <label style="font-size: 16px;" for="productImages">Ảnh sản phẩm (Chọn nhiều)</label>
+              <label style="font-size: 16px;" for="productImages">Ảnh sản phẩm (Chọn nhiều)<span
+                  class="required-asterisk">*</span></label>
               <input type="file" class="form-control-file" id="productImages" multiple
                 (change)="onImagesSelected($event)">
             </div>
@@ -254,7 +256,8 @@
                 Làm mới</button>
             </div>
             <div class="form-group col-md-4">
-              <label style="font-size: 16px;" for="thumbnailImage">Ảnh đại diện sản phẩm</label>
+              <label style="font-size: 16px;" for="thumbnailImage">Ảnh đại diện sản phẩm<span
+                  class="required-asterisk">*</span></label>
               <input type="file" class="form-control-file" id="thumbnailImage" (change)="onThumbnailSelected($event)">
             </div>
             <div class="form-group col-md-2 d-flex align-items-end">
@@ -274,14 +277,14 @@
           </div>
           <!-- Mảng các vật liệu cần có trong product -->
           <hr>
-          <label style="font-size: 16px;">Bảng ước tính nguyên vật liệu</label>
+          <label style="font-size: 16px;">Bảng ước tính nguyên vật liệu<span class="required-asterisk">*</span></label>
           <form [formGroup]="materialForm">
             <div formArrayName="items">
               <div *ngFor="let item of items.controls; let i = index" [formGroupName]="i" class="row mb-3">
                 <!-- Thêm select cho materialId -->
                 <div class="col-md-2 mb-3">
                   <div class="form-group">
-                    <label for="materialId-{{i}}">Loại vật liệu</label>
+                    <label for="materialId-{{i}}">Loại vật liệu<span class="required-asterisk">*</span></label>
                     <select id="materialId-{{i}}" class="form-control" formControlName="materialId"
                       (change)="onMaterialChange($event, i)">
                       <option *ngFor="let material of materials" [value]="material.materialId">{{ material.materialName
@@ -292,7 +295,7 @@
                 <!-- subMaterial -->
                 <div class="col-md-4 mb-3">
                   <div class="form-group">
-                    <label for="subMaterialId-{{i}}">Vật liệu</label>
+                    <label for="subMaterialId-{{i}}">Vật liệu<span class="required-asterisk">*</span></label>
                     <select id="subMaterialId-{{i}}" class="form-control" formControlName="subMaterialId"
                       *ngIf="subMaterials[i]" (change)="onSubMaterialChange($event, i)">
                       <option *ngFor="let subMaterial of subMaterials[i]" [value]="subMaterial?.subMaterialId">{{
@@ -304,7 +307,7 @@
                 <!-- Giá (VNĐ) -->
                 <div class="col-md-2 mb-2">
                   <div class="form-group">
-                    <label for="price-{{i}}">Giá</label>
+                    <label for="price-{{i}}">Giá<span class="required-asterisk">*</span></label>
                     <input id="price-{{i}}" class="form-control" formControlName="price" type="text"
                       [value]="unitPriceSubMaterial[i]" readonly="">
                   </div>
@@ -312,7 +315,7 @@
                 <!-- Đơn vị vật liệu -->
                 <div class="col-md-2 mb-3">
                   <div class="form-group">
-                    <label for="subMaterialId-{{i}}">Đơn vị</label>
+                    <label for="subMaterialId-{{i}}">Đơn vị<span class="required-asterisk">*</span></label>
                     <input id="price-{{i}}" class="form-control" formControlName="" type="text"
                       [value]="materialType[i]" readonly="">
                   </div>
@@ -320,7 +323,7 @@
                 <!-- Input cho số lượng -->
                 <div class="col-md-1 mb-3">
                   <div class="form-group">
-                    <label for="quantity-{{i}}">Số lượng</label>
+                    <label for="quantity-{{i}}">Số lượng<span class="required-asterisk">*</span></label>
                     <input id="quantity-{{i}}" class="form-control" formControlName="quantity" type="number" min="0"
                       [(ngModel)]="quantityPerSubMaterial[i]" (change)="onQuantityChange($event, i)"
                       placeholder="Nhập số lượng">
@@ -336,9 +339,18 @@
           </form>
           <hr>
           <div class="total-price">
-            Tổng giá: {{totalUnitPrice | number: '1.0-3'}} VNĐ
+            Tổng giá vật liệu ước tính: {{totalUnitPrice | number: '1.0-3'}} VNĐ
           </div>
           <div>
+          </div>
+          <!-- Nhap gia tien -->
+          <div class="form-row">
+            <div class="col-md-12">
+              <label style="font-size: 16px;" for="productPrice">Đơn giá(VNĐ)<span
+                  class="required-asterisk">*</span></label>
+              <input type="text" min="0" class="form-control" id="productPrice" formControlName="price"
+                (input)="formatInputValue($event)">
+            </div>
           </div>
           <div class="modal-footer d-flex justify-content-center">
             <button type="button" class="btn btn-mau-do" data-dismiss="modal">Hủy</button>
@@ -358,26 +370,43 @@
       <div class="modal-body">
         <h2 for="productName">Thêm sản phẩm theo yêu cầu</h2>
         <form [formGroup]="uploadForm" (ngSubmit)="onSubmitProductRequest()">
-          <!-- auto complete request -->
+          <!-- request infomation -->
           <div class="form-row">
-            <div class="form-group col-md-12">
-              <label style="font-size: 16px;" for="request_id">Chọn yêu cầu</label>
-              <div class="ng-autocomplete">
-                <ng-autocomplete *ngIf="requests" [data]="requests" [searchKeyword]="keyword"
-                  placeholder="Enter the request's code" [itemTemplate]="itemTemplate"
-                  [notFoundTemplate]="notFoundTemplate" (selected)="onRequestIdSelected($event)">
-                </ng-autocomplete>
-
-                <ng-template #itemTemplate let-item>
-                  <a [innerHTML]="item.code"></a>
-                </ng-template>
-
-                <ng-template #notFoundTemplate let-notFound>
-                  <div [innerHTML]="notFound"></div>
-                </ng-template>
+            <div class="form-group col-md-12" [formGroup]="orderForm">
+              <div class="form-row">
+                <div class="form-group col-md-4">
+                  <label for="orderId">Mã yêu cầu</label>
+                  <input type="text" class="form-control" formControlName="code" placeholder="Mã đặt hàng" readonly>
+                </div>
+                <div class="form-group col-md-4">
+                  <label for="orderDate">Ngày đặt hàng</label>
+                  <input type="text" class="form-control" formControlName="orderDate" placeholder="DD-MM-YYY" readonly>
+                </div>
+                <div class="form-group col-md-4">
+                  <label for="orderDate">Ngày dự kiến hoàn thành</label>
+                  <input type="text" class="form-control" formControlName="orderFinish" placeholder="DD-MM-YYY"
+                    readonly>
+                </div>
               </div>
+
+              <div class="form-group">
+                <label for="description">Miêu tả</label>
+                <textarea class="form-control" formControlName="description" placeholder="Miêu tả" readonly></textarea>
+              </div>
+
+
+              <div class="form-group">
+                <label for="image_name">Hình ảnh yêu cầu</label>
+                <div class="form-group col-md-12" *ngIf="selectedImages">
+                  <a *ngFor="let imageUrl of imagesPreviewRequest" [href]="imageUrl" target="_blank">
+                    <img [src]="imageUrl" class="previewMultiple">
+                  </a>
+                </div>
+              </div>
+
             </div>
           </div>
+          <hr>
           <div class="form-row" hidden>
             <div class="form-group col-md-12">
               <label style="font-size: 16px;" for="request_id">Chọn yêu cầu</label>
@@ -385,22 +414,30 @@
             </div>
           </div>
           <div class="form-row">
-            <div class="form-group col-md-8">
-              <label style="font-size: 16px;" for="requestProductName">Tên sản phẩm theo yêu cầu</label>
+            <div class="form-group col-md-7">
+              <label style="font-size: 16px;" for="requestProductName">Tên sản phẩm theo yêu cầu<span
+                  class="required-asterisk">*</span></label>
               <input type="text" class="form-control" id="requestProductName" formControlName="requestProductName">
             </div>
-            <div class="form-group col-md-4">
-              <label style="font-size: 16px;" for="quantity">Số lượng</label>
+            <div class="form-group col-md-2">
+              <label style="font-size: 16px;" for="quantity">Số lượng<span class="required-asterisk">*</span></label>
               <input type="number" min="0" class="form-control" id="quantity" formControlName="quantity">
+            </div>
+            <div class="form-group col-md-3">
+              <label style="font-size: 16px;" for="completionTime">Thời gian hoàn thành<span
+                  class="required-asterisk">*</span></label>
+              <input type="date" class="form-control" id="completionTime" name="completionTime"
+                formControlName="completionTime">
             </div>
           </div>
 
           <div class="form-group">
-            <label style="font-size: 16px;" for="productDescription">Mô tả</label>
+            <label style="font-size: 16px;" for="productDescription">Mô tả<span
+                class="required-asterisk">*</span></label>
             <textarea class="form-control" id="productDescription" rows="3" formControlName="description"></textarea>
           </div>
           <!-- <div class="form-group">
-            <label style="font-size: 16px;" for="productCategory">Kiểu sản phẩm</label>
+            <label style="font-size: 16px;" for="productCategory">Kiểu sản phẩm<span class="required-asterisk">*</span></label>
             <select class="form-control" id="productCategory" formControlName="category_id">
               <option [ngValue]="null" disabled selected>Loại sản phẩm</option>
               <option *ngFor="let category of categories" [ngValue]="category.categoryId">{{ category.categoryName }}
@@ -408,26 +445,9 @@
             </select>
           </div> -->
           <div class="form-row">
-            <div class="form-group col-md-6">
-              <label style="font-size: 16px;" for="productPrice">Đơn giá</label>
-              <input type="number" min="0" class="form-control" id="productPrice" formControlName="price">
-            </div>
-            <div class="form-group col-md-6">
-              <label style="font-size: 16px;" for="completionTime">Thời gian hoàn thành</label>
-              <input type="date" class="form-control" id="completionTime" name="completionTime"
-                formControlName="completionTime">
-            </div>
-            <!-- <div class="form-group col-md-6">
-              <label style="font-size: 16px;" for="selectedStatus">Tình trạng</label>
-              <select class="form-control" id="selectedStatus">
-                <option disabled selected>Chọn trạng thái</option>
-                <option *ngFor="let status of statuses" [ngValue]="status.status_id">{{ status.status_name }}</option>
-              </select>
-            </div> -->
-          </div>
-          <div class="form-row">
             <div class="form-group col-md-10">
-              <label style="font-size: 16px;" for="productImages">Ảnh sản phẩm (Chọn nhiều)</label>
+              <label style="font-size: 16px;" for="productImages">Ảnh sản phẩm (Chọn nhiều)<span
+                  class="required-asterisk">*</span></label>
               <input type="file" class="form-control-file" id="productImages" multiple
                 (change)="onImagesSelected($event)">
             </div>
@@ -455,7 +475,7 @@
                 <!-- Thêm select cho materialId -->
                 <div class="col-md-2 mb-3">
                   <div class="form-group">
-                    <label for="materialId-{{i}}">Loại vật liệu</label>
+                    <label for="materialId-{{i}}">Loại vật liệu<span class="required-asterisk">*</span></label>
                     <select id="materialId-{{i}}" class="form-control" formControlName="materialId"
                       (change)="onMaterialChange($event, i)">
                       <option *ngFor="let material of materials" [value]="material.materialId">{{ material.materialName
@@ -466,7 +486,7 @@
                 <!-- subMaterial -->
                 <div class="col-md-4 mb-3">
                   <div class="form-group">
-                    <label for="subMaterialId-{{i}}">Vật liệu</label>
+                    <label for="subMaterialId-{{i}}">Vật liệu<span class="required-asterisk">*</span></label>
                     <select id="subMaterialId-{{i}}" class="form-control" formControlName="subMaterialId"
                       *ngIf="subMaterials[i]" (change)="onSubMaterialChange($event, i)">
                       <option *ngFor="let subMaterial of subMaterials[i]" [value]="subMaterial?.subMaterialId">{{
@@ -494,7 +514,7 @@
                 <!-- Input cho số lượng -->
                 <div class="col-md-1 mb-3">
                   <div class="form-group">
-                    <label for="quantity-{{i}}">Số lượng</label>
+                    <label for="quantity-{{i}}">Số lượng<span class="required-asterisk">*</span></label>
                     <input id="quantity-{{i}}" class="form-control" formControlName="quantity" type="number" min="0"
                       [(ngModel)]="quantityPerSubMaterial[i]" (change)="onQuantityChange($event, i)"
                       placeholder="Nhập số lượng">
@@ -510,9 +530,18 @@
           </form>
           <hr>
           <div class="total-price">
-            Tổng giá: {{totalUnitPrice | number: '1.0-3'}} VNĐ
+            Tổng giá vật liệu ước tính: {{totalUnitPrice | number: '1.0-3'}} VNĐ
           </div>
           <div>
+          </div>
+          <!-- Nhap gia tien -->
+          <div class="form-row">
+            <div class="form-group col-md-12">
+              <label style="font-size: 16px;" for="productPrice">Đơn giá(VNĐ)<span
+                  class="required-asterisk">*</span></label>
+              <input (input)="formatInputValue($event)" type="text" min="0" class="form-control" id="productPrice"
+                formControlName="price">
+            </div>
           </div>
           <div class="modal-footer d-flex justify-content-center">
             <button type="button" class="btn btn-mau-do" data-dismiss="modal">Hủy</button>
@@ -540,36 +569,32 @@
         <form enctype="multipart/form-data" [formGroup]="editForm" (ngSubmit)="onEditSubmit()">
 
           <div class="form-group">
-            <label style="font-size: 16px;" for="editProductName">Tên sản phẩm</label>
+            <label style="font-size: 16px;" for="editProductName">Tên sản phẩm<span
+                class="required-asterisk">*</span></label>
             <input type="text" class="form-control" id="editProductName" name="editProductName"
               formControlName="product_name">
 
           </div>
 
           <div class="form-group">
-            <label style="font-size: 16px;" for="editProductDescription">Mô tả</label>
+            <label style="font-size: 16px;" for="editProductDescription">Mô tả<span
+                class="required-asterisk">*</span></label>
             <textarea class="form-control" id="editProductDescription" rows="3" name="editProductDescription"
               formControlName="description"></textarea>
           </div>
 
-          <div class="form-group">
-            <label style="font-size: 16px;" for="editProductCategory">Kiểu sản phẩm</label>
-            <select class="form-control" id="editProductCategory" name="editProductCategory"
-              formControlName="category_id">
-              <option [ngValue]="null" disabled selected>Loại sản phẩm</option>
-              <option *ngFor="let category of categories" [ngValue]="category.categoryId">{{ category.categoryName }}
-              </option>
-            </select>
-          </div>
+
 
           <div class="form-row">
             <div class="form-group col-md-6">
-              <label style="font-size: 16px;" for="editProductCompletionTime">Thời gian hoàn thành</label>
+              <label style="font-size: 16px;" for="editProductCompletionTime">Thời gian hoàn thành<span
+                  class="required-asterisk">*</span></label>
               <input type="date" class="form-control" id="editProductCompletionTime" name="editProductCompletionTime"
                 formControlName="completionTime">
             </div>
             <div class="form-group col-md-6">
-              <label style="font-size: 16px;" for="editProductEndDate">Ngày kết thúc bảo hành</label>
+              <label style="font-size: 16px;" for="editProductEndDate">Ngày kết thúc bảo hành<span
+                  class="required-asterisk">*</span></label>
               <input type="date" class="form-control" id="editProductEndDate" name="editProductEndDate"
                 formControlName="enddateWarranty">
             </div>
@@ -577,12 +602,20 @@
 
           <div class="form-row">
             <div class="form-group col-md-6">
-              <label style="font-size: 16px;" for="editProductPrice">Đơn giá</label>
-              <input type="number" min="0" class="form-control" id="editProductPrice" name="editProductPrice"
-                formControlName="price">
+              <label style="font-size: 16px;" for="editProductCategory">Kiểu sản phẩm<span
+                  class="required-asterisk">*</span></label>
+              <select class="form-control" id="editProductCategory" name="editProductCategory"
+                formControlName="category_id">
+                <option [ngValue]="null" disabled selected>Loại sản phẩm<span class="required-asterisk">*</span>
+                </option>
+                <option *ngFor="let category of categories" [ngValue]="category.categoryId">{{ category.categoryName }}
+                </option>
+              </select>
             </div>
+
             <div class="form-group col-md-6">
-              <label style="font-size: 16px;" for="editSelectedStatus">Tình trạng</label>
+              <label style="font-size: 16px;" for="editSelectedStatus">Tình trạng<span
+                  class="required-asterisk">*</span></label>
               <select class="form-control" formControlName="status_id">
                 <option [ngValue]="0" disabled selected>Chọn trạng thái</option>
                 <option *ngFor="let status of statuses" [ngValue]="status.status_id">{{ status.status_name }}</option>
@@ -590,13 +623,15 @@
             </div>
           </div>
           <div class="form-group">
-            <label style="font-size: 16px;" for="editSelectedStatus">Số lượng</label>
+            <label style="font-size: 16px;" for="editSelectedStatus">Số lượng<span
+                class="required-asterisk">*</span></label>
             <input type="number" min="0" class="form-control" id="editProductQuantity" name="editProductQuantity"
               formControlName="quantity">
           </div>
           <div class="form-row">
             <div class="form-group col-md-4">
-              <label style="font-size: 16px;" for="editProductImages">Ảnh sản phẩm (Chọn nhiều)</label>
+              <label style="font-size: 16px;" for="editProductImages">Ảnh sản phẩm (Chọn nhiều)<span
+                  class="required-asterisk">*</span></label>
               <input type="file" class="form-control-file" id="editProductImages" name="editProductImages" multiple
                 (change)="onImagesSelected($event)">
             </div>
@@ -606,7 +641,8 @@
                 Làm mới</button>
             </div>
             <div class="form-group col-md-4">
-              <label style="font-size: 16px;" for="editThumbnailImage">Ảnh đại diện sản phẩm</label>
+              <label style="font-size: 16px;" for="editThumbnailImage">Ảnh đại diện sản phẩm<span
+                  class="required-asterisk">*</span></label>
               <input type="file" class="form-control-file" id="editThumbnailImage" name="editThumbnailImage"
                 (change)="onThumbnailSelected($event)">
             </div>
@@ -638,7 +674,7 @@
                 <!-- Thêm select cho materialId -->
                 <div class="col-md-2 mb-3">
                   <div class="form-group">
-                    <label for="materialId-{{i}}">Loại vật liệu</label>
+                    <label for="materialId-{{i}}">Loại vật liệu<span class="required-asterisk">*</span></label>
                     <select id="materialId-{{i}}" class="form-control" formControlName="materialId"
                       (change)="onMaterialChange($event, i)">
                       <option *ngFor="let material of materials" [value]="material.materialId">{{ material.materialName
@@ -649,7 +685,7 @@
                 <!-- subMaterial -->
                 <div class="col-md-4 mb-3">
                   <div class="form-group">
-                    <label for="subMaterialId-{{i}}">Vật liệu</label>
+                    <label for="subMaterialId-{{i}}">Vật liệu<span class="required-asterisk">*</span></label>
                     <select id="subMaterialId-{{i}}" class="form-control" *ngIf="subMaterials[i]"
                       (change)="onSubMaterialChange($event, i)" formControlName="subMaterialId">
                       <option *ngFor="let subMaterial of subMaterials[i]" [value]="subMaterial?.subMaterialId">{{
@@ -693,9 +729,16 @@
           </form>
           <hr>
           <div class="total-price">
-            Tổng giá: {{totalUnitPrice | number: '1.0-3'}} VNĐ
+            Tổng giá vật liệu ước tính: {{totalUnitPrice | number: '1.0-3'}} VNĐ
           </div>
-
+          <div class="form-row">
+            <div class="form-group col-md-12">
+              <label style="font-size: 16px;" for="editProductPrice">Đơn giá(VNĐ)<span
+                  class="required-asterisk">*</span></label>
+              <input type="text" min="0" class="form-control" id="editProductPrice" name="editProductPrice"
+                formControlName="price" (input)="formatInputValue($event)">
+            </div>
+          </div>
           <div class="modal-footer d-flex justify-content-center">
             <button type="button" class="btn btn-mau-do" data-dismiss="modal">Hủy</button>
             <button type="submit" class="btn btn-primary">Lưu thay đổi</button>
@@ -721,15 +764,63 @@
       </div>
       <div class="modal-body">
         <form enctype="multipart/form-data" [formGroup]="editForm" (ngSubmit)="onEditRequestProductSubmit()">
+          <!-- request infomation -->
+          <div class="form-row">
+            <div class="form-group col-md-12" [formGroup]="orderForm">
+              <div class="form-row">
+                <div class="form-group col-md-4">
+                  <label for="orderId">Order ID</label>
+                  <input type="text" class="form-control" formControlName="code" placeholder="Mã đặt hàng" readonly>
+                </div>
+                <div class="form-group col-md-4">
+                  <label for="orderDate">Ngày đặt hàng</label>
+                  <input type="text" class="form-control" formControlName="orderDate" placeholder="DD-MM-YYY" readonly>
+                </div>
+                <div class="form-group col-md-4">
+                  <label for="orderDate">Ngày dự kiến hoàn thành</label>
+                  <input type="text" class="form-control" formControlName="orderFinish" placeholder="DD-MM-YYY"
+                    readonly>
+                </div>
+              </div>
 
-          <div class="form-group">
-            <label style="font-size: 16px;" for="editProductName">Tên sản phẩm</label>
-            <input type="text" class="form-control" id="editProductName" name="editProductName"
-              formControlName="requestProductName">
+              <div class="form-group">
+                <label for="description">Miêu tả</label>
+                <textarea class="form-control" formControlName="description" placeholder="Miêu tả" readonly></textarea>
+              </div>
+
+              <div class="form-group">
+                <label for="image_name">Hình ảnh yêu cầu</label>
+                <div class="form-group col-md-12" *ngIf="selectedImages">
+                  <a *ngFor="let imageUrl of imagesPreviewRequest" [href]="imageUrl" target="_blank">
+                    <img [src]="imageUrl" class="previewMultiple">
+                  </a>
+                </div>
+              </div>
+
+            </div>
+          </div>
+          <hr>
+          <div class="form-row">
+            <div class="form-group col-md-7">
+              <label style="font-size: 16px;" for="editProductName">Tên sản phẩm<span class="required-asterisk">*</span></label>
+              <input type="text" class="form-control" id="editProductName" name="editProductName"
+                formControlName="requestProductName">
+            </div>
+            <div class="form-group col-md-2">
+              <label style="font-size: 16px;" for="editSelectedStatus">Số lượng<span class="required-asterisk">*</span></label>
+              <input type="number" min="0" class="form-control" id="editProductQuantity" name="editProductQuantity"
+                formControlName="quantity">
+            </div>
+            <div class="form-group col-md-3">
+              <label style="font-size: 16px;" for="editProductCompletionTime">Thời gian hoàn thành<span class="required-asterisk">*</span></label>
+              <input type="date" class="form-control" id="editProductCompletionTime" name="editProductCompletionTime"
+                formControlName="completionTime">
+            </div>
           </div>
 
+
           <div class="form-group">
-            <label style="font-size: 16px;" for="editProductDescription">Mô tả</label>
+            <label style="font-size: 16px;" for="editProductDescription">Mô tả<span class="required-asterisk">*</span></label>
             <textarea class="form-control" id="editProductDescription" rows="3" name="editProductDescription"
               formControlName="description"></textarea>
           </div>
@@ -743,42 +834,19 @@
               </option>
             </select>
           </div> -->
-
           <div class="form-row">
             <div class="form-group col-md-12">
-              <label style="font-size: 16px;" for="editProductCompletionTime">Thời gian hoàn thành</label>
-              <input type="date" class="form-control" id="editProductCompletionTime" name="editProductCompletionTime"
-                formControlName="completionTime">
-            </div>
-            <!-- <div class="form-group col-md-6">
-              <label style="font-size: 16px;" for="editProductEndDate">Ngày kết thúc bảo hành</label>
-              <input type="date" class="form-control" id="editProductEndDate" name="editProductEndDate"
-                formControlName="enddateWarranty">
-            </div> -->
-          </div>
-
-          <div class="form-row">
-            <div class="form-group col-md-6">
-              <label style="font-size: 16px;" for="editProductPrice">Đơn giá</label>
-              <input type="number" min="0" class="form-control" id="editProductPrice" name="editProductPrice"
-                formControlName="price">
-            </div>
-            <div class="form-group col-md-6">
-              <label style="font-size: 16px;" for="editSelectedStatus">Tình trạng</label>
+              <label style="font-size: 16px;" for="editSelectedStatus">Tình trạng<span class="required-asterisk">*</span></label>
               <select class="form-control" formControlName="status_id">
                 <option [ngValue]="0" disabled selected>Chọn trạng thái</option>
                 <option *ngFor="let status of statuses" [ngValue]="status.status_id">{{ status.status_name }}</option>
               </select>
             </div>
           </div>
-          <div class="form-group">
-            <label style="font-size: 16px;" for="editSelectedStatus">Số lượng</label>
-            <input type="number" min="0" class="form-control" id="editProductQuantity" name="editProductQuantity"
-              formControlName="quantity">
-          </div>
+
           <div class="form-row">
             <div class="form-group col-md-4">
-              <label style="font-size: 16px;" for="editProductImages">Ảnh sản phẩm (Chọn nhiều)</label>
+              <label style="font-size: 16px;" for="editProductImages">Ảnh sản phẩm (Chọn nhiều)<span class="required-asterisk">*</span></label>
               <input type="file" class="form-control-file" id="editProductImages" name="editProductImages" multiple
                 (change)="onImagesSelected($event)">
             </div>
@@ -818,7 +886,7 @@
                 <!-- Thêm select cho materialId -->
                 <div class="col-md-2 mb-3">
                   <div class="form-group">
-                    <label for="materialId-{{i}}">Loại vật liệu</label>
+                    <label for="materialId-{{i}}">Loại vật liệu<span class="required-asterisk">*</span></label>
                     <select id="materialId-{{i}}" class="form-control" formControlName="materialId"
                       (change)="onMaterialChange($event, i)">
                       <option *ngFor="let material of materials" [value]="material.materialId">{{ material.materialName
@@ -829,7 +897,7 @@
                 <!-- subMaterial -->
                 <div class="col-md-4 mb-3">
                   <div class="form-group">
-                    <label for="subMaterialId-{{i}}">Vật liệu</label>
+                    <label for="subMaterialId-{{i}}">Vật liệu<span class="required-asterisk">*</span></label>
                     <select id="subMaterialId-{{i}}" class="form-control" *ngIf="subMaterials[i]"
                       (change)="onSubMaterialChange($event, i)" formControlName="subMaterialId">
                       <option *ngFor="let subMaterial of subMaterials[i]" [value]="subMaterial?.subMaterialId">{{
@@ -873,13 +941,22 @@
           </form>
           <hr>
           <div class="total-price">
-            Tổng giá: {{totalUnitPrice | number: '1.0-3'}} VNĐ
+            Tổng giá vật liệu ước tính: {{totalUnitPrice | number: '1.0-3'}} VNĐ
+          </div>
+
+          <div class="form-row">
+            <div class="form-group col-md-12">
+              <label style="font-size: 16px;" for="editProductPrice">Đơn giá(VNĐ)</label>
+              <input type="text" min="0" class="form-control" id="editProductPrice" name="editProductPrice"
+                formControlName="price" (input)="formatInputValue($event)">
+            </div>
           </div>
 
           <div class="modal-footer d-flex justify-content-center">
             <button type="button" class="btn btn-mau-do" data-dismiss="modal">Hủy</button>
             <button type="submit" class="btn btn-primary">Lưu thay đổi</button>
           </div>
+
 
         </form>
       </div>
@@ -893,13 +970,13 @@
   <div class="modal-dialog" role="document">
     <div class="modal-content">
       <div class="modal-header">
-        <h2 class="modal-title" id="confirmDeleteModalLabel">Confirm Delete</h2>
+        <h2 class="modal-title" id="confirmDeleteModalLabel">Xóa sản phẩm</h2>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
       <div class="modal-body" id="confirmDeleteModal">
-        Are you sure you want to delete this product "{{ selectedProductNameCurrentDelele }}" ?
+        Bản có chắc muốn xóa sản phẩm "{{ selectedProductNameCurrentDelele }}" (thao tác này không thể hoàn tác)?
       </div>
       <div class="modal-footer" id="confirmDeleteModal">
         <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>

@@ -22,44 +22,48 @@ import java.util.Objects;
 
 public class ExcelUploadService {
 
-    public static boolean isValidExcelFile(MultipartFile file){
-        return Objects.equals(file.getContentType(),"application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
+    public static boolean isValidExcelFile(MultipartFile file) {
+        return Objects.equals(file.getContentType(), "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
     }
-    public static List<SubMaterialDTO> getSubMaterialDataFromExcel(InputStream inputStream){
-        List<SubMaterialDTO> subMaterialDTOS = new ArrayList<>();
-        try {
-            XSSFWorkbook workbook = new XSSFWorkbook(inputStream);
+
+    public static List<SubMaterialDTO> getSubMaterialDataFromExcel(InputStream inputStream, List<ExcelError> errors) {
+        List<SubMaterialDTO> subMaterialDTOs = new ArrayList<>();
+        try (XSSFWorkbook workbook = new XSSFWorkbook(inputStream)) {
             XSSFSheet sheet = workbook.getSheet("SubMaterial");
 
-            int rowIndex=0;
-            for(Row row :sheet){
-                if(rowIndex ==0){
-                    rowIndex ++;
-                    continue;
+            int rowIndex = 0;
+            for (Row row : sheet) {
+                if (rowIndex == 0) {
+                    rowIndex++;
+                    continue; // Bỏ qua dòng tiêu đề
                 }
                 Iterator<Cell> cellIterator = row.iterator();
-                int cellIndex=0;
+                int cellIndex = 0;
                 SubMaterialDTO subMaterialDTO = new SubMaterialDTO();
-                while(cellIterator.hasNext()){
+                while (cellIterator.hasNext()) {
                     Cell cell = cellIterator.next();
-                    switch (cellIndex){
-                        case 0 -> subMaterialDTO.setSub_material_name(cell.getStringCellValue());
-                        case 1 -> subMaterialDTO.setMaterial_name(cell.getStringCellValue());
-                        case 2 -> subMaterialDTO.setDescription(cell.getStringCellValue());
-                        case 3 -> subMaterialDTO.setQuantity(cell.getNumericCellValue());
-                        case 4 -> subMaterialDTO.setUnit_price(BigDecimal.valueOf(cell.getNumericCellValue()));
-                        default ->  {
-
+                    try {
+                        switch (cellIndex) {
+                            case 0 -> subMaterialDTO.setSub_material_name(cell.getStringCellValue());
+                            case 1 -> subMaterialDTO.setMaterial_name(cell.getStringCellValue());
+                            case 2 -> subMaterialDTO.setDescription(cell.getStringCellValue());
+                            case 3 -> subMaterialDTO.setQuantity(cell.getNumericCellValue());
+                            case 4 -> subMaterialDTO.setUnit_price(BigDecimal.valueOf(cell.getNumericCellValue()));
+                            default -> {
+                            }
                         }
+                    } catch (IllegalStateException | NumberFormatException e) {
+                        String errorMessage = "Lỗi định dạng ở hàng " + (rowIndex + 1) + ", cột " + (cellIndex + 1);
+                        errors.add(new ExcelError(rowIndex + 1, cellIndex + 1, errorMessage));
                     }
                     cellIndex++;
                 }
-                subMaterialDTOS.add(subMaterialDTO);
-
+                subMaterialDTOs.add(subMaterialDTO);
+                rowIndex++;
             }
         } catch (IOException e) {
-            e.getStackTrace();
+            // Xử lý lỗi đọc file nếu cần
         }
-        return subMaterialDTOS;
+        return subMaterialDTOs;
     }
 }

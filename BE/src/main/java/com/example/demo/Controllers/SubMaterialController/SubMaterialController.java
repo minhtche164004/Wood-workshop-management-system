@@ -5,6 +5,7 @@ import com.example.demo.Config.RedisConfig;
 import com.example.demo.Dto.ProductDTO.CreateExportMaterialProductRequest;
 import com.example.demo.Dto.ProductDTO.ProductDTO;
 import com.example.demo.Dto.ProductDTO.QuantityTotalDTO;
+import com.example.demo.Dto.SubMaterialDTO.ExportMaterialDTO;
 import com.example.demo.Dto.SubMaterialDTO.SubMaterialDTO;
 import com.example.demo.Dto.SubMaterialDTO.SubMaterialViewDTO;
 import com.example.demo.Dto.SubMaterialDTO.UpdateSubDTO;
@@ -35,8 +36,11 @@ import redis.clients.jedis.JedisPooled;
 import java.net.MalformedURLException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/auth/submaterial/")
@@ -125,9 +129,9 @@ public class SubMaterialController {
 
     @PostMapping("/upload-submaterial-data")
     public ApiResponse<?> uploadCustomersData(@RequestParam("file") MultipartFile file) {
-        ApiResponse<String> apiResponse = new ApiResponse<>();
-        subMaterialService.saveSubMaterialToDatabase(file);
-        apiResponse.setResult("Đọc file thành công , dữ liệu đã đưọc thêm vào ");
+        ApiResponse<List> apiResponse = new ApiResponse<>();
+
+        apiResponse.setResult(subMaterialService.saveSubMaterialToDatabase(file));
         return apiResponse;
     }
 
@@ -178,11 +182,30 @@ public class SubMaterialController {
         return subMaterialService.createExportMaterialProduct(request.getProductId(), request.getSubMaterialQuantities());
     }
 
-    //xuất đơn vật liệu cho đơn hàng đặt theo yêu cầu , request product
+//    //xuất đơn vật liệu cho đơn hàng đặt theo yêu cầu , request product
+//    @PostMapping("/createExportMaterialProductRequest")
+//    public List<List<RequestProductsSubmaterials>> createExportMaterialProductRequest(@RequestBody List<CreateExportMaterialProductRequest> request) {
+//        return subMaterialService.createExportMaterialProductRequest(List<request.getProductId()> id, request.getSubMaterialQuantities());
+//    }
+
     @PostMapping("/createExportMaterialProductRequest")
-    public List<RequestProductsSubmaterials> createExportMaterialProductRequest(@RequestBody CreateExportMaterialProductRequest request) {
-        return subMaterialService.createExportMaterialProductRequest(request.getProductId(), request.getSubMaterialQuantities());
+    public ResponseEntity<List<List<RequestProductsSubmaterials>>> createExportMaterialProductRequest(@RequestBody List<ExportMaterialDTO> request) {
+        List<Integer> productIds = new ArrayList<>();
+        List<Map<Integer, Double>> subMaterialQuantitiesList = new ArrayList<>();
+
+        // Lặp qua danh sách request và lấy ra productIds và subMaterialQuantities tương ứng
+        for (ExportMaterialDTO exportMaterialDTO : request) {
+            Integer productId = exportMaterialDTO.getRequest_product_id(); // Lấy productId
+           // for (Map<Integer, Double> subMaterialQuantities : exportMaterialDTO.getSubMaterialQuantities()) {
+                productIds.add(productId); // Thêm productId vào danh sách
+                subMaterialQuantitiesList.add(exportMaterialDTO.getSubMaterialQuantities()); // Thêm subMaterialQuantities vào danh sách
+          //  }
+        }
+
+        return ResponseEntity.ok(subMaterialService.createExportMaterialProductRequest(productIds, subMaterialQuantitiesList));
     }
+
+
 
     @PostMapping("/createExportMaterialProductTotalJob")
     public ResponseEntity<ApiResponse<List<String>>> createExportMaterialProductTotalJob(@RequestParam("id") int id ,@RequestParam("mate_id") int mate_id, @RequestBody QuantityTotalDTO quantityTotalDTO

@@ -15,12 +15,13 @@ export class ProductDetailComponent implements OnInit {
   productId: number = 0;
   categoryId: number = 0;
   productDetails: any = {};
-  categoryProduct: any= {};
+  categoryProduct: any = {};
   largeImageUrl: string = '';
+  isLoadding: boolean = false;
   largeImageUrl_Cate: string = '';
   listWoodMaterial: string[] = [];
   listPaintMaterial: string[] = [];
-  constructor(private route: ActivatedRoute, private http: HttpClient,private wishList: WishlistService,private toastr: ToastrService) {
+  constructor(private route: ActivatedRoute, private http: HttpClient, private wishList: WishlistService, private toastr: ToastrService) {
     this.onTabClick('description');
   }
 
@@ -32,26 +33,31 @@ export class ProductDetailComponent implements OnInit {
     this.shuffleArray(this.categoryProduct);
   }
   addToWishlist(productId: number): void {
-    this.wishList.addWishlist(productId).subscribe( 
+    this.isLoadding = true;
+    this.wishList.addWishlist(productId).subscribe(
       data => {
         console.log('data:', data);
         if (data.code === 1000) {
           this.toastr.success('Sản phẩm đã được thêm vào yêu thích!', 'Thành công');
+          this.isLoadding = false;
         } else if (data.code === 1034) {
           this.toastr.error('Sản phẩm đã được thêm vào yêu thích!', 'Thành công');
         } else {
           console.log("data.code: ", data.code);
           this.toastr.warning('Vui lòng đăng nhập để thêm sản phẩm yêu thích!', 'Lỗi');
+          this.isLoadding = false;
         }
       },
       error => {
         // console.error('error:', error);
         this.toastr.success('Sản phẩm đã được thêm vào yêu thích!', 'Thành công');
+        this.isLoadding = false;
       }
     );
   }
 
   getProductDetails(id: number) {
+    this.isLoadding = true
     this.http.get(`${environment.apiUrl}api/auth/product/ViewDetailProductById?id=${id}`)
       .subscribe(
         (response: any) => {
@@ -63,20 +69,24 @@ export class ProductDetailComponent implements OnInit {
           // if(this.productDetails.sub_material_name.length)
           this.listWoodMaterial = [];
           this.listPaintMaterial = [];
-          this.productDetails.sub_material_name.map((submaterial: any)=>{
-            if(submaterial.materialId == 1){
+          this.productDetails.sub_material_name.map((submaterial: any) => {
+            if (submaterial.materialId == 1) {
               this.listWoodMaterial.push(submaterial.subMaterialName)
             }
-            if(submaterial.materialId == 4){
+            if (submaterial.materialId == 4) {
               this.listPaintMaterial.push(submaterial.subMaterialName)
             }
           })
 
           console.log('CategoryID:', this.categoryId);
           this.getCategoryProducts(this.categoryId);
+          this.isLoadding = false
+
         },
         (error) => {
           console.error('Error fetching product details:', error);
+          this.isLoadding = false
+
         }
       );
   }
@@ -94,7 +104,7 @@ export class ProductDetailComponent implements OnInit {
         }
       );
   }
-  
+
 
   updateLargeImage(imageUrl: string) {
     this.largeImageUrl = imageUrl;

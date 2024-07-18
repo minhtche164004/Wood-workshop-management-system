@@ -95,23 +95,18 @@
 
           <hr />
 
-          <div class="row" style="margin-top: 20px;">
-            <div class="col-md-6 d-flex justify-content-center mb-3">
-              <a class="btn btn-warning shadow-0 custom-background"
-                [routerLink]="['/product-details', productDetails.productId]"
-                (click)="addToWishlist(productDetails.productId)">
-                Thêm vào danh sách yêu thích <i class="fa-solid fa-heart"></i>
-              </a>
-            </div>
-            <div class="col-md-6 d-flex justify-content-center mb-3">
-              <a class="btn btn-warning shadow-0 custom-background" href="https://zalo.me/2628068117103072011"
-                target="_blank">
-                Liên hệ người bán sản phẩm
-              </a>
-            </div>
+          <div class="d-flex justify-content-center mt-4">
+            <a class="btn btn-warning shadow-0 custom-background mx-2"
+               [routerLink]="['/product-details', productDetails.productId]"
+               (click)="addToWishlist(productDetails.productId)">
+              Thêm vào danh sách yêu thích <i class="fa-solid fa-heart"></i>
+            </a>
+            <a class="btn btn-warning shadow-0 custom-background mx-2"
+               href="https://zalo.me/2628068117103072011"
+               target="_blank">
+              Liên hệ người bán sản phẩm
+            </a>
           </div>
-
-
 
 
 
@@ -204,3 +199,6 @@
 <div class="zalo-chat-widget" data-oaid="2628068117103072011" data-welcome-message="Rất vui khi được hỗ trợ bạn!"
   data-autopopup="0" data-width="" data-height=""></div>
 <app-footer></app-footer>
+<div *ngIf="isLoadding" class="loading-overlay">
+  <div class="spinner"></div>
+</div>

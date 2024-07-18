@@ -20,15 +20,33 @@ export class WishlistComponent {
   }
 
   loadWishlist() {
+    this.isLoadding = true;
+
     // Thay thế bằng user_id thích hợp của bạn
     this.authenListService.GetByIdWishList().subscribe(
       (data) => {
+
+
         this.wishlistItems = data.result; // Lưu trữ dữ liệu nhận được từ API vào biến wishlistItems
-        console.log("Data WishList: ", data)
+       
+        this.isLoadding = false;
+
       },
       (error) => {
         console.error('Failed to fetch wishlist:', error);
-        // Xử lý lỗi nếu cần thiết
+        this.isLoadding = false;
+
+      }
+    );
+  }
+  ReloadWishlist() {
+    this.authenListService.GetByIdWishList().subscribe(
+      (data) => {
+        this.wishlistItems = data.result; // Lưu trữ dữ liệu nhận được từ API vào biến wishlistItems
+      },
+      (error) => {
+        console.error('Failed to fetch wishlist:', error);
+        this.isLoadding = false;
       }
     );
   }
@@ -42,10 +60,9 @@ export class WishlistComponent {
     this.authenListService.deleteWishList(this.deleteId).subscribe(
       response => {
         this.isLoadding = false;
+        this.ReloadWishlist();
         this.toastr.success('Xóa sản phẩm yêu thích thành công!', 'Thành công');
-        timer(1000).subscribe(() => {
-          window.location.reload();
-        });
+        $('[data-dismiss="modal"]').click();
       },
       error => {
         this.isLoadding = false;

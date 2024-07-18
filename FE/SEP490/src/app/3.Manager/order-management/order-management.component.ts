@@ -96,7 +96,7 @@ export class OrderManagementComponent implements OnInit {
             this.user = data.result;
             this.isLoadding = false;
 
-            //      console.log('Danh sách order:', this.user);
+                  console.log('Danh sách order:', this.user);
 
 
           } else {
@@ -150,13 +150,13 @@ export class OrderManagementComponent implements OnInit {
   }
   getOrDetailById(order_detail_id: string): void {
     this.isLoadding = true;
-
+    console.log('Order_detail_id:', order_detail_id);
     this.authenListService.getOrderDetailById(order_detail_id).subscribe(
       (data) => {
         this.OrderdetailById = data.result;
         this.isLoadding = false;
 
-        //  console.log('OrderdetailById:', this.OrderdetailById);
+          console.log('OrderdetailById:', this.OrderdetailById);
       },
       (error) => {
         console.error('Error fetching user data:', error);
@@ -167,9 +167,9 @@ export class OrderManagementComponent implements OnInit {
 
   }
   selectedOrder: any = {};
-  getOrderDetail(order: any) {
-    this.selectedOrder = order;
-    console.log('Order:', this.selectedOrder);
+  getOrderDetail(orderId: number):void {
+    
+    console.log('OrderID:', this.selectedOrder);
   }
   onStatusChange(orderId: string, event: Event): void {
     const statusId = (event.target as HTMLSelectElement).value;

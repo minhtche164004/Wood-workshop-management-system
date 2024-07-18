@@ -90,7 +90,9 @@ export class ChartComponent implements OnInit {
         this.getTotalAmountSubMaterial(),
         this.getTotalSpecialOrder(),
         this.getTotalProduct(),
-        this.getAllEmployee()
+        this.getAllEmployee(),
+        this.getProductByMonthAndYear(),
+        this.getProductRequestByMonthAndYear()
       ]).then(() => {
         this.updateEmployeePositions().then(() => {
           this.initializeCharts();
@@ -311,5 +313,21 @@ export class ChartComponent implements OnInit {
     });
   }
 
+  getProductByMonthAndYear() {
+    return new Promise<void>((resolve, reject) => {
+      this.statistic.countProductByMonthYear(1, 1, 2021).subscribe((data) => {
+        console.log("getProductByMonthAndYear: ", data);
+        resolve();
+      }, err => reject(err));
+    });
+  }
+  getProductRequestByMonthAndYear() {
+    return new Promise<void>((resolve, reject) => {
+      this.statistic.countProductRequestByMonthYear(1, 1, 2021).subscribe((data) => {
+        console.log("getProductRequestByMonthAndYear: ", data);
+        resolve();
+      }, err => reject(err));
+    });
+  }
   
 }

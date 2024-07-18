@@ -503,13 +503,13 @@ public class    OrderServiceImpl implements OrderService {
 //    }
 
     @Override
-    public List<Orders> GetAllOrder() {
-        return orderRepository.findAll();
+    public List<OderDTO> GetAllOrder() {
+        return orderRepository.getAllOrder();
     }
 
     @Override
-    public List<Orders> FindByNameOrCode(String key) {
-        List<Orders> ordersList = orderRepository.findOrderByAddressorCode(key);
+    public List<OderDTO> FindByNameOrCode(String key) {
+        List<OderDTO> ordersList = orderRepository.findOrderByAddressorCode(key);
         if (ordersList.isEmpty()) {
             throw new AppException(ErrorCode.NOT_FOUND);
         }
@@ -517,8 +517,8 @@ public class    OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public List<Orders> FilterByDate(Date from, Date to) {
-        List<Orders> ordersList = orderRepository.findByOrderDateBetween(from, to);
+    public List<OderDTO> FilterByDate(Date from, Date to) {
+        List<OderDTO> ordersList = orderRepository.findByOrderDateBetween(from, to);
         if (ordersList.isEmpty()) {
             throw new AppException(ErrorCode.NOT_FOUND);
         }
@@ -527,8 +527,8 @@ public class    OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public List<Orders> FilterByStatus(int status_id) {
-        List<Orders> ordersList = orderRepository.filterByStatus(status_id);
+    public List<OderDTO> FilterByStatus(int status_id) {
+        List<OderDTO> ordersList = orderRepository.filterByStatus(status_id);
         if (ordersList.isEmpty()) {
             throw new AppException(ErrorCode.NOT_FOUND);
         }

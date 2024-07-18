@@ -1,5 +1,7 @@
 package com.example.demo.Repository;
 
+import com.example.demo.Dto.JobDTO.JobDoneDTO;
+import com.example.demo.Dto.OrderDTO.OderDTO;
 import com.example.demo.Entity.Orders;
 import com.example.demo.Entity.Products;
 import jakarta.transaction.Transactional;
@@ -18,21 +20,46 @@ public interface OrderRepository extends JpaRepository<Orders,Integer> {
     @Query(value = "SELECT p.* FROM orders p WHERE p.code LIKE :prefix% ORDER BY p.code DESC LIMIT 1", nativeQuery = true)
     Orders findOrderTop(@Param("prefix") String prefix);
 
+    @Query("SELECT new com.example.demo.Dto.OrderDTO.OderDTO(" +
+            "COALESCE(o.code, ''), o.orderId, COALESCE(o.orderDate, '') , o.totalAmount,COALESCE(s.status_id, 0) ,COALESCE(s.status_name, '') , COALESCE(o.paymentMethod, ''),COALESCE(o.deposite, 0) ,COALESCE(o.specialOrder, false))" + // Sử dụng COALESCE
+            " FROM Orders o" +
+            " LEFT JOIN o.status s")
+    List<OderDTO> getAllOrder();
+
     @Query("SELECT u FROM Orders u WHERE u.code = :query")
     Orders findByCode(String query);
 
     @Query("SELECT u FROM Orders u WHERE u.orderId = :query")
     Orders findById(int query);
 
-    @Query("SELECT u FROM Orders u  WHERE u.address LIKE CONCAT('%', :keyword, '%') OR " +
-            "u.code LIKE CONCAT('%', :keyword, '%')")
-    List<Orders> findOrderByAddressorCode(@Param("keyword") String keyword);
+    @Query("SELECT new com.example.demo.Dto.OrderDTO.OderDTO(" +
+            "COALESCE(o.code, ''), o.orderId, COALESCE(o.orderDate, '') , o.totalAmount,COALESCE(s.status_id, 0) ,COALESCE(s.status_name, '') , COALESCE(o.paymentMethod, ''),COALESCE(o.deposite, 0) ,COALESCE(o.specialOrder, false))" + // Sử dụng COALESCE
+            " FROM Orders o" +
+            " LEFT JOIN o.status s WHERE o.address LIKE CONCAT('%', :keyword, '%') OR " +
+            "o.code LIKE CONCAT('%', :keyword, '%')")
+    List<OderDTO> findOrderByAddressorCode(@Param("keyword") String keyword);
 
-    @Query("SELECT o FROM Orders o WHERE o.orderDate BETWEEN :startDate AND :endDate")
-    List<Orders> findByOrderDateBetween(@Param("startDate") Date startDate, @Param("endDate") Date endDate);
+//    @Query("SELECT u FROM Orders u  WHERE u.address LIKE CONCAT('%', :keyword, '%') OR " +
+//            "u.code LIKE CONCAT('%', :keyword, '%')")
+//    List<Orders> findOrderByAddressorCode(@Param("keyword") String keyword);
 
-    @Query("SELECT u FROM Orders u WHERE u.status.status_id = :query")
-    List<Orders> filterByStatus(int query);
+    @Query("SELECT new com.example.demo.Dto.OrderDTO.OderDTO(" +
+            "COALESCE(o.code, ''), o.orderId, COALESCE(o.orderDate, '') , o.totalAmount,COALESCE(s.status_id, 0) ,COALESCE(s.status_name, '') , COALESCE(o.paymentMethod, ''),COALESCE(o.deposite, 0) ,COALESCE(o.specialOrder, false))" + // Sử dụng COALESCE
+            " FROM Orders o" +
+            " LEFT JOIN o.status s WHERE o.orderDate BETWEEN :startDate AND :endDate")
+    List<OderDTO> findByOrderDateBetween(@Param("startDate") Date startDate, @Param("endDate") Date endDate);
+
+//    @Query("SELECT o FROM Orders o WHERE o.orderDate BETWEEN :startDate AND :endDate")
+//    List<Orders> findByOrderDateBetween(@Param("startDate") Date startDate, @Param("endDate") Date endDate);
+
+    @Query("SELECT new com.example.demo.Dto.OrderDTO.OderDTO(" +
+            "COALESCE(o.code, ''), o.orderId, COALESCE(o.orderDate, '') , o.totalAmount,COALESCE(s.status_id, 0) ,COALESCE(s.status_name, '') , COALESCE(o.paymentMethod, ''),COALESCE(o.deposite, 0) ,COALESCE(o.specialOrder, false))" + // Sử dụng COALESCE
+            " FROM Orders o" +
+            " LEFT JOIN o.status s WHERE o.status.status_id = :query")
+    List<OderDTO> filterByStatus(int query);
+
+//    @Query("SELECT u FROM Orders u WHERE u.status.status_id = :query")
+//    List<Orders> filterByStatus(int query);
 
     @Query("SELECT u FROM Orders u WHERE u.userInfor.user.userId = :query")
     List<Orders> findHistoryOrder(int query);

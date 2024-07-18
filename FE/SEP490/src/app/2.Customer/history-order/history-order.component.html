@@ -61,11 +61,11 @@
 
                   <td>{{ hs?.code }}</td>
                   <td class="action-buttons">
-                    <a href="#" class="delete" title="Delete" data-toggle="modal" data-target="#confirmDeleteModal">
+                    <!-- <a href="#" class="delete" title="Delete" data-toggle="modal" data-target="#confirmDeleteModal">
                       <i class="fa-regular fa-trash-can"></i>
-                    </a>
-                    <a href="#" class="info" title="Info" data-toggle="modal" data-target="#productDetailModal" (click)="historyOrderDetail(hs.orderId)">
-                      <i class="fa-solid fa-circle-info"></i>
+                    </a> -->
+                    <a href="#" class="info" title="Xem chi tiết" data-toggle="modal" data-target="#productDetailModal" (click)="historyOrderDetail(hs.orderId)">
+                      <i class="fa-solid fa-ellipsis-vertical"></i>
                     </a>
                   </td>
                   <td>{{ hs?.orderDate | date:'dd/MM/yyyy' }}</td>
@@ -93,33 +93,97 @@
   </div>
 </div >
 <!-- Modal for Product Detail -->
-<div class="modal fade" id="productDetailModal" tabindex="-1" role="dialog" aria-labelledby="productDetailModalLabel" aria-hidden="true">
-  <div class="modal-dialog modal-xl modal-dialog-centered" role="document">
+
+
+
+<div class="modal fade" id="productDetailModal" role="dialog" aria-labelledby="detailJobModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-lg">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title text-gradient" id="productDetailModalLabel">Xem đơn hàng chi tiết</h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
+        <h2 class="modal-title" id="productDetailModal">Thông tin lịch sử đơn hàng</h2>
+        <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close"></button>
       </div>
-      <div class="modal-body">
-        <div class="row">
-          <div class="col-md-6">
-            <img class="img-fluid rounded shadow-lg animate__animated animate__zoomIn" [src]="orderData?.productImage" alt="Product Image">
-          </div>
-          <div class="col-md-6">
-            <h3 class="text-gradient animate__animated animate__fadeInUp">{{ orderData?.productName }}</h3>
-            <p><strong>Giá: </strong> <span class="text-danger animate__animated animate__fadeInUp">{{ orderData?.price | currency }}</span></p>
-            <p><strong>Số lượng:</strong> <span class="animate__animated animate__fadeInUp">{{ orderData?.quantity }}</span></p>
+      <div class="modal-body p-4">
+        <div class="container">
+          <div class="card order-detail-card">
+            <div class="card-body p-4">
+              <div class="row">
+                <div class="col-md-6">
+                  <section class="customer-info mb-4">
+                    <h5 style="text-align: center;">Thông tin sản phẩm</h5>
+                    <div class="row">
+                      <div class="col-md-6">
+                        <p>
+                          <strong>Tên sản phẩm:</strong>
+                          {{ orderData?.product_name }}
+                        </p>
+                      </div>
+                      
+                    </div>
+                    <div class="row">
+                      <div class="col-md-6">
+                        <p>
+                          <strong>Số lượng sản phẩm:</strong>
+                          {{ orderData?.quantity }}
+                        </p>
+                      </div>
+                      <div class="col-md-6">
+                        <p>
+                          <strong>Giá sản phẩm:</strong>
+                          {{ orderData?.price }}
+                        </p>
+                      </div>
+                    </div>
+                    <div class="row">
+                      <div class="col-md-6">
+                        <p>
+                          <strong>Tổng số tiền:</strong>
+                          {{ orderData?.totalAmount }}
+                        </p>
+                      </div>
+                      <div class="col-md-6">
+                        <p>
+                          <strong>Phương thức thanh toán:</strong>
+                         
+                          {{ orderData?.paymentMethod === 1 ? 'Chuyển khoản' : (orderData?.paymentMethod === 0 ? 'Tiền mặt' : '') }}
+                        </p>
+                      </div>
+                    </div>
+                  </section>
+                </div>
 
+                <div class="col-md-6">
+                  <section class="order-summary mb-4">
+                    <h5 style="text-align: center;">Thông tin đơn hàng</h5>
+                    <div class="row">
+                      <div class="col-md-6">
+                        <p>
+                          <strong>Mã đơn hàng:</strong>
+                          {{ orderData?.code }}
+                        </p>
+                      </div>
+                      <div class="col-md-6">
+                        <p>
+                          <strong>Trạng thái đơn hàng:</strong>
+                          {{ orderData?.status?.status_name }}
+                        </p>
+                      </div>
+                    </div>
+
+                  
+              
+                  </section>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
+
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
+        </div>
       </div>
     </div>
   </div>
 </div>
-
 <app-footer></app-footer>

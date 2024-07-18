@@ -24,10 +24,18 @@ public class StatisticServiceImpl implements StatisticService {
     public BigDecimal findTotalSalaryByMonthAndYear(int month, int year) {
         return advancesalaryRepository.findTotalSalaryByMonthAndYear(month,year);
     }
-
     @Override
     public Long countCompletedJobsByMonthAndYear(int status_id, int month, int year) {
         return advancesalaryRepository.countCompletedJobsByMonthAndYear(status_id,month,year);
+    }
+    @Override
+    public Long countCompletedProductOnOrderByMonthAndYear( int month, int year) {
+        return advancesalaryRepository.countCompletedProductOnOrderByMonthAndYear(month,year);
+    }
+
+    @Override
+    public Long countCompletedRequestProductOnOrderByMonthAndYear( int month, int year) {
+        return advancesalaryRepository.countCompletedRequestProductOnOrderByMonthAndYear(month,year);
     }
     @Override
     public Integer countCompletedJobsForProductByMonthAndYear(int status_id, int month, int year) {

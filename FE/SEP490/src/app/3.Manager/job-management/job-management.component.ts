@@ -507,7 +507,7 @@ export class JobManagementComponent implements OnInit {
       (data) => {
         if (data.code === 1000) {
           this.productRQs = data.result;
-          //     console.log('Sp cho job:', this.productRQs);
+               console.log('Sp cho job:', this.productRQs);
         } else {
           console.error('Failed to fetch products:', data);
           this.toastr.error('Không thể lấy danh sách sản phẩm!', 'Lỗi');

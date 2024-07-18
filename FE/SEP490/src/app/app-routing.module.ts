@@ -82,15 +82,22 @@ const routes: Routes = [
   { path: 'payment-salary', component: PaymentSalaryComponent },
   { path: 'verifyOtp/:email', component: VerifyOtpMailComponent },  // Route with email as a parameter
   { path: 'forgot_pass/:email', component: ForgotPassComponent },
+
+
+  { path: 'product', component: ProductComponent , }, 
+
   { path: 'employee-submaterial-management', component: EmployeeSubmaterialManagementComponent },
-  { path: 'product', component: ProductComponent , canActivate: [AuthGuard], data: { roles: ['MANAGER'] }}, 
+
+
   { path: 'productsList', component: ProductListComponent , canActivate: [AuthGuard], data: { roles: ['MANAGER'] }}, 
   { path: 'product_management', component: ProductManagementComponent, canActivate: [AuthGuard], data: { roles: ['MANAGER'] } },
-  { path: 'order_rq', component: OrderRequiredComponent , canActivate: [AuthGuard], data: { roles: ['CUSTOMER'] }}, 
+  { path: 'product_management/:id', component: ProductManagementComponent, canActivate: [AuthGuard], data: { roles: ['MANAGER'] } },
+
+  { path: 'order_rq', component: OrderRequiredComponent ,}, 
   { path: 'supplier_management', component: SupplierManagementComponent , canActivate: [AuthGuard], data: { roles: ['MANAGER'] }}, 
   { path: 'profile', component: ViewProfileComponent },
   { path: 'submtr_management', component: SubMaterialManagementComponent , canActivate: [AuthGuard], data: { roles: ['MANAGER'] }}, 
-  { path: 'create_order', component: CreateOrderComponent , canActivate: [AuthGuard], data: { roles: ['CUSTOMER'] }}, 
+  { path: 'create_order', component: CreateOrderComponent , canActivate: [AuthGuard] }, 
   { path: 'upload', component: FileUploadComponent },
   { path: 'product_list', component: ProductListComponent },
   { path: 'order_detail_management', component: OrderDetailManagementComponent , canActivate: [AuthGuard], data: { roles: ['MANAGER'] }  },
@@ -121,7 +128,7 @@ const routes: Routes = [
   { path: 'total_salary', component: TotalSalaryComponent , canActivate: [AuthGuard], data: { roles: ['MANAGER'] }  },
   { path: 'autoComplete', component: AutoCompleteComponent },
   { path: 'history_order', component: HistoryOrderComponent , canActivate: [AuthGuard], data: { roles: ['CUSTOMER'] }}, 
-  { path: 'request_product', component: ListRequestProductComponent , canActivate: [AuthGuard], data: { roles: ['CUSTOMER'] }}, 
+  { path: 'request_product', component: ListRequestProductComponent}, 
   
   { path: 'employee', component: ListJobDoneEmployeeComponent , canActivate: [AuthGuard], data: { roles: ['EMPLOYEE'] }}, 
   { path: 'list_job_done', component: ListJobDoneComponent , canActivate: [AuthGuard], data: { roles: ['ADMIN'] }}, 
@@ -135,9 +142,8 @@ const routes: Routes = [
   
   // { path: '', redirectTo: '/homepage', pathMatch: 'full' },
   { path: 'report-cost', component: ReportCostManagementComponent },
-  // { path: '', redirectTo: '/homepage', pathMatch: 'full' },
-
-  // { path: '**', redirectTo: '/homepage', pathMatch: 'full' },
+  { path: '', redirectTo: '/homepage', pathMatch: 'full' },
+  { path: '**', redirectTo: '/homepage', pathMatch: 'full' },
 
 ];
 

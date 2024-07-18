@@ -602,7 +602,7 @@ public class    OrderServiceImpl implements OrderService {
             }
         }
         if(orders.getSpecialOrder() == true){
-            String email=orderDetailRepository.getMailOrderForSendMail(orderId);
+            String email=orderDetailRepository.getOrderDetailsByOrderIdForSendMail(orderId);
             String code = orders.getCode();
             SimpleDateFormat dateFormatter = new SimpleDateFormat("dd/MM/yyyy");
             String time_finish = dateFormatter.format(orders.getOrderFinish());

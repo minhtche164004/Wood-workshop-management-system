@@ -8,7 +8,7 @@ import java.math.BigDecimal;
 @Service
 public interface StatisticService {
     BigDecimal findTotalSalaryByMonthAndYear(int month, int year);
-    Long countCompletedJobsByMonthAndYear(String status_name,int month, int year);
+    Long countCompletedJobsByMonthAndYear(int status_id,int month, int year);
     Long countProduct();
     Long countRequestProduct();
     Long countSpecialOrder();
@@ -19,8 +19,8 @@ public interface StatisticService {
     BigDecimal totalAmountOrderHaveDone();
     BigDecimal totalAmountSubMaterial();
     BigDecimal findTotalSubMaterialByMonthAndYear(int year, int month);
-    Integer countCompletedJobsForProductByMonthAndYear(String status_name,int month, int year);
-    Integer countCompletedJobsForRequestProductByMonthAndYear(String status_name,int month, int year);
+    Integer countCompletedJobsForProductByMonthAndYear(int status_id,int month, int year);
+    Integer countCompletedJobsForRequestProductByMonthAndYear(int status_id,int month, int year);
 
 
 

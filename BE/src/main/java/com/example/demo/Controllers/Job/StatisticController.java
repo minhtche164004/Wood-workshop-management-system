@@ -50,6 +50,12 @@ public class StatisticController {
         apiResponse.setResult(statisticService.countProduct());
         return apiResponse;
     }
+    @GetMapping("/countTotalOrder")
+    public ApiResponse<?> countTotalOrder() {
+        ApiResponse<Long> apiResponse = new ApiResponse<>();
+        apiResponse.setResult(statisticService.countTotalOrder());
+        return apiResponse;
+    }
     @GetMapping("/countRequestProduct")
     public ApiResponse<?> countRequestProduct() {
         ApiResponse<Long> apiResponse = new ApiResponse<>();

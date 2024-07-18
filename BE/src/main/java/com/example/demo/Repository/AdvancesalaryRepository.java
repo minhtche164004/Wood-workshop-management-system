@@ -58,6 +58,10 @@ public interface AdvancesalaryRepository extends JpaRepository<Advancesalary,Int
             @Param("month") int month,
             @Param("year") int year);
 
+    //đếm số lượng order đã hoàn thành theo tháng và năm
+    @Query("SELECT COUNT(*) FROM Orders o" )
+    Long countTotalOrder();
+
   //đếm số lượng order theo tháng và năm
     @Query("SELECT COUNT(*) FROM Orders o " +
             "WHERE MONTH(o.orderFinish) = :month " +

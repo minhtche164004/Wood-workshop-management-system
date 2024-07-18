@@ -10,6 +10,7 @@ import com.example.demo.Entity.ProductSubMaterials;
 import com.example.demo.Entity.RequestProductsSubmaterials;
 import com.example.demo.Entity.SubMaterials;
 import com.example.demo.Response.ApiResponse;
+import com.example.demo.Service.Impl.ExcelError;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -23,7 +24,7 @@ public interface SubMaterialService {
     List<SubMaterialViewDTO> FilterByMaterial(int material_id);
     SubMaterials addNew(SubMaterialDTO subMaterialDTO);
     List<SubMaterialNameDTO> GetListName();
-    void saveSubMaterialToDatabase(MultipartFile file);
+    List<ExcelError> saveSubMaterialToDatabase(MultipartFile file);
     List<SubMaterialViewDTO> SearchByNameorCode(String key);
     UpdateSubDTO UpdateSub(int id, UpdateSubDTO updateSubDTO);
     SubMaterialViewDTO getSubMaterialById(int sub_material_id);

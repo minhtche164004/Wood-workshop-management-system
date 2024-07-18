@@ -4,11 +4,8 @@ import { ToastrService } from 'ngx-toastr';
 import { FormArray, FormBuilder, FormGroup, Validators, FormsModule, FormControl } from '@angular/forms';
 import { concatMap } from 'rxjs/operators';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
-import { map, switchMap, tap } from 'rxjs/operators';
+import { map, switchMap } from 'rxjs/operators';
 import { Observable } from 'rxjs';
-import { ActivatedRoute, Router } from '@angular/router';
-import { Location } from '@angular/common';
-
 import 'jquery';
 
 interface Category {
@@ -45,27 +42,6 @@ interface SubMaterialItemOfProduct {
   materialType: string;
 }
 declare var $: any; // khai bao jquery
-
-
-interface OrderForm {
-  orderId: number;
-  orderDate: string;
-  status: number;
-  totalAmount: number | null;
-  specialOrder: boolean;
-  paymentMethod: any; // Assuming dynamic type due to null in example
-  deposite: any; // Assuming dynamic type due to null in example
-  code: string;
-  phoneNumber: string;
-  fullname: string;
-  address: string;
-  city_province: string;
-  district: string;
-  wards: string;
-  orderFinish: any; // Assuming dynamic type due to null in example
-  response: string;
-  description: string;
-}
 
 @Component({
   selector: 'app-product-management',
@@ -117,23 +93,13 @@ export class ProductManagementComponent implements OnInit {
   keyword = 'code';
   requests: any[] = [];
   //
-
-  //tao formGroup cho order
-  orderForm: FormGroup;
-  imagesPreviewRequest: string[] = [];
-
-
   constructor(
     private fb: FormBuilder,
     private productListService: ProductListService,
     private toastr: ToastrService,
-    private http: HttpClient,
-    private activatedRoute: ActivatedRoute,
-    private router: Router,
-    private location: Location
+    private http: HttpClient
   ) {
     this.uploadForm = this.fb.group({
-
       request_id: [],// id cua product request
       requestProductName: [''], // ten cua product request
       product_name: [''],
@@ -173,43 +139,6 @@ export class ProductManagementComponent implements OnInit {
     this.formSubMaterialPerProduct = this.fb.group({
       itemsEdit: this.fb.array([]),
     });
-
-    this.orderForm = this.fb.group({
-      orderId: [null],
-      orderDate: [''],
-      status: this.fb.group({
-        status_id: [null],
-        status_name: ['']
-      }),
-      totalAmount: [null],
-      specialOrder: [false],
-      paymentMethod: [null],
-      deposite: [null],
-      // userInfor: this.fb.group({
-      //   inforId: [null],
-      //   phoneNumber: [''],
-      //   fullname: [''],
-      //   address: [''],
-      //   bank_name: [''],
-      //   bank_number: [''],
-      //   city_province: [''],
-      //   district: [''],
-      //   wards: [''],
-      //   has_Account: [null]
-      // }),
-      code: [''],
-      phoneNumber: [''],
-      fullname: [''],
-      address: [''],
-      city_province: [''],
-      district: [''],
-      wards: [''],
-      orderFinish: [null],
-      response: [''],
-      description: [''],
-      requestImages: this.fb.array([])
-    });
-
   }
   //reset lai khi add lai material cho product va product request
   resetFormAdd() {
@@ -327,80 +256,12 @@ export class ProductManagementComponent implements OnInit {
     this.onRemoveMaterial(index);
   }
   //
-  buttonClickModalFlag: boolean = true;
 
-  ngAfterViewChecked() {
-    if (!this.isProduct && this.buttonClickModalFlag && this.idOrder) {
-      const addRequestProductButton = document.getElementById('addRequestProductButton');
-      if (addRequestProductButton) {
-        addRequestProductButton.click();
-        this.buttonClickModalFlag = false;
-      }
-    }
-  }
-
-  ngOnDestroy(): void {
-    this.buttonClickModalFlag = true;
-  }
-
-  idOrder: number | null = null; // khai bao idOrder
   ngOnInit(): void {
     this.loginToken = localStorage.getItem('loginToken');
     this.loadCategories();
     this.loadStatus();
     this.loadMaterials();
-
-    //khi truyen param co id order 
-    this.activatedRoute.params.subscribe(params => {
-      this.idOrder = params['id'];
-      if (this.idOrder) {
-        this.isProduct = false;
-
-        this.materialForm.reset();
-        this.unitPriceSubMaterial = {};
-        this.quantityPerSubMaterial = {};
-        this.orderForm.patchValue({
-          product_id: null,
-          product_name: null,
-          description: null,
-          price: null,
-          category_id: null,
-          image: null,
-          quantity: null,
-          imageList: null,
-          re_productId: null,
-          re_productName: null,
-          code: null,
-          request_id: null
-        });
-        this.imagesPreviewRequest = [];
-
-        this.productListService.getOrderById(this.idOrder).subscribe(
-          (response) => {
-            this.orderForm.patchValue({
-              orderId: this.idOrder,
-              orderDate: response.result.orderDate,
-              code: response.result.code,
-              description: response.result.description,
-              price: response.result?.price,
-              completionTime: response.result?.completionTime,
-              status_id: response.result.status?.status_id,
-              orderFinish: response.result.orderFinish,
-
-            });
-
-            this.imagesPreviewRequest = response.result.requestImages.map((image: any) => {
-              return image.fullPath;
-            });
-          },
-          (error) => {
-            // Xử lý lỗi ở đây
-            console.error(error);
-          }
-        );
-      }
-    });
-
 
     if (this.loginToken) {
       this.isLoadding = true;
@@ -420,23 +281,6 @@ export class ProductManagementComponent implements OnInit {
           (error) => {
             console.error('Error fetching products:', error);
             this.toastr.error('Có lỗi xảy ra!', 'Lỗi');
-          }
-        );
-      } else {
-        this.productListService.getAllProductRequest().subscribe(
-          (data) => {
-            this.isLoadding = false;
-            if (data.code === 1000) {
-              this.products = data.result;
-              console.log('Danh sách sản phẩm theo yeu cau:', this.products);
-            } else {
-              console.error('Failed to fetch products:', data);
-              this.toastr.error('Không thể lấy danh sách sản phẩm!', 'Lỗi');
-            }
-          },
-          (error) => {
-            console.error('Error fetching products:', error);
-            this.toastr.error('Có lỗi xảy ra! Không thể lấy danh sách sản phẩm theo yêu cầu', 'Lỗi');
           }
         );
       }
@@ -509,17 +353,17 @@ export class ProductManagementComponent implements OnInit {
         }
       );
       // lay danh sach request de autocomplete
-      // this.productListService.getAllRequest().subscribe((data: any) => {
-      //   if (data.code === 1000) {
-      //     this.requests = data?.result;
-      //   } else {
-      //     this.toastr.error('Không thể lấy danh sách request!', 'Lỗi');
-      //   }
-      // },
-      //   (error) => {
-      //     console.error('Error fetching requests:', error);
-      //     this.toastr.error('Có lỗi xảy ra!', 'Lỗi');
-      //   });
+      this.productListService.getAllRequest().subscribe((data: any) => {
+        if (data.code === 1000) {
+          this.requests = data?.result;
+        } else {
+          this.toastr.error('Không thể lấy danh sách request!', 'Lỗi');
+        }
+      },
+        (error) => {
+          console.error('Error fetching requests:', error);
+          this.toastr.error('Có lỗi xảy ra!', 'Lỗi');
+        });
     }
     // console.log('Giá trị mới của isProduct:', this.isProduct);
   }
@@ -564,7 +408,7 @@ export class ProductManagementComponent implements OnInit {
 
 
 
-  filterProducts(): void {
+    filterProducts(): void {
     this.isLoadding = true;
     console.log("Lọc sản phẩm với từ khóa:", this.searchKey, ", danh mục:", this.selectedCategory, "và giá:", this.selectedSortByPrice);
 
@@ -748,9 +592,7 @@ export class ProductManagementComponent implements OnInit {
       this.isLoadding = true;
       const productData = this.uploadForm.value;
       // console.log(productData);
-      if (productData.price) {
-        productData.price = Number(productData.price.replace(/,/g, ''));
-      }
+
       // console.log('data goc:', this.materialForm.value);
       var temp = this.materialForm.value;
 
@@ -811,7 +653,7 @@ export class ProductManagementComponent implements OnInit {
         this.editForm.patchValue({
           product_name: product.result.productName,
           description: product.result.description,
-          price: this.formatNumberWithCommas(product.result.price),
+          price: product.result.price,
           category_id: product.result.categories.categoryId,
           completionTime: product.result.completionTime,
           enddateWarranty: product.result.enddateWarranty,
@@ -830,13 +672,10 @@ export class ProductManagementComponent implements OnInit {
 
   }
 
+
   onEditSubmit(): void {
     if (this.editForm.valid) {
       const productData = this.editForm.value;
-
-      if (productData.price) {
-        productData.price = Number(productData.price.replace(/,/g, ''));
-      }
       // console.log('Form Data for Edit:', productData.product_id);
       this.isLoadding = true;
 
@@ -865,37 +704,37 @@ export class ProductManagementComponent implements OnInit {
       }
 
       this.productListService.editProduct(updatedProduct, this.selectedThumbnail, this.selectedImages, productData.product_id)
-        .pipe(
-          concatMap(response => {
-            console.log('Update successful', response);
+      .pipe(
+        concatMap(response => {
+          console.log('Update successful', response);
 
-            const transformedData = {
-              productId: response.result.productId,
-              subMaterialQuantities: transformedObject
-            };
-            console.log("data cua submaterial: ", transformedData);
-            return this.productListService.EditSubMaterialProduct(transformedData);
-          })
-        )
-        .subscribe(
-          finalResponse => {
-            this.reloadProduct();
-            this.isLoadding = false;
-            console.log('Sub material update successful', finalResponse);
-            this.toastr.success('Cập nhật sản phẩm và vật liệu phụ thành công!', 'Thành công');
-            $('[data-dismiss="modal"]').click(); // Đóng modal
-          },
-          error => {
-            if (error.status === 400 && error.error.code === 1038) {
-              this.toastr.warning(error.error.message, 'Lỗi');
-            } else {
-              this.toastr.error('Cập nhật sản phẩm bị lỗi!', 'Lỗi');
-            }
-            console.error('Update error', error);
-            this.isLoadding = false;
-            $('[data-dismiss="modal"]').click(); // Đóng modal
+          const transformedData = {
+            productId: response.result.productId,
+            subMaterialQuantities: transformedObject
+          };
+          console.log("data cua submaterial: ", transformedData);
+          return this.productListService.EditSubMaterialProduct(transformedData);
+        })
+      )
+      .subscribe(
+        finalResponse => {
+          this.reloadProduct();
+          this.isLoadding = false;
+          console.log('Sub material update successful', finalResponse);
+          this.toastr.success('Cập nhật sản phẩm và vật liệu phụ thành công!', 'Thành công');
+          $('[data-dismiss="modal"]').click(); // Đóng modal
+        },
+        error => {
+          if (error.status === 400 && error.error.code === 1038) {
+            this.toastr.warning(error.error.message, 'Lỗi');
+          } else {
+            this.toastr.error('Cập nhật sản phẩm bị lỗi!', 'Lỗi');
           }
-        );
+          console.error('Update error', error);
+          this.isLoadding = false;
+          $('[data-dismiss="modal"]').click(); // Đóng modal
+        }
+      );
     }
   }
 
@@ -1018,11 +857,6 @@ export class ProductManagementComponent implements OnInit {
       this.isLoadding = true;
       const productRequestData = this.uploadForm.value;
 
-      if (productRequestData.price) {
-        productRequestData.price = Number(productRequestData.price.replace(/,/g, ''));
-      }
-
-      productRequestData.request_id = this.idOrder;
       console.log('data goc:', this.materialForm.value);
       var temp = this.materialForm.value;
 
@@ -1050,12 +884,11 @@ export class ProductManagementComponent implements OnInit {
         }))
         .subscribe(
           response => {
-            this.location.replaceState('/product_management');
-            this.isProduct = false;
             this.reloadProductRequest();
             this.isLoadding = false;
             this.toastr.success('Tạo sản phẩm theo yêu cầu thành công!', 'Thành công');
             $('[data-dismiss="modal"]').click();      // tat modal  
+
           },
           error => {
             this.isLoadding = false;
@@ -1063,32 +896,10 @@ export class ProductManagementComponent implements OnInit {
 
           }
         );
-
-
     }
   }
 
   editProductRequest(productId: number) {
-    //binding data cua orderF
-    this.orderForm.patchValue({
-      product_id: null,
-      product_name: null,
-      description: null,
-      price: null,
-      category_id: null,
-      image: null,
-      quantity: null,
-      imageList: null,
-      re_productId: null,
-      re_productName: null,
-      code: null,
-      request_id: null
-    });
-    this.imagesPreviewRequest = [];
-
-
-
-    //reset phan form edit product
     this.materialForm.reset();
     this.unitPriceSubMaterial = {};
     this.quantityPerSubMaterial = {};
@@ -1110,18 +921,15 @@ export class ProductManagementComponent implements OnInit {
     this.thumbnailPreview = '';
     // console.log('Thumbnailpre:', this.thumbnailPreview);
 
-
-
-    this.productListService.getRequestProductById(productId).pipe(
-      tap(product => {
-        // Cập nhật form sản phẩm ở đây
+    this.productListService.getRequestProductById(productId)
+      .subscribe(async product => {
         this.editForm.patchValue({
           re_productId: product.result.re_productId,
           requestProductName: product.result.re_productName,
           code: product.result.code,
           request_id: product.result.request_id,
           description: product.result.description,
-          price: this.formatNumberWithCommas(product.result.price),
+          price: product.result.price,
           completionTime: product.result.completionTime,
           enddateWarranty: product.result?.enddateWarranty,
           status_id: product.result.status?.status_id,
@@ -1129,96 +937,70 @@ export class ProductManagementComponent implements OnInit {
           imageList: product.result.imageList,
 
         });
-        // Cập nhật imagesPreview ở đây
-        this.imagesPreview = product.result.imageList.map((image: any) => image.fullPath);
-      }),
-      concatMap(product => this.productListService.getOrderById(product.result.request_id))
-    ).subscribe(
-      response => {
-        // Cập nhật form đơn hàng ở đây
-        this.orderForm.patchValue({
-          orderId: this.idOrder,
-          orderDate: response.result.orderDate,
-          code: response.result.code,
-          description: response.result.description,
-          price: response.result?.price,
-          completionTime: response.result?.completionTime,
-          status_id: response.result.status?.status_id,
-          orderFinish: response.result.orderFinish,
-
+        this.imagesPreview = product.result.imageList.map((image: any) => {
+          return image.fullPath;
         });
-        // Cập nhật imagesPreviewRequest ở đây
-        this.imagesPreviewRequest = response.result.requestImages.map((image: any) => image.fullPath);
-      },
-      error => {
-        // Xử lý lỗi ở đây
-        console.error(error);
-      }
-    );
-
+        // console.log('Thumbnailpre:', this.imagesPreview);
+      });
     this.populateFormWithDataRequestProduct(productId);
 
   }
 
   onEditRequestProductSubmit(): void {
     // if (this.editForm.valid) {
-    const productData = this.editForm.value;
+      const productData = this.editForm.value;
+      this.isLoadding = true;
 
-    if (productData.price) {
-      productData.price = Number(productData.price.replace(/,/g, ''));
-    }
-    this.isLoadding = true;
+      const updatedProductRequest = {
+        ...productData,
+        // status: this.selectedStatus,
+        // images: this.selectedImages
+      };
 
-    const updatedProductRequest = {
-      ...productData,
-      // status: this.selectedStatus,
-      // images: this.selectedImages
-    };
+      //phan` lay thong tin submate cho san pham
+      var temp = this.formSubMaterialPerProduct.value;
 
-    //phan` lay thong tin submate cho san pham
-    var temp = this.formSubMaterialPerProduct.value;
+      // tach lay quantity va subMaterialId
+      var processedData = temp.itemsEdit.map((item: MaterialItem) => (
+        [(item.subMaterialId as string), item.quantity]
+      ));
+      // console.log("temp:", temp); 
+      // console.log('processedData:', processedData);
+      // convert thanh dang map
+      const transformedObject: { [key: string]: number } = {};
 
-    // tach lay quantity va subMaterialId
-    var processedData = temp.itemsEdit.map((item: MaterialItem) => (
-      [(item.subMaterialId as string), item.quantity]
-    ));
-    // console.log("temp:", temp); 
-    // console.log('processedData:', processedData);
-    // convert thanh dang map
-    const transformedObject: { [key: string]: number } = {};
+      for (const [subMaterialId, quantity] of processedData) {
+        transformedObject[subMaterialId] = quantity;
+      }
 
-    for (const [subMaterialId, quantity] of processedData) {
-      transformedObject[subMaterialId] = quantity;
-    }
+      this.productListService.editProductRequest(updatedProductRequest, this.selectedImages, productData.product_id)
+        .pipe(
+          concatMap(response => {
+            console.log('Update successful', response);
 
-    this.productListService.editProductRequest(updatedProductRequest, this.selectedImages, productData.product_id)
-      .pipe(
-        concatMap(response => {
-          console.log('Update successful', response);
-
-          const transformedData = {
-            productId: response.result.requestProductId,
-            subMaterialQuantities: transformedObject
-          };
-          console.log("data cua submaterial: 0", transformedData);
-          return this.productListService.EditSubMaterialRequestProduct(transformedData);
-        })
-      )
-      .subscribe(
-        finalResponse => {
-          this.reloadProductRequest();
-          this.isLoadding = false;
-          console.log('Sub material update successful', finalResponse);
-          this.toastr.success('Cập nhật sản phẩm và vật liệu phụ thành công!', 'Thành công');
-          $('[data-dismiss="modal"]').click(); // Đóng modal
-        },
-        error => {
-          console.error('Update error', error);
-          this.toastr.error('Cập nhật sản phẩm bị lỗi!', 'Lỗi');
-          this.isLoadding = false;
-        }
-      );
-
+            const transformedData = {
+              productId: response.result.requestProductId,
+              subMaterialQuantities: transformedObject
+            };
+            console.log("data cua submaterial: 0", transformedData);
+            return this.productListService.EditSubMaterialRequestProduct(transformedData);
+          })
+        )
+        .subscribe(
+          finalResponse => {
+            this.reloadProductRequest();
+            this.isLoadding = false;
+            console.log('Sub material update successful', finalResponse);
+            this.toastr.success('Cập nhật sản phẩm và vật liệu phụ thành công!', 'Thành công');
+            $('[data-dismiss="modal"]').click(); // Đóng modal
+          },
+          error => {
+            console.error('Update error', error);
+            this.toastr.error('Cập nhật sản phẩm bị lỗi!', 'Lỗi');
+            this.isLoadding = false;
+          }
+        );
+    // }
   }
 
   deleteProductRequest() {
@@ -1251,15 +1033,4 @@ export class ProductManagementComponent implements OnInit {
     // console.log('productId', this.selectedProductIdCurrentDelele);
   }
 
-
-  //danh cho format input gia tien
-  formatInputValue(event: any) {
-    let value = event.target.value.replace(/,/g, ''); // Remove existing commas
-    const formattedValue = value.replace(/\B(?=(\d{3})+(?!\d))/g, ','); // Add commas
-    event.target.value = formattedValue;
-  }
-  //format gia tien
-  formatNumberWithCommas(x: number): string {
-    return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-  }
 }

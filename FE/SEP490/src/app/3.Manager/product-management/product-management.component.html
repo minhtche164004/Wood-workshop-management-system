@@ -164,7 +164,7 @@
               </td>
               <td>
                 <a [href]="product.imageList[0]?.fullPath" target="_blank">
-                  <img class="img_product" [src]="product.imageList[0]" alt="Ảnh đại diện">
+                  <img class="img_product" [src]="product.imageList[0]?.fullPath" alt="Ảnh đại diện">
                 </a>
               </td>
               <td>{{ product.completionTime }}</td>

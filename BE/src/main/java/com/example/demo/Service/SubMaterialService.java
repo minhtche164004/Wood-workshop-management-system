@@ -6,16 +6,16 @@ import com.example.demo.Dto.MaterialDTO.MaterialDTO;
 import com.example.demo.Dto.ProductDTO.CreateExportMaterialProductRequest;
 import com.example.demo.Dto.ProductDTO.QuantityTotalDTO;
 import com.example.demo.Dto.SubMaterialDTO.*;
-import com.example.demo.Entity.Employeematerials;
-import com.example.demo.Entity.ProductSubMaterials;
-import com.example.demo.Entity.RequestProductsSubmaterials;
-import com.example.demo.Entity.SubMaterials;
+import com.example.demo.Entity.*;
 import com.example.demo.Response.ApiResponse;
 import com.example.demo.Service.Impl.ExcelError;
+import org.springframework.data.repository.query.Param;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.math.BigDecimal;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -51,5 +51,9 @@ public interface SubMaterialService {
 
     List<ProductSubMaterials> EditSubMaterialProduct(int product_id, Map<Integer, Double> subMaterialQuantities);
     List<RequestProductsSubmaterials> EditSubMaterialRequestProduct(int request_product_id, Map<Integer, Double> subMaterialQuantities);
+
+    List<InputSubMaterial> getAllInputSubMaterial();
+
+    List<InputSubMaterial> MultiFilterInputSubMaterial(String search, Integer materialId, Date startDate, Date endDate, BigDecimal minPrice, BigDecimal maxPrice,String sortDirection);
 
 }

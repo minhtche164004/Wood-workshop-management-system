@@ -33,13 +33,11 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import redis.clients.jedis.JedisPooled;
 
+import java.math.BigDecimal;
 import java.net.MalformedURLException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @RestController
@@ -58,6 +56,26 @@ public class SubMaterialController {
     public ApiResponse<?> getAllSubMaterials() {
         ApiResponse<List> apiResponse = new ApiResponse<>();
         apiResponse.setResult(subMaterialService.getAll());
+        return apiResponse;
+    }
+    @GetMapping("/MultiFilterInputSubMaterial")
+    public ApiResponse<?>  MultiFilterInputSubMaterial(
+            @RequestParam(required = false) String search,
+            @RequestParam(required = false) Integer materialId,
+            @RequestParam(required = false) Date startDate,
+            @RequestParam(required = false) Date endDate,
+            @RequestParam(required = false) BigDecimal minPrice,
+            @RequestParam(required = false) BigDecimal maxPrice,
+            @RequestParam(required = false) String sortDirection){
+        ApiResponse<List> apiResponse = new ApiResponse<>();
+        apiResponse.setResult(subMaterialService.MultiFilterInputSubMaterial(search, materialId, startDate,endDate, minPrice, maxPrice, sortDirection));
+        return apiResponse;
+
+    }
+    @GetMapping("/getAllInputSubMaterial")
+    public ApiResponse<?> getAllInputSubMaterial() {
+        ApiResponse<List> apiResponse = new ApiResponse<>();
+        apiResponse.setResult(subMaterialService.getAllInputSubMaterial());
         return apiResponse;
     }
     @GetMapping("/getSubmaterialById")

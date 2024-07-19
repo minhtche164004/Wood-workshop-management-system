@@ -547,6 +547,40 @@ public class SubMaterialServiceImpl implements SubMaterialService {
         return requestProductsSubmaterialsList;
     }
 
+    @Override
+    public List<InputSubMaterial> getAllInputSubMaterial() {
+        List<InputSubMaterial> list = subMaterialsRepository.getAllInputSubMaterial();
+        if(list ==  null){
+            throw new AppException(ErrorCode.NOT_FOUND);
+        }
+        return list;
+    }
+
+    @Override
+    public List<InputSubMaterial> MultiFilterInputSubMaterial(String search, Integer materialId, Date startDate, Date endDate, BigDecimal minPrice, BigDecimal maxPrice,String sortDirection) {
+        List<InputSubMaterial> inputSubMaterials = new ArrayList<>();
+
+        if (search != null || materialId != null || startDate != null || endDate != null || minPrice != null || maxPrice != null) {
+            inputSubMaterials = subMaterialsRepository.MultiFilterInputSubMaterial(search, materialId, startDate,endDate, minPrice, maxPrice);
+        } else {
+            inputSubMaterials = subMaterialsRepository.getAllInputSubMaterial();
+        }
+
+        if (inputSubMaterials.isEmpty()) {
+            throw new AppException(ErrorCode.NOT_FOUND);
+        }
+        // Sắp xếp danh sách sản phẩm theo giá
+        if (sortDirection != null) {
+            if (sortDirection.equals("asc")) {
+                inputSubMaterials.sort(Comparator.comparing(InputSubMaterial::getUnit_price));
+            } else if (sortDirection.equals("desc")) {
+                inputSubMaterials.sort(Comparator.comparing(InputSubMaterial::getUnit_price).reversed());
+            }
+        }
+
+        return inputSubMaterials;
+    }
+
 //    @Override
 //    public List<Employeematerials> createEMaterial(int emp_id, int mate_id, int product_id) {
 //        List<Employeematerials> employeeMaterialsList = new ArrayList<>();

@@ -3,6 +3,7 @@ package com.example.demo.Repository;
 import com.example.demo.Dto.OrderDTO.JobProductDTO;
 import com.example.demo.Dto.SubMaterialDTO.SubMaterialDTO;
 import com.example.demo.Dto.SubMaterialDTO.SubMaterialViewDTO;
+import com.example.demo.Entity.InputSubMaterial;
 import com.example.demo.Entity.Materials;
 import com.example.demo.Entity.Products;
 import com.example.demo.Entity.SubMaterials;
@@ -15,6 +16,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.math.BigDecimal;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -24,6 +26,25 @@ public interface SubMaterialsRepository extends JpaRepository<SubMaterials,Integ
 
     @Query("SELECT u FROM SubMaterials u WHERE u.subMaterialId = :query")
     SubMaterials findById1(int query);
+
+    @Query("SELECT u FROM InputSubMaterial u")
+    List<InputSubMaterial> getAllInputSubMaterial();
+
+    @Query("SELECT i FROM InputSubMaterial i" +
+            " LEFT JOIN i.subMaterials s  WHERE " +
+            "(s.subMaterialName LIKE %:search% OR :search IS NULL) AND " +
+            "(s.material.materialId = :materialId OR :materialId IS NULL) AND " +
+            "(i.date_input >= :startDate OR :startDate IS NULL) AND " +
+            "(i.date_input <= :endDate OR :endDate IS NULL) AND " +
+            "(i.unit_price >= :minPrice OR :minPrice IS NULL) AND " +
+            "(i.unit_price <= :maxPrice OR :maxPrice IS NULL)")
+    List<InputSubMaterial> MultiFilterInputSubMaterial(@Param("search") String search,
+                                               @Param("materialId") Integer materialId,
+                                               @Param("startDate") Date startDate,
+                                               @Param("endDate") Date endDate,
+                                               @Param("minPrice") BigDecimal minPrice,
+                                               @Param("maxPrice") BigDecimal maxPrice);
+
 
     @Query("SELECT u FROM SubMaterials u WHERE u.subMaterialName = :query AND u.material.materialName = :materialName")
     SubMaterials findBySubmaterialNameAndMaterialName(@Param("query") String subMaterialName, @Param("materialName") String materialName);

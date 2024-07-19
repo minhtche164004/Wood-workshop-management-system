@@ -74,6 +74,7 @@ public class    OrderServiceImpl implements OrderService {
     private ProcessproducterrorRepository processproducterrorRepository;
 
 
+
     @Override
     public Orders AddOrder(RequestOrder requestOrder) {
         Map<String, String> errors = new HashMap<>(); //hashmap cho error
@@ -637,10 +638,34 @@ public class    OrderServiceImpl implements OrderService {
     @Transactional
     @Override
     public String ChangeStatusOrder(int orderId, int status_id) {
-        //send mail cho những đơn hàng đặt theo yêu cầu , vì đơn hàng mau có sẵn thì mua luôn rồi, trả tiền luôn r cần đéo gì nữa mà phải theo dõi tình trạng đơn hàng
-        orderRepository.UpdateStatusOrder(orderId,status_id);
         Status_Order statusOrder =statusOrderRepository.findById(status_id);
         Orders orders = orderRepository.findById(orderId);
+
+//        if(orders.getPaymentMethod() == 1 && orders.getStatus().getStatus_id() == 1){//nghĩa là thanh toán bằng tiền mặt, và đang trong trạng thái là chờ đặt cọc
+//            Status_Order statusOrder1 = new Status_Order();
+//            if(orders.getSpecialOrder() == false){//nếu là hàng có sẵn thì set status order cho nó là đã thi công xong luôn(vì nó ko cần sản xuất nữa)
+//                statusOrder1 = statusOrderRepository.findById(4);
+//                orders.setStatus(statusOrder1);
+//                orderRepository.save(orders);
+//                return "Cập nhật đơn hàng sang tình trạng "+ statusOrder1.getStatus_name()+ "thành công";
+//            }
+//            if(orders.getSpecialOrder() == true){//nếu là hàng đặt làm theo yêu cầu thì set status order cho nó là đã đặt cọc thành công
+//                statusOrder1 = statusOrderRepository.findById(3);//đã đặt cọc, đang thi công
+//                orders.setStatus(statusOrder1);
+//                orderRepository.save(orders);
+//                return "Cập nhật đơn hàng sang tình trạng "+ statusOrder1.getStatus_name()+ "thành công";
+//            }
+//            Status_Job statusJob = statusJobRepository.findById(3); // 3 la status job sau khi dat coc thi set status la chua giao viec
+//            List<Jobs> jobsList = jobRepository.getJobByOrderDetailByOrderCode(orders.getCode());
+//            for(Jobs jobs : jobsList){
+//                jobs.setStatus(statusJob);
+//                jobRepository.save(jobs);
+//            }
+//
+//        }
+        //send mail cho những đơn hàng đặt theo yêu cầu , vì đơn hàng mau có sẵn thì mua luôn rồi, trả tiền luôn r cần đéo gì nữa mà phải theo dõi tình trạng đơn hàng
+        orderRepository.UpdateStatusOrder(orderId,status_id);
+
         List<Jobs> list_jobs = jobRepository.getJobByOrderDetailByOrderCode(orders.getCode());
         for(Jobs job : list_jobs){
             if(job.getStatus().getStatus_id() != 13) { //tức là công việc đã hoàn thành

@@ -18,7 +18,7 @@ public class InputSubMaterial {
 
     @ManyToOne
     @JoinColumn(name = "sub_material_id") // Khóa ngoại tới bảng materials
-    @JsonIgnore // Không đưa vào JSON để tránh vòng lặp
+//    @JsonIgnore // Không đưa vào JSON để tránh vòng lặp
     private SubMaterials subMaterials; // Đổi tên thuộc tính thành "material"
 
     @Column(name = "quantity")
@@ -29,6 +29,10 @@ public class InputSubMaterial {
 
     @Column(name = "date_input")
     private Date date_input;
+
+    @ManyToOne
+    @JoinColumn(name = "action_type_id")
+    private Action_Type actionType;
 
 
 }

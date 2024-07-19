@@ -3,6 +3,7 @@ package com.example.demo.Service;
 //import com.example.demo.Dto.JobDTO.Employee_MaterialDTO;
 import com.example.demo.Dto.JobDTO.Employee_MaterialDTO;
 import com.example.demo.Dto.MaterialDTO.MaterialDTO;
+import com.example.demo.Dto.ProductDTO.CreateExportMaterialProductRequest;
 import com.example.demo.Dto.ProductDTO.QuantityTotalDTO;
 import com.example.demo.Dto.SubMaterialDTO.*;
 import com.example.demo.Entity.Employeematerials;
@@ -34,7 +35,8 @@ public interface SubMaterialService {
     ResponseEntity<ApiResponse<List<String>>> createExportMaterialProductTotalJob(int product_id,int mate_id, QuantityTotalDTO quantityTotalDTO,int emp_id);
     ResponseEntity<ApiResponse<List<String>>> createExportMaterialRequestTotalJob(int product_id,int mate_id,QuantityTotalDTO quantityTotalDTO,int emp_id);
     //xuất nguyên liệu cho sản phẩm  theo yêu cầu
-    List<List<RequestProductsSubmaterials>> createExportMaterialProductRequest(List<Integer> request_product_id, List<Map<Integer, Double>> subMaterialQuantities);
+   List<RequestProductsSubmaterials> createExportMaterialProductRequest(int productId, Map<Integer, Double> subMaterialQuantities);
+    List<RequestProductsSubmaterials> createExportMaterialListProductRequest(List<CreateExportMaterialProductRequest> exportMaterialDTOs);
     List<Product_SubmaterialDTO> getProductSubMaterialByProductId(int id,int material_id);
     List<ReProduct_SubmaterialDTO> getRequestProductSubMaterialByRequestProductId(int id,int material_id);
 

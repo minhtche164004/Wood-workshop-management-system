@@ -5,7 +5,7 @@ import com.example.demo.Config.RedisConfig;
 import com.example.demo.Dto.ProductDTO.CreateExportMaterialProductRequest;
 import com.example.demo.Dto.ProductDTO.ProductDTO;
 import com.example.demo.Dto.ProductDTO.QuantityTotalDTO;
-import com.example.demo.Dto.SubMaterialDTO.ExportMaterialDTO;
+
 import com.example.demo.Dto.SubMaterialDTO.SubMaterialDTO;
 import com.example.demo.Dto.SubMaterialDTO.SubMaterialViewDTO;
 import com.example.demo.Dto.SubMaterialDTO.UpdateSubDTO;
@@ -183,28 +183,15 @@ public class SubMaterialController {
     }
 
 //    //xuất đơn vật liệu cho đơn hàng đặt theo yêu cầu , request product
-//    @PostMapping("/createExportMaterialProductRequest")
-//    public List<List<RequestProductsSubmaterials>> createExportMaterialProductRequest(@RequestBody List<CreateExportMaterialProductRequest> request) {
-//        return subMaterialService.createExportMaterialProductRequest(List<request.getProductId()> id, request.getSubMaterialQuantities());
-//    }
-
     @PostMapping("/createExportMaterialProductRequest")
-    public ResponseEntity<List<List<RequestProductsSubmaterials>>> createExportMaterialProductRequest(@RequestBody List<ExportMaterialDTO> request) {
-        List<Integer> productIds = new ArrayList<>();
-        List<Map<Integer, Double>> subMaterialQuantitiesList = new ArrayList<>();
-
-        // Lặp qua danh sách request và lấy ra productIds và subMaterialQuantities tương ứng
-        for (ExportMaterialDTO exportMaterialDTO : request) {
-            Integer productId = exportMaterialDTO.getRequest_product_id(); // Lấy productId
-           // for (Map<Integer, Double> subMaterialQuantities : exportMaterialDTO.getSubMaterialQuantities()) {
-                productIds.add(productId); // Thêm productId vào danh sách
-                subMaterialQuantitiesList.add(exportMaterialDTO.getSubMaterialQuantities()); // Thêm subMaterialQuantities vào danh sách
-          //  }
-        }
-
-        return ResponseEntity.ok(subMaterialService.createExportMaterialProductRequest(productIds, subMaterialQuantitiesList));
+    public List<RequestProductsSubmaterials> createExportMaterialProductRequest(@RequestBody CreateExportMaterialProductRequest request) {
+        return subMaterialService.createExportMaterialProductRequest(request.getProductId(), request.getSubMaterialQuantities());
     }
 
+    @PostMapping("/createExportMaterialListProductRequest")
+    public List<RequestProductsSubmaterials> createExportMaterialListProductRequest(@RequestBody List<CreateExportMaterialProductRequest> request) {
+        return subMaterialService.createExportMaterialListProductRequest(request);
+    }
 
 
     @PostMapping("/createExportMaterialProductTotalJob")

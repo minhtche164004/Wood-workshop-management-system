@@ -3,6 +3,7 @@ package com.example.demo.Service.Impl;
 //import com.example.demo.Dto.JobDTO.Employee_MaterialDTO;
 import com.example.demo.Dto.JobDTO.Employee_MaterialDTO;
 import com.example.demo.Dto.MaterialDTO.MaterialDTO;
+import com.example.demo.Dto.ProductDTO.CreateExportMaterialProductRequest;
 import com.example.demo.Dto.ProductDTO.QuantityTotalDTO;
 import com.example.demo.Dto.SubMaterialDTO.*;
 import com.example.demo.Entity.*;
@@ -390,31 +391,44 @@ public class SubMaterialServiceImpl implements SubMaterialService {
 
     @Override
     @Transactional
-    public List<List<RequestProductsSubmaterials>> createExportMaterialProductRequest(List<Integer> request_product_id, List<Map<Integer, Double>> subMaterialQuantities) {
-        List<List<RequestProductsSubmaterials>> list = new ArrayList<>();
-      //  List<List<Integer>> list2 = new ArrayList<>();
-        int index = 0; // Khởi tạo biến đếm
-        for (int i = 0; i<request_product_id.size();i++) {
-            Integer id = request_product_id.get(i);
-            RequestProducts requestProducts = requestProductRepository.findByIdInteger(id);
-            List<RequestProductsSubmaterials> requestProductsSubmaterialsList = new ArrayList<>();
-            // Lấy subMaterialQuantities tương ứng với requestProductId
-            Map<Integer, Double> subMaterialQuantitiesForProduct = subMaterialQuantities.get(index);
-            index++; // Tăng biến đếm cho requestProductId tiếp theo
+    public List<RequestProductsSubmaterials> createExportMaterialProductRequest(int productId, Map<Integer, Double> subMaterialQuantities) {
+        RequestProducts requestProducts = requestProductRepository.findById(productId);
+        List<RequestProductsSubmaterials> reproductSubMaterialsList = new ArrayList<>();
+        for (Map.Entry<Integer, Double> entry : subMaterialQuantities.entrySet()) {
+            int subMaterialId = entry.getKey();
+            double quantity = entry.getValue();
+            SubMaterials subMaterial = subMaterialsRepository.findById1(subMaterialId);
+            InputSubMaterial input = inputSubMaterialRepository.findLatestInputSubMaterialBySubMaterialId(subMaterialId);//lấy giá mới cập nhật
+            RequestProductsSubmaterials productSubMaterial = new RequestProductsSubmaterials(subMaterial, requestProducts, quantity, input);
+            reproductSubMaterialsList.add(productSubMaterial);
+        }
+        requestProductsSubmaterialsRepository.saveAll(reproductSubMaterialsList);
+        return reproductSubMaterialsList;
+    }
 
-            for (Map.Entry<Integer, Double> entry : subMaterialQuantitiesForProduct.entrySet()) {
+    @Override
+    @Transactional
+    public List<RequestProductsSubmaterials> createExportMaterialListProductRequest(List<CreateExportMaterialProductRequest> exportMaterialDTOs) {
+        List<RequestProductsSubmaterials> result = new ArrayList<>();
+        for (CreateExportMaterialProductRequest dto : exportMaterialDTOs) {
+            int id = dto.getProductId();
+            RequestProducts requestProducts = requestProductRepository.findByIdInteger(id);
+
+            for (Map.Entry<Integer, Double> entry : dto.getSubMaterialQuantities().entrySet()) {
                 int subMaterialId = entry.getKey();
                 double quantity = entry.getValue();
+
                 SubMaterials subMaterial = subMaterialsRepository.findById1(subMaterialId);
                 InputSubMaterial input = inputSubMaterialRepository.findLatestInputSubMaterialBySubMaterialId(subMaterialId);
                 RequestProductsSubmaterials requestProductsSubmaterials = new RequestProductsSubmaterials(subMaterial, requestProducts, quantity, input);
-                requestProductsSubmaterialsList.add(requestProductsSubmaterials);
+
+                result.add(requestProductsSubmaterials);
             }
-            list.add(requestProductsSubmaterialsList);
-            requestProductsSubmaterialsRepository.saveAll(requestProductsSubmaterialsList);
         }
-        return list;
+        requestProductsSubmaterialsRepository.saveAll(result);
+        return result;
     }
+
 
 
 

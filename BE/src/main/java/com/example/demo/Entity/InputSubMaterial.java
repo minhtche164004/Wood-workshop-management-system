@@ -30,5 +30,9 @@ public class InputSubMaterial {
     @Column(name = "date_input")
     private Date date_input;
 
+    @ManyToOne
+    @JoinColumn(name = "action_type_id")
+    private Action_Type actionType;
+
 
 }

@@ -54,6 +54,6 @@ public interface SubMaterialService {
 
     List<InputSubMaterial> getAllInputSubMaterial();
 
-    List<InputSubMaterial> MultiFilterInputSubMaterial(String search, Integer materialId, Date startDate, Date endDate, BigDecimal minPrice, BigDecimal maxPrice,String sortDirection);
+    List<InputSubMaterial> MultiFilterInputSubMaterial(String search, Integer materialId,Integer action_type_id, Date startDate, Date endDate, BigDecimal minPrice, BigDecimal maxPrice,String sortDirection);
 
 }

@@ -756,7 +756,7 @@ export class ProductManagementComponent implements OnInit {
 
         this.totalPriceSubmatePerProducRequest[indexOfItemRProduct] += totalForThisItem;
       }
-   }
+    }
 
 
   }
@@ -1112,7 +1112,7 @@ export class ProductManagementComponent implements OnInit {
     );
   }
 
-  totalAmountOfOrder : number = 0;
+  totalAmountOfOrder: number = 0;
   onSubmitProductRequest() {
 
     for (let i = 0; i < this.itemsRProduct.length; i++) {
@@ -1136,6 +1136,15 @@ export class ProductManagementComponent implements OnInit {
       // this.totalAmountOfOrder += this.totalPriceSubmatePerProducRequest[i];
     }
     console.log('Form Data for Product Request:', this.listRequestProductForm.value);
+    const transformedData = this.listRequestProductForm.value.itemsRProduct.map((item: any) => ({
+      productId: 0, // Assuming productId is not available in original data and set to 0
+      subMaterialQuantities: item.materialFormRequests.reduce((acc: Record<string, number>, { submateId, quantity }: { submateId: number; quantity: string }) => {
+        acc[submateId.toString()] = Number(quantity);
+        return acc;
+      }, {})
+    }));
+
+    console.log(transformedData);
     // console.log("selectedMaterialId:"+0, this.selectedMaterialId[0]);
     // console.log("selectedMaterialId:"+1, this.selectedMaterialId[1]);
     // console.log("selectedMaterialId:"+10, this.selectedMaterialId[10]);

@@ -6,6 +6,7 @@ import com.example.demo.Dto.ProductDTO.*;
 import com.example.demo.Dto.RequestDTO.RequestDTO;
 import com.example.demo.Dto.RequestDTO.RequestEditCusDTO;
 import com.example.demo.Dto.RequestDTO.RequestEditDTO;
+import com.example.demo.Dto.SubMaterialDTO.CreateExportMaterialProductRequestDTO;
 import com.example.demo.Entity.*;
 import org.junit.runner.Request;
 import org.springframework.http.ResponseEntity;
@@ -50,7 +51,7 @@ public interface OrderService {
 
     List<Orderdetails> getAllOrderDetail();
 
-    List<RequestProducts> AddNewProductRequest(RequestProductWithFiles[] requestProductsWithFiles, RequestSpecialOrder requestSpecialOrder, int order_id);
+    List<RequestProducts> AddNewProductRequest(RequestProductWithFiles[] requestProductsWithFiles, int order_id);
 
     Orders AddNewRequest(RequestDTO requestDTO, MultipartFile[] multipartFiles);
 

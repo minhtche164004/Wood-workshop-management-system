@@ -3,6 +3,7 @@ package com.example.demo.Service.Impl;
 import com.example.demo.Dto.OrderDTO.*;
 import com.example.demo.Dto.ProductDTO.*;
 import com.example.demo.Dto.RequestDTO.*;
+import com.example.demo.Dto.SubMaterialDTO.CreateExportMaterialProductRequestDTO;
 import com.example.demo.Entity.*;
 import com.example.demo.Entity.UserInfor;
 import com.example.demo.Exception.AppException;
@@ -72,6 +73,11 @@ public class    OrderServiceImpl implements OrderService {
     private Status_Product_Repository statusProductRepository;
     @Autowired
     private ProcessproducterrorRepository processproducterrorRepository;
+    @Autowired
+    private InputSubMaterialRepository inputSubMaterialRepository;
+    @Autowired
+    private SubMaterialsRepository subMaterialsRepository;
+
 
 
     @Override
@@ -285,6 +291,7 @@ public class    OrderServiceImpl implements OrderService {
         requests.setDistrict(requestDTO.getDistrict_province());
         requests.setWards(requestDTO.getWards_province());
         requests.setResponse("");
+        requests.setPaymentMethod(requestDTO.getPayment_method());
 
         requests.setSpecialOrder(true);//đặt cho đơn hàng theo yêu cầu là đơn hàng đặc biệt
 
@@ -346,12 +353,13 @@ public class    OrderServiceImpl implements OrderService {
 
     //Tạo Request Product
     @Override
-    public List<RequestProducts> AddNewProductRequest(RequestProductWithFiles[] requestProductsWithFiles, RequestSpecialOrder requestSpecialOrder,int order_id) { //lấy từ request
+    public List<RequestProducts> AddNewProductRequest(RequestProductWithFiles[] requestProductsWithFiles,int order_id) { //lấy từ request
+        List<RequestProductsSubmaterials> result = new ArrayList<>();
         Orders orders = orderRepository.findById(order_id);
         Status_Order statusOrder = statusOrderRepository.findById(1);//tự set cho nó là 1
         orders.setStatus(statusOrder);
-        orders.setOrderFinish(requestSpecialOrder.getOrderFinish()); // set ngay hoan thanh order
-        orders.setPaymentMethod(requestSpecialOrder.getPayment_method()); //1 là trả tiền trực tiếp, 2 là chuyển khoản
+//        orders.setOrderFinish(requestSpecialOrder.getOrderFinish()); // set ngay hoan thanh order
+//        orders.setPaymentMethod(requestSpecialOrder.getPayment_method()); //1 là trả tiền trực tiếp, 2 là chuyển khoản
 
         LocalDate today = LocalDate.now();
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("ddMMyy");
@@ -372,9 +380,6 @@ public class    OrderServiceImpl implements OrderService {
             if (!checkConditionService.checkInputName(requestProductDTO.getRequestProductName())) {
                 throw new AppException(ErrorCode.INVALID_FORMAT_NAME);
             }
-//        if (requestProductRepository.countByRequestProductName(requestProductDTO.getRequestProductName()) > 0) {
-//            throw new AppException(ErrorCode.NAME_EXIST);
-//        }
             if (!checkConditionService.checkInputQuantityInt(requestProductDTO.getQuantity())) {
                 throw new AppException(ErrorCode.QUANTITY_INVALID);
             }
@@ -384,13 +389,11 @@ public class    OrderServiceImpl implements OrderService {
             requestProducts = requestProductRepository.save(requestProducts);
 
             //set ảnh của product
-            RequestProducts requestProduct = requestProductRepository.findByName(requestProductDTO.getRequestProductName());
-
-            uploadImageService.uploadFileRequestProduct(files, requestProduct.getRequestProductId());
+        //    RequestProducts requestProduct = requestProductRepository.findByName(requestProductDTO.getRequestProductName());
+            uploadImageService.uploadFileRequestProduct(files, requestProducts.getRequestProductId());
 
             addedProducts.add(requestProducts);
         }
-
         BigDecimal totalOrder = BigDecimal.ZERO;
         for(RequestProducts re : addedProducts){
 //        if (requestSpecialOrder.getSpecial_order() == 1) {//là hàng ko có sẵn
@@ -637,10 +640,34 @@ public class    OrderServiceImpl implements OrderService {
     @Transactional
     @Override
     public String ChangeStatusOrder(int orderId, int status_id) {
-        //send mail cho những đơn hàng đặt theo yêu cầu , vì đơn hàng mau có sẵn thì mua luôn rồi, trả tiền luôn r cần đéo gì nữa mà phải theo dõi tình trạng đơn hàng
-        orderRepository.UpdateStatusOrder(orderId,status_id);
         Status_Order statusOrder =statusOrderRepository.findById(status_id);
         Orders orders = orderRepository.findById(orderId);
+
+//        if(orders.getPaymentMethod() == 1 && orders.getStatus().getStatus_id() == 1){//nghĩa là thanh toán bằng tiền mặt, và đang trong trạng thái là chờ đặt cọc
+//            Status_Order statusOrder1 = new Status_Order();
+//            if(orders.getSpecialOrder() == false){//nếu là hàng có sẵn thì set status order cho nó là đã thi công xong luôn(vì nó ko cần sản xuất nữa)
+//                statusOrder1 = statusOrderRepository.findById(4);
+//                orders.setStatus(statusOrder1);
+//                orderRepository.save(orders);
+//                return "Cập nhật đơn hàng sang tình trạng "+ statusOrder1.getStatus_name()+ "thành công";
+//            }
+//            if(orders.getSpecialOrder() == true){//nếu là hàng đặt làm theo yêu cầu thì set status order cho nó là đã đặt cọc thành công
+//                statusOrder1 = statusOrderRepository.findById(3);//đã đặt cọc, đang thi công
+//                orders.setStatus(statusOrder1);
+//                orderRepository.save(orders);
+//                return "Cập nhật đơn hàng sang tình trạng "+ statusOrder1.getStatus_name()+ "thành công";
+//            }
+//            Status_Job statusJob = statusJobRepository.findById(3); // 3 la status job sau khi dat coc thi set status la chua giao viec
+//            List<Jobs> jobsList = jobRepository.getJobByOrderDetailByOrderCode(orders.getCode());
+//            for(Jobs jobs : jobsList){
+//                jobs.setStatus(statusJob);
+//                jobRepository.save(jobs);
+//            }
+//
+//        }
+        //send mail cho những đơn hàng đặt theo yêu cầu , vì đơn hàng mau có sẵn thì mua luôn rồi, trả tiền luôn r cần đéo gì nữa mà phải theo dõi tình trạng đơn hàng
+        orderRepository.UpdateStatusOrder(orderId,status_id);
+
         List<Jobs> list_jobs = jobRepository.getJobByOrderDetailByOrderCode(orders.getCode());
         for(Jobs job : list_jobs){
             if(job.getStatus().getStatus_id() != 13) { //tức là công việc đã hoàn thành

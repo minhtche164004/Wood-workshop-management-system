@@ -3,14 +3,12 @@ package com.example.demo.Controllers.OrderController;
 import com.example.demo.Config.RedisConfig;
 import com.example.demo.Dto.OrderDTO.*;
 
-import com.example.demo.Dto.ProductDTO.ProductEditDTO;
-import com.example.demo.Dto.ProductDTO.RequestProductDTO_Show;
+import com.example.demo.Dto.ProductDTO.*;
 import com.example.demo.Dto.RequestDTO.RequestAllDTO;
-import com.example.demo.Dto.ProductDTO.RequestProductAllDTO;
-import com.example.demo.Dto.ProductDTO.RequestProductDTO;
 import com.example.demo.Dto.RequestDTO.RequestDTO;
 import com.example.demo.Dto.RequestDTO.RequestEditCusDTO;
 import com.example.demo.Dto.RequestDTO.RequestEditDTO;
+import com.example.demo.Dto.SubMaterialDTO.CreateExportMaterialProductRequestDTO;
 import com.example.demo.Entity.*;
 
 import com.example.demo.Repository.OrderRepository;
@@ -157,13 +155,12 @@ public class OrderController {
     @PostMapping(value = "/AddNewRequestProduct", consumes = MediaType.MULTIPART_FORM_DATA_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ApiResponse<?> AddNewRequestProduct(
             @RequestPart("requestProductsWithFiles") RequestProductWithFiles[] requestProductsWithFiles,
-            @RequestPart("requestSpecialOrder") RequestSpecialOrder requestSpecialOrder,
             @RequestPart("order_id") int order_id
 
 
     ) {
         ApiResponse<List> apiResponse = new ApiResponse<>();
-        apiResponse.setResult(orderService.AddNewProductRequest(requestProductsWithFiles,requestSpecialOrder,order_id));
+        apiResponse.setResult(orderService.AddNewProductRequest(requestProductsWithFiles,order_id));
         return apiResponse;
     }
     @PostMapping("/Approve_Reject_Request")

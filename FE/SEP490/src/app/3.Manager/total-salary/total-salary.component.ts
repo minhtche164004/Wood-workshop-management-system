@@ -43,7 +43,7 @@ export class TotalSalaryComponent implements OnInit {
   endDate: string = '';
   position: number = 0;
   selectedBanking: any;
-
+  selectedStatusBanking: string = '0';
   advanceSuccessValues: any = {
     trueValue: true,
     falseValue: false
@@ -55,7 +55,6 @@ export class TotalSalaryComponent implements OnInit {
     this.getAllEmployee();
     this.getAllPostionEmp();
     this.getBankList();
- 
   }
   getBankList(): void {
     // this.isLoadding = true;
@@ -160,11 +159,9 @@ export class TotalSalaryComponent implements OnInit {
     this.checkNotFound = false;
     this.isLoadding = true;
     console.log('Search key before search:', this.searchKey);
-    // if (this.searchKey === '') {
-    //   this.searchKey = this.selectedEmp.fullname
-    // }
+    console.log('Selected position:', this.selectedStatusBanking);
 
-    this.salaryService.multSearchSalary(this.searchKey, this.startDate, this.endDate, '', this.selectedPosition).subscribe(
+    this.salaryService.multSearchSalary(this.searchKey, this.startDate, this.endDate, '', this.selectedPosition, this.selectedStatusBanking).subscribe(
       (data) => {
         if (data.code === 1000) {
           this.totalSalary = data.result;

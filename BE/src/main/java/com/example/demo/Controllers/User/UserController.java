@@ -60,7 +60,6 @@ public class UserController {
         if (cachedData != null) {
             Type type = new TypeToken<UpdateProfileDTO>() {
             }.getType();
-            System.out.println("hehe");
             users = gson.fromJson(cachedData, type);
         } else {
             users = userService.ViewProfile();

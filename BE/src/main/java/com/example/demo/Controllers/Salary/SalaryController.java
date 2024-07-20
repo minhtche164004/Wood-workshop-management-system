@@ -47,11 +47,12 @@ public class SalaryController {
             @RequestParam(required = false) String username,
             @RequestParam(required = false) Date fromDate,
             @RequestParam(required = false) Date toDate,
+            @RequestParam(required = false) Integer isAdvanceSuccess,
             @RequestParam(required = false) Integer position_id,
             @RequestParam(required = false) String sortDirection
     ){
         ApiResponse<List> apiResponse = new ApiResponse<>();
-        apiResponse.setResult(jobService.multi_filter_salary(fromDate, toDate,position_id, username,sortDirection));
+        apiResponse.setResult(jobService.multi_filter_salary(fromDate, toDate, isAdvanceSuccess,position_id, username,sortDirection));
         return apiResponse;
     }
 }

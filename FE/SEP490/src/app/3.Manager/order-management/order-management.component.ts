@@ -172,17 +172,17 @@ export class OrderManagementComponent implements OnInit {
     );
 
   }
-  productOfOrder: any[] = [];
-
-  getOrDetailById(order_detail_id: string): void {
-    this.isLoadding = true;
-    console.log('Order_detail_id:', order_detail_id);
+  productOfOrder: any = [];
+  
+  getOrDetailById(us: any, order_detail_id: string): void {
+ //  this.isLoadding = true;
+ //   console.log('Order_detail_id:', order_detail_id);
     this.authenListService.getOrderDetailById(order_detail_id).subscribe(
       (data) => {
         this.OrderdetailById = data.result;
         this.isLoadding = false;
-
-        console.log('OrderdetailById:', this.OrderdetailById);
+        console.log('OrderdetailById tối 20/7:', data.result);
+        // console.log('OrderdetailById:', this.OrderdetailById);
       },
       (error) => {
         console.error('Error fetching user data:', error);
@@ -190,12 +190,15 @@ export class OrderManagementComponent implements OnInit {
 
       }
     );
-    this.orderRequestService.getAllOrderDetailByOrderId(order_detail_id).subscribe(
+    console.log("order detail: ", us)
+    console.log("order detail id: ", us.orderId)
+    
+    this.orderRequestService.getAllOrderDetailByOrderId(us.orderId).subscribe(
       (data) => {
         this.productOfOrder = data.result;
         this.isLoadding = false;
 
-        console.log('Product Orders: :', this.productOfOrder);
+        console.log('Product Orders:', this.productOfOrder);
       },
       (error) => {
         console.error('Error fetching user data:', error);

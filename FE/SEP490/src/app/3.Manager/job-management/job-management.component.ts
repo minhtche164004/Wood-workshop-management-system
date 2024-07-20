@@ -27,7 +27,7 @@ export class JobManagementComponent implements OnInit {
   products: any[] = [];
   errorForm: FormGroup;
   editJob: FormGroup;
-  keyword = 'productName';
+  keyword = 'product_name';
   createJobs: FormGroup;
   productRQs: any[] = [];
   currentPage: number = 1;
@@ -37,6 +37,7 @@ export class JobManagementComponent implements OnInit {
   selectedStatus: number = 0;
   selectedProduct: any = {}; // Biến để lưu trữ sản phẩm được chọn
   positionEmployees: any[] = [];
+  positions: any[]= [];
   type: any = {};
   statusType: any[] = [];
   statusOptions: any[] = [];
@@ -96,29 +97,31 @@ export class JobManagementComponent implements OnInit {
       quantity: ['']
     });
   }
-  // loadProductNgOn(): void {
-  //   this.productListService.getProducts().subscribe(
-  //     (data) => {
-  //       if (data.code === 1000) {
-  //         this.products = data.result;
-  //         // console.log('Danh sách sản phẩm:', this.products);
-  //       } else {
 
-  //         console.error('Failed to fetch products:', data);
-  //       }
-  //     },
-  //     (error) => {
-  //       console.error('Error fetching products:', error);
-  //     }
-  //   );
-  // }
   ngOnInit(): void {
-    this.loadProductRQForJob();
-    this.loadStatusByType();
-    // this.loadProductNgOn();
-    this.getAllPostionEmp();
-    this.checkJobsForErrors();
-    this.getAllStatusJob();
+    this.showLoadingIndicator();
+  
+    Promise.all([
+      this.loadProductRQForJob(),
+      this.loadStatusByType(),
+      // this.loadProductNgOn(),
+      this.getAllPostionEmp(), 
+      this.getAllStatusJob(),
+      this.loadPosition(),
+      this.loadAutoSearchProduct()
+    ]).then(() => {
+      this.hideLoadingIndicator();
+    }).catch(error => {
+      console.error('Error loading data:', error);
+      this.hideLoadingIndicator();
+    });
+  }
+  showLoadingIndicator() {
+    this.isLoadding = true;
+  }
+  
+  hideLoadingIndicator() {
+    this.isLoadding = false;
   }
   selectedModalJob: string = '';
   selectedModalId: string = '';
@@ -130,12 +133,12 @@ export class JobManagementComponent implements OnInit {
     console.log('event:', event);
     const statusId = (event.target as HTMLSelectElement).value;
     this.selectedModalJob = jobId.toString();
-  
+
     this.selectedModalId = statusId;
- 
+
     this.launchModalButton.nativeElement.click();
     this.indexStatus = index;
-   
+
   }
 
   closeModal() {
@@ -145,7 +148,7 @@ export class JobManagementComponent implements OnInit {
       // console.log('element.value', element.options[element.selectedIndex].value);
       // console.log('element.selectedIndex', element.selectedIndex);
     }
-    // console.log('Close modal');
+ 
 
   }
 
@@ -155,16 +158,9 @@ export class JobManagementComponent implements OnInit {
 
   acceptJob(jobId: string, statusId: string): void {
     this.isLoadding = true
-    //   console.log('Job ID:', jobId, 'Status ID:', statusId);
+
     this.createJobs.reset();
-    //   console.log('selected cate: ', this.selectedCategory);
-    // if (statusId === 4) {
-    //   statusId = 6;
-    // } else if (statusId === 7) {
-    //   statusId = 9;
-    // } else if (statusId === 10) {
-    //   statusId = 12;
-    // }
+ 
     if (this.selectedCategory === 1) {
       console.log('SP có sẵn');
 
@@ -198,20 +194,24 @@ export class JobManagementComponent implements OnInit {
     );
   }
   selectedStatusJob: string = '';
-  getAllStatusJob(): void {
-    this.jobService.getStatusByType().subscribe(
-      (data) => {
-        if (data.code === 1000) {
-          this.statusSearch = data.result.filter((item: any) => [1, 2, 3, 4].includes(item.type));
-          console.log('Status Job :', this.statusSearch);
+  getAllStatusJob(): Promise<void> {
+    return new Promise((resolve, reject) => {
+      this.jobService.getStatusByType().subscribe(
+        (data) => {
+          if (data.code === 1000) {
+            this.statusSearch = data.result.filter((item: any) => [1, 2, 3, 4].includes(item.type));
+            console.log('Status Job :', this.statusSearch);
+          }
+          resolve();
+        },
+        (error) => {
+          console.error('Error fetching data:', error);
+          reject(error);
         }
-      },
-      (error) => {
-        console.error('Error fetching data:', error);
-      }
-    );
+      );
+    });
   }
-  
+
   openConfirmChangeStatusJob(product: any): void {
 
     this.selectedProduct = { ...product };
@@ -478,23 +478,22 @@ export class JobManagementComponent implements OnInit {
       }
     );
   }
-  loadStatusByType() {
-    this.jobService.getStatusByType().subscribe(
-      (data) => {
-        if (data.code === 1000) {
-          this.statusType = data.result;
-          // console.log('Status Job Type:', data.result); 
-
+  loadStatusByType(): Promise<void> {
+    return new Promise((resolve, reject) => {
+      this.jobService.getStatusByType().subscribe(
+        (data) => {
+          if (data.code === 1000) {
+            this.statusType = data.result;
+          }
+          resolve();
+        },
+        (error) => {
+          console.error('Error fetching data:', error);
+          reject(error);
         }
-        // console.log('Data:', data);
-      },
-      (error) => {
-        //console.error('Error fetching data:', error); 
-
-      }
-    );
+      );
+    });
   }
-
   isButtonDisabled(): boolean {
     const selectedStatusId = this.selectedStatus;
     if (selectedStatusId === 10 || selectedStatusId === 7 || selectedStatusId === 4) {
@@ -517,39 +516,43 @@ export class JobManagementComponent implements OnInit {
   }
 
   listErrorJob: any[] = [];
-  loadProductRQForJob() {
-    this.isLoadding = true;
-    this.jobService.getListProductRQ().subscribe(
-      (data) => {
-        if (data.code === 1000) {
-          this.productRQs = data.result;
-          // console.log('Sp cho job:', this.productRQs);
-
-        } else {
-          console.error('Failed to fetch products:', data);
-          this.toastr.error('Không thể lấy danh sách sản phẩm!', 'Lỗi');
+  loadProductRQForJob(): Promise<void> {
+    return new Promise((resolve, reject) => {
+      this.isLoadding = true;
+      this.jobService.getListProductRQ().subscribe(
+        (data) => {
+          if (data.code === 1000) {
+            this.productRQs = data.result;
+          //  console.log('Sp cho job:', this.productRQs);
+            this.checkJobsForErrors();
+          } else {
+            console.error('Failed to fetch products:', data);
+            this.toastr.error('Không thể lấy danh sách sản phẩm!', 'Lỗi');
+          }
+          this.isLoadding = false;
+          resolve();
+        },
+        (error) => {
+          console.error('Error fetching products:', error);
+          this.toastr.error('Có lỗi xảy ra!', 'Lỗi');
+          this.isLoadding = false;
+          reject(error);
         }
-
-        this.isLoadding = false;
-      },
-      (error) => {
-        console.error('Error fetching products:', error);
-        this.toastr.error('Có lỗi xảy ra!', 'Lỗi');
-        this.isLoadding = false;
-      }
-    );
+      );
+    });
   }
+  
   checkJobsForErrors() {
     const errorCheckPromises = this.productRQs.map((product) => {
-      return this.jobService.checkErrorOfJob(product.id).toPromise().then(
+      return this.jobService.checkErrorOfJob(product.job_id).toPromise().then(
         (data) => {
           if (data.result === true) {
-            console.log(`Job ${product.id} has errors`);
-            this.listErrorJob.push(product.id);
+            console.log(`Job ${product.job_id} has errors`);
+            this.listErrorJob.push(product.job_id);
           }
         },
         (error) => {
-          console.error(`Error checking job ${product.id}:`, error);
+          console.error(`Error checking job ${product.job_id}:`, error);
         }
       );
     });
@@ -581,11 +584,29 @@ export class JobManagementComponent implements OnInit {
   isDisabled(product: any): boolean {
     return [10, 7, 4, 14].includes(product.statusJob.status_id);
   }
-  
+
   isErrorDisabled(product: any): boolean {
     return [6, 9, 12, 14].includes(product.statusJob.status_id) || product.statusJob.type === 1;
   }
-  
+  productAutoSearch: any[] = [];
+  loadAutoSearchProduct(){
+    this.jobService.getListProduct().subscribe(
+      (data) => {
+        if (data.code === 1000) {
+          this.productAutoSearch = data.result;
+         
+           console.log('Auto search prodcut:', this.productAutoSearch);
+        } else {
+          //   console.error('Failed to fetch products:', data);
+          this.toastr.error('Không thể lấy danh sách sản phẩm!', 'Lỗi');
+        }
+      },
+      (error) => {
+        // console.error('Error fetching products:', error);
+        this.toastr.error('Có lỗi xảy ra!', 'Lỗi');
+      }
+    );
+  }
   
   manageJob(product: any): void {
     this.isLoadding = true;
@@ -645,7 +666,7 @@ export class JobManagementComponent implements OnInit {
   }
 
   checkErrorStatus(jobId: number): void {
-    console.log("list job to check error: ", )
+    console.log("list job to check error: ",)
     // this.jobService.checkErrorOfJob(jobId).subscribe(
     //   data => {
     //     if (data.code === 1000) {
@@ -689,20 +710,24 @@ export class JobManagementComponent implements OnInit {
   positionEmpList: any[] = [];
   selectedPosition: any = {};
   statusSearch: any = {};
-  getAllPostionEmp(): void {
-    //  this.isLoadding = true;
-    this.employeeService.getAllPostionEmp().subscribe(
-      (data) => {
-        if (data.code === 1000) {
-          this.positionEmpList = data.result;
-          console.log('Danh sách chuc vu nhan vien: ', this.positionEmpList); this.isLoadding = false;
-        } else {
-          console.error('Failed to fetch products:', data);
-          //this.isLoadding = false;
+  getAllPostionEmp(): Promise<void> {
+    return new Promise((resolve, reject) => {
+      this.employeeService.getAllPostionEmp().subscribe(
+        (data) => {
+          if (data.code === 1000) {
+            this.positionEmpList = data.result;
+            console.log('Danh sách chức vụ nhân viên: ', this.positionEmpList);
+          } else {
+            console.error('Failed to fetch products:', data);
+          }
+          resolve();
+        },
+        (error) => {
+          console.error('Error fetching data:', error);
+          reject(error);
         }
-
-      },
-    )
+      );
+    });
   }
   showJobDetail(job: any) {
     let mate_id = job.position_id;
@@ -749,8 +774,8 @@ export class JobManagementComponent implements OnInit {
 
   }
   selectedJob: any = {};
-user_name: string = '';
-JOBID: number = 0;
+  user_name: string = '';
+  JOBID: number = 0;
   editJobDetail(job: any, job_id: number): void {
     console.log('Job ID:', job_id);
     this.JOBID = job_id;
@@ -760,7 +785,7 @@ JOBID: number = 0;
     // Fetch job detail by ID
     this.jobService.getJobDetailById(job_id).subscribe(
       (data) => {
-      //  console.log('Job detail:', data.result);
+        //  console.log('Job detail:', data.result);
         if (data.code === 1000) {
           // Patch values to editJob form
           this.editJob.patchValue({
@@ -886,66 +911,67 @@ JOBID: number = 0;
   checkNotFound: boolean = false;
   selectedPositionId: any = '';
   // hàm search api bằng produc thawojc product rq
-  searchJob(selectedCategory: number){
-    if(selectedCategory === 1){
+  searchJob(selectedCategory: number) {
+    if (selectedCategory === 1) {
       this.loadProduct();
-    } else if(selectedCategory === 0){
+    } else if (selectedCategory === 0) {
       this.loadProductRQForJob();
     }
   }
+
   onSearch(selectedCategory: number, searchKey: string): void {
     this.checkNotFound = false;
     // console.log('checkNotFound:', this.checkNotFound);
     console.log("Selected cate: ", this.selectedStatusJob)
     // console.log('Thực hiện tìm kiếm:', searchKey);
     // console.log('Category:', selectedCategory);
-    // console.log('status job:', this.selectedStatusJob);
-   
-    
+     console.log('Position:', this.selectedPosSearch);
+
+
 
     this.isLoadding = true;
     if (selectedCategory === 1) {
-      this.jobService.multiSearchJob(searchKey, this.selectedStatusJob, this.selectedPositionId).subscribe(
+      this.jobService.multiSearchJob(searchKey, this.selectedStatusJob, this.selectedPosSearch).subscribe(
         (data) => {
           console.log('Data:', data);
           if (data.code === 1000) {
             this.productRQs = data.result;
             this.currentPage = 1;
             console.log('Danh sách sản phẩm search:', this.productRQs);
-          } else if(data.code === 1015) {
+          } else if (data.code === 1015) {
             console.log('Danh sách sản phẩm search:', this.productRQs);
             this.checkNotFound = true;
             this.productRQs = [];
             console.log("checkNotFound job:", this.checkNotFound);
           }
-         
+
           this.isLoadding = false;
           this.checkNotFound = true;
         },
         (error) => {
           console.log('Error fetching products:', error);
-        
+
           this.isLoadding = false;
           this.checkNotFound = true;
-          
+
         }
       );
       this.isLoadding = false;
     } else if (selectedCategory === 0) {
 
-      this.jobService.multiSearchJobRequest(searchKey, this.selectedStatusJob, this.selectedPositionId).subscribe(
+      this.jobService.multiSearchJobRequest(searchKey, this.selectedStatusJob, this.selectedPosSearch).subscribe(
         (data) => {
           if (data.code === 1000) {
             this.productRQs = data.result;
             console.log('Danh sách sản phẩm request:', this.productRQs);
             this.currentPage = 1;
-          } else if(data.code === 1015) {
+          } else if (data.code === 1015) {
             console.log('Khoong thay san pham request');
             this.productRQs = [];
             this.checkNotFound = true;
             console.log("checkNotFound jobRequest:", this.checkNotFound);
           }
-          
+
           this.isLoadding = false;
           this.checkNotFound = true;
         },
@@ -982,6 +1008,25 @@ JOBID: number = 0;
       }
     );
   }
-
-
+  selectedPosSearch: any ='';
+  positionsSearch: any[] = [];
+  loadPosition(): Promise<void> {
+    return new Promise((resolve, reject) => {
+      this.productListService.getAllPosition().subscribe(
+        (data: any) => {
+          if (data.code === 1000) {
+            this.positionsSearch = data.result;
+            console.log("Position search: ", this.positionsSearch);
+          } else {
+            console.error('Invalid data returned:', data);
+          }
+          resolve();
+        },
+        (error) => {
+          console.error('Error fetching positions:', error);
+          reject(error);
+        }
+      );
+    });
+  }
 }

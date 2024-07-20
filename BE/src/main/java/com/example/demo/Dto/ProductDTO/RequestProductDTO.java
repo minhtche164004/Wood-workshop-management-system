@@ -27,8 +27,8 @@ public class RequestProductDTO {
     private Integer quantity;
     @NotNull(message = "MUST_REQUIRED")
     private Date completionTime;
-    @NotNull(message = "MUST_REQUIRED")
-    private int request_id;
+//    @NotNull(message = "MUST_REQUIRED")
+//    private int request_id;
 //    private List<String> files;
 //    private int status_id;
 

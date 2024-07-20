@@ -10,6 +10,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { Location } from '@angular/common';
 
 import 'jquery';
+import { get } from 'jquery';
 
 interface Category {
   categoryId: number;
@@ -123,6 +124,9 @@ export class ProductManagementComponent implements OnInit {
   imagesPreviewRequest: string[] = [];
 
 
+  //form danh` cho up list request product theo order
+  listRequestProductForm: FormGroup;
+
   constructor(
     private fb: FormBuilder,
     private productListService: ProductListService,
@@ -132,6 +136,12 @@ export class ProductManagementComponent implements OnInit {
     private router: Router,
     private location: Location
   ) {
+
+    this.listRequestProductForm = this.fb.group({
+      itemsRProduct: this.fb.array([]),
+      // materialFormRequests: this.fb.array([])
+    });
+
     this.uploadForm = this.fb.group({
 
       request_id: [],// id cua product request
@@ -185,32 +195,14 @@ export class ProductManagementComponent implements OnInit {
       specialOrder: [false],
       paymentMethod: [null],
       deposite: [null],
-      // userInfor: this.fb.group({
-      //   inforId: [null],
-      //   phoneNumber: [''],
-      //   fullname: [''],
-      //   address: [''],
-      //   bank_name: [''],
-      //   bank_number: [''],
-      //   city_province: [''],
-      //   district: [''],
-      //   wards: [''],
-      //   has_Account: [null]
-      // }),
       code: [''],
-      phoneNumber: [''],
-      fullname: [''],
-      address: [''],
-      city_province: [''],
-      district: [''],
-      wards: [''],
       orderFinish: [null],
-      response: [''],
       description: [''],
       requestImages: this.fb.array([])
     });
 
   }
+
   //reset lai khi add lai material cho product va product request
   resetFormAdd() {
     this.totalUnitPrice = 0;
@@ -226,7 +218,8 @@ export class ProductManagementComponent implements OnInit {
     this.uploadForm.reset();
   }
 
-  //phan formGroup cua add productt
+  //phan formGroup cua add product
+  //phan` danh` cho material
   get items(): FormArray {
     return this.materialForm.get('items') as FormArray;
   }
@@ -246,6 +239,82 @@ export class ProductManagementComponent implements OnInit {
     items.removeAt(index);
     this.onRemoveMaterial(index);
   }
+  //
+  //phan material cho request product theo order
+  get ItemsMaterialRequest(): FormArray {
+    return (this.listRequestProductForm.get(['materialFormRequests']) as FormArray);
+
+  }
+
+  get MaterialFormRequests(): FormArray {
+    return this.listRequestProductForm.get('materialFormRequests') as FormArray;
+  }
+
+  // Phương thức để thêm một item mới vào FormArray 'items'
+
+  getMaterialFormRequests(index: number): FormArray {
+    // Access the FormGroup at the given index within the itemsRProduct FormArray
+    const itemFormGroup = this.itemsRProduct.at(index) as FormGroup; // Cast to FormGroup here
+    // console.log(`itemFormGroup at index ${index}:`, itemFormGroup);
+
+    // Access the materialFormRequests FormArray within the obtained FormGroup
+    return itemFormGroup.get('materialFormRequests') as FormArray;
+  }
+
+
+
+  addMaterialFormRequest(index: number) {
+    const materialFormRequests = this.getMaterialFormRequests(index);
+    console.log("materialFormRequestcuaAdd" + index, materialFormRequests);
+    // console.log('materialFormRequests111111:', materialFormRequests);
+    // console.log('materialFormRequests22222:', this.MaterialFormRequests);
+    // Create form controls for materialId, quantity, and price
+
+    // const materialIdControl = new FormControl(null);
+    // const quantityControl = new FormControl(1);
+    // const priceControl = new FormControl(0);
+
+    const newRequest = this.fb.group({
+      materialId: [null],
+      submateId: [null],
+      quantity: [null],
+    });
+    materialFormRequests.push(newRequest);
+  }
+
+  removeMaterialFormRequest(sectionIndex: number, formIndex: number) {
+    const materialFormRequests = this.getMaterialFormRequests(sectionIndex);
+    if (materialFormRequests && formIndex >= 0 && formIndex < materialFormRequests.length) {
+      materialFormRequests.removeAt(formIndex);
+    }
+  }
+  //phan` danh cho request product theo order
+  get itemsRProduct(): FormArray {
+    return this.listRequestProductForm.get('itemsRProduct') as FormArray;
+  }
+
+  addItemRProduct(): void {
+
+    const itemRProductForm = this.fb.group({
+      request_id: [this.idOrder],
+      requestProductName: ['', Validators.required],
+      quantity: [0, Validators.required],
+      completionTime: ['', Validators.required],
+      description: ['', Validators.required],
+      price: [0, Validators.required],
+      materialFormRequests: this.fb.array([]) // Ensure this is initialized
+    });
+
+    this.itemsRProduct.push(itemRProductForm);
+
+  }
+
+  removeItemRProduct(index: number) {
+    const items = this.listRequestProductForm.get('itemsRProduct') as FormArray;
+    items.removeAt(index);
+    this.onRemoveMaterial(index);
+  }
+  //
   //phan formGroup cua edit productt
 
   populateFormWithData(productId: number) {
@@ -403,7 +472,7 @@ export class ProductManagementComponent implements OnInit {
 
 
     if (this.loginToken) {
-      this.isLoadding = true;
+      // this.isLoadding = true;
       // console.log('Retrieved loginToken:', this.loginToken);
       if (this.isProduct == true) {
         this.productListService.getProducts().subscribe(
@@ -423,22 +492,22 @@ export class ProductManagementComponent implements OnInit {
           }
         );
       } else {
-        this.productListService.getAllProductRequest().subscribe(
-          (data) => {
-            this.isLoadding = false;
-            if (data.code === 1000) {
-              this.products = data.result;
-              console.log('Danh sách sản phẩm theo yeu cau:', this.products);
-            } else {
-              console.error('Failed to fetch products:', data);
-              this.toastr.error('Không thể lấy danh sách sản phẩm!', 'Lỗi');
-            }
-          },
-          (error) => {
-            console.error('Error fetching products:', error);
-            this.toastr.error('Có lỗi xảy ra! Không thể lấy danh sách sản phẩm theo yêu cầu', 'Lỗi');
-          }
-        );
+        // this.productListService.getAllProductRequest().subscribe(
+        //   (data) => {
+        //     this.isLoadding = false;
+        //     if (data.code === 1000) {
+        //       this.products = data.result;
+        //       console.log('Danh sách sản phẩm theo yeu cau:', this.products);
+        //     } else {
+        //       console.error('Failed to fetch products:', data);
+        //       this.toastr.error('Không thể lấy danh sách sản phẩm!', 'Lỗi');
+        //     }
+        //   },
+        //   (error) => {
+        //     console.error('Error fetching products:', error);
+        //     this.toastr.error('Có lỗi xảy ra! Không thể lấy danh sách sản phẩm theo yêu cầu', 'Lỗi');
+        //   }
+        // );
       }
 
     } else {
@@ -617,13 +686,15 @@ export class ProductManagementComponent implements OnInit {
     );
   }
 
+
   onMaterialChange(event: Event, index: number) {
     this.selectedSubMaterialId[index] = Number((event.target as HTMLSelectElement).value);    // Gọi hàm để tải sub-materials dựa trên giá trị được chọn
     const selectedMaterial = this.materials.find(material => material.materialId === this.selectedSubMaterialId[index]);
     this.materialType[index] = selectedMaterial ? selectedMaterial.type : '';
 
     this.loadSubMaterials(this.selectedSubMaterialId[index], index);
-    // console.log('Selected MaterialId:', this.selectedSubMaterialId[index], " selected index:" + index);
+    console.log('Selected MaterialId:', this.selectedSubMaterialId[index], " selected index:" + index);
+    this.selectedMaterialId[index] = (event.target as HTMLSelectElement).value; // bo sung cho add list productrequest
   }
 
   loadSubMaterials(materialId: number, index: number): void {
@@ -637,6 +708,7 @@ export class ProductManagementComponent implements OnInit {
       }
     );
   }
+
 
   onSubMaterialChange(event: Event, index: number) {
     this.selectedSubMaterialId[index] = Number((event.target as HTMLSelectElement).value);
@@ -658,6 +730,34 @@ export class ProductManagementComponent implements OnInit {
       }
     }
     console.log('totalprice:', this.totalUnitPrice);
+
+  }
+
+  totalPriceSubmatePerProducRequest: { [key: number]: number | number } = {};
+  onQuantityChangeRProduct(event: Event, index: number, indexOfItemRProduct: number, indexOfMaterial: number) {
+    this.quantityPerSubMaterial[index] = (event.target as HTMLInputElement).value;
+    this.totalPriceSubmatePerProducRequest[indexOfItemRProduct] = 0;
+    if (this.unitPriceSubMaterial && this.quantityPerSubMaterial) {
+      // Calculate the start and end index based on indexOfItemRProduct and indexOfMaterial
+      const startIndex = indexOfItemRProduct * 10;
+      const endIndex = startIndex + indexOfMaterial;
+
+      // Iterate from startIndex to endIndex
+      for (let index = startIndex; index <= endIndex; index++) {
+        console.log('index:', index);
+        console.log('unitPriceSubMaterial:' + index, this.unitPriceSubMaterial[index]);
+        console.log('quantityPerSubMaterial:' + index, this.quantityPerSubMaterial[index]);
+        // Ensure that unitPriceSubMaterial and quantityPerSubMaterial exist for the current index
+
+        const numericUnitPrice = Number(this.unitPriceSubMaterial[index]) || 0;
+        const quantity = Number(this.quantityPerSubMaterial[index]) || 0;
+        const totalForThisItem = numericUnitPrice * quantity;
+        console.log('totalForThisItem:' + index, totalForThisItem);
+
+        this.totalPriceSubmatePerProducRequest[indexOfItemRProduct] += totalForThisItem;
+      }
+    }
+
 
   }
 
@@ -1012,60 +1112,116 @@ export class ProductManagementComponent implements OnInit {
     );
   }
 
+  totalAmountOfOrder: number = 0;
   onSubmitProductRequest() {
-    console.log('Form Data for Product Request:', this.uploadForm.value);
-    if (this.uploadForm.valid && this.selectedImages.length) {
-      this.isLoadding = true;
-      const productRequestData = this.uploadForm.value;
 
-      if (productRequestData.price) {
-        productRequestData.price = Number(productRequestData.price.replace(/,/g, ''));
+    for (let i = 0; i < this.itemsRProduct.length; i++) {
+      const materialFormRequests = this.getMaterialFormRequests(i);
+      // console.log("do dai cua j:" ,materialFormRequests.length)
+      // console.log("do dai cua i: ", i)
+      // console.log("in materialFormRequests:"+i, materialFormRequests);
+
+      // Duyệt qua mỗi request hiện có và cập nhật giá trị
+      for (let j = 0; j < materialFormRequests.length; j++) {
+        const materialIdValue = this.selectedMaterialId[i * 10 + j];
+        // console.log("Giá trị materialId:"+ (i*10+j), materialIdValue);
+        const request = materialFormRequests.at(j);
+        // console.log("request:"+j, request);
+        request.patchValue({
+          materialId: this.selectedMaterialId[i * 10 + j], // Giá trị mới cho materialId
+          submateId: this.selectedSubMaterialId[i * 10 + j], // Giá trị mới cho submateId
+          quantity: this.quantityPerSubMaterial[i * 10 + j], // Giá trị mới cho quantity
+        });
       }
-
-      productRequestData.request_id = this.idOrder;
-      console.log('data goc:', this.materialForm.value);
-      var temp = this.materialForm.value;
-
-      // tach lay quantity va subMaterialId
-      var processedData = temp.items.map((item: MaterialItem) => (
-        [(item.subMaterialId as string), item.quantity]
-      ));
-      // convert thanh dang map
-      const transformedObject: { [key: string]: number } = {};
-
-      for (const [subMaterialId, quantity] of processedData) {
-        transformedObject[subMaterialId] = quantity;
-      }
-
-      this.productListService.addNewProductRequest(productRequestData, this.selectedImages)
-        .pipe(concatMap(response => {
-
-          console.log('response:', response);
-          const transformedData = {
-            productId: response.result.requestProductId,
-            subMaterialQuantities: transformedObject
-          };
-          console.log("transformedData:", transformedData);
-          return this.productListService.createExportMaterialProductRequest(transformedData);
-        }))
-        .subscribe(
-          response => {
-            this.location.replaceState('/product_management');
-            this.isProduct = false;
-            this.reloadProductRequest();
-            this.isLoadding = false;
-            this.toastr.success('Tạo sản phẩm theo yêu cầu thành công!', 'Thành công');
-            $('[data-dismiss="modal"]').click();      // tat modal  
-          },
-          error => {
-            this.isLoadding = false;
-            this.toastr.error('Tạo sản phẩm bị lỗi!', 'Lỗi');
-
-          }
-        );
-
-
+      // this.totalAmountOfOrder += this.totalPriceSubmatePerProducRequest[i];
     }
+    console.log('Form Data for Product Request:', this.listRequestProductForm.value);
+    const transformedData = this.listRequestProductForm.value.itemsRProduct.map((item: any) => ({
+      productId: 0, // Assuming productId is not available in original data and set to 0
+      subMaterialQuantities: item.materialFormRequests.reduce((acc: Record<string, number>, { submateId, quantity }: { submateId: number; quantity: string }) => {
+        acc[submateId.toString()] = Number(quantity);
+        return acc;
+      }, {})
+    }));
+
+    console.log(transformedData);
+    // console.log("selectedMaterialId:"+0, this.selectedMaterialId[0]);
+    // console.log("selectedMaterialId:"+1, this.selectedMaterialId[1]);
+    // console.log("selectedMaterialId:"+10, this.selectedMaterialId[10]);
+
+    // console.log("selectedMaterialId:"+11, this.selectedMaterialId[11]); // Debug line to check the object
+    // const keys = Object.keys(this.selectedMaterialId); // Get all keys as string[]
+    // console.log("Keys:", keys); // Debug line to check the keys
+    // for (let i = 0; i < keys.length; i++) {
+    //   const key = keys[i];
+    //   // Convert key back to number since selectedMaterialId expects a number as the key
+    //   console.log("mateId", this.selectedMaterialId[+key]);
+    // }
+    // const materialFormRequests = this.getMaterialFormRequests(index);
+    // const newRequest = this.fb.group({
+    //   materialId: materialIdControl,
+    //   submateId: [null],
+    //   quantity: [1],
+    //   price: [0],
+    // });
+    // materialFormRequests.push(newRequest);
+    // console.log('Form Data for Edit Request Product00:', this.materialFormRequest.values);
+
+    // console.log('Form Data for Edit Request Product0:', this.materialFormRequest[0].value);
+
+    // console.log('Form Data for Edit Request Product1:', this.materialFormRequest[1].value);
+    // if (this.uploadForm.valid && this.selectedImages.length) {
+    //   this.isLoadding = true;
+    //   const productRequestData = this.uploadForm.value;
+
+    //   if (productRequestData.price) {
+    //     productRequestData.price = Number(productRequestData.price.replace(/,/g, ''));
+    //   }
+
+    //   productRequestData.request_id = this.idOrder;
+    //   console.log('data goc:', this.materialForm.value);
+    //   var temp = this.materialForm.value;
+
+    //   // tach lay quantity va subMaterialId
+    //   var processedData = temp.items.map((item: MaterialItem) => (
+    //     [(item.subMaterialId as string), item.quantity]
+    //   ));
+    //   // convert thanh dang map
+    //   const transformedObject: { [key: string]: number } = {};
+
+    //   for (const [subMaterialId, quantity] of processedData) {
+    //     transformedObject[subMaterialId] = quantity;
+    //   }
+
+    //   this.productListService.addNewProductRequest(productRequestData, this.selectedImages)
+    //     .pipe(concatMap(response => {
+
+    //       console.log('response:', response);
+    //       const transformedData = {
+    //         productId: response.result.requestProductId,
+    //         subMaterialQuantities: transformedObject
+    //       };
+    //       console.log("transformedData:", transformedData);
+    //       return this.productListService.createExportMaterialProductRequest(transformedData);
+    //     }))
+    //     .subscribe(
+    //       response => {
+    //         this.location.replaceState('/product_management');
+    //         this.isProduct = false;
+    //         this.reloadProductRequest();
+    //         this.isLoadding = false;
+    //         this.toastr.success('Tạo sản phẩm theo yêu cầu thành công!', 'Thành công');
+    //         $('[data-dismiss="modal"]').click();      // tat modal  
+    //       },
+    //       error => {
+    //         this.isLoadding = false;
+    //         this.toastr.error('Tạo sản phẩm bị lỗi!', 'Lỗi');
+
+    //       }
+    //     );
+
+
+    // }
   }
 
   editProductRequest(productId: number) {

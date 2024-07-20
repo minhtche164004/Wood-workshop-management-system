@@ -38,7 +38,7 @@
                   <option disabled selected>Chọn loại sản phẩm</option>
                   <option [ngValue]="true">Sản phẩm thường</option>
                   <option [ngValue]="false">Sản phẩm theo yêu cầu</option>
-                </select>
+                </select> 
                 <!-- Sắp xếp giá tiền -->
                 <select (change)="isProduct ? filterProducts() : filterProductsRequest()"
                   [(ngModel)]="selectedSortByPrice">

@@ -51,7 +51,12 @@ export class AuthenListService {
   private apiUrl_cancelOrder = `${environment.apiUrl}api/auth/order/Cancel_Order`;
   private apiUrl_getFilterRole = `${environment.apiUrl}api/auth/admin/FilterByPosition`;
 
+
+  private api_getAllInputSubMaterial = `${environment.apiUrl}api/auth/submaterial/getAllInputSubMaterial`;
+  private apiUrl_getMultiFillterRHistoryImpact = `${environment.apiUrl}api/auth/submaterial/MultiFilterInputSubMaterial`;
+
   private api_getAllOrderDetailById = `${environment.apiUrl}api/auth/order/getAllOrderDetailByOrderId`;
+
   private apiUrl_NameATM = 'https://api.vietqr.io/v2/banks';
   constructor(private http: HttpClient) { }
   isLoggedIn(): boolean {
@@ -214,6 +219,11 @@ export class AuthenListService {
   getAllRequest(): Observable<any> {
   
     return this.http.get<any>(this.api_getAllRequest).pipe(
+      catchError(this.handleError) 
+    );
+  }
+  getAllInputSubMaterial(): Observable<any> {
+    return this.http.get<any>(this.api_getAllInputSubMaterial).pipe(
       catchError(this.handleError) 
     );
   }
@@ -516,6 +526,29 @@ export class AuthenListService {
       .join('&');
 
     const url = `${this.apiUrl_getFilterRole}?${queryString}`;
+    console.log(url);
+    return this.http.get<any>(url).pipe(
+      catchError(this.handleError)
+    );
+  }
+
+  getMultiFillterRHistoryImpact(search: string, sortDirection: string): Observable<any> {
+    const params = {
+      search: search,
+      sortDirection: sortDirection,
+    };
+
+    const queryString = Object.entries(params)
+      .filter(([key, value]) => {
+        if (key === 'search' && value === '') return false;
+
+
+        return value != null;
+      })
+      .map(([key, value]) => `${encodeURIComponent(key)}=${encodeURIComponent(value)}`)
+      .join('&');
+
+    const url = `${this.apiUrl_getMultiFillterRHistoryImpact}?${queryString}`;
     console.log(url);
     return this.http.get<any>(url).pipe(
       catchError(this.handleError)

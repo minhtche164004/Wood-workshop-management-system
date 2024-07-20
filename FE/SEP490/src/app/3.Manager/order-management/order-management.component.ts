@@ -75,13 +75,7 @@ export class OrderManagementComponent implements OnInit {
 
   closeModal(event: Event): void {
     $('[data-dismiss="modal"]').click();
-    // const element = document.getElementById("mySelect" + this.indexStatus) as HTMLSelectElement;
-    // if (element) {
-    //   element.value = this.saveInitialValue.toString();
-
-    // }
-    const statusId = (event.target as HTMLSelectElement).value;
-    this.selectedModalId = statusId;
+    this.realoadgetAllUser();
   }
 
   getOrderStatus(): void {

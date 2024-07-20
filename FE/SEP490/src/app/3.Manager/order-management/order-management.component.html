@@ -17,8 +17,7 @@
               </a>
             </div>
           </div>
-          <table class="table table-striped table-hover">
-          </table>
+        
           <div class="row  justify-content-end">
             <div class="col-md-9 text-end">
               <div class="input-group mb-3">
@@ -31,9 +30,9 @@
 
                 <!-- product.component.html -->
                 <select [(ngModel)]="selectedCategory" (change)="filterStatus()">
-                  <option value="null" selected>Tất cả đơn hàng</option>
+                  <option value="0" selected>Tất cả đơn hàng</option>
                   <option *ngFor="let ps of userStatus" [value]="ps.status_id">{{ ps.status_name }}</option>
-               
+
                 </select>
                 <input type="text" class="form-control" placeholder="Mã đơn hàng">
                 <button class="btn search-button" type="button">
@@ -43,18 +42,21 @@
             </div>
           </div>
         </div>
+      </div>
+      
+      <div>
         <table class="table table-striped table-hover">
           <thead>
             <tr>
-              <th style="min-width: 100px;">Mã đơn hàng</th>
+              <th>Mã đơn hàng</th>
               <th>Thao tác</th>
               <th>Ngày đặt hàng</th>
               <th>Tình trạng</th>
-              <th style="min-width: 100px;">Kiểu thanh toán</th>
-              <th style="min-width: 100px;">Số tiền đặt cọc</th>
-              <th style="min-width: 100px;">Số tiền còn cần thanh toán</th>
-              <th style="min-width: 100px;">Tổng tiền(vnd)</th>
-              <th style="min-width: 30px;">Hủy đơn hàng</th>
+              <th>Kiểu thanh toán</th>
+              <th>Số tiền đặt cọc</th>
+              <th>Số tiền còn cần thanh toán</th>
+              <th>Tổng tiền(vnd)</th>
+              <th>Hủy đơn hàng</th>
             </tr>
           </thead>
           <tbody>
@@ -66,11 +68,11 @@
                   <i class="fa-solid fa-pen-to-square"></i>
                 </a> -->
                 <a href="#" class="info" title="Info" data-toggle="modal" data-target="#productDetailModal"
-                  (click)="getOrDetailById(us?.orderId)">
+                  (click)="getOrDetailById(us, us?.orderId)">
                   <i class="fa-solid fa-circle-info"></i>
                 </a>
                 <a href="/product_management/{{ us?.orderId }}" class="info" title="Thêm sản phẩm">
-                  <i class="fa-solid fa-plus"></i>
+                  <i class="fa-solid fa-circle-plus"></i>
                 </a>
 
 
@@ -81,7 +83,7 @@
               <!-- [disabled]="us?.status.status_id === 6 || us?.status.status_id === 5
               || us?.status.status_id === 1
               || us?.status.status_id === 3"  -->
-              <td style="min-width: 200px;" *ngIf="us?.totalAmount === null">
+              <td *ngIf="us?.totalAmount === null">
                 <div class="select-wrapper">
                   <select id="mySelect{{i}}" [disabled]="us?.status_id !== 4 && us?.status_id !== 7"
                     class="custom-select" (focus)="saveInitialValue(us.status_id, i)"
@@ -150,10 +152,8 @@
   </div>
 </div>
 
-
-<div class="modal fade" id="productDetailModal" tabindex="-1" role="dialog" aria-labelledby="productDetailModalLabel"
-  aria-hidden="true">
-  <div class="modal-dialog modal-lg" role="document">
+<div class="modal fade" id="productDetailModal" tabindex="-1" role="dialog" aria-labelledby="productDetailModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
     <div class="modal-content">
       <div class="modal-header">
         <h5 class="modal-title" id="productDetailModalLabel">Xem chi tiết đơn hàng</h5>
@@ -162,42 +162,58 @@
         </button>
       </div>
       <div class="modal-body" style="font-size: 16px;">
-        <div class="row">
-          <!-- <div class="col-md-2">
-          </div>
-          <div class="col-md-10">
-            <h4 class="mb-4">Tên Sản Phẩm: {{ OrderdetailById.product_name }}</h4>
-            <p class="mb-2"><strong>Mã đơn chi tiết:</strong> {{ OrderdetailById.order_detail_id }}</p>
-            <p class="mb-2"><strong>Sản phẩm yêu cầu:</strong> {{ OrderdetailById.request_product_name }}</p>
-            <p class="mb-2"><strong>Số lượng:</strong> {{ OrderdetailById.quantity }}</p>
-            <p class="mb-2"><strong>Giá:</strong> {{ OrderdetailById.price | number:'1.0-3' }} VNĐ </p>
-          </div> -->
-          <div class="col-md-9">
-            <div class="col-md-9">
-              Đơn hàng: {{OrderdetailById.orders?.code}} 
+        <div class="container">
+          <div class="row">
+            <div class="col-md-8">
+             <b>Đơn hàng: </b> 
+              
+             <label style="color: rgba(0, 102, 255, 0.945);">{{OrderdetailById.orders?.code}}</label>
               <br>
-              {{OrderdetailById.orders?.orderDate | date:'dd/MM/yyyy'}}
+             <b>Ngày tạo đơn:</b>  {{OrderdetailById.orders?.orderDate | date:'dd/MM/yyyy'}}
             </div>
-            <div>
-              Tình trạng: {{OrderdetailById.orders?.status?.status_name}}
+            <div class="col-md-4">
+            <b> {{OrderdetailById.orders?.status?.status_name}}</b> 
             </div>
-            <div class="col-md-6">
+          </div>
+          <br>
+          <hr>
+          <div class="row">
+            <div class="col-md-4">
               <div class="card">
                 <div class="card-header">
                   Khách hàng
                 </div>
                 <div class="card-body">
-                  <h5 class="card-title">{{ OrderdetailById.orders?.userInfor.fullname}}</h5>
-                  <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
-                  <a href="#" class="btn btn-primary">Go somewhere</a>
+                  <h5 class="card-title">{{OrderdetailById.orders?.userInfor?.fullname}}</h5>
+                  <p class="card-text">{{OrderdetailById.orders?.userInfor?.phoneNumber}}</p>
                 </div>
               </div>
             </div>
-          </div>
-          <div class="col-md-3">
-             
+          
+            <div class="col-md-8">
+              <h2 class="text-center">Thông tin đơn hàng</h2>
+              <table class="table table-striped table-hover">
+                <thead>
+                  <tr>
+                    <th>Tên sản phẩm</th>
+                    <th>Đơn giá</th>
+                    <th>Trạng thái</th>
+                    <th>Số lượng</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let product of productOfOrder">
+                    <td>{{product?.product_name}} {{product?.request_product_name}}</td>
+                    <td>{{product?.price | number:'1.0-3'}}</td>
+                    <td>{{product?.status_job_name}}</td>
+                    <td>{{product?.quantity}}</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
           </div>
         </div>
+      
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
@@ -208,7 +224,9 @@
 
 
 
-<div class="modal fade" id="confirmDeleteModal" tabindex="-1" role="dialog" aria-labelledby="confirmDeleteModalLabel" aria-hidden="true">
+
+<div class="modal fade" id="confirmDeleteModal" tabindex="-1" role="dialog" aria-labelledby="confirmDeleteModalLabel"
+  aria-hidden="true">
   <div class="modal-dialog" role="document">
     <div class="modal-content">
       <div class="modal-header">

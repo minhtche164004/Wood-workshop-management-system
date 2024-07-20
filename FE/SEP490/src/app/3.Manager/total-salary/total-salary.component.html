@@ -76,18 +76,14 @@
                         </div>
 
                     </div>
-
                 </div>
-
-
-
                 <div *ngIf="!checkNotFound">
                     <table class="table table-striped table-hover">
                         <!-- Table header -->
                         <thead>
                             <tr>
                                 <th>STT</th>
-                                <th>Mã việc</th>
+                                <!-- <th>Mã việc</th> -->
                                 <th>Ngày hoàn thành</th>
                                 <th>Tên nhân viên</th>
                                 <th>Vị trí</th>
@@ -103,8 +99,9 @@
                             <tr
                                 *ngFor="let product of totalSalary | paginate: { itemsPerPage: 10, currentPage: currentPage }; let i = index">
                                 <td>{{ i + 1 + (currentPage - 1) * 10 }}</td>
-                                <td>{{ product?.code }}</td>
-                                <td>{{ product?.date }}</td>
+                                <!-- <td>{{ product?.code }}</td> -->
+                                <td>{{ product?.date | date:'dd/MM/yyyy' }}</td>
+
                                 <td>{{ product?.user?.userInfor?.fullname }}</td>
                                 <td>{{ product?.user?.position?.position_name }}</td>
                                 <td>
@@ -121,9 +118,9 @@
                                     </select>
 
                                 </td>
-                                <td>{{ product?.amount | number: '1.0-3'}}</td>
+                                <td  style="text-align: right;">{{ product?.amount | number: '1.0-3'}}</td>
                                 <td>{{ product?.user?.userInfor?.bank_name }}</td>
-                                <td>{{ product?.user?.userInfor?.bank_number }}</td>
+                                <td  style="text-align: right;">{{ product?.user?.userInfor?.bank_number }}</td>
                                 <td>
                                     <button class="btn"
                                         [ngClass]="{'btn-primary': !product?.advanceSuccess, 'btn-secondary': product?.advanceSuccess}"
@@ -158,7 +155,7 @@
                         <div class="d-flex justify-content-center align-items-center" style="height: 200px;">
                             <img src="https://encrypted-tbn2.gstatic.com/images?q=tbn:ANd9GcSG53pYn6cpXaiwT_q6IM45P-rXg5dUw67XqRmr9-vtsbMoHnCG"
                                 alt="Not Found" style="width: 150px; height: 150px; object-fit: cover;">
-                            <p class="text-center">404 Not Found!</p>
+                            <p class="text-center">Không tìm thấy!</p>
                         </div>
                     </div>
                 </div>
@@ -168,75 +165,6 @@
 </div>
 
 
-<div class="modal fade" id="assignJobModal" role="d" aria-labelledby="assignJobModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered modal-lg">
-        <div class="modal-content">
-            <div class="modal-header bg-primary text-white">
-                <h5 class="modal-title" id="assignJobModalLabel">Chi tiết giao việc làm</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body p-4">
-                <div class="container">
-                    <div class="card order-detail-card">
-                        <div class="card-body p-4">
-                            <div class="row">
-                                <div class="col-md-5">
-                                    <section class="customer-info mb-4">
-                                        <h5>Thông tin nhân viên</h5>
-                                        <p style="margin-left: 15px;">
-                                            <!-- <strong>Tên nhân viên:</strong> <select class="form-select" [(ngModel)]="selectedEmployee">
-                                                <option value="" disabled selected>Chọn nhân viên</option>
-                                                <option value="none" disabled>Không chọn</option>
-                                                <option *ngFor="let employee of positionEmployees" [ngValue]="employee.userId">{{ employee.username }}</option>
-                                              </select> -->
-                                        </p>
-                                        <div>
-
-
-
-                                        </div>
-                                        <!-- <p style="margin-left: 15px;">
-                                            <strong>Số lượng:</strong> {{ selectedProduct.quantity }}
-                                        </p>
-                                        <p style="margin-left: 15px;">
-                                            <strong>Giá công khoán:</strong> {{ selectedProduct.price | number: '1.0-3' }}
-                                        </p> -->
-
-                                    </section>
-                                </div>
-                                <div class="col-md-1 d-flex align-items-stretch"
-                                    style="border-left: 2px solid #ddd; margin-left: 30px;"></div>
-                                <div class="col-md-5">
-                                    <section class="order-summary mb-4">
-                                        <h5>Mô tả việc làm</h5>
-                                        <!-- <p style="margin-left: 15px;">
-                                            <strong>Mã đơn hàng:</strong> {{ selectedProduct.code }}
-                                        </p>
-                                        <p style="margin-left: 15px;">
-                                            <strong>Tên công việc:</strong> {{ selectedProduct.product_name }}
-                                        </p> -->
-                                        <p style="margin-left: 15px;">
-                                            <strong>Thời gian yêu cầu hoàn thành công việc:</strong>
-                                            <!-- thêm thời gian yêu cầu hoàn thành nếu có -->
-                                        </p>
-                                    </section>
-                                </div>
-                            </div>
-                            <div class="customer-info">
-                                <h5>Mô tả chi tiết yêu cầu việc làm</h5>
-                                <textarea class="form-control" rows="6" placeholder="Nhập mô tả chi tiết..."></textarea>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="modal-footer">
-                <!-- <button type="button" class="btn btn-primary" (click)="assignJob()">Tạo việc</button> -->
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
-            </div>
-        </div>
-    </div>
-</div>
 <div class="modal fade" id="QRPAY" role="dialog" aria-labelledby="QRPAY" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">

@@ -3,6 +3,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder } from '@angular/forms';
 import { DomSanitizer } from '@angular/platform-browser';
 import { Chart } from 'chart.js';
+import * as e from 'cors';
 import { ToastrService } from 'ngx-toastr';
 import { DataService } from 'src/app/service/data.service';
 import { EmployeeService } from 'src/app/service/employee.service';
@@ -118,7 +119,7 @@ export class ChartComponent implements OnInit {
         this.getAllEmployee(),
         this.getAllDataForYear(),
         this.getAllPostionEmp(),
-      
+        // this.countProductByMonthAndYear(),
 
       ]).then(() => {
         this.updateEmployeePositions().then(() => {
@@ -379,29 +380,58 @@ export class ChartComponent implements OnInit {
       });
     });
   }
-  
+
   getProductByMonthAndYear(month: number, year: number): Promise<void> {
     return new Promise<void>((resolve, reject) => {
-      this.statistic.countProductByMonthYear(13, month, year).subscribe((data) => {
+      this.statistic.countCompletedProductOnOrderByMonthAndYear(month, year).subscribe((data) => {
         if (data.result === null || data.result === undefined) {
           data.result = 0;
         }
-       // console.log(`getProductByMonthAndYear result for ${month}/${year}: `, data.result);
+        console.log(`getProductByMonthAndYear result for ${month}/${year}: `, data.result);
         this.productCounts.push(data.result);
         resolve();
       }, err => {
       //  console.error(`getProductByMonthAndYear error for ${month}/${year}: `, err);
         reject(err);
       });
-    });
+      this.statistic.countCompletedRequestProductOnOrderByMonthAndYear(month, year).subscribe((data) => {
+        if (data.result === null || data.result === undefined) {
+          data.result = 0;
+        }
+        console.log(`getProductByMonthAndYear result for ${month}/${year}: `, data.result);
+        this.productRequestCounts.push(data.result);
+        resolve();
+      }, err => {
+      //  console.error(`getProductByMonthAndYear error for ${month}/${year}: `, err);
+        reject(err);
+      });
+    }
+   
+  );
+
   }
-  
+  // countProductByMonthAndYear() {
+  //   const year = new Date().getFullYear(); //Lấy năm hiện tại
+  //   const promises = [];
+  //   for (let month = 1; month <= 12; month++) {
+  //     promises.push(this.getProductByMonthAndYear(month, year));
+      
+  //   }
+  //   Promise.all(promises).then(() => {
+  //     // console.log('All data retrieved successfully.');
+  //      console.log('Product Counts:', this.productCounts);
+  //      console.log('Product Request Counts:', this.productRequestCounts);
+  //     this.initializeCharts(); // Call to initialize charts with the fetched data
+  //   }).catch(err => {
+  //     console.error('Error retrieving data:', err);
+  //   });
+  // }
   getAllDataForYear() {
     const year = new Date().getFullYear(); //Lấy năm hiện tại
     const promises = [];
     for (let month = 1; month <= 12; month++) {
       promises.push(this.getProductByMonthAndYear(month, year));
-      promises.push(this.getProductRequestByMonthAndYear(month, year));
+     
       promises.push(this.countTotalOrder(month, year));
       promises.push(this.countTotalSpecOrder(month, year));
     }

@@ -22,17 +22,22 @@
                     <table class="table table-striped table-hover">
                     </table>
                     <div class="row">
-                        <div class="col-md-6"></div>
-                        <div class="col-md-6 text-end">
+                        <div class="col-md-4"></div>
+                        <div class="col-md-8 text-end">
 
                             <div class="input-group mb-3">
-                                <select [(ngModel)]="selectedCategory" (change)="onSearch(selectedCategory, searchKey)">
+                                <select [(ngModel)]="selectedCategory" (change)="searchJob(selectedCategory)">
 
                                     <option [ngValue]="1" [(ngModel)]="selectedCategory">Sản phẩm có sẵn </option>
                                     <option [ngValue]="0" [(ngModel)]="selectedCategory" selected>Sản phẩm theo yêu cầu
                                     </option>
 
                                 </select>
+                                <select [(ngModel)]="selectedStatusJob" (change)="onSearch(selectedCategory, searchKey)">
+                                    <option value="">Tất cả</option>
+                                    <option *ngFor="let st of statusSearch" [ngValue]="st.status_id">{{ st.status_name }}</option>
+                                  </select>
+                                  
                                 <input type="text" class="form-control" placeholder="Tìm kiếm sản phẩm..."
                                     [(ngModel)]="searchKey" name="search">
                                 <button class="btn search-button" type="submit"
@@ -108,22 +113,25 @@
                             <td>{{ product?.user_name }}</td>
                             <td>
                                 <button style="margin-left: -10px; size: 15px;" data-toggle="modal"
-                                    data-target="#assignJobModal" (click)="manageJob(product)" class="btn btn-sm"
-                                    [class.btn-outline-primary]="product.statusJob.status_id !== 10 && product.statusJob.status_id !== 7 && product.statusJob.status_id !== 4 && product.statusJob.status_id !== 14"
-                                    [class.btn-danger]="product.statusJob.status_id === 10 || product.statusJob.status_id === 7 || product.statusJob.status_id === 4 || product.statusJob.status_id === 14"
-                                    [disabled]="product.statusJob.status_id === 10 || product.statusJob.status_id === 7 || product.statusJob.status_id === 4 || product.statusJob.status_id === 14">
+                                    data-target="#assignJobModal" (click)="manageJob(product)" class="btn btn-primary"
+                                    [class.btn-primary]="!isDisabled(product)"
+                                    [class.btn-danger]="isDisabled(product)"
+                                    [disabled]="isDisabled(product)">
                                     Giao việc
                                 </button>
-                            </td>
-                            <td>
-                                <button class="btn btn-sm" data-toggle="modal" data-target="#errorProduct"
+                              </td>
+                              <td>
+                                <button class="btn btn-primary" data-toggle="modal" data-target="#errorProduct"
                                     (click)="errorJob(product)"
-                                    [class.btn-outline-primary]="product.statusJob.status_id !== 10 && product.statusJob.status_id !== 7 && product.statusJob.status_id !== 4 && product.statusJob.status_id !== 14 "
-                                    [class.btn-danger]="product.statusJob.status_id === 10 || product.statusJob.status_id === 7 || product.statusJob.status_id === 4 || product.statusJob.status_id === 14 || product.statusJob.type === 1"
-                                    [disabled]="product.statusJob.status_id === 6 || product.statusJob.status_id === 9 || product.statusJob.status_id === 12 || product.statusJob.status_id === 14 || product.statusJob.type === 1">
+                                    [class.btn-primary]="!isErrorDisabled(product)"
+                                    [class.btn-danger]="isErrorDisabled(product)"
+                                    [disabled]="isErrorDisabled(product)">
                                     <i class="fa-solid fa-triangle-exclamation"></i>
                                 </button>
-                            </td>
+                              </td>
+                              
+                              
+                              
                         </tr>
 
                     </tbody>
@@ -148,7 +156,7 @@
                             style="display: flex; justify-content: center; align-items: center; height: 100%;">
                             <img src="https://encrypted-tbn2.gstatic.com/images?q=tbn:ANd9GcSG53pYn6cpXaiwT_q6IM45P-rXg5dUw67XqRmr9-vtsbMoHnCG"
                                 alt="" class="product-img" style="width: 150px; height: 150px; object-fit: cover;">
-                            <p class="name-product text-center">404 Not Found !</p>
+                            <p class="name-product text-center">Không tìm thấy!</p>
                         </div>
                     </div>
                 </div>

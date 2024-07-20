@@ -7,6 +7,7 @@ import { OrderService } from 'src/app/service/order.service';
 import { ProductListService } from 'src/app/service/product/product-list.service';
 
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
+import { OrderRequestService } from 'src/app/service/order-request.service';
 interface ApiResponse {
   code: number;
   result: any[];
@@ -40,7 +41,7 @@ export class OrderManagementComponent implements OnInit {
   activeModal: any;
   cancelReason: string = '';
   constructor(private http: HttpClient, private productListService: ProductListService, private orderService: OrderService,
-    private authenListService: AuthenListService, private toastr: ToastrService,
+    private authenListService: AuthenListService, private toastr: ToastrService, private orderRequestService: OrderRequestService
   ) { }
 
   ngOnInit(): void {
@@ -182,6 +183,7 @@ export class OrderManagementComponent implements OnInit {
 
   }
   productOfOrder: any[] = [];
+
   getOrDetailById(order_detail_id: string): void {
     this.isLoadding = true;
     console.log('Order_detail_id:', order_detail_id);
@@ -198,12 +200,12 @@ export class OrderManagementComponent implements OnInit {
 
       }
     );
-    this.authenListService.getOrderDetailById(order_detail_id).subscribe(
+    this.orderRequestService.getAllOrderDetailByOrderId(order_detail_id).subscribe(
       (data) => {
         this.productOfOrder = data.result;
         this.isLoadding = false;
 
-        console.log('OrderdetailById:', this.OrderdetailById);
+        console.log('Product Orders: :', this.productOfOrder);
       },
       (error) => {
         console.error('Error fetching user data:', error);

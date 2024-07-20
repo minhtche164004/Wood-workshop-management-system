@@ -25,7 +25,7 @@ declare var $: any; // khai bao jquery
 })
 
 export class SubMaterialManagementComponent implements OnInit {
-  products: any[] = []; // Biến để lưu trữ danh sách sub-materials
+  subMaterials: any[] = []; // Biến để lưu trữ danh sách sub-materials
   loginToken: string | null = null;
   currentPage: number = 1;
   selectedMaterial: any = null;
@@ -33,6 +33,7 @@ export class SubMaterialManagementComponent implements OnInit {
   categories: any[] = [];
   selectedFile: File | undefined;
   keyword = 'subMaterialName';
+  subMaterialAutoComp: any[] = [];
   sub_material_name: string = '';
   SubMaterData: any = {};
   description: string = '';
@@ -93,16 +94,37 @@ export class SubMaterialManagementComponent implements OnInit {
    // console.log("Bắt đầu chạy sub-material-management.component.ts")
     this.getAllMaterials();
     this.getAllSubMaterials();
-
+    this.getAllSubMaterialsForAutoCom();
   }
 
+  getAllSubMaterialsForAutoCom(): void {
+    this.isLoadding = true;
+    this.materialService.getAllSubMaterials().subscribe(
+      (data) => {
+        if (data.code === 1000) {
+          this.subMaterialAutoComp = data.result;
+          console.log('Danh sách Sub-Materials:', this.subMaterialAutoComp);
+          this.isLoadding = false;
+        } else {
+          console.error('Failed to fetch sub-materials:', data);
+          this.toastr.error('Không thể lấy danh sách sub-materials!', 'Lỗi');
+          this.isLoadding = false;// Hiển thị thông báo lỗi
+        }
+      },
+      (error) => {
+        console.error('Error fetching sub-materials:', error);
+        this.toastr.error('Có lỗi xảy ra!', 'Lỗi'); // Hiển thị thông báo lỗi chung
+        this.isLoadding = false;
+      }
+    );
+  }
   getAllSubMaterials(): void {
     this.isLoadding = true;
     this.materialService.getAllSubMaterials().subscribe(
       (data) => {
         if (data.code === 1000) {
-          this.products = data.result;
-          console.log('Danh sách Sub-Materials:', this.products);
+          this.subMaterials = data.result;
+          console.log('Danh sách Sub-Materials:', this.subMaterials);
           this.isLoadding = false;
         } else {
           console.error('Failed to fetch sub-materials:', data);
@@ -279,10 +301,10 @@ export class SubMaterialManagementComponent implements OnInit {
       (data) => {
         if (data.code === 1000) {
           this.currentPage = 1;
-          this.products = data.result;
+          this.subMaterials = data.result;
      //     console.log('Kết quả tìm kiếm Sub-Materials:', this.products);
           this.isLoadding = false;
-          if(this.products.length == 0){
+          if(this.subMaterials.length == 0){
             this.checkNotFound = true;
           }
         } else {
@@ -397,8 +419,8 @@ resetFileInput(inputElement: HTMLInputElement) {
     this.materialService.searchSubMaterial(this.selectedSubMtr.subMaterialName).subscribe(
       (data) => {
         if (data.code === 1000) {
-          this.products = data.result;
-          console.log('Kết quả tìm kiếm Sub-Materials:', this.products);
+          this.subMaterials = data.result;
+          console.log('Kết quả tìm kiếm Sub-Materials:', this.subMaterials);
           this.isLoadding = false;
         } else {
           console.error('Failed to search sub-materials:', data);
@@ -426,10 +448,10 @@ resetFileInput(inputElement: HTMLInputElement) {
     this.subMaterialService.filterByMaterial(this.selectedMaterial).subscribe(
       (data) => {
         if (data.code === 1000) {
-          this.products = data.result;
+          this.subMaterials = data.result;
           this.currentPage = 1;
           //    this.toastr.success('Vật liệu ' + this.selectedMaterial.materialName + ' thành công!', 'Thành công');
-          console.log('Kết quả lọc Sub-Materials:', this.products);
+          console.log('Kết quả lọc Sub-Materials:', this.subMaterials);
         } else {
           console.error('Failed to filter sub-materials:', data);
           this.toastr.error('Không thể lọc sub-materials!', 'Lỗi');

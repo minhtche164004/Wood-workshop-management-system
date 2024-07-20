@@ -11,6 +11,8 @@ export class OrderRequestService {
   private urlGetAllRequestOrder = `${environment.apiUrl}api/auth/order/GetAllRequest`;
   private urlGetRequestByID = `${environment.apiUrl}api/auth/order/GetRequestById`;
   private urlGetProductbyID = `${environment.apiUrl}api/auth/order/getRequestProductById`
+
+  private urlGetAllOrdeDetailByOrderId = `${environment.apiUrl}api/auth/order/getAllOrderDetailByOrderId`;
   
   constructor(private http: HttpClient) { }
 
@@ -19,6 +21,12 @@ export class OrderRequestService {
       catchError(this.handleError) 
     );
   }
+  getAllOrderDetailByOrderId(orderId: string): Observable<any> {
+    const url = `${this.urlGetAllOrdeDetailByOrderId}?orderId=${orderId}`;
+    console.log(url);
+    return this.http.get<any>(url).pipe(
+      catchError(this.handleError));
+    }
   private handleError(error: HttpErrorResponse) {
     let errorMessage = '';
     if (error.error instanceof ErrorEvent) {

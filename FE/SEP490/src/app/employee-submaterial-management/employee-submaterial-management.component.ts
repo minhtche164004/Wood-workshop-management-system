@@ -163,7 +163,7 @@ export class EmployeeSubmaterialManagementComponent implements OnInit {
     console.log('Search key:', this.searchKey);
     this.empService.searchEmployeeByName(this.searchKey).subscribe(
       (data) => {
-
+        this.currentPage = 1;
         this.subMaterialList = data.result;
         console.log('Search result:', data.result);
         this.checkNotFound = false;

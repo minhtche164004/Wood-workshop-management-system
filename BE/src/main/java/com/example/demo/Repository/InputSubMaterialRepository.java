@@ -12,8 +12,8 @@ import org.springframework.stereotype.Repository;
 @EnableJpaRepositories
 public interface InputSubMaterialRepository extends JpaRepository<InputSubMaterial,Integer> {
 
-    //lấy giá submaterial đã cập nhật lần cuối(bản ghi mới nhất)
-    @Query("SELECT ism FROM InputSubMaterial ism WHERE ism.subMaterials.subMaterialId = :subMaterialId ORDER BY ism.date_input DESC LIMIT 1   ")
+    //lấy giá submaterial đã cập nhật lần cuối(bản ghi mới nhất) (loại action là cạp nhật giá)
+    @Query("SELECT ism FROM InputSubMaterial ism WHERE ism.subMaterials.subMaterialId = :subMaterialId AND ism.actionType.action_type_id = 4  ORDER BY ism.date_input DESC LIMIT 1   ")
     InputSubMaterial findLatestInputSubMaterialBySubMaterialId(@Param("subMaterialId") int subMaterialId);
 
 }

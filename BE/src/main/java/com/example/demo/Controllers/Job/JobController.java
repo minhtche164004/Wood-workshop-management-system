@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.*;
 import redis.clients.jedis.JedisPooled;
 
 import java.lang.reflect.Type;
+import java.math.BigDecimal;
 import java.util.List;
 
 @RestController
@@ -363,5 +364,27 @@ public class JobController {
         ApiResponse<ProductErrorAllDTO> apiResponse = new ApiResponse<>();
         apiResponse.setResult(jobService.getProductErrorDetailById(id));
         return apiResponse;
+    }
+
+    @GetMapping("/MultiFilterListProductJob")
+    public ApiResponse<?>  MultiFilterListProductJob(
+            @RequestParam(required = false) String search,
+            @RequestParam(required = false) Integer status_id,
+            @RequestParam(required = false) Integer position_id){
+        ApiResponse<List> apiResponse = new ApiResponse<>();
+        apiResponse.setResult(jobService.MultiFilterListProductJob(search, status_id, position_id));
+        return apiResponse;
+
+    }
+
+    @GetMapping("/MultiFilterRequestProductInJob")
+    public ApiResponse<?>  MultiFilterRequestProductInJob(
+            @RequestParam(required = false) String search,
+            @RequestParam(required = false) Integer status_id,
+            @RequestParam(required = false) Integer position_id){
+        ApiResponse<List> apiResponse = new ApiResponse<>();
+        apiResponse.setResult(jobService.MultiFilterRequestProductInJob(search, status_id, position_id));
+        return apiResponse;
+
     }
 }

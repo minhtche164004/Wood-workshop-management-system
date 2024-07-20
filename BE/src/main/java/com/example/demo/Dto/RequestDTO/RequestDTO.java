@@ -33,4 +33,5 @@ public class RequestDTO {
     private String wards_province;
     private List<String> files;
     private String email;
+    private Integer payment_method;
 }

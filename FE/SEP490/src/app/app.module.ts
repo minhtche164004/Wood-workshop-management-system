@@ -74,6 +74,7 @@ import { ListSalaryEmployeeComponent } from './4.Employee/list-salary-employee/l
 import { OrderSuccessComponent } from './Order-payment-vnpay/order-success/order-success.component';
 import { OrderFailComponent } from './Order-payment-vnpay/order-fail/order-fail.component';
 import { EmployeeSubmaterialManagementComponent } from './employee-submaterial-management/employee-submaterial-management.component';
+import { ImpactHistoryManagerComponent } from './3.Manager/impact-history-manager/impact-history-manager.component';
 // import { AuthInterceptor } from './service/auth.interceptor';
 @NgModule({
 
@@ -140,6 +141,7 @@ import { EmployeeSubmaterialManagementComponent } from './employee-submaterial-m
     OrderSuccessComponent,
     OrderFailComponent,
     EmployeeSubmaterialManagementComponent,
+    ImpactHistoryManagerComponent,
 
 
   ],

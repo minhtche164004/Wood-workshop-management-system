@@ -49,7 +49,7 @@ export class OrderManagementComponent implements OnInit {
     this.loadPosition();
     this.loadStatus();
     this.getOrderStatus();
-    this.getAllUser();
+    // this.getAllOrder();
 
   }
   selectedModalJob: string = '';
@@ -94,7 +94,7 @@ export class OrderManagementComponent implements OnInit {
       }
     );
   }
-  getAllUser(): void {
+  getAllOrder(): void {
     this.isLoadding = true;
     this.loginToken = localStorage.getItem('loginToken');
 
@@ -220,7 +220,7 @@ export class OrderManagementComponent implements OnInit {
       response => {
         this.realoadgetAllUser();
         console.log('Order status changed', response);
-        this.toastr.success('Thay đổi tình trạng công việc thành công.');
+        this.toastr.success('Thay đổi tình trạng  thành công.');
 
         $('[data-dismiss="modal"]').click();
         this.isLoadding = false;

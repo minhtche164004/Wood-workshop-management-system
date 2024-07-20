@@ -46,11 +46,12 @@ export class OrderRequiredComponent implements OnInit {
   selectedProvince: any;
   selectedDistrict: any;
   selectedWard: any;
-  
+  selectedStatus: any = null;
   selectedImages: File[] = [];
 
   isDisabled: boolean = false;
  
+  selectedPaymenet: number = 0;
   constructor(
     private toastr: ToastrService,
     private productListService: ProductListService,
@@ -73,6 +74,7 @@ export class OrderRequiredComponent implements OnInit {
       district_province:  [''],
       wards_province:  [''],
       files: this.fb.array([]),
+      payment_method: [''],
       email: ['']
     });
     
@@ -94,6 +96,17 @@ export class OrderRequiredComponent implements OnInit {
     this.imagesPreview = [];
   }
   loadData() {
+    this.authenListService.getUserProfile().subscribe((data) => {
+      this.userProfile = data.result;
+
+      this.provincesService.getProvinces().subscribe((data: Province[]) => {
+        this.provinces = data;
+        this.updateControls();
+
+      });
+    });
+  }
+  reloadData() {
     this.authenListService.getUserProfile().subscribe((data) => {
       this.userProfile = data.result;
 
@@ -188,13 +201,14 @@ export class OrderRequiredComponent implements OnInit {
           response => {
             this.isLoadding = false;
             this.toastr.success('Đặt hàng thành công!', 'Thành công');
-            // timer(1000).subscribe(() => {
-            //   window.location.reload();
-            // });
+            timer(2000).subscribe(() => {
+              window.location.reload();
+            });
           },
           error => {
             this.isLoadding = false;
             this.toastr.error('Đặt hàng bị lỗi!', 'Lỗi');
+
           }
         );
     }
@@ -202,13 +216,19 @@ export class OrderRequiredComponent implements OnInit {
   
 
   onCancel() {
-    this.uploadForm.patchValue({
-      description: '',
-      response: '',
-      files: ''
-    });
+    // Clear the FormArray for 'files'
     const filesArray = this.uploadForm.get('files') as FormArray;
     filesArray.clear();
+  
+    // Reset the form values
+    this.uploadForm.patchValue({
+      payment_method: 0,
+      files: [],
+      description: ''
+    });
+  
+    // Reset the imagesPreview array
+    this.imagesPreview = [];
   }
 }
 

@@ -43,7 +43,7 @@ export class TotalSalaryComponent implements OnInit {
   endDate: string = '';
   position: number = 0;
   selectedBanking: any;
-  
+
   advanceSuccessValues: any = {
     trueValue: true,
     falseValue: false
@@ -55,7 +55,7 @@ export class TotalSalaryComponent implements OnInit {
     this.getAllEmployee();
     this.getAllPostionEmp();
     this.getBankList();
-  //  this.getTotalSalary();
+ 
   }
   getBankList(): void {
     // this.isLoadding = true;
@@ -170,7 +170,7 @@ export class TotalSalaryComponent implements OnInit {
 
         } else {
           console.error('Failed to fetch products:', data);
-        
+
           this.checkNotFound = true;
 
         }
@@ -279,16 +279,16 @@ export class TotalSalaryComponent implements OnInit {
   }
   confirmThanhToan(): void {
     console.log('Confirm thanh toan: ', this.selectedBanking);
-   
+
   }
   modalThanhToan(job: any, event: Event): void {
     console.log('Job salary modal:', job);
     const newValue2 = (event.target as HTMLSelectElement).value;
     console.log('Giá trị được chọn:', newValue2);
     this.launchModalButton.nativeElement.click();
-  
+
   }
-    thanhToan(product: any): void {
+  thanhToan(product: any): void {
     this.isLoadding = true;
     this.qrImageUrl = '';
 
@@ -324,7 +324,7 @@ export class TotalSalaryComponent implements OnInit {
 
   }
   closeModal() {
-      this.getTotalSalary();
+    this.getTotalSalary();
   }
 
 }

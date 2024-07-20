@@ -121,6 +121,7 @@ const routes: Routes = [
   { path: 'ds', component: DashboardComponent },
 
   { path: 'static-report', component: ChartComponent, canActivate: [AuthGuard], data: { roles: ['MANAGER'] }  },
+  { path: 'manager', component: ChartComponent, canActivate: [AuthGuard], data: { roles: ['MANAGER'] }  },
   { path: 'material_management', component: MaterialManagementComponent , canActivate: [AuthGuard], data: { roles: ['MANAGER'] }  },
   { path: 'report_management', component: ReportManagementComponent , canActivate: [AuthGuard], data: { roles: ['MANAGER'] }  },
   { path: 'report_management/:id', component: ReportManagementComponent , canActivate: [AuthGuard], data: { roles: ['MANAGER'] }  },

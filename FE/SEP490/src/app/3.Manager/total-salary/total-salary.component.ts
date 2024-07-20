@@ -161,16 +161,19 @@ export class TotalSalaryComponent implements OnInit {
     this.isLoadding = true;
     console.log('Search key before search:', this.searchKey);
     console.log('Selected position:', this.selectedStatusBanking);
-    this.salaryService.multSearchSalary(this.searchKey, this.startDate, this.endDate, '', this.selectedPosition).subscribe(
+
+    this.salaryService.multSearchSalary(this.searchKey, this.startDate, this.endDate, '', this.selectedPosition, this.selectedStatusBanking).subscribe(
       (data) => {
         if (data.code === 1000) {
           this.totalSalary = data.result;
-          this.currentPage = 1;
           console.log('search luong bang ten: ', this.totalSalary);
+          //this.selectedEmp = '';
+          //     this.searchKey = '';
 
         } else {
           console.error('Failed to fetch products:', data);
-        
+          // this.toastr.error('Không tìm thấy lương của nhân viên', 'Lỗi');
+
           this.checkNotFound = true;
 
         }

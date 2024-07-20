@@ -18,6 +18,8 @@ import java.util.List;
 @Repository
 public interface AdvancesalaryRepository extends JpaRepository<Advancesalary,Integer> {
 
+    @Query("SELECT u FROM Advancesalary u where u.isAdvanceSuccess = false")
+    List<Advancesalary> getAllByFalseAdvanceSuccess();
     @Query(value = "SELECT p.* FROM advancesalary p WHERE p.code LIKE :prefix% ORDER BY p.code DESC LIMIT 1", nativeQuery = true)
     Advancesalary findAdvancesalaryTop(@Param("prefix") String prefix);
 
@@ -42,6 +44,18 @@ public interface AdvancesalaryRepository extends JpaRepository<Advancesalary,Int
             "ORDER BY a.date DESC")
     List<Advancesalary> filterAdvancesalary(@Param("fromDate") Date fromDate,
                                             @Param("toDate") Date toDate,
+                                            @Param("position_id") Integer position_id,
+                                            @Param("fullname") String fullname);
+    @Query("SELECT a FROM Advancesalary a LEFT JOIN a.user.userInfor i WHERE " +
+            "(:fromDate IS NULL OR a.date >= :fromDate) AND " +
+            "(:toDate IS NULL OR a.date <= :toDate) AND " +
+            "(a.user.position.position_id IN :position_id OR :position_id IS NULL) AND " +
+            "(a.isAdvanceSuccess = :isAdvanceSuccess) AND" +
+            "(:fullname IS NULL OR i.fullname LIKE %:fullname%) " +
+            "ORDER BY a.date DESC")
+    List<Advancesalary> filterAdvancesalaryWithAdvanceSuccess(@Param("fromDate") Date fromDate,
+                                            @Param("toDate") Date toDate,
+                                            @Param("isAdvanceSuccess") boolean isAdvanceSuccess,
                                             @Param("position_id") Integer position_id,
                                             @Param("fullname") String fullname);
 

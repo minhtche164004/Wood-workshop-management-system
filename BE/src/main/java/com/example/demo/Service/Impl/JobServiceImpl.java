@@ -64,7 +64,7 @@ public class JobServiceImpl implements JobService {
     @Override
     public List<JobProductDTO> getListRequestProductJob() {
         List<JobProductDTO> orderdetailsList = jobRepository.getRequestProductInJob();
-        if(orderdetailsList == null){
+        if (orderdetailsList == null) {
             throw new AppException(ErrorCode.NOT_FOUND);
         }
         return orderdetailsList;
@@ -73,7 +73,7 @@ public class JobServiceImpl implements JobService {
     @Override
     public List<JobProductDTO> getListProductJob() {
         List<JobProductDTO> orderdetailsList = jobRepository.getListProductJob();
-        if(orderdetailsList == null){
+        if (orderdetailsList == null) {
             throw new AppException(ErrorCode.NOT_FOUND);
         }
         return orderdetailsList;
@@ -83,7 +83,7 @@ public class JobServiceImpl implements JobService {
     @Override
     public List<JobProductDTO> getListProductJobByNameOrCode(String key) {
         List<JobProductDTO> orderdetailsList = jobRepository.getListProductJobByNameOrCodeProduct(key);
-        if(orderdetailsList == null){
+        if (orderdetailsList == null) {
             throw new AppException(ErrorCode.NOT_FOUND);
         }
         return orderdetailsList;
@@ -104,12 +104,12 @@ public class JobServiceImpl implements JobService {
     //nếu màn bên kia là đang là Đã nghiệm thu làm sơn thì lúc sửa status, nó sẽ sửa thành Sản phẩm đã hoàn thành , job thành công , quantity được cộng vào
     @Transactional
     @Override
-    public Jobs CreateJob(JobDTO jobDTO, int user_id, int p_id, int status_id, int job_id,int type_job) {
-      //  type_job để phân biệt alf hàng có sẵn hay hàng theo yêu cầu , 0 là ko có sẵn , 1 là có sẵn
+    public Jobs CreateJob(JobDTO jobDTO, int user_id, int p_id, int status_id, int job_id, int type_job) {
+        //  type_job để phân biệt alf hàng có sẵn hay hàng theo yêu cầu , 0 là ko có sẵn , 1 là có sẵn
         Jobs jobs = new Jobs();
         User user = userRepository.findByIdJob(user_id);
         jobs.setUser(user);
-        if (type_job ==0) { //tức là đang phân job cho requets product
+        if (type_job == 0) { //tức là đang phân job cho requets product
             RequestProducts requestProducts = requestProductRepository.findById(p_id);
             jobs.setRequestProducts(requestProducts);
             jobs.setProduct(null);
@@ -138,14 +138,13 @@ public class JobServiceImpl implements JobService {
         jobs.setJob_log(false);
         jobRepository.save(jobs);
         List<Processproducterror> processproducterrorList = processproducterrorRepository.getProcessproducterrorByJobId(job_id);
-        for(Processproducterror p : processproducterrorList){
+        for (Processproducterror p : processproducterrorList) {
             processproducterrorRepository.delete(p);
         }
         jobRepository.delete(jobs_order_detail);
 
         return jobs;
     }
-
 
 
     @Override
@@ -175,23 +174,23 @@ public class JobServiceImpl implements JobService {
         Jobs waitNextJob = jobRepository.findById(job_id).orElseThrow(() -> new RuntimeException("Job not found"));
         waitNextJob.setProduct(jobs_history.getProduct());
         waitNextJob.setRequestProducts(jobs_history.getRequestProducts());
-        if(status_id == 12){
+        if (status_id == 12) {
             //nếu công việc hoàn thành thì + số lượng của sản phẩm vào số lượng đã có trước đấy
-            if(jobs_log.getProduct() == null){
+            if (jobs_log.getProduct() == null) {
                 RequestProducts requestProducts = requestProductRepository.findById(jobs_history.getRequestProducts().getRequestProductId());
-                requestProducts.setQuantity(requestProducts.getQuantity()+jobs_history.getQuantityProduct());
+                requestProducts.setQuantity(requestProducts.getQuantity() + jobs_history.getQuantityProduct());
                 requestProductRepository.save(requestProducts);
                 jobs_log.setProduct(null);
                 //------ đoạn này chỉ dành cho request product , vì nó là đơn hàng , còn product có sẵn thì lúc cọc xong thì chuyển sang status là đã thi công xong luôn
                 Orders orders = orderRepository.findByCode(jobs_history.getOrderdetails().getOrder().getCode());
-                if(checkOderDoneOrNot(orders.getOrderId()) == true){
+                if (checkOderDoneOrNot(orders.getOrderId()) == true) {
                     orders.setStatus(statusOrderRepository.findById(4)); //nghĩa là đơn hàng đã thi công xong
                     orderRepository.save(orders);
                 }
             }
-            if(jobs_log.getRequestProducts() == null){
+            if (jobs_log.getRequestProducts() == null) {
                 Products products = productRepository.findById(jobs_history.getProduct().getProductId());
-                products.setQuantity(products.getQuantity()+jobs_history.getQuantityProduct());
+                products.setQuantity(products.getQuantity() + jobs_history.getQuantityProduct());
                 productRepository.save(products);
                 jobs_log.setRequestProducts(null);
             }
@@ -201,8 +200,7 @@ public class JobServiceImpl implements JobService {
 
 
             //khi da nghiem thu o cong doan cuoi la son thi` se chuyen status sang trang thai da hoan` thanh
-        }
-        else{
+        } else {
             //nếu công việc hoàn thành thì set lương cho nhân viên luôn --------------------------------------
             Advancesalary advancesalary = new Advancesalary();
             LocalDate today = LocalDate.now();
@@ -225,14 +223,14 @@ public class JobServiceImpl implements JobService {
         waitNextJob.setJob_log(true); // true đển ẩn , ví dụ đã nghiệm thu xong chờ giai đoạn tiếp theo , ở đây list trong job ra thì bắt đc user_id cảu
         // thằng đảm nhận -> bắt dc position thằng đảm nhận là thợ mộc ,thợ sơn ,thợ nhám luôn rồi , không cần phải hiện status mới đc
         jobRepository.save(waitNextJob);
-      //  jobRepository.delete(jobs_history);
+        //  jobRepository.delete(jobs_history);
         return jobs_log;
     }
 
     private boolean checkOderDoneOrNot(int order_id) {
         List<OrderDetailWithJobStatusDTO> results = orderDetailRepository.getAllOrderDetailByOrderIdCheck(order_id);
         for (OrderDetailWithJobStatusDTO result : results) {
-            if (result.getStatus_job_id() != 13 && result.getStatus_job_id() != 15 ) {  //13 tức là sản phẩm của oderdetail đã hoàn thành
+            if (result.getStatus_job_id() != 13 && result.getStatus_job_id() != 15) {  //13 tức là sản phẩm của oderdetail đã hoàn thành
                 return false; // Ngay lập tức trả về false nếu tìm thấy job chưa hoàn thành
             }
         }
@@ -256,7 +254,7 @@ public class JobServiceImpl implements JobService {
     @Override
     public Jobs GetJobById(int job_id) {
         Jobs jobs = jobRepository.getJobById(job_id);
-        if(jobs == null){
+        if (jobs == null) {
             throw new AppException(ErrorCode.NOT_FOUND);
         }
         return jobs;
@@ -296,7 +294,7 @@ public class JobServiceImpl implements JobService {
     @Override
     public List<Jobs> getJobWasDone() {
         List<Jobs> jobsList = jobRepository.getJobWasDone();
-        if(jobsList == null ){
+        if (jobsList == null) {
             throw new AppException(ErrorCode.NOT_FOUND);
         }
         return jobsList;
@@ -305,7 +303,7 @@ public class JobServiceImpl implements JobService {
     @Override
     public List<JobDoneDTO> filterJobWasDoneByEmployeeName(String keyword) {
         List<JobDoneDTO> jobsList = jobRepository.filterJobWasDoneByEmployeeName(keyword);
-        if(jobsList == null ){
+        if (jobsList == null) {
             throw new AppException(ErrorCode.NOT_FOUND);
         }
         return jobsList;
@@ -316,7 +314,7 @@ public class JobServiceImpl implements JobService {
         UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         User user = userRepository.getUserByUsername(userDetails.getUsername());
         List<JobDoneDTO> jobsList = jobRepository.findAllJobForDoneByEmployeeID(user.getUserId());
-        if(jobsList == null ){
+        if (jobsList == null) {
             throw new AppException(ErrorCode.NOT_FOUND);
         }
         return jobsList;
@@ -326,8 +324,8 @@ public class JobServiceImpl implements JobService {
     public List<JobDoneDTO> findAllJobForDoneByEmployeeIDWithJobCode(String query) {
         UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         User user = userRepository.getUserByUsername(userDetails.getUsername());
-        List<JobDoneDTO> jobsList = jobRepository.findAllJobForDoneByEmployeeIDWithJobCode(user.getUserId(),query);
-        if(jobsList == null ){
+        List<JobDoneDTO> jobsList = jobRepository.findAllJobForDoneByEmployeeIDWithJobCode(user.getUserId(), query);
+        if (jobsList == null) {
             throw new AppException(ErrorCode.NOT_FOUND);
         }
         return jobsList;
@@ -349,14 +347,14 @@ public class JobServiceImpl implements JobService {
         if (!checkConditionService.checkInputQuantityInt(productErrorDTO.getQuantity())) {
             throw new AppException(ErrorCode.QUANTITY_INVALID);
         }
-        if(checkConditionService.checkInputQuantityIntForProductError(processproducterror.getQuantity(),jobs.getQuantityProduct())== false){
+        if (checkConditionService.checkInputQuantityIntForProductError(processproducterror.getQuantity(), jobs.getQuantityProduct()) == false) {
             throw new AppException(ErrorCode.INVALID_QUANTITY_PRODUCT_ERROR);
         }
         processproducterror.setDescription(productErrorDTO.getDescription());
         processproducterror.setSolution(productErrorDTO.getSolution());
 
         Products product = jobs.getProduct(); // Lấy đối tượng Product
-        if (product == null ) { // Kiểm tra product có null không
+        if (product == null) { // Kiểm tra product có null không
             processproducterror.setProduct(null);
             processproducterror.setRequestProducts(jobs.getRequestProducts());
         } else {
@@ -371,7 +369,7 @@ public class JobServiceImpl implements JobService {
     @Override
     public List<ProductErrorAllDTO> getAllProductError() {
         List<ProductErrorAllDTO> list = jobRepository.getAllProductError();
-        if(list == null ){
+        if (list == null) {
             throw new AppException(ErrorCode.NOT_FOUND);
         }
         return list;
@@ -380,7 +378,7 @@ public class JobServiceImpl implements JobService {
     @Override
     public ProductErrorAllDTO getProductErrorDetailById(int query) {
         ProductErrorAllDTO productErrorAllDTO = jobRepository.getProductErrorDetailById(query);
-        if(productErrorAllDTO == null ){
+        if (productErrorAllDTO == null) {
             throw new AppException(ErrorCode.NOT_FOUND);
         }
         return productErrorAllDTO;
@@ -399,27 +397,32 @@ public class JobServiceImpl implements JobService {
 
     @Override
     public List<Advancesalary> getAllAdvancesalary() {
-        List<Advancesalary> list = advancesalaryRepository.findAll();
-        if(list == null){
+        List<Advancesalary> list = advancesalaryRepository.getAllByFalseAdvanceSuccess();
+        if (list == null) {
             throw new AppException(ErrorCode.NOT_FOUND);
         }
         return list;
     }
 
     @Override
-    public List<Advancesalary> multi_filter_salary(Date fromDate, Date toDate,Integer position_id, String username, String sortDirection) {
+    public List<Advancesalary> multi_filter_salary(Date fromDate, Date toDate, Integer isAdvanceSuccess, Integer position_id, String username, String sortDirection) {
         List<Advancesalary> advancesalaryList = new ArrayList<>();
-        if (position_id != null ||fromDate != null||toDate != null||username != null) {
-            advancesalaryList = advancesalaryRepository.filterAdvancesalary(fromDate, toDate, position_id, username);
+        boolean advance;
+        if (position_id != null || fromDate != null || toDate != null || username != null || isAdvanceSuccess != null) {
+            if (isAdvanceSuccess == null) {
+                advancesalaryList = advancesalaryRepository.filterAdvancesalary(fromDate, toDate, position_id, username);
+            } else {
+                advancesalaryList = advancesalaryRepository.filterAdvancesalaryWithAdvanceSuccess(fromDate, toDate, isAdvanceSuccess == 0 ? false : true, position_id, username);
+            }
         } else {
-            advancesalaryList= advancesalaryRepository.findAll();
+            advancesalaryList = advancesalaryRepository.findAll();
         }
 //        if (search != null || categoryId != null || statusId != null || minPrice != null || maxPrice != null) {
 //            productList = productRepository.filterProductsForAdmin(search, categoryId, statusId, minPrice, maxPrice);
 //        } else {
 //            productList = productRepository.findAll();
 //        }
-    //    List<Advancesalary> advancesalaryList = advancesalaryRepository.filterAdvancesalary(fromDate, toDate, position_id, "%" + username + "%");
+        //    List<Advancesalary> advancesalaryList = advancesalaryRepository.filterAdvancesalary(fromDate, toDate, position_id, "%" + username + "%");
 
         if (advancesalaryList.isEmpty()) {
             throw new AppException(ErrorCode.NOT_FOUND);
@@ -442,7 +445,7 @@ public class JobServiceImpl implements JobService {
         UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         User user = userRepository.getUserByUsername(userDetails.getUsername());
         List<Advancesalary> list = advancesalaryRepository.findByUserId(user.getUserId());
-        if(list == null){
+        if (list == null) {
             throw new AppException(ErrorCode.NOT_FOUND);
         }
         return list;
@@ -450,20 +453,20 @@ public class JobServiceImpl implements JobService {
 
     @Transactional
     @Override
-    public Advancesalary ChangeStatus(int id,boolean check) {
-        advancesalaryRepository.update_banking(id,check);
+    public Advancesalary ChangeStatus(int id, boolean check) {
+        advancesalaryRepository.update_banking(id, check);
         return advancesalaryRepository.findById(id);
     }
 
     @Override
     public Long CountQuantityOfJob(String status_name, int month, int year) {
-        return jobRepository.countCompletedJobsByMonthAndYear(status_name,month,year);
+        return jobRepository.countCompletedJobsByMonthAndYear(status_name, month, year);
     }
 
     @Override
     public List<Employeematerials> getAllMaterialForEmployee() {
         List<Employeematerials> list = employeeMaterialRepository.findAll();
-        if(list == null){
+        if (list == null) {
             throw new AppException(ErrorCode.NOT_FOUND);
         }
         return list;
@@ -472,7 +475,7 @@ public class JobServiceImpl implements JobService {
     @Override
     public boolean checkErrorOfJobHaveFixDoneOrNot(int job_id) {
         List<Processproducterror> list = processproducterrorRepository.getProcessproducterrorByJobIdHaveFixNotDone(job_id);
-        if(list != null) return false;
+        if (list != null) return false;
         return true;
     }
 
@@ -480,8 +483,8 @@ public class JobServiceImpl implements JobService {
     public List<JobProductDTO> MultiFilterRequestProductInJob(String search, Integer status_id, Integer position_id) {
         List<JobProductDTO> productList = new ArrayList<>();
 
-        if (search != null || position_id != null || status_id != null ) {
-            productList = jobRepository.MultiFilterRequestProductInJob(search,status_id, position_id);
+        if (search != null || position_id != null || status_id != null) {
+            productList = jobRepository.MultiFilterRequestProductInJob(search, status_id, position_id);
         } else {
             productList = jobRepository.getRequestProductInJob();
         }
@@ -491,12 +494,13 @@ public class JobServiceImpl implements JobService {
         }
         return productList;
     }
+
     @Override
     public List<JobProductDTO> MultiFilterListProductJob(String search, Integer status_id, Integer position_id) {
         List<JobProductDTO> productList = new ArrayList<>();
 
-        if (search != null || position_id != null || status_id != null ) {
-            productList = jobRepository.MultiFilterListProductJob(search,status_id, position_id);
+        if (search != null || position_id != null || status_id != null) {
+            productList = jobRepository.MultiFilterListProductJob(search, status_id, position_id);
         } else {
             productList = jobRepository.getListProductJob();
         }

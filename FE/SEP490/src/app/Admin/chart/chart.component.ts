@@ -211,7 +211,7 @@ export class ChartComponent implements OnInit {
             backgroundColor: 'rgb(54, 162, 235)',
           },
           {
-            label: 'Sản phẩm đặt riêng',
+            label: 'Sản phẩm theo yêu cầu',
             data: this.productRequestCounts,
             backgroundColor: 'rgb(255, 99, 132)',
           },
@@ -426,14 +426,15 @@ export class ChartComponent implements OnInit {
   //     console.error('Error retrieving data:', err);
   //   });
   // }
+  year: number = new Date().getFullYear();
   getAllDataForYear() {
-    const year = new Date().getFullYear(); //Lấy năm hiện tại
+  
     const promises = [];
     for (let month = 1; month <= 12; month++) {
-      promises.push(this.getProductByMonthAndYear(month, year));
+      promises.push(this.getProductByMonthAndYear(month, this.year));
      
-      promises.push(this.countTotalOrder(month, year));
-      promises.push(this.countTotalSpecOrder(month, year));
+      promises.push(this.countTotalOrder(month, this.year));
+      promises.push(this.countTotalSpecOrder(month, this.year));
     }
     Promise.all(promises).then(() => {
       // console.log('All data retrieved successfully.');

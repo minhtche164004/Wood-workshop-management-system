@@ -43,6 +43,9 @@
             </div>
           </div>
         </div>
+      </div>
+      
+      <div>
         <table class="table table-striped table-hover">
           <thead>
             <tr>
@@ -184,13 +187,40 @@
               <div class="card-body">
                 <h5 class="card-title">{{ OrderdetailById.orders?.userInfor.fullname}}</h5>
                 <p class="card-text">{{ OrderdetailById.orders?.userInfor.phoneNumber}}</p>
-               
               </div>
             </div>
           </div>
 
           <div class="col-md-8">
-              thông tin đơn hàng
+            thông tin đơn hàng
+            <table class="table table-striped table-hover">
+              <thead>
+                <tr>
+                
+                  <th style="min-width: 100px;">Tên sản phẩm</th>
+                  <th style="min-width: 100px;">Số tiền đặt cọc</th>
+                  <th style="min-width: 100px;">Số tiền còn cần thanh toán</th>
+                  <th style="min-width: 100px;">Tổng tiền(vnd)</th>
+                  <th style="min-width: 30px;">Hủy đơn hàng</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let us of user ; let i = index">
+    
+                  <td style=" min-width: 150px;">{{ us?.code}}</td>
+                  <td class="action-buttons">
+                  
+    
+                  <td>{{ us?.orderDate | date:'dd/MM/yyyy' }}</td>
+    
+              
+    
+    
+    
+                 
+                </tr>
+              </tbody>
+            </table>
           </div>
         </div>
       </div>

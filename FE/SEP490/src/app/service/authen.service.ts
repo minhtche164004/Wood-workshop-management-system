@@ -51,6 +51,7 @@ export class AuthenListService {
   private apiUrl_cancelOrder = `${environment.apiUrl}api/auth/order/Cancel_Order`;
   private apiUrl_getFilterRole = `${environment.apiUrl}api/auth/admin/FilterByPosition`;
 
+  private api_getAllOrderDetailById = `${environment.apiUrl}api/auth/order/getAllOrderDetailByOrderId`;
   private apiUrl_NameATM = 'https://api.vietqr.io/v2/banks';
   constructor(private http: HttpClient) { }
   isLoggedIn(): boolean {
@@ -102,7 +103,12 @@ export class AuthenListService {
       catchError(this.handleError)
     );
   }
-
+  getOrderDetailByOrderId(orderId: string): Observable<any> {
+    const url = `${this.api_getAllOrderDetailById}?orderId=${orderId}`;
+    return this.http.get<any>(url).pipe(
+      catchError(this.handleError)
+    );
+  }
   getRequestById(id: string): Observable<any> {
     const url = `${this.apiUrl_getRequestById}?id=${id}`;
     return this.http.get<any>(url).pipe(

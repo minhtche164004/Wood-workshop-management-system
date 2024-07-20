@@ -33,7 +33,7 @@ export class OrderManagementComponent implements OnInit {
   currentPage: number = 1;
   position: any[] = [];
   status_order: any[] = [];
-  selectedCategory: any = null;
+  selectedCategory: number = 0;
   OrderdetailById: any = {};
   isLoadding: boolean = false;
   selectedOrderId: number | null = null;
@@ -76,13 +76,7 @@ export class OrderManagementComponent implements OnInit {
 
   closeModal(event: Event): void {
     $('[data-dismiss="modal"]').click();
-    // const element = document.getElementById("mySelect" + this.indexStatus) as HTMLSelectElement;
-    // if (element) {
-    //   element.value = this.saveInitialValue.toString();
-
-    // }
-    const statusId = (event.target as HTMLSelectElement).value;
-    this.selectedModalId = statusId;
+    this.realoadgetAllUser();
   }
 
   getOrderStatus(): void {
@@ -111,13 +105,9 @@ export class OrderManagementComponent implements OnInit {
           if (data.code === 1000) {
             this.user = data.result;
             this.isLoadding = false;
-
-            console.log("Danh sách đơn hàng:", this.user);
-
           } else {
             console.error('Failed to fetch products:', data);
             this.isLoadding = false;
-
           }
         },
         (error) => {
@@ -263,30 +253,8 @@ export class OrderManagementComponent implements OnInit {
   filterStatus(): void {
     console.log(this.selectedCategory);
     this.isLoadding = true;
-    this.authenListService.getFilterStatus(this.selectedCategory)
-      .subscribe(
-        (data) => {
-          if (data.code === 1000) {
-            this.user = data.result;
-            this.isLoadding = false;
-            this.toastr.success('Lọc đơn hàng thành công!', 'Thành công');
-          } else if (data.code === 1015) {
-
-            this.isLoadding = false;
-            this.toastr.error('Lọc đơn hàng thất bại!', 'Thành công');
-          }
-          else {
-            this.realoadgetAllUser();
-            this.isLoadding = false;
-            this.toastr.success('Lọc đơn hàng thành công!', 'Thành công');
-          }
-        },
-
-      );
-
-
     const selectedStatusOption = this.userStatus.find(status => status.status_id === this.selectedCategory);
-    if (selectedStatusOption !== null) {
+    if (this.selectedCategory !== 0) {
       this.authenListService.getFilterStatus(this.selectedCategory)
         .subscribe(
           (data) => {
@@ -294,21 +262,16 @@ export class OrderManagementComponent implements OnInit {
               this.currentPage = 1;
               this.user = data.result;
               this.isLoadding = false;
-              this.toastr.success('Lọc đơn hàng thành công!', 'Thành công');
+            
             } else if (data.code === 1015) {
-              this.user = [];
-              console.error('Lọc đơn hàng không thành công:', data);
+              this.realoadgetAllUser();
+           
               this.isLoadding = false;
-              this.toastr.error('Không tìm thấy đơn hàng phù hợp!', 'Lọc thất bại');
+              
             }
+            
           },
-          
         );
-    } else {
-      // The selected category doesn't exist in the userStatus array, so we'll fetch all user data
-      this.getAllUser();
-      this.isLoadding = false;
-      this.toastr.success('Lọc đơn hàng thành công!', 'Thành công');
     }
 
   }

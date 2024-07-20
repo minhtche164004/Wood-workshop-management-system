@@ -64,6 +64,7 @@ import { OrderSuccessComponent } from './Order-payment-vnpay/order-success/order
 import { OrderFailComponent } from './Order-payment-vnpay/order-fail/order-fail.component';
 import { AuthGuard } from './AuthGuard';
 import { EmployeeSubmaterialManagementComponent } from './employee-submaterial-management/employee-submaterial-management.component';
+import { ImpactHistoryManagerComponent } from './3.Manager/impact-history-manager/impact-history-manager.component';
 
 
 
@@ -142,6 +143,7 @@ const routes: Routes = [
   
   // { path: '', redirectTo: '/homepage', pathMatch: 'full' },
   { path: 'report-cost', component: ReportCostManagementComponent },
+  { path: 'im_history', component: ImpactHistoryManagerComponent },
   { path: '', redirectTo: '/homepage', pathMatch: 'full' },
   { path: '**', redirectTo: '/homepage', pathMatch: 'full' },
 

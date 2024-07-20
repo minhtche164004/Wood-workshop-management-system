@@ -60,7 +60,7 @@
                               <div class="form-group">
                                 <select class="form-control" formControlName="district_province"
                                   [(ngModel)]="userProfile.district" [formControl]="districtControl" required>
-                                  <option disabled selected [ngValue]="null" >Chọn Quận/Huyện</option>
+                                  <option disabled selected [ngValue]="null">Chọn Quận/Huyện</option>
                                   <option *ngFor="let district of districts" [ngValue]="district.name">{{ district.name
                                     }}</option>
                                 </select>
@@ -70,7 +70,7 @@
                               <div class="form-group">
                                 <select class="form-control" formControlName="wards_province"
                                   [(ngModel)]="userProfile.wards" [formControl]="wardControl" required>
-                                  <option disabled selected [ngValue]="null" >Chọn Phường/Xã</option>
+                                  <option disabled selected [ngValue]="null">Chọn Phường/Xã</option>
 
                                   <option *ngFor="let ward of wards" [ngValue]="ward.name">{{ ward.name }}</option>
                                 </select>
@@ -78,10 +78,10 @@
                             </div>
                           </div>
                         </div>
-                      
-                     
-                     
-                        
+
+
+
+
                       </div>
                       <div class="row mb-3">
                         <div class="col">
@@ -94,12 +94,23 @@
                       </div>
                       <div class="row mb-3">
                         <div class="col-md-6">
-                          <label style="font-size: 16px;" for="thumbnailImage">Ảnh minh họa</label>
+                          <div class="form-group">
+                            <label>Phương thức thanh toán</label>
+                            <select [(ngModel)]="selectedStatus" class="form-control" formControlName="payment_method">
+                              <option [ngValue]="null" disabled selected>Chọn phương thức thanh toán</option>
+                              <option [ngValue]="0">Thanh toán bằng phương thức chuyển khoản</option>
+                              <option [ngValue]="1">Thanh toán bằng phương thức tiền mặt</option>
+                            </select>
+                          </div>
+                        </div>
+
+                        <div class="col-md-5 form-group">
+                          <label for="thumbnailImage">Ảnh minh họa</label>
                           <input type="file" class="form-control" id="thumbnailImage" multiple
                             (change)="onImagesSelected($event)">
-
                         </div>
-                        <div class="col-md-6  d-flex align-items-end">
+
+                        <div class="col-md-1 form-group d-flex align-items-end">
                           <a (click)="onResetImage()"
                             style="height: calc(2.25rem + 2px); padding: 0.375rem 0.75rem; font-size: 1rem; line-height: 1.5; border-radius: 0.25rem; border: 1px solid #ced4da; background-color: #fff; color: #495057; cursor: pointer;">
                             Làm mới
@@ -108,7 +119,11 @@
                       </div>
 
 
+
                       <div class="form-row">
+                        <div class="form-group col-md-6">
+
+                        </div>
                         <div class="form-group col-md-6" *ngIf="selectedImages">
                           <a *ngFor="let imageUrl of imagesPreview" [href]="imageUrl" target="_blank">
                             <img [src]="imageUrl" class="previewMultiple">
@@ -120,7 +135,7 @@
                         <div class="col">
                           <div class="form-group">
                             <label>Mô tả đơn hàng</label>
-                            <textarea class="form-control"formControlName="description" rows="5"
+                            <textarea class="form-control" formControlName="description" rows="5"
                               placeholder=""></textarea>
                           </div>
                         </div>

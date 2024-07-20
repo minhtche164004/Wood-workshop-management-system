@@ -119,7 +119,7 @@ const routes: Routes = [
   { path: 'template', component: TemplateComponent },
 
   { path: 'ds', component: DashboardComponent },
-
+    
   { path: 'static-report', component: ChartComponent, canActivate: [AuthGuard], data: { roles: ['MANAGER'] }  },
   { path: 'manager', component: ChartComponent, canActivate: [AuthGuard], data: { roles: ['MANAGER'] }  },
   { path: 'material_management', component: MaterialManagementComponent , canActivate: [AuthGuard], data: { roles: ['MANAGER'] }  },

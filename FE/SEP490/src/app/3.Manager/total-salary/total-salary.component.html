@@ -50,7 +50,13 @@
                                             {{ category.position_name }}
                                         </option>
                                     </select>
-
+                                    <select [(ngModel)]="selectedStatusBanking" (change)="searchSalary()"
+                                    class="form-select">
+                                    <!-- <option [ngValue]="4" selected disabled>Chọn vị trí</option> -->
+                                    <option value="">Tất cả</option>
+                                    <option value="1">Đã Thanh Toán</option>
+                                    <option value="0">Chưa Thanh Toán</option>
+                                </select>
                                     <div class="ng-autocomplete" style="width: 30%; margin-left: 5px;">
                                         <ng-autocomplete *ngIf="employeeInfoList" [data]="employeeInfoList"
                                             [searchKeyword]="keyword" placeholder="Nhập tên nhân viên tìm kiếm"

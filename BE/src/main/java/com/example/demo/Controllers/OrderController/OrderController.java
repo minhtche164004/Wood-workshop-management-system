@@ -1,19 +1,14 @@
 package com.example.demo.Controllers.OrderController;
 
 import com.example.demo.Config.RedisConfig;
-import com.example.demo.Dto.OrderDTO.JobProductDTO;
+import com.example.demo.Dto.OrderDTO.*;
 
-import com.example.demo.Dto.OrderDTO.OrderDetailDTO;
-import com.example.demo.Dto.OrderDTO.OrderDetailWithJobStatusDTO;
-import com.example.demo.Dto.ProductDTO.ProductEditDTO;
-import com.example.demo.Dto.ProductDTO.RequestProductDTO_Show;
+import com.example.demo.Dto.ProductDTO.*;
 import com.example.demo.Dto.RequestDTO.RequestAllDTO;
-import com.example.demo.Dto.ProductDTO.RequestProductAllDTO;
-import com.example.demo.Dto.ProductDTO.RequestProductDTO;
 import com.example.demo.Dto.RequestDTO.RequestDTO;
-import com.example.demo.Dto.OrderDTO.RequestOrder;
 import com.example.demo.Dto.RequestDTO.RequestEditCusDTO;
 import com.example.demo.Dto.RequestDTO.RequestEditDTO;
+import com.example.demo.Dto.SubMaterialDTO.CreateExportMaterialProductRequestDTO;
 import com.example.demo.Entity.*;
 
 import com.example.demo.Repository.OrderRepository;
@@ -38,6 +33,7 @@ import java.io.IOException;
 import java.lang.reflect.Type;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/auth/order/")
@@ -137,10 +133,11 @@ public class OrderController {
         return apiResponse;
     }
     @PostMapping("/Cancel_Order")
-    public ResponseEntity<String> Cancel_Order(@RequestParam("order_id") int order_id,@RequestParam("special_order_id") boolean special_order_id) {
+    public ResponseEntity<String> Cancel_Order(@RequestParam("order_id") int order_id,@RequestParam("special_order_id") boolean special_order_id,
+                                               @RequestBody String response) {
       //  ApiResponse<ResponseEntity<?>> apiResponse = new ApiResponse<>();
       //  apiResponse.setResult(orderService.Cancel_Order(order_id,special_order_id));
-        return orderService.Cancel_Order(order_id,special_order_id);
+        return orderService.Cancel_Order(order_id,special_order_id,response);
     }
     @GetMapping("/GetWhiteListByUser")
     public ApiResponse<?> GetWhiteListByUser() {
@@ -157,11 +154,13 @@ public class OrderController {
     }
     @PostMapping(value = "/AddNewRequestProduct", consumes = MediaType.MULTIPART_FORM_DATA_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ApiResponse<?> AddNewRequestProduct(
-            @RequestPart("productDTO") RequestProductDTO requestProductDTO,
-            @RequestPart("files") MultipartFile[] files
+            @RequestPart("requestProductsWithFiles") RequestProductWithFiles[] requestProductsWithFiles,
+            @RequestPart("order_id") int order_id
+
+
     ) {
-        ApiResponse<RequestProducts> apiResponse = new ApiResponse<>();
-        apiResponse.setResult(orderService.AddNewProductRequest(requestProductDTO, files));
+        ApiResponse<List> apiResponse = new ApiResponse<>();
+        apiResponse.setResult(orderService.AddNewProductRequest(requestProductsWithFiles,order_id));
         return apiResponse;
     }
     @PostMapping("/Approve_Reject_Request")

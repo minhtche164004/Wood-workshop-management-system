@@ -46,6 +46,8 @@ public class SubMaterials {
     @JsonIgnore // Không đưa vào JSON để tránh vòng lặp
     private Materials material; // Đổi tên thuộc tính thành "material"
 
+
+
 }
 
 //@ManyToOne: Mỗi sub-material thuộc về một material.

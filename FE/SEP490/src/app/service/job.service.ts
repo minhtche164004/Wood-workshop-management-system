@@ -31,6 +31,9 @@ export class JobService {
   private apiCreateExportProd = `${environment.apiUrl}api/auth/submaterial/createExportMaterialProductTotalJob`
   private apiGetSubMaterialOfProductRQ = `${environment.apiUrl}api/auth/submaterial/getRequestProductSubMaterialByRequestProductId`
   private apicheckErrorOfJobHaveFixDoneOrNot = `${environment.apiUrl}api/auth/job/checkErrorOfJobHaveFixDoneOrNot`
+  private apiMultiSearchJob = `${environment.apiUrl}api/auth/job/MultiFilterListProductJob`
+
+  private apiMultiSeachJobRequest = `${environment.apiUrl}api/auth/job/MultiFilterRequestProductInJob`
 
     // user_id={{$random.integer(100)}}&
     // p_id={{$random.integer(100)}}&                                  ?job_id=152&status_id=9
@@ -101,6 +104,44 @@ export class JobService {
     console.log('Constructed URL:', url);
     console.log('Constructed params:', params);
     return this.http.post(url, jobData, { params });
+  }
+
+  multiSearchJob(search: string, status_id: string, position_id: string): Observable<any> {
+    const params = {
+      search: search,
+      status_id: status_id,
+      position_id: position_id,
+    };
+    
+    const queryString = Object.entries(params)
+      .filter(([key, value]) => value != null && value !== '') // Loại bỏ các tham số có giá trị null, undefined hoặc rỗng
+      .map(([key, value]) => `${encodeURIComponent(key)}=${encodeURIComponent(value)}`)
+      .join('&');
+  
+    const url = `${this.apiMultiSearchJob}?${queryString}`;
+    console.log('URL:', url);
+    return this.http.get<any>(url).pipe(
+      catchError(this.handleError)
+    );
+  }
+
+  multiSearchJobRequest(search: string, status_id: string, position_id: string): Observable<any> {
+    const params = {
+      search: search,
+      status_id: status_id,
+      position_id: position_id,
+    };
+    
+    const queryString = Object.entries(params)
+      .filter(([key, value]) => value != null && value !== '') // Loại bỏ các tham số có giá trị null, undefined hoặc rỗng
+      .map(([key, value]) => `${encodeURIComponent(key)}=${encodeURIComponent(value)}`)
+      .join('&');
+  
+    const url = `${this.apiMultiSeachJobRequest}?${queryString}`;
+    console.log('URL:', url);
+    return this.http.get<any>(url).pipe(
+      catchError(this.handleError)
+    );
   }
   getStatusJobByType(type: number): Observable<any> {
     console.log(this.apiGetStatusJobByType)

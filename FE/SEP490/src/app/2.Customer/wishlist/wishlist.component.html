@@ -56,11 +56,32 @@
             transform: translateY(-5px);
         }
 
+        .product {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
         .product img {
             width: 340px;
             height: 200px;
             object-fit: cover;
             margin-right: 20px;
+        }
+
+        @media (max-width: 768px) {
+            .product {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .product img {
+                width: 100%;
+                height: auto;
+                margin-right: 0;
+                margin-bottom: 10px;
+            }
         }
 
         .product-info {
@@ -168,20 +189,23 @@
     </header>
 
     <div class="product-container">
-        <div *ngFor="let item of wishlistItems | paginate: { itemsPerPage: 4, currentPage: currentPage }; let i = index" class="product">
-          <img [routerLink]="['/product-details', item.product.productId]" [src]="item.product.image" alt="Sản phẩm 2">
-          <div class="product-info">
-            <h3>{{ item.product.productName }}</h3>
-            <h3>Mô tả: {{ item.product.description }}</h3>
-            <p class="price">Giá Tiền: {{ item.product.price | number: '1.0-3' }} VNĐ</p>
-            <div class="actions">
-              <button class="delete-btn" title="Delete" data-toggle="modal" data-target="#confirmDeleteModal" (click)="setDeleteId(item.id)">
-                <i class="fas fa-trash-alt"></i> Xóa
-              </button>
+        <div *ngFor="let item of wishlistItems | paginate: { itemsPerPage: 4, currentPage: currentPage }; let i = index"
+            class="product">
+            <img [routerLink]="['/product-details', item.product.productId]" [src]="item.product.image"
+                alt="Sản phẩm 2">
+            <div class="product-info">
+                <h3>{{ item.product.productName }}</h3>
+                <h3>Mô tả: {{ item.product.description }}</h3>
+                <p class="price">Giá Tiền: {{ item.product.price | number: '1.0-3' }} VNĐ</p>
+                <div class="actions">
+                    <button class="delete-btn" title="Delete" data-toggle="modal" data-target="#confirmDeleteModal"
+                        (click)="setDeleteId(item.id)">
+                        <i class="fas fa-trash-alt"></i> Xóa
+                    </button>
+                </div>
             </div>
-          </div>
         </div>
-      </div>
+    </div>
 
     <div class="pagination">
         <pagination-controls (pageChange)="currentPage = $event" previousLabel="Trang trước" nextLabel="Trang sau">
@@ -218,4 +242,4 @@
 <!-- loadding man` hinh` -->
 <div *ngIf="isLoadding" class="loading-overlay">
     <div class="spinner"></div>
-  </div>
+</div>

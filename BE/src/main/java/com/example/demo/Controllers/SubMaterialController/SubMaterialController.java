@@ -5,6 +5,7 @@ import com.example.demo.Config.RedisConfig;
 import com.example.demo.Dto.ProductDTO.CreateExportMaterialProductRequest;
 import com.example.demo.Dto.ProductDTO.ProductDTO;
 import com.example.demo.Dto.ProductDTO.QuantityTotalDTO;
+
 import com.example.demo.Dto.SubMaterialDTO.SubMaterialDTO;
 import com.example.demo.Dto.SubMaterialDTO.SubMaterialViewDTO;
 import com.example.demo.Dto.SubMaterialDTO.UpdateSubDTO;
@@ -32,11 +33,12 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import redis.clients.jedis.JedisPooled;
 
+import java.math.BigDecimal;
 import java.net.MalformedURLException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/auth/submaterial/")
@@ -54,6 +56,27 @@ public class SubMaterialController {
     public ApiResponse<?> getAllSubMaterials() {
         ApiResponse<List> apiResponse = new ApiResponse<>();
         apiResponse.setResult(subMaterialService.getAll());
+        return apiResponse;
+    }
+    @GetMapping("/MultiFilterInputSubMaterial")
+    public ApiResponse<?>  MultiFilterInputSubMaterial(
+            @RequestParam(required = false) String search,
+            @RequestParam(required = false) Integer materialId,
+            @RequestParam(required = false) Integer action_type_id,
+            @RequestParam(required = false) Date startDate,
+            @RequestParam(required = false) Date endDate,
+            @RequestParam(required = false) BigDecimal minPrice,
+            @RequestParam(required = false) BigDecimal maxPrice,
+            @RequestParam(required = false) String sortDirection){
+        ApiResponse<List> apiResponse = new ApiResponse<>();
+        apiResponse.setResult(subMaterialService.MultiFilterInputSubMaterial(search, materialId,action_type_id, startDate,endDate, minPrice, maxPrice, sortDirection));
+        return apiResponse;
+
+    }
+    @GetMapping("/getAllInputSubMaterial")
+    public ApiResponse<?> getAllInputSubMaterial() {
+        ApiResponse<List> apiResponse = new ApiResponse<>();
+        apiResponse.setResult(subMaterialService.getAllInputSubMaterial());
         return apiResponse;
     }
     @GetMapping("/getSubmaterialById")
@@ -125,9 +148,9 @@ public class SubMaterialController {
 
     @PostMapping("/upload-submaterial-data")
     public ApiResponse<?> uploadCustomersData(@RequestParam("file") MultipartFile file) {
-        ApiResponse<String> apiResponse = new ApiResponse<>();
-        subMaterialService.saveSubMaterialToDatabase(file);
-        apiResponse.setResult("Đọc file thành công , dữ liệu đã đưọc thêm vào ");
+        ApiResponse<List> apiResponse = new ApiResponse<>();
+
+        apiResponse.setResult(subMaterialService.saveSubMaterialToDatabase(file));
         return apiResponse;
     }
 
@@ -178,11 +201,17 @@ public class SubMaterialController {
         return subMaterialService.createExportMaterialProduct(request.getProductId(), request.getSubMaterialQuantities());
     }
 
-    //xuất đơn vật liệu cho đơn hàng đặt theo yêu cầu , request product
+//    //xuất đơn vật liệu cho đơn hàng đặt theo yêu cầu , request product
     @PostMapping("/createExportMaterialProductRequest")
     public List<RequestProductsSubmaterials> createExportMaterialProductRequest(@RequestBody CreateExportMaterialProductRequest request) {
         return subMaterialService.createExportMaterialProductRequest(request.getProductId(), request.getSubMaterialQuantities());
     }
+
+    @PostMapping("/createExportMaterialListProductRequest")
+    public List<RequestProductsSubmaterials> createExportMaterialListProductRequest(@RequestBody List<CreateExportMaterialProductRequest> request) {
+        return subMaterialService.createExportMaterialListProductRequest(request);
+    }
+
 
     @PostMapping("/createExportMaterialProductTotalJob")
     public ResponseEntity<ApiResponse<List<String>>> createExportMaterialProductTotalJob(@RequestParam("id") int id ,@RequestParam("mate_id") int mate_id, @RequestBody QuantityTotalDTO quantityTotalDTO

@@ -7,6 +7,7 @@ import { OrderService } from 'src/app/service/order.service';
 import { ProductListService } from 'src/app/service/product/product-list.service';
 
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
+import { OrderRequestService } from 'src/app/service/order-request.service';
 interface ApiResponse {
   code: number;
   result: any[];
@@ -18,6 +19,12 @@ interface ApiResponse {
   styleUrls: ['./order-management.component.scss']
 })
 export class OrderManagementComponent implements OnInit {
+  initialStatusValues: { [key: number]: number } = {};
+
+  saveInitialValue(statusId: number, index: number): void {
+    this.initialStatusValues[index] = statusId;
+    console.log("Select Status: ", this.initialStatusValues[index] = statusId)
+  }
   @ViewChild('launchModalButton')
   launchModalButton!: ElementRef;
   user: any[] = [];
@@ -32,8 +39,9 @@ export class OrderManagementComponent implements OnInit {
   selectedOrderId: number | null = null;
   selectedSpecialOrder: boolean | null = null;
   activeModal: any;
+  cancelReason: string = '';
   constructor(private http: HttpClient, private productListService: ProductListService, private orderService: OrderService,
-    private authenListService: AuthenListService, private toastr: ToastrService,
+    private authenListService: AuthenListService, private toastr: ToastrService, private orderRequestService: OrderRequestService
   ) { }
 
   ngOnInit(): void {
@@ -66,9 +74,17 @@ export class OrderManagementComponent implements OnInit {
     // console.log("indexStatus:", this.indexStatus);
   }
 
-  closeModal() {
-    this.getAllUser();
+  closeModal(event: Event): void {
+    $('[data-dismiss="modal"]').click();
+    // const element = document.getElementById("mySelect" + this.indexStatus) as HTMLSelectElement;
+    // if (element) {
+    //   element.value = this.saveInitialValue.toString();
+
+    // }
+    const statusId = (event.target as HTMLSelectElement).value;
+    this.selectedModalId = statusId;
   }
+
   getOrderStatus(): void {
     this.orderService.getOrderStatus().subscribe(
       (data: any) => {
@@ -96,7 +112,6 @@ export class OrderManagementComponent implements OnInit {
             this.user = data.result;
             this.isLoadding = false;
 
-            //      console.log('Danh sách order:', this.user);
 
 
           } else {
@@ -116,6 +131,25 @@ export class OrderManagementComponent implements OnInit {
       this.isLoadding = false;
 
     }
+  }
+  realoadgetAllUser(): void {
+
+    this.productListService.getAllOrder().subscribe(
+      (data: ApiResponse) => {
+        if (data.code === 1000) {
+          this.user = data.result;
+        } else {
+          console.error('Failed to fetch products:', data);
+
+        }
+      },
+      (error) => {
+        console.error('Error fetching products:', error);
+
+
+      }
+    );
+
   }
   loadPosition(): void {
     this.productListService.getAllPosition().subscribe(
@@ -148,15 +182,17 @@ export class OrderManagementComponent implements OnInit {
     );
 
   }
+  productOfOrder: any[] = [];
+
   getOrDetailById(order_detail_id: string): void {
     this.isLoadding = true;
-
+    console.log('Order_detail_id:', order_detail_id);
     this.authenListService.getOrderDetailById(order_detail_id).subscribe(
       (data) => {
         this.OrderdetailById = data.result;
         this.isLoadding = false;
 
-        //  console.log('OrderdetailById:', this.OrderdetailById);
+        console.log('OrderdetailById:', this.OrderdetailById);
       },
       (error) => {
         console.error('Error fetching user data:', error);
@@ -164,12 +200,24 @@ export class OrderManagementComponent implements OnInit {
 
       }
     );
+    this.orderRequestService.getAllOrderDetailByOrderId(order_detail_id).subscribe(
+      (data) => {
+        this.productOfOrder = data.result;
+        this.isLoadding = false;
 
+        console.log('Product Orders: :', this.productOfOrder);
+      },
+      (error) => {
+        console.error('Error fetching user data:', error);
+        this.isLoadding = false;
+
+      }
+    );
   }
   selectedOrder: any = {};
-  getOrderDetail(order: any) {
-    this.selectedOrder = order;
-    console.log('Order:', this.selectedOrder);
+  getOrderDetail(orderId: number): void {
+
+    console.log('OrderID:', this.selectedOrder);
   }
   onStatusChange(orderId: string, event: Event): void {
     const statusId = (event.target as HTMLSelectElement).value;
@@ -180,16 +228,18 @@ export class OrderManagementComponent implements OnInit {
     this.isLoadding = true;
     this.authenListService.changeStatusOrder(orderId, statusId).subscribe(
       response => {
-        this.isLoadding = false;
+        this.realoadgetAllUser();
         console.log('Order status changed', response);
         this.toastr.success('Thay đổi tình trạng công việc thành công.');
-        this.getAllUser();
+
         $('[data-dismiss="modal"]').click();
+        this.isLoadding = false;
       },
       error => {
         this.isLoadding = false;
 
         console.error('Error changing order status', error);
+        $('[data-dismiss="modal"]').click();
       }
     );
   }
@@ -210,6 +260,26 @@ export class OrderManagementComponent implements OnInit {
   filterStatus(): void {
     console.log(this.selectedCategory);
     this.isLoadding = true;
+    this.authenListService.getFilterStatus(this.selectedCategory)
+      .subscribe(
+        (data) => {
+          if (data.code === 1000) {
+            this.user = data.result;
+            this.isLoadding = false;
+            this.toastr.success('Lọc đơn hàng thành công!', 'Thành công');
+          } else if (data.code === 1015) {
+
+            this.isLoadding = false;
+            this.toastr.error('Lọc đơn hàng thất bại!', 'Thành công');
+          }
+          else {
+            this.realoadgetAllUser();
+            this.isLoadding = false;
+            this.toastr.success('Lọc đơn hàng thành công!', 'Thành công');
+          }
+        },
+
+      );
 
 
     const selectedStatusOption = this.userStatus.find(status => status.status_id === this.selectedCategory);
@@ -218,6 +288,7 @@ export class OrderManagementComponent implements OnInit {
         .subscribe(
           (data) => {
             if (data.code === 1000) {
+              this.currentPage = 1;
               this.user = data.result;
               this.isLoadding = false;
               this.toastr.success('Lọc đơn hàng thành công!', 'Thành công');
@@ -245,29 +316,22 @@ export class OrderManagementComponent implements OnInit {
   confirmCancel() {
     this.isLoadding = true;
     if (this.selectedOrderId !== null && this.selectedSpecialOrder !== null) {
-      this.authenListService.cancelOrder(this.selectedOrderId, this.selectedSpecialOrder).subscribe({
-        next: (response: string) => {
-          this.toastr.success(response, 'Success');
-          // Close the modal
+      this.authenListService.cancelOrder(this.selectedOrderId, this.selectedSpecialOrder, this.cancelReason).subscribe({
+        next: (response) => {
+
+          this.toastr.success('Hủy đơn hàng thành công');
           this.isLoadding = false;
-          const closeModalButton = document.querySelector('.btn-close') as HTMLElement;
+          const closeModalButton = document.querySelector('.close') as HTMLElement;
           if (closeModalButton) {
             closeModalButton.click();
           }
+          $('[data-dismiss="modal"]').click();
         },
         error: (error: HttpErrorResponse) => {
-          if (error.status === 400) {
-            const errorMessage = typeof error.error === 'string' ? error.error : 'Unexpected error';
-            this.isLoadding = false;
-            this.toastr.warning(errorMessage, 'Lỗi');
-          } else {
-            const responseText = error.error.text || 'Unexpected error';
-            this.isLoadding = false;
-            this.toastr.success(responseText);
-            timer(1000).subscribe(() => {
-              window.location.reload();
-            });
-          }
+          this.isLoadding = false;
+          this.toastr.success('Hủy đơn hàng thành công');
+          this.realoadgetAllUser();
+          $('[data-dismiss="modal"]').click();
         }
       });
     }

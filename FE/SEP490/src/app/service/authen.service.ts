@@ -8,6 +8,7 @@ import { AddNewAccount } from '../Admin/user-management/user-management.componen
   providedIn: 'root'
 })
 export class AuthenListService {
+  cancelReason: string ='';
   private apiUrl_ViewProfile = `${environment.apiUrl}api/auth/user/ViewProfile`;
   private apiUrl_UpdateProfile = `${environment.apiUrl}api/auth/user/UpdateProfile`;
   private apiUrl_ChangePass = `${environment.apiUrl}api/auth/user/ChangePass`;
@@ -50,6 +51,7 @@ export class AuthenListService {
   private apiUrl_cancelOrder = `${environment.apiUrl}api/auth/order/Cancel_Order`;
   private apiUrl_getFilterRole = `${environment.apiUrl}api/auth/admin/FilterByPosition`;
 
+  private api_getAllOrderDetailById = `${environment.apiUrl}api/auth/order/getAllOrderDetailByOrderId`;
   private apiUrl_NameATM = 'https://api.vietqr.io/v2/banks';
   constructor(private http: HttpClient) { }
   isLoggedIn(): boolean {
@@ -101,22 +103,26 @@ export class AuthenListService {
       catchError(this.handleError)
     );
   }
-
+  getOrderDetailByOrderId(orderId: string): Observable<any> {
+    const url = `${this.api_getAllOrderDetailById}?orderId=${orderId}`;
+    return this.http.get<any>(url).pipe(
+      catchError(this.handleError)
+    );
+  }
   getRequestById(id: string): Observable<any> {
     const url = `${this.apiUrl_getRequestById}?id=${id}`;
     return this.http.get<any>(url).pipe(
       catchError(this.handleError)
     );
   }
-  cancelOrder(orderId: number, specialOrderId: boolean): Observable<any> {
-
+  cancelOrder(orderId: number, specialOrderId: boolean, cancelReason: string): Observable<string> {
     const url = `${this.apiUrl_cancelOrder}?order_id=${orderId}&special_order_id=${specialOrderId}`;
-  
-    return this.http.post<any>(url, { responseType: 'text' }).pipe(
+    const headers = new HttpHeaders({ 'Content-Type': 'text/plain' });
+
+    return this.http.post<string>(url, cancelReason, { headers }).pipe(
       catchError(this.handleError)
     );
   }
-  
   
   getOrderDetailById(order_detail_id: string): Observable<any> {
     const url = `${this.apiUrl_GetOrderDeTailById}?id=${order_detail_id}`;

@@ -1,11 +1,9 @@
 package com.example.demo.Service.Impl;
 
-import com.example.demo.Dto.OrderDTO.OrderDetailDTO;
-import com.example.demo.Dto.OrderDTO.OrderDetailWithJobStatusDTO;
+import com.example.demo.Dto.OrderDTO.*;
 import com.example.demo.Dto.ProductDTO.*;
 import com.example.demo.Dto.RequestDTO.*;
-import com.example.demo.Dto.OrderDTO.ProductItem;
-import com.example.demo.Dto.OrderDTO.RequestOrder;
+import com.example.demo.Dto.SubMaterialDTO.CreateExportMaterialProductRequestDTO;
 import com.example.demo.Entity.*;
 import com.example.demo.Entity.UserInfor;
 import com.example.demo.Exception.AppException;
@@ -75,6 +73,11 @@ public class    OrderServiceImpl implements OrderService {
     private Status_Product_Repository statusProductRepository;
     @Autowired
     private ProcessproducterrorRepository processproducterrorRepository;
+    @Autowired
+    private InputSubMaterialRepository inputSubMaterialRepository;
+    @Autowired
+    private SubMaterialsRepository subMaterialsRepository;
+
 
 
     @Override
@@ -163,57 +166,57 @@ public class    OrderServiceImpl implements OrderService {
             orders.setTotalAmount(total);
             orders.setSpecialOrder(false);
         }
-        if (requestOrder.getSpecial_order() == 1) {//là hàng ko có sẵn
-
-            BigDecimal total = BigDecimal.ZERO; // Khởi tạo total là 0
-            List<ProductItem> requestProductItems = requestOrder.getOrderDetail().getProductItems();
-
-            // Kiểm tra nếu danh sách sản phẩm không rỗng
-            if (requestProductItems != null && !requestProductItems.isEmpty()) {
-                for (ProductItem item : requestProductItems) { // Duyệt qua từng sản phẩm
-                    RequestProducts requestProducts = requestProductRepository.findById(item.getId());
-                    Orderdetails orderdetail = new Orderdetails();
-                    orderdetail.setOrder(orders);
-                    orderdetail.setRequestProduct(requestProductRepository.findById(item.getId()));
-                    orderdetail.setQuantity(item.getQuantity()); //set quantity
-                    orderdetail.setUnitPrice(item.getPrice()); //set unit price
-//                        if(orderdetail.getRequestProduct().getQuantity() < item.getQuantity()){
-//                            throw new AppException(ErrorCode.OUT_OF_STOCK);
-//                        }
-                    requestProducts.setQuantity(requestProducts.getQuantity() - item.getQuantity());
-                    requestProductRepository.save(requestProducts);
-                    orderdetail.setProduct(null); //set product null
-                    BigDecimal itemPrice = item.getPrice();
-                    BigDecimal itemQuantity = BigDecimal.valueOf(item.getQuantity());
-                    total = total.add(itemPrice.multiply(itemQuantity)); // Cộng dồn vào total
-                    orderDetailRepository.save(orderdetail);
-
-                    Jobs jobs = new Jobs();
-                    jobs.setRequestProducts(requestProducts);
-                    jobs.setQuantityProduct(orderdetail.getQuantity());
-                    Jobs lastJob = jobRepository.findJobsTop(dateString + "JB");
-                    int count1 = lastJob != null ? Integer.parseInt(lastJob.getCode().substring(8)) + 1 : 1;
-                    String code1 = dateString + "JB" + String.format("%03d", count1);
-                    jobs.setCode(code1);
-                    jobs.setJob_name("");
-                    jobs.setOrderdetails(orderdetail);
-                    jobs.setJob_log(false);
-                    jobs.setStatus(statusJobRepository.findById(14));
-                    jobRepository.save(jobs);
-
-                }
-            }
-            orders.setDeposite(total.multiply(BigDecimal.valueOf(0.2))); // 20% tiền cọc của tổng tiền đơn hàng
-            orders.setTotalAmount(total);
-            orders.setSpecialOrder(true);
-        }
+//        if (requestOrder.getSpecial_order() == 1) {//là hàng ko có sẵn
+//
+//            BigDecimal total = BigDecimal.ZERO; // Khởi tạo total là 0
+//            List<ProductItem> requestProductItems = requestOrder.getOrderDetail().getProductItems();
+//
+//            // Kiểm tra nếu danh sách sản phẩm không rỗng
+//            if (requestProductItems != null && !requestProductItems.isEmpty()) {
+//                for (ProductItem item : requestProductItems) { // Duyệt qua từng sản phẩm
+//                    RequestProducts requestProducts = requestProductRepository.findById(item.getId());
+//                    Orderdetails orderdetail = new Orderdetails();
+//                    orderdetail.setOrder(orders);
+//                    orderdetail.setRequestProduct(requestProductRepository.findById(item.getId()));
+//                    orderdetail.setQuantity(item.getQuantity()); //set quantity
+//                    orderdetail.setUnitPrice(item.getPrice()); //set unit price
+////                        if(orderdetail.getRequestProduct().getQuantity() < item.getQuantity()){
+////                            throw new AppException(ErrorCode.OUT_OF_STOCK);
+////                        }
+//                    requestProducts.setQuantity(requestProducts.getQuantity() - item.getQuantity());
+//                    requestProductRepository.save(requestProducts);
+//                    orderdetail.setProduct(null); //set product null
+//                    BigDecimal itemPrice = item.getPrice();
+//                    BigDecimal itemQuantity = BigDecimal.valueOf(item.getQuantity());
+//                    total = total.add(itemPrice.multiply(itemQuantity)); // Cộng dồn vào total
+//                    orderDetailRepository.save(orderdetail);
+//
+//                    Jobs jobs = new Jobs();
+//                    jobs.setRequestProducts(requestProducts);
+//                    jobs.setQuantityProduct(orderdetail.getQuantity());
+//                    Jobs lastJob = jobRepository.findJobsTop(dateString + "JB");
+//                    int count1 = lastJob != null ? Integer.parseInt(lastJob.getCode().substring(8)) + 1 : 1;
+//                    String code1 = dateString + "JB" + String.format("%03d", count1);
+//                    jobs.setCode(code1);
+//                    jobs.setJob_name("");
+//                    jobs.setOrderdetails(orderdetail);
+//                    jobs.setJob_log(false);
+//                    jobs.setStatus(statusJobRepository.findById(14));
+//                    jobRepository.save(jobs);
+//
+//                }
+//            }
+//            orders.setDeposite(total.multiply(BigDecimal.valueOf(0.2))); // 20% tiền cọc của tổng tiền đơn hàng
+//            orders.setTotalAmount(total);
+//            orders.setSpecialOrder(true);
+//        }
 
         orderRepository.save(orders);
 
         return orders;
     }
     @Override
-    public ResponseEntity<String> Cancel_Order(int order_id, boolean special_order_id) {
+    public ResponseEntity<String> Cancel_Order(int order_id, boolean special_order_id,String response) {
 
         Orders orders = orderRepository.findById(order_id);
         if(special_order_id == false){//là hàng có sẵn
@@ -225,6 +228,7 @@ public class    OrderServiceImpl implements OrderService {
                 productRepository.save(products);
             }
             orders.setStatus(statusOrderRepository.findById(6));//set cho nó là đơn hàng bị huỷ
+            orders.setResponse(response);
             orderRepository.save(orders);
 
 
@@ -255,6 +259,7 @@ public class    OrderServiceImpl implements OrderService {
 //                requestProductRepository.save(requestProducts);
             }
             orders.setStatus(statusOrderRepository.findById(6));//set cho nó là đơn hàng bị huỷ
+            orders.setResponse(response);
             orderRepository.save(orders);
 
         }
@@ -286,6 +291,7 @@ public class    OrderServiceImpl implements OrderService {
         requests.setDistrict(requestDTO.getDistrict_province());
         requests.setWards(requestDTO.getWards_province());
         requests.setResponse("");
+        requests.setPaymentMethod(requestDTO.getPayment_method());
 
         requests.setSpecialOrder(true);//đặt cho đơn hàng theo yêu cầu là đơn hàng đặc biệt
 
@@ -347,38 +353,81 @@ public class    OrderServiceImpl implements OrderService {
 
     //Tạo Request Product
     @Override
-    public RequestProducts AddNewProductRequest(RequestProductDTO requestProductDTO, MultipartFile[] multipartFiles) { //lấy từ request
+    public List<RequestProducts> AddNewProductRequest(RequestProductWithFiles[] requestProductsWithFiles,int order_id) { //lấy từ request
+        List<RequestProductsSubmaterials> result = new ArrayList<>();
+        Orders orders = orderRepository.findById(order_id);
+        Status_Order statusOrder = statusOrderRepository.findById(1);//tự set cho nó là 1
+        orders.setStatus(statusOrder);
+//        orders.setOrderFinish(requestSpecialOrder.getOrderFinish()); // set ngay hoan thanh order
+//        orders.setPaymentMethod(requestSpecialOrder.getPayment_method()); //1 là trả tiền trực tiếp, 2 là chuyển khoản
 
-        RequestProducts requestProducts = new RequestProducts();
-        requestProducts.setRequestProductName(requestProductDTO.getRequestProductName());
-        requestProducts.setDescription(requestProductDTO.getDescription());
-        requestProducts.setPrice(requestProductDTO.getPrice());
-        Status_Product status = statusProductRepository.findById(2);//tuc la kich hoạt
-        requestProducts.setStatus(status);
-        requestProducts.setQuantity(requestProductDTO.getQuantity());
-        requestProducts.setCompletionTime(requestProductDTO.getCompletionTime());
-        Orders requests = orderRepository.findById(requestProductDTO.getRequest_id());
-        requestProducts.setOrders(requests);
-        if (!checkConditionService.checkInputName(requestProductDTO.getRequestProductName())) {
-            throw new AppException(ErrorCode.INVALID_FORMAT_NAME);
+        LocalDate today = LocalDate.now();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("ddMMyy");
+        String dateString = today.format(formatter);
+        List<RequestProducts> addedProducts = new ArrayList<>();
+        for (RequestProductWithFiles r : requestProductsWithFiles) {
+            RequestProductDTO requestProductDTO = r.getRequestProductDTO();
+            MultipartFile[] files = r.getFiles();
+            RequestProducts requestProducts = new RequestProducts();
+            requestProducts.setRequestProductName(requestProductDTO.getRequestProductName());
+            requestProducts.setDescription(requestProductDTO.getDescription());
+            requestProducts.setPrice(requestProductDTO.getPrice());
+            Status_Product status = statusProductRepository.findById(2);//tuc la kich hoạt
+            requestProducts.setStatus(status);
+            requestProducts.setQuantity(requestProductDTO.getQuantity());
+            requestProducts.setCompletionTime(requestProductDTO.getCompletionTime());
+            requestProducts.setOrders(orders);
+            if (!checkConditionService.checkInputName(requestProductDTO.getRequestProductName())) {
+                throw new AppException(ErrorCode.INVALID_FORMAT_NAME);
+            }
+            if (!checkConditionService.checkInputQuantityInt(requestProductDTO.getQuantity())) {
+                throw new AppException(ErrorCode.QUANTITY_INVALID);
+            }
+            if (!checkConditionService.checkInputPrice(requestProductDTO.getPrice())) {
+                throw new AppException(ErrorCode.PRICE_INVALID);
+            }
+            requestProducts = requestProductRepository.save(requestProducts);
+
+            //set ảnh của product
+        //    RequestProducts requestProduct = requestProductRepository.findByName(requestProductDTO.getRequestProductName());
+            uploadImageService.uploadFileRequestProduct(files, requestProducts.getRequestProductId());
+
+            addedProducts.add(requestProducts);
         }
-//        if (requestProductRepository.countByRequestProductName(requestProductDTO.getRequestProductName()) > 0) {
-//            throw new AppException(ErrorCode.NAME_EXIST);
-//        }
-        if (!checkConditionService.checkInputQuantityInt(requestProductDTO.getQuantity())) {
-            throw new AppException(ErrorCode.QUANTITY_INVALID);
+        BigDecimal totalOrder = BigDecimal.ZERO;
+        for(RequestProducts re : addedProducts){
+//        if (requestSpecialOrder.getSpecial_order() == 1) {//là hàng ko có sẵn
+            BigDecimal total = BigDecimal.ZERO; // Khởi tạo total là 0
+            Orderdetails orderdetail = new Orderdetails();
+            orderdetail.setOrder(orders);
+            orderdetail.setRequestProduct(re);
+            orderdetail.setQuantity(re.getQuantity()); //set quantity
+            orderdetail.setUnitPrice(re.getPrice()); //set unit price
+            orderdetail.setProduct(null); //set product null
+            BigDecimal itemPrice = re.getPrice();
+            BigDecimal itemQuantity = BigDecimal.valueOf(re.getQuantity());
+            total = total.add(itemPrice.multiply(itemQuantity)); // Cộng dồn vào total
+            orderDetailRepository.save(orderdetail);
+            Jobs jobs = new Jobs();
+            jobs.setRequestProducts(re);
+            jobs.setQuantityProduct(orderdetail.getQuantity());
+            Jobs lastJob = jobRepository.findJobsTop(dateString + "JB");
+            int count1 = lastJob != null ? Integer.parseInt(lastJob.getCode().substring(8)) + 1 : 1;
+            String code1 = dateString + "JB" + String.format("%03d", count1);
+            jobs.setCode(code1);
+            jobs.setJob_name("");
+            jobs.setOrderdetails(orderdetail);
+            jobs.setJob_log(false);
+            jobs.setStatus(statusJobRepository.findById(14));
+            jobRepository.save(jobs);
+            totalOrder = totalOrder.add(total); // Cộng dồn total của orderDetail vào totalOrder
         }
-        if (!checkConditionService.checkInputPrice(requestProductDTO.getPrice())) {
-            throw new AppException(ErrorCode.PRICE_INVALID);
-        }
-        requestProducts = requestProductRepository.save(requestProducts);
-//        //set ảnh thumbnail
-//        Product_Thumbnail t = uploadImageService.uploadFile_Thumnail(multipartFiles_thumbnal);
-//        requestProducts.setImage(t.getFullPath());
-        //set ảnh của product
-        RequestProducts requestProduct = requestProductRepository.findByName(requestProductDTO.getRequestProductName());
-        uploadImageService.uploadFileRequestProduct(multipartFiles, requestProduct.getRequestProductId());
-        return requestProducts;
+
+            orders.setDeposite(totalOrder.multiply(BigDecimal.valueOf(0.2))); // 20% tiền cọc của tổng tiền đơn hàng
+            orders.setTotalAmount(totalOrder);
+            orders.setSpecialOrder(true);
+            orderRepository.save(orders);
+        return addedProducts;
     }
 
 
@@ -459,13 +508,13 @@ public class    OrderServiceImpl implements OrderService {
 //    }
 
     @Override
-    public List<Orders> GetAllOrder() {
-        return orderRepository.findAll();
+    public List<OderDTO> GetAllOrder() {
+        return orderRepository.getAllOrder();
     }
 
     @Override
-    public List<Orders> FindByNameOrCode(String key) {
-        List<Orders> ordersList = orderRepository.findOrderByAddressorCode(key);
+    public List<OderDTO> FindByNameOrCode(String key) {
+        List<OderDTO> ordersList = orderRepository.findOrderByAddressorCode(key);
         if (ordersList.isEmpty()) {
             throw new AppException(ErrorCode.NOT_FOUND);
         }
@@ -473,8 +522,8 @@ public class    OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public List<Orders> FilterByDate(Date from, Date to) {
-        List<Orders> ordersList = orderRepository.findByOrderDateBetween(from, to);
+    public List<OderDTO> FilterByDate(Date from, Date to) {
+        List<OderDTO> ordersList = orderRepository.findByOrderDateBetween(from, to);
         if (ordersList.isEmpty()) {
             throw new AppException(ErrorCode.NOT_FOUND);
         }
@@ -483,8 +532,8 @@ public class    OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public List<Orders> FilterByStatus(int status_id) {
-        List<Orders> ordersList = orderRepository.filterByStatus(status_id);
+    public List<OderDTO> FilterByStatus(int status_id) {
+        List<OderDTO> ordersList = orderRepository.filterByStatus(status_id);
         if (ordersList.isEmpty()) {
             throw new AppException(ErrorCode.NOT_FOUND);
         }
@@ -591,10 +640,34 @@ public class    OrderServiceImpl implements OrderService {
     @Transactional
     @Override
     public String ChangeStatusOrder(int orderId, int status_id) {
-        //send mail cho những đơn hàng đặt theo yêu cầu , vì đơn hàng mau có sẵn thì mua luôn rồi, trả tiền luôn r cần đéo gì nữa mà phải theo dõi tình trạng đơn hàng
-        orderRepository.UpdateStatusOrder(orderId,status_id);
         Status_Order statusOrder =statusOrderRepository.findById(status_id);
         Orders orders = orderRepository.findById(orderId);
+
+//        if(orders.getPaymentMethod() == 1 && orders.getStatus().getStatus_id() == 1){//nghĩa là thanh toán bằng tiền mặt, và đang trong trạng thái là chờ đặt cọc
+//            Status_Order statusOrder1 = new Status_Order();
+//            if(orders.getSpecialOrder() == false){//nếu là hàng có sẵn thì set status order cho nó là đã thi công xong luôn(vì nó ko cần sản xuất nữa)
+//                statusOrder1 = statusOrderRepository.findById(4);
+//                orders.setStatus(statusOrder1);
+//                orderRepository.save(orders);
+//                return "Cập nhật đơn hàng sang tình trạng "+ statusOrder1.getStatus_name()+ "thành công";
+//            }
+//            if(orders.getSpecialOrder() == true){//nếu là hàng đặt làm theo yêu cầu thì set status order cho nó là đã đặt cọc thành công
+//                statusOrder1 = statusOrderRepository.findById(3);//đã đặt cọc, đang thi công
+//                orders.setStatus(statusOrder1);
+//                orderRepository.save(orders);
+//                return "Cập nhật đơn hàng sang tình trạng "+ statusOrder1.getStatus_name()+ "thành công";
+//            }
+//            Status_Job statusJob = statusJobRepository.findById(3); // 3 la status job sau khi dat coc thi set status la chua giao viec
+//            List<Jobs> jobsList = jobRepository.getJobByOrderDetailByOrderCode(orders.getCode());
+//            for(Jobs jobs : jobsList){
+//                jobs.setStatus(statusJob);
+//                jobRepository.save(jobs);
+//            }
+//
+//        }
+        //send mail cho những đơn hàng đặt theo yêu cầu , vì đơn hàng mau có sẵn thì mua luôn rồi, trả tiền luôn r cần đéo gì nữa mà phải theo dõi tình trạng đơn hàng
+        orderRepository.UpdateStatusOrder(orderId,status_id);
+
         List<Jobs> list_jobs = jobRepository.getJobByOrderDetailByOrderCode(orders.getCode());
         for(Jobs job : list_jobs){
             if(job.getStatus().getStatus_id() != 13) { //tức là công việc đã hoàn thành
@@ -602,7 +675,7 @@ public class    OrderServiceImpl implements OrderService {
             }
         }
         if(orders.getSpecialOrder() == true){
-            String email=orderDetailRepository.getOrderDetailsByOrderIdForSendMail(orderId);
+            String email=orderDetailRepository.getMailOrderForSendMail(orderId);
             String code = orders.getCode();
             SimpleDateFormat dateFormatter = new SimpleDateFormat("dd/MM/yyyy");
             String time_finish = dateFormatter.format(orders.getOrderFinish());

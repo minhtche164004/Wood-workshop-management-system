@@ -1,13 +1,12 @@
 package com.example.demo.Service;
 
-import com.example.demo.Dto.OrderDTO.OrderDetailDTO;
-import com.example.demo.Dto.OrderDTO.OrderDetailWithJobStatusDTO;
+import com.example.demo.Dto.OrderDTO.*;
 import com.example.demo.Dto.RequestDTO.RequestAllDTO;
 import com.example.demo.Dto.ProductDTO.*;
 import com.example.demo.Dto.RequestDTO.RequestDTO;
-import com.example.demo.Dto.OrderDTO.RequestOrder;
 import com.example.demo.Dto.RequestDTO.RequestEditCusDTO;
 import com.example.demo.Dto.RequestDTO.RequestEditDTO;
+import com.example.demo.Dto.SubMaterialDTO.CreateExportMaterialProductRequestDTO;
 import com.example.demo.Entity.*;
 import org.junit.runner.Request;
 import org.springframework.http.ResponseEntity;
@@ -18,6 +17,7 @@ import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public interface OrderService {
@@ -38,20 +38,20 @@ public interface OrderService {
 
    // RequestAllDTO GetRequestById(int id);
 
-    List<Orders> GetAllOrder();
+    List<OderDTO> GetAllOrder();
 
-    List<Orders> FindByNameOrCode(String key);
+    List<OderDTO> FindByNameOrCode(String key);
 
-    List<Orders> FilterByDate(Date from, Date to);
+    List<OderDTO> FilterByDate(Date from, Date to);
 
-    List<Orders> FilterByStatus(int status_id);
+    List<OderDTO> FilterByStatus(int status_id);
 
     List<Orders> HistoryOrder();
     Orders getOrderById(int order_id);
 
     List<Orderdetails> getAllOrderDetail();
 
-    RequestProducts AddNewProductRequest(RequestProductDTO requestProductDTO, MultipartFile[] multipartFiles);
+    List<RequestProducts> AddNewProductRequest(RequestProductWithFiles[] requestProductsWithFiles, int order_id);
 
     Orders AddNewRequest(RequestDTO requestDTO, MultipartFile[] multipartFiles);
 
@@ -82,7 +82,7 @@ public interface OrderService {
     List<RequestProductDTO_Show> GetAllRequestProductWithImage();
 
 
-   ResponseEntity<String> Cancel_Order(int order_id, boolean special_order_id);
+   ResponseEntity<String> Cancel_Order(int order_id, boolean special_order_id,String response);
 
 
 

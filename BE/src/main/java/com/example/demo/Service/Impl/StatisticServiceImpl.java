@@ -24,10 +24,18 @@ public class StatisticServiceImpl implements StatisticService {
     public BigDecimal findTotalSalaryByMonthAndYear(int month, int year) {
         return advancesalaryRepository.findTotalSalaryByMonthAndYear(month,year);
     }
-
     @Override
     public Long countCompletedJobsByMonthAndYear(int status_id, int month, int year) {
         return advancesalaryRepository.countCompletedJobsByMonthAndYear(status_id,month,year);
+    }
+    @Override
+    public Long countCompletedProductOnOrderByMonthAndYear( int month, int year) {
+        return advancesalaryRepository.countCompletedProductOnOrderByMonthAndYear(month,year);
+    }
+
+    @Override
+    public Long countCompletedRequestProductOnOrderByMonthAndYear( int month, int year) {
+        return advancesalaryRepository.countCompletedRequestProductOnOrderByMonthAndYear(month,year);
     }
     @Override
     public Integer countCompletedJobsForProductByMonthAndYear(int status_id, int month, int year) {
@@ -41,6 +49,10 @@ public class StatisticServiceImpl implements StatisticService {
     @Override
     public Long countProduct() {
         return advancesalaryRepository.countProduct();
+    }
+    @Override
+    public Long countTotalOrder() {
+        return advancesalaryRepository.countTotalOrder();
     }
     @Override
     public Long countRequestProduct() {
@@ -59,6 +71,10 @@ public class StatisticServiceImpl implements StatisticService {
     @Override
     public Long countCompletedOrderByMonthAndYear(int month, int year) {
         return advancesalaryRepository.countCompletedOrderByMonthAndYear( month,  year);
+    }
+    @Override
+    public Long countTotalSpecialOrderByMonthAndYear(int month, int year) {
+        return advancesalaryRepository.countTotalSpecialOrderByMonthAndYear( month,  year);
     }
 
     @Override

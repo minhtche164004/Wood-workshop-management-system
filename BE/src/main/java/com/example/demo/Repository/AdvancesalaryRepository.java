@@ -58,11 +58,44 @@ public interface AdvancesalaryRepository extends JpaRepository<Advancesalary,Int
             @Param("month") int month,
             @Param("year") int year);
 
+    //đếm số lượng order đã hoàn thành theo tháng và năm
+    @Query("SELECT SUM(od.quantity) FROM Orderdetails od " +
+            " JOIN od.order o" +
+            " LEFT JOIN o.status s " +
+            " WHERE od.product IS NOT NULL AND MONTH(o.orderFinish) = :month AND s.status_id = 5 " +
+            " AND YEAR(o.orderFinish) = :year ")
+    Long countCompletedProductOnOrderByMonthAndYear(
+            @Param("month") int month,
+            @Param("year") int year);
+
+    //đếm số lượng order đã hoàn thành theo tháng và năm
+    @Query("SELECT SUM(od.quantity) FROM Orderdetails od " +
+            " JOIN od.order o" +
+            " LEFT JOIN o.status s " +
+            "WHERE od.requestProduct IS NOT NULL AND MONTH(o.orderFinish) = :month AND s.status_id = 5 " +
+            "AND YEAR(o.orderFinish) = :year")
+    Long countCompletedRequestProductOnOrderByMonthAndYear(
+            @Param("month") int month,
+            @Param("year") int year);
+
+
+    //đếm số lượng order đã hoàn thành theo tháng và năm
+    @Query("SELECT COUNT(*) FROM Orders o" )
+    Long countTotalOrder();
+
   //đếm số lượng order theo tháng và năm
     @Query("SELECT COUNT(*) FROM Orders o " +
             "WHERE MONTH(o.orderFinish) = :month " +
             "AND YEAR(o.orderFinish) = :year")
     Long countTotalOrderByMonthAndYear(
+            @Param("month") int month,
+            @Param("year") int year);
+
+    //đếm số lượng order theo tháng và năm
+    @Query("SELECT COUNT(*) FROM Orders o " +
+            "WHERE o.specialOrder =TRUE AND MONTH(o.orderFinish) = :month " +
+            "AND YEAR(o.orderFinish) = :year")
+    Long countTotalSpecialOrderByMonthAndYear(
             @Param("month") int month,
             @Param("year") int year);
 

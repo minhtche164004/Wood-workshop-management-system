@@ -6,6 +6,7 @@ import com.example.demo.Dto.OrderDTO.JobProductDTO;
 import com.example.demo.Dto.ProductDTO.ProductErrorAllDTO;
 import com.example.demo.Dto.ProductDTO.ProductErrorDTO;
 import com.example.demo.Entity.*;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Service;
 
 import java.sql.Date;
@@ -56,4 +57,9 @@ public interface JobService {
     List<Employeematerials> getAllMaterialForEmployee();
 
     boolean checkErrorOfJobHaveFixDoneOrNot(int job_id);
+
+
+    List<JobProductDTO> MultiFilterRequestProductInJob(String search, Integer status_id, Integer position_id);
+
+    List<JobProductDTO> MultiFilterListProductJob(String search, Integer status_id, Integer position_id);
 }

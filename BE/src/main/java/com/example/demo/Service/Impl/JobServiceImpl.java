@@ -476,6 +476,37 @@ public class JobServiceImpl implements JobService {
         return true;
     }
 
+    @Override
+    public List<JobProductDTO> MultiFilterRequestProductInJob(String search, Integer status_id, Integer position_id) {
+        List<JobProductDTO> productList = new ArrayList<>();
+
+        if (search != null || position_id != null || status_id != null ) {
+            productList = jobRepository.MultiFilterRequestProductInJob(search,status_id, position_id);
+        } else {
+            productList = jobRepository.getRequestProductInJob();
+        }
+
+        if (productList.isEmpty()) {
+            throw new AppException(ErrorCode.NOT_FOUND);
+        }
+        return productList;
+    }
+    @Override
+    public List<JobProductDTO> MultiFilterListProductJob(String search, Integer status_id, Integer position_id) {
+        List<JobProductDTO> productList = new ArrayList<>();
+
+        if (search != null || position_id != null || status_id != null ) {
+            productList = jobRepository.MultiFilterListProductJob(search,status_id, position_id);
+        } else {
+            productList = jobRepository.getListProductJob();
+        }
+
+        if (productList.isEmpty()) {
+            throw new AppException(ErrorCode.NOT_FOUND);
+        }
+        return productList;
+    }
+
 
 }
 

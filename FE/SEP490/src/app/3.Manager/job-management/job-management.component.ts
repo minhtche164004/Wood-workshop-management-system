@@ -145,16 +145,12 @@ export class JobManagementComponent implements OnInit {
     var element = document.getElementById("mySelect" + this.indexStatus);
     if (element instanceof HTMLSelectElement) {
       element.selectedIndex = 0;
-      // console.log('element.value', element.options[element.selectedIndex].value);
-      // console.log('element.selectedIndex', element.selectedIndex);
     }
- 
-
   }
-
-  cancelChangeStatusJob() {
+cancelChangeStatusJob() {
     this.selectedModalId = '';
   }
+  
 
   acceptJob(jobId: string, statusId: string): void {
     this.isLoadding = true

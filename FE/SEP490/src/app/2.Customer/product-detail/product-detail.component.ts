@@ -43,7 +43,7 @@ export class ProductDetailComponent implements OnInit {
         } else if (data.code === 1034) {
           this.toastr.error('Sản phẩm đã được thêm vào yêu thích!', 'Thành công');
         } else {
-          console.log("data.code: ", data.code);
+        
           this.toastr.warning('Vui lòng đăng nhập để thêm sản phẩm yêu thích!', 'Lỗi');
           this.isLoadding = false;
         }

@@ -472,7 +472,7 @@
                       <label style="font-size: 16px;" for="productImages">Ảnh sản phẩm (Chọn nhiều)<span
                           class="required-asterisk">*</span></label>
                       <input type="file" class="form-control-file" id="productImages" multiple
-                        (change)="onImagesSelected($event)">
+                        (change)="onImagesRProductSelected($event, i)">
                     </div>
                     <div class="form-group col-md-2 d-flex align-items-end">
                       <button (click)="onResetImage()" class="btn"
@@ -482,8 +482,8 @@
                   </div>
                   <!-- Preview anh -->
                   <div class="form-row">
-                    <div class="form-group col-md-12" *ngIf="selectedImages">
-                      <img *ngFor="let imageUrl of imagesPreview" [src]="imageUrl" class="previewMultiple">
+                    <div class="form-group col-md-12" *ngIf="selectedImagesRProduct">
+                      <img *ngFor="let imageUrl of imagesPreviewRProduct[i]" [src]="imageUrl" class="previewMultiple">
                     </div>
                   </div>
                   <!-- Mảng các vật liệu cần có trong product request add -->

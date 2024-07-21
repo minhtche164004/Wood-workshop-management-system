@@ -59,6 +59,8 @@ export class ProductListService {
   private apiUrlDeleteProductRequest = `${environment.apiUrl}api/auth/product/deleteRequestProduct`;
   private api_UrlexportMaterialProductByProductRequestId = `${environment.apiUrl}api/auth/product/getRequestProductSubMaterialAndMaterialByRequestProductId`;  // lay tat ca vat lieu can co de tao 1 san pham theo yeu cau 
   private api_UrlEditSubMateialRequestProduct = `${environment.apiUrl}api/auth/submaterial/EditSubMaterialRequestProduct`;
+  private api_UrlcreateExportMaterialListProductRequest = `${environment.apiUrl}api/auth/submaterial/createExportMaterialListProductRequest`; 
+
   //
 
   //api danh` cho order dac biet
@@ -317,13 +319,16 @@ export class ProductListService {
     );
   }
 
-  addNewProductRequest(productRequestData: any, images: File[]): Observable<any> {
+  addNewProductRequest(productRequestData: any, idOrder : any): Observable<any> {
     const formData = new FormData();
 
-    formData.append('productDTO', new Blob([JSON.stringify(productRequestData)], { type: 'application/json' }));
-    images.forEach(image => {
-      formData.append('files', image, image.name);
-    });
+
+    formData.append('order_id', new Blob([JSON.stringify(idOrder)], { type: 'application/json' }));
+    formData.append('requestProductsWithFiles', new Blob([JSON.stringify(productRequestData)], { type: 'application/json' }));
+
+    // images.forEach(image => {
+    //   formData.append('files', image, image.name);
+    // });
     const token = localStorage.getItem('loginToken');
 
     if (!token) {
@@ -347,6 +352,14 @@ export class ProductListService {
       catchError(this.handleError)
     );
   }
+
+  //danh` cho add n` san pham reqeust product
+  createExportMaterialListProductRequest(requestData: any): Observable<any> {
+    return this.http.post<any>(this.api_UrlcreateExportMaterialListProductRequest, requestData).pipe(
+      catchError(this.handleError)
+    );
+  }
+
   getAllRequest(): Observable<any> {
     return this.http.get<any>(this.apiUrl_getAllRequest).pipe(
       catchError(this.handleError)

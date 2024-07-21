@@ -31,6 +31,8 @@ import redis.clients.jedis.JedisPooled;
 
 import java.io.IOException;
 import java.lang.reflect.Type;
+import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -175,6 +177,18 @@ public class OrderController {
     public ApiResponse<?> ConfirmPayment(@RequestParam("order_id") int order_id) {
         ApiResponse<String> apiResponse = new ApiResponse<>();
         apiResponse.setResult(orderService.ConfirmPayment(order_id));
+        return apiResponse;
+    }
+    @GetMapping("/MultiFilterOrder")
+    public ApiResponse<?> MultiFilterOrder(
+            @RequestParam(required = false) String search,
+            @RequestParam(required = false) Integer statusId,
+            @RequestParam(required = false) Integer paymentMethod,
+            @RequestParam(required = false) @DateTimeFormat(pattern = "yyyy-MM-dd")  Date startDate,
+            @RequestParam(required = false)  @DateTimeFormat(pattern = "yyyy-MM-dd") Date endDate
+    ) {
+        ApiResponse<List<OderDTO>> apiResponse = new ApiResponse<>(); // Chỉ định rõ kiểu List<OderDTO>
+        apiResponse.setResult(orderService.MultiFilterOrder(search, statusId, paymentMethod, startDate, endDate));
         return apiResponse;
     }
 

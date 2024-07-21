@@ -18,7 +18,8 @@ public interface ProcessproducterrorRepository extends JpaRepository<Processprod
     @Query("SELECT u FROM Processproducterror u WHERE u.job.jobId = :query")
     List<Processproducterror> getProcessproducterrorByJobId(int query);
 
-    @Query("SELECT u FROM Processproducterror u WHERE u.job.jobId = :query AND u.isFixed = false")
+    @Query("SELECT u FROM Processproducterror u" +
+            " LEFT JOIN u.job j WHERE j.jobId = :query AND u.isFixed = false")
     List<Processproducterror> getProcessproducterrorByJobIdHaveFixNotDone(int query);
 
     @Query("SELECT u FROM Processproducterror u WHERE u.requestProducts.requestProductId = :query")

@@ -295,6 +295,22 @@ public class    OrderServiceImpl implements OrderService {
         return "";
     }
 
+    @Override
+    public List<OderDTO> MultiFilterOrder(String search, Integer status_id, Integer paymentMethod, Date startDate, Date endDate) {
+        List<OderDTO> order_list = new ArrayList<>();
+
+        if (search != null || status_id != null || paymentMethod != null || startDate != null || endDate != null) {
+            order_list = orderRepository.MultiFilterOrder(search, status_id, paymentMethod, startDate, endDate);
+        } else {
+            order_list = orderRepository.getAllOrder();
+        }
+
+        if (order_list.isEmpty()) {
+            throw new AppException(ErrorCode.NOT_FOUND);
+        }
+        return order_list;
+    }
+
     //Tạo Request
     //Tạo Request Product
     @Override

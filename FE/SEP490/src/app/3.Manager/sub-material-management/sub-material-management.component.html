@@ -44,8 +44,8 @@
                 </select>
 
                 <!-- Tìm kiếm tên sản phẩm -->
-                <ng-autocomplete style="width: 50%; margin-left: 10px;" *ngIf="products" [data]="products"
-                  [searchKeyword]="keyword" placeholder="Nhập tên nguyên vật liệu" historyIdentifier="products"
+                <ng-autocomplete style="width: 50%; margin-left: 10px;" *ngIf="subMaterialAutoComp" [data]="subMaterialAutoComp"
+                  [searchKeyword]="keyword" placeholder="Nhập tên nguyên vật liệu" historyIdentifier="subMaterialAutoComp"
                   [(ngModel)]="searchKey" [itemTemplate]="itemTemplate" [notFoundTemplate]="notFoundTemplate"
                   (selected)="selectProduct($event)">
                 </ng-autocomplete>
@@ -55,7 +55,7 @@
                 </ng-template>
 
                 <ng-template #notFoundTemplate let-notFound>
-                  <div>No results found!</div>
+                  <div>Không tìm thấy vật liệu!</div>
                 </ng-template>
 
                 <button class="btn search-button ms-2" type="button" (click)="searchSubMaterial()">
@@ -82,12 +82,12 @@
             </thead>
         
             <tbody>
-              <tr *ngFor="let product of products | paginate: { itemsPerPage: 10, currentPage: currentPage }; let i = index">
+              <tr *ngFor="let product of subMaterials | paginate: { itemsPerPage: 10, currentPage: currentPage }; let i = index">
                 <td>{{ i + 1 + (currentPage - 1) * 10 }}</td>
                 <td style="text-align: center;" class="action-buttons">
                   <a href="#" class="settings" title="Edit" data-toggle="modal" data-target="#editSubMaterialModal"
                     (click)="loadSubMaterialDetails(product.subMaterialId)">
-                    <i class="fa-solid fa-pen-to-square"></i>
+                    <i class="fa-solid fa-circle-info"></i>
                   </a>
                 </td>
                 <td>{{ product.subMaterialName }}</td>
@@ -107,7 +107,7 @@
           <!-- Display data information -->
           <div class="clearfix" style="justify-content: right; display: flex;">
             <div class="hint-text">Hiển thị <b>{{ (currentPage - 1) * 10 + 1 }}</b> tới <b>{{ currentPage * 10
-                > products.length ? products.length : currentPage * 10 }}</b> trong số <b>{{ products.length }}</b> dữ liệu</div>
+                > subMaterials.length ? subMaterials.length : currentPage * 10 }}</b> trong số <b>{{ subMaterials.length }}</b> dữ liệu</div>
           </div>
         </div>
         
@@ -117,7 +117,7 @@
             <div class="d-flex justify-content-center align-items-center" style="height: 200px;">
               <img src="https://encrypted-tbn2.gstatic.com/images?q=tbn:ANd9GcSG53pYn6cpXaiwT_q6IM45P-rXg5dUw67XqRmr9-vtsbMoHnCG"
                    alt="Not Found" style="width: 150px; height: 150px; object-fit: cover;">
-              <p class="text-center">404 Not Found!</p>
+              <p class="text-center">Không tìm thấy!</p>
             </div>
           </div>
         </div>

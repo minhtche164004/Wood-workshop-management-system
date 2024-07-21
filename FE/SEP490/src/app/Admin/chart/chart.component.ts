@@ -3,6 +3,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder } from '@angular/forms';
 import { DomSanitizer } from '@angular/platform-browser';
 import { Chart } from 'chart.js';
+import * as e from 'cors';
 import { ToastrService } from 'ngx-toastr';
 import { DataService } from 'src/app/service/data.service';
 import { EmployeeService } from 'src/app/service/employee.service';
@@ -88,14 +89,13 @@ export class ChartComponent implements OnInit {
   ngOnInit(): void {
     this.loadData();
   }
-  getJobByMonthAndYear() {
-  }
+
   getAllPostionEmp(): void {
     this.employeeService.getAllPostionEmp().subscribe(
       (data) => {
         if (data.code === 1000) {
           this.positionLabels = data.result.map((item: any) => item.position_name);
-          console.log('Danh sách chức vụ nhân viên: ', this.positionLabels);
+     //     console.log('Danh sách chức vụ nhân viên: ', this.positionLabels);
         } else {
           console.error('Failed to fetch products:', data);
           // Handle error as needed
@@ -117,9 +117,9 @@ export class ChartComponent implements OnInit {
         this.getTotalSpecialOrder(),
         this.getTotalProduct(),
         this.getAllEmployee(),
-        this.getAllDataForYear(2024),
+        this.getAllDataForYear(),
         this.getAllPostionEmp(),
-      
+        // this.countProductByMonthAndYear(),
 
       ]).then(() => {
         this.updateEmployeePositions().then(() => {
@@ -211,7 +211,7 @@ export class ChartComponent implements OnInit {
             backgroundColor: 'rgb(54, 162, 235)',
           },
           {
-            label: 'Sản phẩm đặt riêng',
+            label: 'Sản phẩm theo yêu cầu',
             data: this.productRequestCounts,
             backgroundColor: 'rgb(255, 99, 132)',
           },
@@ -225,7 +225,7 @@ export class ChartComponent implements OnInit {
         labels: this.months,
         datasets: [{
           label: 'Đơn hàng sản phẩm có sẵn',
-          data: [this.productCounts],
+          data: this.totalOrderMY,
           fill: false,
           borderColor: 'rgb(75, 192, 192)',
           backgroundColor: 'rgb(75, 192, 192)',
@@ -233,7 +233,7 @@ export class ChartComponent implements OnInit {
         },
         {
           label: 'Đơn đặt hàng sản phẩm theo yêu cầu',
-          data: [5, 3, 13, 8, 11, 9, 14, 6, 10, 12, 14, 7],
+          data: this.totalOrderSpecMY,
           fill: false,
           borderColor: 'rgb(255, 99, 132)',
           backgroundColor: 'rgb(255, 99, 132)',
@@ -267,7 +267,7 @@ export class ChartComponent implements OnInit {
     return new Promise<void>((resolve, reject) => {
       this.statistic.getCountRQProduct().subscribe((data) => {
         this.totalRQProduct = data.result;
-        console.log("totalRQProduct: ", this.totalRQProduct);
+   //     console.log("totalRQProduct: ", this.totalRQProduct);
         resolve();
       }, err => reject(err));
     });
@@ -295,7 +295,7 @@ export class ChartComponent implements OnInit {
     return new Promise<void>((resolve, reject) => {
       this.statistic.getTotalOrder().subscribe((data) => {
         this.totalOrder = data.result;
-        console.log("totalOrder: ", this.totalOrder);
+    //    console.log("totalOrder: ", this.totalOrder);
         resolve();
       }, err => reject(err));
     });
@@ -305,7 +305,7 @@ export class ChartComponent implements OnInit {
     return new Promise<void>((resolve, reject) => {
       this.statistic.getCountSpecialOrder().subscribe((data) => {
         this.totalSpecialOrder = data.result;
-        console.log("totalSpecialOrder", this.totalSpecialOrder);
+       // console.log("totalSpecialOrder", this.totalSpecialOrder);
         
         if (this.totalOrder !== 0) {
           this.percentSpecialOrder = (this.totalSpecialOrder / this.totalOrder) * 100;
@@ -332,7 +332,7 @@ export class ChartComponent implements OnInit {
       }, err => reject(err));
       this.statistic.getCountRQProduct().subscribe((data) => {
         this.totalRQProduct = data.result;
-        console.log("totalRQProduct: ", this.totalRQProduct);
+     //   console.log("totalRQProduct: ", this.totalRQProduct);
         resolve();
       }, err => reject(err));
     });
@@ -380,15 +380,83 @@ export class ChartComponent implements OnInit {
       });
     });
   }
-  
+
   getProductByMonthAndYear(month: number, year: number): Promise<void> {
     return new Promise<void>((resolve, reject) => {
-      this.statistic.countProductByMonthYear(month, 1, year).subscribe((data) => {
+      this.statistic.countCompletedProductOnOrderByMonthAndYear(month, year).subscribe((data) => {
         if (data.result === null || data.result === undefined) {
           data.result = 0;
         }
-       // console.log(`getProductByMonthAndYear result for ${month}/${year}: `, data.result);
+        console.log(`getProductByMonthAndYear result for ${month}/${year}: `, data.result);
         this.productCounts.push(data.result);
+        resolve();
+      }, err => {
+      //  console.error(`getProductByMonthAndYear error for ${month}/${year}: `, err);
+        reject(err);
+      });
+      this.statistic.countCompletedRequestProductOnOrderByMonthAndYear(month, year).subscribe((data) => {
+        if (data.result === null || data.result === undefined) {
+          data.result = 0;
+        }
+        console.log(`getProductByMonthAndYear result for ${month}/${year}: `, data.result);
+        this.productRequestCounts.push(data.result);
+        resolve();
+      }, err => {
+      //  console.error(`getProductByMonthAndYear error for ${month}/${year}: `, err);
+        reject(err);
+      });
+    }
+   
+  );
+
+  }
+  // countProductByMonthAndYear() {
+  //   const year = new Date().getFullYear(); //Lấy năm hiện tại
+  //   const promises = [];
+  //   for (let month = 1; month <= 12; month++) {
+  //     promises.push(this.getProductByMonthAndYear(month, year));
+      
+  //   }
+  //   Promise.all(promises).then(() => {
+  //     // console.log('All data retrieved successfully.');
+  //      console.log('Product Counts:', this.productCounts);
+  //      console.log('Product Request Counts:', this.productRequestCounts);
+  //     this.initializeCharts(); // Call to initialize charts with the fetched data
+  //   }).catch(err => {
+  //     console.error('Error retrieving data:', err);
+  //   });
+  // }
+  year: number = new Date().getFullYear();
+  getAllDataForYear() {
+  
+    const promises = [];
+    for (let month = 1; month <= 12; month++) {
+      promises.push(this.getProductByMonthAndYear(month, this.year));
+     
+      promises.push(this.countTotalOrder(month, this.year));
+      promises.push(this.countTotalSpecOrder(month, this.year));
+    }
+    Promise.all(promises).then(() => {
+      // console.log('All data retrieved successfully.');
+      // console.log('Product Counts:', this.productCounts);
+      // console.log('Product Request Counts:', this.productRequestCounts);
+    //  console.log('Total Order:', this.totalOrderMY);
+    //  console.log('Total Special Order:', this.totalOrderSpecMY);
+      this.initializeCharts(); // Call to initialize charts with the fetched data
+    }).catch(err => {
+      console.error('Error retrieving data:', err);
+    });
+  }
+  totalOrderMY: any[] = [];
+  totalOrderSpecMY: any[] = [];
+  countTotalOrder(month: number, year: number): Promise<void> {
+    return new Promise<void>((resolve, reject) => {
+      this.statistic.countTotalOrderByMonthAndYear(month, year).subscribe((data) => {
+        // if (data.result === null || data.result === undefined) {
+        //   data.result = 0;
+        // }
+      //  console.log(`total order ${month}/${year}: `, data.result);
+        this.totalOrderMY.push(data.result);
         resolve();
       }, err => {
       //  console.error(`getProductByMonthAndYear error for ${month}/${year}: `, err);
@@ -396,20 +464,19 @@ export class ChartComponent implements OnInit {
       });
     });
   }
-  
-  getAllDataForYear(year: number) {
-    const promises = [];
-    for (let month = 1; month <= 12; month++) {
-      promises.push(this.getProductByMonthAndYear(month, year));
-      promises.push(this.getProductRequestByMonthAndYear(month, year));
-    }
-    Promise.all(promises).then(() => {
-      // console.log('All data retrieved successfully.');
-      // console.log('Product Counts:', this.productCounts);
-      // console.log('Product Request Counts:', this.productRequestCounts);
-      this.initializeCharts(); // Call to initialize charts with the fetched data
-    }).catch(err => {
-      console.error('Error retrieving data:', err);
+  countTotalSpecOrder(month: number, year: number): Promise<void> {
+    return new Promise<void>((resolve, reject) => {
+      this.statistic.countTotalSpecOrderByMonthAndYear(month, year).subscribe((data) => {
+        // if (data.result === null || data.result === undefined) {
+        //   data.result = 0;
+        // }
+      //  console.log(`total spec order result for ${month}/${year}: `, data.result);
+        this.totalOrderSpecMY.push(data.result);
+        resolve();
+      }, err => {
+      //  console.error(`getProductByMonthAndYear error for ${month}/${year}: `, err);
+        reject(err);
+      });
     });
   }
   

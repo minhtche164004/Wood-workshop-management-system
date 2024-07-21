@@ -64,6 +64,7 @@ import { OrderSuccessComponent } from './Order-payment-vnpay/order-success/order
 import { OrderFailComponent } from './Order-payment-vnpay/order-fail/order-fail.component';
 import { AuthGuard } from './AuthGuard';
 import { EmployeeSubmaterialManagementComponent } from './employee-submaterial-management/employee-submaterial-management.component';
+import { ImpactHistoryManagerComponent } from './3.Manager/impact-history-manager/impact-history-manager.component';
 
 
 
@@ -97,7 +98,7 @@ const routes: Routes = [
   { path: 'supplier_management', component: SupplierManagementComponent , canActivate: [AuthGuard], data: { roles: ['MANAGER'] }}, 
   { path: 'profile', component: ViewProfileComponent },
   { path: 'submtr_management', component: SubMaterialManagementComponent , canActivate: [AuthGuard], data: { roles: ['MANAGER'] }}, 
-  { path: 'create_order', component: CreateOrderComponent , canActivate: [AuthGuard] }, 
+  { path: 'create_order', component: CreateOrderComponent }, 
   { path: 'upload', component: FileUploadComponent },
   { path: 'product_list', component: ProductListComponent },
   { path: 'order_detail_management', component: OrderDetailManagementComponent , canActivate: [AuthGuard], data: { roles: ['MANAGER'] }  },
@@ -118,8 +119,9 @@ const routes: Routes = [
   { path: 'template', component: TemplateComponent },
 
   { path: 'ds', component: DashboardComponent },
-
+    
   { path: 'static-report', component: ChartComponent, canActivate: [AuthGuard], data: { roles: ['MANAGER'] }  },
+  { path: 'manager', component: ChartComponent, canActivate: [AuthGuard], data: { roles: ['MANAGER'] }  },
   { path: 'material_management', component: MaterialManagementComponent , canActivate: [AuthGuard], data: { roles: ['MANAGER'] }  },
   { path: 'report_management', component: ReportManagementComponent , canActivate: [AuthGuard], data: { roles: ['MANAGER'] }  },
   { path: 'report_management/:id', component: ReportManagementComponent , canActivate: [AuthGuard], data: { roles: ['MANAGER'] }  },
@@ -142,6 +144,7 @@ const routes: Routes = [
   
   // { path: '', redirectTo: '/homepage', pathMatch: 'full' },
   { path: 'report-cost', component: ReportCostManagementComponent },
+  { path: 'im_history', component: ImpactHistoryManagerComponent },
   { path: '', redirectTo: '/homepage', pathMatch: 'full' },
   { path: '**', redirectTo: '/homepage', pathMatch: 'full' },
 

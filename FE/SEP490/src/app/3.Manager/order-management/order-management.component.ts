@@ -7,6 +7,7 @@ import { OrderService } from 'src/app/service/order.service';
 import { ProductListService } from 'src/app/service/product/product-list.service';
 
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
+import { OrderRequestService } from 'src/app/service/order-request.service';
 interface ApiResponse {
   code: number;
   result: any[];
@@ -32,7 +33,7 @@ export class OrderManagementComponent implements OnInit {
   currentPage: number = 1;
   position: any[] = [];
   status_order: any[] = [];
-  selectedCategory: any = null;
+  selectedCategory: number = 0;
   OrderdetailById: any = {};
   isLoadding: boolean = false;
   selectedOrderId: number | null = null;
@@ -40,7 +41,7 @@ export class OrderManagementComponent implements OnInit {
   activeModal: any;
   cancelReason: string = '';
   constructor(private http: HttpClient, private productListService: ProductListService, private orderService: OrderService,
-    private authenListService: AuthenListService, private toastr: ToastrService,
+    private authenListService: AuthenListService, private toastr: ToastrService, private orderRequestService: OrderRequestService
   ) { }
 
   ngOnInit(): void {
@@ -48,7 +49,7 @@ export class OrderManagementComponent implements OnInit {
     this.loadPosition();
     this.loadStatus();
     this.getOrderStatus();
-    this.getAllUser();
+    // this.getAllOrder();
 
   }
   selectedModalJob: string = '';
@@ -75,13 +76,7 @@ export class OrderManagementComponent implements OnInit {
 
   closeModal(event: Event): void {
     $('[data-dismiss="modal"]').click();
-    // const element = document.getElementById("mySelect" + this.indexStatus) as HTMLSelectElement;
-    // if (element) {
-    //   element.value = this.saveInitialValue.toString();
-
-    // }
-    const statusId = (event.target as HTMLSelectElement).value;
-    this.selectedModalId = statusId;
+    this.realoadgetAllUser();
   }
 
   getOrderStatus(): void {
@@ -99,7 +94,7 @@ export class OrderManagementComponent implements OnInit {
       }
     );
   }
-  getAllUser(): void {
+  getAllOrder(): void {
     this.isLoadding = true;
     this.loginToken = localStorage.getItem('loginToken');
 
@@ -110,13 +105,9 @@ export class OrderManagementComponent implements OnInit {
           if (data.code === 1000) {
             this.user = data.result;
             this.isLoadding = false;
-
-
-
           } else {
             console.error('Failed to fetch products:', data);
             this.isLoadding = false;
-
           }
         },
         (error) => {
@@ -181,15 +172,17 @@ export class OrderManagementComponent implements OnInit {
     );
 
   }
-  getOrDetailById(order_detail_id: string): void {
-    this.isLoadding = true;
-    console.log('Order_detail_id:', order_detail_id);
+  productOfOrder: any = [];
+  
+  getOrDetailById(us: any, order_detail_id: string): void {
+ //  this.isLoadding = true;
+ //   console.log('Order_detail_id:', order_detail_id);
     this.authenListService.getOrderDetailById(order_detail_id).subscribe(
       (data) => {
         this.OrderdetailById = data.result;
         this.isLoadding = false;
-
-        console.log('OrderdetailById:', this.OrderdetailById);
+        console.log('OrderdetailById tối 20/7:', data.result);
+        // console.log('OrderdetailById:', this.OrderdetailById);
       },
       (error) => {
         console.error('Error fetching user data:', error);
@@ -197,7 +190,22 @@ export class OrderManagementComponent implements OnInit {
 
       }
     );
+    console.log("order detail: ", us)
+    console.log("order detail id: ", us.orderId)
+    
+    this.orderRequestService.getAllOrderDetailByOrderId(us.orderId).subscribe(
+      (data) => {
+        this.productOfOrder = data.result;
+        this.isLoadding = false;
 
+        console.log('Product Orders:', this.productOfOrder);
+      },
+      (error) => {
+        console.error('Error fetching user data:', error);
+        this.isLoadding = false;
+
+      }
+    );
   }
   selectedOrder: any = {};
   getOrderDetail(orderId: number): void {
@@ -215,7 +223,7 @@ export class OrderManagementComponent implements OnInit {
       response => {
         this.realoadgetAllUser();
         console.log('Order status changed', response);
-        this.toastr.success('Thay đổi tình trạng công việc thành công.');
+        this.toastr.success('Thay đổi tình trạng  thành công.');
 
         $('[data-dismiss="modal"]').click();
         this.isLoadding = false;
@@ -245,27 +253,26 @@ export class OrderManagementComponent implements OnInit {
   filterStatus(): void {
     console.log(this.selectedCategory);
     this.isLoadding = true;
-    this.authenListService.getFilterStatus(this.selectedCategory)
-      .subscribe(
-        (data) => {
-          if (data.code === 1000) {
-            this.user = data.result;
-            this.isLoadding = false;
-            this.toastr.success('Lọc đơn hàng thành công!', 'Thành công');
-          } else if (data.code === 1015) {
-
-            this.isLoadding = false;
-            this.toastr.error('Lọc đơn hàng thất bại!', 'Thành công');
-          }
-          else {
-            this.realoadgetAllUser();
-            this.isLoadding = false;
-            this.toastr.success('Lọc đơn hàng thành công!', 'Thành công');
-          }
-        },
-
-      );
-
+    const selectedStatusOption = this.userStatus.find(status => status.status_id === this.selectedCategory);
+    if (this.selectedCategory !== 0) {
+      this.authenListService.getFilterStatus(this.selectedCategory)
+        .subscribe(
+          (data) => {
+            if (data.code === 1000) {
+              this.currentPage = 1;
+              this.user = data.result;
+              this.isLoadding = false;
+            
+            } else if (data.code === 1015) {
+              this.realoadgetAllUser();
+           
+              this.isLoadding = false;
+              
+            }
+            
+          },
+        );
+    }
 
   }
   setOrderForCancellation(orderId: number | null, specialOrder: boolean | null) {

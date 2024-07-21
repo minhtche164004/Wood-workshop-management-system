@@ -1141,6 +1141,14 @@ export class ProductManagementComponent implements OnInit {
     }
   }
   
+  convertImageToBase64RProduct(file: File): Promise<string> {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
+      reader.onload = () => resolve(reader.result as string);
+      reader.onerror = error => reject(error);
+    });
+  }
 
   totalAmountOfOrder: number = 0;
   onSubmitProductRequest() {
@@ -1206,7 +1214,7 @@ export class ProductManagementComponent implements OnInit {
       Object.keys(this.selectedImagesRProduct).forEach((key) => {
         const index = parseInt(key, 10); 
         if (this.selectedImagesRProduct[index]) {
-          transformedArray[index].files = this.selectedImagesRProduct[index];
+          transformedArray[index].files = this.convertImageToBase64RProduct(this.selectedImagesRProduct[index]);
           console.log(`Index: ${index}, Value:`, this.selectedImagesRProduct[index]);
           // console.log(`transformedArray[${index}].files:`, transformedArray[index].files);
         }

@@ -475,7 +475,11 @@ public class JobServiceImpl implements JobService {
     @Override
     public boolean checkErrorOfJobHaveFixDoneOrNot(int job_id) {
         List<Processproducterror> list = processproducterrorRepository.getProcessproducterrorByJobIdHaveFixNotDone(job_id);
-        if (list != null) return false;
+        for(Processproducterror p : list){
+            if(p.getIsFixed() == false){
+                return false;
+            }
+        }
         return true;
     }
 

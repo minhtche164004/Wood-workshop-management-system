@@ -123,18 +123,24 @@ export class OrderManagementComponent implements OnInit {
     }
   }
   realoadgetAllUser(): void {
-
+    this.isLoadding = true;
     this.productListService.getAllOrder().subscribe(
       (data: ApiResponse) => {
         if (data.code === 1000) {
           this.user = data.result;
+          this.isLoadding = false;
+
         } else {
           console.error('Failed to fetch products:', data);
+          this.isLoadding = false;
+
 
         }
       },
       (error) => {
         console.error('Error fetching products:', error);
+        this.isLoadding = false;
+
 
 
       }
@@ -173,10 +179,10 @@ export class OrderManagementComponent implements OnInit {
 
   }
   productOfOrder: any = [];
-  
+
   getOrDetailById(us: any, order_detail_id: string): void {
- //  this.isLoadding = true;
- //   console.log('Order_detail_id:', order_detail_id);
+    //  this.isLoadding = true;
+    //   console.log('Order_detail_id:', order_detail_id);
     this.authenListService.getOrderDetailById(order_detail_id).subscribe(
       (data) => {
         this.OrderdetailById = data.result;
@@ -192,7 +198,7 @@ export class OrderManagementComponent implements OnInit {
     );
     console.log("order detail: ", us)
     console.log("order detail id: ", us.orderId)
-    
+
     this.orderRequestService.getAllOrderDetailByOrderId(us.orderId).subscribe(
       (data) => {
         this.productOfOrder = data.result;
@@ -262,14 +268,12 @@ export class OrderManagementComponent implements OnInit {
               this.currentPage = 1;
               this.user = data.result;
               this.isLoadding = false;
-            
+
             } else if (data.code === 1015) {
               this.realoadgetAllUser();
-           
-              this.isLoadding = false;
-              
+
             }
-            
+
           },
         );
     }

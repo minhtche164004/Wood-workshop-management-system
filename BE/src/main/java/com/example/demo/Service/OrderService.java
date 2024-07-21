@@ -84,6 +84,8 @@ public interface OrderService {
 
    ResponseEntity<String> Cancel_Order(int order_id, boolean special_order_id,String response);
 
+    String ConfirmPayment(int order_id);
+
 
 
 

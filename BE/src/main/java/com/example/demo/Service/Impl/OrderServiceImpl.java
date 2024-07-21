@@ -625,9 +625,35 @@ public class    OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public List<RequestProducts> GetAllProductRequest() {
+    public List<RequestProductAllDTO> GetAllProductRequest() {
+        List<RequestProductAllDTO> list_request = new ArrayList<>();
+        List<RequestProductAllDTO> list = requestProductRepository.getAllRequestProduct();
 
-        return requestProductRepository.findAll();
+        for (RequestProductAllDTO re : list) {
+            String full_path = " ";  // Đặt lại giá trị cho mỗi lần lặp
+            String list_image = productRequestimagesRepository.findFirstFullPathImageByProductTest(re.getRe_productId());
+            if(list_image
+                    != null) {
+                full_path = list_image;
+            }
+            RequestProductAllDTO request = new RequestProductAllDTO(
+                    re.getRe_productId(),
+                    re.getRe_productName(),
+                    re.getDescription(),
+                    re.getPrice(),
+                    re.getQuantity(),
+                    re.getCompletionTime(),
+                    re.getStatus_id(),
+                    re.getStatus_name(),
+                    re.getProductImageId(),
+                    full_path,
+                    re.getCode(),
+                    re.getRequest_id()
+            );
+
+            list_request.add(request); // Thêm đối tượng request vào danh sách kết quả
+        }
+        return list_request;
     }
 
 //    private String getAddressLocalComputer(String imagePath) {
@@ -727,12 +753,13 @@ public class    OrderServiceImpl implements OrderService {
 
 
     @Override
-    public List<RequestProductDTO_Show> filterRequestProductsForAdmin(String search,  Integer statusId, BigDecimal minPrice, BigDecimal maxPrice, String sortDirection) {
-        List<RequestProducts> productList = new ArrayList<>();
+    public List<RequestProductAllDTO> filterRequestProductsForAdmin(String search,  Integer statusId, BigDecimal minPrice, BigDecimal maxPrice, String sortDirection) {
+        List<RequestProductAllDTO> productList = new ArrayList<>();
+
         if (search != null|| statusId != null  || minPrice != null || maxPrice != null) {
             productList = requestProductRepository.filterRequestProductsForAdmin(search, statusId, minPrice, maxPrice);
         } else {
-            productList = requestProductRepository.findAll();
+            productList = requestProductRepository.getAllRequestProduct();
         }
 
         if (productList.isEmpty()) {
@@ -746,42 +773,38 @@ public class    OrderServiceImpl implements OrderService {
         // Sắp xếp danh sách sản phẩm theo giá
         if (sortDirection != null) {
             if (sortDirection.equals("asc")) {
-                productList.sort(Comparator.comparing(RequestProducts::getPrice));
+                productList.sort(Comparator.comparing(RequestProductAllDTO::getPrice));
             } else if (sortDirection.equals("desc")) {
-                productList.sort(Comparator.comparing(RequestProducts::getPrice).reversed());
+                productList.sort(Comparator.comparing(RequestProductAllDTO::getPrice).reversed());
             }
         }
-        List<RequestProductDTO_Show> result = new ArrayList<>();
-        for (RequestProducts requestProducts : productList) {
-            int id = requestProducts.getRequestProductId();
-            List<Product_Requestimages> productRequestimagesList = productRequestimagesRepository.findImageByProductId(id);
-            RequestProductDTO_Show requestProductDTOShow = new RequestProductDTO_Show();
-            requestProductDTOShow.setRe_productId(requestProducts.getRequestProductId());
-            requestProductDTOShow.setRe_productName(requestProducts.getRequestProductName());
-            requestProductDTOShow.setQuantity(requestProducts.getQuantity());
-            requestProductDTOShow.setDescription(requestProducts.getDescription());
-            requestProductDTOShow.setPrice(requestProducts.getPrice());
-            requestProductDTOShow.setCompletionTime(requestProducts.getCompletionTime());
-            requestProductDTOShow.setStatus(requestProducts.getStatus());
-            int request_id = requestProducts.getOrders().getOrderId();
-            System.out.println(request_id);
-            Orders requests= orderRepository.findById(request_id);
-            requestProductDTOShow.setRequest_id(request_id);
-            requestProductDTOShow.setCode(requests.getCode());
-            List<Product_Requestimages> imageList = productRequestimagesList.stream()
-                    .map(img -> {
-                        img.setFullPath(getAddressLocalComputer(img.getFullPath()));
-                        return img;
-                    })
-                    .toList();
-            requestProductDTOShow.setImageList(imageList);
-            List<String> subMaterialNames = requestProductsSubmaterialsRepository.GetSubNameByProductId(id);
-            requestProductDTOShow.setSub_material_name(subMaterialNames.isEmpty() ? null : subMaterialNames);
-            result.add(requestProductDTOShow);
+        List<RequestProductAllDTO> list = requestProductRepository.getAllRequestProduct();
+        for (RequestProductAllDTO re : list) {
+            String full_path = " ";  // Đặt lại giá trị cho mỗi lần lặp
+            String list_image = productRequestimagesRepository.findFirstFullPathImageByProductTest(re.getRe_productId());
+            if(list_image
+                    != null) {
+                full_path = list_image;
+            }
+            RequestProductAllDTO request = new RequestProductAllDTO(
+                    re.getRe_productId(),
+                    re.getRe_productName(),
+                    re.getDescription(),
+                    re.getPrice(),
+                    re.getQuantity(),
+                    re.getCompletionTime(),
+                    re.getStatus_id(),
+                    re.getStatus_name(),
+                    re.getProductImageId(),
+                    full_path,
+                    re.getCode(),
+                    re.getRequest_id()
+            );
+
+            productList.add(request); // Thêm đối tượng request vào danh sách kết quả
         }
-
-
-        return result;
+        return productList;
+//        return productList;
     }
     @Override
     public List<RequestProducts> findByPriceRange(BigDecimal min, BigDecimal max) {

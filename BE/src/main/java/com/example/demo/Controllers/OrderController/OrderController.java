@@ -63,7 +63,7 @@ public class OrderController {
     @GetMapping("/GetAllProductRequest")
     public ApiResponse<?> GetAllProductRequest() {
         ApiResponse<List> apiResponse = new ApiResponse<>();
-        apiResponse.setResult(orderService.GetAllRequestProductWithImage());
+        apiResponse.setResult(orderService.GetAllProductRequest());
         return apiResponse;
     }
     @GetMapping("/GetAllProductRequestByUserId")

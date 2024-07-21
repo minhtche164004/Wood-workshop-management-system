@@ -11,17 +11,51 @@ import lombok.NoArgsConstructor;
 import java.math.BigDecimal;
 import java.sql.Date;
 import java.util.List;
-@AllArgsConstructor
+
 @NoArgsConstructor
 @Data
 public class RequestProductAllDTO {
-    private Integer id;
-    private String requestProductName;
+    private int re_productId;
+    private String re_productName;
     private String description;
     private BigDecimal price;
     private Integer quantity;
     private Date completionTime;
-    private int request_id;
-    private List<Product_Requestimages> imagesList;
+    private Integer status_id;
+    private String status_name;
+    private Integer productImageId;
+    private String fullPath;
+    private String code;
+    private Integer request_id;
 
+    public RequestProductAllDTO(int re_productId, String re_productName, String description, BigDecimal price, Integer quantity, Date completionTime,
+                                Integer status_id, String status_name, Integer productImageId, String fullPath, String code, Integer request_id) {
+        this.re_productId = re_productId;
+        this.re_productName = re_productName;
+        this.description = description;
+        this.price = price;
+        this.quantity = quantity;
+        this.completionTime = completionTime;
+        this.status_id = status_id;
+        this.status_name = status_name;
+        this.productImageId = productImageId;
+        this.fullPath = fullPath;
+        this.code = code;
+        this.request_id = request_id;
+    }
+
+//    public RequestProductAllDTO(Integer re_productId, String re_productName, String description, BigDecimal price,
+//                                Integer quantity, Date completionTime, Integer status_id, String status_name, Integer productImageId, String code, Integer request_id) {
+//        this.re_productId = re_productId;
+//        this.re_productName = re_productName;
+//        this.description = description;
+//        this.price = price;
+//        this.quantity = quantity;
+//        this.completionTime = completionTime;
+//        this.status_id = status_id;
+//        this.status_name = status_name;
+//        this.productImageId = productImageId;
+//        this.code = code;
+//        this.request_id = request_id;
+//    }
 }

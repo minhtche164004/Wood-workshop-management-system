@@ -265,7 +265,7 @@ export class ProductManagementComponent implements OnInit {
 
   addMaterialFormRequest(index: number) {
     const materialFormRequests = this.getMaterialFormRequests(index);
-    console.log("materialFormRequestcuaAdd" + index, materialFormRequests);
+    // console.log("materialFormRequestcuaAdd" + index, materialFormRequests);
     // console.log('materialFormRequests111111:', materialFormRequests);
     // console.log('materialFormRequests22222:', this.MaterialFormRequests);
     // Create form controls for materialId, quantity, and price
@@ -287,6 +287,15 @@ export class ProductManagementComponent implements OnInit {
     if (materialFormRequests && formIndex >= 0 && formIndex < materialFormRequests.length) {
       materialFormRequests.removeAt(formIndex);
     }
+
+    const numericUnitPrice = Number(this.unitPriceSubMaterial[sectionIndex*10+formIndex]) || 0;
+    const quantity = Number(this.quantityPerSubMaterial[sectionIndex*10+formIndex]) || 0;
+    const totalForThisItem = numericUnitPrice * quantity;
+
+    //tru tong gia uoc tinh cua san pham neu xoa 1 material
+    this.totalPriceSubmatePerProducRequest[sectionIndex] = this.totalPriceSubmatePerProducRequest[sectionIndex] - totalForThisItem;
+
+    
   }
   //phan` danh cho request product theo order
   get itemsRProduct(): FormArray {
@@ -1165,7 +1174,7 @@ export class ProductManagementComponent implements OnInit {
         return acc;
       }, {})
     }));
-
+    
     this.isLoadding = true;
 
     // console.log(transformedData);
@@ -1193,21 +1202,19 @@ export class ProductManagementComponent implements OnInit {
         files: []
       }));
 
-      // Object.keys(this.selectedImagesRProduct).forEach((key) => {
-      //   const index = parseInt(key, 10); 
-      //   if (this.selectedImagesRProduct[index]) {
-      //     transformedArray[index].files = this.selectedImagesRProduct[index];
-      //     // Log the current index and the value being assigned
-      //     console.log(`Index: ${index}, Value:`, this.selectedImagesRProduct[index]);
-      //     // Optionally, log the entire transformedArray to see the changes
-      //     console.log(`transformedArray[${index}].files:`, transformedArray[index].files);
-      //   }
-      //   else{
-      //     console.log("khhong hoat dong")
-      //   }
-      // });
-      transformedArray[0].files = this.selectedImagesRProduct[0];
-      console.log(`Index: ${0}, Value:`, this.selectedImagesRProduct[0]);
+
+      Object.keys(this.selectedImagesRProduct).forEach((key) => {
+        const index = parseInt(key, 10); 
+        if (this.selectedImagesRProduct[index]) {
+          transformedArray[index].files = this.selectedImagesRProduct[index];
+          console.log(`Index: ${index}, Value:`, this.selectedImagesRProduct[index]);
+          // console.log(`transformedArray[${index}].files:`, transformedArray[index].files);
+        }
+        else{
+          console.log("khhong hoat dong")
+        }
+      });
+      // transformedArray[0].files = this.selectedImagesRProduct[0];
 
 
       console.log("transformedArray", transformedArray)
@@ -1236,6 +1243,10 @@ export class ProductManagementComponent implements OnInit {
           console.log("transformedDataSubMate: ", transformedDataSubMate);
 
           return this.productListService.createExportMaterialListProductRequest(transformedDataSubMate);
+        },
+        error => {
+          this.isLoadding = false;
+          this.toastr.error('Tạo sản phẩm theo yêu cầu bị lỗi!', 'Lỗi');
         }))
         .subscribe(
           response => {
@@ -1254,6 +1265,9 @@ export class ProductManagementComponent implements OnInit {
         );
 
 
+    }else{
+      this.isLoadding = false;
+      this.toastr.error('Vui lòng điền đầy đủ thông tin!', 'Lỗi');
     }
   }
 

@@ -288,14 +288,14 @@ export class ProductManagementComponent implements OnInit {
       materialFormRequests.removeAt(formIndex);
     }
 
-    const numericUnitPrice = Number(this.unitPriceSubMaterial[sectionIndex*10+formIndex]) || 0;
-    const quantity = Number(this.quantityPerSubMaterial[sectionIndex*10+formIndex]) || 0;
+    const numericUnitPrice = Number(this.unitPriceSubMaterial[sectionIndex * 10 + formIndex]) || 0;
+    const quantity = Number(this.quantityPerSubMaterial[sectionIndex * 10 + formIndex]) || 0;
     const totalForThisItem = numericUnitPrice * quantity;
 
     //tru tong gia uoc tinh cua san pham neu xoa 1 material
     this.totalPriceSubmatePerProducRequest[sectionIndex] = this.totalPriceSubmatePerProducRequest[sectionIndex] - totalForThisItem;
 
-    
+
   }
   //phan` danh cho request product theo order
   get itemsRProduct(): FormArray {
@@ -1125,29 +1125,42 @@ export class ProductManagementComponent implements OnInit {
 
   selectedImagesRProduct: { [key: number]: File[] } = {};
   imagesPreviewRProduct: { [key: number]: string[] } = {}; // Specify as an array of strings
-  
+
   onImagesRProductSelected(event: any, index: number): void {
     this.selectedImagesRProduct[index] = Array.from(event.target.files);
-  
+
     const files: File[] = Array.from(event.target.files as FileList);
     if (event.target.files && event.target.files.length) {
       // Reset the preview for the current index
       this.imagesPreviewRProduct[index] = []; // Now correctly typed as an array of strings
-  
+
       files.forEach((file: File) => {
         const url = URL.createObjectURL(file);
         this.imagesPreviewRProduct[index].push(url); // No error since url is a string
       });
     }
   }
-  
-  convertImageToBase64RProduct(file: File): Promise<string> {
+
+  convertImageToBase64RProduct(imageFile: File): Promise<string> {
     return new Promise((resolve, reject) => {
-      const reader = new FileReader();
-      reader.readAsDataURL(file);
-      reader.onload = () => resolve(reader.result as string);
-      reader.onerror = error => reject(error);
+      const fileReader = new FileReader();
+      fileReader.onload = (event) => {
+        // Kiểm tra event.target không phải là null trước khi truy cập result
+        if (event.target) {
+          resolve(event.target.result as string);
+        } else {
+          reject(new Error('FileReader event target is null'));
+        }
+      };
+      fileReader.onerror = (error) => {
+        reject(error);
+      };
+      fileReader.readAsDataURL(imageFile);
     });
+  }
+
+  convertListImagesToBase64(files: File[]): Promise<string[]> {
+    return Promise.all(files.map(file => this.convertImageToBase64RProduct(file)));
   }
 
   totalAmountOfOrder: number = 0;
@@ -1182,7 +1195,7 @@ export class ProductManagementComponent implements OnInit {
         return acc;
       }, {})
     }));
-    
+
     this.isLoadding = true;
 
     // console.log(transformedData);
@@ -1207,73 +1220,78 @@ export class ProductManagementComponent implements OnInit {
           completionTime: item.completionTime,
           request_id: parseInt(item.request_id)
         },
-        files: []
+        filesBase64: []
       }));
 
-
-      Object.keys(this.selectedImagesRProduct).forEach((key) => {
-        const index = parseInt(key, 10); 
+      // xu li upload anh
+      const promises = Object.keys(this.selectedImagesRProduct).map(async (key) => {
+        const index = parseInt(key, 10);
         if (this.selectedImagesRProduct[index]) {
-          transformedArray[index].files = this.convertImageToBase64RProduct(this.selectedImagesRProduct[index]);
-          console.log(`Index: ${index}, Value:`, this.selectedImagesRProduct[index]);
-          // console.log(`transformedArray[${index}].files:`, transformedArray[index].files);
-        }
-        else{
-          console.log("khhong hoat dong")
+          const files = this.selectedImagesRProduct[index];
+          const base64Files = await this.convertListImagesToBase64(files);
+          return { index, base64Files }; // Trả về đối tượng chứa index và base64Files
+        } else {
+          console.log("Không hoạt động");
+          return null; // Trả về null nếu không có gì để xử lý
         }
       });
-      // transformedArray[0].files = this.selectedImagesRProduct[0];
-
 
       console.log("transformedArray", transformedArray)
 
-
-      const id_Order = this.idOrder;
-
-
-      this.productListService.addNewProductRequest(transformedArray, id_Order)
-        .pipe(concatMap(response => {
-
-          console.log('response:', response);
-          // const transformedData = {
-          //   productId: response.result.requestProductId,
-          //   subMaterialQuantities: transformedObject
-          // };
-          // console.log("transformedData:", transformedData);
-          response.result.forEach((item: any, index: number) => {
-            // Kiểm tra xem có đối tượng tương ứng trong transformedDataSubMate không
-            if (transformedDataSubMate[index]) {
-              // Thêm thuộc tính requestProductName từ response vào đối tượng tương ứng trong transformedDataSubMate
-              transformedDataSubMate[index].productId = item.requestProductId;
-            }
-          });
-
-          console.log("transformedDataSubMate: ", transformedDataSubMate);
-
-          return this.productListService.createExportMaterialListProductRequest(transformedDataSubMate);
-        },
-        error => {
-          this.isLoadding = false;
-          this.toastr.error('Tạo sản phẩm theo yêu cầu bị lỗi!', 'Lỗi');
-        }))
-        .subscribe(
-          response => {
-            this.location.replaceState('/product_management');
-            this.isProduct = false;
-            this.reloadProductRequest();
-            this.isLoadding = false;
-            this.toastr.success('Tạo sản phẩm theo yêu cầu thành công!', 'Thành công');
-            $('[data-dismiss="modal"]').click();      // tat modal  
-          },
-          error => {
-            this.isLoadding = false;
-            this.toastr.error('Tạo sản phẩm bị lỗi!', 'Lỗi');
-
+      Promise.all(promises).then(results => {
+        results.forEach(result => {
+          if (result) { // Kiểm tra nếu kết quả không phải là null
+            transformedArray[result.index].filesBase64 = result.base64Files;
           }
-        );
+        });
+
+        console.log("transformedArray", transformedArray);
+
+        const id_Order = this.idOrder;
+
+        this.productListService.addNewProductRequest(transformedArray, id_Order)
+          .pipe(concatMap(response => {
+
+            console.log('response:', response);
+            // const transformedData = {
+            //   productId: response.result.requestProductId,
+            //   subMaterialQuantities: transformedObject
+            // };
+            // console.log("transformedData:", transformedData);
+            response.result.forEach((item: any, index: number) => {
+              // Kiểm tra xem có đối tượng tương ứng trong transformedDataSubMate không
+              if (transformedDataSubMate[index]) {
+                // Thêm thuộc tính requestProductName từ response vào đối tượng tương ứng trong transformedDataSubMate
+                transformedDataSubMate[index].productId = item.requestProductId;
+              }
+            });
+
+            console.log("transformedDataSubMate: ", transformedDataSubMate);
+
+            return this.productListService.createExportMaterialListProductRequest(transformedDataSubMate);
+          }))
+          .subscribe(
+            response => {
+              this.location.replaceState('/product_management');
+              this.isProduct = false;
+              this.reloadProductRequest();
+              this.isLoadding = false;
+              this.toastr.success('Tạo sản phẩm theo yêu cầu thành công!', 'Thành công');
+              $('[data-dismiss="modal"]').click();      // tat modal  
+            },
+            error => {
+              this.isLoadding = false;
+              this.toastr.error('Tạo sản phẩm bị lỗi!', 'Lỗi');
+
+            }
+          );
+      });
 
 
-    }else{
+
+
+
+    } else {
       this.isLoadding = false;
       this.toastr.error('Vui lòng điền đầy đủ thông tin!', 'Lỗi');
     }

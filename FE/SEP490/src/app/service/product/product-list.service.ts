@@ -320,29 +320,32 @@ export class ProductListService {
   }
 
   addNewProductRequest(productRequestData: any, idOrder : any): Observable<any> {
-    const formData = new FormData();
+    // const formData = new FormData();
 
 
-    formData.append('order_id', new Blob([JSON.stringify(idOrder)], { type: 'application/json' }));
-    formData.append('requestProductsWithFiles', new Blob([JSON.stringify(productRequestData)], { type: 'application/json' }));
+    // formData.append('order_id', new Blob([JSON.stringify(idOrder)], { type: 'application/json' }));
+    // formData.append('requestProductsWithFiles', new Blob([JSON.stringify(productRequestData)], { type: 'application/json' }));
 
     // images.forEach(image => {
     //   formData.append('files', image, image.name);
     // });
-    const token = localStorage.getItem('loginToken');
+    // const token = localStorage.getItem('loginToken');
 
-    if (!token) {
-      return throwError(new Error('Login token not found in localStorage.'));
-    }
+    // if (!token) {
+    //   return throwError(new Error('Login token not found in localStorage.'));
+    // }
 
     const headers = new HttpHeaders({
       // 'Authorization': `Bearer ${token}`,
-      'Accept': 'application/json'
+      'Accept': 'application/json',
+      'Content-Type': 'application/json' 
+
     });
 
     // console.log("Authorization header:", headers.get('Authorization'));
+    const urlWithParam = `${this.apiUrlAddNewProductRequest}?order_id=${encodeURIComponent(idOrder)}`;
 
-    return this.http.post(this.apiUrlAddNewProductRequest, formData, { headers }).pipe(
+    return this.http.post(urlWithParam, productRequestData, { headers }).pipe(
       catchError(this.handleError)
     );
   }

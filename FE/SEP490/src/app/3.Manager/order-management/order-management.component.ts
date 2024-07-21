@@ -71,13 +71,13 @@ export class OrderManagementComponent implements OnInit {
   }
   
   closeModal(event: Event): void {
-    const statusId = (event.target as HTMLSelectElement).value;
-    const selectedStatusOption = this.status_order.find(status => status.status_id == parseInt(statusId));
-    const element = document.getElementById("mySelect" + this.indexStatus) as HTMLSelectElement;
-    if (element) {
-      element.value = statusId;
-    }
-    // this.realoadgetAllUser();
+    // const statusId = (event.target as HTMLSelectElement).value;
+    // const selectedStatusOption = this.status_order.find(status => status.status_id == parseInt(statusId));
+    // const element = document.getElementById("mySelect" + this.indexStatus) as HTMLSelectElement;
+    // if (element) {
+    //   element.value = statusId;
+    // }
+    this.realoadgetAllUser();
   }
  
   getOrderStatus(): void {

@@ -413,7 +413,7 @@ export class UserManagementComponent implements OnInit {
   onRoleChangeUpdate() {
     if (this.selectedRole === 4) {
       this.isPositionEnabled_Update = true;
-      // Enable position and bank fields
+      
     } else {
       this.isPositionEnabled_Update = false;
       this.editUserForm.patchValue({
@@ -641,7 +641,7 @@ export class UserManagementComponent implements OnInit {
       return;
     }
     const addNewAccountRequest: AddNewAccount = this.addAccountForm.value;
-    console.log('Request Data:', addNewAccountRequest);
+    // console.log('Request Data:', addNewAccountRequest);
 
     this.authenListService.AddNewAccountForAdmin(addNewAccountRequest).subscribe(
       () => {
@@ -674,25 +674,21 @@ export class UserManagementComponent implements OnInit {
     }
     const editUserRequest: EditUserRequest = this.editUserForm.value;
     const userId = this.userData.userId; // Lấy userId từ userData
-    console.log("Data: ", editUserRequest)
-    console.log("Data: ", userId)
+    // console.log("Data: ", editUserRequest)
+    // console.log("Data: ", userId)
     this.authenListService.editUserById(userId, editUserRequest).subscribe(
       () => {
         this.loadAllAcountByAdmin();
         this.isLoadding = false;
         $('[data-dismiss="modal"]').click();
-        this.toastr.success('Thay đổi thông tin thành công.');
-       
-        // this.ngAfterViewInit();
-        // setTimeout(() => {
-        //   window.location.reload();
-        // }, 2000); // Delay 1 second before reload
+        this.toastr.success('Thay đổi thông tin người dùng thành công.');
+
       },
       (error: any) => {
         this.isLoadding = false;
 
         if (error.error.code === 1035) {
-          this.toastr.error('Không thể thay đổi quyền của nhân viên này vì họ đang đảm nhận công việc ở vị trí của họ',);
+         
         }
 
       }
@@ -700,7 +696,7 @@ export class UserManagementComponent implements OnInit {
   }
 
   SearchUserByNameorAddress(): void {
-    console.log("Thực hiện tìm kiếm sản phẩm: ", this.searchKey);
+    
 
     if (this.searchKey.trim() !== "") {
       this.authenListService.findSearchUserByNameorAddress(this.searchKey)
@@ -708,12 +704,10 @@ export class UserManagementComponent implements OnInit {
           (data) => {
             if (data.code === 1000) {
               this.user = data.result;
-              console.log('Tìm kiếm thành công:', this.user);
-              this.toastr.success('Tìm kiếm sản phẩm thành công!', 'Thành công');
+           
             } else if (data.code === 1015) {
               this.user = [];
-              console.error('Tìm kiếm không thành công:', data);
-              this.toastr.error('Không tìm thấy sản phẩm!', 'Tìm kiếm thất bại');
+              
             }
           }
         );
@@ -749,14 +743,14 @@ export class UserManagementComponent implements OnInit {
           (data) => {
             if (data.code === 1000) {
               this.user = data.result;
-              console.log('Lọc vai trò thành công:', this.user);
+           
               this.isLoadding = false;
-              this.toastr.success('Lọc vai trò thành công!', 'Thành công');
+           
             } else if (data.code === 1015) {
               this.user = [];
-              console.error('Lọc vai trò không thành công:', data);
+           
               this.isLoadding = false;
-              this.toastr.error('Không tìm thấy vai trò phù hợp!', 'Lọc thất bại');
+
             }
           }
         );

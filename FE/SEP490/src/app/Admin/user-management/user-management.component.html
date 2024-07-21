@@ -1,4 +1,3 @@
-
 <app-dashboard-admin></app-dashboard-admin>
 <div class="dashboard-main" [class.dimmed]="isModalOpen">
 
@@ -8,7 +7,7 @@
         <div class="table-title">
           <div class="row " style="height: 60px;">
             <div class="col-sm-5 ">
-              <h2 style="margin-bottom: 0;">Tra cứu Người Dùng</h2>
+              <h2 style="margin-bottom: 0;">Quản lý người dùng</h2>
             </div>
             <div class="col-sm-7 text-end d-flex align-items-center justify-content-end">
               <a href="#" class="btn btn-secondary btn-sm" data-toggle="modal" data-target="#addAccountModal"
@@ -17,7 +16,7 @@
                 <span class="align-middle">Thêm Người Dùng</span>
               </a>
             </div>
-          </div> 
+          </div>
 
           <div class="row">
             <div class="col-md-7"></div> <!-- Dummy column to push the search box to the right -->
@@ -26,8 +25,8 @@
                 <!-- product.component.html -->
 
                 <select [(ngModel)]="selectedRoleFilter" (change)="filterRole()">
-                  <option value="null"  selected>Tất cả vai trò</option>
-                   <option *ngFor="let ps of position" [value]="ps.position_id">{{ ps.position_name }}</option>
+                  <option value="null" selected>Tất cả vai trò</option>
+                  <option *ngFor="let ps of position" [value]="ps.position_id">{{ ps.position_name }}</option>
                 </select>
                 <input type="text" class="form-control" placeholder="Mã người dùng,Tên" [(ngModel)]="searchKey">
                 <button class="btn search-button" type="button" (click)="SearchUserByNameorAddress()">
@@ -164,7 +163,7 @@
               <select [(ngModel)]="selectedRoleAdd" formControlName="role" class="form-control form-control-lg"
                 id="role" (change)="onRoleChange()">
                 <option [ngValue]="null" disabled selected>Chọn Vai Trò</option>
-                <option *ngFor="let rol of role" [ngValue]="rol.roleId">
+                <option *ngFor="let rol of role" [ngValue]="rol.roleId"  [hidden]="rol.roleId == 5">
                   {{ rol.roleName }}
                 </option>
               </select>
@@ -172,6 +171,7 @@
 
             <div class="form-group col-md-6">
               <label for="position">Vị Trí</label>
+              <span *ngIf="selectedRoleAdd === 4" style="font-size: 16px;" class="required-asterisk">*</span>
               <div *ngIf="isPositionEnabled">
                 <select [(ngModel)]="selectedPosition" formControlName="position" class="form-control form-control-lg"
                   id="position">
@@ -194,6 +194,7 @@
           <div class="form-row">
             <div class="form-group col-md-6">
               <label for="bank_name">Tên Ngân Hàng</label>
+              <span *ngIf="selectedRoleAdd === 4" style="font-size: 16px;" class="required-asterisk">*</span>
               <div *ngIf="isPositionEnabled">
                 <select [(ngModel)]="selectBankName" formControlName="bank_name" class="form-control form-control-lg"
                   id="bank_name">
@@ -215,6 +216,7 @@
 
             <div class="form-group col-md-6">
               <label for="fullname">Số tài khoản</label>
+              <span *ngIf="selectedRoleAdd === 4" style="font-size: 16px;" class="required-asterisk">*</span>
               <input *ngIf="isPositionEnabled" formControlName="bank_number" type="text"
                 class="form-control form-control-lg" id="fullname" placeholder="Số tài khoản">
               <input readonly *ngIf="!isPositionEnabled" formControlName="bank_number" type="text"
@@ -274,7 +276,7 @@
       </div>
     </div>
   </div>
-</form> 
+</form>
 
 <!-- Modal for Editing Product -->
 <form [formGroup]="editUserForm" (ngSubmit)="EditUser()" #editForm="ngForm">
@@ -298,6 +300,7 @@
             </div>
             <div class="form-group col-md-6">
               <label for="email">Email</label>
+              <span style="font-size: 16px;" class="required-asterisk">*</span>
               <input formControlName="email" type="email" class="form-control form-control-lg" placeholder="Nhập email"
                 [(ngModel)]="userData.email">
             </div>
@@ -306,11 +309,13 @@
           <div class="form-row">
             <div class="form-group col-md-6">
               <label for="phoneNumber">Số Điện Thoại</label>
+              <span style="font-size: 16px;" class="required-asterisk">*</span>
               <input formControlName="phoneNumber" type="tel" class="form-control form-control-lg"
                 placeholder="Nhập số điện thoại" [(ngModel)]="userData.phoneNumber">
             </div>
             <div class="form-group col-md-6">
               <label for="fullname">Họ Và Tên</label>
+              <span style="font-size: 16px;" class="required-asterisk">*</span>
               <input formControlName="fullname" type="text" class="form-control form-control-lg"
                 placeholder="Nhập họ và tên" [(ngModel)]="userData.fullname">
             </div>
@@ -318,11 +323,12 @@
           <div class="form-row">
             <div class="form-group col-md-6">
               <label for="role">Vai Trò</label>
+              <span style="font-size: 16px;" class="required-asterisk">*</span>
               <div>
                 <select (change)="onRoleChangeUpdate()" [(ngModel)]="selectedRole" formControlName="role_id"
                   class="form-control form-control-lg">
                   <option [ngValue]="null" disabled selected>Chọn Vai Trò</option>
-                  <option *ngFor="let rol of role" [ngValue]="rol.roleId">
+                  <option *ngFor="let rol of role" [ngValue]="rol.roleId"  [hidden]="rol.roleId == 5">
                     {{ rol.roleName }}
                   </option>
                 </select>
@@ -331,17 +337,26 @@
             </div>
             <div class="form-group col-md-6">
               <label for="position">Vị Trí</label>
-              <select [(ngModel)]="selectedPosition_Update" formControlName="position_id" class="form-control form-control-lg">
-                <option disabled *ngFor="let pos of position" [ngValue]="pos.position_id">
-                  {{ pos.position_name }}
-                </option>
-              </select>
-            
+              <span *ngIf="selectedRole === 4" style="font-size: 16px;" class="required-asterisk">*</span>
+              <div *ngIf="isPositionEnabled_Update">
+                <select [(ngModel)]="selectedPosition_Update" formControlName="position_id"
+                  class="form-control form-control-lg">
+                  <option disabled *ngFor="let pos of position" [ngValue]="pos.position_id">
+                    {{ pos.position_name }}
+                  </option>
+                </select>
+              </div>
+              <div *ngIf="!isPositionEnabled_Update">
+                <select disabled class="form-control form-control-lg">
+                  <option [ngValue]="null" disabled selected>Chọn Vị Trí</option>
+                </select>
+              </div>
             </div>
           </div>
           <div class="form-row">
             <div class="form-group col-md-6">
               <label for="position">Tên ngân hàng</label>
+              <span *ngIf="selectedRole === 4" style="font-size: 16px;" class="required-asterisk">*</span>
               <div *ngIf="isPositionEnabled_Update">
                 <select [(ngModel)]="selectBankName_update" formControlName="bank_name"
                   class="form-control form-control-lg">
@@ -361,6 +376,7 @@
             </div>
             <div class="form-group col-md-6">
               <label for="fullname">Số tài khoản</label>
+              <span *ngIf="selectedRole === 4" style="font-size: 16px;" class="required-asterisk">*</span>
               <input *ngIf="isPositionEnabled_Update" [(ngModel)]="userData.bank_number" formControlName="bank_number"
                 type="text" class="form-control form-control-lg" placeholder="Số tài khoản">
               <input readonly *ngIf="!isPositionEnabled_Update" [(ngModel)]="userData.bank_number"
@@ -370,6 +386,7 @@
             </div>
           </div>
           <label style="font-size: 1.3em; font-weight: bold;" for="role">Địa chỉ</label>
+          <span style="font-size: 16px;" class="required-asterisk">*</span>
           <div class="row">
             <div class="col-md-4 mb-5">
               <div class="form-group">
@@ -406,11 +423,13 @@
           <div class="row">
             <div class="form-group col-md-6">
               <label for="address">Địa Chỉ Cụ Thể</label>
+              <span style="font-size: 16px;" class="required-asterisk">*</span>
               <input formControlName="address" type="text" class="form-control form-control-lg"
                 placeholder="Nhập địa chỉ cụ thể" [(ngModel)]="userData.address">
             </div>
             <div class="form-group col-md-6">
               <label for="position">Trạng Thái</label>
+              <span style="font-size: 16px;" class="required-asterisk">*</span>
               <div>
                 <select [(ngModel)]="selectedStatus" formControlName="status_id" class="form-control form-control-lg">
                   <option [ngValue]="null" disabled selected>Chọn Trạng Thái</option>
@@ -433,7 +452,8 @@
 </form>
 
 <!-- Modal for Delete Product -->
-<div class="modal fade" id="confirmDeleteModal" tabindex="-1" role="dialog" aria-labelledby="confirmDeleteModalLabel" aria-hidden="true" #confirmDeleteModal>
+<div class="modal fade" id="confirmDeleteModal" tabindex="-1" role="dialog" aria-labelledby="confirmDeleteModalLabel"
+  aria-hidden="true" #confirmDeleteModal>
   <div class="modal-backdrop"></div>
   <div class="modal-dialog" role="document">
     <div class="modal-content">

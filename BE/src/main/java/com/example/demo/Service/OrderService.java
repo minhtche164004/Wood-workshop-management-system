@@ -9,12 +9,14 @@ import com.example.demo.Dto.RequestDTO.RequestEditDTO;
 import com.example.demo.Dto.SubMaterialDTO.CreateExportMaterialProductRequestDTO;
 import com.example.demo.Entity.*;
 import org.junit.runner.Request;
+import org.springframework.data.repository.query.Param;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -85,6 +87,8 @@ public interface OrderService {
    ResponseEntity<String> Cancel_Order(int order_id, boolean special_order_id,String response);
 
     String ConfirmPayment(int order_id);
+
+    List<OderDTO> MultiFilterOrder(String search, Integer status_id, Integer paymentMethod, Date startDate, Date endDate);
 
 
 

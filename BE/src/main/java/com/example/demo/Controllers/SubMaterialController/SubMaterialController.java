@@ -25,6 +25,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
 import org.springframework.core.io.UrlResource;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -63,8 +64,8 @@ public class SubMaterialController {
             @RequestParam(required = false) String search,
             @RequestParam(required = false) Integer materialId,
             @RequestParam(required = false) Integer action_type_id,
-            @RequestParam(required = false) Date startDate,
-            @RequestParam(required = false) Date endDate,
+            @RequestParam(required = false)@DateTimeFormat(pattern = "yyyy-MM-dd") Date startDate,
+            @RequestParam(required = false)@DateTimeFormat(pattern = "yyyy-MM-dd") Date endDate,
             @RequestParam(required = false) BigDecimal minPrice,
             @RequestParam(required = false) BigDecimal maxPrice,
             @RequestParam(required = false) String sortDirection){

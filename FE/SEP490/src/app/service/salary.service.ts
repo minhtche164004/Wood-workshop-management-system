@@ -35,13 +35,14 @@ export class SalaryService {
     // Yêu cầu dữ liệu trả về là dạng text (base64 của hình ảnh)
     return this.http.post<string>(url, {}, { responseType: 'text' as 'json' });
   }
-  multSearchSalary(employeeName: string, fromDate: string, toDate: string, sortDirection: string, position: string): Observable<any> {
+  multSearchSalary(employeeName: string, fromDate: string, toDate: string, sortDirection: string, position: string, isAdvanceSuccess: string): Observable<any> {
     const params = {
       username: employeeName,
       fromDate: fromDate,
       toDate: toDate,
       position_id: position,
-      sortDirection: sortDirection
+      sortDirection: sortDirection,
+      isAdvanceSuccess: isAdvanceSuccess
     };
     
     const queryString = Object.entries(params)

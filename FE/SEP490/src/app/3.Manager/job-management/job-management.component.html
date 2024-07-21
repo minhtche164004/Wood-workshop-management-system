@@ -33,7 +33,8 @@
                                     </option>
 
                                 </select>
-                                <select [(ngModel)]="selectedStatusJob" (change)="onSearch(selectedCategory, searchKey)">
+                                <select [(ngModel)]="selectedStatusJob"
+                                    (change)="onSearch(selectedCategory, searchKey)">
                                     <option value="">Tất cả</option>
                                     <option *ngFor="let st of statusSearch" [ngValue]="st.status_id">{{ st.status_name }}</option>
                                   </select>
@@ -117,24 +118,21 @@
                             <td>
                                 <button style="margin-left: -10px; size: 15px;" data-toggle="modal"
                                     data-target="#assignJobModal" (click)="manageJob(product)" class="btn btn-primary"
-                                    [class.btn-primary]="!isDisabled(product)"
-                                    [class.btn-danger]="isDisabled(product)"
+                                    [class.btn-primary]="!isDisabled(product)" [class.btn-danger]="isDisabled(product)"
                                     [disabled]="isDisabled(product)">
                                     Giao việc
                                 </button>
-                              </td>
-                              <td>
+                            </td>
+                            <td>
                                 <button class="btn btn-primary" data-toggle="modal" data-target="#errorProduct"
-                                    (click)="errorJob(product)"
-                                    [class.btn-primary]="!isErrorDisabled(product)"
-                                    [class.btn-danger]="isErrorDisabled(product)"
-                                    [disabled]="isErrorDisabled(product)">
+                                    (click)="errorJob(product)" [class.btn-primary]="!isErrorDisabled(product)"
+                                    [class.btn-danger]="isErrorDisabled(product)" [disabled]="isErrorDisabled(product)">
                                     <i class="fa-solid fa-triangle-exclamation"></i>
                                 </button>
-                              </td>
-                              
-                              
-                              
+                            </td>
+
+
+
                         </tr>
 
                     </tbody>
@@ -174,9 +172,9 @@
             <div class="modal-header">
                 <h2 class="modal-title" id="myModal">Cập nhật trạng thái việc làm</h2>
                 <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close"
-                    (click)="closeModal()"></button>
+                    (click)="closeModal()" (click)="cancelChangeStatusJob()"></button>
             </div>
-            <div class="modal-body"> 
+            <div class="modal-body">
                 Bạn có chắc chắn muốn cập nhật trạng thái việc làm?
             </div>
             <div class="modal-footer">

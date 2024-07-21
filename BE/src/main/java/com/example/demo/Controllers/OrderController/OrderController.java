@@ -152,10 +152,11 @@ public class OrderController {
         apiResponse.setResult("Xoá Sản Phẩm khỏi danh sách yêu thích thành công !");
         return apiResponse;
     }
-    @PostMapping(value = "/AddNewRequestProduct", consumes = MediaType.MULTIPART_FORM_DATA_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(value = "/AddNewRequestProduct", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ApiResponse<?> AddNewRequestProduct(
-            @RequestPart("requestProductsWithFiles") RequestProductWithFiles[] requestProductsWithFiles,
-            @RequestPart("order_id") int order_id
+            @RequestBody RequestProductWithFiles[] requestProductsWithFiles,
+            @RequestParam("order_id") int order_id
+//            @RequestPart("files") MultipartFile[] files
 
     ) {
         ApiResponse<List> apiResponse = new ApiResponse<>();
@@ -167,6 +168,13 @@ public class OrderController {
         ApiResponse<String> apiResponse = new ApiResponse<>();
         orderService.Approve_Reject_Request(id,status_id);
         apiResponse.setResult("Chỉnh Yêu cầu đơn hàng thành công");
+        return apiResponse;
+    }
+
+    @PostMapping("/ConfirmPayment")
+    public ApiResponse<?> ConfirmPayment(@RequestParam("order_id") int order_id) {
+        ApiResponse<String> apiResponse = new ApiResponse<>();
+        apiResponse.setResult(orderService.ConfirmPayment(order_id));
         return apiResponse;
     }
 

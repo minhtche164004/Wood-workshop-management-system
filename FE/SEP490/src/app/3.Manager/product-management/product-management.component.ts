@@ -481,7 +481,7 @@ export class ProductManagementComponent implements OnInit {
 
 
     if (this.loginToken) {
-      // this.isLoadding = true;
+      this.isLoadding = true;
       // console.log('Retrieved loginToken:', this.loginToken);
       if (this.isProduct == true) {
         this.productListService.getProducts().subscribe(
@@ -496,27 +496,29 @@ export class ProductManagementComponent implements OnInit {
             }
           },
           (error) => {
+            this.isLoadding = false;
             console.error('Error fetching products:', error);
             this.toastr.error('Có lỗi xảy ra!', 'Lỗi');
           }
         );
       } else {
-        // this.productListService.getAllProductRequest().subscribe(
-        //   (data) => {
-        //     this.isLoadding = false;
-        //     if (data.code === 1000) {
-        //       this.products = data.result;
-        //       console.log('Danh sách sản phẩm theo yeu cau:', this.products);
-        //     } else {
-        //       console.error('Failed to fetch products:', data);
-        //       this.toastr.error('Không thể lấy danh sách sản phẩm!', 'Lỗi');
-        //     }
-        //   },
-        //   (error) => {
-        //     console.error('Error fetching products:', error);
-        //     this.toastr.error('Có lỗi xảy ra! Không thể lấy danh sách sản phẩm theo yêu cầu', 'Lỗi');
-        //   }
-        // );
+        this.productListService.getAllProductRequest().subscribe(
+          (data) => {
+            this.isLoadding = false;
+            if (data.code === 1000) {
+              this.products = data.result;
+              console.log('Danh sách sản phẩm theo yeu cau:', this.products);
+            } else {
+              console.error('Failed to fetch products:', data);
+              this.toastr.error('Không thể lấy danh sách sản phẩm!', 'Lỗi');
+            }
+          },
+          (error) => {
+            this.isLoadding = false;
+            console.error('Error fetching products:', error);
+            this.toastr.error('Có lỗi xảy ra! Không thể lấy danh sách sản phẩm theo yêu cầu', 'Lỗi');
+          }
+        );
       }
 
     } else {
@@ -1232,11 +1234,10 @@ export class ProductManagementComponent implements OnInit {
           return { index, base64Files }; // Trả về đối tượng chứa index và base64Files
         } else {
           console.log("Không hoạt động");
-          return null; // Trả về null nếu không có gì để xử lý
+          return null; 
         }
       });
 
-      console.log("transformedArray", transformedArray)
 
       Promise.all(promises).then(results => {
         results.forEach(result => {
@@ -1253,11 +1254,7 @@ export class ProductManagementComponent implements OnInit {
           .pipe(concatMap(response => {
 
             console.log('response:', response);
-            // const transformedData = {
-            //   productId: response.result.requestProductId,
-            //   subMaterialQuantities: transformedObject
-            // };
-            // console.log("transformedData:", transformedData);
+
             response.result.forEach((item: any, index: number) => {
               // Kiểm tra xem có đối tượng tương ứng trong transformedDataSubMate không
               if (transformedDataSubMate[index]) {
@@ -1286,9 +1283,6 @@ export class ProductManagementComponent implements OnInit {
             }
           );
       });
-
-
-
 
 
     } else {

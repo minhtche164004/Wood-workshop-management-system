@@ -25,7 +25,7 @@ import java.util.Map;
 public interface OrderService {
     Orders AddOrder(RequestOrder requestOrder);
 
-    List<RequestProducts> GetAllProductRequest();
+    List<RequestProductAllDTO> GetAllProductRequest();
 
   //  List<Orders> GetAllRequests();
    // List<Orders> GetAllRequestsAccept();
@@ -73,7 +73,7 @@ public interface OrderService {
  String ChangeStatusOrder(int orderId, int status_id);
 
 
-    List<RequestProductDTO_Show> filterRequestProductsForAdmin(String search,Integer statusId, BigDecimal minPrice, BigDecimal maxPrice, String sortDirection);
+    List<RequestProductAllDTO> filterRequestProductsForAdmin(String search,Integer statusId, BigDecimal minPrice, BigDecimal maxPrice, String sortDirection);
 
     List<RequestProducts> findByPriceRange(BigDecimal min, BigDecimal max);
     List<RequestProducts> GetAllProductRequestByUserId();

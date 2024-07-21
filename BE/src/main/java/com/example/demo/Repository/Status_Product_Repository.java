@@ -23,6 +23,9 @@ public interface Status_Product_Repository extends JpaRepository<Status_Product,
     @Query("SELECT u FROM Status_Product u WHERE u.status_id = :query")
     Status_Product findById(int query);
 
+    @Query("SELECT u FROM Status_Product u WHERE u.status_id = :query")
+    Status_Product findById1(int query);
+
     @Query("SELECT u FROM Status_Product u ")
     List<Status_Product> GetListStatusType();
 

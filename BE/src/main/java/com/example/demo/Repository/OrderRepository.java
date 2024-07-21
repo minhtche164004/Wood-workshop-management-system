@@ -4,13 +4,17 @@ import com.example.demo.Dto.JobDTO.JobDoneDTO;
 import com.example.demo.Dto.OrderDTO.OderDTO;
 import com.example.demo.Entity.Orders;
 import com.example.demo.Entity.Products;
+import jakarta.persistence.TemporalType;
 import jakarta.transaction.Transactional;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.jpa.repository.Temporal;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.Date;
 import java.util.List;
 
@@ -25,6 +29,23 @@ public interface OrderRepository extends JpaRepository<Orders,Integer> {
             " FROM Orders o" +
             " LEFT JOIN o.status s")
     List<OderDTO> getAllOrder();
+
+    @Query("SELECT new com.example.demo.Dto.OrderDTO.OderDTO(" +
+            "COALESCE(o.code, ''), o.orderId, COALESCE(o.orderDate, '') , o.totalAmount, COALESCE(s.status_id, 0) , COALESCE(s.status_name, ''), COALESCE(o.paymentMethod, ''), COALESCE(o.deposite, 0) , COALESCE(o.specialOrder, false))" +
+            " FROM Orders o" +
+            " LEFT JOIN o.status s" +
+            " WHERE ( o.code LIKE %:search% OR :search IS NULL) AND" +
+            "(s.status_id = :status_id OR :status_id IS NULL) AND " +
+            "(o.paymentMethod = :paymentMethod OR :paymentMethod IS NULL) AND " +
+            "(o.orderDate >= :startDate OR :startDate IS NULL) AND " +
+            "(o.orderDate <= :endDate OR :endDate IS NULL)")
+    List<OderDTO> MultiFilterOrder(@Param("search") String search,
+                                   @Param("status_id") Integer status_id,
+                                   @Param("paymentMethod") Integer paymentMethod,
+                                   @Param("startDate") Date startDate,
+                                   @Param("endDate") Date endDate);
+
+
 
     @Query("SELECT u FROM Orders u WHERE u.code = :query")
     Orders findByCode(String query);

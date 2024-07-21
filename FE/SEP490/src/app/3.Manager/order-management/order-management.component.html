@@ -50,11 +50,12 @@
             <thead>
               <tr>
                 <th>Mã đơn hàng</th>
-              
+
                 <th>Thao tác</th>
                 <th>Loại đơn hàng</th>
                 <th>Ngày đặt hàng</th>
                 <th>Tình trạng</th>
+                <th>Thanh toán</th>
                 <th>Kiểu thanh toán</th>
                 <th>Tiền cọc(VNĐ)</th>
                 <th>Số tiền thanh toán(VNĐ)</th>
@@ -66,8 +67,8 @@
               <tr *ngFor="let us of user | paginate: { itemsPerPage: 10, currentPage: currentPage }; let i = index">
 
                 <td style=" min-width: 140px;">{{ us?.code}}</td>
-               
-                
+
+
                 <td class="action-buttons">
                   <!-- <a href="#" class="settings" title="Edit" data-toggle="modal" data-target="#editProductModal">
                   <i class="fa-solid fa-pen-to-square"></i>
@@ -91,8 +92,7 @@
                 <td *ngIf="us?.totalAmount === null">
                   <div class="select-wrapper">
                     <select id="mySelect{{i}}" [disabled]="us?.status_id !== 4 && us?.status_id !== 7"
-                      class="custom-select" (focus)="saveInitialValue(us.status_id, i)"
-                      (change)="openModal(us.orderId, $event, i)">
+                      class="custom-select" (change)="openModal(us.orderId, $event, i)">
                       <option *ngFor="let status of status_order" [value]="status.status_id"
                         [selected]="status.status_id === us?.status_id" [disabled]="status.status_id !== 8"
                         [hidden]="status.status_id !== 7 && status.status_id !== 8">
@@ -110,8 +110,8 @@
 
                 <td style="min-width: 200px;" *ngIf="us?.totalAmount !== null">
                   <div class="select-wrapper">
-                    <select id="mySelect{{i}}" [disabled]=" us?.status_id !== 4" class="custom-select"
-                      (change)="openModal(us.orderId, $event,i)">
+                    <select id="mySelect{{i}}" [disabled]="us?.status_id !== 4" class="custom-select"
+                      (change)="openModal(us.orderId, $event, i)">
                       <option *ngFor="let status of status_order" [value]="status.status_id"
                         [selected]="status.status_id === us?.status_id" [disabled]="status.status_id !== 5"
                         [hidden]="status.status_id !== 4 && status.status_id !== 5">
@@ -124,7 +124,13 @@
                     </button>
                   </div>
                 </td>
-
+                <td>
+                  <button style="margin-left: -10px; size: 15px;" data-toggle="modal" data-target="#myModalconfirm"
+                    class="btn btn-primary" *ngIf="us?.status_id === 1 && us?.paymentMethod=== 2 "
+                    (click)="setOrderForPayment(us?.orderId)">
+                    Tiền cọc
+                  </button>
+                </td>
 
 
                 <td style=" min-width: 30px;"
@@ -139,7 +145,10 @@
                 <td>
                   <a href="#" class="delete" title="Delete" data-toggle="modal" data-target="#confirmDeleteModal"
                     (click)="setOrderForCancellation(us?.orderId, us?.specialOrder)" *ngIf="us?.status_id === 7">
-                    <i class="fa-solid fa-times"></i>
+                    <svg class="custom-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <line x1="18" y1="6" x2="6" y2="18"></line>
+                      <line x1="6" y1="6" x2="18" y2="18"></line>
+                    </svg>
                   </a>
                 </td>
               </tr>
@@ -283,6 +292,29 @@
       </div>
     </div>
   </div>
+  <div class="modal fade" id="myModalconfirm" tabindex="-1" aria-labelledby="myModalLabel" aria-hidden="true"
+    data-backdrop="static" data-keyboard="false">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h2 class="modal-title" id="myModalconfirm">Cập nhật tình trạng đơn hàng</h2>
+          <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close"
+            (click)="closeModal($event)"></button>
+        </div>
+        <div class="modal-body">
+          Bạn có chắc chắn muốn cập nhật trạng thái đơn hàng này?
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal"
+            (click)="closeModal($event)">Đóng</button>
+            <button type="button" class="btn btn-primary" (click)="confirmPayment()">Chắc
+              chắn
+            </button>
+      </div>
+    </div>
+  </div>
+
+
   <div *ngIf="isLoadding" class="loading-overlay">
     <div class="spinner"></div>
   </div>

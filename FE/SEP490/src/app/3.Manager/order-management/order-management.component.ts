@@ -8,6 +8,7 @@ import { ProductListService } from 'src/app/service/product/product-list.service
 
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { OrderRequestService } from 'src/app/service/order-request.service';
+import { data } from 'jquery';
 interface ApiResponse {
   code: number;
   result: any[];
@@ -19,12 +20,7 @@ interface ApiResponse {
   styleUrls: ['./order-management.component.scss']
 })
 export class OrderManagementComponent implements OnInit {
-  initialStatusValues: { [key: number]: number } = {};
 
-  saveInitialValue(statusId: number, index: number): void {
-    this.initialStatusValues[index] = statusId;
-    console.log("Select Status: ", this.initialStatusValues[index] = statusId)
-  }
   @ViewChild('launchModalButton')
   launchModalButton!: ElementRef;
   user: any[] = [];
@@ -49,7 +45,7 @@ export class OrderManagementComponent implements OnInit {
     this.loadPosition();
     this.loadStatus();
     this.getOrderStatus();
-    // this.getAllOrder();
+    this.getAllOrder();
 
   }
   selectedModalJob: string = '';
@@ -73,12 +69,16 @@ export class OrderManagementComponent implements OnInit {
     this.indexStatus = index;
     // console.log("indexStatus:", this.indexStatus);
   }
-
-  closeModal(event: Event): void {
-    $('[data-dismiss="modal"]').click();
-    this.realoadgetAllUser();
+  closeModal(event: Event) {
+    // const statusId = (event.target as HTMLSelectElement).value;
+    // console.log('Status IDClóe:', statusId);
+    // const element = document.getElementById("mySelect" + this.indexStatus);
+    // if (element instanceof HTMLSelectElement && element !== null) {
+    //   // Reset the selected index to the initial value
+    //   element.selectedIndex = parseInt(statusId);
+      
+    // }
   }
-
   getOrderStatus(): void {
     this.orderService.getOrderStatus().subscribe(
       (data: any) => {
@@ -283,6 +283,10 @@ export class OrderManagementComponent implements OnInit {
     this.selectedOrderId = orderId;
     this.selectedSpecialOrder = specialOrder;
   }
+  setOrderForPayment(orderId: number) {
+    this.selectedOrderId = orderId;
+   
+  }
   confirmCancel() {
     this.isLoadding = true;
     if (this.selectedOrderId !== null && this.selectedSpecialOrder !== null) {
@@ -306,4 +310,30 @@ export class OrderManagementComponent implements OnInit {
       });
     }
   }
+  confirmPayment() {
+    this.isLoadding = true;
+    if (this.selectedOrderId !== null) {
+      this.authenListService.Paymentmoney(this.selectedOrderId).subscribe({
+        next: (response: any ) => {
+         if(response.code == 1000){
+          this.toastr.success(response.result);
+          this.realoadgetAllUser();
+    
+          this.isLoadding = false;
+          const closeModalButton = document.querySelector('.close') as HTMLElement;
+          if (closeModalButton) {
+            closeModalButton.click();
+          }
+          $('[data-dismiss="modal"]').click();
+        }},
+        error: (error: HttpErrorResponse) => {
+          this.isLoadding = false;
+          this.toastr.error('Thanh toán thất bại');
+          this.realoadgetAllUser();
+          $('[data-dismiss="modal"]').click();
+        }
+      });
+    }
+  }
+  
 }

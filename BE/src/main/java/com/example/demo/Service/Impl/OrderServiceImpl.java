@@ -14,6 +14,7 @@ import com.example.demo.Repository.*;
 import com.example.demo.Service.*;
 import jakarta.persistence.EntityManager;
 import jakarta.transaction.Transactional;
+import org.apache.poi.util.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -21,13 +22,17 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
+
+
 
 @Service
 public class    OrderServiceImpl implements OrderService {
@@ -43,14 +48,10 @@ public class    OrderServiceImpl implements OrderService {
     private CheckConditionService checkConditionService;
     @Autowired
     private UserRepository userRepository;
-//    @Autowired
-//    private Status_Request_Repository statusRequestRepository;
     @Autowired
     private UploadImageService uploadImageService;
     @Autowired
     private RequestProductRepository requestProductRepository;
-//    @Autowired
-//    private RequestRepository requestRepository;
     @Autowired
     private Product_RequestimagesRepository productRequestimagesRepository;
     @Autowired
@@ -77,8 +78,8 @@ public class    OrderServiceImpl implements OrderService {
     private InputSubMaterialRepository inputSubMaterialRepository;
     @Autowired
     private SubMaterialsRepository subMaterialsRepository;
-
-
+    @Autowired
+    private MultipartFileConverter multipartFileConverter;
 
     @Override
     public Orders AddOrder(RequestOrder requestOrder) {
@@ -352,6 +353,7 @@ public class    OrderServiceImpl implements OrderService {
     }
 
     //Tạo Request Product
+    @Transactional
     @Override
     public List<RequestProducts> AddNewProductRequest(RequestProductWithFiles[] requestProductsWithFiles,int order_id) { //lấy từ request
         List<RequestProductsSubmaterials> result = new ArrayList<>();
@@ -367,7 +369,6 @@ public class    OrderServiceImpl implements OrderService {
         List<RequestProducts> addedProducts = new ArrayList<>();
         for (RequestProductWithFiles r : requestProductsWithFiles) {
             RequestProductDTO requestProductDTO = r.getRequestProductDTO();
-            MultipartFile[] files = r.getFiles();
             RequestProducts requestProducts = new RequestProducts();
             requestProducts.setRequestProductName(requestProductDTO.getRequestProductName());
             requestProducts.setDescription(requestProductDTO.getDescription());
@@ -390,7 +391,14 @@ public class    OrderServiceImpl implements OrderService {
 
             //set ảnh của product
         //    RequestProducts requestProduct = requestProductRepository.findByName(requestProductDTO.getRequestProductName());
-            uploadImageService.uploadFileRequestProduct(files, requestProducts.getRequestProductId());
+            // Upload ảnh từ danh sách base64
+            List<String> filesBase64 = r.getFilesBase64(); // Lấy danh sách base64
+            for (String base64Data : filesBase64) {
+                // Chuyển đổi base64 thành MultipartFile
+                MultipartFile file = multipartFileConverter.convertBase64ToMultipartFile(base64Data,
+                        "Screenshot 2024-05-26 174835.png");
+                uploadImageService.uploadFileRequestProduct(new MultipartFile[]{file}, requestProducts.getRequestProductId());
+            }
 
             addedProducts.add(requestProducts);
         }

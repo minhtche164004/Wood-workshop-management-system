@@ -511,6 +511,7 @@
                           <label for="subMaterialId-{{i}}">Vật liệu<span class="required-asterisk">*</span></label>
                           <select id="subMaterialId-{{i}}" class="form-control" *ngIf="subMaterials[i*10+j]"
                             (change)="onSubMaterialChange($event, i*10+j)">
+                            <option disabled value="" selected>Chọn vật liệu</option>
                             <option *ngFor="let subMaterial of subMaterials[i*10+j]" [value]="subMaterial?.subMaterialId">{{
                               subMaterial?.subMaterialName
                               }}</option>
@@ -945,6 +946,7 @@
                     <label for="subMaterialId-{{i}}">Vật liệu<span class="required-asterisk">*</span></label>
                     <select id="subMaterialId-{{i}}" class="form-control" *ngIf="subMaterials[i]"
                       (change)="onSubMaterialChange($event, i)" formControlName="subMaterialId">
+                      <option disabled value="" selected>Chọn vật liệu</option>
                       <option *ngFor="let subMaterial of subMaterials[i]" [value]="subMaterial?.subMaterialId">{{
                         subMaterial?.subMaterialName
                         }}</option>

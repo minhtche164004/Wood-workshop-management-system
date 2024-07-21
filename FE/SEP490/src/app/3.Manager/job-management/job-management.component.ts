@@ -147,10 +147,10 @@ export class JobManagementComponent implements OnInit {
       element.selectedIndex = 0;
     }
   }
-
-  cancelChangeStatusJob() {
+cancelChangeStatusJob() {
     this.selectedModalId = '';
   }
+  
 
   acceptJob(jobId: string, statusId: string): void {
     this.isLoadding = true

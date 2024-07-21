@@ -32,6 +32,7 @@ export class OrderManagementComponent implements OnInit {
   selectedCategory: number = 0;
   OrderdetailById: any = {};
   isLoadding: boolean = false;
+  selectedC: number | null = null;
   selectedOrderId: number | null = null;
   selectedSpecialOrder: boolean | null = null;
   activeModal: any;
@@ -48,6 +49,7 @@ export class OrderManagementComponent implements OnInit {
     this.getAllOrder();
 
   }
+
   selectedModalJob: string = '';
   selectedModalId: string = '';
   indexStatus: number = 0;
@@ -55,30 +57,29 @@ export class OrderManagementComponent implements OnInit {
   cancelChangeStatusJob() {
     this.selectedModalId = '';
   }
-
   openModal(orderId: number, event: Event, index: number): void {
-
-    console.log('event:', event);
     const statusId = (event.target as HTMLSelectElement).value;
     this.selectedModalJob = orderId.toString();
-    console.log('Job ID:', this.selectedModalJob, 'Status ID:', statusId);
     this.selectedModalId = statusId;
-    // this.createJobs.reset();  
-    // S? d?ng tham chi?u này d? kích ho?t click
-    this.launchModalButton.nativeElement.click();
     this.indexStatus = index;
-    // console.log("indexStatus:", this.indexStatus);
+  
+    console.log('event:', event);
+    console.log('Job ID:', this.selectedModalJob, 'Status ID:', statusId);
+  
+    // Trigger the modal open action
+    this.launchModalButton.nativeElement.click();
   }
-  closeModal(event: Event) {
-    // const statusId = (event.target as HTMLSelectElement).value;
-    // console.log('Status IDClóe:', statusId);
-    // const element = document.getElementById("mySelect" + this.indexStatus);
-    // if (element instanceof HTMLSelectElement && element !== null) {
-    //   // Reset the selected index to the initial value
-    //   element.selectedIndex = parseInt(statusId);
-      
-    // }
+  
+  closeModal(event: Event): void {
+    const statusId = (event.target as HTMLSelectElement).value;
+    const selectedStatusOption = this.status_order.find(status => status.status_id == parseInt(statusId));
+    const element = document.getElementById("mySelect" + this.indexStatus) as HTMLSelectElement;
+    if (element) {
+      element.value = statusId;
+    }
+    // this.realoadgetAllUser();
   }
+ 
   getOrderStatus(): void {
     this.orderService.getOrderStatus().subscribe(
       (data: any) => {
@@ -123,23 +124,22 @@ export class OrderManagementComponent implements OnInit {
     }
   }
   realoadgetAllUser(): void {
-    this.isLoadding = true;
+  
     this.productListService.getAllOrder().subscribe(
       (data: ApiResponse) => {
         if (data.code === 1000) {
           this.user = data.result;
-          this.isLoadding = false;
+        
 
         } else {
           console.error('Failed to fetch products:', data);
-          this.isLoadding = false;
-
+        
 
         }
       },
       (error) => {
         console.error('Error fetching products:', error);
-        this.isLoadding = false;
+     
 
 
 
@@ -227,12 +227,14 @@ export class OrderManagementComponent implements OnInit {
     this.isLoadding = true;
     this.authenListService.changeStatusOrder(orderId, statusId).subscribe(
       response => {
+
         this.realoadgetAllUser();
+        this.isLoadding = false;
         console.log('Order status changed', response);
         this.toastr.success('Thay đổi tình trạng  thành công.');
 
         $('[data-dismiss="modal"]').click();
-        this.isLoadding = false;
+       
       },
       error => {
         this.isLoadding = false;
@@ -271,6 +273,8 @@ export class OrderManagementComponent implements OnInit {
 
             } else if (data.code === 1015) {
               this.realoadgetAllUser();
+              this.isLoadding = false;
+              
 
             }
 

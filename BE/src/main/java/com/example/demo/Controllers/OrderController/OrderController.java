@@ -171,6 +171,13 @@ public class OrderController {
         return apiResponse;
     }
 
+    @PostMapping("/ConfirmPayment")
+    public ApiResponse<?> ConfirmPayment(@RequestParam("order_id") int order_id) {
+        ApiResponse<String> apiResponse = new ApiResponse<>();
+        apiResponse.setResult(orderService.ConfirmPayment(order_id));
+        return apiResponse;
+    }
+
     @PostMapping(value = "/AddNewRequest", consumes = MediaType.MULTIPART_FORM_DATA_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ApiResponse<?> AddNewRequest(
             @RequestPart("requestDTO") RequestDTO requestDTO,

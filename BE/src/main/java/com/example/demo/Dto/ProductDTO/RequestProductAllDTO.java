@@ -12,7 +12,7 @@ import java.math.BigDecimal;
 import java.sql.Date;
 import java.util.List;
 
-@NoArgsConstructor
+//@NoArgsConstructor
 @Data
 public class RequestProductAllDTO {
     private int re_productId;
@@ -29,7 +29,7 @@ public class RequestProductAllDTO {
     private Integer request_id;
 
     public RequestProductAllDTO(int re_productId, String re_productName, String description, BigDecimal price, Integer quantity, Date completionTime,
-                                Integer status_id, String status_name, Integer productImageId, String fullPath, String code, Integer request_id) {
+                                Integer status_id, String status_name, Integer productImageId,String fullPath, String code, Integer request_id) {
         this.re_productId = re_productId;
         this.re_productName = re_productName;
         this.description = description;
@@ -43,19 +43,4 @@ public class RequestProductAllDTO {
         this.code = code;
         this.request_id = request_id;
     }
-
-//    public RequestProductAllDTO(Integer re_productId, String re_productName, String description, BigDecimal price,
-//                                Integer quantity, Date completionTime, Integer status_id, String status_name, Integer productImageId, String code, Integer request_id) {
-//        this.re_productId = re_productId;
-//        this.re_productName = re_productName;
-//        this.description = description;
-//        this.price = price;
-//        this.quantity = quantity;
-//        this.completionTime = completionTime;
-//        this.status_id = status_id;
-//        this.status_name = status_name;
-//        this.productImageId = productImageId;
-//        this.code = code;
-//        this.request_id = request_id;
-//    }
 }

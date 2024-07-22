@@ -30,12 +30,15 @@
 
                 <!-- product.component.html -->
                 <select [(ngModel)]="selectedCategory" (change)="filterStatus()">
-                  <option value="0" selected>Tất cả đơn hàng</option>
+                  <!-- <option value="0" selected disabled>Chọn đơn hàng</option> -->
                   <option *ngFor="let ps of userStatus" [value]="ps.status_id">{{ ps.status_name }}</option>
-
+                  <option value="" selected >Tất cả danh mục</option>
                 </select>
-                <input type="text" class="form-control" placeholder="Mã đơn hàng...">
-                <button class="btn search-button" type="button">
+
+                <input type="text" class="form-control" placeholder="Tìm kiếm mã đơn hàng..." [(ngModel)]="searchKey"
+                  (keyup.enter)="filterStatus()">
+
+                <button class="btn search-button" type="button" (click)="filterStatus()">
                   <i class="fa fa-search"></i>
                 </button>
               </div>
@@ -55,7 +58,7 @@
                 <th>Loại đơn hàng</th>
                 <th>Ngày đặt hàng</th>
                 <th>Tình trạng</th>
-               
+
                 <th>Kiểu thanh toán</th>
                 <th>Tiền cọc(VNĐ)</th>
                 <th>Số tiền thanh toán(VNĐ)</th>
@@ -93,7 +96,7 @@
               || us?.status.status_id === 3"  -->
                 <td *ngIf="us?.totalAmount === null">
                   <div class="select-wrapper">
-                    <select  id="mySelect{{i}}" [disabled]="us?.status_id !== 4 && us?.status_id !== 7"
+                    <select id="mySelect{{i}}" [disabled]="us?.status_id !== 4 && us?.status_id !== 7"
                       class="custom-select" (change)="openModal(us.orderId, $event, i)">
                       <option *ngFor="let status of status_order" [value]="status.status_id"
                         [selected]="status.status_id === us?.status_id" [disabled]="status.status_id !== 8"
@@ -112,7 +115,7 @@
 
                 <td style="min-width: 200px;" *ngIf="us?.totalAmount !== null">
                   <div class="select-wrapper">
-                    <select   id="mySelect{{i}}" [disabled]="us?.status_id !== 4" class="custom-select"
+                    <select id="mySelect{{i}}" [disabled]="us?.status_id !== 4" class="custom-select"
                       (change)="openModal(us.orderId, $event, i)">
                       <option *ngFor="let status of status_order" [value]="status.status_id"
                         [selected]="status.status_id === us?.status_id" [disabled]="status.status_id !== 5"
@@ -126,7 +129,7 @@
                     </button>
                   </div>
                 </td>
-                
+
 
 
                 <td style=" min-width: 30px;"
@@ -134,13 +137,14 @@
                   {{ us?.paymentMethod === 2 ? 'Chuyển khoản' : (us?.paymentMethod === 1 ? 'Tiền mặt' : '') }}
                 </td>
 
-                <td>{{ us?.deposite | number : '1.0-3' }}</td>
-                <td>{{ (us?.totalAmount - us?.deposite) | number : '1.0-3'
+                <td style="text-align: right;">{{ us?.deposite | number : '1.0-3' }}</td>
+                <td style="text-align: right;">{{ (us?.totalAmount - us?.deposite) | number : '1.0-3'
                   }}</td>
-                <td>{{ us?.totalAmount | number : '1.0-3' }}</td>
+                <td style="text-align: right;">{{ us?.totalAmount | number : '1.0-3' }}</td>
                 <td>
                   <button style="margin-left: -10px; size: 15px;" data-toggle="modal" data-target="#myModalconfirm"
-                    class="btn btn-primary" *ngIf="us?.status_id === 1 " (click)="setOrderForPayment(us?.orderId)">
+                    class="btn btn-primary" *ngIf="us?.status_id === 1 && us?.paymentMethod === 1 "
+                    (click)="setOrderForPayment(us?.orderId)">
                     Tiền cọc
                   </button>
                 </td>
@@ -162,15 +166,27 @@
 
 
       <pagination-controls style="justify-content: right; display: flex;" (pageChange)="currentPage = $event"
-        previousLabel="Trang trước" nextLabel="Trang sau">
-      </pagination-controls>
-      <div class="hint-text">
-        Hiển thị <b>{{ (currentPage - 1) * 10 + 1 }}</b> tới <b>{{ (currentPage * 10 > user.length) ? user.length :
-          currentPage * 10 }}</b>
-        trong tổng <b>{{ user.length }}</b> dữ liệu
-      </div>
+                    previousLabel="Trang trước" nextLabel="Trang sau" [maxSize]="4"
+                    *ngIf="user && user.length > 0">
+                </pagination-controls>
+                <div class="clearfix" style="justify-content: right; display: flex;"
+                    *ngIf="user && user.length > 0">
+                    <div class="hint-text">Hiển thị <b>{{ (currentPage - 1) * 10 + 1 }}</b> tới <b>{{ currentPage * 10 >
+                            user.length ? user.length : currentPage * 10 }}</b> trong tổng <b>{{
+                            user.length }}</b> dữ liệu</div>
+                </div>
 
+                <div *ngIf="!user || user.length === 0">
 
+                    <div style="background-color: white;">
+                        <div class=""
+                            style="display: flex; justify-content: center; align-items: center; height: 100%;">
+                            <img src="https://encrypted-tbn2.gstatic.com/images?q=tbn:ANd9GcSG53pYn6cpXaiwT_q6IM45P-rXg5dUw67XqRmr9-vtsbMoHnCG"
+                                alt="" class="product-img" style="width: 150px; height: 150px; object-fit: cover;">
+                            <p class="name-product text-center">Không tìm thấy đơn hàng!</p>
+                        </div>
+                    </div>
+                </div>
     </div>
   </div>
 
@@ -287,8 +303,8 @@
           Bạn có chắc chắn muốn cập nhật trạng thái đơn hàng này?
         </div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-dismiss="modal"
-            (click)="closeModal($event)" (click)="cancelChangeStatusJob()">Đóng</button>
+          <button type="button" class="btn btn-secondary" data-dismiss="modal" (click)="closeModal($event)"
+            (click)="cancelChangeStatusJob()">Đóng</button>
           <button type="button" class="btn btn-primary" (click)="changeStatus(selectedModalJob,selectedModalId)">Chắc
             chắn</button>
         </div>
@@ -304,15 +320,15 @@
       <div class="modal-content">
         <div class="modal-header">
           <h2 class="modal-title" id="myModalconfirm">Xác nhận thanh toán tiền cọc đơn hàng</h2>
-          <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close"
-            (click)="closeModal($event) " (click)="cancelChangeStatusJob()"></button>
+          <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close" (click)="closeModal($event) "
+            (click)="cancelChangeStatusJob()"></button>
         </div>
         <div class="modal-body">
           Bạn có chắc chắn xác nhận thanh toán tiền cọc đơn hàng này?
         </div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-dismiss="modal"
-            (click)="closeModal($event)" (click)="cancelChangeStatusJob()">Đóng</button>
+          <button type="button" class="btn btn-secondary" data-dismiss="modal" (click)="closeModal($event)"
+            (click)="cancelChangeStatusJob()">Đóng</button>
           <button type="button" class="btn btn-primary" (click)="confirmPayment()">Chắc
             chắn
           </button>

@@ -32,7 +32,7 @@
                 <select [(ngModel)]="selectedCategory" (change)="filterStatus()">
                   <!-- <option value="0" selected disabled>Chọn đơn hàng</option> -->
                   <option *ngFor="let ps of userStatus" [value]="ps.status_id">{{ ps.status_name }}</option>
-                  <option value="" selected >Tất cả danh mục</option>
+                  <option value="" selected>Tất cả danh mục</option>
                 </select>
 
                 <input type="text" class="form-control" placeholder="Tìm kiếm mã đơn hàng..." [(ngModel)]="searchKey"
@@ -145,7 +145,7 @@
                   <button style="margin-left: -10px; size: 15px;" data-toggle="modal" data-target="#myModalconfirm"
                     class="btn btn-primary" *ngIf="us?.status_id === 1 && us?.paymentMethod === 1 "
                     (click)="setOrderForPayment(us?.orderId)">
-                    Tiền cọc
+                    Thanh toán cọc
                   </button>
                 </td>
                 <td>
@@ -166,27 +166,25 @@
 
 
       <pagination-controls style="justify-content: right; display: flex;" (pageChange)="currentPage = $event"
-                    previousLabel="Trang trước" nextLabel="Trang sau" [maxSize]="4"
-                    *ngIf="user && user.length > 0">
-                </pagination-controls>
-                <div class="clearfix" style="justify-content: right; display: flex;"
-                    *ngIf="user && user.length > 0">
-                    <div class="hint-text">Hiển thị <b>{{ (currentPage - 1) * 10 + 1 }}</b> tới <b>{{ currentPage * 10 >
-                            user.length ? user.length : currentPage * 10 }}</b> trong tổng <b>{{
-                            user.length }}</b> dữ liệu</div>
-                </div>
+        previousLabel="Trang trước" nextLabel="Trang sau" [maxSize]="4" *ngIf="user && user.length > 0">
+      </pagination-controls>
+      <div class="clearfix" style="justify-content: right; display: flex;" *ngIf="user && user.length > 0">
+        <div class="hint-text">Hiển thị <b>{{ (currentPage - 1) * 10 + 1 }}</b> tới <b>{{ currentPage * 10 >
+            user.length ? user.length : currentPage * 10 }}</b> trong tổng <b>{{
+            user.length }}</b> dữ liệu</div>
+      </div>
 
-                <div *ngIf="!user || user.length === 0">
+      <div *ngIf="!user || user.length === 0">
 
-                    <div style="background-color: white;">
-                        <div class=""
-                            style="display: flex; justify-content: center; align-items: center; height: 100%;">
-                            <img src="https://encrypted-tbn2.gstatic.com/images?q=tbn:ANd9GcSG53pYn6cpXaiwT_q6IM45P-rXg5dUw67XqRmr9-vtsbMoHnCG"
-                                alt="" class="product-img" style="width: 150px; height: 150px; object-fit: cover;">
-                            <p class="name-product text-center">Không tìm thấy đơn hàng!</p>
-                        </div>
-                    </div>
-                </div>
+        <div style="background-color: white;">
+          <div class="" style="display: flex; justify-content: center; align-items: center; height: 100%;">
+            <img
+              src="https://encrypted-tbn2.gstatic.com/images?q=tbn:ANd9GcSG53pYn6cpXaiwT_q6IM45P-rXg5dUw67XqRmr9-vtsbMoHnCG"
+              alt="" class="product-img" style="width: 150px; height: 150px; object-fit: cover;">
+            <p class="name-product text-center">Không tìm thấy đơn hàng!</p>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 

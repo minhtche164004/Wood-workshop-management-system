@@ -8,7 +8,7 @@ import { AddNewAccount } from '../Admin/user-management/user-management.componen
   providedIn: 'root'
 })
 export class AuthenListService {
-  cancelReason: string ='';
+  cancelReason: string = '';
   private apiUrl_ViewProfile = `${environment.apiUrl}api/auth/user/ViewProfile`;
   private apiUrl_UpdateProfile = `${environment.apiUrl}api/auth/user/UpdateProfile`;
   private apiUrl_ChangePass = `${environment.apiUrl}api/auth/user/ChangePass`;
@@ -20,7 +20,7 @@ export class AuthenListService {
   private apiUrl_GetListProductCustomer = `${environment.apiUrl}api/auth/order/GetAllRequestByUserId`;
 
   private apiUrl_DeleteWhiteList = `${environment.apiUrl}api/auth/order/DeleteWhiteList`;
-  private apiUrl_GetOrderDeTailById = `${environment.apiUrl}api/auth/order/getOrderDetailById`;
+  private apiUrl_GetOrderDeTailById = `${environment.apiUrl}api/auth/order/GetOrderById`;
   private apiUrl_AddNewAccount = `${environment.apiUrl}api/auth/admin/AddNewAccount`;
   private apiUrl_SearchUserByNameorAddress = `${environment.apiUrl}api/auth/admin/SearchUserByNameorAddress`;
 
@@ -44,7 +44,7 @@ export class AuthenListService {
   private apiUrl_EditRequest = `${environment.apiUrl}api/auth/order/ManagerEditRequest`;
   private apiUrl_getAllStatusOrder = `${environment.apiUrl}api/auth/order/getStatusOrder`;
   private apiUrl_chanegStatusOrder = `${environment.apiUrl}api/auth/order/ChangeStatusOrder`;
-  private apiUrl_getFilterStatus = `${environment.apiUrl}api/auth/order/filter-by-status`;
+  private apiUrl_getFilterStatus = `${environment.apiUrl}api/auth/order/MultiFilterOrder`;
   private apiUrl_getSalaryByEmployeeID = `${environment.apiUrl}api/auth/salary/getSalaryByEmployeeID`;
   private apiUrl_changeStatusOrderRequest = `${environment.apiUrl}api/auth/order/Cancel_Order`;
   private apiUrl_getAllStatusOrderRequest = `${environment.apiUrl}api/auth/admin/GetAllStatusRequest`;
@@ -57,7 +57,7 @@ export class AuthenListService {
 
   private api_getAllOrderDetailById = `${environment.apiUrl}api/auth/order/getAllOrderDetailByOrderId`;
   private apiUrl_Paymentmoney = `${environment.apiUrl}api/auth/order/ConfirmPayment`;
-  
+
   private apiUrl_NameATM = 'https://api.vietqr.io/v2/banks';
   constructor(private http: HttpClient) { }
   isLoggedIn(): boolean {
@@ -137,7 +137,7 @@ export class AuthenListService {
       catchError(this.handleError)
     );
   }
-  
+
   getOrderDetailById(order_detail_id: string): Observable<any> {
     const url = `${this.apiUrl_GetOrderDeTailById}?id=${order_detail_id}`;
     return this.http.get<any>(url).pipe(
@@ -219,21 +219,21 @@ export class AuthenListService {
   }
 
   getListJobWasDoneAdmin(): Observable<any> {
-    
+
 
     return this.http.get<any>(this.api_getListJobWasDoneAdmin).pipe(
-      catchError(this.handleError) 
+      catchError(this.handleError)
     );
   }
   getAllRequest(): Observable<any> {
-  
+
     return this.http.get<any>(this.api_getAllRequest).pipe(
-      catchError(this.handleError) 
+      catchError(this.handleError)
     );
   }
   getAllInputSubMaterial(): Observable<any> {
     return this.http.get<any>(this.api_getAllInputSubMaterial).pipe(
-      catchError(this.handleError) 
+      catchError(this.handleError)
     );
   }
 
@@ -322,7 +322,7 @@ export class AuthenListService {
     const headers = new HttpHeaders({
       'Authorization': `Bearer ${token}`
     });
-    
+
     return this.http.get<any>(this.apiUrl_ViewProfile, { headers }).pipe(
       catchError(this.handleError)
     );
@@ -374,7 +374,7 @@ export class AuthenListService {
 
 
   addNewMaterial(MaterialData: any): Observable<any> {
-    
+
     return this.http.post<any>(this.apiUrl_GetAddMaterial, MaterialData).pipe(
       catchError(this.handleError)
     );
@@ -392,20 +392,20 @@ export class AuthenListService {
     );
   }
 
-  getAllMaterialName(): Observable<any>{
+  getAllMaterialName(): Observable<any> {
     return this.http.get<any>(this.api_getAllMaterialName).pipe(
-      catchError(this.handleError) 
+      catchError(this.handleError)
     );
   }
-  getAllSubMaterialName(): Observable<any>{
+  getAllSubMaterialName(): Observable<any> {
     return this.http.get<any>(this.api_getAllSubMaterialName).pipe(
-      catchError(this.handleError) 
+      catchError(this.handleError)
     );
   }
 
-  getAllStatusRequest(): Observable<any>{
+  getAllStatusRequest(): Observable<any> {
     return this.http.get<any>(this.api_getAllStatusRequest).pipe(
-      catchError(this.handleError) 
+      catchError(this.handleError)
     );
   }
   EditRequest(request_id: string, RequestData: any): Observable<any> {
@@ -415,8 +415,8 @@ export class AuthenListService {
     );
   }
 
-  
-  
+
+
   EditSupplier(id: string, suplierData: any): Observable<any> {
     const token = localStorage.getItem('loginToken');
     if (!token) {
@@ -433,7 +433,7 @@ export class AuthenListService {
       catchError(this.handleError)
     );
   }
-  
+
   uploadProductRequired(productRequiredData: any, images: File[]): Observable<any> {
     const formData = new FormData();
 
@@ -496,17 +496,19 @@ export class AuthenListService {
       catchError(this.handleError)
     );
   }
-  getFilterStatus(status_id : number): Observable<any> {
+  getFilterStatus(search: string, statusId: string): Observable<any> {
     const params = {
-     
-      status_id : status_id,
- 
+      search: search,
+
+      statusId: statusId,
+
     };
 
     const queryString = Object.entries(params)
       .filter(([key, value]) => {
+        if (key === 'search' && value === '') return false;
+        if (key === 'statusId' && value === "0") return false;
 
-        if (key === 'status_id' && value === 0) return false;
         return value != null;
       })
       .map(([key, value]) => `${encodeURIComponent(key)}=${encodeURIComponent(value)}`)
@@ -518,11 +520,11 @@ export class AuthenListService {
       catchError(this.handleError)
     );
   }
-  getFilterRole(query : number): Observable<any> {
+  getFilterRole(query: number): Observable<any> {
     const params = {
-     
-      query : query,
- 
+
+      query: query,
+
     };
 
     const queryString = Object.entries(params)

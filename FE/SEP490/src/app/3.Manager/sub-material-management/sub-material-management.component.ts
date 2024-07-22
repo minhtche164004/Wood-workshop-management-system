@@ -388,14 +388,25 @@ export class SubMaterialManagementComponent implements OnInit {
       (event: any) => {
         if (event.type === HttpEventType.UploadProgress) {
           const progress = Math.round((100 * event.loaded) / event.total);
-          console.log(`File is ${progress}% uploaded.`);
+      //    console.log(`File is ${progress}% uploaded.`);
         } else if (event instanceof HttpResponse) {
-          this.toastr.success('Cập nhật nguyên vật liệu thành công!', 'Thành công');
-          console.log('File is completely uploaded!', event.body);
+          if (event.body.result == null || event.body.result.length === 0) {
+            this.toastr.success('Cập nhật nguyên vật liệu thành công!', 'Thành công');
+          } else {
+            const errors = event.body.result.map((error: any) => 
+              `Hàng: ${error.row} - Cột: ${error.column}, Lỗi: ${error.errorMessage}`
+            ).join('<br>');
+            this.toastr.error(
+              `<div">${errors}</div>`, 
+              'Lỗi', 
+              { enableHtml: true }
+            );
+          }
+        
           this.getAllSubMaterials();
           this.resetFileInput(inputElement); // Reset file input
+          this.isLoadding = false;
         }
-        this.isLoadding = false;
       },
       (error) => {
         console.error('Upload error:', error);
@@ -406,6 +417,10 @@ export class SubMaterialManagementComponent implements OnInit {
       }
     );
   }
+  
+  
+  
+  
 
 resetFileInput(inputElement: HTMLInputElement) {
   inputElement.value = ''; // Reset the file input

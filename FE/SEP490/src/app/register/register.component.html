@@ -5,40 +5,41 @@
     <div style="margin-top: 40px;" class="form-container sign-up-container">
         <form (ngSubmit)="registerUser()" #registerForm="ngForm">
             <h1 style="margin-bottom: 20px;">Tạo tài khoản</h1>
+            
 
             <div class="input-container">
-                <label for="username">Tên tài khoản</label>
+                <label for="username">Tên tài khoản <span class="required">*</span></label>
                 <input type="text" id="username" name="username" [(ngModel)]="username" required>
             </div>
 
             <div class="input-container">
-                <label for="password">Mật khẩu</label>
+                <label for="password">Mật khẩu <span class="required">*</span></label>
                 <input type="password" id="password" name="password" [(ngModel)]="password" required>
             </div>
 
             <div class="input-container">
-                <label for="checkPass">Xác nhận mật khẩu</label>
+                <label for="checkPass">Xác nhận mật khẩu <span class="required">*</span></label>
                 <input type="password" id="checkPass" name="checkPass" [(ngModel)]="checkPass" required>
             </div>
  
             <div class="input-container">
-                <label for="email">Email</label>
+                <label for="email">Email <span class="required">*</span></label>
                 <input type="email" id="email" name="email" [(ngModel)]="email" required>
             </div>
 
             <div class="input-container">
-                <label for="phoneNumber">Số điện thoại</label>
+                <label for="phoneNumber">Số điện thoại <span class="required">*</span></label>
                 <input type="text" id="phoneNumber" name="phoneNumber" [(ngModel)]="phoneNumber" required>
             </div>
 
             <div class="input-container">
-                <label for="fullname">Họ tên</label>
+                <label for="fullname">Họ tên <span class="required">*</span></label>
                 <input type="text" id="fullname" name="fullname" [(ngModel)]="fullname" required>
             </div>
 
             <div class="row" style="justify-content: center;">
                 <div class="input-container col-md-4">
-                    <label for="province">Tỉnh / Thành Phố</label>
+                    <label for="province">Tỉnh / Thành Phố<span class="required">*</span></label>
                     <select id="province" [formControl]="provinceControl" required>
                         <option [ngValue]="null" disabled>Tỉnh / Thành Phố</option>
                         <option *ngFor="let province of provinces" [value]="province.name">{{ province.name }}</option>
@@ -46,7 +47,7 @@
                 </div>
 
                 <div class="input-container col-md-4">
-                    <label for="district">Quận / Huyện</label>
+                    <label for="district">Quận / Huyện <span class="required">*</span></label>
                     <select id="district" [formControl]="districtControl" required>
                         <option [ngValue]="null" disabled>Quận / Huyện</option>
                         <option *ngFor="let district of districts" [value]="district.name">{{ district.name }}</option>
@@ -54,7 +55,7 @@
                 </div>
 
                 <div class="input-container col-md-4">
-                    <label for="ward">Phường / Xã</label>
+                    <label for="ward">Phường / Xã <span class="required">*</span></label>
                     <select id="ward" [formControl]="wardControl" required>
                         <option [ngValue]="null" disabled>Phường / Xã</option>
                         <option *ngFor="let ward of wards" [value]="ward.name">{{ ward.name }}</option>
@@ -63,7 +64,7 @@
             </div>
 
             <div class="input-container">
-                <label for="address">Địa chỉ cụ thể</label>
+                <label for="address">Địa chỉ cụ thể <span class="required">*</span></label>
                 <input type="text" id="address" name="address" [(ngModel)]="address" required>
             </div>
 

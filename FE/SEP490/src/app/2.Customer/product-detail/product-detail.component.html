@@ -171,8 +171,8 @@
       <div class="col-lg-3">
         <div class="px-0 border rounded-2 shadow-0">
           <div class="card-body">
-            <h5 style="font-size: 20px; margin-bottom: 10px;" class="card-title">Sản phẩm tương tự</h5>
-            <div class="product-list" style="max-height: 350px; overflow-y: auto;">
+            <h5 style="font-size: 20px; margin-bottom: 10px;margin-top: 2%;" class="card-title text-center"><b>Sản phẩm tương tự</b></h5>
+            <div class="product-list" style="max-height: 350px; overflow-y: auto; padding: 3%;">
               <ng-container *ngFor="let cate of categoryProduct; let i = index">
                 <div class="d-flex mb-3" *ngIf="i < 8">
                   <a [routerLink]="['/product-details', cate.productId]" class="me-3">
@@ -182,7 +182,7 @@
                   </a>
                   <div class="info">
                     <a [routerLink]="['/product-details', cate.productId]" class="nav-link mb-1 product-name">
-                      {{ cate.productName }}
+                   <b> {{ cate.productName }}</b>  
                     </a>
                     <strong class="text-dark product-price">{{ cate.price | number: '1.0-3' }} VNĐ</strong>
                   </div>

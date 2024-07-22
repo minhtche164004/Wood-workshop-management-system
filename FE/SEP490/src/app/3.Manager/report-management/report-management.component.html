@@ -74,7 +74,7 @@
             <td>{{ product?.des }}</td>
             <td>
               <!-- {{ product.fix }} -->
-              <ng-container *ngIf="product.fix; else notFixed">
+              <ng-container *ngIf="product.fix; else notFixed" >
                 Đã khắc phục
               </ng-container>
               <ng-template #notFixed>Chưa khắc phục</ng-template>
@@ -184,7 +184,7 @@
                 <div class="col-md-6">         
                   <div class="col-md-6">
                 
-                    <select formControlName="isFixed" [ngModel]="errorDetail?.isFixed" >
+                    <select formControlName="isFixed" [ngModel]="errorDetail?.isFixed"  class="custom-select" style="width: 160%;">
                       <option [ngValue]="true" [selected]="errorDetail?.isFixed">Đã khắc phục</option>
                       <option [ngValue]="false" [selected]="!errorDetail?.isFixed">Chưa khắc phục</option>
                     </select>
@@ -199,10 +199,10 @@
               </div>
               <div class="row">
                 <div class="col-md-2">
-                  <label style="font-size: 16px;margin-top: 3%;" for="productName">Mô tả lỗi:</label>
+                  <label style="font-size: 16px;margin-top: 3%;" for="productName">Mô tả lỗi:<span class="required-asterisk">*</span></label>
                 </div>
-                <div class="col-md-8" style="margin-top:1% ;">
-                  <textarea style="width: 100%; font-size: 16px;" id="description" formControlName="description" name="des" >        
+                <div class="col-md-8" style="margin-top:1%">
+                  <textarea style="width: 100%; padding: 2%; font-size: 16px;" id="description" formControlName="description" name="des" >        
                   </textarea>
                 </div>
             </div>
@@ -210,10 +210,10 @@
               </div>        
               <div class="row">
                 <div class="col-md-2">
-                  <label style="font-size: 16px;margin-top: 3%;" for="productName">Giải pháp:</label>
+                  <label style="font-size: 16px;margin-top: 3%;" for="productName">Giải pháp:<span class="required-asterisk">*</span></label>
                 </div>
                 <div class="col-md-8" style="margin-top:1% ;">
-                  <textarea style="width: 100%; font-size: 16px; "id="solution" formControlName="solution" name="solution">
+                  <textarea style="width: 100%; font-size: 16px; padding: 2%; "id="solution" formControlName="solution" name="solution">
                
                  </textarea>
                 </div>               
@@ -237,7 +237,7 @@
     <div class="modal-content">
       <div class="modal-header">
         <h2 class="modal-title" id="confirmDeleteModalLabel">Xác nhận xóa sản phẩm</h2>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+        <button type="button" class="close " data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
@@ -247,7 +247,7 @@
     
       <div class="modal-footer" id="confirmDeleteModal">
         <button type="button" class="btn btn-secondary" data-dismiss="modal">Hủy bỏ</button>
-        <button type="button" class="btn btn-danger" (click)="deleteProduct()">Xác nhận</button>
+        <button type="button" class="btn btn-primary" (click)="deleteProduct()">Xác nhận</button>
       </div>
     </div>
   </div>

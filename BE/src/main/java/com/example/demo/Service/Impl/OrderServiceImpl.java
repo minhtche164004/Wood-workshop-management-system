@@ -270,7 +270,7 @@ public class    OrderServiceImpl implements OrderService {
     @Override
     public String ConfirmPayment(int order_id) {
         Orders orders = orderRepository.findById(order_id);
-        if(orders.getStatus().getStatus_id() == 1){//nghĩa là thanh toán bằng tiền mặt, và đang trong trạng thái là chờ đặt cọc
+        if(orders.getStatus().getStatus_id() == 1){//đang trong trạng thái là chờ đặt cọc
             Status_Order statusOrder = new Status_Order();
             if(orders.getSpecialOrder() == false){//nếu là hàng có sẵn thì set status order cho nó là đã thi công xong luôn(vì nó ko cần sản xuất nữa)
                 statusOrder = statusOrderRepository.findById(4);
@@ -735,7 +735,8 @@ public class    OrderServiceImpl implements OrderService {
             String email=orderDetailRepository.getMailOrderForSendMail(orderId);
             String code = orders.getCode();
             SimpleDateFormat dateFormatter = new SimpleDateFormat("dd/MM/yyyy");
-            String time_finish = dateFormatter.format(orders.getOrderFinish());
+//            String time_finish = dateFormatter.format(orders.getOrderFinish());
+            String time_finish = (orders.getOrderFinish() == null) ? "" : dateFormatter.format(orders.getOrderFinish());
             String time_start = dateFormatter.format(orders.getOrderDate());
             String status_name=statusOrder.getStatus_name();
             MailBody mailBody = MailBody.builder()

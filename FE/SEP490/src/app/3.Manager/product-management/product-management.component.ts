@@ -87,7 +87,7 @@ export class ProductManagementComponent implements OnInit {
   selectedStatus: number = 0;
   // selectedType: number = 0;
   selectedSortByPrice: string = '0';
-  selectedSortById: string = '';
+  selectedSortById: string = ''; 
   // thumbnail image and list image
   productImages: File[] = [];
   thumbnailImage: File | null = null;

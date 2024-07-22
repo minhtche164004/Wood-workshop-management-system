@@ -653,6 +653,7 @@ export class ProductManagementComponent implements OnInit {
         (data) => {
           this.isLoadding = false;
           if (data.code === 1000) {
+            this.currentPage = 1;
             this.products = data.result;
             console.log('Lọc sản phẩm thành công:', this.products);
             //      this.toastr.success('Lọc sản phẩm thành công!', 'Thành công');
@@ -673,6 +674,7 @@ export class ProductManagementComponent implements OnInit {
         (data) => {
           this.isLoadding = false;
           if (data.code === 1000) {
+            this.currentPage = 1;
             this.products = data.result;
             console.log('Lọc sản phẩm thành công:', this.products);
             this.toastr.success('Lọc sản phẩm thành công!', 'Thành công');

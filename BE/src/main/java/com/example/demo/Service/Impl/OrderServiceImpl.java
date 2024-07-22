@@ -626,35 +626,11 @@ public class    OrderServiceImpl implements OrderService {
 
     @Override
     public List<RequestProductAllDTO> GetAllProductRequest() {
-        List<RequestProductAllDTO> list_request = new ArrayList<>();
+      //  List<RequestProductAllDTO> list_request = new ArrayList<>();
         List<RequestProductAllDTO> list = requestProductRepository.getAllRequestProduct();
-
-        for (RequestProductAllDTO re : list) {
-            String full_path = " ";  // Đặt lại giá trị cho mỗi lần lặp
-            String list_image = productRequestimagesRepository.findFirstFullPathImageByProductTest(re.getRe_productId());
-            if(list_image
-                    != null) {
-                full_path = list_image;
-            }
-            RequestProductAllDTO request = new RequestProductAllDTO(
-                    re.getRe_productId(),
-                    re.getRe_productName(),
-                    re.getDescription(),
-                    re.getPrice(),
-                    re.getQuantity(),
-                    re.getCompletionTime(),
-                    re.getStatus_id(),
-                    re.getStatus_name(),
-                    re.getProductImageId(),
-                    full_path,
-                    re.getCode(),
-                    re.getRequest_id()
-            );
-
-            list_request.add(request); // Thêm đối tượng request vào danh sách kết quả
-        }
-        return list_request;
+        return list;
     }
+
 
 //    private String getAddressLocalComputer(String imagePath) {
 //        int assetsIndex = imagePath.indexOf("/assets/");
@@ -779,31 +755,7 @@ public class    OrderServiceImpl implements OrderService {
                 productList.sort(Comparator.comparing(RequestProductAllDTO::getPrice).reversed());
             }
         }
-        List<RequestProductAllDTO> list = requestProductRepository.getAllRequestProduct();
-        for (RequestProductAllDTO re : list) {
-            String full_path = " ";  // Đặt lại giá trị cho mỗi lần lặp
-            String list_image = productRequestimagesRepository.findFirstFullPathImageByProductTest(re.getRe_productId());
-            if(list_image
-                    != null) {
-                full_path = list_image;
-            }
-            RequestProductAllDTO request = new RequestProductAllDTO(
-                    re.getRe_productId(),
-                    re.getRe_productName(),
-                    re.getDescription(),
-                    re.getPrice(),
-                    re.getQuantity(),
-                    re.getCompletionTime(),
-                    re.getStatus_id(),
-                    re.getStatus_name(),
-                    re.getProductImageId(),
-                    full_path,
-                    re.getCode(),
-                    re.getRequest_id()
-            );
 
-            productList.add(request); // Thêm đối tượng request vào danh sách kết quả
-        }
         return productList;
 //        return productList;
     }

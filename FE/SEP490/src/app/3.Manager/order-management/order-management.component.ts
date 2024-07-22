@@ -29,7 +29,7 @@ export class OrderManagementComponent implements OnInit {
   currentPage: number = 1;
   position: any[] = [];
   status_order: any[] = [];
-  selectedCategory: number = 0;
+  selectedCategory: string = '';
   OrderdetailById: any = {};
   isLoadding: boolean = false;
   selectedC: number | null = null;
@@ -49,7 +49,7 @@ export class OrderManagementComponent implements OnInit {
     this.getAllOrder();
 
   }
-
+  searchKey: string = '';
   selectedModalJob: string = '';
   selectedModalId: string = '';
   indexStatus: number = 0;
@@ -62,14 +62,14 @@ export class OrderManagementComponent implements OnInit {
     this.selectedModalJob = orderId.toString();
     this.selectedModalId = statusId;
     this.indexStatus = index;
-  
+
     console.log('event:', event);
     console.log('Job ID:', this.selectedModalJob, 'Status ID:', statusId);
-  
+
     // Trigger the modal open action
     this.launchModalButton.nativeElement.click();
   }
-  
+
   closeModal(event: Event): void {
     // const statusId = (event.target as HTMLSelectElement).value;
     // const selectedStatusOption = this.status_order.find(status => status.status_id == parseInt(statusId));
@@ -79,7 +79,7 @@ export class OrderManagementComponent implements OnInit {
     // }
     this.realoadgetAllUser();
   }
- 
+
   getOrderStatus(): void {
     this.orderService.getOrderStatus().subscribe(
       (data: any) => {
@@ -104,7 +104,7 @@ export class OrderManagementComponent implements OnInit {
       this.productListService.getAllOrder().subscribe(
         (data: ApiResponse) => {
           if (data.code === 1000) {
-            this.user = data.result;
+            this.user = data.result.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
             this.isLoadding = false;
           } else {
             console.error('Failed to fetch products:', data);
@@ -124,22 +124,22 @@ export class OrderManagementComponent implements OnInit {
     }
   }
   realoadgetAllUser(): void {
-  
+
     this.productListService.getAllOrder().subscribe(
       (data: ApiResponse) => {
         if (data.code === 1000) {
           this.user = data.result;
-        
+
 
         } else {
           console.error('Failed to fetch products:', data);
-        
+
 
         }
       },
       (error) => {
         console.error('Error fetching products:', error);
-     
+
 
 
 
@@ -234,7 +234,7 @@ export class OrderManagementComponent implements OnInit {
         this.toastr.success('Thay đổi tình trạng  thành công.');
 
         $('[data-dismiss="modal"]').click();
-       
+
       },
       error => {
         this.isLoadding = false;
@@ -260,10 +260,10 @@ export class OrderManagementComponent implements OnInit {
   }
   filterStatus(): void {
     console.log(this.selectedCategory);
+    console.log("Lọc sản phẩm với từ khóa:", this.searchKey, ", danh mục:", this.selectedCategory);
     this.isLoadding = true;
-    const selectedStatusOption = this.userStatus.find(status => status.status_id === this.selectedCategory);
-    if (this.selectedCategory !== 0) {
-      this.authenListService.getFilterStatus(this.selectedCategory)
+    if (this.selectedCategory !== "0") {
+      this.authenListService.getFilterStatus(this.searchKey, this.selectedCategory)
         .subscribe(
           (data) => {
             if (data.code === 1000) {
@@ -272,10 +272,10 @@ export class OrderManagementComponent implements OnInit {
               this.isLoadding = false;
 
             } else if (data.code === 1015) {
-              this.realoadgetAllUser();
-              this.isLoadding = false;
-              
+              this.user = [];
+            
 
+              this.isLoadding = false;
             }
 
           },
@@ -289,7 +289,7 @@ export class OrderManagementComponent implements OnInit {
   }
   setOrderForPayment(orderId: number) {
     this.selectedOrderId = orderId;
-   
+
   }
   confirmCancel() {
     this.isLoadding = true;
@@ -318,18 +318,19 @@ export class OrderManagementComponent implements OnInit {
     this.isLoadding = true;
     if (this.selectedOrderId !== null) {
       this.authenListService.Paymentmoney(this.selectedOrderId).subscribe({
-        next: (response: any ) => {
-         if(response.code == 1000){
-          this.toastr.success(response.result);
-          this.realoadgetAllUser();
-    
-          this.isLoadding = false;
-          const closeModalButton = document.querySelector('.close') as HTMLElement;
-          if (closeModalButton) {
-            closeModalButton.click();
+        next: (response: any) => {
+          if (response.code == 1000) {
+            this.toastr.success(response.result);
+            this.realoadgetAllUser();
+
+            this.isLoadding = false;
+            const closeModalButton = document.querySelector('.close') as HTMLElement;
+            if (closeModalButton) {
+              closeModalButton.click();
+            }
+            $('[data-dismiss="modal"]').click();
           }
-          $('[data-dismiss="modal"]').click();
-        }},
+        },
         error: (error: HttpErrorResponse) => {
           this.isLoadding = false;
           this.toastr.error('Thanh toán thất bại');
@@ -339,5 +340,5 @@ export class OrderManagementComponent implements OnInit {
       });
     }
   }
-  
+
 }

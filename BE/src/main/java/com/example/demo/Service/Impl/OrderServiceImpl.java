@@ -736,7 +736,7 @@ public class    OrderServiceImpl implements OrderService {
             String code = orders.getCode();
             SimpleDateFormat dateFormatter = new SimpleDateFormat("dd/MM/yyyy");
 //            String time_finish = dateFormatter.format(orders.getOrderFinish());
-            String time_finish = (orders.getOrderFinish() == null) ? null : dateFormatter.format(orders.getOrderFinish());
+            String time_finish = (orders.getOrderFinish() == null) ? "" : dateFormatter.format(orders.getOrderFinish());
             String time_start = dateFormatter.format(orders.getOrderDate());
             String status_name=statusOrder.getStatus_name();
             MailBody mailBody = MailBody.builder()

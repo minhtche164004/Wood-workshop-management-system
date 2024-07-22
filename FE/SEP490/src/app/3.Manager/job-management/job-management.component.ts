@@ -11,6 +11,7 @@ import { ProductService } from 'src/app/service/product.service';
 import { MatDialog, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import 'jquery';
 import { EmployeeService } from 'src/app/service/employee.service';
+import { isCancel } from 'axios';
 
 declare var $: any;
 
@@ -32,7 +33,7 @@ export class JobManagementComponent implements OnInit {
   productRQs: any[] = [];
   currentPage: number = 1;
   searchKey: string = '';
-  selectedEmployee: any = {};
+  selectedEmployee: any='';
   selectedCategory: number = 0;
   selectedStatus: number = 0;
   selectedProduct: any = {}; // Biến để lưu trữ sản phẩm được chọn
@@ -168,13 +169,13 @@ cancelChangeStatusJob() {
       (data) => {
         if (data.code === 1000) {
           this.toastr.success('Cập nhật trạng thái làm việc thành công!', 'Thành công');
-          console.log('Đổi trạng thái job thành công'); this.isLoadding = false;
+      //    console.log('Đổi trạng thái job thành công'); this.isLoadding = false;
           if (this.selectedCategory === 1) {
             console.log('SP có sẵn');
             $('[data-dismiss="modal"]').click();
             this.loadProduct();
           } else if (this.selectedCategory === 0) {
-            console.log('SP không có sẵn');
+        //    console.log('SP không có sẵn');
             this.loadProductRQForJob();
             $('[data-dismiss="modal"]').click();
           }
@@ -196,7 +197,7 @@ cancelChangeStatusJob() {
         (data) => {
           if (data.code === 1000) {
             this.statusSearch = data.result.filter((item: any) => [1, 2, 3, 4].includes(item.type));
-            console.log('Status Job :', this.statusSearch);
+     //       console.log('Status Job :', this.statusSearch);
           }
           resolve();
         },
@@ -240,18 +241,19 @@ cancelChangeStatusJob() {
 
   createNewJob() {
 
-    this.isLoadding = true;
+   // this.isLoadding = true;
     console.log('Selected Employee:', this.selectedEmployee);
+    console.log('Selected Product:', this.selectedProduct);
     const user_id = this.selectedEmployee;
-
     const p_id = this.selectedProduct.product_id; // Thay đổi giá trị tùy theo sản phẩm
     let status_id = this.selectedProduct.statusJob?.status_id; // Thay đổi giá trị tùy theo trạng thái
     const job_id = this.selectedProduct.job_id; // Thay đổi giá trị tùy theo công việc
     const type_id = this.selectedCategory; // cho sp có sẵn     0 - k có sẵn
     let position_id = this.selectedProduct.position_id + 1;
-
-    //  console.log('JobName:', position_name);
+    
+    //  console.log('JobName:', this.selectedProduct.position_name);
     const jobData = this.createJobs.value;
+
     if (status_id === 6) {
       status_id = 7;
     } else if (status_id === 3) {
@@ -262,25 +264,29 @@ cancelChangeStatusJob() {
 
     // console.log('emp_id:', user_id);
     // console.log('mate_id:', position_id);
-    // console.log('id:', p_id);
-    const quantity = this.selectedProduct.quantity;
-    let modifiedPositionName = this.selectedProduct.position_name.replace(/Thợ/g, 'Làm');
 
+
+    const quantity = this.selectedProduct.quantity;
+    let modifiedPositionName = this.positionName.replace(/Thợ/g, 'Làm');
+    console.log('Modified Position Name:', modifiedPositionName);
     const createJobs = {
       quantity_product: quantity,
       job_name: modifiedPositionName
     };
-    //   console.log('quantity productForm:', createJobs);
-    //   console.log('code :', this.selectedProduct.code);
+    console.log('createJobs before API call:', createJobs);
+
+      console.log('code :', this.selectedProduct.code);
     if (this.selectedProduct.code == null) {
       this.isLoadding = true
-      console.log("consolo lod: ", this.isLoadding)
+    //  console.log("consolo lod: ", this.isLoadding)
+    console.log("create form:", createJobs);
+    console.log('API parameters:', p_id, position_id, user_id, createJobs);
       this.jobService.createExportMaterialProductTotalJob(p_id, position_id, user_id, createJobs).subscribe(
         (data) => {
           if (data.code === 1000) {
             this.toastr.success('Xuất nguyên liệu thành công', 'Thành công');
             console.log('Xuất nguyên liệu thành công');
-            this.jobService.addJob(user_id, p_id, status_id, job_id, type_id, jobData).subscribe(
+            this.jobService.addJob(user_id, p_id, status_id, job_id, type_id, createJobs).subscribe(
               (data) => {
                 if (data.code === 1000) {
                   this.pForJob = data.result;
@@ -288,8 +294,8 @@ cancelChangeStatusJob() {
 
 
                   this.isLoadding = false;
-                  console.log("consolo lod flase: ", this.isLoadding)
-                  this.loadProduct();
+           //       console.log("consolo lod flase: ", this.isLoadding)
+                 this.loadProduct();
                   $('[data-dismiss="modal"]').click();
                 }
                 this.isLoadding = false;
@@ -328,21 +334,21 @@ cancelChangeStatusJob() {
     } else if (this.selectedProduct.code != null) {
 
       this.isLoadding = true
-      console.log("consolo lod: ", this.isLoadding)
-      console.log("exort submaterial product request");
+    //  console.log("consolo lod: ", this.isLoadding)
+    //  console.log("exort submaterial product request");
       this.jobService.createExportMaterialRequestTotalJob(p_id, position_id, user_id, createJobs).subscribe(
         (data) => {
           if (data.code === 1000) {
             this.toastr.success('Xuất nguyên liệu thành công', 'Thành công');
-            console.log('Xuất nguyên liệu thành công');
-            this.jobService.addJob(user_id, p_id, status_id, job_id, type_id, jobData).subscribe(
+       //     console.log('Xuất nguyên liệu thành công');
+            this.jobService.addJob(user_id, p_id, status_id, job_id, type_id, createJobs).subscribe(
               (data) => {
                 if (data.code === 1000) {
                   this.pForJob = data.result;
                   // console.log('Add product for job:', this.pForJob);
                   // this.toastr.success('Thêm sản phẩm sản xuất thành công!', 'Thành công');
                   $('[data-dismiss="modal"]').click(); this.isLoadding = false;
-                  console.log("consolo lod false: ", this.isLoadding)
+          //        console.log("consolo lod false: ", this.isLoadding)
                   this.loadProductRQForJob();
                 } else {
                   // console.error('Failed to fetch products:', data);
@@ -426,10 +432,12 @@ cancelChangeStatusJob() {
     );
   }
   selectedPosEmp: any = {};
+  empId: number = 0;
   onChangeSelectedEmployee(event: any) {
     this.selectedEmployee = event.target.value;
     console.log('Selected employee ID:', event.target.value);
-    // this.selectedPosEmp = 
+    this.empId = event.target.value;
+    this.getPositionNameById(this.empId);
   }
 
   onChangeSearch(search: string) {
@@ -499,7 +507,7 @@ cancelChangeStatusJob() {
   }
 
   getStatusOptions(product: any) {
-    console.log('Product:', product);
+//    console.log('Product:', product);
     this.jobService.getStatusJobByType(product.statusJob.type).subscribe(
       (data) => {
         // console.log('Status Job:', data);
@@ -513,8 +521,10 @@ cancelChangeStatusJob() {
 
   listErrorJob: any[] = [];
   loadProductRQForJob(): Promise<void> {
+    this.currentPage = 1;
     return new Promise((resolve, reject) => {
       this.isLoadding = true;
+    
       this.jobService.getListProductRQ().subscribe(
         (data) => {
           if (data.code === 1000) {
@@ -539,11 +549,12 @@ cancelChangeStatusJob() {
   }
   
   checkJobsForErrors() {
+    this.listErrorJob = [];
     const errorCheckPromises = this.productRQs.map((product) => {
       return this.jobService.checkErrorOfJob(product.job_id).toPromise().then(
         (data) => {
-          if (data.result === true) {
-            console.log(`Job ${product.job_id} has errors`);
+          if (data.result === false) {
+  //          console.log(`Job ${product.job_id} has errors`);
             this.listErrorJob.push(product.job_id);
           }
         },
@@ -555,16 +566,18 @@ cancelChangeStatusJob() {
 
     Promise.all(errorCheckPromises).then(() => {
       this.isLoadding = false;
-      console.log('Jobs with errors:', this.listErrorJob);
+   //   console.log('Jobs with errors:', this.listErrorJob);
     });
   }
   loadProduct() {
+    this.currentPage = 1;
     this.jobService.getListProduct().subscribe(
       (data) => {
         if (data.code === 1000) {
           this.productRQs = data.result;
           this.selectedCategory = 1;
           // console.log('Sp cho job:', this.productRQs);
+          this.checkJobsForErrors();
         } else {
           //   console.error('Failed to fetch products:', data);
           this.toastr.error('Không thể lấy danh sách sản phẩm!', 'Lỗi');
@@ -607,7 +620,7 @@ cancelChangeStatusJob() {
   manageJob(product: any): void {
     this.isLoadding = true;
     this.selectedProduct = { ...product };
-    console.log('Product:', this.selectedProduct);
+  //  console.log('Product:', this.selectedProduct);
     this.jobId = this.selectedProduct.job_id;
     this.jobService.getJobDetailById(this.jobId).subscribe(
       (data) => {
@@ -661,26 +674,19 @@ cancelChangeStatusJob() {
     $('[data-dismiss="modal"]').click(); this.isLoadding = false;
   }
 
-  checkErrorStatus(jobId: number): void {
-    console.log("list job to check error: ",)
-    // this.jobService.checkErrorOfJob(jobId).subscribe(
-    //   data => {
-    //     if (data.code === 1000) {
-    //       this.errorCheckResults[jobId] = data.result.errorFixed;
-    //     }
-    //   },
-    //   error => {
-    //     console.error('Error fetching job status', error);
-    //   }
-    // );
-  }
-  cancelAssign() {
-    if (this.selectedCategory === 0) {
-      this.loadProductRQForJob();
-    } else if (this.selectedCategory === 1) {
-      this.loadProduct();
+   isCancel: boolean = false;
+  cancelAssign(): void {
+    if (this.isCancel) {
+      console.log('Cancel Assign Called');
+      this.selectedEmployee = '';
+      if (this.selectedCategory === 0) {
+        this.loadProductRQForJob();
+      } else if (this.selectedCategory === 1) {
+        this.loadProduct();
+      }
     }
   }
+  
   getSubMTRProductRQ(id: number, mate_id: number) {
     this.jobService.getSubMTRProductRQ(id, mate_id).subscribe(
       (data) => {
@@ -727,9 +733,9 @@ cancelChangeStatusJob() {
   }
   showJobDetail(job: any) {
     let mate_id = job.position_id;
-    console.log('Mate ID:', mate_id);
-    console.log('Product ID:', job.product_id);
-    console.log('productName:', job.product_name);
+  //  console.log('Mate ID:', mate_id);
+   // console.log('Product ID:', job.product_id);
+   // console.log('productName:', job.product_name);
     this.selected_productName = job.product_name;
     // this.isLoadding = true;  
     this.jobService.getSubMTRProduct(job.product_id, mate_id).subscribe(  //thay bang api goi job product submaterial
@@ -756,7 +762,7 @@ cancelChangeStatusJob() {
 
           this.isLoadding = false;
         } else {
-          console.error('Failed to fetch products:', data);
+    //      console.error('Failed to fetch products:', data);
           this.toastr.error('Không thể lấy danh sách sản phẩm!', 'Lỗi');
           this.isLoadding = false;
         }
@@ -773,11 +779,11 @@ cancelChangeStatusJob() {
   user_name: string = '';
   JOBID: number = 0;
   editJobDetail(job: any, job_id: number): void {
-    console.log('Job ID:', job_id);
+  //  console.log('Job ID:', job_id);
     this.JOBID = job_id;
     this.isLoadding = true;
     this.user_name = job.user_name;
-    console.log('User name:', this.user_name);
+ //   console.log('User name:', this.user_name);
     // Fetch job detail by ID
     this.jobService.getJobDetailById(job_id).subscribe(
       (data) => {
@@ -797,7 +803,7 @@ cancelChangeStatusJob() {
             start: data.result.timeStart,
             cost: data.result.cost
           });
-          console.log('Form editJob value:', this.editJob.value);
+  //        console.log('Form editJob value:', this.editJob.value);
           this.isLoadding = false;
         } else {
           //   console.error('Failed to fetch job detail:', data);
@@ -824,8 +830,8 @@ cancelChangeStatusJob() {
     // console.log('Form Values:', this.errorForm.value);
     const errorFormData = this.editJob.value;
     const jobid = this.JOBID;
-    console.log('JOBID: ', this.JOBID)
-    console.log('error edit form saveChanges:', errorFormData);
+  //  console.log('JOBID: ', this.JOBID)
+   // console.log('error edit form saveChanges:', errorFormData);
     this.jobService.editJob(jobid, errorFormData).subscribe(
       (response) => {
         if (response.code === 1000) {
@@ -849,9 +855,9 @@ cancelChangeStatusJob() {
     this.isLoadding = true;
 
     const jobId = this.selectedProduct.job_id; // Hoặc lấy từ giá trị khác nếu cần
-    console.log('Job ID:', jobId);
+  //  console.log('Job ID:', jobId);
     const formValues = this.errorForm.value;
-    console.log('Form values:', formValues);
+  //  console.log('Form values:', formValues);
     this.productListService.createProductError(
       jobId,
       formValues.description,
@@ -892,7 +898,7 @@ cancelChangeStatusJob() {
         if (data.code === 1000) {
           this.subMaterialProduct = data.result;
           this.isLoadding = false;
-          console.log("Sub-material product data:", this.subMaterialProduct);
+    //      console.log("Sub-material product data:", this.subMaterialProduct);
         } else {
           console.error('Failed to fetch products:', data);
           this.isLoadding = false;
@@ -918,13 +924,10 @@ cancelChangeStatusJob() {
   onSearch(selectedCategory: number, searchKey: string): void {
     this.checkNotFound = false;
     // console.log('checkNotFound:', this.checkNotFound);
-    console.log("Selected cate: ", this.selectedStatusJob)
+  //  console.log("Selected cate: ", this.selectedStatusJob)
     // console.log('Thực hiện tìm kiếm:', searchKey);
     // console.log('Category:', selectedCategory);
      console.log('Position:', this.selectedPosSearch);
-
-
-
     this.isLoadding = true;
     if (selectedCategory === 1) {
       this.jobService.multiSearchJob(searchKey, this.selectedStatusJob, this.selectedPosSearch).subscribe(
@@ -933,19 +936,19 @@ cancelChangeStatusJob() {
           if (data.code === 1000) {
             this.productRQs = data.result;
             this.currentPage = 1;
-            console.log('Danh sách sản phẩm search:', this.productRQs);
+      //      console.log('Danh sách sản phẩm search:', this.productRQs);
           } else if (data.code === 1015) {
-            console.log('Danh sách sản phẩm search:', this.productRQs);
+       //     console.log('Danh sách sản phẩm search:', this.productRQs);
             this.checkNotFound = true;
             this.productRQs = [];
-            console.log("checkNotFound job:", this.checkNotFound);
+       //     console.log("checkNotFound job:", this.checkNotFound);
           }
 
           this.isLoadding = false;
           this.checkNotFound = true;
         },
         (error) => {
-          console.log('Error fetching products:', error);
+       //   console.log('Error fetching products:', error);
 
           this.isLoadding = false;
           this.checkNotFound = true;
@@ -959,13 +962,13 @@ cancelChangeStatusJob() {
         (data) => {
           if (data.code === 1000) {
             this.productRQs = data.result;
-            console.log('Danh sách sản phẩm request:', this.productRQs);
+      //      console.log('Danh sách sản phẩm request:', this.productRQs);
             this.currentPage = 1;
           } else if (data.code === 1015) {
-            console.log('Khoong thay san pham request');
+       //     console.log('Khoong thay san pham request');
             this.productRQs = [];
             this.checkNotFound = true;
-            console.log("checkNotFound jobRequest:", this.checkNotFound);
+      //      console.log("checkNotFound jobRequest:", this.checkNotFound);
           }
 
           this.isLoadding = false;
@@ -984,13 +987,33 @@ cancelChangeStatusJob() {
   //   console.log("Selected cate: ", cate)
   //   console.log("Search key: ", searchKey)
   // }
+  positionName: string = '';
+  getPositionNameById(id: number): string {
+    this.positionName = '';
+    console.log('Position Employees:', this.positionEmployees);
+
+    console.log('Position Name check id:', typeof id);
+
+    this.positionEmployees.forEach((item) => {
+        const userIdNum = item.userId.toString(); // Chuyển userId thành số
+        console.log('Type of userId:', typeof userIdNum);
+        if (userIdNum === id) {
+            console.log('Position Name check id:', item.position?.position_name);
+            this.positionName = item.position?.position_name;
+        }
+    });
+
+    console.log('Position Name check id:', this.positionName);
+    return this.positionName;
+}
+
   loadPosition3(product: any) {
     this.selectedProduct = { ...product };
     this.type = this.selectedProduct.statusJob.type;
     let positon = this.selectedProduct.position_id;
-    console.log('posion truoc khi cong:', positon);
+ //   console.log('posion truoc khi cong:', positon);
     const statusId = this.selectedProduct.statusJob?.status_id;
-    console.log('Status ID:', this.selectedProduct.statusJob?.status_id);
+  //  console.log('Status ID:', this.selectedProduct.statusJob?.status_id);
 
     positon += 1;
     this.jobService.GetPosition3(positon).subscribe(
@@ -1012,7 +1035,7 @@ cancelChangeStatusJob() {
         (data: any) => {
           if (data.code === 1000) {
             this.positionsSearch = data.result;
-            console.log("Position search: ", this.positionsSearch);
+      //      console.log("Position search: ", this.positionsSearch);
           } else {
             console.error('Invalid data returned:', data);
           }

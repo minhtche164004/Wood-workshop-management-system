@@ -183,11 +183,11 @@ export class OrderManagementComponent implements OnInit {
   getOrDetailById(us: any, order_detail_id: string): void {
     //  this.isLoadding = true;
     //   console.log('Order_detail_id:', order_detail_id);
-    this.authenListService.getOrderDetailById(order_detail_id).subscribe(
+    this.authenListService.getOrderDetailById(us.orderId).subscribe(
       (data) => {
         this.OrderdetailById = data.result;
         this.isLoadding = false;
-        console.log('OrderdetailById tối 20/7:', data.result);
+        console.log('OrderdetailById:', data.result);
         // console.log('OrderdetailById:', this.OrderdetailById);
       },
       (error) => {
@@ -196,10 +196,9 @@ export class OrderManagementComponent implements OnInit {
 
       }
     );
-    console.log("order detail: ", us)
-    console.log("order detail id: ", us.orderId)
-
-    this.orderRequestService.getAllOrderDetailByOrderId(us.orderId).subscribe(
+    // console.log("order detail: ", us)
+    // console.log("order detail id: ", us.orderId)
+    this.orderRequestService.getAllOrderDetailByOrderId(order_detail_id).subscribe(
       (data) => {
         this.productOfOrder = data.result;
         this.isLoadding = false;

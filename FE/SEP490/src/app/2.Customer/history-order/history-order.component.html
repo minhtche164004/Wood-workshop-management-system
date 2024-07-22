@@ -47,12 +47,16 @@
               <thead>
                 <tr>
 
-                  <th style="width: 200px;">Mã đơn</th>
-                  <th style="width: 200px;">Thao tác</th>
+                  <th style="width: 200px;">Mã đơn hàng</th>
+                  <!-- <th style="width: 2px;">Thao tác</th> -->
+                  <th style="width: 200px;">Loại đơn hàng</th>
+                  <th >Ngày đặt hàng</th>
                   <th>Ngày hoàn thành</th>
-                  <th>Tình trạng</th>
-                  <th style="width: 200px;">Kiểu thanh toán</th>
-                  <th style="width: 200px;">Tổng tiền(vnd)</th>
+                  <th>Tình trạng đơn hàng</th>
+                 
+                  <th style="width: 160px;">Kiểu thanh toán</th>
+                  <th style="width: 150px;">Tổng tiền(VNĐ)</th>
+                  <th>Lí do từ chối</th>
                 </tr>
               </thead>
               <tbody>
@@ -60,21 +64,26 @@
                   *ngFor="let hs of history_order | paginate: { itemsPerPage: 10, currentPage: currentPage }; let i = index">
 
                   <td>{{ hs?.code }}</td>
-                  <td class="action-buttons">
-                    <!-- <a href="#" class="delete" title="Delete" data-toggle="modal" data-target="#confirmDeleteModal">
-                      <i class="fa-regular fa-trash-can"></i>
-                    </a> -->
+                  <!-- <td class="action-buttons">
+                   
                     <a href="#" class="info" title="Xem chi tiết" data-toggle="modal" data-target="#productDetailModal" (click)="historyOrderDetail(hs.orderId)">
                       <i class="fa-solid fa-ellipsis-vertical"></i>
                     </a>
+                  </td> -->
+                  <td style="min-width: 140px;">
+                    {{ hs?.specialOrder ? 'Đơn hàng đặc biệt' : 'Đơn hàng có sẵn' }}
                   </td>
+
                   <td>{{ hs?.orderDate | date:'dd/MM/yyyy' }}</td>
+                  <td>{{ hs?.orderFinish | date:'dd/MM/yyyy' }}</td>
                   <td>{{ hs?.status.status_name}}</td>
-                  <td
-                    [ngStyle]="{'color': hs?.paymentMethod === 1 ? 'green' : (hs?.paymentMethod === 0 ? 'red' : 'black')}">
-                    {{ hs?.paymentMethod === 1 ? 'Chuyển khoản' : (hs?.paymentMethod === 0 ? 'Tiền mặt' : '') }}
-                  </td>
-                  <td>{{ hs?.totalAmount | number : '1.0-3' }}</td>
+                  
+                  <td style=" min-width: 30px;"
+                  [ngStyle]="{'color': hs?.paymentMethod === 2 ? 'green' : (hs?.paymentMethod === 1 ? 'red' : 'black')}">
+                  {{ hs?.paymentMethod === 2 ? 'Chuyển khoản' : (hs?.paymentMethod === 1 ? 'Tiền mặt' : '') }}
+                </td>
+                  <td style="text-align: right;">{{ hs?.totalAmount | number : '1.0-3' }}</td>
+                  <td>{{ hs?.response}}</td>
                 </tr>
               </tbody>
             </table>

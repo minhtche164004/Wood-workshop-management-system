@@ -76,6 +76,12 @@
                         </li>
                     </ng-container>
                     <ng-template #loggedOutLinks>
+                        <li class="nav-item">
+                            <a class="nav-link active" style="cursor: pointer;" (click)="showLoginMessage()">Đặt hàng</a>
+                        </li>
+                    </ng-template>
+                    
+                    <ng-template #loggedOutLinks>
                         <!-- Add your logged-out links here -->
                     </ng-template>
                 </ul>

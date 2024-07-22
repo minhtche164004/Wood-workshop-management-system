@@ -4,6 +4,7 @@ import { HttpClient } from '@angular/common/http';
 import { environment } from 'src/app/environments/environment';
 import { WishlistService } from 'src/app/service/wishlist.service';
 import { ToastrService } from 'ngx-toastr';
+import { AuthenListService } from 'src/app/service/authen.service';
 
 @Component({
   selector: 'app-product-detail',
@@ -20,8 +21,9 @@ export class ProductDetailComponent implements OnInit {
   isLoadding: boolean = false;
   largeImageUrl_Cate: string = '';
   listWoodMaterial: string[] = [];
+  countwishlist: number = 0;
   listPaintMaterial: string[] = [];
-  constructor(private route: ActivatedRoute, private http: HttpClient, private wishList: WishlistService, private toastr: ToastrService) {
+  constructor(private route: ActivatedRoute,private authenListService: AuthenListService, private http: HttpClient, private wishList: WishlistService, private toastr: ToastrService) {
     this.onTabClick('description');
   }
 
@@ -39,10 +41,10 @@ export class ProductDetailComponent implements OnInit {
         console.log('data:', data);
         if (data.code === 1000) {
           this.toastr.success('Sản phẩm đã được thêm vào yêu thích!', 'Thành công');
+       
           this.isLoadding = false;
-        } else if (data.code === 1034) {
-          this.toastr.error('Sản phẩm đã được thêm vào yêu thích!', 'Thành công');
-        } else {
+
+        }  else {
         
           this.toastr.warning('Vui lòng đăng nhập để thêm sản phẩm yêu thích!', 'Lỗi');
           this.isLoadding = false;
@@ -55,7 +57,19 @@ export class ProductDetailComponent implements OnInit {
       }
     );
   }
-
+  wishlistcount(): void {
+    this.authenListService.GetByIdWishList().subscribe(
+      (data) => {
+        if (data != null || data != undefined)
+          this.countwishlist = data.result.length; // Lưu trữ dữ liệu nhận được từ API vào biến wishlistItems
+        else this.countwishlist = 0
+      },
+      (error) => {
+        // console.error('Failed to fetch wishlist:', error);
+        // Xử lý lỗi nếu cần thiết
+      }
+    );
+  }
   getProductDetails(id: number) {
     this.isLoadding = true
     this.http.get(`${environment.apiUrl}api/auth/product/ViewDetailProductById?id=${id}`)

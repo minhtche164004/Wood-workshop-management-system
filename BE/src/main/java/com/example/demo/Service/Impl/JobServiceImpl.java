@@ -235,12 +235,12 @@ public class JobServiceImpl implements JobService {
 //    }
 
     private boolean checkOderDoneOrNot(int order_id) {
-        List<OrderDetailWithJobStatusDTO> results = orderDetailRepository.getAllOrderDetailByOrderId(order_id);
-        for(OrderDetailWithJobStatusDTO p :results){
-            if(p.getStatus_job_id() != 13){
+        List<OrderDetailWithJobStatusDTO> results = orderDetailRepository.getAllOrderDetailByOrderIdCheck(order_id);
+     //   for(OrderDetailWithJobStatusDTO p :results){
+            if(results.size() >= 1){
                 return false;
             }
-        }
+       // }
         return true;
     }
 

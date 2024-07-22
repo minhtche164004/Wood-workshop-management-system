@@ -94,7 +94,7 @@ public interface OrderDetailRepository extends JpaRepository<Orderdetails, Integ
             "JOIN od.requestProduct rp " +  // Sử dụng INNER JOIN
             "JOIN od.jobs j " + // Sử dụng INNER JOIN
             "JOIN j.status s " +  // Sử dụng INNER JOIN
-            "WHERE od.order.orderId = :query AND j.status.status_id = 13")
+            "WHERE od.order.orderId = :query AND s.status_id = 13")
     List<OrderDetailWithJobStatusDTO> getAllOrderDetailByOrderIdCheck(int query);
 
 

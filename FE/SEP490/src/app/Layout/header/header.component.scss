@@ -1,12 +1,10 @@
+/* Styles for the dropdown container */
 .dropdown {
   position: relative;
   display: inline-block;
 }
 
-.autocomplete-custom {
-  width: 120%; /* Độ rộng tối đa */
-  max-width: 930px; /* Giới hạn chiều rộng */
-}
+/* Styles for the dropdown content */
 .dropdown-content {
   display: none;
   position: absolute;
@@ -14,169 +12,154 @@
   min-width: 160px;
   box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
   z-index: 1;
+  /* Default position, can be adjusted */
+  // left: 0; /* Adjust this value to position the dropdown horizontally */
+  top: 100%; /* Adjust this value to position the dropdown vertically below the toggle button */
 }
+
+
+/* Responsive styles */
 @media (max-width: 768px) {
-    .header-icon, .header-contact {
-        text-align: center;
-        margin-bottom: 10px;
-    }
+  .header-icon, .header-contact {
+    text-align: center;
+    margin-bottom: 10px;
+  }
 
-    .header-contact ul {
-        justify-content: center;
-    }
+  .header-contact ul {
+    justify-content: center;
+  }
 
-    .header-contact li {
-        margin: 0 10px;
-    }
+  .header-contact li {
+    margin: 0 10px;
+  }
+}
+
+/* Styles for specific elements */
+.header_link {
+  text-decoration: none;
+}
+
+.logo {
+  height: 80px; /* Increased logo height */
+  margin-left: 50px; /* Increased left margin */
+  width: auto;
+}
+
+.navbar-nav .nav-link {
+  font-size: 18px; /* Increased font size for navbar links */
+}
+
+.search-input {
+  font-size: 16px; /* Increased font size for search input */
+}
+
+.search-button {
+  background-color: #C89551; /* Light brown background */
+  color: white; /* White text color */
+  border: none; /* Remove border */
+  padding: 10px 20px; /* Button padding */
+  font-size: 16px; /* Button font size */
+  cursor: pointer; /* Pointer cursor */
+}
+
+.search-button:hover {
+  background-color: #C89551; /* Darker brown on hover */
+}
+
+.icon-nav .icon-user, .icon-nav .icon-buy {
+  font-size: 24px; /* Increased font size for icons */
+  cursor: pointer;
+}
+
+.icon-nav .icon-buy .number-buy {
+  font-size: 16px; /* Increased font size for cart number */
 }
 
 .dropdown-content a {
+  font-size: 18px; /* Increased font size for dropdown content */
+}
+
+.search-bar-container {
+  width: 100%;
+  background-color: #f8f9fa; /* Background color of the search bar container */
+  padding: 10px 0;
+}
+
+.search-bar {
+  width: 50%; /* Adjust the width of the search bar */
+}
+
+.icon-buy {
+  color: black; /* Default color is black */
+  transition: color 0.3s ease; /* Color transition effect */
+}
+
+.icon-buy:hover {
+  color: #8B4513; /* Color when hovered is brown */
+}
+
+/* New styles for buttons with gradient background */
+.header-button {
+  font-size: 18px; /* Increased font size for buttons */
+  padding: 10px 20px; /* Increased padding for buttons */
+  background: linear-gradient(45deg, #C89551, #fad0c4); /* Gradient background */
+  border: none; /* Remove border */
+  color: white; /* White text color */
+  cursor: pointer; /* Pointer cursor */
+  transition: background 0.3s ease; /* Smooth transition for background */
+}
+
+.header-button:hover {
+  background: linear-gradient(45deg, #C89551, #ffd79a); /* Gradient background on hover */
+}
+
+.header-button-register {
+  font-size: 18px; /* Increased font size for buttons */
+  padding: 10px 20px; /* Increased padding for buttons */
+  background: linear-gradient(45deg, #C89551, #fad0c4); /* Gradient background */
+  border: none; /* Remove border */
+  color: white; /* White text color */
+  cursor: pointer; /* Pointer cursor */
+  transition: background 0.3s ease; /* Smooth transition for background */
+}
+
+.header-button-register:hover {
+  background: linear-gradient(45deg, #fad0c4, #ff9a9e); /* Gradient background on hover */
+}
+
+/* Custom styles for icon-nav dropdown */
+.icon-nav .dropdown {
+  position: relative;
+  display: inline-block;
+}
+
+.icon-nav .dropdown .dropdown-content {
+  display: none;
+  position: absolute;
+  left: -150px; /* Adjust this value to move the dropdown further to the left */
+  background-color: #f9f9f9;
+  min-width: 160px;
+  box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+  z-index: 1;
+}
+
+.icon-nav .dropdown:hover .dropdown-content {
+  display: block;
+}
+
+.icon-nav .dropdown .dropdown-content a {
   color: black;
   padding: 12px 16px;
   text-decoration: none;
   display: block;
 }
 
-.dropdown-content a:hover {
+.icon-nav .dropdown .dropdown-content a:hover {
   background-color: #f1f1f1;
 }
 
-.dropdown:hover .dropdown-content {
-  display: block;
-}
-
-.dropdown:hover .dropbtn {
-  background-color: #3e8e41;
-}
-.header_link{
-    text-decoration: none;
-}
-
-.logo {
-    height: 80px; // Increased logo height
-    margin-left: 50px; // Increased left margin
-    width: auto;
-  }
-  
-  .navbar-nav .nav-link {
-    font-size: 18px; // Increased font size for navbar links
-  }
-  
-  .search-input {
-    font-size: 16px; // Increased font size for search input
-  }
-  
-  .search-button {
-    background-color: #C89551; // Light brown background
-    color: white; // White text color
-    border: none; // Remove border
-    padding: 10px 20px; // Button padding
-    font-size: 16px; // Button font size
-    cursor: pointer; // Pointer cursor
-
-  }
-  
-  .search-button:hover {
-    background-color: #C89551; // Darker brown on hover
-  }
-  
-  .icon-nav .icon-user, .icon-nav .icon-buy {
-    font-size: 24px; // Increased font size for icons
-    cursor: pointer;
-  }
-  
-  .icon-nav .icon-buy .number-buy {
-    font-size: 16px; // Increased font size for cart number
-  }
-  
-  .dropdown-content a {
-    font-size: 18px; // Increased font size for dropdown content
-  }
-  
-  .search-bar-container {
-    width: 100%;
-    background-color: #f8f9fa; // Background color of the search bar container
-    padding: 10px 0;
-  }
-  
-  .search-bar {
-    width: 50%; // Adjust the width of the search bar
-  }
-  
-    .icon-buy {
-      color: black; // Màu mặc định là đen
-      transition: color 0.3s ease; // Hiệu ứng chuyển đổi màu
-    }
-      .icon-buy:hover {
-        color: #8B4513; // Màu khi di chuột qua là nâu
-      }
-    
-  
-    
-  
-  /* New styles for buttons with gradient background */
-  .header-button {
-    font-size: 18px; // Increased font size for buttons
-    padding: 10px 20px; // Increased padding for buttons
-    background: linear-gradient(45deg, #C89551, #fad0c4); // Gradient background
-    border: none; // Remove border
-    color: white; // White text color
-    cursor: pointer; // Pointer cursor
-    transition: background 0.3s ease; // Smooth transition for background
-  }
-  
-  .header-button:hover {
-    background: linear-gradient(45deg, #C89551, #ffd79a); // Gradient background on hover
-  }
-   /* New styles for buttons with gradient background */
-   .header-button-register {
-    font-size: 18px; // Increased font size for buttons
-    padding: 10px 20px; // Increased padding for buttons
-    background: linear-gradient(45deg, #C89551, #fad0c4); // Gradient background
-    border: none; // Remove border
-    color: white; // White text color
-    cursor: pointer; // Pointer cursor
-    transition: background 0.3s ease; // Smooth transition for background
-  }
-  
-  .header-button:hover {
-    background: linear-gradient(45deg, #fad0c4, #ff9a9e); // Gradient background on hover
-  }
-
-
-  .icon-nav .dropdown {
-    position: relative;
-    display: inline-block;
-}
-
-.icon-nav .dropdown .dropdown-content {
-    display: none;
-    position: absolute;
-    left: -150px; /* Adjust this value to move the dropdown further to the left */
-    background-color: #f9f9f9;
-    min-width: 160px;
-    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
-    z-index: 1;
-}
-
-.icon-nav .dropdown:hover .dropdown-content {
-    display: block;
-}
-
-.icon-nav .dropdown .dropdown-content a {
-    color: black;
-    padding: 12px 16px;
-    text-decoration: none;
-    display: block;
-}
-
-.icon-nav .dropdown .dropdown-content a:hover {
-    background-color: #f1f1f1;
-}
-  .search-button-custom {
-    margin-left: 10px; /* Thêm khoảng cách bên trái */
-    width: auto; /* Điều chỉnh chiều dài của button */
-    padding: 0 15px; /* Điều chỉnh padding để button không quá dài hoặc quá ngắn */
-
-
+.search-button-custom {
+  margin-left: 10px; /* Added left margin */
+  width: auto; /* Adjust button width */
+  padding: 0 15px; /* Adjust padding to prevent button from being too long or too short */
 }

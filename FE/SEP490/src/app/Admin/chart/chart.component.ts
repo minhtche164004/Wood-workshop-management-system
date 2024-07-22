@@ -387,7 +387,7 @@ export class ChartComponent implements OnInit {
         if (data.result === null || data.result === undefined) {
           data.result = 0;
         }
-        console.log(`getProductByMonthAndYear result for ${month}/${year}: `, data.result);
+     //   console.log(`getProductByMonthAndYear result for ${month}/${year}: `, data.result);
         this.productCounts.push(data.result);
         resolve();
       }, err => {
@@ -398,7 +398,7 @@ export class ChartComponent implements OnInit {
         if (data.result === null || data.result === undefined) {
           data.result = 0;
         }
-        console.log(`getProductByMonthAndYear result for ${month}/${year}: `, data.result);
+   //     console.log(`getProductByMonthAndYear result for ${month}/${year}: `, data.result);
         this.productRequestCounts.push(data.result);
         resolve();
       }, err => {

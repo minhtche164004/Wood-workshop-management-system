@@ -20,7 +20,7 @@ export class AuthenListService {
   private apiUrl_GetListProductCustomer = `${environment.apiUrl}api/auth/order/GetAllRequestByUserId`;
 
   private apiUrl_DeleteWhiteList = `${environment.apiUrl}api/auth/order/DeleteWhiteList`;
-  private apiUrl_GetOrderDeTailById = `${environment.apiUrl}api/auth/order/getOrderDetailById`;
+  private apiUrl_GetOrderDeTailById = `${environment.apiUrl}api/auth/order/GetOrderById`;
   private apiUrl_AddNewAccount = `${environment.apiUrl}api/auth/admin/AddNewAccount`;
   private apiUrl_SearchUserByNameorAddress = `${environment.apiUrl}api/auth/admin/SearchUserByNameorAddress`;
 

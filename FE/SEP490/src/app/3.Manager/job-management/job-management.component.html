@@ -73,68 +73,72 @@
 
                     <tbody>
                         <tr *ngFor="let product of productRQs | paginate: { itemsPerPage: 10, currentPage: currentPage }; let i = index"
-                            [ngClass]="{'bg-warning': errorCheckResults[product.job_id] === true}">
-                            <td>{{ i + 1 + (currentPage - 1) * 10 }}</td>
-                            <!-- <td>{{ product?.code }}</td> -->
-                            <td class="action-buttons">
-                                <ng-container
-                                    *ngIf="product.statusJob.status_id !== 6 && product.statusJob.status_id !== 9 && product.statusJob.status_id !== 12">
-                                    <a href="#" class="settings" title="Chỉnh sửa" data-toggle="modal"
-                                        data-target="#editProductJobModal"
-                                        (click)="editJobDetail(product, product.job_id)">
-                                        <i class="fa-solid fa-pen-to-square"></i>
-                                    </a>
-                                </ng-container>
-                                <a style="margin-left: 10px;" title="Chi tiết" data-toggle="modal"
-                                    data-target="#detailJobModal" (click)="showJobDetail(product)">
-                                    <i class="fa-solid fa-circle-info"></i>
+                        [ngClass]="{'bg-warning': listErrorJob.includes(product.job_id)}">
+                        <td>{{ i + 1 + (currentPage - 1) * 10 }}</td>
+                        <!-- <td>{{ product?.code }}</td> -->
+                        <td class="action-buttons">
+                            <ng-container
+                                *ngIf="product.statusJob.status_id !== 6 && product.statusJob.status_id !== 9 && product.statusJob.status_id !== 12">
+                                <a href="#" class="settings" title="Chỉnh sửa" data-toggle="modal"
+                                    data-target="#editProductJobModal"
+                                    (click)="editJobDetail(product, product.job_id)">
+                                    <i class="fa-solid fa-pen-to-square"></i>
                                 </a>
-                            </td>
-                            <td>{{ product?.product_name }}</td>
-                            <td style="text-align: right;">{{ product?.quantity }}</td>
-                            <td style="text-align: right;">{{ product?.price | number: '1.0-3' }}</td>
-                            <td>
-                                <ng-container *ngIf="product?.statusJob.type !== 1 && product?.statusJob.type !== 6">
-                                    <select id="mySelect{{i}}" class="custom-select"
-                                        [ngModel]="product?.statusJob.status_id"
-                                        (change)="openModal($event,product?.job_id, i)">
-                                        <ng-container *ngFor="let status of statusType">
-                                            <option *ngIf="status.type === product.statusJob.type"
-                                                [value]="status.status_id"
-                                                [disabled]="status.status_id === 4 || status.status_id === 7 || status.status_id === 10">
-                                                {{ status.status_name }}
-                                            </option>
-                                        </ng-container>
-                                        <button #launchModalButton type="button" class="btn btn-primary d-none"
-                                            data-toggle="modal" data-target="#myModal">
-                                            Launch modal
-                                        </button>
-                                    </select>
-                                </ng-container>
-                                <span *ngIf="product.statusJob.type === 1">Chưa giao việc</span>
-                                <span *ngIf="product.statusJob.type === 6">Chờ đặt cọc</span>
-                            </td>
-                            <td>{{ product?.user_name }}</td>
-                            <td>
-                                <button style="margin-left: -10px; size: 15px;" data-toggle="modal"
-                                    data-target="#assignJobModal" (click)="manageJob(product)" class="btn btn-primary"
-                                    [class.btn-primary]="!isDisabled(product)" [class.btn-danger]="isDisabled(product)"
-                                    [disabled]="isDisabled(product)">
-                                    Giao việc
-                                </button>
-                            </td>
-                            <td>
-                                <button class="btn btn-primary" data-toggle="modal" data-target="#errorProduct"
-                                    (click)="errorJob(product)" [class.btn-primary]="!isErrorDisabled(product)"
-                                    [class.btn-danger]="isErrorDisabled(product)" [disabled]="isErrorDisabled(product)">
-                                    <i class="fa-solid fa-triangle-exclamation"></i>
-                                </button>
-                            </td>
-
-
-
-                        </tr>
-
+                            </ng-container>
+                            <a style="margin-left: 10px;" title="Chi tiết" data-toggle="modal"
+                                data-target="#detailJobModal" (click)="showJobDetail(product)">
+                                <i class="fa-solid fa-circle-info"></i>
+                            </a>
+                        </td>
+                        <td>{{ product?.product_name }}</td>
+                        <td style="text-align: center;">{{ product?.quantity }}</td>
+                        <td style="text-align: center;">{{ product?.price | number: '1.0-3' }}</td>
+                        <td>
+                          
+                         
+                            <ng-container *ngIf="product?.statusJob.type !== 1 && product?.statusJob.type !== 6">
+                                <select id="mySelect{{i}}" class="custom-select" [disabled]="listErrorJob.includes(product.job_id) || isErrorDisabled(product)"
+                                    [ngModel]="product?.statusJob.status_id"
+                                    (change)="openModal($event,product?.job_id, i)">
+                                    <ng-container *ngFor="let status of statusType">
+                                        <option *ngIf="status.type === product.statusJob.type"
+                                            [value]="status.status_id"
+                                            [disabled]="status.status_id === 4 || status.status_id === 7 || status.status_id === 10">
+                                            {{ status.status_name }}
+                                        </option>
+                                    </ng-container>
+                                    <button #launchModalButton type="button" class="btn btn-primary d-none"
+                                        data-toggle="modal" data-target="#myModal">
+                                        Launch modal
+                                    </button>
+                                </select>
+                            </ng-container>
+                            <span *ngIf="product.statusJob.type === 1">Chưa giao việc</span>
+                            <span *ngIf="product.statusJob.type === 6">Chờ đặt cọc</span>
+                        </td>
+                        <td>{{ product?.user_name }}</td>
+                        <td>
+                            <button style="margin-left: -10px; size: 15px;" data-toggle="modal"
+                                data-target="#assignJobModal" (click)="manageJob(product)" 
+                                class="btn"
+                                [class.btn-primary]="!isDisabled(product) && !listErrorJob.includes(product.job_id) "
+                                [class.btn-danger]="isDisabled(product) && !listErrorJob.includes(product.job_id)"
+                                [class.btn-warning]="listErrorJob.includes(product.job_id) "
+                                [disabled]="listErrorJob.includes(product.job_id) || isDisabled(product)">
+                                Giao việc
+                            </button>
+                        </td>
+                        <td>
+                            <button class="btn btn-primary" data-toggle="modal" data-target="#errorProduct"
+                                (click)="errorJob(product)" 
+                                [class.btn-primary]="!isErrorDisabled(product) && !listErrorJob.includes(product.job_id)"
+                                [class.btn-danger]="isErrorDisabled(product) && !listErrorJob.includes(product.job_id)"
+                                [class.btn-warning]="listErrorJob.includes(product.job_id)"
+                                [disabled]="listErrorJob.includes(product.job_id) || isErrorDisabled(product)">
+                                <i class="fa-solid fa-triangle-exclamation"></i>
+                            </button>
+                        </td>               
+                    </tr>                            
                     </tbody>
 
                 </table>
@@ -194,7 +198,7 @@
             <div class="modal-header">
                 <h2 class="modal-title" id="assignJobModalLabel">Chi tiết giao việc làm</h2>
                 <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close"
-                    (click)="cancelAssign()"></button>
+                  ></button>
             </div>
             <div class="modal-body p-4">
                 <form [formGroup]="createJobs" (ngSubmit)="createNewJob()">
@@ -218,8 +222,6 @@
                                                     </p>
                                                 </div>
                                                 <div class="col-md-6">
-                                                    <!-- {{this.selectedProduct.type_id}}
-                                                    {{this.selectedProduct.user_id}} -->
 
                                                     <select class="form-select" [(ngModel)]="selectedEmployee"
                                                         name="selectedEmployee"
@@ -231,6 +233,7 @@
                                                             {{employee.position?.position_name}}
                                                         </option>
                                                     </select>
+                                            
                                                 </div>
                                             </div>
 

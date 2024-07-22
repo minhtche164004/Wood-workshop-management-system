@@ -226,16 +226,26 @@ public class JobServiceImpl implements JobService {
         //  jobRepository.delete(jobs_history);
         return jobs_log;
     }
+//    private boolean checkOderDoneOrNot(int order_id) {
+//        List<OrderDetailWithJobStatusDTO> results = orderDetailRepository.getAllOrderDetailByOrderIdCheck(order_id);
+//        if(!results.isEmpty()){
+//            return false;
+//        }
+//        return true; // Chỉ trả về true nếu tất cả các job đều đã hoàn thành (status_id = 13)
+//    }
 
     private boolean checkOderDoneOrNot(int order_id) {
-        List<OrderDetailWithJobStatusDTO> results = orderDetailRepository.getAllOrderDetailByOrderIdCheck(order_id);
-        for (OrderDetailWithJobStatusDTO result : results) {
-            if (result.getStatus_job_id() != 13 && result.getStatus_job_id() != 15) {  //13 tức là sản phẩm của oderdetail đã hoàn thành
-                return false; // Ngay lập tức trả về false nếu tìm thấy job chưa hoàn thành
+        List<OrderDetailWithJobStatusDTO> results = orderDetailRepository.getAllOrderDetailByOrderId(order_id);
+        for(OrderDetailWithJobStatusDTO p :results){
+            if(p.getStatus_job_id() != 13){
+                return false;
             }
         }
-        return true; // Chỉ trả về true nếu tất cả các job đều đã hoàn thành (status_id = 13)
+        return true;
     }
+
+
+
 
     @Override
     public Jobs EditJobs(JobDTO jobDTO, int job_id) {

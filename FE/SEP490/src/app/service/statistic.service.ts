@@ -33,6 +33,8 @@ export class StatisticService {
 
   private apiCountTotalSpecOrderByMonthAndYear = `${environment.apiUrl}api/auth/statistic/countTotalSpecialOrderByMonthAndYear`
 
+  private apiCheckJobError = `${environment.apiUrl}api/auth/job/checkErrorOfJobHaveFixDoneOrNot`
+
   constructor(private http: HttpClient) { }
   countCompletedRequestProductOnOrderByMonthAndYear(month: number, year: number): Observable<any> {
     const url = `${this.apiCountProductByMonthYear}/countCompletedRequestProductOnOrderByMonthAndYear`;
@@ -40,6 +42,10 @@ export class StatisticService {
     return this.http.get<any>(url, { params });
   }
 
+  checkErrorOfJobHaveFixDoneOrNot(jobId: number): Observable<any> {
+    const url = `${this.apiCheckJobError}?job_id=${jobId}`;
+    return this.http.get<any>(url);
+  }
   countCompletedProductOnOrderByMonthAndYear(month: number, year: number): Observable<any> {
     const url = `${this.apiCountProductByMonthYear}/countCompletedProductOnOrderByMonthAndYear`;
     const params = new HttpParams().set('month', month.toString()).set('year', year.toString());

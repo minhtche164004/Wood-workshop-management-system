@@ -48,7 +48,7 @@
         <div class="container-fluid">
            
                 <a class="navbar-brand" href="index.html">
-                    <img src="assets/img/logomain-removebg-preview.png" class="logo img-fluid" alt="Logo" style="max-height: 100px;">
+                    <img src="assets/img/logomain-removebg-preview.png" class="logo img-fluid" alt="Logo" style="max-height: 100px; margin-top: -16%;">
                 </a>
            
        
@@ -75,6 +75,12 @@
                             <a class="nav-link active" aria-current="page" routerLink="/order_rq" style="cursor: pointer;">Đặt hàng</a>
                         </li>
                     </ng-container>
+                    <ng-template #loggedOutLinks>
+                        <li class="nav-item">
+                            <a class="nav-link active" style="cursor: pointer;" (click)="showLoginMessage()">Đặt hàng</a>
+                        </li>
+                    </ng-template>
+                    
                     <ng-template #loggedOutLinks>
                         <!-- Add your logged-out links here -->
                     </ng-template>

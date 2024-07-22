@@ -1,5 +1,6 @@
 package com.example.demo.Repository;
 
+import com.example.demo.Dto.JobDTO.JobDoneDTO;
 import com.example.demo.Dto.ProductDTO.RequestProductAllDTO;
 import com.example.demo.Entity.Products;
 import com.example.demo.Entity.RequestProducts;
@@ -55,21 +56,47 @@ public interface RequestProductRepository extends JpaRepository<RequestProducts,
     List<RequestProducts> findByUserId(int query);
 
 
-    @Query("SELECT p FROM RequestProducts p WHERE " +
-            "(p.requestProductName LIKE %:search% OR :search IS NULL) AND " +
-            "(p.status.status_id = :status_id OR :status_id IS NULL) AND " +
-            "(p.price >= :minPrice OR :minPrice IS NULL) AND " +
-            "(p.price <= :maxPrice OR :maxPrice IS NULL)")
-    List<RequestProducts> filterRequestProductsForAdmin(@Param("search") String search,
-                                          @Param("status_id") Integer status_id,
-                                          @Param("minPrice") BigDecimal minPrice,
-                                          @Param("maxPrice") BigDecimal maxPrice);
+//    @Query("SELECT p FROM RequestProducts p WHERE " +
+//            "(p.requestProductName LIKE %:search% OR :search IS NULL) AND " +
+//            "(p.status.status_id = :status_id OR :status_id IS NULL) AND " +
+//            "(p.price >= :minPrice OR :minPrice IS NULL) AND " +
+//            "(p.price <= :maxPrice OR :maxPrice IS NULL)")
+//    List<RequestProducts> filterRequestProductsForAdmin(@Param("search") String search,
+//                                          @Param("status_id") Integer status_id,
+//                                          @Param("minPrice") BigDecimal minPrice,
+//                                          @Param("maxPrice") BigDecimal maxPrice);
 
 
 
 
     @Query("SELECT p FROM RequestProducts p WHERE p.price BETWEEN :minPrice AND :maxPrice")
     List<RequestProducts> findByPriceRange(@Param("minPrice") BigDecimal minPrice, @Param("maxPrice") BigDecimal maxPrice);
+
+
+    @Query("SELECT new com.example.demo.Dto.ProductDTO.RequestProductAllDTO(" +
+            "r.requestProductId, r.requestProductName, r.description, r.price, r.quantity, r.completionTime, s.status_id, s.status_name, i.productImageId, " +
+            "COALESCE(i.fullPath, ''), o.code, o.orderId) " +
+            " FROM RequestProducts r " +
+            " LEFT JOIN r.status s " +
+            " LEFT JOIN r.orders o " +
+            " LEFT JOIN r.productRequestimages i")
+    List<RequestProductAllDTO> getAllRequestProduct();
+
+    @Query("SELECT new com.example.demo.Dto.ProductDTO.RequestProductAllDTO(" +
+            "r.requestProductId, r.requestProductName, r.description, r.price, r.quantity, r.completionTime, s.status_id, s.status_name, i.productImageId, " +
+            "COALESCE(i.fullPath, ''), o.code, o.orderId) " +
+            " FROM RequestProducts r " +
+            " LEFT JOIN r.status s " +
+            " LEFT JOIN r.orders o " +
+            " LEFT JOIN r.productRequestimages i WHERE " +
+            "(r.requestProductName LIKE %:search% OR :search IS NULL) AND " +
+            "(r.status.status_id = :status_id OR :status_id IS NULL) AND" +
+            "(r.price >= :minPrice OR :minPrice IS NULL) AND" +
+            "(r.price <= :maxPrice OR :maxPrice IS NULL) ")
+    List<RequestProductAllDTO> filterRequestProductsForAdmin(@Param("search") String search,
+                                                             @Param("status_id") Integer status_id,
+                                                             @Param("minPrice") BigDecimal minPrice,
+                                                             @Param("maxPrice") BigDecimal maxPrice);
 
 
 

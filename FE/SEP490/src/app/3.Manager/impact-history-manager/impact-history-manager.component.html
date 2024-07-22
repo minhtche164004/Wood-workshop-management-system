@@ -9,7 +9,7 @@
         <div class="table-title">
           <div class="row " style="height: 60px;">
             <div class="col-sm-5 ">
-              <h2 style="margin-bottom: 0;">Quản lý lịch sử tác động</h2>
+              <h2 style="margin-bottom: 0;">Quản lý lịch sử nhập vật liệu</h2>
             </div>
             <div class="col-sm-7 text-end d-flex align-items-center justify-content-end">
               <!-- <a href="#" class="btn btn-secondary btn-sm" data-toggle="modal" data-target="#addAccountModal"
@@ -53,6 +53,7 @@
               <thead>
                 <tr>
                   <th>Mã thay đổi</th>
+                  <th style="width: 100px;">Thao tác với kho</th>
                   <th>Tên vật liệu</th>
                   <th>Mô tả</th>
                   <th>Ngày tạo</th>
@@ -62,6 +63,7 @@
                   <th style="width: 150px;">Số lượng thay đổi</th>
                   <th>Giá</th>
                   <th style="width: 120px;">Giá thay đổi</th>
+                
                   
           
                   
@@ -72,8 +74,9 @@
                 <tr
                   *ngFor="let job of list_submaterinput_manage | paginate: { itemsPerPage: 10, currentPage: currentPage }; let i = index">
                   <td style="min-width: 150px;">{{ job.subMaterials.code }}</td>
-                  <td>{{ job.subMaterials.subMaterialName }}</td>
-                  <td>{{ job.subMaterials.description}}</td>
+                  <td style="min-width: 150px;">{{ job.actionType.action_name }}</td>
+                  <td style="min-width: 150px;">{{ job.subMaterials.subMaterialName }}</td>
+                  <td style="min-width: 100px;">{{ job.subMaterials.description}}</td>
                   <td>{{ job.subMaterials.create_date  | date:'dd/MM/yyyy' }}</td>
                   <td>{{ job.date_input  | date:'dd/MM/yyyy' }}</td>
                  

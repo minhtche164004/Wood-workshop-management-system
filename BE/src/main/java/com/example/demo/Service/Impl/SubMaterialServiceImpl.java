@@ -135,6 +135,17 @@ public class SubMaterialServiceImpl implements SubMaterialService {
                 for (SubMaterialDTO dto : subMaterialDTOs) {
                     rowIndex++; // Tăng số hàng trước khi xử lý từng dòng
 
+                    // Thực hiện các kiểm tra điều kiện
+                    if (!checkConditionService.checkInputName(dto.getSub_material_name())) {
+                        errors.add(new ExcelError(rowIndex, 1, "Tên không hợp lệ"));
+                    }
+                    if (!checkConditionService.checkInputQuantity(dto.getQuantity())) {
+                        errors.add(new ExcelError(rowIndex, 4, "Số lượng không hợp lệ"));
+                    }
+                    if (!checkConditionService.checkInputPrice(dto.getUnit_price())) {
+                        errors.add(new ExcelError(rowIndex, 5, "Đơn giá không hợp lệ"));
+                    }
+
                     String subMaterialName = dto.getSub_material_name();
                     String materialName = dto.getMaterial_name(); // Lấy tên vật liệu từ DTO
                     BigDecimal unit_price = dto.getUnit_price();
@@ -177,16 +188,6 @@ public class SubMaterialServiceImpl implements SubMaterialService {
                     } else {
                         // Nếu chưa tồn tại, tạo SubMaterial mới với đầy đủ thuộc tính
 
-                        // Thực hiện các kiểm tra điều kiện
-                        if (!checkConditionService.checkInputName(dto.getSub_material_name())) {
-                            errors.add(new ExcelError(rowIndex, 1, "Tên không hợp lệ"));
-                        }
-                        if (!checkConditionService.checkInputQuantity(dto.getQuantity())) {
-                            errors.add(new ExcelError(rowIndex, 4, "Số lượng không hợp lệ"));
-                        }
-                        if (!checkConditionService.checkInputPrice(dto.getUnit_price())) {
-                            errors.add(new ExcelError(rowIndex, 5, "Đơn giá không hợp lệ"));
-                        }
 
                         SubMaterials subMaterials = new SubMaterials();
                         subMaterials.setSubMaterialName(subMaterialName);

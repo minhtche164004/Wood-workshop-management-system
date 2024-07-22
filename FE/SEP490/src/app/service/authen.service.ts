@@ -56,7 +56,8 @@ export class AuthenListService {
   private apiUrl_getMultiFillterRHistoryImpact = `${environment.apiUrl}api/auth/submaterial/MultiFilterInputSubMaterial`;
 
   private api_getAllOrderDetailById = `${environment.apiUrl}api/auth/order/getAllOrderDetailByOrderId`;
-
+  private apiUrl_Paymentmoney = `${environment.apiUrl}api/auth/order/ConfirmPayment`;
+  
   private apiUrl_NameATM = 'https://api.vietqr.io/v2/banks';
   constructor(private http: HttpClient) { }
   isLoggedIn(): boolean {
@@ -125,6 +126,14 @@ export class AuthenListService {
     const headers = new HttpHeaders({ 'Content-Type': 'text/plain' });
 
     return this.http.post<string>(url, cancelReason, { headers }).pipe(
+      catchError(this.handleError)
+    );
+  }
+  Paymentmoney(orderId: number): Observable<string> {
+    const url = `${this.apiUrl_Paymentmoney}?order_id=${orderId}`;
+    const headers = new HttpHeaders({ 'Content-Type': 'text/plain' });
+
+    return this.http.post<string>(url, { headers }).pipe(
       catchError(this.handleError)
     );
   }

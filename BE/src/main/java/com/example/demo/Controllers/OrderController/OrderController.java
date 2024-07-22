@@ -31,6 +31,8 @@ import redis.clients.jedis.JedisPooled;
 
 import java.io.IOException;
 import java.lang.reflect.Type;
+import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -61,7 +63,7 @@ public class OrderController {
     @GetMapping("/GetAllProductRequest")
     public ApiResponse<?> GetAllProductRequest() {
         ApiResponse<List> apiResponse = new ApiResponse<>();
-        apiResponse.setResult(orderService.GetAllRequestProductWithImage());
+        apiResponse.setResult(orderService.GetAllProductRequest());
         return apiResponse;
     }
     @GetMapping("/GetAllProductRequestByUserId")
@@ -152,11 +154,11 @@ public class OrderController {
         apiResponse.setResult("Xoá Sản Phẩm khỏi danh sách yêu thích thành công !");
         return apiResponse;
     }
-    @PostMapping(value = "/AddNewRequestProduct", consumes = MediaType.MULTIPART_FORM_DATA_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(value = "/AddNewRequestProduct", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ApiResponse<?> AddNewRequestProduct(
-            @RequestPart("requestProductsWithFiles") RequestProductWithFiles[] requestProductsWithFiles,
-            @RequestPart("order_id") int order_id
-
+            @RequestBody RequestProductWithFiles[] requestProductsWithFiles,
+            @RequestParam("order_id") int order_id
+//            @RequestPart("files") MultipartFile[] files
 
     ) {
         ApiResponse<List> apiResponse = new ApiResponse<>();
@@ -168,6 +170,25 @@ public class OrderController {
         ApiResponse<String> apiResponse = new ApiResponse<>();
         orderService.Approve_Reject_Request(id,status_id);
         apiResponse.setResult("Chỉnh Yêu cầu đơn hàng thành công");
+        return apiResponse;
+    }
+
+    @PostMapping("/ConfirmPayment")
+    public ApiResponse<?> ConfirmPayment(@RequestParam("order_id") int order_id) {
+        ApiResponse<String> apiResponse = new ApiResponse<>();
+        apiResponse.setResult(orderService.ConfirmPayment(order_id));
+        return apiResponse;
+    }
+    @GetMapping("/MultiFilterOrder")
+    public ApiResponse<?> MultiFilterOrder(
+            @RequestParam(required = false) String search,
+            @RequestParam(required = false) Integer statusId,
+            @RequestParam(required = false) Integer paymentMethod,
+            @RequestParam(required = false) @DateTimeFormat(pattern = "yyyy-MM-dd")  Date startDate,
+            @RequestParam(required = false)  @DateTimeFormat(pattern = "yyyy-MM-dd") Date endDate
+    ) {
+        ApiResponse<List<OderDTO>> apiResponse = new ApiResponse<>(); // Chỉ định rõ kiểu List<OderDTO>
+        apiResponse.setResult(orderService.MultiFilterOrder(search, statusId, paymentMethod, startDate, endDate));
         return apiResponse;
     }
 

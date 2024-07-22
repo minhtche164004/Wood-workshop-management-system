@@ -14,6 +14,7 @@ import com.example.demo.Repository.*;
 import com.example.demo.Service.*;
 import jakarta.persistence.EntityManager;
 import jakarta.transaction.Transactional;
+import org.apache.poi.util.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -21,13 +22,17 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
+
+
 
 @Service
 public class    OrderServiceImpl implements OrderService {
@@ -43,14 +48,10 @@ public class    OrderServiceImpl implements OrderService {
     private CheckConditionService checkConditionService;
     @Autowired
     private UserRepository userRepository;
-//    @Autowired
-//    private Status_Request_Repository statusRequestRepository;
     @Autowired
     private UploadImageService uploadImageService;
     @Autowired
     private RequestProductRepository requestProductRepository;
-//    @Autowired
-//    private RequestRepository requestRepository;
     @Autowired
     private Product_RequestimagesRepository productRequestimagesRepository;
     @Autowired
@@ -77,8 +78,8 @@ public class    OrderServiceImpl implements OrderService {
     private InputSubMaterialRepository inputSubMaterialRepository;
     @Autowired
     private SubMaterialsRepository subMaterialsRepository;
-
-
+    @Autowired
+    private MultipartFileConverter multipartFileConverter;
 
     @Override
     public Orders AddOrder(RequestOrder requestOrder) {
@@ -266,6 +267,50 @@ public class    OrderServiceImpl implements OrderService {
         return ResponseEntity.ok("Huỷ đơn hàng thành công");
     }
 
+    @Override
+    public String ConfirmPayment(int order_id) {
+        Orders orders = orderRepository.findById(order_id);
+        if(orders.getStatus().getStatus_id() == 1){//nghĩa là thanh toán bằng tiền mặt, và đang trong trạng thái là chờ đặt cọc
+            Status_Order statusOrder = new Status_Order();
+            if(orders.getSpecialOrder() == false){//nếu là hàng có sẵn thì set status order cho nó là đã thi công xong luôn(vì nó ko cần sản xuất nữa)
+                statusOrder = statusOrderRepository.findById(4);
+                orders.setStatus(statusOrder);
+                orderRepository.save(orders);
+                return "Cập nhật đơn hàng sang tình trạng "+ statusOrder.getStatus_name()+ " thành công";
+            }
+            if(orders.getSpecialOrder() == true){//nếu là hàng đặt làm theo yêu cầu thì set status order cho nó là đã đặt cọc thành công
+                statusOrder = statusOrderRepository.findById(3);//đã đặt cọc, đang thi công
+                orders.setStatus(statusOrder);
+                Status_Job statusJob = statusJobRepository.findById(3); // 3 la status job sau khi dat coc thi set status la chua giao viec
+                List<Jobs> jobsList = jobRepository.getJobByOrderDetailByOrderCode(orders.getCode());
+                for(Jobs jobs : jobsList){
+                    jobs.setStatus(statusJob);
+                    jobRepository.save(jobs);
+                }
+
+                orderRepository.save(orders);
+                return "Cập nhật đơn hàng sang tình trạng "+ statusOrder.getStatus_name()+ " thành công";
+            }
+        }
+        return "";
+    }
+
+    @Override
+    public List<OderDTO> MultiFilterOrder(String search, Integer status_id, Integer paymentMethod, Date startDate, Date endDate) {
+        List<OderDTO> order_list = new ArrayList<>();
+
+        if (search != null || status_id != null || paymentMethod != null || startDate != null || endDate != null) {
+            order_list = orderRepository.MultiFilterOrder(search, status_id, paymentMethod, startDate, endDate);
+        } else {
+            order_list = orderRepository.getAllOrder();
+        }
+
+        if (order_list.isEmpty()) {
+            throw new AppException(ErrorCode.NOT_FOUND);
+        }
+        return order_list;
+    }
+
     //Tạo Request
     //Tạo Request Product
     @Override
@@ -352,6 +397,7 @@ public class    OrderServiceImpl implements OrderService {
     }
 
     //Tạo Request Product
+    @Transactional
     @Override
     public List<RequestProducts> AddNewProductRequest(RequestProductWithFiles[] requestProductsWithFiles,int order_id) { //lấy từ request
         List<RequestProductsSubmaterials> result = new ArrayList<>();
@@ -367,7 +413,6 @@ public class    OrderServiceImpl implements OrderService {
         List<RequestProducts> addedProducts = new ArrayList<>();
         for (RequestProductWithFiles r : requestProductsWithFiles) {
             RequestProductDTO requestProductDTO = r.getRequestProductDTO();
-            MultipartFile[] files = r.getFiles();
             RequestProducts requestProducts = new RequestProducts();
             requestProducts.setRequestProductName(requestProductDTO.getRequestProductName());
             requestProducts.setDescription(requestProductDTO.getDescription());
@@ -390,7 +435,14 @@ public class    OrderServiceImpl implements OrderService {
 
             //set ảnh của product
         //    RequestProducts requestProduct = requestProductRepository.findByName(requestProductDTO.getRequestProductName());
-            uploadImageService.uploadFileRequestProduct(files, requestProducts.getRequestProductId());
+            // Upload ảnh từ danh sách base64
+            List<String> filesBase64 = r.getFilesBase64(); // Lấy danh sách base64
+            for (String base64Data : filesBase64) {
+                // Chuyển đổi base64 thành MultipartFile
+                MultipartFile file = multipartFileConverter.convertBase64ToMultipartFile(base64Data,
+                        "Screenshot 2024-05-26 174835.png");
+                uploadImageService.uploadFileRequestProduct(new MultipartFile[]{file}, requestProducts.getRequestProductId());
+            }
 
             addedProducts.add(requestProducts);
         }
@@ -573,9 +625,35 @@ public class    OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public List<RequestProducts> GetAllProductRequest() {
+    public List<RequestProductAllDTO> GetAllProductRequest() {
+        List<RequestProductAllDTO> list_request = new ArrayList<>();
+        List<RequestProductAllDTO> list = requestProductRepository.getAllRequestProduct();
 
-        return requestProductRepository.findAll();
+        for (RequestProductAllDTO re : list) {
+            String full_path = " ";  // Đặt lại giá trị cho mỗi lần lặp
+            String list_image = productRequestimagesRepository.findFirstFullPathImageByProductTest(re.getRe_productId());
+            if(list_image
+                    != null) {
+                full_path = list_image;
+            }
+            RequestProductAllDTO request = new RequestProductAllDTO(
+                    re.getRe_productId(),
+                    re.getRe_productName(),
+                    re.getDescription(),
+                    re.getPrice(),
+                    re.getQuantity(),
+                    re.getCompletionTime(),
+                    re.getStatus_id(),
+                    re.getStatus_name(),
+                    re.getProductImageId(),
+                    full_path,
+                    re.getCode(),
+                    re.getRequest_id()
+            );
+
+            list_request.add(request); // Thêm đối tượng request vào danh sách kết quả
+        }
+        return list_request;
     }
 
 //    private String getAddressLocalComputer(String imagePath) {
@@ -643,28 +721,7 @@ public class    OrderServiceImpl implements OrderService {
         Status_Order statusOrder =statusOrderRepository.findById(status_id);
         Orders orders = orderRepository.findById(orderId);
 
-//        if(orders.getPaymentMethod() == 1 && orders.getStatus().getStatus_id() == 1){//nghĩa là thanh toán bằng tiền mặt, và đang trong trạng thái là chờ đặt cọc
-//            Status_Order statusOrder1 = new Status_Order();
-//            if(orders.getSpecialOrder() == false){//nếu là hàng có sẵn thì set status order cho nó là đã thi công xong luôn(vì nó ko cần sản xuất nữa)
-//                statusOrder1 = statusOrderRepository.findById(4);
-//                orders.setStatus(statusOrder1);
-//                orderRepository.save(orders);
-//                return "Cập nhật đơn hàng sang tình trạng "+ statusOrder1.getStatus_name()+ "thành công";
-//            }
-//            if(orders.getSpecialOrder() == true){//nếu là hàng đặt làm theo yêu cầu thì set status order cho nó là đã đặt cọc thành công
-//                statusOrder1 = statusOrderRepository.findById(3);//đã đặt cọc, đang thi công
-//                orders.setStatus(statusOrder1);
-//                orderRepository.save(orders);
-//                return "Cập nhật đơn hàng sang tình trạng "+ statusOrder1.getStatus_name()+ "thành công";
-//            }
-//            Status_Job statusJob = statusJobRepository.findById(3); // 3 la status job sau khi dat coc thi set status la chua giao viec
-//            List<Jobs> jobsList = jobRepository.getJobByOrderDetailByOrderCode(orders.getCode());
-//            for(Jobs jobs : jobsList){
-//                jobs.setStatus(statusJob);
-//                jobRepository.save(jobs);
-//            }
-//
-//        }
+
         //send mail cho những đơn hàng đặt theo yêu cầu , vì đơn hàng mau có sẵn thì mua luôn rồi, trả tiền luôn r cần đéo gì nữa mà phải theo dõi tình trạng đơn hàng
         orderRepository.UpdateStatusOrder(orderId,status_id);
 
@@ -696,12 +753,13 @@ public class    OrderServiceImpl implements OrderService {
 
 
     @Override
-    public List<RequestProductDTO_Show> filterRequestProductsForAdmin(String search,  Integer statusId, BigDecimal minPrice, BigDecimal maxPrice, String sortDirection) {
-        List<RequestProducts> productList = new ArrayList<>();
+    public List<RequestProductAllDTO> filterRequestProductsForAdmin(String search,  Integer statusId, BigDecimal minPrice, BigDecimal maxPrice, String sortDirection) {
+        List<RequestProductAllDTO> productList = new ArrayList<>();
+
         if (search != null|| statusId != null  || minPrice != null || maxPrice != null) {
             productList = requestProductRepository.filterRequestProductsForAdmin(search, statusId, minPrice, maxPrice);
         } else {
-            productList = requestProductRepository.findAll();
+            productList = requestProductRepository.getAllRequestProduct();
         }
 
         if (productList.isEmpty()) {
@@ -715,42 +773,38 @@ public class    OrderServiceImpl implements OrderService {
         // Sắp xếp danh sách sản phẩm theo giá
         if (sortDirection != null) {
             if (sortDirection.equals("asc")) {
-                productList.sort(Comparator.comparing(RequestProducts::getPrice));
+                productList.sort(Comparator.comparing(RequestProductAllDTO::getPrice));
             } else if (sortDirection.equals("desc")) {
-                productList.sort(Comparator.comparing(RequestProducts::getPrice).reversed());
+                productList.sort(Comparator.comparing(RequestProductAllDTO::getPrice).reversed());
             }
         }
-        List<RequestProductDTO_Show> result = new ArrayList<>();
-        for (RequestProducts requestProducts : productList) {
-            int id = requestProducts.getRequestProductId();
-            List<Product_Requestimages> productRequestimagesList = productRequestimagesRepository.findImageByProductId(id);
-            RequestProductDTO_Show requestProductDTOShow = new RequestProductDTO_Show();
-            requestProductDTOShow.setRe_productId(requestProducts.getRequestProductId());
-            requestProductDTOShow.setRe_productName(requestProducts.getRequestProductName());
-            requestProductDTOShow.setQuantity(requestProducts.getQuantity());
-            requestProductDTOShow.setDescription(requestProducts.getDescription());
-            requestProductDTOShow.setPrice(requestProducts.getPrice());
-            requestProductDTOShow.setCompletionTime(requestProducts.getCompletionTime());
-            requestProductDTOShow.setStatus(requestProducts.getStatus());
-            int request_id = requestProducts.getOrders().getOrderId();
-            System.out.println(request_id);
-            Orders requests= orderRepository.findById(request_id);
-            requestProductDTOShow.setRequest_id(request_id);
-            requestProductDTOShow.setCode(requests.getCode());
-            List<Product_Requestimages> imageList = productRequestimagesList.stream()
-                    .map(img -> {
-                        img.setFullPath(getAddressLocalComputer(img.getFullPath()));
-                        return img;
-                    })
-                    .toList();
-            requestProductDTOShow.setImageList(imageList);
-            List<String> subMaterialNames = requestProductsSubmaterialsRepository.GetSubNameByProductId(id);
-            requestProductDTOShow.setSub_material_name(subMaterialNames.isEmpty() ? null : subMaterialNames);
-            result.add(requestProductDTOShow);
+        List<RequestProductAllDTO> list = requestProductRepository.getAllRequestProduct();
+        for (RequestProductAllDTO re : list) {
+            String full_path = " ";  // Đặt lại giá trị cho mỗi lần lặp
+            String list_image = productRequestimagesRepository.findFirstFullPathImageByProductTest(re.getRe_productId());
+            if(list_image
+                    != null) {
+                full_path = list_image;
+            }
+            RequestProductAllDTO request = new RequestProductAllDTO(
+                    re.getRe_productId(),
+                    re.getRe_productName(),
+                    re.getDescription(),
+                    re.getPrice(),
+                    re.getQuantity(),
+                    re.getCompletionTime(),
+                    re.getStatus_id(),
+                    re.getStatus_name(),
+                    re.getProductImageId(),
+                    full_path,
+                    re.getCode(),
+                    re.getRequest_id()
+            );
+
+            productList.add(request); // Thêm đối tượng request vào danh sách kết quả
         }
-
-
-        return result;
+        return productList;
+//        return productList;
     }
     @Override
     public List<RequestProducts> findByPriceRange(BigDecimal min, BigDecimal max) {

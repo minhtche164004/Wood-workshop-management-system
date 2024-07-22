@@ -78,12 +78,12 @@ export class ImpactHistoryManagerComponent implements OnInit {
           this.isLoadding = false;
           if (data.code === 1000) {
             this.list_submaterinput_manage = data.result;
-            console.log('Lọc lịch sử thay đổi thành công:', this.list_submaterinput_manage);
-            this.toastr.success('Lọc lịch sử thay đổi thành công!', 'Thành công');
+
+
           } else if (data.code === 1015) {
             this.list_submaterinput_manage = [];
             //    console.error('Lọc lịch sử thay đổi không thành công:', data);
-            this.toastr.error('Không tìm thấy lịch sử thay đổi phù hợp!', 'Lọc thất bại');
+          
           }
         }
       );

@@ -8,6 +8,7 @@ import { ProductListService } from 'src/app/service/product/product-list.service
 
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { OrderRequestService } from 'src/app/service/order-request.service';
+import { data } from 'jquery';
 interface ApiResponse {
   code: number;
   result: any[];
@@ -19,12 +20,7 @@ interface ApiResponse {
   styleUrls: ['./order-management.component.scss']
 })
 export class OrderManagementComponent implements OnInit {
-  initialStatusValues: { [key: number]: number } = {};
 
-  saveInitialValue(statusId: number, index: number): void {
-    this.initialStatusValues[index] = statusId;
-    console.log("Select Status: ", this.initialStatusValues[index] = statusId)
-  }
   @ViewChild('launchModalButton')
   launchModalButton!: ElementRef;
   user: any[] = [];
@@ -36,6 +32,7 @@ export class OrderManagementComponent implements OnInit {
   selectedCategory: number = 0;
   OrderdetailById: any = {};
   isLoadding: boolean = false;
+  selectedC: number | null = null;
   selectedOrderId: number | null = null;
   selectedSpecialOrder: boolean | null = null;
   activeModal: any;
@@ -49,9 +46,10 @@ export class OrderManagementComponent implements OnInit {
     this.loadPosition();
     this.loadStatus();
     this.getOrderStatus();
-    this.getAllUser();
+    this.getAllOrder();
 
   }
+
   selectedModalJob: string = '';
   selectedModalId: string = '';
   indexStatus: number = 0;
@@ -59,26 +57,29 @@ export class OrderManagementComponent implements OnInit {
   cancelChangeStatusJob() {
     this.selectedModalId = '';
   }
-
   openModal(orderId: number, event: Event, index: number): void {
-
-    console.log('event:', event);
     const statusId = (event.target as HTMLSelectElement).value;
     this.selectedModalJob = orderId.toString();
-    console.log('Job ID:', this.selectedModalJob, 'Status ID:', statusId);
     this.selectedModalId = statusId;
-    // this.createJobs.reset();  
-    // S? d?ng tham chi?u này d? kích ho?t click
-    this.launchModalButton.nativeElement.click();
     this.indexStatus = index;
-    // console.log("indexStatus:", this.indexStatus);
+  
+    console.log('event:', event);
+    console.log('Job ID:', this.selectedModalJob, 'Status ID:', statusId);
+  
+    // Trigger the modal open action
+    this.launchModalButton.nativeElement.click();
   }
-
+  
   closeModal(event: Event): void {
-    $('[data-dismiss="modal"]').click();
+    // const statusId = (event.target as HTMLSelectElement).value;
+    // const selectedStatusOption = this.status_order.find(status => status.status_id == parseInt(statusId));
+    // const element = document.getElementById("mySelect" + this.indexStatus) as HTMLSelectElement;
+    // if (element) {
+    //   element.value = statusId;
+    // }
     this.realoadgetAllUser();
   }
-
+ 
   getOrderStatus(): void {
     this.orderService.getOrderStatus().subscribe(
       (data: any) => {
@@ -94,7 +95,7 @@ export class OrderManagementComponent implements OnInit {
       }
     );
   }
-  getAllUser(): void {
+  getAllOrder(): void {
     this.isLoadding = true;
     this.loginToken = localStorage.getItem('loginToken');
 
@@ -123,18 +124,23 @@ export class OrderManagementComponent implements OnInit {
     }
   }
   realoadgetAllUser(): void {
-
+  
     this.productListService.getAllOrder().subscribe(
       (data: ApiResponse) => {
         if (data.code === 1000) {
           this.user = data.result;
+        
+
         } else {
           console.error('Failed to fetch products:', data);
+        
 
         }
       },
       (error) => {
         console.error('Error fetching products:', error);
+     
+
 
 
       }
@@ -173,10 +179,10 @@ export class OrderManagementComponent implements OnInit {
 
   }
   productOfOrder: any = [];
-  
+
   getOrDetailById(us: any, order_detail_id: string): void {
- //  this.isLoadding = true;
- //   console.log('Order_detail_id:', order_detail_id);
+    //  this.isLoadding = true;
+    //   console.log('Order_detail_id:', order_detail_id);
     this.authenListService.getOrderDetailById(order_detail_id).subscribe(
       (data) => {
         this.OrderdetailById = data.result;
@@ -192,7 +198,7 @@ export class OrderManagementComponent implements OnInit {
     );
     console.log("order detail: ", us)
     console.log("order detail id: ", us.orderId)
-    
+
     this.orderRequestService.getAllOrderDetailByOrderId(us.orderId).subscribe(
       (data) => {
         this.productOfOrder = data.result;
@@ -221,12 +227,14 @@ export class OrderManagementComponent implements OnInit {
     this.isLoadding = true;
     this.authenListService.changeStatusOrder(orderId, statusId).subscribe(
       response => {
+
         this.realoadgetAllUser();
+        this.isLoadding = false;
         console.log('Order status changed', response);
-        this.toastr.success('Thay đổi tình trạng công việc thành công.');
+        this.toastr.success('Thay đổi tình trạng  thành công.');
 
         $('[data-dismiss="modal"]').click();
-        this.isLoadding = false;
+       
       },
       error => {
         this.isLoadding = false;
@@ -262,14 +270,14 @@ export class OrderManagementComponent implements OnInit {
               this.currentPage = 1;
               this.user = data.result;
               this.isLoadding = false;
-            
+
             } else if (data.code === 1015) {
               this.realoadgetAllUser();
-           
               this.isLoadding = false;
               
+
             }
-            
+
           },
         );
     }
@@ -278,6 +286,10 @@ export class OrderManagementComponent implements OnInit {
   setOrderForCancellation(orderId: number | null, specialOrder: boolean | null) {
     this.selectedOrderId = orderId;
     this.selectedSpecialOrder = specialOrder;
+  }
+  setOrderForPayment(orderId: number) {
+    this.selectedOrderId = orderId;
+   
   }
   confirmCancel() {
     this.isLoadding = true;
@@ -302,4 +314,30 @@ export class OrderManagementComponent implements OnInit {
       });
     }
   }
+  confirmPayment() {
+    this.isLoadding = true;
+    if (this.selectedOrderId !== null) {
+      this.authenListService.Paymentmoney(this.selectedOrderId).subscribe({
+        next: (response: any ) => {
+         if(response.code == 1000){
+          this.toastr.success(response.result);
+          this.realoadgetAllUser();
+    
+          this.isLoadding = false;
+          const closeModalButton = document.querySelector('.close') as HTMLElement;
+          if (closeModalButton) {
+            closeModalButton.click();
+          }
+          $('[data-dismiss="modal"]').click();
+        }},
+        error: (error: HttpErrorResponse) => {
+          this.isLoadding = false;
+          this.toastr.error('Thanh toán thất bại');
+          this.realoadgetAllUser();
+          $('[data-dismiss="modal"]').click();
+        }
+      });
+    }
+  }
+  
 }

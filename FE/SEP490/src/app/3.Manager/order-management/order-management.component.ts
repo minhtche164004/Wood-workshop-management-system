@@ -77,7 +77,7 @@ export class OrderManagementComponent implements OnInit {
     // if (element) {
     //   element.value = statusId;
     // }
-    this.realoadgetAllUser();
+    this.refilterStatus();
   }
 
   getOrderStatus(): void {
@@ -276,6 +276,24 @@ export class OrderManagementComponent implements OnInit {
             
 
               this.isLoadding = false;
+            }
+
+          },
+        );
+    }
+
+  }
+  refilterStatus(): void {
+
+    if (this.selectedCategory !== "0") {
+      this.authenListService.getFilterStatus(this.searchKey, this.selectedCategory)
+        .subscribe(
+          (data) => {
+            if (data.code === 1000) {
+              // this.currentPage = 1;
+              this.user = data.result;
+            } else if (data.code === 1015) {
+              this.user = [];                        
             }
 
           },

@@ -25,7 +25,10 @@ public interface Product_RequestimagesRepository extends JpaRepository<Product_R
     List<Product_Requestimages> findImageByProductId(@Param("requestProductId") int requestProductId);
 
     @Query("SELECT p.fullPath FROM Product_Requestimages p JOIN p.requestProducts r WHERE r.requestProductId = :requestProductId")
-    Optional<String> findFirstFullPathImageByProductId(@Param("requestProductId") int requestProductId);
+    List<String> findFirstFullPathImageByProductId(@Param("requestProductId") int requestProductId);
+//
+//    @Query("SELECT i.requestProducts.requestProductId, i.fullPath FROM Product_Requestimages i")
+//    List<Object[]> findAllImagesWithProductIdTest();
 
 
     @Query(value = "SELECT product_request_images.full_path FROM product_request_images JOIN request_products ON product_request_images.request_product_id = request_products.request_product_id WHERE request_products.request_product_id = :requestProductId ORDER BY request_products.request_product_id DESC LIMIT 1", nativeQuery = true)

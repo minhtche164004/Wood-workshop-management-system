@@ -46,7 +46,7 @@ public class RequestProducts {
 
 
  @OneToMany(mappedBy = "requestProducts")
-// @JsonIgnore
+ @JsonIgnore
  private List<Product_Requestimages> productRequestimages;
 //    @ManyToOne
 //    @JoinColumn(name = "request_id", referencedColumnName = "request_id")

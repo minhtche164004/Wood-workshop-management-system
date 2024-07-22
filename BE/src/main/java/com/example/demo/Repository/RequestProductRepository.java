@@ -74,29 +74,38 @@ public interface RequestProductRepository extends JpaRepository<RequestProducts,
 
 
     @Query("SELECT new com.example.demo.Dto.ProductDTO.RequestProductAllDTO(" +
-            "r.requestProductId, r.requestProductName, r.description, r.price, r.quantity, r.completionTime, s.status_id, s.status_name, i.productImageId, " +
-            "COALESCE(i.fullPath, ''), o.code, o.orderId) " +
-            " FROM RequestProducts r " +
-            " LEFT JOIN r.status s " +
-            " LEFT JOIN r.orders o " +
-            " LEFT JOIN r.productRequestimages i")
+            "r.requestProductId, r.requestProductName, r.description, r.price, r.quantity, r.completionTime, s.status_id, s.status_name, " +
+            "MIN(i.productImageId),MIN(i.fullPath), " +
+            "o.code, o.orderId) " +
+            "FROM RequestProducts r " +
+            "LEFT JOIN r.status s " +
+            "LEFT JOIN r.orders o " +
+            "JOIN r.productRequestimages i " +
+            "GROUP BY r.requestProductId")
     List<RequestProductAllDTO> getAllRequestProduct();
 
+
+
+
     @Query("SELECT new com.example.demo.Dto.ProductDTO.RequestProductAllDTO(" +
-            "r.requestProductId, r.requestProductName, r.description, r.price, r.quantity, r.completionTime, s.status_id, s.status_name, i.productImageId, " +
-            "COALESCE(i.fullPath, ''), o.code, o.orderId) " +
-            " FROM RequestProducts r " +
-            " LEFT JOIN r.status s " +
-            " LEFT JOIN r.orders o " +
-            " LEFT JOIN r.productRequestimages i WHERE " +
-            "(r.requestProductName LIKE %:search% OR :search IS NULL) AND " +
-            "(r.status.status_id = :status_id OR :status_id IS NULL) AND" +
-            "(r.price >= :minPrice OR :minPrice IS NULL) AND" +
-            "(r.price <= :maxPrice OR :maxPrice IS NULL) ")
-    List<RequestProductAllDTO> filterRequestProductsForAdmin(@Param("search") String search,
-                                                             @Param("status_id") Integer status_id,
-                                                             @Param("minPrice") BigDecimal minPrice,
-                                                             @Param("maxPrice") BigDecimal maxPrice);
+            "r.requestProductId, r.requestProductName, r.description, r.price, r.quantity, r.completionTime, s.status_id, s.status_name, MIN(i.productImageId),MIN(i.fullPath), " +
+            "o.code, o.orderId) " +
+            "FROM RequestProducts r " +
+            "LEFT JOIN r.status s " +
+            "LEFT JOIN r.orders o " +
+            "LEFT JOIN r.productRequestimages i " +
+            "WHERE (r.requestProductName LIKE %:search% OR :search IS NULL) AND " +
+            "(s.status_id = :status_id OR :status_id IS NULL) AND " +
+            "(r.price >= :minPrice OR :minPrice IS NULL) AND " +
+            "(r.price <= :maxPrice OR :maxPrice IS NULL) " +
+            "GROUP BY r.requestProductId, r.requestProductName, r.description, r.price, r.quantity, r.completionTime, s.status_id, s.status_name, o.code, o.orderId")
+    List<RequestProductAllDTO> filterRequestProductsForAdmin(
+            @Param("search") String search,
+            @Param("status_id") Integer status_id,
+            @Param("minPrice") BigDecimal minPrice,
+            @Param("maxPrice") BigDecimal maxPrice
+    );
+
 
 
 

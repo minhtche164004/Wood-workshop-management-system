@@ -23,6 +23,12 @@ spring:
     hibernate:
       ddl-auto: update
     show-sql: true
+    spring:
+      jpa:
+        properties:
+          hibernate:
+            query:
+              subqueries=true:
 
   logging:
     level:

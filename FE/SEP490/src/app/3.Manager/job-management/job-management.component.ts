@@ -38,7 +38,7 @@ export class JobManagementComponent implements OnInit {
   selectedStatus: number = 0;
   selectedProduct: any = {}; // Biến để lưu trữ sản phẩm được chọn
   positionEmployees: any[] = [];
-  positions: any[]= [];
+  positions: any[] = [];
   type: any = {};
   statusType: any[] = [];
   statusOptions: any[] = [];
@@ -101,12 +101,12 @@ export class JobManagementComponent implements OnInit {
 
   ngOnInit(): void {
     this.showLoadingIndicator();
-  
+
     Promise.all([
       this.loadProductRQForJob(),
       this.loadStatusByType(),
       // this.loadProductNgOn(),
-      this.getAllPostionEmp(), 
+      this.getAllPostionEmp(),
       this.getAllStatusJob(),
       this.loadPosition(),
       this.loadAutoSearchProduct()
@@ -120,7 +120,7 @@ export class JobManagementComponent implements OnInit {
   showLoadingIndicator() {
     this.isLoadding = true;
   }
-  
+
   hideLoadingIndicator() {
     this.isLoadding = false;
   }
@@ -147,6 +147,8 @@ export class JobManagementComponent implements OnInit {
     if (element instanceof HTMLSelectElement) {
       element.selectedIndex = 0;
     }
+
+
   }
 cancelChangeStatusJob() {
     this.selectedModalId = '';
@@ -157,7 +159,7 @@ cancelChangeStatusJob() {
     this.isLoadding = true
 
     this.createJobs.reset();
- 
+
     if (this.selectedCategory === 1) {
       console.log('SP có sẵn');
 
@@ -284,11 +286,11 @@ cancelChangeStatusJob() {
       this.jobService.createExportMaterialProductTotalJob(p_id, position_id, user_id, createJobs).subscribe(
         (data) => {
           if (data.code === 1000) {
-            this.toastr.success('Xuất nguyên liệu thành công', 'Thành công');
             console.log('Xuất nguyên liệu thành công');
             this.jobService.addJob(user_id, p_id, status_id, job_id, type_id, createJobs).subscribe(
               (data) => {
                 if (data.code === 1000) {
+                  this.toastr.success('Giao việc thành công', 'Thành công');
                   this.pForJob = data.result;
                   // console.log('Add product for job:', this.pForJob);
 
@@ -339,12 +341,13 @@ cancelChangeStatusJob() {
       this.jobService.createExportMaterialRequestTotalJob(p_id, position_id, user_id, createJobs).subscribe(
         (data) => {
           if (data.code === 1000) {
-            this.toastr.success('Xuất nguyên liệu thành công', 'Thành công');
-       //     console.log('Xuất nguyên liệu thành công');
-            this.jobService.addJob(user_id, p_id, status_id, job_id, type_id, createJobs).subscribe(
+            console.log('Xuất nguyên liệu thành công');
+            this.jobService.addJob(user_id, p_id, status_id, job_id, type_id, jobData).subscribe(
               (data) => {
                 if (data.code === 1000) {
                   this.pForJob = data.result;
+                  this.toastr.success('Giao việc thành công', 'Thành công');
+
                   // console.log('Add product for job:', this.pForJob);
                   // this.toastr.success('Thêm sản phẩm sản xuất thành công!', 'Thành công');
                   $('[data-dismiss="modal"]').click(); this.isLoadding = false;
@@ -529,7 +532,7 @@ cancelChangeStatusJob() {
         (data) => {
           if (data.code === 1000) {
             this.productRQs = data.result;
-          //  console.log('Sp cho job:', this.productRQs);
+            //  console.log('Sp cho job:', this.productRQs);
             this.checkJobsForErrors();
           } else {
             console.error('Failed to fetch products:', data);
@@ -547,7 +550,7 @@ cancelChangeStatusJob() {
       );
     });
   }
-  
+
   checkJobsForErrors() {
     this.listErrorJob = [];
     const errorCheckPromises = this.productRQs.map((product) => {
@@ -598,13 +601,13 @@ cancelChangeStatusJob() {
     return [6, 9, 12, 14].includes(product.statusJob.status_id) || product.statusJob.type === 1;
   }
   productAutoSearch: any[] = [];
-  loadAutoSearchProduct(){
+  loadAutoSearchProduct() {
     this.jobService.getListProduct().subscribe(
       (data) => {
         if (data.code === 1000) {
           this.productAutoSearch = data.result;
-         
-           console.log('Auto search prodcut:', this.productAutoSearch);
+
+          console.log('Auto search prodcut:', this.productAutoSearch);
         } else {
           //   console.error('Failed to fetch products:', data);
           this.toastr.error('Không thể lấy danh sách sản phẩm!', 'Lỗi');
@@ -616,7 +619,7 @@ cancelChangeStatusJob() {
       }
     );
   }
-  
+
   manageJob(product: any): void {
     this.isLoadding = true;
     this.selectedProduct = { ...product };
@@ -927,7 +930,6 @@ cancelChangeStatusJob() {
   //  console.log("Selected cate: ", this.selectedStatusJob)
     // console.log('Thực hiện tìm kiếm:', searchKey);
     // console.log('Category:', selectedCategory);
-     console.log('Position:', this.selectedPosSearch);
     this.isLoadding = true;
     if (selectedCategory === 1) {
       this.jobService.multiSearchJob(searchKey, this.selectedStatusJob, this.selectedPosSearch).subscribe(
@@ -1027,7 +1029,7 @@ cancelChangeStatusJob() {
       }
     );
   }
-  selectedPosSearch: any ='';
+  selectedPosSearch: any = '';
   positionsSearch: any[] = [];
   loadPosition(): Promise<void> {
     return new Promise((resolve, reject) => {

@@ -19,6 +19,8 @@ import com.example.demo.Service.*;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
+import jakarta.mail.MessagingException;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -34,6 +36,7 @@ import java.lang.reflect.Type;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -179,16 +182,15 @@ public class OrderController {
         apiResponse.setResult(orderService.ConfirmPayment(order_id));
         return apiResponse;
     }
-    @GetMapping("/MultiFilterOrder")
+    @PostMapping ("/MultiFilterOrder")
     public ApiResponse<?> MultiFilterOrder(
             @RequestParam(required = false) String search,
             @RequestParam(required = false) Integer statusId,
             @RequestParam(required = false) Integer paymentMethod,
-            @RequestParam(required = false) @DateTimeFormat(pattern = "yyyy-MM-dd")  Date startDate,
-            @RequestParam(required = false)  @DateTimeFormat(pattern = "yyyy-MM-dd") Date endDate
+            @RequestBody(required = false) DateDTO dto
     ) {
         ApiResponse<List<OderDTO>> apiResponse = new ApiResponse<>(); // Chỉ định rõ kiểu List<OderDTO>
-        apiResponse.setResult(orderService.MultiFilterOrder(search, statusId, paymentMethod, startDate, endDate));
+        apiResponse.setResult(orderService.MultiFilterOrder(search, statusId, paymentMethod, dto.getStartDate(), dto.getEndDate()));
         return apiResponse;
     }
 
@@ -220,6 +222,18 @@ public class OrderController {
         apiResponse.setResult(orderService.GetAllOrder());
         return apiResponse;
     }
+
+    @PostMapping("SendMailToNotifyCationAboutOrder")
+    public ResponseEntity<Map<String, String>> SendMailToNotifyCationAboutOrder(@RequestParam("order_id") int order_id , HttpServletRequest request) throws MessagingException, IOException {
+       // ApiResponse<String> apiResponse = new ApiResponse<>();
+        String baseUrl = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort() + "/api/auth";
+        String vnpayUrl= orderService.SendMailToNotifyCationAboutOrder(order_id,baseUrl);
+        Map<String, String> response = new HashMap<>();
+        response.put("url", vnpayUrl);
+
+        return ResponseEntity.ok(response);
+    }
+
     @PutMapping("ManagerEditRequest")
     public ApiResponse<?> ManagerEditRequest(@RequestParam("request_id") int request_id,@RequestBody RequestEditDTO requestEditDTO){
         ApiResponse<Orders> apiResponse = new ApiResponse<>();

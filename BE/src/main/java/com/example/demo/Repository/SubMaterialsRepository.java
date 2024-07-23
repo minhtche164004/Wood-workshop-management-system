@@ -36,8 +36,8 @@ public interface SubMaterialsRepository extends JpaRepository<SubMaterials,Integ
             "(s.subMaterialName LIKE %:search% OR :search IS NULL) AND " +
             "(s.material.materialId = :materialId OR :materialId IS NULL) AND " +
             "(a.action_type_id = :action_type_id OR :action_type_id IS NULL) AND " +
-            "(i.date_input >= :startDate OR :startDate IS NULL) AND " +
-            "(i.date_input <= :endDate OR :endDate IS NULL) AND " +
+            "(i.date_input > :startDate OR :startDate IS NULL) AND " +
+            "(i.date_input < :endDate OR :endDate IS NULL) AND " +
             "(i.unit_price >= :minPrice OR :minPrice IS NULL) AND " +
             "(i.unit_price <= :maxPrice OR :maxPrice IS NULL)")
     List<InputSubMaterial> MultiFilterInputSubMaterial(@Param("search") String search,
@@ -56,26 +56,26 @@ public interface SubMaterialsRepository extends JpaRepository<SubMaterials,Integ
 
 
     @Query("SELECT new com.example.demo.Dto.SubMaterialDTO.SubMaterialViewDTO(" +
-            "s.subMaterialId, COALESCE(s.subMaterialName, ''), m.materialId, COALESCE(s.description, ''), COALESCE(m.materialName, ''), s.quantity, s.unitPrice,m.type) " + // Thêm dấu phẩy và loại bỏ COALESCE cho các ID
+            "s.subMaterialId, COALESCE(s.subMaterialName, ''), m.materialId, COALESCE(s.description, ''), COALESCE(m.materialName, ''), s.quantity, s.unitPrice,s.inputPrice,m.type) " + // Thêm dấu phẩy và loại bỏ COALESCE cho các ID
             "FROM SubMaterials s " +
             "LEFT JOIN s.material m")
     List<SubMaterialViewDTO> getAllSubmaterial();
 
     @Query("SELECT new com.example.demo.Dto.SubMaterialDTO.SubMaterialViewDTO(" +
-            "s.subMaterialId, COALESCE(s.subMaterialName, ''), m.materialId, COALESCE(s.description, ''), COALESCE(m.materialName, ''), s.quantity, s.unitPrice,m.type) " + // Thêm dấu phẩy và loại bỏ COALESCE cho các ID
+            "s.subMaterialId, COALESCE(s.subMaterialName, ''), m.materialId, COALESCE(s.description, ''), COALESCE(m.materialName, ''), s.quantity, s.unitPrice,s.inputPrice,m.type) " + // Thêm dấu phẩy và loại bỏ COALESCE cho các ID
             "FROM SubMaterials s " +
             "LEFT JOIN s.material m WHERE s.material.materialId = :query")
     List<SubMaterialViewDTO> findSubMaterialIdByMaterial(int query);
 
     @Query("SELECT new com.example.demo.Dto.SubMaterialDTO.SubMaterialViewDTO(" +
-            "s.subMaterialId, COALESCE(s.subMaterialName, ''), m.materialId, COALESCE(s.description, ''), COALESCE(m.materialName, ''), s.quantity, s.unitPrice,m.type) " + // Thêm dấu phẩy và loại bỏ COALESCE cho các ID
+            "s.subMaterialId, COALESCE(s.subMaterialName, ''), m.materialId, COALESCE(s.description, ''), COALESCE(m.materialName, ''), s.quantity, s.unitPrice,s.inputPrice,m.type) " + // Thêm dấu phẩy và loại bỏ COALESCE cho các ID
             "FROM SubMaterials s " +
             "LEFT JOIN s.material m WHERE s.subMaterialName LIKE CONCAT('%', :keyword, '%') OR " +
             "s.code LIKE CONCAT('%', :keyword, '%')")
     List<SubMaterialViewDTO> findSubMaterialsByNameCode(@Param("keyword") String keyword);
 
     @Query("SELECT new com.example.demo.Dto.SubMaterialDTO.SubMaterialViewDTO(" +
-            "s.subMaterialId, COALESCE(s.subMaterialName, ''), m.materialId, COALESCE(s.description, ''), COALESCE(m.materialName, ''), s.quantity, s.unitPrice,m.type) " + // Thêm dấu phẩy và loại bỏ COALESCE cho các ID
+            "s.subMaterialId, COALESCE(s.subMaterialName, ''), m.materialId, COALESCE(s.description, ''), COALESCE(m.materialName, ''), s.quantity, s.unitPrice,s.inputPrice,m.type) " + // Thêm dấu phẩy và loại bỏ COALESCE cho các ID
             "FROM SubMaterials s " +
             "LEFT JOIN s.material m WHERE s.subMaterialId = :subMaterialId")
     SubMaterialViewDTO findSubMaterialsById(int subMaterialId);

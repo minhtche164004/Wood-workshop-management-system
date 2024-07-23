@@ -222,7 +222,7 @@ export class OrderRequiredComponent implements OnInit {
   
     // Reset the form values
     this.uploadForm.patchValue({
-      payment_method: 0,
+      payment_method: null,
       files: [],
       description: ''
     });

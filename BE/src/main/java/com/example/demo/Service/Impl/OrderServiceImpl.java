@@ -12,6 +12,7 @@ import com.example.demo.Mail.EmailService;
 import com.example.demo.Mail.MailBody;
 import com.example.demo.Repository.*;
 import com.example.demo.Service.*;
+import jakarta.mail.MessagingException;
 import jakarta.persistence.EntityManager;
 import jakarta.transaction.Transactional;
 import org.apache.poi.util.IOUtils;
@@ -26,6 +27,8 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.math.BigDecimal;
+import java.math.RoundingMode;
+import java.nio.charset.StandardCharsets;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.ZoneId;
@@ -80,6 +83,10 @@ public class    OrderServiceImpl implements OrderService {
     private SubMaterialsRepository subMaterialsRepository;
     @Autowired
     private MultipartFileConverter multipartFileConverter;
+    @Autowired
+    private VNPayService vnPayService;
+
+
 
     @Override
     public Orders AddOrder(RequestOrder requestOrder) {
@@ -310,6 +317,8 @@ public class    OrderServiceImpl implements OrderService {
         }
         return order_list;
     }
+
+
 
     //Tạo Request
     //Tạo Request Product
@@ -694,10 +703,17 @@ public class    OrderServiceImpl implements OrderService {
     @Transactional
     @Override
     public String ChangeStatusOrder(int orderId, int status_id) {
+        LocalDate today = LocalDate.now();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("ddMMyy");
+        String dateString = today.format(formatter);
+        Date requestDate = Date.from(today.atStartOfDay(ZoneId.systemDefault()).toInstant());
         Status_Order statusOrder =statusOrderRepository.findById(status_id);
         Orders orders = orderRepository.findById(orderId);
 
-
+        if(status_id == 5){
+            orders.setOrderFinish(requestDate);
+            orderRepository.save(orders);
+        }
         //send mail cho những đơn hàng đặt theo yêu cầu , vì đơn hàng mau có sẵn thì mua luôn rồi, trả tiền luôn r cần đéo gì nữa mà phải theo dõi tình trạng đơn hàng
         orderRepository.UpdateStatusOrder(orderId,status_id);
 
@@ -726,6 +742,22 @@ public class    OrderServiceImpl implements OrderService {
             emailService.sendSimpleMessage(mailBody);
         }
         return "Thay đổi trạng thái đơn hàng thành công";
+    }
+
+    @Override
+    public String SendMailToNotifyCationAboutOrder(int order_id,String link) throws MessagingException, IOException {
+        List<OrderDetailWithJobStatusDTO> list  = orderDetailRepository.getAllOrderDetailByOrderId(order_id);
+        Orders orders = orderRepository.findById(order_id);
+      //  String baseUrl = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort() + "/api/auth";
+
+       // int total = orders.getTotalAmount().setScale(0, RoundingMode.HALF_UP).intValueExact();
+        //int total = (int) orders.getDeposite().longValue(); // Ép kiểu từ long sang int
+     //  String link = vnPayService.createOrder(total,orders.getCode(),url);
+        String name = orders.getFullname();
+        String email =orders.getUserInfor().getUser().getEmail();
+      //  String link = "";
+        emailService.sendEmailFromTemplate(name,email,list,orders,link);
+        return "Gửi thông tin đơn hàng thành công !";
     }
 
 

@@ -16,4 +16,9 @@ public interface InputSubMaterialRepository extends JpaRepository<InputSubMateri
     @Query("SELECT ism FROM InputSubMaterial ism WHERE ism.subMaterials.subMaterialId = :subMaterialId AND ism.actionType.action_type_id = 4  ORDER BY ism.date_input DESC LIMIT 1   ")
     InputSubMaterial findLatestInputSubMaterialBySubMaterialId(@Param("subMaterialId") int subMaterialId);
 
+
+    //lấy giá submaterial đã cập nhật lần cuối(bản ghi mới nhất) (loại action là cạp nhật giá)(giá bán)
+    @Query("SELECT ism FROM InputSubMaterial ism WHERE ism.subMaterials.subMaterialId = :subMaterialId AND ism.actionType.action_type_id = 4  ORDER BY ism.date_input DESC LIMIT 1   ")
+    InputSubMaterial findLatestOutputSubMaterialBySubMaterialId(@Param("subMaterialId") int subMaterialId);
+
 }

@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { environment } from 'src/app/environments/environment';
@@ -35,6 +35,7 @@ export class JobService {
 
   private apiMultiSeachJobRequest = `${environment.apiUrl}api/auth/job/MultiFilterRequestProductInJob`
 
+  private apigetAllProductErrorByJobId = `${environment.apiUrl}api/auth/job`
     // user_id={{$random.integer(100)}}&
     // p_id={{$random.integer(100)}}&                                  ?job_id=152&status_id=9
     // status_id={{$random.integer(100)}}`
@@ -50,7 +51,11 @@ export class JobService {
     const url = `${this.apiGetJobById}?job_id=${jobId}`;
     return this.http.get<any>(url);
   }
-
+  getAllProductErrorsByJobId(jobId: number): Observable<any> {
+    const url = `${this.apigetAllProductErrorByJobId}/getAllProductErrorByJobId`;
+    const params = new HttpParams().set('job_id', jobId.toString());
+    return this.http.get<any>(url, { params });
+  }
   checkErrorOfJob(jobId: number): Observable<any> {
     return this.http.get<any>(`${this.apicheckErrorOfJobHaveFixDoneOrNot}?job_id=${jobId}`);
   }
@@ -70,12 +75,12 @@ export class JobService {
   getProductJobByNameOrCode(key: string): Observable<any> {
     return this.http.get<any>(`${this.apiSearchProductByNameOrCode}?key=${key}`);
   }
-  createExportMaterialProductTotalJob(id:number, mate_id: number, emp_id: number, productForm: any): Observable<any> {
+  createExportMaterialProductTotalJob(id:number, mate_id: number, emp_id: any, productForm: any): Observable<any> {
     const url = `${this.apiCreateExportProd}?id=${id}&mate_id=${mate_id}&emp_id=${emp_id}`;
    // console.log('Total product for job URL:', url);
     return this.http.post(url, productForm);
   }
-  createExportMaterialRequestTotalJob(id:number, mate_id: number, emp_id: number, productForm: any): Observable<any> {
+  createExportMaterialRequestTotalJob(id:number, mate_id: number, emp_id: any, productForm: any): Observable<any> {
     const url = `${this.apicreateExportMaterialRequestTotalJob}?id=${id}&mate_id=${mate_id}&emp_id=${emp_id}`;
  //   console.log('Total product for job URL:', url);
     return this.http.post(url, productForm);
@@ -88,7 +93,7 @@ export class JobService {
     return this.http.put<any>(url, payload);
   }
   
-  addJob(user_id: number, p_id: number, status_id: number, job_id: number, type_id:number, jobData: any): Observable<any> {
+  addJob(user_id: any, p_id: number, status_id: number, job_id: number, type_id:number, jobData: any): Observable<any> {
     const url = `${this.apiCreateProductForjob}?user_id=${user_id}&p_id=${p_id}&status_id=${status_id}&&type_job=${type_id}&job_id=${job_id}`;
     // console.log('Add job URL:', url);
     return this.http.post<any>(url, jobData);

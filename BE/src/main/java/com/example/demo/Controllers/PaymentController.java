@@ -63,7 +63,6 @@ public class PaymentController {
                                                            HttpServletRequest request) {
         String baseUrl = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort() + "/api/auth";
         String vnpayUrl = vnPayService.createOrder(orderTotal, orderInfo, baseUrl);
-
         Map<String, String> response = new HashMap<>();
         response.put("url", vnpayUrl);
 

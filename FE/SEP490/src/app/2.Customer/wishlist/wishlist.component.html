@@ -35,13 +35,19 @@
             font-size: 24px;
         }
 
-        /* Product Container Styles */
         .product-container {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            grid-gap: 40px;
-            padding: 40px;
-        }
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  grid-gap: 40px;
+  padding: 40px;
+}
+
+@media (max-width: 767px) {
+  .product-container {
+    grid-gap: 20px;
+    padding: 20px;
+  }
+}
 
         .product {
             border: 1px solid #ccc;

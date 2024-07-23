@@ -1,110 +1,92 @@
 <app-header></app-header>
 
-<div class="dashboard-main" style="margin-top: 150px;">
+<div class="dashboard-main mt-5">
   <div class="container-fluid">
-    <div class="table-responsive">
+    <div style="margin-top: 120px;" class="table-responsive">
       <div class="table-wrapper">
         <div class="table-title">
-          <div class="row " style="height: 60px;">
-            <div class="col-sm-5 ">
-              <h2 style="margin-bottom: 0;">Lịch sử đơn đặt hàng</h2>
+          <div class="row align-items-center" style="height: 60px;">
+            <div class="col-md-5 col-sm-12">
+              <h2 class="mb-0">Lịch sử đơn đặt hàng</h2>
             </div>
-            <div class="col-sm-7 text-end d-flex align-items-center justify-content-end">
-
+            <div class="col-md-7 col-sm-12 text-end d-flex align-items-center justify-content-end">
+              <!-- Add any additional buttons or elements here -->
             </div>
           </div>
 
-          <div class="row">
-            <div class="col-md-7">
+          <div class="row  justify-content-end">
+            <div class="col-md-9 text-end">
               <div class="input-group mb-3">
                 <!-- product.component.html -->
                 <label>Từ: </label>
-                <input style="margin-left: 10px;" type="date" class="form-control" placeholder="Đến: dd/mm/yyyy">
+                <input [(ngModel)]="selectedSDate" style="margin-left: 10px;" type="date" class="form-control"
+                  placeholder="Đến: dd/mm/yyyy">
 
                 <label>Đến: </label>
-                <input style="margin-left: 10px;" type="date" class="form-control" placeholder="Đến: dd/mm/yyyy">
-              </div>
-            </div>
-            <div class="col-md-5 text-end">
-              <div class="input-group mb-3">
+                <input [(ngModel)]="selectedEDate" style="margin-left: 10px;" type="date" class="form-control"
+                  placeholder="Đến: dd/mm/yyyy">
+
                 <!-- product.component.html -->
-                <select>
-                  <option value="null" disabled selected>Tình Trạng Đơn Hàng</option>
-                  <option></option>
+                <select [(ngModel)]="selectedCategory">
+                  <!-- <option value="0" selected disabled>Chọn đơn hàng</option> -->
+                  <option *ngFor="let ps of userStatus" [value]="ps.status_id">{{ ps.status_name }}</option>
+                  <option value="" selected>Tất cả danh mục</option>
                 </select>
 
-                <input type="text" class="form-control" placeholder="(Mã đơn hàng, Tên)">
-                <button class="btn search-button" type="button">
+                <input type="text" class="form-control" placeholder="Tìm kiếm mã đơn hàng..." [(ngModel)]="searchKey">
+
+                <button class="btn search-button" type="button" (click)="filterStatus()">
                   <i class="fa fa-search"></i>
                 </button>
               </div>
             </div>
           </div>
         </div>
+
         <div class="table-container">
           <div class="table-responsive">
             <table class="table table-striped table-hover">
               <thead>
                 <tr>
-
-                  <th style="width: 200px;">Mã đơn hàng</th>
-                  <!-- <th style="width: 2px;">Thao tác</th> -->
-                  <th style="width: 200px;">Loại đơn hàng</th>
-                  <th >Ngày đặt hàng</th>
+                  <th>Mã đơn hàng</th>
+                  <th>Loại đơn hàng</th>
+                  <th>Ngày đặt hàng</th>
                   <th>Ngày hoàn thành</th>
                   <th>Tình trạng đơn hàng</th>
-                 
-                  <th style="width: 160px;">Kiểu thanh toán</th>
-                  <th style="width: 150px;">Tổng tiền(VNĐ)</th>
+                  <th>Kiểu thanh toán</th>
+                  <th>Tổng tiền (VNĐ)</th>
                   <th>Lí do từ chối</th>
                 </tr>
               </thead>
               <tbody>
                 <tr
                   *ngFor="let hs of history_order | paginate: { itemsPerPage: 10, currentPage: currentPage }; let i = index">
-
                   <td>{{ hs?.code }}</td>
-                  <!-- <td class="action-buttons">
-                   
-                    <a href="#" class="info" title="Xem chi tiết" data-toggle="modal" data-target="#productDetailModal" (click)="historyOrderDetail(hs.orderId)">
-                      <i class="fa-solid fa-ellipsis-vertical"></i>
-                    </a>
-                  </td> -->
-                  <td style="min-width: 140px;">
-                    {{ hs?.specialOrder ? 'Đơn hàng đặc biệt' : 'Đơn hàng có sẵn' }}
-                  </td>
-
+                  <td>{{ hs?.specialOrder ? 'Đơn hàng đặc biệt' : 'Đơn hàng có sẵn' }}</td>
                   <td>{{ hs?.orderDate | date:'dd/MM/yyyy' }}</td>
                   <td>{{ hs?.orderFinish | date:'dd/MM/yyyy' }}</td>
                   <td>{{ hs?.status.status_name}}</td>
-                  
-                  <td style=" min-width: 30px;"
-                  [ngStyle]="{'color': hs?.paymentMethod === 2 ? 'green' : (hs?.paymentMethod === 1 ? 'red' : 'black')}">
-                  {{ hs?.paymentMethod === 2 ? 'Chuyển khoản' : (hs?.paymentMethod === 1 ? 'Tiền mặt' : '') }}
-                </td>
+                  <td
+                    [ngStyle]="{'color': hs?.paymentMethod === 2 ? 'green' : (hs?.paymentMethod === 1 ? 'red' : 'black')}">
+                    {{ hs?.paymentMethod === 2 ? 'Chuyển khoản' : (hs?.paymentMethod === 1 ? 'Tiền mặt' : '') }}
+                  </td>
                   <td style="text-align: right;">{{ hs?.totalAmount | number : '1.0-3' }}</td>
-                  <td>{{ hs?.response}}</td>
+                  <td>{{ hs?.response }}</td>
                 </tr>
               </tbody>
             </table>
           </div>
         </div>
 
-
-        <pagination-controls style="justify-content: right; display: flex;" (pageChange)="currentPage = $event"
+        <pagination-controls class="d-flex justify-content-end" (pageChange)="currentPage = $event"
           previousLabel="Trang trước" nextLabel="Trang sau">
         </pagination-controls>
-       
-
-
       </div>
     </div>
   </div>
-</div >
+</div>
+
 <!-- Modal for Product Detail -->
-
-
-
 <div class="modal fade" id="productDetailModal" role="dialog" aria-labelledby="detailJobModalLabel" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered modal-lg">
     <div class="modal-content">
@@ -119,80 +101,56 @@
               <div class="row">
                 <div class="col-md-6">
                   <section class="customer-info mb-4">
-                    <h5 style="text-align: center;">Thông tin sản phẩm</h5>
+                    <h5 class="text-center">Thông tin sản phẩm</h5>
                     <div class="row">
                       <div class="col-md-6">
-                        <p>
-                          <strong>Tên sản phẩm:</strong>
-                          {{ orderData?.product_name }}
-                        </p>
-                      </div>
-                      
-                    </div>
-                    <div class="row">
-                      <div class="col-md-6">
-                        <p>
-                          <strong>Số lượng sản phẩm:</strong>
-                          {{ orderData?.quantity }}
-                        </p>
-                      </div>
-                      <div class="col-md-6">
-                        <p>
-                          <strong>Giá sản phẩm:</strong>
-                          {{ orderData?.price }}
-                        </p>
+                        <p><strong>Tên sản phẩm:</strong> {{ orderData?.product_name }}</p>
                       </div>
                     </div>
                     <div class="row">
                       <div class="col-md-6">
-                        <p>
-                          <strong>Tổng số tiền:</strong>
-                          {{ orderData?.totalAmount }}
-                        </p>
+                        <p><strong>Số lượng sản phẩm:</strong> {{ orderData?.quantity }}</p>
                       </div>
                       <div class="col-md-6">
-                        <p>
-                          <strong>Phương thức thanh toán:</strong>
-                         
-                          {{ orderData?.paymentMethod === 1 ? 'Chuyển khoản' : (orderData?.paymentMethod === 0 ? 'Tiền mặt' : '') }}
-                        </p>
+                        <p><strong>Giá sản phẩm:</strong> {{ orderData?.price }}</p>
+                      </div>
+                    </div>
+                    <div class="row">
+                      <div class="col-md-6">
+                        <p><strong>Tổng số tiền:</strong> {{ orderData?.totalAmount }}</p>
+                      </div>
+                      <div class="col-md-6">
+                        <p><strong>Phương thức thanh toán:</strong> {{ orderData?.paymentMethod === 1 ? 'Chuyển khoản' :
+                          (orderData?.paymentMethod === 0 ? 'Tiền mặt' : '') }}</p>
                       </div>
                     </div>
                   </section>
                 </div>
-
                 <div class="col-md-6">
                   <section class="order-summary mb-4">
-                    <h5 style="text-align: center;">Thông tin đơn hàng</h5>
+                    <h5 class="text-center">Thông tin đơn hàng</h5>
                     <div class="row">
                       <div class="col-md-6">
-                        <p>
-                          <strong>Mã đơn hàng:</strong>
-                          {{ orderData?.code }}
-                        </p>
+                        <p><strong>Mã đơn hàng:</strong> {{ orderData?.code }}</p>
                       </div>
                       <div class="col-md-6">
-                        <p>
-                          <strong>Trạng thái đơn hàng:</strong>
-                          {{ orderData?.status?.status_name }}
-                        </p>
+                        <p><strong>Trạng thái đơn hàng:</strong> {{ orderData?.status?.status_name }}</p>
                       </div>
                     </div>
-
-                  
-              
                   </section>
                 </div>
               </div>
             </div>
           </div>
         </div>
-
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
         </div>
       </div>
     </div>
   </div>
+</div>
+<div *ngIf="isLoadding" class="loading-overlay">
+  <div class="spinner"></div>
 </div>
 <app-footer></app-footer>

@@ -25,7 +25,7 @@
                 <!-- product.component.html -->
 
                 <select [(ngModel)]="selectedRoleFilter" (change)="filterRole()">
-                  <option value="null" selected>Tất cả vai trò</option>
+                  <option value="null" selected>Tất cả vị trí đảm nhận</option>
                   <option *ngFor="let ps of position" [value]="ps.position_id">{{ ps.position_name }}</option>
                 </select>
                 <input type="text" class="form-control" placeholder="Mã người dùng,Tên" [(ngModel)]="searchKey">

@@ -95,19 +95,18 @@
 
           <hr />
 
-          <div class="d-flex justify-content-center mt-4">
-            <a class="btn btn-warning shadow-0 custom-background mx-2"
+          <div class="d-flex justify-content-center mt-4 flex-column flex-md-row">
+            <a class="btn btn-warning shadow-0 custom-background mx-2 mb-2 mb-md-0"
                [routerLink]="['/product-details', productDetails.productId]"
                (click)="addToWishlist(productDetails.productId)">
-              Thêm vào danh sách yêu thích <i class="fa-solid fa-heart"></i>
+              <i class="fa-solid fa-heart me-2"></i>Thêm vào danh sách yêu thích
             </a>
-            <a class="btn btn-warning shadow-0 custom-background mx-2"
+            <a class="btn btn-warning shadow-0 custom-background mx-2 mb-2 mb-md-0"
                href="https://zalo.me/2628068117103072011"
                target="_blank">
-              Liên hệ người bán sản phẩm
+              <i class="fa-brands fa-whatsapp me-2"></i>Liên hệ người bán sản phẩm
             </a>
           </div>
-
 
 
         </div>

@@ -137,10 +137,18 @@
                   {{ us?.paymentMethod === 2 ? 'Chuyển khoản' : (us?.paymentMethod === 1 ? 'Tiền mặt' : '') }}
                 </td>
 
-                <td style="text-align: right;">{{ us?.deposite | number : '1.0-3' }}</td>
-                <td style="text-align: right;">{{ (us?.totalAmount - us?.deposite) | number : '1.0-3'
-                  }}</td>
-                <td style="text-align: right;">{{ us?.totalAmount | number : '1.0-3' }}</td>
+                <td
+                  style="text-align: right; min-width: 100px; max-width: 150px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
+                  {{ us?.deposite | number : '1.0-3' }}
+                </td>
+                <td
+                  style="text-align: right; min-width: 100px; max-width: 150px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
+                  {{ (us?.totalAmount - us?.deposite) | number : '1.0-3' }}
+                </td>
+                <td
+                  style="text-align: right; min-width: 100px; max-width: 150px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
+                  {{ us?.totalAmount | number : '1.0-3' }}
+                </td>
                 <td>
                   <button style="margin-left: -10px; size: 15px;" data-toggle="modal" data-target="#myModalconfirm"
                     class="btn btn-primary" *ngIf="us?.status_id === 1 && us?.paymentMethod === 1 "
@@ -166,7 +174,7 @@
 
 
       <pagination-controls style="justify-content: right; display: flex;" (pageChange)="currentPage = $event"
-        previousLabel="Trang trước" nextLabel="Trang sau" [maxSize]="4" *ngIf="user && user.length > 0">
+        previousLabel="Trang trước" nextLabel="Trang sau"  *ngIf="user && user.length > 0">
       </pagination-controls>
       <div class="clearfix" style="justify-content: right; display: flex;" *ngIf="user && user.length > 0">
         <div class="hint-text">Hiển thị <b>{{ (currentPage - 1) * 10 + 1 }}</b> tới <b>{{ currentPage * 10 >

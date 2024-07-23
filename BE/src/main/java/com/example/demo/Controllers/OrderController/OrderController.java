@@ -179,16 +179,15 @@ public class OrderController {
         apiResponse.setResult(orderService.ConfirmPayment(order_id));
         return apiResponse;
     }
-    @GetMapping("/MultiFilterOrder")
+    @PostMapping ("/MultiFilterOrder")
     public ApiResponse<?> MultiFilterOrder(
             @RequestParam(required = false) String search,
             @RequestParam(required = false) Integer statusId,
             @RequestParam(required = false) Integer paymentMethod,
-            @RequestParam(required = false) @DateTimeFormat(pattern = "yyyy-MM-dd")  Date startDate,
-            @RequestParam(required = false)  @DateTimeFormat(pattern = "yyyy-MM-dd") Date endDate
+            @RequestBody(required = false) DateDTO dto
     ) {
         ApiResponse<List<OderDTO>> apiResponse = new ApiResponse<>(); // Chỉ định rõ kiểu List<OderDTO>
-        apiResponse.setResult(orderService.MultiFilterOrder(search, statusId, paymentMethod, startDate, endDate));
+        apiResponse.setResult(orderService.MultiFilterOrder(search, statusId, paymentMethod, dto.getStartDate(), dto.getEndDate()));
         return apiResponse;
     }
 

@@ -43,6 +43,7 @@ public interface JobService {
 
     Processproducterror AddProductError(int job_id,ProductErrorDTO productErrorDTO);
     List<ProductErrorAllDTO> getAllProductError();
+    List<ProductErrorAllDTO> getAllProductErrorByJobId(int job_id);
     ProductErrorAllDTO getProductErrorDetailById(int query);
     ProductErrorAllDTO EditProductError(int error_id, ProductErrorDTO productErrorDTO);
    // boolean checkOderDoneOrNot(int order_id);

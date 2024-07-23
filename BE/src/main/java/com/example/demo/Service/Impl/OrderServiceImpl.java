@@ -694,10 +694,17 @@ public class    OrderServiceImpl implements OrderService {
     @Transactional
     @Override
     public String ChangeStatusOrder(int orderId, int status_id) {
+        LocalDate today = LocalDate.now();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("ddMMyy");
+        String dateString = today.format(formatter);
+        Date requestDate = Date.from(today.atStartOfDay(ZoneId.systemDefault()).toInstant());
         Status_Order statusOrder =statusOrderRepository.findById(status_id);
         Orders orders = orderRepository.findById(orderId);
 
-
+        if(status_id == 5){
+            orders.setOrderFinish(requestDate);
+            orderRepository.save(orders);
+        }
         //send mail cho những đơn hàng đặt theo yêu cầu , vì đơn hàng mau có sẵn thì mua luôn rồi, trả tiền luôn r cần đéo gì nữa mà phải theo dõi tình trạng đơn hàng
         orderRepository.UpdateStatusOrder(orderId,status_id);
 

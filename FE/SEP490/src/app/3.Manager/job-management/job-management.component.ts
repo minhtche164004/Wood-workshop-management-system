@@ -12,6 +12,7 @@ import { MatDialog, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import 'jquery';
 import { EmployeeService } from 'src/app/service/employee.service';
 import { isCancel } from 'axios';
+import { ErrorProductService } from 'src/app/service/error-product.service';
 
 declare var $: any;
 
@@ -24,7 +25,9 @@ declare var $: any;
 export class JobManagementComponent implements OnInit {
 
   @ViewChild('launchModalButton')
+  
   launchModalButton!: ElementRef;
+  errorReport!: ElementRef;
   products: any[] = [];
   errorForm: FormGroup;
   editJob: FormGroup;
@@ -57,8 +60,11 @@ export class JobManagementComponent implements OnInit {
   isProduct: boolean = true; // check product or product request
   isLoadding: boolean = false;
   jobList: any[] = [];
-
-  constructor(private fb: FormBuilder, private employeeService: EmployeeService, private productList: ProductService, private productListService: ProductListService, private jobService: JobService, private toastr: ToastrService, private sanitizer: DomSanitizer) {
+  showPrimaryModal: boolean | undefined;
+  showWarningModal: boolean | undefined;
+  @ViewChild('errorProduct') errorProduct: any;
+  @ViewChild('otherModal') otherModal: any;
+  constructor(private fb: FormBuilder,private errorProductService: ErrorProductService, private employeeService: EmployeeService, private productList: ProductService, private productListService: ProductListService, private jobService: JobService, private toastr: ToastrService, private sanitizer: DomSanitizer) {
     this.createJobs = this.fb.group({
       job_name: [''],
       quantity_product: [''],
@@ -105,7 +111,7 @@ export class JobManagementComponent implements OnInit {
     Promise.all([
       this.loadProductRQForJob(),
       this.loadStatusByType(),
-      // this.loadProductNgOn(),
+     //  this.loadProductNgOn(),
       this.getAllPostionEmp(), 
       this.getAllStatusJob(),
       this.loadPosition(),
@@ -406,8 +412,8 @@ cancelChangeStatusJob() {
       this.toastr.error('Có lỗi xảy ra!', 'Lỗi');
       return;
     }
-    // console.log('Selected product for job:', this.selectedProduct.productId);
-    this.jobService.addProductForJob(this.selectedProduct.productId, quantity).subscribe(
+     console.log('Selected product for job:', this.selectedProduct.product_id);
+    this.jobService.addProductForJob(this.selectedProduct.product_id, quantity).subscribe(
 
       (data) => {
 
@@ -599,19 +605,20 @@ cancelChangeStatusJob() {
   }
   productAutoSearch: any[] = [];
   loadAutoSearchProduct(){
-    this.jobService.getListProduct().subscribe(
+    this.productListService.getProducts().subscribe(
       (data) => {
+        this.isLoadding = false;
         if (data.code === 1000) {
           this.productAutoSearch = data.result;
-         
-           console.log('Auto search prodcut:', this.productAutoSearch);
+           console.log('Danh sách sản phẩm:', this.productAutoSearch);
         } else {
-          //   console.error('Failed to fetch products:', data);
+          console.error('Failed to fetch products:', data);
           this.toastr.error('Không thể lấy danh sách sản phẩm!', 'Lỗi');
         }
       },
       (error) => {
-        // console.error('Error fetching products:', error);
+        this.isLoadding = false;
+        console.error('Error fetching products:', error);
         this.toastr.error('Có lỗi xảy ra!', 'Lỗi');
       }
     );
@@ -1048,4 +1055,88 @@ cancelChangeStatusJob() {
       );
     });
   }
+  openModal2(product: any) {
+    console.log('open Modal 2:', product);
+    console.log('job_id: ', product.job_id)
+    this.editProduct(product.job_id);
+  }
+
+  errorDetail: any = {};
+
+  shouldShowAnotherButton(): boolean {
+    // Replace this logic with your own conditions
+    // For example, return true if some condition is met to show the second button
+    return this.isCancel; // or use any logic you need
+  }
+  editProduct(errorid: number) {
+    console.log('report product function:');
+    this.isLoadding = true;
+    this.errorProductService.getRrrorDetailById(errorid)
+      .subscribe((response: any) => {
+
+        if (response.code === 1000) {
+          const errorEdit = response.result;
+
+          console.log('Get Error Edit:', errorEdit);
+          this.selectedError = {
+            code: errorEdit.code,
+            code_order: errorEdit.code_order,
+            description: errorEdit.des,
+            employee_name: errorEdit.employee_name,
+            id: errorEdit.id,
+            job_id: errorEdit.job_id,
+            job_name: errorEdit.job_name,
+            product_id: errorEdit.product_id,
+            product_name: errorEdit.product_name,
+            request_product_id: errorEdit.request_product_id,
+            request_product_name: errorEdit.request_product_name,
+            solution: errorEdit.solution,
+            user_name_order: errorEdit.user_name_order,
+            isFixed: errorEdit.fix
+
+          };
+
+          //   this.originalError = { ...this.selectedError };
+          console.log('Form Values after patchValue:', this.selectedError);
+          this.errorForm.patchValue({
+            code: this.selectedError.code,
+            code_order: this.selectedError.code_order,
+            description: this.selectedError.description,
+            employee_name: this.selectedError.employee_name,
+            id: this.selectedError.id,
+            job_id: this.selectedError.job_id,
+            job_name: this.selectedError.job_name,
+            product_id: this.selectedError.product_id,
+            product_name: this.selectedError.product_name,
+            request_product_id: this.selectedError.request_product_id,
+            request_product_name: this.selectedError.request_product_name,
+            solution: this.selectedError.solution,
+            user_name_order: this.selectedError.user_name_order,
+            isFixed: this.selectedError.isFixed
+          });
+          this.isLoadding = false;
+        } else {
+          console.error('Failed to fetch products:', response); this.isLoadding = false;
+          // this.toastr.error('Không thể lấy danh sách sản phẩm!', 'Lỗi');
+        }
+
+      })
+    //  console.log('Form Values after patchValue:', this.errorForm.value);
+  }
+  selectedError: any = {
+    code: null,
+    code_order: null,
+    description: null,
+    employee_name: null,
+    id: null,
+    job_id: null,
+    job_name: null,
+    product_id: null,
+    product_name: null,
+    request_product_id: null,
+    request_product_name: null,
+    solution: null,
+    user_name_order: null,
+    isFixed: null
+  };
 }

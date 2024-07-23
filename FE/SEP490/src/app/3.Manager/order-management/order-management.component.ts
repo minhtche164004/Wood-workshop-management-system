@@ -189,15 +189,17 @@ export class OrderManagementComponent implements OnInit {
 
   }
   productOfOrder: any = [];
-
+  totalAmoutOrder: number = 0;
   getOrDetailById(us: any, order_detail_id: string): void {
     //  this.isLoadding = true;
     //   console.log('Order_detail_id:', order_detail_id);
+    console.log("order detail: ", us)
+    this.totalAmoutOrder = us.totalAmount
     this.authenListService.getOrderDetailById(us.orderId).subscribe(
       (data) => {
         this.OrderdetailById = data.result;
         this.isLoadding = false;
-        console.log('OrderdetailById:', data.result);
+       // console.log('OrderdetailById:', data.result);
         // console.log('OrderdetailById:', this.OrderdetailById);
       },
       (error) => {
@@ -213,7 +215,7 @@ export class OrderManagementComponent implements OnInit {
         this.productOfOrder = data.result;
         this.isLoadding = false;
 
-        console.log('Product Orders:', this.productOfOrder);
+      //  console.log('Product Orders:', this.productOfOrder);
       },
       (error) => {
         console.error('Error fetching user data:', error);

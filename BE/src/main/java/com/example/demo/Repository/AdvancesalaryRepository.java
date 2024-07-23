@@ -46,6 +46,7 @@ public interface AdvancesalaryRepository extends JpaRepository<Advancesalary,Int
                                             @Param("toDate") Date toDate,
                                             @Param("position_id") Integer position_id,
                                             @Param("fullname") String fullname);
+    
     @Query("SELECT a FROM Advancesalary a LEFT JOIN a.user.userInfor i WHERE " +
             "(:fromDate IS NULL OR a.date >= :fromDate) AND " +
             "(:toDate IS NULL OR a.date <= :toDate) AND " +

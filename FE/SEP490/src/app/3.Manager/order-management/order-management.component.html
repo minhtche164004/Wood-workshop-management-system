@@ -23,20 +23,21 @@
               <div class="input-group mb-3">
                 <!-- product.component.html -->
                 <label>Từ: </label>
-                <input style="margin-left: 10px;" type="date" class="form-control" placeholder="Đến: dd/mm/yyyy">
+                <input [(ngModel)]="selectedSDate" style="margin-left: 10px;" type="date" class="form-control"
+                  placeholder="Đến: dd/mm/yyyy">
 
                 <label>Đến: </label>
-                <input style="margin-left: 10px;" type="date" class="form-control" placeholder="Đến: dd/mm/yyyy">
+                <input [(ngModel)]="selectedEDate" style="margin-left: 10px;" type="date" class="form-control"
+                  placeholder="Đến: dd/mm/yyyy">
 
                 <!-- product.component.html -->
-                <select [(ngModel)]="selectedCategory" (change)="filterStatus()">
+                <select [(ngModel)]="selectedCategory">
                   <!-- <option value="0" selected disabled>Chọn đơn hàng</option> -->
                   <option *ngFor="let ps of userStatus" [value]="ps.status_id">{{ ps.status_name }}</option>
                   <option value="" selected>Tất cả danh mục</option>
                 </select>
 
-                <input type="text" class="form-control" placeholder="Tìm kiếm mã đơn hàng..." [(ngModel)]="searchKey"
-                  (keyup.enter)="filterStatus()">
+                <input type="text" class="form-control" placeholder="Tìm kiếm mã đơn hàng..." [(ngModel)]="searchKey">
 
                 <button class="btn search-button" type="button" (click)="filterStatus()">
                   <i class="fa fa-search"></i>
@@ -55,16 +56,16 @@
                 <th>Mã đơn hàng</th>
 
                 <th>Thao tác</th>
+
                 <th>Loại đơn hàng</th>
                 <th>Ngày đặt hàng</th>
                 <th>Tình trạng</th>
 
                 <th>Kiểu thanh toán</th>
                 <th>Tiền cọc(VNĐ)</th>
-                <th>Số tiền thanh toán(VNĐ)</th>
+
                 <th>Tổng tiền(VNĐ)</th>
-                <th>Thanh toán cọc</th>
-                <th>Hủy đơn hàng</th>
+
               </tr>
             </thead>
             <tbody>
@@ -85,11 +86,23 @@
                   us?.specialOrder === true">
                     <i class="fa-solid fa-circle-plus"></i>
                   </a>
+
+                  <a href="#" data-toggle="modal" data-target="#myModalconfirm"
+                    *ngIf="us?.status_id === 1 && us?.paymentMethod === 1 " (click)="setOrderForPayment(us?.orderId)"
+                    (click)="getOrDetailById(us, us?.orderId)">
+                    <i class="fa-solid fa-credit-card"></i>
+                  </a>
+
+                  <a href="#" data-toggle="modal" data-target="#confirmDeleteModal"
+                    (click)="setOrderForCancellation(us?.orderId, us?.specialOrder)" *ngIf="us?.status_id === 7">
+                    <i class="fa-solid fa-times-circle"></i>
+                  </a>
                 </td>
+
                 <td style="min-width: 140px;">
                   {{ us?.specialOrder ? 'Đơn hàng đặc biệt' : 'Đơn hàng có sẵn' }}
                 </td>
-                <td>{{ us?.orderDate | date:'dd/MM/yyyy' }}</td>
+                <td style="text-align: center;">{{ us?.orderDate | date:'dd/MM/yyyy' }}</td>
 
                 <!-- [disabled]="us?.status.status_id === 6 || us?.status.status_id === 5
               || us?.status.status_id === 1
@@ -141,31 +154,15 @@
                   style="text-align: right; min-width: 100px; max-width: 150px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
                   {{ us?.deposite | number : '1.0-3' }}
                 </td>
-                <td
+                <!-- <td
                   style="text-align: right; min-width: 100px; max-width: 150px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
                   {{ (us?.totalAmount - us?.deposite) | number : '1.0-3' }}
-                </td>
+                </td> -->
                 <td
                   style="text-align: right; min-width: 100px; max-width: 150px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
                   {{ us?.totalAmount | number : '1.0-3' }}
                 </td>
-                <td>
-                  <button style="margin-left: -10px; size: 15px;" data-toggle="modal" data-target="#myModalconfirm"
-                    class="btn btn-primary" *ngIf="us?.status_id === 1 && us?.paymentMethod === 1 "
-                    (click)="setOrderForPayment(us?.orderId)">
-                    Thanh toán cọc
-                  </button>
-                </td>
-                <td>
-                  <a href="#" class="delete" title="Delete" data-toggle="modal" data-target="#confirmDeleteModal"
-                    (click)="setOrderForCancellation(us?.orderId, us?.specialOrder)" *ngIf="us?.status_id === 7">
-                    <svg class="custom-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                      stroke-linecap="round" stroke-linejoin="round">
-                      <line x1="18" y1="6" x2="6" y2="18"></line>
-                      <line x1="6" y1="6" x2="18" y2="18"></line>
-                    </svg>
-                  </a>
-                </td>
+
               </tr>
             </tbody>
           </table>
@@ -325,12 +322,14 @@
     <div class="modal-dialog">
       <div class="modal-content">
         <div class="modal-header">
-          <h2 class="modal-title" id="myModalconfirm">Xác nhận thanh toán tiền cọc đơn hàng</h2>
+          <h2 class="modal-title" id="myModalconfirm">Xác nhận thanh toán cọc</h2>
           <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close" (click)="closeModal($event) "
             (click)="cancelChangeStatusJob()"></button>
         </div>
         <div class="modal-body">
-          Bạn có chắc chắn xác nhận thanh toán tiền cọc đơn hàng này?
+          <p>Tiền cọc: {{OrderdetailById.deposite | number : '1.0-3'}}</p>
+          <p>Tiền cần thanh toán: {{ OrderdetailById.totalAmount - OrderdetailById.deposite | number : '1.0-3' }}</p>
+
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" data-dismiss="modal" (click)="closeModal($event)"

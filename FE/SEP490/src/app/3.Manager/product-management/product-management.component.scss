@@ -400,22 +400,35 @@ option[value="option3"] {
 }
 
 .total-price {
-  background-color: #f0f0f0;
-  /* Màu nền */
-  color: #333;
-  /* Màu chữ */
   padding: 10px 20px;
   /* Khoảng cách bên trong */
   border-radius: 5px;
   /* Bo tròn góc */
-  font-size: 18px;
+  font-size: 12px;
   /* Kích thước chữ */
   font-weight: bold;
   /* Độ đậm */
   margin: 10px 0;
   /* Khoảng cách bên ngoài */
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  /* Bóng đổ */
-  text-align: center;
+  text-align: end;
   /* Căn giữa chữ */
+}
+
+.odd-row {
+  background-color: #ffffff;
+}
+
+.even-row {
+  background-color: #f2f2f2;
+
+  input {
+    background-color: #f2f2f2;
+  }
+  input, textarea { /* Corrected typo for textarea */
+    background-color: #f2f2f2;
+  }
+
+  ::selection {
+    background-color: #d0d0d0; /* A different or lighter shade for text selection, if desired */
+  }
 }

@@ -745,18 +745,18 @@ public class    OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public String SendMailToNotifyCationAboutOrder(int order_id,String link) throws MessagingException, IOException {
+    public String SendMailToNotifyCationAboutOrder(int order_id,String linkBaseUrl) throws MessagingException, IOException {
         List<OrderDetailWithJobStatusDTO> list  = orderDetailRepository.getAllOrderDetailByOrderId(order_id);
         Orders orders = orderRepository.findById(order_id);
       //  String baseUrl = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort() + "/api/auth";
 
-       // int total = orders.getTotalAmount().setScale(0, RoundingMode.HALF_UP).intValueExact();
-        //int total = (int) orders.getDeposite().longValue(); // Ép kiểu từ long sang int
-     //  String link = vnPayService.createOrder(total,orders.getCode(),url);
+//        int total = orders.getTotalAmount().setScale(0, RoundingMode.HALF_UP).intValueExact();
+        int total = (int) orders.getDeposite().longValue(); // Ép kiểu từ long sang int
+       String linkVnPay = vnPayService.createOrder(total,orders.getCode(),linkBaseUrl);
         String name = orders.getFullname();
         String email =orders.getUserInfor().getUser().getEmail();
       //  String link = "";
-        emailService.sendEmailFromTemplate(name,email,list,orders,link);
+        emailService.sendEmailFromTemplate(name,email,list,orders,linkVnPay);
         return "Gửi thông tin đơn hàng thành công !";
     }
 

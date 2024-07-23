@@ -169,11 +169,11 @@ export class ChartComponent implements OnInit {
     this.chart2 = new Chart('canvas2', {
       type: 'pie',
       data: {
-        labels: ['Đơn hàng thường', 'Đơn hàng đặc biệt'],
+        labels: ['Đơn hàng có sẵn', 'Đơn hàng đặc biệt'],
         datasets: [
           {
             label: 'Đơn hàng',
-            data: [this.totalNormalOrder, this.totalSpecialOrder],
+            data: [this.percentSpecialOrder, this.percentOrder],
             backgroundColor: [
               'rgb(255, 99, 132)',
               'rgb(54, 162, 235)',

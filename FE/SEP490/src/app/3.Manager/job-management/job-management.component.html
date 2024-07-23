@@ -26,7 +26,7 @@
                         <div class="col-md-9 text-end">
 
                             <div class="input-group mb-3">
-                                <select [(ngModel)]="selectedCategory" (change)="searchJob(selectedCategory)">
+                                <select [(ngModel)]="selectedCategory" >
 
                                     <option [ngValue]="1" [(ngModel)]="selectedCategory">Sản phẩm có sẵn </option>
                                     <option [ngValue]="0" [(ngModel)]="selectedCategory" selected>Sản phẩm theo yêu cầu
@@ -34,13 +34,16 @@
 
                                 </select>
                                 <select [(ngModel)]="selectedStatusJob"
-                                    (change)="onSearch(selectedCategory, searchKey)">
+                                    >
                                     <option value="">Tất cả</option>
-                                    <option *ngFor="let st of statusSearch" [ngValue]="st.status_id">{{ st.status_name }}</option>
-                                  </select>
-                                <select [(ngModel)]="selectedPosSearch" (change)="onSearch(selectedCategory, searchKey)">
+                                    <option *ngFor="let st of statusSearch" [ngValue]="st.status_id">{{ st.status_name
+                                        }}</option>
+                                </select>
+                                <select [(ngModel)]="selectedPosSearch"
+                                    >
                                     <option value="">Tất cả</option>
-                                    <option *ngFor="let poss of positionsSearch" [ngValue]="poss.position_id">{{ poss.position_name }}</option>
+                                    <option *ngFor="let poss of positionsSearch" [ngValue]="poss.position_id">{{
+                                        poss.position_name }}</option>
                                 </select>
                                 <input type="text" class="form-control" placeholder="Tìm kiếm sản phẩm..."
                                     [(ngModel)]="searchKey" name="search">
@@ -59,93 +62,102 @@
                             <th>STT</th>
                             <!-- <th>Mã đơn hàng</th> -->
                             <th>Thao tác</th>
+                            <th>Giao việc</th>
+                            <th>Lỗi</th>
                             <th>Tên sản phẩm</th>
-
                             <th>Số lượng</th>
                             <th>Đơn giá sản phẩm(vnd)</th>
                             <th>Trạng thái</th>
                             <th>Nhân viên</th>
-                            <th>Giao việc</th>
-                            <th>Lỗi</th>
+
 
                         </tr>
                     </thead>
 
                     <tbody>
                         <tr *ngFor="let product of productRQs | paginate: { itemsPerPage: 10, currentPage: currentPage }; let i = index"
-                        [ngClass]="{'bg-warning': listErrorJob.includes(product.job_id)}">
-                        <td>{{ i + 1 + (currentPage - 1) * 10 }}</td>
-                        <!-- <td>{{ product?.code }}</td> -->
-                        <td class="action-buttons">
-                            <ng-container
-                                *ngIf="product.statusJob.status_id !== 6 && product.statusJob.status_id !== 9 && product.statusJob.status_id !== 12">
-                                <a href="#" class="settings" title="Chỉnh sửa" data-toggle="modal"
-                                    data-target="#editProductJobModal"
-                                    (click)="editJobDetail(product, product.job_id)">
-                                    <i class="fa-solid fa-pen-to-square"></i>
+                            [ngClass]="{'bg-warning': listErrorJob.includes(product.job_id)}">
+                            <td>{{ i + 1 + (currentPage - 1) * 10 }}</td>
+                            <!-- <td>{{ product?.code }}</td> -->
+                            <td class="action-buttons">
+                                <ng-container
+                                    *ngIf="product.statusJob.status_id !== 6 && product.statusJob.status_id !== 9 && product.statusJob.status_id !== 12">
+                                    <a href="#" class="settings" title="Chỉnh sửa" data-toggle="modal"
+                                        data-target="#editProductJobModal"
+                                        (click)="editJobDetail(product, product.job_id)">
+                                        <i class="fa-solid fa-pen-to-square"></i>
+                                    </a>
+                                </ng-container>
+                                <a style="margin-left: 10px;" title="Chi tiết" data-toggle="modal"
+                                    data-target="#detailJobModal" (click)="showJobDetail(product)">
+                                    <i class="fa-solid fa-circle-info"></i>
                                 </a>
-                            </ng-container>
-                            <a style="margin-left: 10px;" title="Chi tiết" data-toggle="modal"
-                                data-target="#detailJobModal" (click)="showJobDetail(product)">
-                                <i class="fa-solid fa-circle-info"></i>
-                            </a>
-                        </td>
-                        <td>{{ product?.product_name }}</td>
-                        <td style="text-align: center;">{{ product?.quantity }}</td>
-                        <td style="text-align: center;">{{ product?.price | number: '1.0-3' }}</td>
-                        <td>
-                          
-                         
-                            <ng-container *ngIf="product?.statusJob.type !== 1 && product?.statusJob.type !== 6">
-                                <select id="mySelect{{i}}" class="custom-select" [disabled]="listErrorJob.includes(product.job_id) || isErrorDisabled(product)"
-                                    [ngModel]="product?.statusJob.status_id"
-                                    (change)="openModal($event,product?.job_id, i)">
-                                    <ng-container *ngFor="let status of statusType">
-                                        <option *ngIf="status.type === product.statusJob.type"
-                                            [value]="status.status_id"
-                                            [disabled]="status.status_id === 4 || status.status_id === 7 || status.status_id === 10">
-                                            {{ status.status_name }}
-                                        </option>
-                                    </ng-container>
-                                    <button #launchModalButton type="button" class="btn btn-primary d-none"
-                                        data-toggle="modal" data-target="#myModal">
-                                        Launch modal
-                                    </button>
-                                </select>
-                            </ng-container>
-                            <span *ngIf="product.statusJob.type === 1">Chưa giao việc</span>
-                            <span *ngIf="product.statusJob.type === 6">Chờ đặt cọc</span>
-                        </td>
-                        <td>{{ product?.user_name }}</td>
-                        <td>
-                            <button style="margin-left: -10px; size: 15px;" data-toggle="modal"
-                                data-target="#assignJobModal" (click)="manageJob(product)" 
-                                class="btn"
-                                [class.btn-primary]="!isDisabled(product) && !listErrorJob.includes(product.job_id) "
-                                [class.btn-secondary]="isDisabled(product) && !listErrorJob.includes(product.job_id)"
-                                [class.btn-warning]="listErrorJob.includes(product.job_id) "
-                                [disabled]="listErrorJob.includes(product.job_id) || isDisabled(product)">
-                                Giao việc
-                            </button>
-                        </td>
-                        <td>
-                            <button class="btn btn-primary" data-toggle="modal" data-target="#errorProduct"
-                                (click)="errorJob(product)" 
-                                [class.btn-primary]="!isErrorDisabled(product) && !listErrorJob.includes(product.job_id)"
-                                [class.btn-secondary]="isErrorDisabled(product) && !listErrorJob.includes(product.job_id)"
-                                [class.btn-warning]="listErrorJob.includes(product.job_id)"
-                                [disabled]="listErrorJob.includes(product.job_id) || isErrorDisabled(product)">
-                                <i class="fa-solid fa-triangle-exclamation"></i>
-                            </button>
-                        </td>               
-                    </tr>                            
+                            </td>
+                            <td>
+                                <button style="margin-left: -10px; size: 15px;" data-toggle="modal"
+                                    data-target="#assignJobModal" (click)="manageJob(product)" class="btn" 
+                                    [class.btn-primary]="!isDisabled(product) && !listErrorJob.includes(product.job_id) "
+                                    [class.btn-secondary]="isDisabled(product) && !listErrorJob.includes(product.job_id)"
+                                    [class.btn-danger]="listErrorJob.includes(product.job_id) "
+                                    [disabled]="listErrorJob.includes(product.job_id) || isDisabled(product)">
+                                    Giao việc
+                                </button>
+                            </td>
+                            <td>
+                                <!-- Button to open the "errorProduct" modal -->
+                                <button *ngIf="!listErrorJob.includes(product.job_id)" class="btn btn-primary" data-toggle="modal"
+                                    data-target="#errorProduct" (click)="errorJob(product)"
+                                    [class.btn-primary]="!isErrorDisabled(product) && !listErrorJob.includes(product.job_id)"
+                                    [class.btn-secondary]="isErrorDisabled(product) && !listErrorJob.includes(product.job_id)"
+                                    [class.btn-danger]="listErrorJob.includes(product.job_id)"
+                                    [disabled]="isErrorDisabled(product)">
+                                    <i class="fa-solid fa-triangle-exclamation"></i>
+                                </button>                         
+                                <button *ngIf="listErrorJob.includes(product.job_id)" class="btn btn-primary" data-toggle="modal"
+                                    data-target="#otherModal" (click)="editProduct(product.job_id)"
+                                    [class.btn-primary]="!isErrorDisabled(product) && !listErrorJob.includes(product.job_id)"
+                                    [class.btn-secondary]="isErrorDisabled(product) && !listErrorJob.includes(product.job_id)"
+                                    [class.btn-danger]="listErrorJob.includes(product.job_id)"
+                                    [disabled]="">
+                                    <i class="fa-solid fa-triangle-exclamation"></i> 
+                                </button>
+                            </td>
+                            <td>{{ product?.product_name }}</td>
+                            <td style="text-align: center;">{{ product?.quantity }}</td>
+                            <td style="text-align: center;">{{ product?.price | number: '1.0-3' }}</td>
+                            <td>
+
+
+                                <ng-container *ngIf="product?.statusJob.type !== 1 && product?.statusJob.type !== 6">
+                                    <select id="mySelect{{i}}" class="custom-select"
+                                        [disabled]="listErrorJob.includes(product.job_id) || isErrorDisabled(product)"
+                                        [ngModel]="product?.statusJob.status_id"
+                                        (change)="openModal($event,product?.job_id, i)">
+                                        <ng-container *ngFor="let status of statusType">
+                                            <option *ngIf="status.type === product.statusJob.type"
+                                                [value]="status.status_id"
+                                                [disabled]="status.status_id === 4 || status.status_id === 7 || status.status_id === 10">
+                                                {{ status.status_name }}
+                                            </option>
+                                        </ng-container>
+                                        <button #launchModalButton type="button" class="btn btn-primary d-none"
+                                            data-toggle="modal" data-target="#myModal">
+                                            Launch modal
+                                        </button>
+                                    </select>
+                                </ng-container>
+                                <span *ngIf="product.statusJob.type === 1">Chưa giao việc</span>
+                                <span *ngIf="product.statusJob.type === 6">Chờ đặt cọc</span>
+                            </td>
+                            <td>{{ product?.user_name }}</td>
+
+                        </tr>
                     </tbody>
 
                 </table>
 
                 <pagination-controls style="justify-content: right; display: flex;" (pageChange)="currentPage = $event"
-                    previousLabel="Trang trước" nextLabel="Trang sau"
-                    *ngIf="productRQs && productRQs.length > 0">
+                    previousLabel="Trang trước" nextLabel="Trang sau" *ngIf="productRQs && productRQs.length > 0">
                 </pagination-controls>
                 <div class="clearfix" style="justify-content: right; display: flex;"
                     *ngIf="productRQs && productRQs.length > 0">
@@ -175,8 +187,8 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h2 class="modal-title" id="myModal">Cập nhật trạng thái việc làm</h2>
-                <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close"
-                    (click)="closeModal()" (click)="cancelChangeStatusJob()"></button>
+                <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close" (click)="closeModal()"
+                    (click)="cancelChangeStatusJob()"></button>
             </div>
             <div class="modal-body">
                 Bạn có chắc chắn muốn cập nhật trạng thái việc làm?
@@ -197,8 +209,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h2 class="modal-title" id="assignJobModalLabel">Chi tiết giao việc làm</h2>
-                <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close"
-                  ></button>
+                <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body p-4">
                 <form [formGroup]="createJobs" (ngSubmit)="createNewJob()">
@@ -218,25 +229,27 @@
                                             <div class="row">
                                                 <div class="col-md-6">
                                                     <p>
-                                                        <strong>Tên nhân viên<span class="required-asterisk"> *</span></strong>
+                                                        <strong>Tên nhân viên<span class="required-asterisk">
+                                                                *</span></strong>
                                                     </p>
                                                 </div>
                                                 <div class="col-md-6">
 
-                                                    <select class="form-select" [(ngModel)]="selectedEmployee"
-                                                        name="selectedEmployee"
-                                                        (change)="onChangeSelectedEmployee($event)">
+                                                    <select class="form-select" [(ngModel)]="selectedEmployee" name="selectedEmployee" (change)="onChangeSelectedEmployee($event)">
                                                         <option [value]="null" disabled selected>Chọn nhân viên</option>
-                                                        <option *ngFor="let employee of positionEmployees"
-                                                            [value]="employee.userId">
-                                                            {{ employee.username }} : {{ employee.userId }} :
-                                                            {{employee.position?.position_name}}
+                                                        <option [value]="''">Tất cả</option>
+                                                        <option *ngFor="let employee of positionEmployees" [value]="employee.userId">
+                                                          {{ employee.username }} : {{ employee.userId }} : {{employee.position?.position_name}}
                                                         </option>
-                                                    </select>
-                                            
+                                                      </select>
+                                                      
+                                                      <!-- Optional: Display an error message if needed -->
+                                                      <div *ngIf="showError" class="alert alert-danger">
+                                                        Không thể chọn "Tất cả". Vui lòng chọn một nhân viên cụ thể.
+                                                      </div>
+                                                                                               
                                                 </div>
                                             </div>
-
                                             <div class="row">
                                                 <div class="col-md-6">
                                                     <p>
@@ -251,7 +264,8 @@
                                             </div>
                                             <div class="row">
                                                 <div class="col-md-6">
-                                                    <strong>Giá công khoán<span class="required-asterisk"> *</span></strong>
+                                                    <strong>Giá công khoán<span class="required-asterisk">
+                                                            *</span></strong>
                                                 </div>
                                                 <div class="col-md-6">
                                                     <input type="number" name="costJob" formControlName="cost"
@@ -272,30 +286,11 @@
                                                     {{ selectedProduct.code }}
                                                 </div>
                                             </div>
-
-                                            <div class="row">
-                                                <!-- <div class="col-md-6">
-                                                    <strong>Tên công việc:</strong>
-                                                </div> -->
-                                                <!-- <div class="col-md-6">
-                                                    <input type="text" formControlName="job_name"
-                                                        placeholder="Nhập tên công việc">
-                                                </div> -->
-                                                <!-- <div class="col-md-6">
-                                                    <select formControlName="job_name" class="form-select">
-                                                        <option value="">Tất cả</option>
-                                                        <option *ngFor="let category of positionEmpList" [ngValue]="category.position_id">
-                                                            {{ category.position_name }}
-                                                        </option>
-                                                    </select>
-                                                </div> -->
-
-
-                                            </div>
                                             <div class="row">
                                                 <div class="row">
                                                     <div class="col-md-6">
-                                                        <strong>Nhận việc trước ngày<span class="required-asterisk"> *</span> </strong>
+                                                        <strong>Nhận việc trước ngày<span class="required-asterisk">
+                                                                *</span> </strong>
                                                     </div>
                                                     <div class="col-md-6">
                                                         <input type="date" placeholder="dd / mm / YYYY" name="start"
@@ -303,7 +298,8 @@
                                                     </div>
                                                 </div>
                                                 <div class="col-md-6">
-                                                    <strong>Hoàn thành trước ngày<span class="required-asterisk"> *</span></strong>
+                                                    <strong>Hoàn thành trước ngày<span class="required-asterisk">
+                                                            *</span></strong>
                                                 </div>
                                                 <div class="col-md-6">
                                                     <input type="date" formControlName="finish"
@@ -331,7 +327,8 @@
                                             <td>{{ i + 1 }}</td>
                                             <td>{{ product?.sub_name }}</td>
                                             <td style="text-align: right;">{{ product?.quantity }}</td>
-                                            <td style="text-align: right;">{{ product.quantity * (selectedProduct?.quantity ?? 1) }}</td>
+                                            <td style="text-align: right;">{{ product.quantity *
+                                                (selectedProduct?.quantity ?? 1) }}</td>
                                             <td>{{ product?.sub_type }}</td>
                                         </tr>
                                     </tbody>
@@ -349,9 +346,10 @@
 
                     <!-- Modal footer -->
                     <div class="modal-footer">
-                        <button type="submit" class="btn btn-primary">Tạo việc</button>
+                        
                         <button type="button" class="btn btn-secondary" data-dismiss="modal"
                             (click)="cancelAssign()">Hủy</button>
+                            <button type="submit" class="btn btn-primary">Tạo việc</button>
                     </div>
                 </form>
             </div>
@@ -492,7 +490,8 @@
                                             <td>{{ i + 1 }}</td>
                                             <td>{{ product?.sub_name }}</td>
                                             <td style="text-align: right;">{{ product?.quantity }}</td>
-                                            <td style="text-align: right;">{{ product.quantity * (selectedProduct?.quantity ?? 1) }}</td>
+                                            <td style="text-align: right;">{{ product.quantity *
+                                                (selectedProduct?.quantity ?? 1) }}</td>
                                             <td>{{ product?.sub_type }}</td>
                                         </tr>
                                     </tbody>
@@ -536,14 +535,14 @@
                 <form [formGroup]="productForm" (ngSubmit)="onSubmit()">
                     <div class="row">
                         <div class="col-md-4">
-                            <label style="font-size: 16px;" for="productName">Danh sách sản phẩm có sẵn <span class="required-asterisk">*</span></label>
+                            <label style="font-size: 16px;" for="productName">Danh sách sản phẩm có sẵn </label>
                         </div>
                         <div class="col-md-8">
                             <div class="ng-autocomplete" style="width: 100%;">
-                                <ng-autocomplete *ngIf="productAutoSearch" [data]="productAutoSearch" [searchKeyword]="keyword"
-                                    placeholder="Nhập tên sản phẩm có sẵn ..." historyIdentifier="productAutoSearch"
-                                    [itemTemplate]="itemTemplate" [notFoundTemplate]="notFoundTemplate"
-                                    (selected)="selectProduct($event)">
+                                <ng-autocomplete *ngIf="productAutoSearch" [data]="productAutoSearch"
+                                    [searchKeyword]="keyword" placeholder="Nhập tên sản phẩm có sẵn ..."
+                                    historyIdentifier="productAutoSearch" [itemTemplate]="itemTemplate"
+                                    [notFoundTemplate]="notFoundTemplate" (selected)="selectProduct($event)">
                                 </ng-autocomplete>
 
                                 <ng-template #itemTemplate let-item>
@@ -558,16 +557,17 @@
                     </div>
                     <div class="row" style="margin-top: 2%;">
                         <div class="col-md-4">
-                            <label style="font-size: 16px;" for="productPrice">Số lượng sản phẩm sản xuất:<span class="required-asterisk">*</span> </label>
+                            <label style="font-size: 16px;" for="productPrice">Số sản phẩm sản xuất:<span
+                                    class="required-asterisk">*</span> </label>
                         </div>
                         <div class="col-md-2">
                             <input type="number" class="form-control" id="productPrice" formControlName="quantity">
                         </div>
                     </div>
                     <div class="modal-footer d-flex justify-content-center">
-                        <button type="submit" class="btn btn-primary">Thêm mới</button>
+                       
                         <button type="button" class="btn btn-mau-do" data-dismiss="modal">Hủy</button>
-
+                        <button type="submit" class="btn btn-primary">Thêm mới</button>
                     </div>
                 </form>
 
@@ -577,7 +577,7 @@
 </div>
 
 
-<div class="modal fade" style="margin-top: 5%;" id="errorProduct" tabindex="-1" role="dialog"
+<div class="modal fade" style="margin-top: 5%;" #errorProduct id="errorProduct" tabindex="-1" role="dialog"
     aria-labelledby="errorProductLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-wide" role="document">
         <div class="modal-content">
@@ -624,7 +624,8 @@
                             </div>
                             <div class="col-md-6">
                                 <div class="col-md-6">
-                                    <h3 style="color: black;">Số lượng sản phẩm lỗi<span class="required-asterisk"> *</span></h3>
+                                    <h3 style="color: black;">Số sản phẩm lỗi<span class="required-asterisk">
+                                            *</span></h3>
                                 </div>
                                 <div class="col-md-6">
                                     <input formControlName="quantity" type="number" required>
@@ -647,8 +648,9 @@
                         </div>
                     </div>
 
-                    <div class="modal-footer d-flex justify-content-center">
-                        <button type="button" class="btn btn-mau-do" data-dismiss="modal">Hủy</button>
+                    <div class="modal-footer d-flex justify-content-end">
+                       
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Hủy</button>
                         <button type="submit" class="btn btn-primary">Tạo báo cáo</button>
                     </div>
                 </form>
@@ -656,8 +658,266 @@
         </div>
     </div>
 </div>
+<!-- <div class="modal fade" #otherModal id="otherModal" tabindex="-1" role="dialog" aria-labelledby="otherModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="otherModal">
+              <h2>Chi tiết lỗi sản xuất</h2>
+            </h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <div class="form-group">
+              <div class="row">
+                <div class="col-md-6">
+                  <div class="col-md-6">
+                    <label style="font-size: 16px;" for="productName">Mã việc làm:</label>
+                  </div>
+                  <div class="col-md-6">
+    
+                    <h3>{{ jobErrors.code }}</h3>
+                  </div>
+    
+                </div>
+                <div class="col-md-6">
+                  <div class="col-md-6">
+                    <label style="font-size: 16px;" for="productName">Tên việc làm:</label>
+                  </div>
+                  <div class="col-md-6">
+                    <h3>{{ jobErrors?.job_name }}</h3>
+                  </div>
+                </div>
+                <div class="col-md-1">
+    
+                </div>
+                <div class="col-md-10">
+                  <hr style="justify-content: space-between;">
+                </div>
+    
+                <div class="col-md-6">
+                  <div class="col-md-6">
+                    <label style="font-size: 16px;" for="productName">Mã đơn hàng: </label>
+                  </div>
+                  <div class="col-md-6">
+                    <h3>{{jobErrors?.code_order}}</h3>
+                  </div>
+                </div>
+                <div class="col-md-6">
+                  <div class="col-md-6">
+                    <label style="font-size: 16px;" for="productName">Tên sản phẩm:</label>
+                  </div>
+                  <div class="col-md-6">
+                    <h3>{{ jobErrors?.product_name }} {{jobErrors?.request_product_name}}</h3>
+                  </div>
+                </div>
+                <div class="col-md-1">
+    
+                </div>
+                <div class="col-md-10">
+                  <hr style="justify-content: space-between;">
+                </div>
+                <div class="col-md-6">
+                  <div class="col-md-6">
+                    <label style="font-size: 16px;" for="productName">Tên nhân viên:</label>
+                  </div>
+                  <div class="col-md-6">
+                    <h3>{{ jobErrors?.employee_name}}</h3>
+                  </div>
+                </div>
+                <div class="col-md-6">
+                  <div class="col-md-6">
+                    <label style="font-size: 16px;" for="productName">Tình trạng lỗi:</label>
+                  </div>
+    
+                  <div class="col-md-6">
+    
+                    <h3 [ngStyle]="{'color': jobErrors?.isFixed? 'green' : 'red'}">
+                      {{ jobErrors?.isFixed ? 'Đã khắc phục' : 'Chưa khắc phục' }}
+                     
+                    </h3>
+                    
+                  </div>
+                </div>
+                <div class="col-md-1">
+    
+                </div>
+                <div class="col-md-10">
+                  <hr style="justify-content: space-between;">
+                </div>
+                <div>
+                  <label style="font-size: 16px;margin-top: 3%;" for="productName">Mô tả lỗi:</label>
+                  <textarea style="width: 100%; font-size: 16px; " readonly>
+                    {{ jobErrors?.des}}
+                  </textarea>
+                </div>
+                <div>
+                  <label style="font-size: 16px;margin-top: 3%;" for="productName">Giải pháp:</label>
+                  <textarea style="width: 100%; font-size: 16px; " readonly>
+                    {{ jobErrors?.solution}}
+                  </textarea>
+                </div>
+              </div>
+    
+    
+            </div>
+    
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
+    
+          </div>
+        </div>
+      </div>
+</div> -->
 
+<div class="modal fade" #otherModal id="otherModal" tabindex="-1" role="dialog" aria-labelledby="otherModalLabel"
+  aria-hidden="true">
+  <div class="modal-dialog modal-dialog-wide" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2 class="modal-title" id="editProductModalLabel">Chỉnh sửa lỗi sản phẩm</h2>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form [formGroup]="editForm">
+          <div class="form-group">
+            <div class="row">
+              <div class="col-md-6">
+                <div class="col-md-6">
+                  <label style="font-size: 16px;" for="code">Mã việc làm:</label>
+                </div>
+                <div class="col-md-6">         
+                  <input type="text" class="form-control" id="code" formControlName="code" name="code" readonly>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="col-md-6">
+                  <label style="font-size: 16px;" for="job_name">Tên việc làm:</label>
+                </div>
+                <div class="col-md-6">
+                 
+                  <input type="text" class="form-control" id="job_name" formControlName="job_name" readonly>
+                </div>
+              </div>
+              <div class="col-md-1">
+              </div>
+              <div class="col-md-10">
+                <hr style="justify-content: space-between;">
+              </div>
 
+              <div class="col-md-6">
+                <div class="col-md-6">
+                  <label style="font-size: 16px;" for="code_order">Mã đơn hàng: </label>
+                </div>
+                <div class="col-md-6">           
+                  <input type="text" class="form-control" id="code_order" formControlName="code_order" name="code_order" readonly>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="col-md-6">
+                  <label style="font-size: 16px;" for="product_name">Tên sản phẩm:</label>
+                </div>
+                <div class="col-md-6">
+                  <h3>{{ errorDetail?.product_name }} {{errorDetail?.request_product_name}}</h3>
+                  <div *ngIf="editForm.get('product_name')?.value">
+                    <input type="text" class="form-control" id="product_name" formControlName="product_name" name="product_name" readonly>
+                  </div>
+                  <div *ngIf="editForm.get('request_product_name')?.value">
+                    <input type="text" class="form-control" id="request_product_name" formControlName="request_product_name" name="request_product_name" readonly>
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-1">
+              </div>
+              <div class="col-md-10">
+                
+                <hr style="justify-content: space-between;">
+              </div>
+              <div class="col-md-6">
+                <div class="col-md-6">
+                  <label style="font-size: 16px;" for="employee_name">Tên nhân viên:</label>
+                </div>
+                <div class="col-md-6">
+                  <h3>{{ errorDetail?.employee_name}}</h3>
+                  <input type="text" class="form-control" id="employee_name" formControlName="employee_name" name="employee_name" readonly>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="col-md-6">
+                  <label style="font-size: 16px;" for="productName">Tình trạng lỗi:</label>
+                </div>
+                <div class="col-md-6">         
+                
+                    <div *ngIf="isEditing; else readOnlyFix">
+                        <select formControlName="fix" class="custom-select" style="width: 100%;">
+                          <option [ngValue]="true">Đã khắc phục</option>
+                          <option [ngValue]="false">Chưa khắc phục</option>
+                        </select>
+                      </div>
+                      <ng-template #readOnlyFix>
+                        <h3>{{ errorDetail?.fix ? 'Đã khắc phục' : 'Chưa khắc phục' }}</h3>
+                      </ng-template>
+      
+                  
+                </div>
+              </div>
+              <div class="col-md-1">
+              </div>
+              <div class="col-md-10">
+                <hr style="justify-content: space-between;">
+              </div>
+              <div class="row">
+                <div class="col-md-2">
+                  <label style="font-size: 16px;margin-top: 3%;" for="productName">Mô tả lỗi:<span class="required-asterisk">*</span></label>
+                </div>
+                <div class="col-md-8" style="margin-top:1%">
+                  <textarea style="width: 100%; padding: 2%; font-size: 16px;" id="des" formControlName="des" name="des" [readonly]="!isEditing" >        
+                  </textarea>
+                </div>
+            </div>
+              <div class="col-md-1">
+              </div>        
+              <div class="row">
+                <div class="col-md-2">
+                  <label style="font-size: 16px;margin-top: 3%;" for="productName">Giải pháp:<span class="required-asterisk">*</span></label>
+                </div>
+                <div class="col-md-8" style="margin-top:1% ;">
+                  <textarea style="width: 100%; font-size: 16px; padding: 2%; "id="solution" formControlName="solution" name="solution" [readonly]="!isEditing" >
+               
+                 </textarea>
+                </div>               
+              </div>
+            </div>
+          </div>
+          
+        </form>
+      </div>
+      <div class="modal-footer">
+        <div class="row">
+            <div class="col-sm-9"></div>
+            <div class="col-sm-3 text-right text-secondary">
+              <button class="btn btn-primary px-4 float-right " *ngIf="!isEditing" (click)="editProfile()">Chỉnh
+                sửa</button>
+              <div *ngIf="isEditing" class="btn-group float-right">
+                <button style="margin-right: 10px;" class="btn btn-primary" (click)="saveChangesError()">Lưu thay
+                  đổi</button>
+                <button class="btn btn-secondary" data-dismiss="modal" (click)="cancelChanges()">Hủy bỏ</button>
+
+              </div>
+            </div>
+          </div>
+        <!-- <button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
+        <button type="button" class="btn btn-primary" (click)="saveChanges()">Lưu thay đổi</button> -->
+      </div>
+    </div>
+  </div>
+</div>
 <!-- Modal for Editing Product -->
 <div class="modal fade" id="editProductJobModal" tabindex="-1" role="dialog" aria-labelledby="editProductJobModalLabel"
     aria-hidden="true">
@@ -714,7 +974,8 @@
 
                                             <div class="row">
                                                 <div class="col-md-6">
-                                                    <strong>Giá công khoán <span class="required-asterisk"> *</span></strong>
+                                                    <strong>Giá công khoán <span class="required-asterisk">
+                                                            *</span></strong>
                                                 </div>
                                                 <div class="col-md-6">
                                                     <input type="number" name="costJob" formControlName="cost">
@@ -722,7 +983,8 @@
                                             </div>
                                             <div class="row">
                                                 <div class="col-md-6">
-                                                    <strong>Ngày nhận việc<span class="required-asterisk"> *</span> </strong>
+                                                    <strong>Ngày nhận việc<span class="required-asterisk"> *</span>
+                                                    </strong>
                                                 </div>
                                                 <div class="col-md-6">
                                                     <input type="date" placeholder="dd / mm / YYYY" name="start"
@@ -749,7 +1011,8 @@
 
                                             <div class="row">
                                                 <div class="col-md-6">
-                                                    <strong>Tên công việc<span class="required-asterisk"> *</span></strong>
+                                                    <strong>Tên công việc<span class="required-asterisk">
+                                                            *</span></strong>
                                                 </div>
                                                 <div class="col-md-6">
                                                     <input type="text" class="form-control" formControlName="job_name"
@@ -758,7 +1021,8 @@
                                             </div>
                                             <div class="row">
                                                 <div class="col-md-6">
-                                                    <strong>Ngày hoàn thành công việc<span class="required-asterisk"> *</span></strong>
+                                                    <strong>Ngày hoàn thành công việc<span class="required-asterisk">
+                                                            *</span></strong>
                                                 </div>
                                                 <div class="col-md-6">
                                                     <input type="date" formControlName="finish"
@@ -786,7 +1050,8 @@
                                             <td>{{ i + 1 }}</td>
                                             <td>{{ product?.sub_name }}</td>
                                             <td style="text-align: right;">{{ product?.quantity }}</td>
-                                            <td style="text-align: right;">{{ product.quantity * (selectedProduct?.quantity ?? 1) }}</td>
+                                            <td style="text-align: right;">{{ product.quantity *
+                                                (selectedProduct?.quantity ?? 1) }}</td>
                                             <td>{{ product?.sub_type }}</td>
                                         </tr>
                                     </tbody>
@@ -794,7 +1059,8 @@
                                 </table>
                                 <!-- Job description -->
                                 <div class="customer-info">
-                                    <h5 style="color: black;">Mô tả chi tiết yêu cầu việc làm <span class="required-asterisk"> *</span></h5>
+                                    <h5 style="color: black;">Mô tả chi tiết yêu cầu việc làm <span
+                                            class="required-asterisk"> *</span></h5>
                                     <textarea class="form-control" rows="6" formControlName="description"
                                         name="jobDescription" placeholder="Nhập mô tả chi tiết..."></textarea>
                                 </div>

@@ -90,14 +90,16 @@
                             <tr>
                                 <th>STT</th>
                                 <!-- <th>Mã việc</th> -->
+                                <th>Thanh toán</th>
                                 <th>Ngày hoàn thành</th>
+                                
                                 <th>Tên nhân viên</th>
                                 <th>Vị trí</th>
                                 <th>Tình trạng</th>
                                 <th>Đơn giá (vnđ)</th>
                                 <th>Ngân hàng</th>
-                                <th>STK</th>
-                                <th>Thanh toán</th>
+                                <th>Số tiền khoản</th>
+                                
                             </tr>
                         </thead>
                         <!-- Table body -->
@@ -105,8 +107,16 @@
                             <tr
                                 *ngFor="let product of totalSalary | paginate: { itemsPerPage: 10, currentPage: currentPage }; let i = index">
                                 <td>{{ i + 1 + (currentPage - 1) * 10 }}</td>
+                                <td>
+                                    <button class="btn"
+                                        [ngClass]="{'btn-primary': !product?.advanceSuccess, 'btn-secondary': product?.advanceSuccess}"
+                                        data-toggle="modal" data-target="#QRPAY" (click)="thanhToan(product)"
+                                        [disabled]="product?.advanceSuccess">
+                                        <i class="fa-solid fa-money-bill-transfer"></i>
+                                    </button>
+                                </td>
                                 <!-- <td>{{ product?.code }}</td> -->
-                                <td>{{ product?.date | date:'dd/MM/yyyy' }}</td>
+                                <td style="text-align: center;">{{ product?.date | date:'dd/MM/yyyy' }}</td>
 
                                 <td>{{ product?.user?.userInfor?.fullname }}</td>
                                 <td>{{ product?.user?.position?.position_name }}</td>
@@ -127,14 +137,7 @@
                                 <td  style="text-align: right;">{{ product?.amount | number: '1.0-3'}}</td>
                                 <td>{{ product?.user?.userInfor?.bank_name }}</td>
                                 <td  style="text-align: right;">{{ product?.user?.userInfor?.bank_number }}</td>
-                                <td>
-                                    <button class="btn"
-                                        [ngClass]="{'btn-primary': !product?.advanceSuccess, 'btn-secondary': product?.advanceSuccess}"
-                                        data-toggle="modal" data-target="#QRPAY" (click)="thanhToan(product)"
-                                        [disabled]="product?.advanceSuccess">
-                                        <i class="fa-solid fa-money-bill-transfer"></i>
-                                    </button>
-                                </td>
+                               
                             </tr>
                         </tbody>
 

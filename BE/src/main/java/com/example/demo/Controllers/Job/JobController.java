@@ -359,7 +359,7 @@ public class JobController {
         return apiResponse;
     }
 
-    @GetMapping("/getProductErrorDetailById")
+    @GetMapping("/getAllProductErrorDetail")
     public ApiResponse<?> getProductErrorDetailById(@RequestParam("id") int id) {
         ApiResponse<ProductErrorAllDTO> apiResponse = new ApiResponse<>();
         apiResponse.setResult(jobService.getProductErrorDetailById(id));

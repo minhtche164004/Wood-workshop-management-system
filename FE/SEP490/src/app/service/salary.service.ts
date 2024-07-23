@@ -35,24 +35,58 @@ export class SalaryService {
     // Yêu cầu dữ liệu trả về là dạng text (base64 của hình ảnh)
     return this.http.post<string>(url, {}, { responseType: 'text' as 'json' });
   }
-  multSearchSalary(employeeName: string, fromDate: string, toDate: string, sortDirection: string, position: string, isAdvanceSuccess: string): Observable<any> {
+  // multSearchSalary(username: string, fromDate: string, toDate: string, sortDirection: string, position_id: string, isAdvanceSuccess: string): Observable<any> {
+  //   const params = {
+  //     username: username,
+
+  //     position_id: position_id,
+  //     sortDirection: sortDirection,
+  //     isAdvanceSuccess: isAdvanceSuccess
+  //   };
+  //   const body = {
+
+  //     fromDate: fromDate,
+  //     toDate: toDate
+  //   };
+  //   const queryString = Object.entries(params)
+  //     .filter(([key, value]) => value != null && value !== '') // Loại bỏ các tham số có giá trị null, undefined hoặc rỗng
+  //     .map(([key, value]) => `${encodeURIComponent(key)}=${encodeURIComponent(value)}`)
+  //     .join('&');
+  
+  //   const url = `${this.apiMultiSearchSalary}?${queryString}`;
+  //   console.log("total url search: ",url);
+  //   return this.http.post<any>(url,body).pipe(
+  //     catchError(this.handleError)
+  //   );
+  // }
+
+  multSearchSalary(username: string, startDate: string, endDate: string, sortDirection: string, position_id: string, isAdvanceSuccess: string): Observable<any> {
     const params = {
-      username: employeeName,
-      fromDate: fromDate,
-      toDate: toDate,
-      position_id: position,
-      sortDirection: sortDirection,
-      isAdvanceSuccess: isAdvanceSuccess
+      username: username,
+      position_id: position_id,
+      isAdvanceSuccess: isAdvanceSuccess,
+      sortDirection:sortDirection,
+      // startDate: startDate,
+      // endDate: endDate
     };
-    
+    const body = {
+
+      startDate: startDate,
+      endDate: endDate
+    };
     const queryString = Object.entries(params)
-      .filter(([key, value]) => value != null && value !== '') // Loại bỏ các tham số có giá trị null, undefined hoặc rỗng
+      .filter(([key, value]) => {
+        if (key === 'username' && value === '') return false;
+        if (key === 'statusId' && value === "0") return false;
+        if (key === 'isAdvanceSuccess' && value === "0") return false;
+        return value != null && value !== '';
+      })
       .map(([key, value]) => `${encodeURIComponent(key)}=${encodeURIComponent(value)}`)
       .join('&');
-  
+
     const url = `${this.apiMultiSearchSalary}?${queryString}`;
-    console.log("total url search: ",url);
-    return this.http.get<any>(url).pipe(
+    console.log(url);
+    return this.http.post<any>(url,body).pipe(
       catchError(this.handleError)
     );
   }

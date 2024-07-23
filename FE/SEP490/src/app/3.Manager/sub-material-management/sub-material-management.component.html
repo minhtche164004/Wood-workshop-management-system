@@ -77,7 +77,8 @@
                 <th>Kiểu nguyên vật liệu</th>
                 <th>Mô tả nguyên vật liệu</th>
                 <th>Số lượng</th>
-                <th style="width: 10%;">Đơn giá (vnd)</th>
+                <th style="width: 10%;">Giá nhập (vnd)</th>
+                <th style="width: 10%;">Giá bán (vnđ)</th>
               </tr>
             </thead>
         
@@ -87,7 +88,7 @@
                 <td style="text-align: center;" class="action-buttons">
                   <a href="#" class="settings" title="Edit" data-toggle="modal" data-target="#editSubMaterialModal"
                     (click)="loadSubMaterialDetails(product.subMaterialId)">
-                    <i class="fa-solid fa-circle-info"></i>
+                    <i class="fa-solid fa-pen-to-square"></i>
                   </a>
                 </td>
                 <td>{{ product.subMaterialName }}</td>
@@ -95,6 +96,7 @@
                 <td>{{ product.description }}</td>
                 <td style="text-align: right;">{{ product.quantity }}</td>
                 <td style="text-align: right;">{{ product.unitPrice | number: '1.0-3'}}</td>
+                <td style="text-align: right;">{{ product.inputPrice | number: '1.0-3'}}</td>
               </tr>
             </tbody>
           </table>
@@ -166,7 +168,7 @@
                 [(ngModel)]="quantity" name="quantity">
             </div>
             <div class="form-group">
-              <label for="productImage">Đơn giá</label>
+              <label for="productImage">Giá bán</label>
               <input type="number" class="form-control" id="productPrice" placeholder="Enter price"
                 [(ngModel)]="unit_price" name="unit_price">
             </div>
@@ -218,7 +220,7 @@
               </div>
               <div class="col-md-4">
                 <div class="form-group">
-                  <label for="editProductPrice">Đơn giá (vnđ)</label>
+                  <label for="editProductPrice">Giá bán (vnđ)</label>
                   <input type="number" class="form-control" formControlName="unitPrice" id="editProductPrice">
                 </div>
               </div>

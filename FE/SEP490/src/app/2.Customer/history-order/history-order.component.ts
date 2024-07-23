@@ -4,7 +4,7 @@ interface ApiResponse {
   code: number;
   result: any[];
 }
-@Component({ 
+@Component({
   selector: 'app-history-order',
   templateUrl: './history-order.component.html',
   styleUrls: ['./history-order.component.scss']
@@ -14,6 +14,7 @@ export class HistoryOrderComponent {
   loginToken: string | null = null;
   currentPage: number = 1;
   orderData: any = {};
+  isLoadding: boolean = false;
   constructor(private authenListService: AuthenListService) { }
   ngOnInit(): void {
     this.orderData = {
@@ -24,41 +25,48 @@ export class HistoryOrderComponent {
       request_product_name: '',
       price: '',
       quantity: '',
-     
+
     };
-   
+
     this.getHistoryOrder();
-    
+
   }
   getHistoryOrder(): void {
     this.loginToken = localStorage.getItem('loginToken');
+    this.isLoadding = true;
     if (this.loginToken) {
       console.log('Retrieved loginToken:', this.loginToken);
       this.authenListService.getHistoryOrderCustomer().subscribe(
         (data: ApiResponse) => {
           if (data.code === 1000) {
             this.history_order = data.result;
-            console.log('Danh sách đơn hàng:', data);
+            this.isLoadding = false;
           } else {
             console.error('Failed to fetch products:', data);
+            this.isLoadding = false;
           }
         },
         (error) => {
           console.error('Error fetching products:', error);
+          this.isLoadding = false;
         }
       );
     } else {
       console.error('No loginToken found in localStorage.');
+      this.isLoadding = false;
     }
   }
 
 
   historyOrderDetail(orderId: string): void {
+    this.isLoadding = true;
     this.authenListService.getOrderDetailById(orderId).subscribe(
       (data) => {
         this.orderData = data.result;
         console.log("Order data:", this.orderData.price)
-        
+        this.isLoadding = false;
+
+
       },
       (error) => {
         console.error('Error fetching user data:', error);

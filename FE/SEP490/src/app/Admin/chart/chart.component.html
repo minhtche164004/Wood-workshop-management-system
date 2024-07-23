@@ -1,4 +1,5 @@
 <app-dashboard></app-dashboard>
+
 <div style="margin-left: 19%;margin-top: 1%; block-size: auto; ">
   <div class="container-fluid" >
     <div class="row">
@@ -46,7 +47,7 @@
             <i class="fas fa-users fa-2x me-3"></i>
             <div>
               <h5 class="card-title">Nhân viên trong xưởng:</h5>
-              <h2 class="card-text text-center">{{ countEmp }} nhân viên</h2>
+              <h2 class="card-text text-center">{{ totalEmployee }} nhân viên</h2>
             </div>
           </div>
         </div>
@@ -68,7 +69,7 @@
             <i class="fas fa-star fa-2x me-3"></i>
             <div>
               <h5 class="card-title">Số đơn hàng có sẵn:</h5>
-              <h2 class="card-text text-center">{{ totalOrderCoSan }} đơn hàng</h2>
+              <h2 class="card-text text-center">{{ totalOrder}} đơn hàng</h2>
             </div>
           </div>
         </div>
@@ -80,7 +81,7 @@
   <div class="row">
     <div class="col-md-4 d-flex flex-column align-items-center justify-content-center">
       <h2 style="color: #299be4; padding: 1%;">
-        <b>Nhân viên</b>
+        <b>Tỉ lệ % nhân viên</b>
       </h2>
       <div style="width: 300px; height: auto;">
         <canvas id="canvas1">{{emmpChart}}</canvas>
@@ -97,7 +98,7 @@
   </div> -->
     <div class="col-md-4 d-flex flex-column align-items-center justify-content-center">
       <h2 style="color: #299be4; padding: 1%;">
-        <b>Đơn hàng</b>
+        <b>Tỉ lệ % đơn hàng</b>
       </h2>
       <div style="width: 300px; height: auto;">
         <canvas id="canvas2">{{chart2}}</canvas>
@@ -106,7 +107,7 @@
   
     <div class="col-md-4 d-flex flex-column align-items-center justify-content-center">
       <h2 style="color: #299be4; padding: 1%;">
-        <b>Sản phẩm</b>
+        <b>Tỉ lệ % sản phẩm</b>
       </h2>
       <div style="width: 300px; height: auto;">
         <canvas id="canvas3">{{chart3}}</canvas>

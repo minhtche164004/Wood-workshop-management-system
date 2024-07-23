@@ -989,7 +989,7 @@ cancelChangeStatusJob() {
 
         }
       );
-      this.isLoadding = false;
+    
     } else if (selectedCategory === 0) {
 
       this.jobService.multiSearchJobRequest(searchKey, this.selectedStatusJob, this.selectedPosSearch).subscribe(
@@ -1014,7 +1014,7 @@ cancelChangeStatusJob() {
         }
       );
 
-      this.isLoadding = false;
+  
     }
   }
   // onSearchInput(cate: number,searchKey: any){
@@ -1085,7 +1085,7 @@ cancelChangeStatusJob() {
   openModal2(product: any) {
     console.log('open Modal 2:', product);
     console.log('job_id: ', product.job_id)
-    this.editProduct(product.job_id);
+    this.editProduct(product.job_id, product);
   }
 
   errorDetail: any = {};
@@ -1102,12 +1102,29 @@ cancelChangeStatusJob() {
   cancelChanges() {
     this.isEditing = false;
     // Reload the user profile to discard changes
-   
+    this.jobService.getAllProductErrorsByJobId(this.errorId).subscribe(
+      (response) => {
+        this.jobErrors = response.result;
+       // console.log('error history: ', this.editForm.value);
+        if (this.jobErrors.length > 0) {
+          this.editForm.patchValue(this.jobErrors[0]);
+        }
+        console.log("error history: ", this.editForm.value);
+      },
+      (error) => {
+        console.error('Error fetching product errors:', error);
+      }
+    );
   }
   jobErrors: any = {};
   errorHistory: any = [];
-  editProduct(errorid: number) {
+  error_job_id: any;
+  errorId: any;
+  editProduct(errorid: number, product: any) {
+    this.errorId = errorid;
     console.log('report product function:', errorid);
+    console.log('Product:', product);
+    this.error_job_id = product.product_error_id;
     this.jobService.getAllProductErrorsByJobId(errorid).subscribe(
       (response) => {
         this.jobErrors = response.result;
@@ -1138,6 +1155,7 @@ cancelChangeStatusJob() {
       const errorFormData = this.editForm.value;
       const jobid = this.selectedProduct.job_id;
       console.log('error edit form saveChanges:', errorFormData);
+      console.log('error_job_id: ', this.error_job_id)
       this.errorProductService.editProductError(this.editForm.value.job_id, this.editForm.value).subscribe(
         (response) => {
           if (response.code === 1000) {

@@ -7,6 +7,8 @@ import { environment } from 'src/app/environments/environment';
   providedIn: 'root'
 })
 export class StatisticService {
+
+
   private apiTotalAmountOrderHaveDone = `${environment.apiUrl}api/auth/statistic/totalAmountOrderHaveDone`
 
   private apiTotalAmountSubMaterial = `${environment.apiUrl}api/auth/statistic/totalAmountSubMaterial`

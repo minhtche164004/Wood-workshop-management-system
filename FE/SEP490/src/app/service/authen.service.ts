@@ -496,27 +496,30 @@ export class AuthenListService {
       catchError(this.handleError)
     );
   }
-  getFilterStatus(search: string, statusId: string): Observable<any> {
+  getFilterStatus(search: string, statusId: string, startDate: string, endDate: string): Observable<any> {
     const params = {
       search: search,
-
       statusId: statusId,
-
+      // startDate: startDate,
+      // endDate: endDate
     };
+    const body = {
 
+      startDate: startDate,
+      endDate: endDate
+    };
     const queryString = Object.entries(params)
       .filter(([key, value]) => {
         if (key === 'search' && value === '') return false;
         if (key === 'statusId' && value === "0") return false;
-
-        return value != null;
+        return value != null && value !== '';
       })
       .map(([key, value]) => `${encodeURIComponent(key)}=${encodeURIComponent(value)}`)
       .join('&');
 
     const url = `${this.apiUrl_getFilterStatus}?${queryString}`;
     console.log(url);
-    return this.http.get<any>(url).pipe(
+    return this.http.post<any>(url,body).pipe(
       catchError(this.handleError)
     );
   }
@@ -543,12 +546,16 @@ export class AuthenListService {
     );
   }
 
-  getMultiFillterRHistoryImpact(search: string, sortDirection: string): Observable<any> {
+  getMultiFillterRHistoryImpact(search: string, sortDirection: string,startDate: string, endDate: string): Observable<any> {
     const params = {
       search: search,
       sortDirection: sortDirection,
     };
+    const body = {
 
+      startDate: startDate,
+      endDate: endDate
+    };
     const queryString = Object.entries(params)
       .filter(([key, value]) => {
         if (key === 'search' && value === '') return false;
@@ -561,7 +568,7 @@ export class AuthenListService {
 
     const url = `${this.apiUrl_getMultiFillterRHistoryImpact}?${queryString}`;
     console.log(url);
-    return this.http.get<any>(url).pipe(
+    return this.http.post<any>(url,body).pipe(
       catchError(this.handleError)
     );
   }

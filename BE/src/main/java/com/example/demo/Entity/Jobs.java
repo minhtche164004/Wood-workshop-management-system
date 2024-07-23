@@ -75,9 +75,13 @@ public class Jobs {
     @Column(name = "job_log")
     private boolean job_log;
 
-//    @OneToMany(mappedBy = "job") // Thêm mối quan hệ với Processproducterror
-//    @JsonIgnore // Tùy chọn: bỏ qua trường này khi serialize thành JSON
-//    private List<Processproducterror> processProductErrors;
+//    @OneToMany(mappedBy = "process_product_error")
+//    @JsonIgnore
+//    private List<Processproducterror> processproducterrors;
+
+    @OneToMany(mappedBy = "job") // Thêm mối quan hệ với Processproducterror
+    @JsonIgnore // Tùy chọn: bỏ qua trường này khi serialize thành JSON
+    private List<Processproducterror> processProductErrors;
 
 }
 

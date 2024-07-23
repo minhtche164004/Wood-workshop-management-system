@@ -416,22 +416,7 @@ export class ChartComponent implements OnInit {
   );
 
   }
-  // countProductByMonthAndYear() {
-  //   const year = new Date().getFullYear(); //Lấy năm hiện tại
-  //   const promises = [];
-  //   for (let month = 1; month <= 12; month++) {
-  //     promises.push(this.getProductByMonthAndYear(month, year));
-      
-  //   }
-  //   Promise.all(promises).then(() => {
-  //     // console.log('All data retrieved successfully.');
-  //      console.log('Product Counts:', this.productCounts);
-  //      console.log('Product Request Counts:', this.productRequestCounts);
-  //     this.initializeCharts(); // Call to initialize charts with the fetched data
-  //   }).catch(err => {
-  //     console.error('Error retrieving data:', err);
-  //   });
-  // }
+
   year: number = new Date().getFullYear();
   getAllDataForYear() {
   

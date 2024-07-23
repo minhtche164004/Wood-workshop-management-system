@@ -81,13 +81,14 @@ export class ChartComponent implements OnInit {
   percentEmpPos3: number = 0;
   percentEmpPos4: number = 0;
   isLoading: boolean = false;
-
+ 
   totalRQProduct: number = 0;
   months = ['Tháng 1', 'Tháng 2', 'Tháng 3', 'Tháng 4', 'Tháng 5', 'Tháng 6', 'Tháng 7', 'Tháng 8', 'Tháng 9', 'Tháng 10', 'Tháng 11', 'Tháng 12'];
   data: any[] = []; // Array to store data for each month
   chartData: any;
   ngOnInit(): void {
     this.loadData();
+    
   }
 
   getAllPostionEmp(): void {
@@ -112,7 +113,7 @@ export class ChartComponent implements OnInit {
     this.isLoading = true; // Hiển thị loading
     this.getTotalOrder().then(() => {
       Promise.all([
-        this.TotalAmountOrderHaveDone(),
+        
         this.getTotalAmountSubMaterial(),
         this.getTotalSpecialOrder(),
         this.getTotalProduct(),
@@ -272,6 +273,9 @@ export class ChartComponent implements OnInit {
       }, err => reject(err));
     });
   }
+  
+  totalOrderCoSan: number = 0;
+
   getAllEmployee() {
     return new Promise<void>((resolve, reject) => {
       this.employeeService.getAllEmployee().subscribe((data) => {
@@ -290,7 +294,7 @@ export class ChartComponent implements OnInit {
       }, err => reject(err));
     });
   }
-
+;
   getTotalOrder() {
     return new Promise<void>((resolve, reject) => {
       this.statistic.getTotalOrder().subscribe((data) => {
@@ -311,6 +315,8 @@ export class ChartComponent implements OnInit {
           this.percentSpecialOrder = (this.totalSpecialOrder / this.totalOrder) * 100;
           this.percentOrder = 100 - this.percentSpecialOrder;
           this.totalNormalOrder = this.totalOrder - this.totalSpecialOrder;
+          this.totalOrderCoSan = this.totalOrder - this.totalSpecialOrder;
+          console.log("total Order: ", this.totalOrder)
         } else {
           this.percentSpecialOrder = 0;
           this.percentOrder = 0;
@@ -387,7 +393,7 @@ export class ChartComponent implements OnInit {
         if (data.result === null || data.result === undefined) {
           data.result = 0;
         }
-        console.log(`getProductByMonthAndYear result for ${month}/${year}: `, data.result);
+     //   console.log(`getProductByMonthAndYear result for ${month}/${year}: `, data.result);
         this.productCounts.push(data.result);
         resolve();
       }, err => {
@@ -398,7 +404,7 @@ export class ChartComponent implements OnInit {
         if (data.result === null || data.result === undefined) {
           data.result = 0;
         }
-        console.log(`getProductByMonthAndYear result for ${month}/${year}: `, data.result);
+   //     console.log(`getProductByMonthAndYear result for ${month}/${year}: `, data.result);
         this.productRequestCounts.push(data.result);
         resolve();
       }, err => {

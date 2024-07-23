@@ -11,6 +11,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 @EnableJpaRepositories
@@ -22,6 +23,21 @@ public interface Product_RequestimagesRepository extends JpaRepository<Product_R
 
     @Query("SELECT p FROM Product_Requestimages p WHERE p.requestProducts.requestProductId = :requestProductId")
     List<Product_Requestimages> findImageByProductId(@Param("requestProductId") int requestProductId);
+
+    @Query("SELECT p.fullPath FROM Product_Requestimages p JOIN p.requestProducts r WHERE r.requestProductId = :requestProductId")
+    List<String> findFirstFullPathImageByProductId(@Param("requestProductId") int requestProductId);
+//
+//    @Query("SELECT i.requestProducts.requestProductId, i.fullPath FROM Product_Requestimages i")
+//    List<Object[]> findAllImagesWithProductIdTest();
+
+
+    @Query(value = "SELECT product_request_images.full_path FROM product_request_images JOIN request_products ON product_request_images.request_product_id = request_products.request_product_id WHERE request_products.request_product_id = :requestProductId ORDER BY request_products.request_product_id DESC LIMIT 1", nativeQuery = true)
+   String findFirstFullPathImageByProductTest(@Param("requestProductId") int requestProductId);
+
+
+    @Query("SELECT p.fullPath FROM Product_Requestimages p JOIN p.requestProducts r WHERE r.requestProductId = :requestProductId")
+    List<String> findFullPathImageByProductId(@Param("requestProductId") int requestProductId);
+
 
     List<Product_Requestimages> findByRequestProducts_RequestProductId(int requestProductId);
 

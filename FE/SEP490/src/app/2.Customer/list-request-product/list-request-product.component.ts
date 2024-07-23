@@ -28,7 +28,7 @@ export class ListRequestProductComponent {
     
     this.requestForm = this.fb.group({
       request_Id: [0],
-      description: [''],
+      description: [''], 
       status_id:[''],
       imageList: ['']
     });

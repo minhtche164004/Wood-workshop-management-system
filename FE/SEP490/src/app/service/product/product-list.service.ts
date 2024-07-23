@@ -59,6 +59,8 @@ export class ProductListService {
   private apiUrlDeleteProductRequest = `${environment.apiUrl}api/auth/product/deleteRequestProduct`;
   private api_UrlexportMaterialProductByProductRequestId = `${environment.apiUrl}api/auth/product/getRequestProductSubMaterialAndMaterialByRequestProductId`;  // lay tat ca vat lieu can co de tao 1 san pham theo yeu cau 
   private api_UrlEditSubMateialRequestProduct = `${environment.apiUrl}api/auth/submaterial/EditSubMaterialRequestProduct`;
+  private api_UrlcreateExportMaterialListProductRequest = `${environment.apiUrl}api/auth/submaterial/createExportMaterialListProductRequest`; 
+
   //
 
   //api danh` cho order dac biet
@@ -317,27 +319,33 @@ export class ProductListService {
     );
   }
 
-  addNewProductRequest(productRequestData: any, images: File[]): Observable<any> {
-    const formData = new FormData();
+  addNewProductRequest(productRequestData: any, idOrder : any): Observable<any> {
+    // const formData = new FormData();
 
-    formData.append('productDTO', new Blob([JSON.stringify(productRequestData)], { type: 'application/json' }));
-    images.forEach(image => {
-      formData.append('files', image, image.name);
-    });
-    const token = localStorage.getItem('loginToken');
 
-    if (!token) {
-      return throwError(new Error('Login token not found in localStorage.'));
-    }
+    // formData.append('order_id', new Blob([JSON.stringify(idOrder)], { type: 'application/json' }));
+    // formData.append('requestProductsWithFiles', new Blob([JSON.stringify(productRequestData)], { type: 'application/json' }));
+
+    // images.forEach(image => {
+    //   formData.append('files', image, image.name);
+    // });
+    // const token = localStorage.getItem('loginToken');
+
+    // if (!token) {
+    //   return throwError(new Error('Login token not found in localStorage.'));
+    // }
 
     const headers = new HttpHeaders({
       // 'Authorization': `Bearer ${token}`,
-      'Accept': 'application/json'
+      'Accept': 'application/json',
+      'Content-Type': 'application/json' 
+
     });
 
     // console.log("Authorization header:", headers.get('Authorization'));
+    const urlWithParam = `${this.apiUrlAddNewProductRequest}?order_id=${encodeURIComponent(idOrder)}`;
 
-    return this.http.post(this.apiUrlAddNewProductRequest, formData, { headers }).pipe(
+    return this.http.post(urlWithParam, productRequestData, { headers }).pipe(
       catchError(this.handleError)
     );
   }
@@ -347,6 +355,14 @@ export class ProductListService {
       catchError(this.handleError)
     );
   }
+
+  //danh` cho add n` san pham reqeust product
+  createExportMaterialListProductRequest(requestData: any): Observable<any> {
+    return this.http.post<any>(this.api_UrlcreateExportMaterialListProductRequest, requestData).pipe(
+      catchError(this.handleError)
+    );
+  }
+
   getAllRequest(): Observable<any> {
     return this.http.get<any>(this.apiUrl_getAllRequest).pipe(
       catchError(this.handleError)

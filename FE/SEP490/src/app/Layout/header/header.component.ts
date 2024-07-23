@@ -102,6 +102,9 @@ export class HeaderComponent implements OnInit {
   isLoggedIn() {
     return this.authService.isLoggedIn();
   }
+  showLoginMessage(): void {
+    this.toastr.warning('Vui lòng đăng nhập để đặt hàng');
+  }
   isLogout(): boolean {
     return !this.isLoggedInForm();
   }

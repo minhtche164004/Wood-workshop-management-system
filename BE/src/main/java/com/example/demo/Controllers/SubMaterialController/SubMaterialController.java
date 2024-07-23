@@ -2,6 +2,7 @@ package com.example.demo.Controllers.SubMaterialController;
 
 //import com.example.demo.Dto.JobDTO.Employee_MaterialDTO;
 import com.example.demo.Config.RedisConfig;
+import com.example.demo.Dto.OrderDTO.DateDTO;
 import com.example.demo.Dto.ProductDTO.CreateExportMaterialProductRequest;
 import com.example.demo.Dto.ProductDTO.ProductDTO;
 import com.example.demo.Dto.ProductDTO.QuantityTotalDTO;
@@ -25,6 +26,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
 import org.springframework.core.io.UrlResource;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -63,13 +65,12 @@ public class SubMaterialController {
             @RequestParam(required = false) String search,
             @RequestParam(required = false) Integer materialId,
             @RequestParam(required = false) Integer action_type_id,
-            @RequestParam(required = false) Date startDate,
-            @RequestParam(required = false) Date endDate,
+            @RequestBody(required = false) DateDTO dto,
             @RequestParam(required = false) BigDecimal minPrice,
             @RequestParam(required = false) BigDecimal maxPrice,
             @RequestParam(required = false) String sortDirection){
         ApiResponse<List> apiResponse = new ApiResponse<>();
-        apiResponse.setResult(subMaterialService.MultiFilterInputSubMaterial(search, materialId,action_type_id, startDate,endDate, minPrice, maxPrice, sortDirection));
+        apiResponse.setResult(subMaterialService.MultiFilterInputSubMaterial(search, materialId,action_type_id, dto.getStartDate(),dto.getEndDate(), minPrice, maxPrice, sortDirection));
         return apiResponse;
 
     }

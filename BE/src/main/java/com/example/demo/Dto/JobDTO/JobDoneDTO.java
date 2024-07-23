@@ -14,7 +14,7 @@ public class JobDoneDTO {
     private Integer job_id;
     private String job_name;
     private Integer user_id;
-    private String user_name;
+    private String full_name;
     private Integer position_id;
     private String position_name;
     private Integer status_job_id;

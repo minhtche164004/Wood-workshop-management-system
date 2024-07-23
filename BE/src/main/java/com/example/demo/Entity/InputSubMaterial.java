@@ -24,8 +24,11 @@ public class InputSubMaterial {
     @Column(name = "quantity")
     private double quantity;
 
-    @Column(name = "unit_price")
+    @Column(name = "unit_price") //giá nhập
     private BigDecimal unit_price;
+
+    @Column(name = "out_price") //giá bán
+    private BigDecimal out_price;
 
     @Column(name = "date_input")
     private Date date_input;

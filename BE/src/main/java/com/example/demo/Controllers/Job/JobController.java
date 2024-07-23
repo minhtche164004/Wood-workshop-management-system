@@ -360,9 +360,16 @@ public class JobController {
     }
 
     @GetMapping("/getAllProductErrorDetail")
-    public ApiResponse<?> getAllProductErrorDetail(@RequestParam("id") int id) {
+    public ApiResponse<?> getProductErrorDetailById(@RequestParam("id") int id) {
         ApiResponse<ProductErrorAllDTO> apiResponse = new ApiResponse<>();
         apiResponse.setResult(jobService.getProductErrorDetailById(id));
+        return apiResponse;
+    }
+
+    @GetMapping("/getAllProductErrorByJobId")
+    public ApiResponse<?> getAllProductErrorByJobId(@RequestParam("job_id") int job_id) {
+        ApiResponse<List> apiResponse = new ApiResponse<>();
+        apiResponse.setResult(jobService.getAllProductErrorByJobId(job_id));
         return apiResponse;
     }
 

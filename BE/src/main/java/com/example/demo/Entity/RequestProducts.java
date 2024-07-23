@@ -1,5 +1,6 @@
 package com.example.demo.Entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -44,8 +45,9 @@ public class RequestProducts {
     private Date completionTime;
 
 
-// @OneToMany(mappedBy = "requestProducts")
-// private List<Product_Requestimages> productRequestimages;
+ @OneToMany(mappedBy = "requestProducts")
+ @JsonIgnore
+ private List<Product_Requestimages> productRequestimages;
 //    @ManyToOne
 //    @JoinColumn(name = "request_id", referencedColumnName = "request_id")
 //    private Requests requests;

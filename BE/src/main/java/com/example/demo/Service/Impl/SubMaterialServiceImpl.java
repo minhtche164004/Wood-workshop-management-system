@@ -78,7 +78,7 @@ public class SubMaterialServiceImpl implements SubMaterialService {
     }
 
     @Override
-    public SubMaterials addNew(SubMaterialDTO subMaterialDTO) {
+    public SubMaterials addNew(SubMaterialDTO subMaterialDTO) { //nhập nguyên vật liệu (thì có giá nhập , còn giá bán chưa có )
 
 
         SubMaterials subMaterials = new SubMaterials();
@@ -87,7 +87,8 @@ public class SubMaterialServiceImpl implements SubMaterialService {
         subMaterials.setMaterial(materials);
         subMaterials.setCreate_date(create);
         subMaterials.setQuantity(subMaterialDTO.getQuantity());
-        subMaterials.setUnitPrice(subMaterialDTO.getUnit_price());
+        subMaterials.setUnitPrice(BigDecimal.ZERO);//mới đầu nhập nguyên vật liệu thì giá bán là 0
+        subMaterials.setInputPrice(subMaterialDTO.getUnit_price());
         subMaterials.setDescription(subMaterialDTO.getDescription());
 
 //        if (!checkConditionService.checkInputName(subMaterialDTO.getSub_material_name())) {
@@ -111,6 +112,7 @@ public class SubMaterialServiceImpl implements SubMaterialService {
         input.setActionType(actionType);
         input.setSubMaterials(subMaterials);
         input.setUnit_price(subMaterialDTO.getUnit_price());
+        input.setOut_price(BigDecimal.ZERO); //lưu vào lịch sử giá nhập , còn giá bán chưa có thì cho null
         input.setQuantity(subMaterialDTO.getQuantity());
         input.setDate_input(create);
         inputSubMaterialRepository.save(input);
@@ -134,6 +136,17 @@ public class SubMaterialServiceImpl implements SubMaterialService {
                 int rowIndex = 1; // Bắt đầu từ hàng 1 (vì hàng 0 là tiêu đề)
                 for (SubMaterialDTO dto : subMaterialDTOs) {
                     rowIndex++; // Tăng số hàng trước khi xử lý từng dòng
+
+                    // Thực hiện các kiểm tra điều kiện
+                    if (!checkConditionService.checkInputName(dto.getSub_material_name())) {
+                        errors.add(new ExcelError(rowIndex, 1, "Tên không hợp lệ"));
+                    }
+                    if (!checkConditionService.checkInputQuantity(dto.getQuantity())) {
+                        errors.add(new ExcelError(rowIndex, 4, "Số lượng không hợp lệ"));
+                    }
+                    if (!checkConditionService.checkInputPrice(dto.getUnit_price())) {
+                        errors.add(new ExcelError(rowIndex, 5, "Đơn giá không hợp lệ"));
+                    }
 
                     String subMaterialName = dto.getSub_material_name();
                     String materialName = dto.getMaterial_name(); // Lấy tên vật liệu từ DTO
@@ -177,16 +190,6 @@ public class SubMaterialServiceImpl implements SubMaterialService {
                     } else {
                         // Nếu chưa tồn tại, tạo SubMaterial mới với đầy đủ thuộc tính
 
-                        // Thực hiện các kiểm tra điều kiện
-                        if (!checkConditionService.checkInputName(dto.getSub_material_name())) {
-                            errors.add(new ExcelError(rowIndex, 1, "Tên không hợp lệ"));
-                        }
-                        if (!checkConditionService.checkInputQuantity(dto.getQuantity())) {
-                            errors.add(new ExcelError(rowIndex, 4, "Số lượng không hợp lệ"));
-                        }
-                        if (!checkConditionService.checkInputPrice(dto.getUnit_price())) {
-                            errors.add(new ExcelError(rowIndex, 5, "Đơn giá không hợp lệ"));
-                        }
 
                         SubMaterials subMaterials = new SubMaterials();
                         subMaterials.setSubMaterialName(subMaterialName);
@@ -205,6 +208,7 @@ public class SubMaterialServiceImpl implements SubMaterialService {
                         input.setActionType(actionType);
                         input.setSubMaterials(subMaterials);
                         input.setUnit_price(dto.getUnit_price());
+                        input.setOut_price(BigDecimal.ZERO); //lưu vào lịch sử giá nhập , còn giá bán chưa có thì cho null
                         input.setQuantity(dto.getQuantity());
                         input.setDate_input(create);
                         inputSubMaterialRepository.save(input);
@@ -328,7 +332,7 @@ public class SubMaterialServiceImpl implements SubMaterialService {
         // Kiểm tra xem có thay đổi gì không
         boolean isPriceUpdated = false;
         boolean isQuantityUpdated=false;
-        if(subMaterials.getUnitPrice().compareTo(subMaterialViewDTO.getUnitPrice()) != 0){
+        if(subMaterials.getUnitPrice().compareTo(subMaterialViewDTO.getUnitPrice()) != 0){ //đây là cập nhật giá bán
             isPriceUpdated = true;
         }
         double epsilon = 0.00001; // Hoặc một giá trị epsilon phù hợp
@@ -339,11 +343,11 @@ public class SubMaterialServiceImpl implements SubMaterialService {
             // Chỉ lưu vào bảng InputSubMaterial khi có thay đổi
             InputSubMaterial input = new InputSubMaterial();
             input.setSubMaterials(subMaterials);
-
+            input.setUnit_price(subMaterials.getInputPrice()); //lưu vào lịch sử giá nhập
             if (isPriceUpdated) {
-                input.setUnit_price(subMaterialViewDTO.getUnitPrice()); // Giá mới
+                input.setOut_price(subMaterialViewDTO.getUnitPrice()); // Giá bán mới
             } else {
-                input.setUnit_price(subMaterials.getUnitPrice()); // Giữ nguyên giá cũ
+                input.setOut_price(subMaterials.getUnitPrice()); // Giữ nguyên giá bán cũ
             }
 
             if (isQuantityUpdated) {
@@ -421,7 +425,8 @@ public class SubMaterialServiceImpl implements SubMaterialService {
                 Action_Type actionType = subMaterialsRepository.findByIdAction(1);//tức là kiểu xuất kho(lưu lại lịch sử xuất kho)
                 input.setActionType(actionType);
                 input.setSubMaterials(subMaterial);
-                input.setUnit_price(subMaterial.getUnitPrice());
+                input.setUnit_price(subMaterial.getInputPrice());
+                input.setOut_price(subMaterial.getUnitPrice());
                 input.setQuantity(quantity);
                 input.setDate_input(create);
                 inputSubMaterialRepository.save(input);
@@ -449,7 +454,7 @@ public class SubMaterialServiceImpl implements SubMaterialService {
             int subMaterialId = entry.getKey();
             double quantity = entry.getValue();
             SubMaterials subMaterial = subMaterialsRepository.findById1(subMaterialId);
-            InputSubMaterial input = inputSubMaterialRepository.findLatestInputSubMaterialBySubMaterialId(subMaterialId);//lấy giá mới cập nhật
+            InputSubMaterial input = inputSubMaterialRepository.findLatestOutputSubMaterialBySubMaterialId(subMaterialId);//lấy giá mới cập nhật
             ProductSubMaterials productSubMaterial = new ProductSubMaterials(subMaterial, product, quantity, input);
             productSubMaterialsList.add(productSubMaterial);
         }
@@ -466,7 +471,7 @@ public class SubMaterialServiceImpl implements SubMaterialService {
             int subMaterialId = entry.getKey();
             double quantity = entry.getValue();
             SubMaterials subMaterial = subMaterialsRepository.findById1(subMaterialId);
-            InputSubMaterial input = inputSubMaterialRepository.findLatestInputSubMaterialBySubMaterialId(subMaterialId);//lấy giá mới cập nhật
+            InputSubMaterial input = inputSubMaterialRepository.findLatestOutputSubMaterialBySubMaterialId(subMaterialId);//lấy giá mới cập nhật
             RequestProductsSubmaterials productSubMaterial = new RequestProductsSubmaterials(subMaterial, requestProducts, quantity, input);
             reproductSubMaterialsList.add(productSubMaterial);
         }
@@ -487,7 +492,7 @@ public class SubMaterialServiceImpl implements SubMaterialService {
                 double quantity = entry.getValue();
 
                 SubMaterials subMaterial = subMaterialsRepository.findById1(subMaterialId);
-                InputSubMaterial input = inputSubMaterialRepository.findLatestInputSubMaterialBySubMaterialId(subMaterialId);
+                InputSubMaterial input = inputSubMaterialRepository.findLatestOutputSubMaterialBySubMaterialId(subMaterialId);
                 RequestProductsSubmaterials requestProductsSubmaterials = new RequestProductsSubmaterials(subMaterial, requestProducts, quantity, input);
 
                 result.add(requestProductsSubmaterials);
@@ -543,8 +548,8 @@ public class SubMaterialServiceImpl implements SubMaterialService {
                 Action_Type actionType = subMaterialsRepository.findByIdAction(1);//tức là kiểu xuất kho(lưu lại lịch sử xuất kho)
                 input.setActionType(actionType);
                 input.setSubMaterials(subMaterial);
-                input.setUnit_price(subMaterial.getUnitPrice());
-                input.setQuantity(quantity);
+                input.setUnit_price(subMaterial.getInputPrice());
+                input.setOut_price(subMaterial.getUnitPrice());
                 input.setDate_input(create);
                 inputSubMaterialRepository.save(input);
 
@@ -577,7 +582,7 @@ public class SubMaterialServiceImpl implements SubMaterialService {
                 int subMaterialId = entry.getKey();
                 double quantity = entry.getValue();
                 SubMaterials subMaterial = subMaterialsRepository.findById1(subMaterialId);
-                InputSubMaterial input=inputSubMaterialRepository.findLatestInputSubMaterialBySubMaterialId(subMaterialId);//lấy giá mới cập nhật
+                InputSubMaterial input=inputSubMaterialRepository.findLatestOutputSubMaterialBySubMaterialId(subMaterialId);//lấy giá mới cập nhật
                 ProductSubMaterials productSubMaterial = new ProductSubMaterials(subMaterial, products, quantity,input);
                 productSubMaterialsList.add(productSubMaterial);
             }
@@ -604,7 +609,7 @@ public class SubMaterialServiceImpl implements SubMaterialService {
                 int subMaterialId = entry.getKey();
                 double quantity = entry.getValue();
                 SubMaterials subMaterial = subMaterialsRepository.findById1(subMaterialId);
-                InputSubMaterial input=inputSubMaterialRepository.findLatestInputSubMaterialBySubMaterialId(subMaterialId);//lấy giá mới cập nhật
+                InputSubMaterial input=inputSubMaterialRepository.findLatestOutputSubMaterialBySubMaterialId(subMaterialId);//lấy giá mới cập nhật
                 RequestProductsSubmaterials requestProductsSubmaterials = new RequestProductsSubmaterials(subMaterial, requestProducts, quantity,input);
                 requestProductsSubmaterialsList.add(requestProductsSubmaterials);
             }
@@ -615,7 +620,7 @@ public class SubMaterialServiceImpl implements SubMaterialService {
                 int subMaterialId = entry.getKey();
                 double quantity = entry.getValue();
                 SubMaterials subMaterial = subMaterialsRepository.findById1(subMaterialId);
-                InputSubMaterial input=inputSubMaterialRepository.findLatestInputSubMaterialBySubMaterialId(subMaterialId);//lấy giá mới cập nhật
+                InputSubMaterial input=inputSubMaterialRepository.findLatestOutputSubMaterialBySubMaterialId(subMaterialId);//lấy giá mới cập nhật
                 RequestProductsSubmaterials requestProductsSubmaterials = new RequestProductsSubmaterials(subMaterial, requestProducts, quantity,input);
                 requestProductsSubmaterialsList.add(requestProductsSubmaterials);
             }

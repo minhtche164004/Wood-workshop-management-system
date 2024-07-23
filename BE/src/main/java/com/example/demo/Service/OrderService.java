@@ -9,12 +9,14 @@ import com.example.demo.Dto.RequestDTO.RequestEditDTO;
 import com.example.demo.Dto.SubMaterialDTO.CreateExportMaterialProductRequestDTO;
 import com.example.demo.Entity.*;
 import org.junit.runner.Request;
+import org.springframework.data.repository.query.Param;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -23,7 +25,7 @@ import java.util.Map;
 public interface OrderService {
     Orders AddOrder(RequestOrder requestOrder);
 
-    List<RequestProducts> GetAllProductRequest();
+    List<RequestProductAllDTO> GetAllProductRequest();
 
   //  List<Orders> GetAllRequests();
    // List<Orders> GetAllRequestsAccept();
@@ -71,7 +73,7 @@ public interface OrderService {
  String ChangeStatusOrder(int orderId, int status_id);
 
 
-    List<RequestProductDTO_Show> filterRequestProductsForAdmin(String search,Integer statusId, BigDecimal minPrice, BigDecimal maxPrice, String sortDirection);
+    List<RequestProductAllDTO> filterRequestProductsForAdmin(String search,Integer statusId, BigDecimal minPrice, BigDecimal maxPrice, String sortDirection);
 
     List<RequestProducts> findByPriceRange(BigDecimal min, BigDecimal max);
     List<RequestProducts> GetAllProductRequestByUserId();
@@ -83,6 +85,10 @@ public interface OrderService {
 
 
    ResponseEntity<String> Cancel_Order(int order_id, boolean special_order_id,String response);
+
+    String ConfirmPayment(int order_id);
+
+    List<OderDTO> MultiFilterOrder(String search, Integer status_id, Integer paymentMethod, Date startDate, Date endDate);
 
 
 

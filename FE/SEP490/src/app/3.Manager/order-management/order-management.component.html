@@ -83,6 +83,17 @@
                   us?.specialOrder === true">
                     <i class="fa-solid fa-circle-plus"></i>
                   </a>
+
+                  <a href="#" data-toggle="modal" data-target="#myModalconfirm"
+                    *ngIf="us?.status_id === 1 " (click)="setOrderForPayment(us?.orderId)"
+                    (click)="getOrDetailById(us, us?.orderId)">
+                    <i class="fa-solid fa-credit-card"></i>
+                  </a>
+
+                  <a href="#" data-toggle="modal" data-target="#confirmDeleteModal"
+                    (click)="setOrderForCancellation(us?.orderId, us?.specialOrder)" *ngIf="us?.status_id === 7">
+                    <i class="fa-solid fa-times-circle"></i>
+                  </a>
                 </td>
                 <td style="min-width: 140px;">
                   {{ us?.specialOrder ? 'Đơn hàng đặc biệt' : 'Đơn hàng có sẵn' }}

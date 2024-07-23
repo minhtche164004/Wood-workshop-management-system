@@ -41,7 +41,7 @@
                                     <input [(ngModel)]="toDate" style="margin-left: 10px;" type="date"
                                         class="form-control" placeholder="Đến: dd/mm/yyyy">
 
-                                    <select [(ngModel)]="selectedPosition" (change)="searchSalary()"
+                                    <select [(ngModel)]="selectedPosition" 
                                         class="form-select">
                                         <!-- <option [ngValue]="4" selected disabled>Chọn vị trí</option> -->
                                         <option value="">Tất cả</option>
@@ -50,7 +50,7 @@
                                             {{ category.position_name }}
                                         </option>
                                     </select>
-                                    <select [(ngModel)]="selectedStatusBanking" (change)="searchSalary()"
+                                    <select [(ngModel)]="selectedStatusBanking" 
                                     class="form-select">
                                     <!-- <option [ngValue]="4" selected disabled>Chọn vị trí</option> -->
                                     <option value="">Tất cả</option>

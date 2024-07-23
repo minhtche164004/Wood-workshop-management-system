@@ -53,12 +53,10 @@
             <thead>
               <tr>
                 <th>Mã đơn hàng</th>
-
                 <th>Thao tác</th>
                 <th>Loại đơn hàng</th>
                 <th>Ngày đặt hàng</th>
                 <th>Tình trạng</th>
-
                 <th>Kiểu thanh toán</th>
                 <th>Tiền cọc(VNĐ)</th>
                 <th>Số tiền thanh toán(VNĐ)</th>
@@ -218,11 +216,12 @@
 
        
             <div class="col-md-4 text-end">
-              <b> {{OrderdetailById.status?.status_name}}</b>
+              <b  style="background-color: #007bff;
+  color: whitesmoke; padding: 4px; border-radius: 5px;"> {{OrderdetailById.status?.status_name}}</b>
             </div>
           </div>
           <br>
-          <hr>
+          <hr>  
           <div class="row">
             <div class="col-md-4">
               <div class="card">
@@ -230,8 +229,8 @@
                   Khách hàng
                 </div>
                 <div class="card-body">
-                  <h3 class="card-title">{{OrderdetailById.userInfor?.fullname}} -
-                    {{OrderdetailById.userInfor?.phoneNumber}}</h3>
+                  <h4 class="card-title">{{OrderdetailById.userInfor?.fullname}} -
+                    {{OrderdetailById.userInfor?.phoneNumber}}</h4>
 
                   <p class="card-text">Địa chỉ: {{OrderdetailById.userInfor?.address}}</p>
                 </div>
@@ -245,8 +244,9 @@
                 </div>
                 <div class="card-body">
                   <!-- <h5 class="card-title">{{OrderdetailById.userInfor?.fullname}}</h5> -->
-                  <p class="card-text"><b>Đã cọc: </b>{{OrderdetailById.deposite | number : '1.0-3' }} vnđ</p>
-                  <p class="card-text"><b>Thanh toán:</b>{{OrderdetailById.paymentMethod}}</p>
+                  <p class="card-text"><b>Đã cọc:   </b>{{OrderdetailById.deposite | number : '1.0-3' }} vnđ</p>
+                  <p class="card-text"><b>Tổng tiền cần thanh toán:   </b>{{ totalAmoutOrder | number : '1.0-3' }} vnđ</p>
+                  <p class="card-text"><b style="margin-right: 2%;">Thanh toán:</b>{{ OrderdetailById.paymentMethod === '1' ? 'Tiền mặt' : 'Chuyển khoản' }}</p>
                   <p class="card-text"><b>Mô tả đơn hàng:</b> {{OrderdetailById.description}}</p>
                 </div>
               </div>

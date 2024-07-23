@@ -90,7 +90,7 @@
                             <tr>
                                 <th>STT</th>
                                 <!-- <th>Mã việc</th> -->
-                                <th>Thanh toán</th>
+                                <th style="width: 10%;">Thanh toán</th>
                                 <th>Ngày hoàn thành</th>
                                 
                                 <th>Tên nhân viên</th>
@@ -98,8 +98,7 @@
                                 <th>Tình trạng</th>
                                 <th>Đơn giá (vnđ)</th>
                                 <th>Ngân hàng</th>
-                                <th>Số tiền khoản</th>
-                                
+                                <th style="width: 13%;">Số tài khoản</th>                              
                             </tr>
                         </thead>
                         <!-- Table body -->
@@ -107,7 +106,7 @@
                             <tr
                                 *ngFor="let product of totalSalary | paginate: { itemsPerPage: 10, currentPage: currentPage }; let i = index">
                                 <td>{{ i + 1 + (currentPage - 1) * 10 }}</td>
-                                <td>
+                                <td >
                                     <button class="btn"
                                         [ngClass]="{'btn-primary': !product?.advanceSuccess, 'btn-secondary': product?.advanceSuccess}"
                                         data-toggle="modal" data-target="#QRPAY" (click)="thanhToan(product)"
@@ -183,13 +182,14 @@
             <div class="modal-body text-center p-4">
                 <img style="width:100%;" [src]="qrImageUrl" class="img-fluid">
             </div>
-            <div class="modal-footer text-center justify-content-center">
+            <div class="modal-footer text-center justify-content-end">
                 <!-- Thêm justify-content-center để căn giữa -->
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Hủy bỏ</button>
                 <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#myModal"
                     (click)="confirmThanhToan()">Đã
                     thanh toán</button>
                 <!-- updateBankingModal(this.selectedBanking) -->
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Hủy bỏ</button>
+                
             </div>
         </div>
     </div>

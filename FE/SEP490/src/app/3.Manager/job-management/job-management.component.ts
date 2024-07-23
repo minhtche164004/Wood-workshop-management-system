@@ -989,7 +989,7 @@ cancelChangeStatusJob() {
 
         }
       );
-      this.isLoadding = false;
+    
     } else if (selectedCategory === 0) {
 
       this.jobService.multiSearchJobRequest(searchKey, this.selectedStatusJob, this.selectedPosSearch).subscribe(
@@ -1014,7 +1014,7 @@ cancelChangeStatusJob() {
         }
       );
 
-      this.isLoadding = false;
+  
     }
   }
   // onSearchInput(cate: number,searchKey: any){

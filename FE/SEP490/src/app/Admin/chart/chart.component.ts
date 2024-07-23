@@ -267,8 +267,8 @@ export class ChartComponent implements OnInit {
       const data = await this.statistic.getCountSpecialOrder().toPromise();
       this.totalSpecialOrder = data.result;
       if (this.totalOrder > 0) {
-        this.percentSpecialOrder = (this.totalSpecialOrder / this.totalOrder) * 100;
-        this.percentOrder = 100 - this.percentSpecialOrder;
+        this.percentSpecialOrder = Math.round((this.totalSpecialOrder / this.totalOrder) * 100);
+        this.percentOrder = Math.round(100 - this.percentSpecialOrder);
         console.log('Phần trăm đơn hàng đặc biệt:', this.percentSpecialOrder.toFixed(2) + '%');
         console.log('Phần trăm đơn hàng có sẵn:', this.percentOrder.toFixed(2) + '%');
 
@@ -305,8 +305,8 @@ export class ChartComponent implements OnInit {
     try {
       this.totalNormalProduct = this.totalProduct - this.totalRQProduct;
       console.log('Tổng sản phẩm normal:', this.totalNormalProduct);
-      this.normalProductPercentage = (this.totalNormalProduct / this.totalProduct) * 100;
-      this.rqProductPercentage = (this.totalRQProduct / this.totalProduct) * 100;
+      this.normalProductPercentage = Math.round((this.totalNormalProduct / this.totalProduct) * 100);
+      this.rqProductPercentage = Math.round((this.totalRQProduct / this.totalProduct) * 100);
       console.log('Phần trăm sản phẩm normal:', this.normalProductPercentage.toFixed(2) + '%');
       console.log('Phần trăm sản phẩm RQ:', this.rqProductPercentage.toFixed(2) + '%');
     } catch (err) {
@@ -344,10 +344,10 @@ export class ChartComponent implements OnInit {
       this.totalEmpPos4 = employees.filter((emp: User) => emp.position.position_id === 4).length;
 
       if (this.totalEmployee > 0) {
-        this.percentEmpPos1 = (this.totalEmpPos1 / this.totalEmployee) * 100;
-        this.percentEmpPos2 = (this.totalEmpPos2 / this.totalEmployee) * 100;
-        this.percentEmpPos3 = (this.totalEmpPos3 / this.totalEmployee) * 100;
-        this.percentEmpPos4 = (this.totalEmpPos4 / this.totalEmployee) * 100;
+        this.percentEmpPos1 = Math.round((this.totalEmpPos1 / this.totalEmployee) * 100);
+        this.percentEmpPos2 = Math.round((this.totalEmpPos2 / this.totalEmployee) * 100);
+        this.percentEmpPos3 = Math.round((this.totalEmpPos3 / this.totalEmployee) * 100);
+        this.percentEmpPos4 = Math.round((this.totalEmpPos4 / this.totalEmployee) * 100);
       }
     } catch (err) {
       console.error(err);

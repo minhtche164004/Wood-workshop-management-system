@@ -31,8 +31,11 @@ public class SubMaterials {
     @Column(name = "quantity")
     private Double quantity;
 
-    @Column(name = "unit_price")
+    @Column(name = "unit_price")  //giá bán
     private BigDecimal unitPrice;
+
+    @Column(name = "input_price")  //giá nhập
+    private BigDecimal inputPrice;
 
     @Column(name = "code")
     private String code;

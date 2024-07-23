@@ -139,9 +139,11 @@ public class JobServiceImpl implements JobService {
         jobRepository.save(jobs);
         List<Processproducterror> processproducterrorList = processproducterrorRepository.getProcessproducterrorByJobId(job_id);
         for (Processproducterror p : processproducterrorList) {
-            processproducterrorRepository.delete(p);
+          p.setJob(jobs);
         }
-        jobRepository.delete(jobs_order_detail);
+        if(jobs_order_detail.getUser() == null){
+            jobRepository.delete(jobs_order_detail);
+        }
 
         return jobs;
     }
@@ -226,16 +228,26 @@ public class JobServiceImpl implements JobService {
         //  jobRepository.delete(jobs_history);
         return jobs_log;
     }
+//    private boolean checkOderDoneOrNot(int order_id) {
+//        List<OrderDetailWithJobStatusDTO> results = orderDetailRepository.getAllOrderDetailByOrderIdCheck(order_id);
+//        if(!results.isEmpty()){
+//            return false;
+//        }
+//        return true; // Chỉ trả về true nếu tất cả các job đều đã hoàn thành (status_id = 13)
+//    }
 
     private boolean checkOderDoneOrNot(int order_id) {
         List<OrderDetailWithJobStatusDTO> results = orderDetailRepository.getAllOrderDetailByOrderIdCheck(order_id);
-        for (OrderDetailWithJobStatusDTO result : results) {
-            if (result.getStatus_job_id() != 13 && result.getStatus_job_id() != 15) {  //13 tức là sản phẩm của oderdetail đã hoàn thành
-                return false; // Ngay lập tức trả về false nếu tìm thấy job chưa hoàn thành
+     //   for(OrderDetailWithJobStatusDTO p :results){
+            if(results.size() >= 1){
+                return false;
             }
-        }
-        return true; // Chỉ trả về true nếu tất cả các job đều đã hoàn thành (status_id = 13)
+       // }
+        return true;
     }
+
+
+
 
     @Override
     public Jobs EditJobs(JobDTO jobDTO, int job_id) {
@@ -370,6 +382,15 @@ public class JobServiceImpl implements JobService {
     public List<ProductErrorAllDTO> getAllProductError() {
         List<ProductErrorAllDTO> list = jobRepository.getAllProductError();
         if (list == null) {
+            throw new AppException(ErrorCode.NOT_FOUND);
+        }
+        return list;
+    }
+
+    @Override
+    public List<ProductErrorAllDTO> getAllProductErrorByJobId(int job_id) {
+        List<ProductErrorAllDTO> list = jobRepository.getAllProductErrorByJobId(job_id);
+        if(list == null){
             throw new AppException(ErrorCode.NOT_FOUND);
         }
         return list;

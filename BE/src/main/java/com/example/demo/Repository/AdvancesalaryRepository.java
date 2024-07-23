@@ -37,8 +37,8 @@ public interface AdvancesalaryRepository extends JpaRepository<Advancesalary,Int
 
     //hien tai lay fulllname thay cho username do khong tao DTO de chua fullname
     @Query("SELECT a FROM Advancesalary a LEFT JOIN a.user.userInfor i WHERE " +
-            "(:fromDate IS NULL OR a.date >= :fromDate) AND " +
-            "(:toDate IS NULL OR a.date <= :toDate) AND " +
+            "(:fromDate IS NULL OR a.date > :fromDate) AND " +
+            "(:toDate IS NULL OR a.date < :toDate) AND " +
             "(a.user.position.position_id IN :position_id OR :position_id IS NULL) AND " +
             "(:fullname IS NULL OR i.fullname LIKE %:fullname%) " +
             "ORDER BY a.date DESC")
@@ -46,7 +46,7 @@ public interface AdvancesalaryRepository extends JpaRepository<Advancesalary,Int
                                             @Param("toDate") Date toDate,
                                             @Param("position_id") Integer position_id,
                                             @Param("fullname") String fullname);
-    
+
     @Query("SELECT a FROM Advancesalary a LEFT JOIN a.user.userInfor i WHERE " +
             "(:fromDate IS NULL OR a.date >= :fromDate) AND " +
             "(:toDate IS NULL OR a.date <= :toDate) AND " +

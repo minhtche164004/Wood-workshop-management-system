@@ -546,12 +546,16 @@ export class AuthenListService {
     );
   }
 
-  getMultiFillterRHistoryImpact(search: string, sortDirection: string): Observable<any> {
+  getMultiFillterRHistoryImpact(search: string, sortDirection: string,startDate: string, endDate: string): Observable<any> {
     const params = {
       search: search,
       sortDirection: sortDirection,
     };
+    const body = {
 
+      startDate: startDate,
+      endDate: endDate
+    };
     const queryString = Object.entries(params)
       .filter(([key, value]) => {
         if (key === 'search' && value === '') return false;
@@ -564,7 +568,7 @@ export class AuthenListService {
 
     const url = `${this.apiUrl_getMultiFillterRHistoryImpact}?${queryString}`;
     console.log(url);
-    return this.http.get<any>(url).pipe(
+    return this.http.post<any>(url,body).pipe(
       catchError(this.handleError)
     );
   }

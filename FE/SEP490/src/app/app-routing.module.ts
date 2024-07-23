@@ -131,7 +131,7 @@ const routes: Routes = [
   { path: 'autoComplete', component: AutoCompleteComponent },
   { path: 'history_order', component: HistoryOrderComponent , canActivate: [AuthGuard], data: { roles: ['CUSTOMER'] }}, 
   { path: 'request_product', component: ListRequestProductComponent}, 
-  
+    
   { path: 'employee', component: ListJobDoneEmployeeComponent , canActivate: [AuthGuard], data: { roles: ['EMPLOYEE'] }}, 
   { path: 'list_job_done', component: ListJobDoneComponent , canActivate: [AuthGuard], data: { roles: ['ADMIN'] }}, 
   { path: 'list_request_customer', component: ListRequestCustomerComponent , canActivate: [AuthGuard], data: { roles: ['MANAGER'] }}, 

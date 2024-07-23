@@ -25,6 +25,7 @@ import redis.clients.jedis.JedisPooled;
 
 import java.lang.reflect.Type;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/auth/admin/")
@@ -68,6 +69,7 @@ public class AdminController {
         ApiResponse<List> apiResponse = new ApiResponse<>();
         String cacheKey = "all_positions";
         List<Position> positions;
+//        jedis.del(cacheKey);
         String cachedData = jedis.get(cacheKey);
         if (cachedData != null) {
             Type type = new TypeToken<List<Position>>() {
@@ -79,6 +81,7 @@ public class AdminController {
             jedis.set(cacheKey, jsonData);
             jedis.expire(cacheKey, 3000);
         }
+        positions = positions.stream().filter(position -> position.getPosition_id() != 4).collect(Collectors.toList());
         apiResponse.setResult(positions);
         return apiResponse;
     }
@@ -119,18 +122,21 @@ public class AdminController {
         apiResponse.setResult(statusUserRepository.getAllStatus());
         return apiResponse;
     }
+
     @GetMapping("/GetAllStatusJob")
     public ApiResponse<?> GetStatusJob() {
         ApiResponse<List> apiResponse = new ApiResponse<>();
         apiResponse.setResult(statusJobRepository.getAllStatus());
         return apiResponse;
     }
+
     @GetMapping("/GetAllStatusOrder")
     public ApiResponse<?> GetStatusOrder() {
         ApiResponse<List> apiResponse = new ApiResponse<>();
         apiResponse.setResult(statusOrderRepository.getAllStatus());
         return apiResponse;
     }
+
     @GetMapping("/GetAllStatusProduct")
     public ApiResponse<?> GetStatusProduct() {
         ApiResponse<List> apiResponse = new ApiResponse<>();
@@ -172,6 +178,7 @@ public class AdminController {
         apiResponse.setResult(userService.FilterByStatus(query));
         return apiResponse;
     }
+
     @GetMapping("/FilterByPosition")
     public ApiResponse<?> FilterByPosition(@RequestParam(value = "query", required = false) int query) {
         ApiResponse<List> apiResponse = new ApiResponse<>();
@@ -185,11 +192,12 @@ public class AdminController {
         apiResponse.setResult(userService.FilterByRole(query));
         return apiResponse;
     }
+
     @GetMapping("/getAllEmployee")
-    public ApiResponse<?> getAllEmployee(){
+    public ApiResponse<?> getAllEmployee() {
         ApiResponse<List> apiResponse = new ApiResponse<>();
         apiResponse.setResult(userService.getAllEmployee());
-        return  apiResponse;
+        return apiResponse;
     }
 
     @GetMapping("GetById")

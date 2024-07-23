@@ -171,7 +171,7 @@
 
 
       <pagination-controls style="justify-content: right; display: flex;" (pageChange)="currentPage = $event"
-        previousLabel="Trang trước" nextLabel="Trang sau" [maxSize]="4" *ngIf="user && user.length > 0">
+        previousLabel="Trang trước" nextLabel="Trang sau" *ngIf="user && user.length > 0">
       </pagination-controls>
       <div class="clearfix" style="justify-content: right; display: flex;" *ngIf="user && user.length > 0">
         <div class="hint-text">Hiển thị <b>{{ (currentPage - 1) * 10 + 1 }}</b> tới <b>{{ currentPage * 10 >
@@ -193,7 +193,7 @@
     </div>
   </div>
 
-  <div class="modal fade" style="margin-left: 5%;" id="productDetailModal" tabindex="-1" role="dialog"
+  <div class="modal fade" style="margin-left: 7%;" id="productDetailModal" tabindex="-1" role="dialog"
     aria-labelledby="productDetailModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-xl" role="document">
       <div class="modal-content">
@@ -206,14 +206,16 @@
         <div class="modal-body" style="font-size: 16px;">
           <div class="container">
             <div class="row">
-              <div class="col-md-8">
+              <div class="col-md-4">
                 <b>Đơn hàng: </b>
 
                 <label style="color: rgba(0, 102, 255, 0.945);">{{OrderdetailById.code}}</label>
-                <br>
-                <b>Ngày tạo đơn:</b> {{OrderdetailById.orderDate | date:'dd/MM/yyyy'}}
               </div>
-              <div class="col-md-4">
+              <div class="col-md-4 text-center"> <b>Ngày tạo đơn:</b> {{OrderdetailById.orderDate | date:'dd/MM/yyyy'}}
+              </div>
+
+
+              <div class="col-md-4 text-end">
                 <b> {{OrderdetailById.status?.status_name}}</b>
               </div>
             </div>
@@ -222,12 +224,28 @@
             <div class="row">
               <div class="col-md-4">
                 <div class="card">
-                  <div class="card-header">
+                  <div class="card-header text-center">
                     Khách hàng
                   </div>
                   <div class="card-body">
-                    <h5 class="card-title">{{OrderdetailById.userInfor?.fullname}}</h5>
-                    <p class="card-text">{{OrderdetailById.userInfor?.phoneNumber}}</p>
+                    <h3 class="card-title">{{OrderdetailById.userInfor?.fullname}} -
+                      {{OrderdetailById.userInfor?.phoneNumber}}</h3>
+
+                    <p class="card-text">Địa chỉ: {{OrderdetailById.userInfor?.address}}</p>
+                  </div>
+                </div>
+                <br>
+                <hr>
+                <br>
+                <div class="card">
+                  <div class="card-header text-center">
+                    Thông tin đơn hàng
+                  </div>
+                  <div class="card-body">
+                    <!-- <h5 class="card-title">{{OrderdetailById.userInfor?.fullname}}</h5> -->
+                    <p class="card-text"><b>Đã cọc: </b>{{OrderdetailById.deposite | number : '1.0-3' }} vnđ</p>
+                    <p class="card-text"><b>Thanh toán:</b>{{OrderdetailById.paymentMethod}}</p>
+                    <p class="card-text"><b>Mô tả đơn hàng:</b> {{OrderdetailById.description}}</p>
                   </div>
                 </div>
               </div>
@@ -293,29 +311,6 @@
 
 
 
-  <div class="modal fade" id="myModal" tabindex="-1" aria-labelledby="myModalLabel" aria-hidden="true"
-    data-backdrop="static" data-keyboard="false">
-    <div class="modal-dialog">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h2 class="modal-title" id="myModal">Cập nhật trạng thái đơn hàng</h2>
-          <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close"
-            (click)="closeModal($event)"></button>
-        </div>
-        <div class="modal-body">
-          Bạn có chắc chắn muốn cập nhật trạng thái đơn hàng này?
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-dismiss="modal" (click)="closeModal($event)"
-            (click)="cancelChangeStatusJob()">Đóng</button>
-          <button type="button" class="btn btn-primary" (click)="changeStatus(selectedModalJob,selectedModalId)">Chắc
-            chắn</button>
-        </div>
-      </div>
-    </div>
-  </div>
-
-
 
   <div class="modal fade" id="myModalconfirm" tabindex="-1" aria-labelledby="myModalLabel1" aria-hidden="true"
     data-backdrop="static" data-keyboard="false">
@@ -341,6 +336,54 @@
       </div>
     </div>
   </div>
+
+  <div class="modal fade" id="myModal" tabindex="-1" aria-labelledby="myModalLabel" aria-hidden="true"
+    data-backdrop="static" data-keyboard="false">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h2 class="modal-title" id="myModal">Cập nhật trạng thái đơn hàng</h2>
+          <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close"
+            (click)="closeModal($event)"></button>
+        </div>
+        <div class="modal-body">
+          Bạn có chắc chắn muốn cập nhật trạng thái đơn hàng này?
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal" (click)="closeModal($event)"
+            (click)="cancelChangeStatusJob()">Đóng</button>
+          <button type="button" class="btn btn-primary" (click)="changeStatus(selectedModalJob,selectedModalId)">Chắc
+            chắn</button>
+
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+
+  <!-- <div class="modal fade" id="myModalconfirm" tabindex="-1" aria-labelledby="myModalLabel1" aria-hidden="true"
+          data-backdrop="static" data-keyboard="false">
+          <div class="modal-dialog">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h2 class="modal-title" id="myModalconfirm">Xác nhận thanh toán tiền cọc đơn hàng</h2>
+                <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close"
+                  (click)="closeModal($event) " (click)="cancelChangeStatusJob()"></button>
+              </div>
+              <div class="modal-body">
+                Bạn có chắc chắn xác nhận thanh toán tiền cọc đơn hàng này?
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal" (click)="closeModal($event)"
+                  (click)="cancelChangeStatusJob()">Đóng</button>
+                <button type="button" class="btn btn-primary" (click)="confirmPayment()">Chắc
+                  chắn
+                </button>
+              </div>
+            </div>
+          </div>
+        </div> -->
 
 
   <div *ngIf="isLoadding" class="loading-overlay">

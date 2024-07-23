@@ -21,22 +21,28 @@
           </div>
 
           <div class="row">
-            <div class="col-md-7"></div> <!-- Dummy column to push the search box to the right -->
-            <div class="col-md-5 text-end">
+            <div class="col-md-2">
+              
+            </div> <!-- Dummy column to push the search box to the right -->
+            <div class="col-md-10 text-end">
               <div class="input-group mb-3">
-                <!-- product.component.html -->
-                <!-- <select [ngModel]="selectedCategory">
-                    <option value="null" disabled selected>Phân quyền</option>
-                    <option *ngFor="let ps of position" [value]="ps.position_id">{{ ps.position_name }}</option>
-                  </select> -->
-                  <select (change)="filterHistory_Impace()"
+              
+                <label>Từ: </label>
+                <input [(ngModel)]="selectedSDate" style="margin-left: 10px;" type="date" class="form-control"
+                  placeholder="Đến: dd/mm/yyyy">
+
+                <label>Đến: </label>
+                <input [(ngModel)]="selectedEDate" style="margin-left: 10px;" type="date" class="form-control"
+                  placeholder="Đến: dd/mm/yyyy">
+
+                  <select 
                   [(ngModel)]="selectedSortByPrice">
                   <option value="0" disabled selected>Sắp xếp giá tiền</option>
                   <option value="asc">Giá tăng dần</option>
                   <option value="desc">Giá giảm dần</option>
                 </select>
                 <input type="text" class="form-control" placeholder="Tìm kiếm tên nguyên vật liệu..." [(ngModel)]="searchKey"
-                (keyup.enter)="filterHistory_Impace()">
+                >
               <button class="btn search-button" type="button"
                 (click)="filterHistory_Impace()">
                 <i class="fa fa-search"></i>

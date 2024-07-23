@@ -50,7 +50,7 @@ public interface UserRepository extends JpaRepository<User,Integer> {
     @Query("update User u set u.status.status_id = ?2 where u.userId = ?1")
     void editStatus(int userId, int status_id);
 
-    @Query("SELECT u FROM User u WHERE u.position.position_id IS NOT NULL")
+    @Query("SELECT u FROM User u WHERE u.position.position_id IS NOT NULL AND u.position.position_id <> 4")
     List<User> findUsersWithPosition();
 
 //    @Query("SELECT u FROM User u WHERE u.position.position_id IS NOT NULL AND ")

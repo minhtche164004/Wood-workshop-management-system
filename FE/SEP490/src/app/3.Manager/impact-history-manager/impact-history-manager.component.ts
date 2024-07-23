@@ -22,7 +22,8 @@ export class ImpactHistoryManagerComponent implements OnInit {
   currentPage: number = 1;
   searchKey: string = '';
   history_impact: any[] = [];
-
+  selectedSDate: string = '';
+  selectedEDate: string = '';
   selectedSortByPrice: string = '0';
   constructor(
 
@@ -52,7 +53,7 @@ export class ImpactHistoryManagerComponent implements OnInit {
           if (data.code === 1000) {
             this.list_submaterinput_manage = data.result;
             this.isLoadding = false;
-            
+
           } else {
             console.error('Failed to fetch products:', data);
             this.isLoadding = false;
@@ -72,7 +73,17 @@ export class ImpactHistoryManagerComponent implements OnInit {
   filterHistory_Impace(): void {
     // console.log("Lọc sản phẩm với từ khóa:", this.searchKey, ", danh mục:", this.selectedCategory, "và giá:", this.selectedSortByPrice);
     this.isLoadding = true;
-    this.authenListService.getMultiFillterRHistoryImpact(this.searchKey, this.selectedSortByPrice)
+    let startDate: string = this.selectedSDate || '';
+    let endDate: string = this.selectedEDate || '';
+    if (this.selectedSDate) {
+      startDate = this.selectedSDate.replace(/(\d{2})\/(\d{2})\/(\d{4})/, "$3/$2/$1");
+    }
+
+    if (this.selectedEDate) {
+      endDate = this.selectedEDate.replace(/(\d{2})\/(\d{2})\/(\d{4})/, "$3/$2/$1");
+    }
+    this.authenListService.getMultiFillterRHistoryImpact(this.searchKey, this.selectedSortByPrice, startDate,
+      endDate)
       .subscribe(
         (data) => {
           this.isLoadding = false;
@@ -83,7 +94,7 @@ export class ImpactHistoryManagerComponent implements OnInit {
           } else if (data.code === 1015) {
             this.list_submaterinput_manage = [];
             //    console.error('Lọc lịch sử thay đổi không thành công:', data);
-          
+
           }
         }
       );

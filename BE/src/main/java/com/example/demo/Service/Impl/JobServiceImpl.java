@@ -139,14 +139,26 @@ public class JobServiceImpl implements JobService {
         jobRepository.save(jobs);
         List<Processproducterror> processproducterrorList = processproducterrorRepository.getProcessproducterrorByJobId(job_id);
         for (Processproducterror p : processproducterrorList) {
-          p.setJob(jobs);
+            p.setJob(jobs);
+            processproducterrorRepository.save(p);
         }
-        if(jobs_order_detail.getUser() == null){
-            jobRepository.delete(jobs_order_detail);
-        }
+        jobRepository.delete(jobs_order_detail);
+//        if(jobs_order_detail.getUser() == null){
+//            jobRepository.delete(jobs_order_detail);
+//        }
 
         return jobs;
     }
+
+    @Override
+    public List<ProductErrorAllDTO> getAllProductErrorByJobId(int job_id) {
+        List<ProductErrorAllDTO> list = jobRepository.getAllProductErrorByJobId(job_id);
+        if(list == null){
+            throw new AppException(ErrorCode.NOT_FOUND);
+        }
+        return list;
+    }
+
 
 
     @Override
@@ -382,15 +394,6 @@ public class JobServiceImpl implements JobService {
     public List<ProductErrorAllDTO> getAllProductError() {
         List<ProductErrorAllDTO> list = jobRepository.getAllProductError();
         if (list == null) {
-            throw new AppException(ErrorCode.NOT_FOUND);
-        }
-        return list;
-    }
-
-    @Override
-    public List<ProductErrorAllDTO> getAllProductErrorByJobId(int job_id) {
-        List<ProductErrorAllDTO> list = jobRepository.getAllProductErrorByJobId(job_id);
-        if(list == null){
             throw new AppException(ErrorCode.NOT_FOUND);
         }
         return list;

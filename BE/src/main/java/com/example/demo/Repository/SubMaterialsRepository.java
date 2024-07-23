@@ -36,8 +36,8 @@ public interface SubMaterialsRepository extends JpaRepository<SubMaterials,Integ
             "(s.subMaterialName LIKE %:search% OR :search IS NULL) AND " +
             "(s.material.materialId = :materialId OR :materialId IS NULL) AND " +
             "(a.action_type_id = :action_type_id OR :action_type_id IS NULL) AND " +
-            "(i.date_input >= :startDate OR :startDate IS NULL) AND " +
-            "(i.date_input <= :endDate OR :endDate IS NULL) AND " +
+            "(i.date_input > :startDate OR :startDate IS NULL) AND " +
+            "(i.date_input < :endDate OR :endDate IS NULL) AND " +
             "(i.unit_price >= :minPrice OR :minPrice IS NULL) AND " +
             "(i.unit_price <= :maxPrice OR :maxPrice IS NULL)")
     List<InputSubMaterial> MultiFilterInputSubMaterial(@Param("search") String search,

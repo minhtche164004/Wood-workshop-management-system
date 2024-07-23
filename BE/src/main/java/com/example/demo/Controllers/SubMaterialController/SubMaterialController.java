@@ -60,7 +60,7 @@ public class SubMaterialController {
         apiResponse.setResult(subMaterialService.getAll());
         return apiResponse;
     }
-    @GetMapping("/MultiFilterInputSubMaterial")
+    @PostMapping("/MultiFilterInputSubMaterial")
     public ApiResponse<?>  MultiFilterInputSubMaterial(
             @RequestParam(required = false) String search,
             @RequestParam(required = false) Integer materialId,

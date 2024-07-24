@@ -67,9 +67,6 @@ import { EmployeeSubmaterialManagementComponent } from './employee-submaterial-m
 import { ImpactHistoryManagerComponent } from './3.Manager/impact-history-manager/impact-history-manager.component';
 
 
-
-
-
 const routes: Routes = [
   { path: 'homepage', component: HomepageComponent }, 
   { path: 'api-province', component: ApiProvinceComponent },
@@ -136,12 +133,11 @@ const routes: Routes = [
   { path: 'list_job_done', component: ListJobDoneComponent , canActivate: [AuthGuard], data: { roles: ['ADMIN'] }}, 
   { path: 'list_request_customer', component: ListRequestCustomerComponent , canActivate: [AuthGuard], data: { roles: ['MANAGER'] }}, 
   { path: 'list_salary_employee', component: ListSalaryEmployeeComponent , canActivate: [AuthGuard], data: { roles: ['EMPLOYEE'] }}, 
-
+  { path: 'temperlate', component: TemplateComponent },
   //danh` cho order-vnpay
   { path: 'order-vnpay-success', component: OrderSuccessComponent },
   { path: 'order-vnpay-fail', component: OrderFailComponent },
 
-  
   // { path: '', redirectTo: '/homepage', pathMatch: 'full' },
   { path: 'report-cost', component: ReportCostManagementComponent },
   { path: 'im_history', component: ImpactHistoryManagerComponent },

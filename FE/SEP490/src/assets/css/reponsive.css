@@ -67,7 +67,7 @@
           display: block;
       }
   }
-  @media (max-width: 576px){
+  /* @media (max-width: 576px){
       .email input{
           width: 100%;
       }
@@ -75,5 +75,5 @@
           right: -5%;
           width: 80px;
       }
-  }
+  } */
   

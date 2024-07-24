@@ -208,7 +208,7 @@
     <div class="modal-dialog modal-dialog-centered modal-lg">
         <div class="modal-content">
             <div class="modal-header">
-                <h2 class="modal-title" id="assignJobModalLabel">Chi tiết giao việc làm</h2>
+                <h2 class="modal-title" id="assignJobModalLabel">Giao việc làm</h2>
                 <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body p-4">
@@ -236,18 +236,12 @@
                                                 <div class="col-md-6">
 
                                                     <select class="form-select" [(ngModel)]="selectedEmployee" name="selectedEmployee" (change)="onChangeSelectedEmployee($event)">
-                                                        <option [value]="null" disabled selected>Chọn nhân viên</option>
-                                                        <option [value]="''">Tất cả</option>
+                                                        <option [value]="''">Chọn 1 nhân viên</option>
                                                         <option *ngFor="let employee of positionEmployees" [value]="employee.userId">
-                                                          {{ employee.username }} : {{ employee.userId }} : {{employee.position?.position_name}}
+                                                            {{ employee.username }} 
+                                                            <!-- : {{ employee.userId }} : {{ employee.position?.position_name }} -->
                                                         </option>
-                                                      </select>
-                                                      
-                                                      <!-- Optional: Display an error message if needed -->
-                                                      <div *ngIf="showError" class="alert alert-danger">
-                                                        Không thể chọn "Tất cả". Vui lòng chọn một nhân viên cụ thể.
-                                                      </div>
-                                                                                               
+                                                    </select>                                                                                     
                                                 </div>
                                             </div>
                                             <div class="row">
@@ -499,7 +493,7 @@
                                 </table>
                                 <!-- Job description -->
                                 <div class="customer-info">
-                                    <h5>Mô tả chi tiết yêu cầu việc làm</h5>
+                                    <h5 style="color: black;">Mô tả chi tiết yêu cầu việc làm</h5>
                                     <textarea class="form-control" rows="6" readonly
                                         placeholder="Nhập mô tả chi tiết..."
                                         required>{{ selectedJob.description }}</textarea>

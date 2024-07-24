@@ -40,8 +40,7 @@
                   <option [ngValue]="false">Sản phẩm theo yêu cầu</option>
                 </select>
                 <!-- Sắp xếp giá tiền -->
-                <select (change)="isProduct"
-                  [(ngModel)]="selectedSortByPrice">
+                <select (change)="isProduct" [(ngModel)]="selectedSortByPrice">
                   <option value="0" disabled selected>Sắp xếp giá tiền</option>
                   <option value="asc">Giá tăng dần</option>
                   <option value="desc">Giá giảm dần</option>
@@ -54,7 +53,7 @@
                 </select>
 
                 <!-- Chọn danh mục sản phẩm -->
-                <select [(ngModel)]="selectedCategory"  *ngIf="isProduct">
+                <select [(ngModel)]="selectedCategory" *ngIf="isProduct">
                   <option [ngValue]="0" disabled selected>Chọn danh mục sản phẩm</option>
                   <option *ngFor="let category of categories" [ngValue]="category.categoryId">{{ category.categoryName}}
                   </option>
@@ -408,8 +407,11 @@
 
               <div class="form-group" style="font-size: 14px;">
                 <div *ngFor="let item of pricePerProductAndQuantity | keyvalue">
-                  Sản phẩm {{+item.key + 1}}: Đơn giá {{item.value[0] | number: '1.0-3'}} VNĐ - Số lượng:
-                  {{item.value[1] | number: '1.0-3'}}
+                  <!-- hien thi neu co gia tri -->
+                  <div *ngIf="item.value[0] || item.value[1]"> 
+                    Sản phẩm {{+item.key + 1}}: Đơn giá {{item.value[0] | number: '1.0-3'}} VNĐ - Số lượng:
+                    {{item.value[1] | number: '1.0-3'}}
+                  </div>
                 </div>
                 <br>
                 <label>Tổng giá tiền đơn hàng: <span style="color: red;">{{ totalPriceOfOrder | number: '1.0-3'}}</span>
@@ -577,7 +579,7 @@
                       Tổng giá vật liệu ước tính của sản phẩm {{i+1}}(giá ước tính vật liệu/đơn vị sản phẩm * số lượng
                       sản phẩm): {{totalPriceSubmatePerProducRequest[i] | number: '1.0-3'}} * {{quantityRProductValue[i]
                       | number: '1.0-3'}} = {{totalPriceSubmatePerProducRequest[i]*quantityRProductValue[i] | number:
-                      '1.0-3'}}VNĐ
+                      '1.0-3'}} VNĐ
                     </div>
                   </form>
                   <hr>
@@ -787,9 +789,9 @@
             </div>
             <button type="button" class="btn btn-secondary" (click)="addItemEdit()">Thêm nguyên vật liệu ước
               tính</button>
-              <div class="total-price">
-                Tổng giá vật liệu ước tính/đơn vị sản phẩm: {{totalUnitPrice | number: '1.0-3'}} VNĐ
-              </div>
+            <div class="total-price">
+              Tổng giá vật liệu ước tính/đơn vị sản phẩm: {{totalUnitPrice | number: '1.0-3'}} VNĐ
+            </div>
           </form>
           <hr>
 
@@ -1007,9 +1009,9 @@
             </div>
             <button type="button" class="btn btn-secondary" (click)="addItemEdit()">Thêm nguyên vật liệu ước
               tính</button>
-              <div class="total-price">
-                Tổng giá vật liệu ước tính/đơn vị sản phẩm: {{totalUnitPrice | number: '1.0-3'}} VNĐ
-              </div>
+            <div class="total-price">
+              Tổng giá vật liệu ước tính/đơn vị sản phẩm: {{totalUnitPrice | number: '1.0-3'}} VNĐ
+            </div>
           </form>
           <hr>
 

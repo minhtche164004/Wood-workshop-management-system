@@ -4,6 +4,7 @@ import { FormBuilder } from '@angular/forms';
 import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { AuthenListService } from 'src/app/service/authen.service';
+import { ProductListService } from 'src/app/service/product/product-list.service';
 interface ApiResponse {
   code: number;
   result: any[];
@@ -15,6 +16,8 @@ interface ApiResponse {
 })
 export class ListJobDoneComponent implements OnInit {
   job_admin: any[] = [];
+  position: any[] = [];
+  selectedRoleFilter: any = null;
   loginToken: string | null = null;
   currentPage: number = 1;
   isLoadding: boolean = false;
@@ -22,6 +25,7 @@ export class ListJobDoneComponent implements OnInit {
 
     private authenListService: AuthenListService,
     private fb: FormBuilder,
+    private productListService: ProductListService,
     private http: HttpClient,
     private toastr: ToastrService,
     private router: Router) { }
@@ -30,8 +34,23 @@ export class ListJobDoneComponent implements OnInit {
 
     this.loginToken = localStorage.getItem('loginToken');
     this.loadAllJobByEmployeID();
- 
+    this.loadPosition();
 
+  }
+  loadPosition(): void {
+    this.productListService.getAllPosition().subscribe(
+      (data: any) => {
+        if (data.code === 1000) {
+          this.position = data.result;
+
+        } else {
+          console.error('Invalid data returned:', data);
+        }
+      },
+      (error) => {
+        console.error('Error fetching positions:', error);
+      }
+    );
   }
   loadAllJobByEmployeID() {
     this.isLoadding = true;

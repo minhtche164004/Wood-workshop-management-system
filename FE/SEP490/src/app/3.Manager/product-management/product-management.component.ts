@@ -11,6 +11,7 @@ import { Location } from '@angular/common';
 
 import 'jquery';
 import { get } from 'jquery';
+import * as e from 'cors';
 
 interface Category {
   categoryId: number;
@@ -87,7 +88,7 @@ export class ProductManagementComponent implements OnInit {
   selectedStatus: number = 0;
   // selectedType: number = 0;
   selectedSortByPrice: string = '0';
-  selectedSortById: string = ''; 
+  selectedSortById: string = '';
   // thumbnail image and list image
   productImages: File[] = [];
   thumbnailImage: File | null = null;
@@ -746,8 +747,15 @@ export class ProductManagementComponent implements OnInit {
 
   }
 
-  totalPriceSubmatePerProducRequest: { [key: number]: number | number } = {};
-  onQuantityChangeRProduct(event: Event, index: number, indexOfItemRProduct: number, indexOfMaterial: number) {
+  quantityRProductValue: { [key: number]: number } = {};
+  updateQuantityRProduct(event: any, index: number) {
+    this.quantityRProductValue[index] = event.target.value;
+    this.calculateTotalPriceOfOrder(index);
+    // console.log("goiham`calculateTotalPriceOfOrder", index);
+  }
+
+  totalPriceSubmatePerProducRequest: { [key: number]: number | number } = {}; // tinh tong gia cua tung san pham (chua nhan voi quantity)
+  onQuantityChangeSubMaterialRProduct(event: Event, index: number, indexOfItemRProduct: number, indexOfMaterial: number) {
     this.quantityPerSubMaterial[index] = (event.target as HTMLInputElement).value;
     this.totalPriceSubmatePerProducRequest[indexOfItemRProduct] = 0;
     if (this.unitPriceSubMaterial && this.quantityPerSubMaterial) {
@@ -757,9 +765,9 @@ export class ProductManagementComponent implements OnInit {
 
       // Iterate from startIndex to endIndex
       for (let index = startIndex; index <= endIndex; index++) {
-        console.log('index:', index);
-        console.log('unitPriceSubMaterial:' + index, this.unitPriceSubMaterial[index]);
-        console.log('quantityPerSubMaterial:' + index, this.quantityPerSubMaterial[index]);
+        // console.log('index:', index);
+        // console.log('unitPriceSubMaterial:' + index, this.unitPriceSubMaterial[index]);
+        // console.log('quantityPerSubMaterial:' + index, this.quantityPerSubMaterial[index]);
         // Ensure that unitPriceSubMaterial and quantityPerSubMaterial exist for the current index
 
         const numericUnitPrice = Number(this.unitPriceSubMaterial[index]) || 0;
@@ -768,9 +776,9 @@ export class ProductManagementComponent implements OnInit {
         console.log('totalForThisItem:' + index, totalForThisItem);
 
         this.totalPriceSubmatePerProducRequest[indexOfItemRProduct] += totalForThisItem;
+        // console.log('totalPriceSubmatePerProducRequest123:'+index, this.totalPriceSubmatePerProducRequest[indexOfItemRProduct]);
       }
     }
-
 
   }
 
@@ -859,6 +867,16 @@ export class ProductManagementComponent implements OnInit {
   //
 
   onSubmit() {
+
+    if(this.uploadForm.get('quantity')?.value < 1){
+      this.toastr.error('Số lượng sản phẩm phải lớn hơn 0!', 'Lỗi');
+      return;
+    }
+    if(parseFloat(this.editForm.get('price')?.value.replace(/,/g, '')) < this.uploadForm.get('quantity')?.value * this.totalUnitPrice){
+      this.toastr.error('Giá sản phẩm phải lớn hơn giá vật liệu !', 'Lỗi');
+      return;
+    }
+
     if (this.uploadForm.valid && this.selectedThumbnail && this.selectedImages.length) {
       this.isLoadding = true;
       const productData = this.uploadForm.value;
@@ -946,6 +964,14 @@ export class ProductManagementComponent implements OnInit {
   }
 
   onEditSubmit(): void {
+    if(this.editForm.get('quantity')?.value < 1){
+      this.toastr.error('Số lượng sản phẩm phải lớn hơn 0!', 'Lỗi');
+      return;
+    }
+    if(parseFloat(this.editForm.get('price')?.value.replace(/,/g, '')) < this.totalUnitPrice){
+      this.toastr.error('Giá sản phẩm phải lớn hơn giá vật liệu !', 'Lỗi');
+      return;
+    }
     if (this.editForm.valid) {
       const productData = this.editForm.value;
 
@@ -1169,6 +1195,7 @@ export class ProductManagementComponent implements OnInit {
 
   totalAmountOfOrder: number = 0;
   onSubmitProductRequest() {
+    this.pricePerProductAndQuantity = []; //reset lai gia tri
 
     for (let i = 0; i < this.itemsRProduct.length; i++) {
       const materialFormRequests = this.getMaterialFormRequests(i);
@@ -1176,9 +1203,9 @@ export class ProductManagementComponent implements OnInit {
       // console.log("do dai cua i: ", i)
       // console.log("in materialFormRequests:"+i, materialFormRequests);
 
-      // Duyệt qua mỗi request hiện có và cập nhật giá trị
+      // Duyệt qua mỗi request product hiện có và cập nhật giá trị
       for (let j = 0; j < materialFormRequests.length; j++) {
-        const materialIdValue = this.selectedMaterialId[i * 10 + j];
+        // const materialIdValue = this.selectedMaterialId[i * 10 + j];
         // console.log("Giá trị materialId:"+ (i*10+j), materialIdValue);
         const request = materialFormRequests.at(j);
         // console.log("request:"+j, request);
@@ -1187,6 +1214,11 @@ export class ProductManagementComponent implements OnInit {
           submateId: this.selectedSubMaterialId[i * 10 + j], // Giá trị mới cho submateId
           quantity: this.quantityPerSubMaterial[i * 10 + j], // Giá trị mới cho quantity
         });
+      }
+
+      if (this.pricePerProduct[i] < this.totalPriceSubmatePerProducRequest[i]) {
+        this.toastr.warning('Đơn giá sản phẩm ' + (i + 1) + ' không được nhỏ hơn giá vật liệu!', 'Lỗi');
+        return;
       }
       // this.totalAmountOfOrder += this.totalPriceSubmatePerProducRequest[i];
     }
@@ -1236,7 +1268,7 @@ export class ProductManagementComponent implements OnInit {
           return { index, base64Files }; // Trả về đối tượng chứa index và base64Files
         } else {
           console.log("Không hoạt động");
-          return null; 
+          return null;
         }
       });
 
@@ -1386,6 +1418,16 @@ export class ProductManagementComponent implements OnInit {
   }
 
   onEditRequestProductSubmit(): void {
+    if(this.editForm.get('quantity')?.value < 1){
+      this.toastr.error('Số lượng sản phẩm phải lớn hơn 0!', 'Lỗi');
+      return;
+    }
+    if(parseFloat(this.editForm.get('price')?.value.replace(/,/g, '')) < this.totalUnitPrice){
+      this.toastr.error('Giá sản phẩm phải lớn hơn giá vật liệu !', 'Lỗi');
+      return;
+    }
+    console.log("price", this.editForm.get('price')?.value);
+    console.log(this.totalUnitPrice);
     // if (this.editForm.valid) {
     const productData = this.editForm.value;
 
@@ -1476,13 +1518,50 @@ export class ProductManagementComponent implements OnInit {
     // console.log('productId', this.selectedProductIdCurrentDelele);
   }
 
+  //tinh tong tien` cho 1 order
+  pricePerProduct: { [key: number]: number } = {};
+  pricePerProductAndQuantity: { [key: number]: [number, number] } = {};
+  totalPriceOfOrder: number = 0;
+
+  //ham` tinh tong gia tien` va so luong cua tung san pham trong order
+  calculateTotalPriceOfOrder(index: number) {
+    this.totalPriceOfOrder = 0;
+    const totalPrice = Object.keys(this.pricePerProduct).reduce((acc, key) => {
+      const numericKey = Number(key);
+      const numericPrice = Number(this.pricePerProduct[numericKey]) || 0;
+      const quantity = Number(this.quantityRProductValue[numericKey]) || 0;
+      return acc + (numericPrice * quantity);
+    }, 0);
+    this.totalPriceOfOrder = totalPrice;
+    this.pricePerProductAndQuantity[index] = [this.pricePerProduct[index], this.quantityRProductValue[index]];
+    // console.log('pricePerProductAndQuantity:', this.pricePerProductAndQuantity);
+
+  }
+  //danh cho format input gia tien cua RProduct 
+  formatInputValueRProduct(event: any, index: number) {
+    // this.totalPriceOfOrder = 0;
+    let rawValue = event.target.value.replace(/,/g, '');
+    this.pricePerProduct[index] = rawValue;
+
+    // const totalPrice = Object.keys(this.pricePerProduct).reduce((acc, key) => {
+    //   const numericKey = Number(key);
+    //   const numericPrice = Number(this.pricePerProduct[numericKey]) || 0;
+    //   const quantity = Number(this.quantityRProductValue[numericKey]) || 0;
+    //   return acc + (numericPrice * quantity);
+    // }, 0);
+    // this.totalPriceOfOrder = totalPrice;
+    this.calculateTotalPriceOfOrder(index);
+    const formattedValue = rawValue.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+    event.target.value = formattedValue;
+  }
 
   //danh cho format input gia tien
   formatInputValue(event: any) {
-    let value = event.target.value.replace(/,/g, ''); // Remove existing commas
-    const formattedValue = value.replace(/\B(?=(\d{3})+(?!\d))/g, ','); // Add commas
+    let rawValue = event.target.value.replace(/,/g, '');
+    const formattedValue = rawValue.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
     event.target.value = formattedValue;
   }
+
   //format gia tien
   formatNumberWithCommas(x: number): string {
     return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");

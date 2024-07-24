@@ -21,7 +21,8 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
-import java.sql.Date;
+import java.time.ZoneId;
+import java.util.Date;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -223,8 +224,9 @@ public class JobServiceImpl implements JobService {
             Advancesalary lastadvan = advancesalaryRepository.findAdvancesalaryTop(dateString + "AD");
             int count = lastadvan != null ? Integer.parseInt(lastadvan.getCode().substring(8)) + 1 : 1;
             String code = dateString + "AD" + String.format("%03d", count);
+            advancesalary.setDate(Date.from(today.atStartOfDay(ZoneId.systemDefault()).toInstant()));
 
-            advancesalary.setDate(Date.valueOf(today));
+            //  advancesalary.setDate(Date.valueOf(today));
             advancesalary.setAmount(jobs_history.getCost());
 //            advancesalary.setApprove(null);
             advancesalary.setAdvanceSuccess(false);
@@ -427,6 +429,7 @@ public class JobServiceImpl implements JobService {
         }
         return list;
     }
+
 
     @Override
     public List<Advancesalary> multi_filter_salary(Date fromDate, Date toDate, Integer isAdvanceSuccess, Integer position_id, String username, String sortDirection) {

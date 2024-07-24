@@ -8,6 +8,7 @@ import com.example.demo.Dto.RequestDTO.RequestEditCusDTO;
 import com.example.demo.Dto.RequestDTO.RequestEditDTO;
 import com.example.demo.Dto.SubMaterialDTO.CreateExportMaterialProductRequestDTO;
 import com.example.demo.Entity.*;
+import jakarta.mail.MessagingException;
 import org.junit.runner.Request;
 import org.springframework.data.repository.query.Param;
 import org.springframework.http.ResponseEntity;
@@ -89,6 +90,8 @@ public interface OrderService {
     String ConfirmPayment(int order_id);
 
     List<OderDTO> MultiFilterOrder(String search, Integer status_id, Integer paymentMethod, Date startDate, Date endDate);
+
+    String SendMailToNotifyCationAboutOrder(int order_id,String link) throws MessagingException, IOException;
 
 
 

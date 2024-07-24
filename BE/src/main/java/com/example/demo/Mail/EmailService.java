@@ -1,9 +1,14 @@
 package com.example.demo.Mail;
 
 import com.example.demo.Controllers.Authentication.SendMailRequest;
+import com.example.demo.Dto.OrderDTO.OrderDetailWithJobStatusDTO;
+import com.example.demo.Entity.Orders;
 import com.example.demo.Service.PaymentService;
 import jakarta.mail.MessagingException;
+import jakarta.mail.internet.InternetAddress;
 import jakarta.mail.internet.MimeMessage;
+import org.thymeleaf.context.Context;
+import org.hibernate.validator.internal.constraintvalidators.bv.EmailValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.ByteArrayResource;
@@ -11,11 +16,19 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.mail.MailException;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
+import org.thymeleaf.spring6.SpringTemplateEngine;
+
+import java.nio.charset.StandardCharsets;
 
 import java.util.Base64;
+import java.util.List;
+import java.util.Locale;
+
+import static org.antlr.v4.runtime.misc.Utils.readFile;
 
 @Service
 public class EmailService {
@@ -27,6 +40,11 @@ public class EmailService {
 
     @Value("${spring.mail.username}")
     private String emailSentTo;
+    @Autowired
+    private JavaMailSenderImpl mailSender;
+
+    @Autowired
+    private SpringTemplateEngine templateEngine;
 
     public void sendSimpleMessage(MailBody mailBody) {
         SimpleMailMessage message = new SimpleMailMessage();
@@ -37,33 +55,35 @@ public class EmailService {
         javaMailSender.send(message);
     }
 
+    public void sendEmailFromTemplate(String name,String email, List<OrderDetailWithJobStatusDTO> orderDetails, Orders order,String link) throws MessagingException {
 
-//    public String sendMail(MultipartFile[] file, String to, String[] cc, String subject, String body) {
-//        try {
-//            MimeMessage mimeMessage = javaMailSender.createMimeMessage();
-//
-//            MimeMessageHelper mimeMessageHelper = new MimeMessageHelper(mimeMessage, true);
-//
-//            mimeMessageHelper.setFrom(emailSentTo);
-//            mimeMessageHelper.setTo(to);
-//            mimeMessageHelper.setCc(cc);
-//            mimeMessageHelper.setSubject(subject);
-//            mimeMessageHelper.setText(body);
-//
-//            for (int i = 0; i < file.length; i++) {
-//                mimeMessageHelper.addAttachment(
-//                        file[i].getOriginalFilename(),
-//                        new ByteArrayResource(file[i].getBytes()));
-//            }
-//
-//            javaMailSender.send(mimeMessage);
-//
-//            return "mail send";
-//
-//        } catch (Exception e) {
-//            throw new RuntimeException(e);
-//        }
-//    }
+            MimeMessage mimeMessage = mailSender.createMimeMessage();
+            MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, MimeMessageHelper.MULTIPART_MODE_MIXED_RELATED, StandardCharsets.UTF_8.name());
+
+            helper.setFrom(new InternetAddress(emailSentTo)); // Địa chỉ email người gửi
+            helper.setTo(email);
+            helper.setSubject("Thông tin chi tiết đơn hàng"); // Tiêu đề email
+
+            // Tạo context cho Thymeleaf (chỉ cần một đối tượng Context)
+        Context context = new Context();
+            context.setVariable("orderDetails", orderDetails); // Đưa danh sách vào context
+        context.setVariable("name", name); // Đưa danh sách vào context
+        context.setVariable("order", order); // Đưa danh sách vào context
+        context.setVariable("link", link); // Đưa danh sách vào context
+
+            // Xử lý template HTML bằng Thymeleaf
+            String htmlContent = templateEngine.process("sendmailtemplate.html", context);
+
+            helper.setText(htmlContent, true); // Đặt nội dung email là HTML
+
+            mailSender.send(mimeMessage);
+
+    }
+
+
+
+
+
     public String sendMail1(SendMailRequest sendMailRequest) {
         try {
             MimeMessage mimeMessage = javaMailSender.createMimeMessage();

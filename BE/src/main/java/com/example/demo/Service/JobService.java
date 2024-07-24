@@ -9,7 +9,7 @@ import com.example.demo.Entity.*;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Service;
 
-import java.sql.Date;
+import java.util.Date;
 import java.util.List;
 
 @Service
@@ -49,7 +49,8 @@ public interface JobService {
    // boolean checkOderDoneOrNot(int order_id);
 
     List<Advancesalary> getAllAdvancesalary();
-    List<Advancesalary> multi_filter_salary(Date fromDate, Date toDate,Integer isAdvanceSuccess,Integer position_id, String username, String sortDirection);
+
+    List<Advancesalary> multi_filter_salary(java.util.Date fromDate, Date toDate, Integer isAdvanceSuccess, Integer position_id, String username, String sortDirection);
     List<Advancesalary> getAdvancesalaryByEmployeeId();
     Advancesalary ChangeStatus(int id,boolean check);
 

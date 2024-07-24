@@ -17,16 +17,18 @@
               <a href="#" class="btn btn-secondary" (click)="dowloadExcelLink($event)">
                 <span>Xuất Excel</span> <i style="margin-left: 5px;" class="fa-solid fa-file-excel"></i>
               </a>
-             
+
             </div>
-            <div class="col-md-3"> 
+            <div class="col-md-3">
               <div class="input-group">
-                  <div class="custom-file">
-                      <input type="file" class="custom-file-input custom-file-input-custom" id="inputGroupFile" (change)="onFileSelectedAndUpload($event)">
-                      <label class="custom-file-label custom-file-label-custom" for="inputGroupFile" [innerHTML]="selectedFile ? selectedFile.name : 'Tải biểu mẫu ...'"></label>
-                  </div>
+                <div class="custom-file">
+                  <input type="file" class="custom-file-input custom-file-input-custom" id="inputGroupFile"
+                    (change)="onFileSelectedAndUpload($event)">
+                  <label class="custom-file-label custom-file-label-custom" for="inputGroupFile"
+                    [innerHTML]="selectedFile ? selectedFile.name : 'Tải biểu mẫu ...'"></label>
+                </div>
               </div>
-          </div>
+            </div>
           </div>
           <table class="table table-striped table-hover">
 
@@ -44,10 +46,10 @@
                 </select>
 
                 <!-- Tìm kiếm tên sản phẩm -->
-                <ng-autocomplete style="width: 50%; margin-left: 10px;" *ngIf="subMaterialAutoComp" [data]="subMaterialAutoComp"
-                  [searchKeyword]="keyword" placeholder="Nhập tên nguyên vật liệu" historyIdentifier="subMaterialAutoComp"
-                  [(ngModel)]="searchKey" [itemTemplate]="itemTemplate" [notFoundTemplate]="notFoundTemplate"
-                  (selected)="selectProduct($event)">
+                <ng-autocomplete style="width: 50%; margin-left: 10px;" *ngIf="subMaterialAutoComp"
+                  [data]="subMaterialAutoComp" [searchKeyword]="keyword" placeholder="Nhập tên nguyên vật liệu"
+                  historyIdentifier="subMaterialAutoComp" [(ngModel)]="searchKey" [itemTemplate]="itemTemplate"
+                  [notFoundTemplate]="notFoundTemplate" (selected)="selectProduct($event)">
                 </ng-autocomplete>
 
                 <ng-template #itemTemplate let-item>
@@ -60,7 +62,7 @@
 
                 <button class="btn search-button ms-2" type="button" (click)="searchSubMaterial()">
                   <i class="fa fa-search"></i>
-                </button> 
+                </button>
               </div>
             </div>
           </div>
@@ -81,9 +83,10 @@
                 <th style="width: 10%;">Giá bán (vnđ)</th>
               </tr>
             </thead>
-        
+
             <tbody>
-              <tr *ngFor="let product of subMaterials | paginate: { itemsPerPage: 10, currentPage: currentPage }; let i = index">
+              <tr
+                *ngFor="let product of subMaterials | paginate: { itemsPerPage: 10, currentPage: currentPage }; let i = index">
                 <td>{{ i + 1 + (currentPage - 1) * 10 }}</td>
                 <td style="text-align: center;" class="action-buttons">
                   <a href="#" class="settings" title="Edit" data-toggle="modal" data-target="#editSubMaterialModal"
@@ -100,30 +103,32 @@
               </tr>
             </tbody>
           </table>
-        
+
           <!-- Pagination controls -->
           <pagination-controls style="justify-content: right; display: flex;" (pageChange)="currentPage = $event"
-                                previousLabel="Trang trước" nextLabel="Trang sau">
+            previousLabel="Trang trước" nextLabel="Trang sau">
           </pagination-controls>
-        
+
           <!-- Display data information -->
           <div class="clearfix" style="justify-content: right; display: flex;">
             <div class="hint-text">Hiển thị <b>{{ (currentPage - 1) * 10 + 1 }}</b> tới <b>{{ currentPage * 10
-                > subMaterials.length ? subMaterials.length : currentPage * 10 }}</b> trong số <b>{{ subMaterials.length }}</b> dữ liệu</div>
+                > subMaterials.length ? subMaterials.length : currentPage * 10 }}</b> trong số <b>{{ subMaterials.length
+                }}</b> dữ liệu</div>
           </div>
         </div>
-        
+
         <!-- Display no data message -->
         <div *ngIf="checkNotFound">
           <div style="background-color: white;">
             <div class="d-flex justify-content-center align-items-center" style="height: 200px;">
-              <img src="https://encrypted-tbn2.gstatic.com/images?q=tbn:ANd9GcSG53pYn6cpXaiwT_q6IM45P-rXg5dUw67XqRmr9-vtsbMoHnCG"
-                   alt="Not Found" style="width: 150px; height: 150px; object-fit: cover;">
+              <img
+                src="https://encrypted-tbn2.gstatic.com/images?q=tbn:ANd9GcSG53pYn6cpXaiwT_q6IM45P-rXg5dUw67XqRmr9-vtsbMoHnCG"
+                alt="Not Found" style="width: 150px; height: 150px; object-fit: cover;">
               <p class="text-center">Không tìm thấy!</p>
             </div>
           </div>
         </div>
-        
+
 
       </div>
     </div>
@@ -162,16 +167,24 @@
               <input type="text" class="form-control" id="productQuantity" placeholder="Nhập mô tả nguyên vật liệu"
                 [(ngModel)]="description" name="description">
             </div>
-            <div class="form-group">
-              <label for="productPrice">Số lượng</label>
-              <input type="number" class="form-control" id="productPrice" placeholder="Enter price"
-                [(ngModel)]="quantity" name="quantity">
+            <div class="row">
+              <div class="col-md-6">
+                <div class="form-group">
+                  <label for="productPrice">Số lượng</label>
+                  <input type="number" class="form-control" id="productPrice" placeholder="Enter price"
+                    [(ngModel)]="quantity" name="quantity">
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="form-group">
+                  <label for="productImage">Giá bán</label>
+                  <input type="number" class="form-control" id="productPrice" placeholder="Enter price"
+                    [(ngModel)]="unit_price" name="unit_price">
+                </div>
+              </div>
             </div>
-            <div class="form-group">
-              <label for="productImage">Giá bán</label>
-              <input type="number" class="form-control" id="productPrice" placeholder="Enter price"
-                [(ngModel)]="unit_price" name="unit_price">
-            </div>
+
+
           </form>
         </div>
         <div class="modal-footer">
@@ -203,30 +216,32 @@
               <label for="editProductDescription">Mô tả</label>
               <textarea class="form-control" id="editProductDescription" formControlName="description"></textarea>
             </div>
-            <div class="row">
-              <div class="col-md-4">
-                <div class="form-group">
-                  <label for="editProductCategory">Kiểu nguyên vật liệu</label>
-                  <input type="text" class="form-control" formControlName="materialName" id="editProductCategory"
-                    readonly>
+            <div>
+              <div class="form-group">
+                <label for="editProductCategory">Kiểu nguyên vật liệu</label>
+                <input type="text" class="form-control" formControlName="materialName" id="editProductCategory"
+                  readonly>
 
-                </div>
               </div>
-              <div class="col-md-4">
+            </div>
+            <div class="row">
+              <div class="col-md-6">
+
                 <div class="form-group">
                   <label for="editProductQuantity">Số lượng</label>
                   <input type="number" class="form-control" formControlName="quantity" id="editProductQuantity">
                 </div>
+
               </div>
-              <div class="col-md-4">
+              <div class="col-md-6">
+
                 <div class="form-group">
                   <label for="editProductPrice">Giá bán (vnđ)</label>
                   <input type="number" class="form-control" formControlName="unitPrice" id="editProductPrice">
                 </div>
               </div>
+
             </div>
-
-
 
           </form>
         </div>

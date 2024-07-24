@@ -11,7 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
-import java.sql.Date;
+import java.util.Date;
 import java.util.List;
 
 @RestController
@@ -52,7 +52,7 @@ public class SalaryController {
             @RequestParam(required = false) String sortDirection
     ){
         ApiResponse<List> apiResponse = new ApiResponse<>();
-        apiResponse.setResult(jobService.multi_filter_salary((Date)dto.getStartDate(), (Date)dto.getEndDate(), isAdvanceSuccess,position_id, username,sortDirection));
+        apiResponse.setResult(jobService.multi_filter_salary(dto.getStartDate(), dto.getEndDate(), isAdvanceSuccess,position_id, username,sortDirection));
         return apiResponse;
     }
 }

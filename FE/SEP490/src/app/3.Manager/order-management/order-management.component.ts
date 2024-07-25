@@ -190,16 +190,19 @@ export class OrderManagementComponent implements OnInit {
   }
   productOfOrder: any = [];
   totalAmoutOrder: number = 0;
+  selectedOrderDetail: any = {};
   getOrDetailById(us: any, order_detail_id: string): void {
-      this.isLoadding = true;
-    //   console.log('Order_detail_id:', order_detail_id);
+    this.isLoadding = true;
+       console.log('Order_detail_id:', order_detail_id);
     console.log("order detail: ", us)
+    console.log("order detail type: ", us.specialOrder)
     this.totalAmoutOrder = us.totalAmount
+    this.selectedOrderDetail = us;
     this.authenListService.getOrderDetailById(us.orderId).subscribe(
       (data) => {
         this.OrderdetailById = data.result;
         this.isLoadding = false;
-       // console.log('OrderdetailById:', data.result);
+        // console.log('OrderdetailById:', data.result);
         // console.log('OrderdetailById:', this.OrderdetailById);
       },
       (error) => {
@@ -208,22 +211,29 @@ export class OrderManagementComponent implements OnInit {
 
       }
     );
-    // console.log("order detail: ", us)
-    // console.log("order detail id: ", us.orderId)
-    this.orderRequestService.getAllOrderDetailByOrderId(order_detail_id).subscribe(
-      (data) => {
-        this.productOfOrder = data.result;
-       
+    if (us.specialOrder == true) {
+      this.orderRequestService.getAllOrderDetailByOrderId(order_detail_id).subscribe(
+        (data) => {
+          this.productOfOrder = data.result;
+          //  console.log('Product Orders:', this.productOfOrder);
+        },
+        (error) => {
+          console.error('Error fetching user data:', error);
 
-      //  console.log('Product Orders:', this.productOfOrder);
-      },
-      (error) => {
-        console.error('Error fetching user data:', error);
-      
 
-      }
-    );
-    
+        }
+      );
+    } else if (us.specialOrder == false) {
+      this.orderRequestService.getAllOrderDetailOfProductByOrderId(order_detail_id).subscribe(
+        (data) => {
+          this.productOfOrder = data.result;
+            console.log('Product Flase:', this.productOfOrder);
+        },
+        (error) => {
+          console.error('Error fetching user data:', error);
+        }
+      );
+    }
   }
 
   selectedOrder: any = {};
@@ -318,7 +328,7 @@ export class OrderManagementComponent implements OnInit {
 
     console.log(this.selectedCategory);
 
-    
+
     let startDate: string = this.selectedSDate || '';
     let endDate: string = this.selectedEDate || '';
     if (this.selectedSDate) {
@@ -328,7 +338,7 @@ export class OrderManagementComponent implements OnInit {
     if (this.selectedEDate) {
       endDate = this.selectedEDate.replace(/(\d{2})\/(\d{2})\/(\d{4})/, "$3/$2/$1");
     }
-   
+
     this.authenListService.getFilterStatus(
       this.searchKey,
       this.selectedCategory,
@@ -338,18 +348,18 @@ export class OrderManagementComponent implements OnInit {
       .subscribe(
         (data) => {
           if (data.code === 1000) {
-       
+
             this.user = data.result;
-      
+
 
           } else if (data.code === 1015) {
             this.user = [];
-          
+
             this.toastr.warning(data.message);
           }
         },
         (error: HttpErrorResponse) => {
-         
+
           this.toastr.error('Có lỗi xảy ra, vui lòng thử lại sau');
 
 

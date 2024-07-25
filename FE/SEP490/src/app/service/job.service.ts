@@ -35,6 +35,7 @@ export class JobService {
 
   private apiMultiSeachJobRequest = `${environment.apiUrl}api/auth/job/MultiFilterRequestProductInJob`
 
+ 
   private apigetAllProductErrorByJobId = `${environment.apiUrl}api/auth/job`
     // user_id={{$random.integer(100)}}&
     // p_id={{$random.integer(100)}}&                                  ?job_id=152&status_id=9
@@ -56,6 +57,7 @@ export class JobService {
     const params = new HttpParams().set('job_id', jobId.toString());
     return this.http.get<any>(url, { params });
   }
+  
   checkErrorOfJob(jobId: number): Observable<any> {
     return this.http.get<any>(`${this.apicheckErrorOfJobHaveFixDoneOrNot}?job_id=${jobId}`);
   }

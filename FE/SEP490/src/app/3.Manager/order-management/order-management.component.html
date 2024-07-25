@@ -70,9 +70,7 @@
             </thead>
             <tbody>
               <tr *ngFor="let us of user | paginate: { itemsPerPage: 10, currentPage: currentPage }; let i = index">
-
                 <td style=" min-width: 140px;">{{ us?.code}}</td>
-
 
                 <td class="action-buttons">
                   <!-- <a href="#" class="settings" title="Edit" data-toggle="modal" data-target="#editProductModal">
@@ -207,14 +205,25 @@
               <div class="col-md-4">
                 <!-- <b>Đơn hàng:</b> -->
                 <label style="color: rgba(0, 102, 255, 0.945);">
-                  {{ OrderdetailById.code !== null ? OrderdetailById.code : 'Đơn hàng có sẵn' }}
+                  <!-- Other parts of your form -->
+
+                  <div *ngIf="selectedOrderDetail.specialOrder; else regularOrder">
+                    <p>Đơn hàng đặc biệt</p>
+                  </div>
+                  <ng-template #regularOrder>
+                    <p>Đơn hàng có sẵn</p>
+                  </ng-template>
+
+                  <!-- Other parts of your form -->
+
+                  {{ OrderdetailById.code}}
                 </label>
               </div>
               <div class="col-md-4 text-center"> <b>Ngày tạo đơn:</b> {{OrderdetailById.orderDate | date:'dd/MM/yyyy'}}
               </div>
               <div class="col-md-4 text-end">
-                <b style="background-color: #007bff;
-color: whitesmoke; padding: 4px; border-radius: 5px;"> {{OrderdetailById.status?.status_name}}</b>
+                <b style="background-color: #007bff; color: whitesmoke; padding: 4px; border-radius: 5px;">
+                  {{OrderdetailById.status?.status_name}}</b>
               </div>
             </div>
             <br>

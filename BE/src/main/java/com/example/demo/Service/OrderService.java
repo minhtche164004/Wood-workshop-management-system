@@ -62,6 +62,8 @@ public interface OrderService {
 
     public List<OrderDetailWithJobStatusDTO> getOrderDetailByOrderId(int order_id);
 
+    List<OrderDetailWithJobStatusDTO> getAllOrderDetailOfProductByOrderId(int order_id);
+
     Orders EditRequest(int request_id, RequestEditCusDTO requestEditDTO, MultipartFile[] multipartFiles) throws IOException;
     Orders ManagerEditRequest(int request_id, RequestEditDTO requestEditDTO);
 //    Requests CustomerEditRequest(int request_id , Requests requests);

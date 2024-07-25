@@ -661,6 +661,16 @@ public class    OrderServiceImpl implements OrderService {
         return results;
     }
 
+    @Override
+    public List<OrderDetailWithJobStatusDTO> getAllOrderDetailOfProductByOrderId(int order_id) {
+        List<OrderDetailWithJobStatusDTO> results = orderDetailRepository.getAllOrderDetailOfProductByOrderId(order_id);
+        if(results.isEmpty()){
+            throw new AppException(ErrorCode.NOT_FOUND);
+        }
+        return results;
+    }
+
+
 
 
 

@@ -139,7 +139,7 @@ img{
     flex-wrap: nowrap;
 }
 .logo{
-    width: 15%;
+
     object-fit: cover;
 }
 /* .navbar{
@@ -166,7 +166,7 @@ img{
     left: 0;
     width: 100%;
     overflow: visible;
-    transition: .3s;
+    /* transition: .3s; */
     background-color: #fff;
     box-shadow: 0 23px 38px 0 rgb(0 0 0 / 10%);
     z-index: 99;

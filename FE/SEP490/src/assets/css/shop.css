@@ -610,12 +610,12 @@ hr{
 .res-right i{
     margin: 0 10px 20px 0;
 }
-.responsive-navbar{
+/* .responsive-navbar{
     position: fixed;
     background-color: white;
     z-index: 100;
     width: 100%;    
-}
+} */
 /* .navbar-toggler{
     border: none;
 } */
@@ -715,11 +715,11 @@ input[checkbox]{
 .is-invalid{
     display: none;
 }
- @media (max-width: 430px){
+ /* @media (max-width: 400px){
     .number-buy{
         right: -45px;
     }
- }
+ } */
  .selling-products{
      margin-top: 20px;
      border: 1px solid rgba(0,0,0,.125)

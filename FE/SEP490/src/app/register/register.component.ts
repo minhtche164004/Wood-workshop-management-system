@@ -212,9 +212,9 @@ export class RegisterComponent implements OnInit {
 
 
   registerUser(): void {
-    if (!this.validateRegistration()) {
-      return;
-    }
+    // if (!this.validateRegistration()) {
+    //   return;
+    // }
     this.isLoading = true; // Start loading
 
     const registrationRequest: RegistrationRequest = {

@@ -192,7 +192,7 @@ export class OrderManagementComponent implements OnInit {
   productOfOrder: any = [];
   totalAmoutOrder: number = 0;
   getOrDetailById(us: any, order_detail_id: string): void {
-    //  this.isLoadding = true;
+      this.isLoadding = true;
     //   console.log('Order_detail_id:', order_detail_id);
     console.log("order detail: ", us)
     this.totalAmoutOrder = us.totalAmount
@@ -214,17 +214,19 @@ export class OrderManagementComponent implements OnInit {
     this.orderRequestService.getAllOrderDetailByOrderId(order_detail_id).subscribe(
       (data) => {
         this.productOfOrder = data.result;
-        this.isLoadding = false;
+       
 
       //  console.log('Product Orders:', this.productOfOrder);
       },
       (error) => {
         console.error('Error fetching user data:', error);
-        this.isLoadding = false;
+      
 
       }
     );
+    
   }
+
   selectedOrder: any = {};
   getOrderDetail(orderId: number): void {
 
@@ -303,7 +305,7 @@ export class OrderManagementComponent implements OnInit {
           } else if (data.code === 1015) {
             this.user = [];
             this.isLoadding = false;
-            this.toastr.warning(data.message);
+            // this.toastr.warning(data.message);
           }
         },
         (error: HttpErrorResponse) => {
@@ -345,7 +347,7 @@ export class OrderManagementComponent implements OnInit {
           } else if (data.code === 1015) {
             this.user = [];
           
-            this.toastr.warning(data.message);
+            // this.toastr.warning(data.message);
           }
         },
         (error: HttpErrorResponse) => {

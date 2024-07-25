@@ -636,21 +636,21 @@ export class UserManagementComponent implements OnInit {
 
   AddNewAccount(): void {
     this.isLoadding = true;
-    if (!this.validateRegistration()) {
-      this.isLoadding = false;
-      return;
-    }
+    // if (!this.validateRegistration()) {
+    //   this.isLoadding = false;
+    //   return;
+    // }
     const addNewAccountRequest: AddNewAccount = this.addAccountForm.value;
     // console.log('Request Data:', addNewAccountRequest);
 
     this.authenListService.AddNewAccountForAdmin(addNewAccountRequest).subscribe(
       () => {
         this.toastr.success('Thêm tài khoản người dùng thành công.');
-        this.loadAllAcountByAdmin();
+       
         this.isLoadding = false;
-        
-        this.addAccountForm.reset(); // Reset the form after successful addition
-        $('[data-dismiss="modal"]').click();
+        // this.loadAllAcountByAdmin();
+        // this.addAccountForm.reset(); 
+        // $('[data-dismiss="modal"]').click();
       },
       (error: any) => {
         this.isLoadding = false;

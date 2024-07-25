@@ -52,6 +52,7 @@ export class JobManagementComponent implements OnInit {
   pForJob: any; // List of products for the job
   materialProduct: any[] = [];
   editForm: FormGroup;
+  updateForm: FormGroup;
   confirmStatus: string = '';
   selectedProductNameCurrentDelele: number = 0;
   showModal = false;
@@ -67,12 +68,13 @@ export class JobManagementComponent implements OnInit {
   @ViewChild('otherModal') otherModal: any;
   constructor(private fb: FormBuilder,private errorProductService: ErrorProductService, private employeeService: EmployeeService, private productList: ProductService, private productListService: ProductListService, private jobService: JobService, private toastr: ToastrService, private sanitizer: DomSanitizer) {
     this.createJobs = this.fb.group({
-      job_name: [''],
-      quantity_product: [''],
-      cost: [],
-      description: [''],
-      finish: [''],
-      start: [''],
+ 
+      job_name: ['', Validators.required],
+      quantity_product: ['', Validators.required],
+      cost: ['', Validators.required],
+      description: ['', Validators.required],
+      finish: ['', Validators.required],
+      start: ['', Validators.required],
     });
     this.editForm = this.fb.group({
       code: ['', Validators.required],
@@ -93,7 +95,12 @@ export class JobManagementComponent implements OnInit {
       solution: ['', Validators.required],
       user_name_order: ['', Validators.required]
     });
-  
+    this.updateForm = this.fb.group({
+      description: ['', Validators.required],
+      solution: ['', Validators.required],
+      isFixed: [true, Validators.required],
+      quantity: [0, [Validators.required, Validators.min(0)]]
+    });
     this.editJob = this.fb.group({
       job_name: [''],
       quantity_product: [''],
@@ -128,7 +135,8 @@ export class JobManagementComponent implements OnInit {
 
   ngOnInit(): void {
     this.showLoadingIndicator();
-   
+
+
     Promise.all([
       this.loadProductRQForJob(),
       this.loadStatusByType(),
@@ -144,6 +152,7 @@ export class JobManagementComponent implements OnInit {
       this.hideLoadingIndicator();
     });
   }
+  
   showLoadingIndicator() {
     this.isLoadding = true;
   }
@@ -269,152 +278,171 @@ cancelChangeStatusJob() {
 
   selectedEmpCreateJob: any = {};
   createNewJob() {
-    
    // this.isLoadding = true;
-    console.log('Selected Employee:', this.selectedEmployee);
+    console.log('Selected Employee createNewJov:', this.selectedEmployee);
     console.log('Selected Product:', this.selectedProduct);
-    const user_id = this.selectedEmployee;
-    const p_id = this.selectedProduct.product_id; // Thay đổi giá trị tùy theo sản phẩm
-    let status_id = this.selectedProduct.statusJob?.status_id; // Thay đổi giá trị tùy theo trạng thái
-    const job_id = this.selectedProduct.job_id; // Thay đổi giá trị tùy theo công việc
-    const type_id = this.selectedCategory; // cho sp có sẵn     0 - k có sẵn
-    let position_id = this.selectedProduct.position_id + 1;
-    
-    //  console.log('JobName:', this.selectedProduct.position_name);
-    const jobData = this.createJobs.value;
+    if (this.selectedEmployee === '') {
+      this.toastr.error('Vui lòng chọn 1 nhân viên createNewJob!', 'Lỗi');
+     
+      return;
+    } 
 
-    if (status_id === 6) {
-      status_id = 7;
-    } else if (status_id === 3) {
-      status_id = 4;
-    } else if (status_id === 9) {
-      status_id = 10;
+    if (this.createJobs.get('cost')?.value < 1) {
+      this.toastr.error('Số lượng sản phẩm phải lớn hơn 0!', 'Lỗi');
+      return;
     }
-
-    // console.log('emp_id:', user_id);
-    // console.log('mate_id:', position_id);
-
-
-    const quantity = this.selectedProduct.quantity;
-    let modifiedPositionName = this.positionName.replace(/Thợ/g, 'Làm');
-    console.log('Modified Position Name:', modifiedPositionName);
-    const createJobs = {
-      quantity_product: quantity,
-      job_name: modifiedPositionName
-    };
-    console.log('createJobs before API call:', createJobs);
-
-      console.log('code :', this.selectedProduct.code);
-    if (this.selectedProduct.code == null) {
-      this.isLoadding = true
-    //  console.log("consolo lod: ", this.isLoadding)
-    console.log("create form:", createJobs);
-    console.log('API parameters:', p_id, position_id, user_id, createJobs);
-      this.jobService.createExportMaterialProductTotalJob(p_id, position_id, user_id, createJobs).subscribe(
-        (data) => {
-          if (data.code === 1000) {
-            console.log('Xuất nguyên liệu thành công');
-            this.jobService.addJob(user_id, p_id, status_id, job_id, type_id, createJobs).subscribe(
-              (data) => {
-                if (data.code === 1000) {
-                  this.toastr.success('Giao việc thành công', 'Thành công');
-                  this.pForJob = data.result;
-                  // console.log('Add product for job:', this.pForJob);
-
-
+    if ( this.createJobs.get('start')?.value < 1 ||
+      // Kiểm tra ngày bắt đầu có lớn hơn hoặc bằng ngày hiện tại không
+      new Date(this.createJobs.get('start')?.value) < new Date() ||
+      // Kiểm tra ngày bắt đầu có nhỏ hơn ngày hiện tại trừ đi 3 tháng không
+      new Date(this.createJobs.get('start')?.value) > new Date(new Date().setMonth(new Date().getMonth() - 3))
+    ) {
+      this.toastr.error('Vui lòng chọn ngày bắt đầu lớn hơn hoặc bằng ngày hôm nay và nhỏ hơn 3 tháng so với ngày hôm nay.', 'Lỗi');
+      return;
+    }
+      const user_id = this.selectedEmployee;
+      const p_id = this.selectedProduct.product_id; // Thay đổi giá trị tùy theo sản phẩm
+      let status_id = this.selectedProduct.statusJob?.status_id; // Thay đổi giá trị tùy theo trạng thái
+      const job_id = this.selectedProduct.job_id; // Thay đổi giá trị tùy theo công việc
+      const type_id = this.selectedCategory; // cho sp có sẵn     0 - k có sẵn
+      let position_id = this.selectedProduct.position_id + 1;
+      
+      //  console.log('JobName:', this.selectedProduct.position_name);
+      const jobData = this.createJobs.value;
+  
+      if (status_id === 6) {
+        status_id = 7;
+      } else if (status_id === 3) {
+        status_id = 4;
+      } else if (status_id === 9) {
+        status_id = 10;
+      }
+  
+      // console.log('emp_id:', user_id);
+      // console.log('mate_id:', position_id);
+  
+  
+      const quantity = this.selectedProduct.quantity;
+      let modifiedPositionName = this.positionName.replace(/Thợ/g, 'Làm');
+    //  console.log('Modified Position Name:', modifiedPositionName);
+      const createJobs = {
+        quantity_product: quantity,
+        job_name: modifiedPositionName
+      };
+     // console.log('createJobs before API call:', createJobs);
+  
+    //    console.log('code :', this.selectedProduct.code);
+      if (this.selectedProduct.code == null) {
+        this.isLoadding = true
+      //  console.log("consolo lod: ", this.isLoadding)
+     // console.log("create form:", createJobs);
+     // console.log('API parameters:', p_id, position_id, user_id, createJobs);
+        this.jobService.createExportMaterialProductTotalJob(p_id, position_id, user_id, createJobs).subscribe(
+          (data) => {
+            if (data.code === 1000) {
+              console.log('Xuất nguyên liệu thành công');
+              this.jobService.addJob(user_id, p_id, status_id, job_id, type_id, createJobs).subscribe(
+                (data) => {
+                  if (data.code === 1000) {
+                    this.toastr.success('Giao việc thành công', 'Thành công');
+                    this.pForJob = data.result;
+                    // console.log('Add product for job:', this.pForJob);
+  
+  
+                    this.isLoadding = false;
+             //       console.log("consolo lod flase: ", this.isLoadding)
+                   this.loadProduct();
+                    $('[data-dismiss="modal"]').click();
+                  }
                   this.isLoadding = false;
-           //       console.log("consolo lod flase: ", this.isLoadding)
-                 this.loadProduct();
+                },
+                (error) => {
+                  console.error('Error fetching products:', error);
+                  this.toastr.error('Có lỗi xảy ra!', 'Lỗi'); this.isLoadding = false;
                   $('[data-dismiss="modal"]').click();
+  
                 }
-                this.isLoadding = false;
-              },
-              (error) => {
-                console.error('Error fetching products:', error);
-                this.toastr.error('Có lỗi xảy ra!', 'Lỗi'); this.isLoadding = false;
-                $('[data-dismiss="modal"]').click();
-
-              }
-            );
-          } else if (data.code === 1015) {
-            console.error('Failed to fetch products:', data);
-            this.toastr.warning('Số lượng nguyên vật liệu trong kho không đủ', 'Thông báo');
-            $('[data-dismiss="modal"]').click(); this.isLoadding = false;
-
-          }
-        },
-        (error) => {
-          console.error('Error:', error);
-          if (error && error.error && error.error.errors) {
-            Object.entries(error.error.errors).forEach(([key, value]) => {
-              this.toastr.warning(`${key}: ${value}`, 'Lỗi');
+              );
+            } else if (data.code === 1015) {
+              console.error('Failed to fetch products:', data);
+              this.toastr.warning('Số lượng nguyên vật liệu trong kho không đủ', 'Thông báo');
               $('[data-dismiss="modal"]').click(); this.isLoadding = false;
-            });
-
-          } else if (error && error.message) {
-            this.toastr.error(`Có lỗi xảy ra: ${error.message}`, 'Lỗi'); this.isLoadding = false;
-            $('[data-dismiss="modal"]').click();
-          } else {
-            this.toastr.error(`Có lỗi xảy ra, vui lòng thử lại.`, 'Lỗi'); this.isLoadding = false;
-            $('[data-dismiss="modal"]').click();
+  
+            }
+          },
+          (error) => {
+            console.error('Error:', error);
+            if (error && error.error && error.error.errors) {
+              Object.entries(error.error.errors).forEach(([key, value]) => {
+                this.toastr.warning(`${key}: ${value}`, 'Lỗi');
+                $('[data-dismiss="modal"]').click(); this.isLoadding = false;
+              });
+  
+            } else if (error && error.message) {
+              this.toastr.error(`Có lỗi xảy ra: ${error.message}`, 'Lỗi'); this.isLoadding = false;
+              $('[data-dismiss="modal"]').click();
+            } else {
+              this.toastr.error(`Có lỗi xảy ra, vui lòng thử lại.`, 'Lỗi'); this.isLoadding = false;
+              $('[data-dismiss="modal"]').click();
+            }
           }
-        }
-      );
-    } else if (this.selectedProduct.code != null) {
-
-      this.isLoadding = true
-    //  console.log("consolo lod: ", this.isLoadding)
-    //  console.log("exort submaterial product request");
-      this.jobService.createExportMaterialRequestTotalJob(p_id, position_id, user_id, createJobs).subscribe(
-        (data) => {
-          if (data.code === 1000) {
-            console.log('Xuất nguyên liệu thành công');
-            this.jobService.addJob(user_id, p_id, status_id, job_id, type_id, jobData).subscribe(
-              (data) => {
-                if (data.code === 1000) {
-                  this.pForJob = data.result;
-                  this.toastr.success('Giao việc thành công', 'Thành công');
-
-                  // console.log('Add product for job:', this.pForJob);
-                  // this.toastr.success('Thêm sản phẩm sản xuất thành công!', 'Thành công');
-                  $('[data-dismiss="modal"]').click(); this.isLoadding = false;
-          //        console.log("consolo lod false: ", this.isLoadding)
-                  this.loadProductRQForJob();
-                } else {
-                  // console.error('Failed to fetch products:', data);
-                  //  this.toastr.error('Thêm sản phẩm sản xuất thất bại!', 'Lỗi'); this.isLoadding = false;
+        );
+      } else if (this.selectedProduct.code != null) {
+  
+        this.isLoadding = true
+      //  console.log("consolo lod: ", this.isLoadding)
+      //  console.log("exort submaterial product request");
+        this.jobService.createExportMaterialRequestTotalJob(p_id, position_id, user_id, createJobs).subscribe(
+          (data) => {
+            if (data.code === 1000) {
+        //      console.log('Xuất nguyên liệu thành công');
+              this.jobService.addJob(user_id, p_id, status_id, job_id, type_id, jobData).subscribe(
+                (data) => {
+                  if (data.code === 1000) {
+                    this.pForJob = data.result;
+  
+                    $('[data-dismiss="modal"]').click(); this.isLoadding = false;
+        
+                    this.loadProductRQForJob();
+                  } else {
+                    console.error('Failed to fetch products:', data);
+                    this.toastr.error('Thêm sản phẩm sản xuất thất bại!', 'Lỗi');
+                    $('[data-dismiss="modal"]').click(); this.isLoadding = false;
+                    this.loadProductRQForJob();
+                  }
+                },
+                (error) => {
+                  // console.error('Error fetching products:', error);
+                  this.toastr.error('Có lỗi xảy ra!', 'Lỗi'); this.isLoadding = false;
                 }
-              },
-              (error) => {
-                // console.error('Error fetching products:', error);
-                this.toastr.error('Có lỗi xảy ra!', 'Lỗi'); this.isLoadding = false;
-              }
-            );
-          } else if (data.code === 1015) {
-            console.error('Failed to fetch products:', data);
-            this.toastr.warning('Số lượng nguyên vật liệu trong kho không đủ', 'Thông báo');
-            $('[data-dismiss="modal"]').click(); this.isLoadding = false;
-          }
-        },
-        (error) => {
-          console.error('Error:', error);
-          if (error && error.error && error.error.errors) {
-            Object.entries(error.error.errors).forEach(([key, value]) => {
-              this.toastr.warning(`${key}: ${value}`, 'Lỗi');
+              );
+            } else if (data.code === 1015) {
+              console.error('Failed to fetch products:', data);
+              this.toastr.warning('Số lượng nguyên vật liệu trong kho không đủ', 'Thông báo');
               $('[data-dismiss="modal"]').click(); this.isLoadding = false;
-            });
-
-          } else if (error && error.message) {
-            this.toastr.error(`Có lỗi xảy ra: ${error.message}`, 'Lỗi'); this.isLoadding = false;
-            $('[data-dismiss="modal"]').click();
-          } else {
-            this.toastr.error(`Có lỗi xảy ra, vui lòng thử lại.`, 'Lỗi'); this.isLoadding = false;
-            $('[data-dismiss="modal"]').click();
+            }
+          },
+          (error) => {
+            console.error('Error:', error);
+            if (error && error.error && error.error.errors) {
+              Object.entries(error.error.errors).forEach(([key, value]) => {
+                this.toastr.warning(`${key}: ${value}`, 'Lỗi');
+                $('[data-dismiss="modal"]').click(); this.isLoadding = false;
+              });
+  
+            } else if (error && error.message) {
+              this.toastr.error(`Có lỗi xảy ra: ${error.message}`, 'Lỗi'); this.isLoadding = false;
+              $('[data-dismiss="modal"]').click();
+            } else {
+              this.toastr.error(`Có lỗi xảy ra, vui lòng thử lại.`, 'Lỗi'); this.isLoadding = false;
+              $('[data-dismiss="modal"]').click();
+            }
           }
-        }
-      );
-    }
-
+        );
+      }
+  
+    
+    
   }
 
   selectEvent(item: any) {
@@ -465,8 +493,9 @@ cancelChangeStatusJob() {
   empId: number = 0;
   onChangeSelectedEmployee(event: any) {
     this.selectedEmployee = event.target.value;
-    console.log('Selected employee ID:', this.selectedEmployee);
+    console.log('Selected employee onchangeSelect:', this.selectedEmployee);
     this.empId = event.target.value;
+ 
     this.getPositionNameById(this.empId);
   }
 
@@ -480,7 +509,7 @@ cancelChangeStatusJob() {
 
   selectProduct(product: any): void {
     this.selectedProduct = product; // Điều chỉnh theo cấu trúc đối tượng sản phẩm của bạn
-    console.log('Tên sản phẩm được chọn:', product);
+ //   console.log('Tên sản phẩm được chọn:', product);
     // console.log('Id sản phẩm được chọn:', product.productId);
   }
 
@@ -552,6 +581,7 @@ cancelChangeStatusJob() {
   listErrorJob: any[] = [];
   loadProductRQForJob(): Promise<void> {
     this.currentPage = 1;
+    this.selectedEmployee = '';
     return new Promise((resolve, reject) => {
       this.isLoadding = true;
     
@@ -559,7 +589,7 @@ cancelChangeStatusJob() {
         (data) => {
           if (data.code === 1000) {
             this.productRQs = data.result;
-            console.log('Sp cho job:', this.productRQs);
+          //  console.log('Sp cho job:', this.productRQs);
             this.checkJobsForErrors();
           } else {
             console.error('Failed to fetch products:', data);
@@ -601,11 +631,13 @@ cancelChangeStatusJob() {
   }
   loadProduct() {
     this.currentPage = 1;
+    this.selectedEmployee = '';
     this.jobService.getListProduct().subscribe(
       (data) => {
         if (data.code === 1000) {
           this.productRQs = data.result;
           this.selectedCategory = 1;
+          
           // console.log('Sp cho job:', this.productRQs);
           this.checkJobsForErrors();
         } else {
@@ -634,7 +666,7 @@ cancelChangeStatusJob() {
         this.isLoadding = false;
         if (data.code === 1000) {
           this.productAutoSearch = data.result;
-           console.log('Danh sách sản phẩm:', this.productAutoSearch);
+        //   console.log('Danh sách sản phẩm:', this.productAutoSearch);
         } else {
           console.error('Failed to fetch products:', data);
           this.toastr.error('Không thể lấy danh sách sản phẩm!', 'Lỗi');
@@ -650,7 +682,7 @@ cancelChangeStatusJob() {
 
   manageJob(product: any): void {
     this.isLoadding = true;
-
+    this.selectedEmployee = '';
     this.selectedProduct = { ...product };
   //  console.log('Product:', this.selectedProduct);
     this.jobId = this.selectedProduct.job_id;
@@ -658,7 +690,7 @@ cancelChangeStatusJob() {
       (data) => {
         if (data.code === 1000) {
           this.selectedJob = data.result;
-          console.log('Form detailJob value:', this.selectedJob);
+       //   console.log('Form detailJob value:', this.selectedJob);
           this.isLoadding = false;
         } else {
           console.error('Failed to fetch products:', data);
@@ -667,27 +699,19 @@ cancelChangeStatusJob() {
         }
       },
     );
-    //   console.log("Sản phẩm được chọn để giao việc:", this.selectedProduct);
-    //   console.log("thiis.type_id: ", this.selectedProduct.code);
-    // console.log("Trạng thái của sản phẩm:", this.selectedProduct.statusJob?.status_id);
+
     this.createJobs.reset();
-
-
-    //console.log("employee:", this.selectedProduct.user_name);
 
     if (this.selectedProduct) {
       this.loadPosition3(product);
     }
-    // Sử dụng regex để thay thế chữ "Thợ" bằng chữ "Làm"
+
     let modifiedPositionName = this.selectedProduct.position_name.replace(/Thợ/g, 'Làm');
 
-    // Gán giá trị vào form createJobs
     this.createJobs.patchValue({
       quantity_product: this.selectedProduct.quantity,
       job_name: modifiedPositionName
     });
-
-
 
     // Call getSubMTRProduct with appropriate IDs
     let productId = this.selectedProduct.product_id;
@@ -707,17 +731,19 @@ cancelChangeStatusJob() {
   }
 
    isCancel: boolean = false;
-  cancelAssign(): void {
-    if (this.isCancel) {
-      console.log('Cancel Assign Called');
-  
-    
+
+  cancelAssign(): void{
+    // this.createJobs.reset();
+     this.selectedEmployee = 'cancel Assign  123123123123123';
+    console.log('Selected employee:', this.selectedEmployee);
       if (this.selectedCategory === 0) {
+      
         this.loadProductRQForJob();
       } else if (this.selectedCategory === 1) {
+       
         this.loadProduct();
       }
-    }
+    
   }
   
   getSubMTRProductRQ(id: number, mate_id: number) {
@@ -751,7 +777,7 @@ cancelChangeStatusJob() {
         (data) => {
           if (data.code === 1000) {
             this.positionEmpList = data.result;
-            console.log('Danh sách chức vụ nhân viên: ', this.positionEmpList);
+          //  console.log('Danh sách chức vụ nhân viên: ', this.positionEmpList);
           } else {
             console.error('Failed to fetch products:', data);
           }
@@ -890,6 +916,7 @@ cancelChangeStatusJob() {
 
     const jobId = this.selectedProduct.job_id; // Hoặc lấy từ giá trị khác nếu cần
   //  console.log('Job ID:', jobId);
+
     const formValues = this.errorForm.value;
   //  console.log('Form values:', formValues);
     this.productListService.createProductError(
@@ -904,11 +931,18 @@ cancelChangeStatusJob() {
           console.log('Form values:', formValues);
           if (data.code === 1000) {
 
-            console.log('Thêm lỗi sản phẩm thành công:');
+            console.log('Thêm lỗi sản phẩm thành công:', this.selectedCategory);
             this.toastr.success('Thêm lỗi sản phẩm thành công!', 'Thành công');
+            if(this.selectedCategory === 1)
+             
+              this.loadProduct();
+            }
+             if (this.selectedCategory === 0) {
+              this.loadProductRQForJob();
+            }       
             $('[data-dismiss="modal"]').click(); this.isLoadding = false;
-            this.loadProduct();
-          }
+           
+          
         },
         (error: HttpErrorResponse) => {
           console.error('Error details:', error);
@@ -947,7 +981,7 @@ cancelChangeStatusJob() {
   }
   checkNotFound: boolean = false;
   selectedPositionId: any = '';
-  // hàm search api bằng produc thawojc product rq
+ 
   searchJob(selectedCategory: number) {
     if (selectedCategory === 1) {
       this.loadProduct();
@@ -1017,6 +1051,7 @@ cancelChangeStatusJob() {
   
     }
   }
+  
   // onSearchInput(cate: number,searchKey: any){
   //   console.log("Selected cate: ", cate)
   //   console.log("Search key: ", searchKey)
@@ -1122,8 +1157,8 @@ cancelChangeStatusJob() {
   errorId: any;
   editProduct(errorid: number, product: any) {
     this.errorId = errorid;
-    console.log('report product function:', errorid);
-    console.log('Product:', product);
+    //console.log('report product function:', errorid);
+   // console.log('Product:', product);
     this.error_job_id = product.product_error_id;
     this.jobService.getAllProductErrorsByJobId(errorid).subscribe(
       (response) => {
@@ -1132,7 +1167,7 @@ cancelChangeStatusJob() {
         if (this.jobErrors.length > 0) {
           this.editForm.patchValue(this.jobErrors[0]);
         }
-        console.log("error history: ", this.editForm.value);
+        //console.log("error history: ", this.editForm.value);
       },
       (error) => {
         console.error('Error fetching product errors:', error);
@@ -1152,11 +1187,16 @@ cancelChangeStatusJob() {
   }
   saveChangesError(){
     //  this.isLoadding = true;
-      const errorFormData = this.editForm.value;
+    const errorFormData = {
+      description: this.editForm.value.des,
+      solution: this.editForm.value.solution,
+      isFixed: this.editForm.value.fix,
+      quantity: this.editForm.value.quantity
+    };
       const jobid = this.selectedProduct.job_id;
       console.log('error edit form saveChanges:', errorFormData);
-      console.log('error_job_id: ', this.error_job_id)
-      this.errorProductService.editProductError(this.editForm.value.job_id, this.editForm.value).subscribe(
+ //     console.log('error_job_id: ', this.error_job_id)
+      this.errorProductService.editProductError(this.error_job_id, errorFormData).subscribe(
         (response) => {
           if (response.code === 1000) {
             this.toastr.success('Sửa lỗi sản phẩm thành công!', 'Thành công');

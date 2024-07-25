@@ -303,6 +303,13 @@ public class OrderController {
         apiResponse.setResult(orderService.getOrderDetailByOrderId(orderId));
         return apiResponse;
     }
+
+    @GetMapping("/getAllOrderDetailOfProductByOrderId")
+    public ApiResponse<?>  getAllOrderDetailOfProductByOrderId(@RequestParam("orderId") int orderId) {
+        ApiResponse<List> apiResponse = new ApiResponse<>();
+        apiResponse.setResult(orderService.getAllOrderDetailOfProductByOrderId(orderId));
+        return apiResponse;
+    }
     @GetMapping("/getListPhoneNumber")
     public ApiResponse<?>  getListPhoneNumber() {
         ApiResponse<List> apiResponse = new ApiResponse<>();

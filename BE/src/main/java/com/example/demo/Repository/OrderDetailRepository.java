@@ -78,9 +78,27 @@ public interface OrderDetailRepository extends JpaRepository<Orderdetails, Integ
             "WHERE od.order.orderId = :query AND j.jobId = (" +
             "SELECT MAX(j2.jobId) " +
             "FROM Jobs j2 " +
-            "WHERE (j2.requestProducts.requestProductId = rp.requestProductId OR j2.product.productId = p.productId)" +
+            "WHERE j2.requestProducts.requestProductId = rp.requestProductId " +
             ")")
     List<OrderDetailWithJobStatusDTO> getAllOrderDetailByOrderId(int query);
+
+    @Query("SELECT new com.example.demo.Dto.OrderDTO.OrderDetailWithJobStatusDTO(" +
+            "od.orderDetailId, " +
+            "COALESCE(p.productId, 0), " +
+            "COALESCE(p.productName, ''), " +
+            "COALESCE(rp.requestProductId, 0), " +
+            "COALESCE(rp.requestProductName, ''), " +
+            "od.unitPrice, " +
+            "COALESCE(p.status.status_id , 0), " + // Giá trị mặc định cho status_id
+            "COALESCE(p.status.status_name , ''), " + // Giá trị mặc định cho status_name
+            "od.quantity " +
+            ") " +
+            "FROM Orderdetails od " +
+            "LEFT JOIN od.product p " +
+            "LEFT JOIN od.requestProduct rp " +
+            "WHERE od.order.orderId = :query")
+    List<OrderDetailWithJobStatusDTO> getAllOrderDetailOfProductByOrderId(int query);
+
 
 
 

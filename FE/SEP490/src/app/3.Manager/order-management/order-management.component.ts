@@ -356,13 +356,10 @@ export class OrderManagementComponent implements OnInit {
 
           } else if (data.code === 1015) {
             this.user = [];
-<<<<<<< HEAD
+
           
             // this.toastr.warning(data.message);
-=======
 
-            this.toastr.warning(data.message);
->>>>>>> 0cb606972083a4774d89bbf013d39344f2e06d6b
           }
         },
         (error: HttpErrorResponse) => {

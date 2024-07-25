@@ -293,11 +293,12 @@ cancelChangeStatusJob() {
     }
     if ( this.createJobs.get('start')?.value < 1 ||
       // Kiểm tra ngày bắt đầu có lớn hơn hoặc bằng ngày hiện tại không
-      new Date(this.createJobs.get('start')?.value) < new Date() ||
+      new Date(this.createJobs.get('start')?.value) < new Date()
       // Kiểm tra ngày bắt đầu có nhỏ hơn ngày hiện tại trừ đi 3 tháng không
-      new Date(this.createJobs.get('start')?.value) > new Date(new Date().setMonth(new Date().getMonth() - 3))
-    ) {
-      this.toastr.error('Vui lòng chọn ngày bắt đầu lớn hơn hoặc bằng ngày hôm nay và nhỏ hơn 3 tháng so với ngày hôm nay.', 'Lỗi');
+    
+    ) 
+    {
+      this.toastr.error('Vui lòng chọn ngày bắt đầu lớn hơn hoặc bằng ngày hôm nay.', 'Lỗi');
       return;
     }
       const user_id = this.selectedEmployee;
@@ -792,9 +793,7 @@ cancelChangeStatusJob() {
   }
   showJobDetail(job: any) {
     let mate_id = job.position_id;
-  //  console.log('Mate ID:', mate_id);
-   // console.log('Product ID:', job.product_id);
-   // console.log('productName:', job.product_name);
+
     this.selected_productName = job.product_name;
     // this.isLoadding = true;  
     this.jobService.getSubMTRProduct(job.product_id, mate_id).subscribe(  //thay bang api goi job product submaterial
@@ -813,6 +812,8 @@ cancelChangeStatusJob() {
         this.isLoadding = false;
       }
     )
+    
+
     this.jobService.getJobDetailById(job.job_id).subscribe(
       (data) => {
         if (data.code === 1000) {

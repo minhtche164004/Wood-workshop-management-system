@@ -127,8 +127,8 @@ public class UserServiceImpl implements UserService {
         Status_User status = statusRepository.findById(2);
         Position position = positionRepository.findById(userDTO.getPosition());
         UserInfor userInfor = new UserInfor(
-                userDTO.getFullname(),
                 userDTO.getPhoneNumber(),
+                userDTO.getFullname(),
                 userDTO.getAddress(),
                 userDTO.getBank_name(),
                 userDTO.getBank_number(),

@@ -33,7 +33,8 @@ export class OrderManagementComponent implements OnInit {
   selectedCategory: string = '';
   selectedSDate: string = '';
   selectedEDate: string = '';
-
+  selectProduduct: string = '';
+  
   OrderdetailById: any = {};
   isLoadding: boolean = false;
   selectedC: number | null = null;
@@ -308,12 +309,13 @@ export class OrderManagementComponent implements OnInit {
           if (data.code === 1000) {
             this.currentPage = 1;
             this.user = data.result;
+            console.log(this.user);
             this.isLoadding = false;
 
           } else if (data.code === 1015) {
             this.user = [];
             this.isLoadding = false;
-            this.toastr.warning(data.message);
+            // this.toastr.warning(data.message);
           }
         },
         (error: HttpErrorResponse) => {
@@ -355,7 +357,9 @@ export class OrderManagementComponent implements OnInit {
           } else if (data.code === 1015) {
             this.user = [];
 
-            this.toastr.warning(data.message);
+          
+            // this.toastr.warning(data.message);
+
           }
         },
         (error: HttpErrorResponse) => {
@@ -424,5 +428,27 @@ export class OrderManagementComponent implements OnInit {
       });
     }
   }
+  sendMail(orderId: number){
+   console.log(orderId);
+   this.isLoadding = true;
+   this.authenListService.SendMail(orderId).subscribe({
+    next: (response: any) => {
 
+        this.toastr.success("Gửi mail cho khách hàng thành công!");
+        this.isLoadding = false;
+        // const closeModalButton = document.querySelector('.close') as HTMLElement;
+        // if (closeModalButton) {
+        //   closeModalButton.click();
+        // }
+        // $('[data-dismiss="modal"]').click();
+      
+    },
+    error: (error: HttpErrorResponse) => {
+      this.isLoadding = false;
+      this.toastr.error('Gửi mail thất bại');
+      this.realoadgetAllUser();
+      $('[data-dismiss="modal"]').click();
+    }
+  });
+  }
 }

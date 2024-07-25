@@ -268,11 +268,11 @@ export class CreateOrderComponent implements OnInit {
 
   onPhoneNumberChange(phoneNumber: string): void {
     //reset lai form
-    this.orderForm.reset();
+    // this.orderForm.reset();
     this.onIsProductChangeWhenChangePhoneNumber();
-    this.isForRequestProduct = false;
-    this.requests = [];
-    this.productList = [];
+    // this.isForRequestProduct = false;
+    // this.requests = [];
+    // this.productList = [];
     this.accId = 0;
     //
     this.createOrderService.getUserInfoByPhone(phoneNumber).subscribe(
@@ -416,15 +416,16 @@ export class CreateOrderComponent implements OnInit {
 
   //
   onSubmit(): void {
-
+    // this.orderForm.value.orderFinish = new Date();
     this.isLoadding = true;
     const orderData = this.orderForm.value;
+    this.orderForm.value.special_order = 0;
     console.log("data order", orderData);
     // const productFormData = this.productForm.value;
     if (this.orderForm && this.orderForm.valid && this.productForm
-      && this.productForm.valid && this.orderForm.value.special_order != null
-      && this.orderForm.value.payment_method != null
-      && this.orderForm.value.orderFinish != null) {
+      && this.productForm.valid
+      // && this.orderForm.value.orderFinish != null
+      && this.orderForm.value.payment_method != null) {
       this.createOrderService.addNewOrder(orderData).subscribe(
         response => {
           // this.isLoadding = false;

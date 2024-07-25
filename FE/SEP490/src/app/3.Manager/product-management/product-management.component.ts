@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef, ChangeDetectorRef } from '@angular/core';
 import { ProductListService } from 'src/app/service/product/product-list.service';
 import { ToastrService } from 'ngx-toastr';
 import { FormArray, FormBuilder, FormGroup, Validators, FormsModule, FormControl } from '@angular/forms';
@@ -135,7 +135,8 @@ export class ProductManagementComponent implements OnInit {
     private http: HttpClient,
     private activatedRoute: ActivatedRoute,
     private router: Router,
-    private location: Location
+    private location: Location,
+    // private cdRef: ChangeDetectorRef
   ) {
 
     this.listRequestProductForm = this.fb.group({
@@ -323,6 +324,23 @@ export class ProductManagementComponent implements OnInit {
     const items = this.listRequestProductForm.get('itemsRProduct') as FormArray;
     items.removeAt(index);
     this.onRemoveMaterial(index);
+    if (index > -1) {
+
+      const keys = Object.keys(this.pricePerProduct).map(Number);
+      for (let i = index; i < keys.length; i++) {
+        this.pricePerProduct[i] = this.pricePerProduct[i + 1];
+        this.quantityRProductValue[i] = this.quantityRProductValue[i + 1];
+        this.pricePerProductAndQuantity[i] = this.pricePerProductAndQuantity[i + 1];
+
+        delete this.quantityRProductValue[keys.length - 1];
+        delete this.pricePerProduct[keys.length - 1];
+        delete this.pricePerProductAndQuantity[keys.length - 1];
+      }
+
+      console.log('pricePerProductAndQuantity:', this.pricePerProductAndQuantity);
+    }
+    this.calculateTotalPriceOfOrder(index);
+    // this.cdRef.detectChanges();
   }
   //
   //phan formGroup cua edit productt
@@ -868,11 +886,11 @@ export class ProductManagementComponent implements OnInit {
 
   onSubmit() {
 
-    if(this.uploadForm.get('quantity')?.value < 1){
+    if (this.uploadForm.get('quantity')?.value < 1) {
       this.toastr.error('Số lượng sản phẩm phải lớn hơn 0!', 'Lỗi');
       return;
     }
-    if(parseFloat(this.editForm.get('price')?.value.replace(/,/g, '')) < this.uploadForm.get('quantity')?.value * this.totalUnitPrice){
+    if (parseFloat(this.editForm.get('price')?.value.replace(/,/g, '')) < this.uploadForm.get('quantity')?.value * this.totalUnitPrice) {
       this.toastr.error('Giá sản phẩm phải lớn hơn giá vật liệu !', 'Lỗi');
       return;
     }
@@ -964,11 +982,11 @@ export class ProductManagementComponent implements OnInit {
   }
 
   onEditSubmit(): void {
-    if(this.editForm.get('quantity')?.value < 1){
+    if (this.editForm.get('quantity')?.value < 1) {
       this.toastr.error('Số lượng sản phẩm phải lớn hơn 0!', 'Lỗi');
       return;
     }
-    if(parseFloat(this.editForm.get('price')?.value.replace(/,/g, '')) < this.totalUnitPrice){
+    if (parseFloat(this.editForm.get('price')?.value.replace(/,/g, '')) < this.totalUnitPrice) {
       this.toastr.error('Giá sản phẩm phải lớn hơn giá vật liệu !', 'Lỗi');
       return;
     }
@@ -1418,11 +1436,11 @@ export class ProductManagementComponent implements OnInit {
   }
 
   onEditRequestProductSubmit(): void {
-    if(this.editForm.get('quantity')?.value < 1){
+    if (this.editForm.get('quantity')?.value < 1) {
       this.toastr.error('Số lượng sản phẩm phải lớn hơn 0!', 'Lỗi');
       return;
     }
-    if(parseFloat(this.editForm.get('price')?.value.replace(/,/g, '')) < this.totalUnitPrice){
+    if (parseFloat(this.editForm.get('price')?.value.replace(/,/g, '')) < this.totalUnitPrice) {
       this.toastr.error('Giá sản phẩm phải lớn hơn giá vật liệu !', 'Lỗi');
       return;
     }

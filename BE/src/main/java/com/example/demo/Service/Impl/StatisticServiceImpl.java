@@ -2,6 +2,7 @@ package com.example.demo.Service.Impl;
 
 import com.example.demo.Entity.SubMaterials;
 import com.example.demo.Repository.AdvancesalaryRepository;
+import com.example.demo.Repository.InputSubMaterialRepository;
 import com.example.demo.Repository.SubMaterialsRepository;
 import com.example.demo.Service.StatisticService;
 import com.nimbusds.jwt.util.DateUtils;
@@ -19,6 +20,8 @@ public class StatisticServiceImpl implements StatisticService {
     private AdvancesalaryRepository advancesalaryRepository;
     @Autowired
     private SubMaterialsRepository subMaterialsRepository;
+    @Autowired
+    private InputSubMaterialRepository inputSubMaterialRepository;
 
     @Override
     public BigDecimal findTotalSalaryByMonthAndYear(int month, int year) {
@@ -37,6 +40,18 @@ public class StatisticServiceImpl implements StatisticService {
     public Long countCompletedRequestProductOnOrderByMonthAndYear( int month, int year) {
         return advancesalaryRepository.countCompletedRequestProductOnOrderByMonthAndYear(month,year);
     }
+
+    @Override
+    public BigDecimal findTotalInputSubMaterialByMonthAndYear(int month, int year) {
+        BigDecimal input =inputSubMaterialRepository.findTotalInputSubMaterialByMonthAndYear(month,year);
+        BigDecimal edit_quantity=inputSubMaterialRepository.findTotalEditQuantitySubMaterialByMonthAndYear(month,year);
+        BigDecimal edit_quantity_price =inputSubMaterialRepository.findTotalEditQuantityAndPriceSubMaterialByMonthAndYear(month,year);
+        BigDecimal total = input.add(edit_quantity).add(edit_quantity_price);
+        return total;
+
+    }
+
+
     @Override
     public Integer countCompletedJobsForProductByMonthAndYear(int status_id, int month, int year) {
         return advancesalaryRepository.countCompletedJobsForProductByMonthAndYear(status_id,month,year);

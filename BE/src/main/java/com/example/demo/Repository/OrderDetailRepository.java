@@ -100,8 +100,6 @@ public interface OrderDetailRepository extends JpaRepository<Orderdetails, Integ
     List<OrderDetailWithJobStatusDTO> getAllOrderDetailOfProductByOrderId(int query);
 
 
-
-
     @Query("SELECT new com.example.demo.Dto.OrderDTO.OrderDetailWithJobStatusDTO(" +
             "od.orderDetailId, " +
             "COALESCE(p.productId, 0), " +

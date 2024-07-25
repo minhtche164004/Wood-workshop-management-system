@@ -236,13 +236,15 @@
                                                 </div>
                                                 <div class="col-md-6">
 
-                                                    <select class="form-select" (change)="onChangeSelectedEmployee($event)">
-                                                        <option  value="" selected disabled>Chọn 1 nhân viên</option>
+                                                    <select #employeeSelect class="form-select" (change)="onChangeSelectedEmployee($event)">
+                                                        <option value="" selected disabled>Chọn 1 nhân viên</option>
                                                         <option *ngFor="let employee of positionEmployees" [value]="employee.userId">
-                                                            {{ employee.username }} 
-                                                            <!-- : {{ employee.userId }} : {{ employee.position?.position_name }} -->
+                                                          {{ employee.username }}
                                                         </option>
-                                                    </select>                                                                                     
+                                                      </select>
+                                                      
+                                                      
+                                                                                                                                      
                                                 </div>
                                             </div>
                                             <div class="row">
@@ -341,7 +343,7 @@
 
                     <div class="modal-footer">                   
                        <button type="button" class="btn btn-secondary" data-dismiss="modal"
-                            (click)="cancelAssign()">Hủy</button>
+                            (onClick)="cancelAssign()">Hủy</button>
                             <button type="submit" class="btn btn-primary">Tạo việc</button>
                     </div>
                 </form>

@@ -26,6 +26,12 @@ public class StatisticController {
         apiResponse.setResult(statisticService.findTotalSalaryByMonthAndYear(month, year));
         return apiResponse;
     }
+    @GetMapping("/findTotalInputSubMaterialByMonthAndYear")
+    public ApiResponse<?> findTotalInputSubMaterialByMonthAndYear(@RequestParam("month") int month,@RequestParam("year") int year) {
+        ApiResponse<BigDecimal> apiResponse = new ApiResponse<>();
+        apiResponse.setResult(statisticService.findTotalInputSubMaterialByMonthAndYear(month, year));
+        return apiResponse;
+    }
     @GetMapping("/countCompletedJobsByMonthAndYear")
     public ApiResponse<?> countCompletedJobsByMonthAndYear(@RequestParam("status_id") int status_id,@RequestParam("month") int month,@RequestParam("year") int year) {
         ApiResponse<Long> apiResponse = new ApiResponse<>();

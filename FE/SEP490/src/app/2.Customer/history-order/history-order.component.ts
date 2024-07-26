@@ -59,6 +59,7 @@ export class HistoryOrderComponent {
     this.authenListService.getFilterStatus(
       this.searchKey,
       this.selectedCategory,
+      this.selectedCategory,
       startDate,
       endDate
     )
@@ -68,7 +69,8 @@ export class HistoryOrderComponent {
             this.currentPage = 1;
             this.history_order = data.result;
             this.isLoadding = false;
-
+            console.log(data
+            );
           } else if (data.code === 1015) {
             this.history_order = [];
             this.isLoadding = false;

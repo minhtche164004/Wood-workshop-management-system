@@ -63,9 +63,10 @@ export class JobManagementComponent implements OnInit {
   isLoadding: boolean = false;
   jobList: any[] = [];
   showPrimaryModal: boolean | undefined;
-  showWarningModal: boolean | undefined;
+  showWarningModal: boolean | undefined;  
   @ViewChild('errorProduct') errorProduct: any;
   @ViewChild('otherModal') otherModal: any;
+  @ViewChild('employeeSelect') employeeSelect!: ElementRef<HTMLSelectElement>;
   constructor(private fb: FormBuilder,private errorProductService: ErrorProductService, private employeeService: EmployeeService, private productList: ProductService, private productListService: ProductListService, private jobService: JobService, private toastr: ToastrService, private sanitizer: DomSanitizer) {
     this.createJobs = this.fb.group({
       job_name: [''],
@@ -654,8 +655,9 @@ cancelChangeStatusJob() {
   }
 
   manageJob(product: any): void {
+    this.employeeSelect.nativeElement.value = '';
     this.isLoadding = true;
-
+   
     this.selectedProduct = { ...product };
   //  console.log('Product:', this.selectedProduct);
     this.jobId = this.selectedProduct.job_id;
@@ -712,7 +714,11 @@ cancelChangeStatusJob() {
   }
 
    isCancel: boolean = false;
+  
+
+
   cancelAssign(): void {
+    this.employeeSelect.nativeElement.value = '';
     if (this.isCancel) {
       console.log('Cancel Assign Called');
   

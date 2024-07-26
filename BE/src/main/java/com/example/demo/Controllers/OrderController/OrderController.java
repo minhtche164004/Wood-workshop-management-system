@@ -187,10 +187,11 @@ public class OrderController {
             @RequestParam(required = false) String search,
             @RequestParam(required = false) Integer statusId,
             @RequestParam(required = false) Integer paymentMethod,
+            @RequestParam(required = false) boolean specialOrder,
             @RequestBody(required = false) DateDTO dto
     ) {
         ApiResponse<List<OderDTO>> apiResponse = new ApiResponse<>(); // Chỉ định rõ kiểu List<OderDTO>
-        apiResponse.setResult(orderService.MultiFilterOrder(search, statusId, paymentMethod, dto.getStartDate(), dto.getEndDate()));
+        apiResponse.setResult(orderService.MultiFilterOrder(search, statusId, paymentMethod,specialOrder, dto.getStartDate(), dto.getEndDate()));
         return apiResponse;
     }
 
@@ -301,6 +302,13 @@ public class OrderController {
     public ApiResponse<?>  getAllOrderDetail(@RequestParam("orderId") int orderId) {
         ApiResponse<List> apiResponse = new ApiResponse<>();
         apiResponse.setResult(orderService.getOrderDetailByOrderId(orderId));
+        return apiResponse;
+    }
+
+    @GetMapping("/getAllOrderDetailOfProductByOrderId")
+    public ApiResponse<?>  getAllOrderDetailOfProductByOrderId(@RequestParam("orderId") int orderId) {
+        ApiResponse<List> apiResponse = new ApiResponse<>();
+        apiResponse.setResult(orderService.getAllOrderDetailOfProductByOrderId(orderId));
         return apiResponse;
     }
     @GetMapping("/getListPhoneNumber")

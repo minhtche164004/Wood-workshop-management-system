@@ -62,6 +62,8 @@ public interface OrderService {
 
     public List<OrderDetailWithJobStatusDTO> getOrderDetailByOrderId(int order_id);
 
+    List<OrderDetailWithJobStatusDTO> getAllOrderDetailOfProductByOrderId(int order_id);
+
     Orders EditRequest(int request_id, RequestEditCusDTO requestEditDTO, MultipartFile[] multipartFiles) throws IOException;
     Orders ManagerEditRequest(int request_id, RequestEditDTO requestEditDTO);
 //    Requests CustomerEditRequest(int request_id , Requests requests);
@@ -89,7 +91,7 @@ public interface OrderService {
 
     String ConfirmPayment(int order_id);
 
-    List<OderDTO> MultiFilterOrder(String search, Integer status_id, Integer paymentMethod, Date startDate, Date endDate);
+    List<OderDTO> MultiFilterOrder(String search, Integer status_id, Integer paymentMethod, boolean specialOrder,Date startDate, Date endDate);
 
     String SendMailToNotifyCationAboutOrder(int order_id,String link) throws MessagingException, IOException;
 

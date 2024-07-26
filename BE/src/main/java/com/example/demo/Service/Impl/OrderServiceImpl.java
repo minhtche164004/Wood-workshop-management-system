@@ -303,14 +303,23 @@ public class    OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public List<OderDTO> MultiFilterOrder(String search, Integer status_id, Integer paymentMethod, Date startDate, Date endDate) {
+    public List<OderDTO> MultiFilterOrder(String search, Integer status_id, Integer paymentMethod,boolean specialOrder,  Date startDate, Date endDate) {
         List<OderDTO> order_list = new ArrayList<>();
 
-        if (search != null || status_id != null || paymentMethod != null || startDate != null || endDate != null) {
-            order_list = orderRepository.MultiFilterOrder(search, status_id, paymentMethod, startDate, endDate);
+//        if (search != null || status_id != null || paymentMethod != null || startDate != null || endDate != null) {
+//            order_list = orderRepository.MultiFilterOrder(search, status_id, paymentMethod,specialOrder, startDate, endDate);
+//        } else {
+//            order_list = orderRepository.getAllOrder();
+//        }
+
+        if (search == null && status_id == null && paymentMethod == null && startDate == null && endDate == null) {
+            // Trường hợp đặc biệt: Chỉ lọc theo specialOrder
+            order_list =orderRepository.findBySpecialOrder(specialOrder);
         } else {
-            order_list = orderRepository.getAllOrder();
+            // Các trường hợp khác: Gọi MultiFilterOrder với tham số đặc biệt = null
+            order_list= orderRepository.MultiFilterOrder(search, status_id, paymentMethod, specialOrder, startDate, endDate);
         }
+
 
         if (order_list.isEmpty()) {
             throw new AppException(ErrorCode.NOT_FOUND);
@@ -660,6 +669,16 @@ public class    OrderServiceImpl implements OrderService {
         }
         return results;
     }
+
+    @Override
+    public List<OrderDetailWithJobStatusDTO> getAllOrderDetailOfProductByOrderId(int order_id) {
+        List<OrderDetailWithJobStatusDTO> results = orderDetailRepository.getAllOrderDetailOfProductByOrderId(order_id);
+        if(results.isEmpty()){
+            throw new AppException(ErrorCode.NOT_FOUND);
+        }
+        return results;
+    }
+
 
 
 

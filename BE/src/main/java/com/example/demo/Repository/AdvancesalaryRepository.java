@@ -1,5 +1,6 @@
 package com.example.demo.Repository;
 
+import com.example.demo.Dto.OrderDTO.OderDTO;
 import com.example.demo.Entity.Advancesalary;
 import com.example.demo.Entity.Products;
 import jakarta.transaction.Transactional;
@@ -25,6 +26,29 @@ public interface AdvancesalaryRepository extends JpaRepository<Advancesalary,Int
 
     @Query("SELECT u FROM Advancesalary u WHERE u.user.userId = :query")
     List<Advancesalary> findByUserId(int query);
+
+
+
+    @Query("SELECT u FROM Advancesalary u " +
+            " WHERE u.user.userId = :query AND" +
+            " ( u.code LIKE %:search% OR :search IS NULL) AND " +
+            " (u.isAdvanceSuccess = :isAdvanceSuccess OR :isAdvanceSuccess IS NULL) AND " + // Sửa đổi tại đây
+            "(u.date > :startDate OR :startDate IS NULL) AND " +
+            "(u.date < :endDate OR :endDate IS NULL) ")
+    List<Advancesalary> MultiFilterAdvansalaryByEmployeeId(int query,@Param("search") String search,@Param("isAdvanceSuccess") Boolean isAdvanceSuccess,
+                                               @Param("startDate") Date startDate,
+                                               @Param("endDate") Date endDate);
+
+    @Query("SELECT u FROM Advancesalary u " +
+            " WHERE u.user.userId = :query AND " +
+            " ( u.code LIKE %:search% OR :search IS NULL) AND " +
+            "(u.date > :startDate OR :startDate IS NULL) AND " +
+            "(u.date < :endDate OR :endDate IS NULL) ")
+    List<Advancesalary> MultiFilterAdvansalaryByEmployeeIdByDate(int query,@Param("search") String search,
+                                                           @Param("startDate") Date startDate,
+                                                           @Param("endDate") Date endDate);
+
+
 
     @Query("SELECT u FROM Advancesalary u WHERE u.advanceSalaryId = :query")
     Advancesalary findById(int query);

@@ -2,6 +2,7 @@ package com.example.demo.Repository;
 
 import com.example.demo.Dto.JobDTO.JobDoneDTO;
 import com.example.demo.Dto.OrderDTO.JobProductDTO;
+import com.example.demo.Dto.OrderDTO.OderDTO;
 import com.example.demo.Dto.ProductDTO.ProductErrorAllDTO;
 import com.example.demo.Entity.*;
 import jakarta.transaction.Transactional;
@@ -211,7 +212,26 @@ public interface JobRepository extends JpaRepository<Jobs,Integer> {
             " JOIN j.status s" +
             " LEFT JOIN j.product pr" +
             " LEFT JOIN j.requestProducts rp" +
-            " WHERE  u.userId = :userId AND j.code = :query AND j.status.status_id != 10")
+            " WHERE ( uf.fullname LIKE %:search% OR :search IS NULL) AND" +
+            "(s.status_id = :status_id OR :status_id IS NULL) AND " +
+            "(p.position_id = :position_id OR :position_id IS NULL) AND j.job_log = true AND j.status.status_id != 10")
+    List<JobDoneDTO> MultiFilterJobDone(@Param("search") String search,
+                                               @Param("status_id") Integer status_id,
+                                               @Param("position_id") Integer position_id);
+
+
+
+    @Query("SELECT new com.example.demo.Dto.JobDTO.JobDoneDTO(" +
+            "j.jobId, j.job_name, u.userId, uf.fullname,COALESCE(p.position_id, 0) ,COALESCE(p.position_name, '') , s.status_id, s.status_name, j.cost, " +
+            "COALESCE(pr.productId, 0), COALESCE(pr.productName, ''), COALESCE(rp.requestProductId, 0), COALESCE(rp.requestProductName, ''), j.quantityProduct,j.code)" + // Sử dụng COALESCE
+            " FROM Jobs j" +
+            " JOIN j.user u" +
+            " JOIN u.userInfor uf" +
+            " JOIN u.position p" +
+            " JOIN j.status s" +
+            " LEFT JOIN j.product pr" +
+            " LEFT JOIN j.requestProducts rp" +
+            " WHERE  u.userId = :userId AND j.code LIKE CONCAT('%', :query, '%') AND j.status.status_id != 10")
         //j.job_log = true AND
     List<JobDoneDTO> findAllJobForDoneByEmployeeIDWithJobCode(int userId,String query);
 

@@ -20,7 +20,7 @@ export class OrderSuccessComponent implements OnInit {
       this.orderInfo = params['orderInfo'];
       this.paymentTime = params['paymentTime'];
       this.transactionId = params['transactionId'];
-      this.totalPrice = +params['totalPrice']; // Dấu '+' chuyển đổi string sang number
+      this.totalPrice = +params['totalPrice'] / 100; // Dấu '+' chuyển đổi string sang number
     });
   }
 }

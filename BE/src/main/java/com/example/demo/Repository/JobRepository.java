@@ -12,6 +12,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.math.BigDecimal;
+import java.util.Date;
 import java.util.List;
 
 @Repository
@@ -324,6 +325,67 @@ List<ProductErrorAllDTO> getAllProductError();
             "LEFT JOIN od.order o " + // Sửa đổi đường dẫn đến orders
             "LEFT JOIN o.userInfor ui WHERE p.processProductErrorId = :query")
     ProductErrorAllDTO getProductErrorDetailById(int query);
+
+
+
+    @Query("SELECT new com.example.demo.Dto.ProductDTO.ProductErrorAllDTO(" +
+            "p.processProductErrorId, " +
+            "COALESCE(j.code, 0), " +
+            "COALESCE(p.description, ''), " +
+            "COALESCE(p.isFixed, false), " +
+            "COALESCE(p.solution, ''), " +
+            "COALESCE(j.job_name, ''), " +
+            "COALESCE(j.jobId, 0), " +
+            "COALESCE(pr.productId, 0), " +
+            "COALESCE(pr.productName, ''), " +
+            "COALESCE(rq.requestProductId, 0), " +
+            "COALESCE(rq.requestProductName, ''), " +
+            "COALESCE(o.code, ''), " +
+            "COALESCE(ui.fullname, ''), " +
+            "COALESCE(j.user.username, ''), " +
+            "COALESCE(ps.position_name, ''), " +
+            "COALESCE(ps.position_id, 0), " +
+            "COALESCE(p.quantity, 0)) " +
+            "FROM Processproducterror p " +
+            "LEFT JOIN p.job j " +
+            "LEFT JOIN j.product pr " +
+            "LEFT JOIN j.user.position ps " +
+            "LEFT JOIN j.requestProducts rq " +
+            "LEFT JOIN j.orderdetails od " +
+            "LEFT JOIN od.order o " + // Sửa đổi đường dẫn đến orders
+            "LEFT JOIN o.userInfor ui WHERE  ( j.code LIKE %:search% OR :search IS NULL) AND " +
+            "(p.isFixed = :isFixed OR :isFixed IS NULL)")
+    List<ProductErrorAllDTO> MultiFilterErrorProductWithBoolean(@Param("search") String search,
+                                               @Param("isFixed") Boolean isFixed);
+
+
+    @Query("SELECT new com.example.demo.Dto.ProductDTO.ProductErrorAllDTO(" +
+            "p.processProductErrorId, " +
+            "COALESCE(j.code, 0), " +
+            "COALESCE(p.description, ''), " +
+            "COALESCE(p.isFixed, false), " +
+            "COALESCE(p.solution, ''), " +
+            "COALESCE(j.job_name, ''), " +
+            "COALESCE(j.jobId, 0), " +
+            "COALESCE(pr.productId, 0), " +
+            "COALESCE(pr.productName, ''), " +
+            "COALESCE(rq.requestProductId, 0), " +
+            "COALESCE(rq.requestProductName, ''), " +
+            "COALESCE(o.code, ''), " +
+            "COALESCE(ui.fullname, ''), " +
+            "COALESCE(j.user.username, ''), " +
+            "COALESCE(ps.position_name, ''), " +
+            "COALESCE(ps.position_id, 0), " +
+            "COALESCE(p.quantity, 0)) " +
+            "FROM Processproducterror p " +
+            "LEFT JOIN p.job j " +
+            "LEFT JOIN j.product pr " +
+            "LEFT JOIN j.user.position ps " +
+            "LEFT JOIN j.requestProducts rq " +
+            "LEFT JOIN j.orderdetails od " +
+            "LEFT JOIN od.order o " + // Sửa đổi đường dẫn đến orders
+            "LEFT JOIN o.userInfor ui WHERE  ( j.code LIKE %:search% OR :search IS NULL)")
+    List<ProductErrorAllDTO> MultiFilterErrorProduct(@Param("search") String search);
 
 
 

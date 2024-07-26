@@ -31,7 +31,7 @@ export class JobManagementComponent implements OnInit {
   products: any[] = [];
   errorForm: FormGroup;
   editJob: FormGroup;
-  keyword = 'product_name';
+  keyword = 'productName';
   createJobs: FormGroup;
   productRQs: any[] = [];
   currentPage: number = 1;
@@ -143,7 +143,7 @@ export class JobManagementComponent implements OnInit {
       this.getAllPostionEmp(), 
       this.getAllStatusJob(),
       this.loadPosition(),
-      this.loadAutoSearchProduct()
+      // this.loadAutoSearchProduct()
     ]).then(() => {
       this.hideLoadingIndicator();
     }).catch(error => {
@@ -276,7 +276,9 @@ cancelChangeStatusJob() {
 
   selectedEmpCreateJob: any = {};
   createNewJob() {
+    if(this.selectedEmployee === '' ){
     
+    }
    // this.isLoadding = true;
     console.log('Selected Employee:', this.selectedEmployee);
     console.log('Selected Product:', this.selectedProduct);
@@ -443,7 +445,8 @@ cancelChangeStatusJob() {
       return;
     }
      console.log('Selected product for job:', this.selectedProduct.product_id);
-    this.jobService.addProductForJob(this.selectedProduct.product_id, quantity).subscribe(
+     this.selectedProduct = '';
+    this.jobService.addProductForJob(this.productIdCoSan, quantity).subscribe(
 
       (data) => {
 
@@ -475,7 +478,9 @@ cancelChangeStatusJob() {
     this.empId = event.target.value;
     this.getPositionNameById(this.empId);
   }
-
+  huyTaoSanPhamCoSan():void{
+    this.createJobs.reset();
+  }
   onChangeSearch(search: string) {
     this.searchKey = search;
   }
@@ -483,10 +488,13 @@ cancelChangeStatusJob() {
   sanitize(name: string): SafeHtml {
     return this.sanitizer.bypassSecurityTrustHtml(name);
   }
-
+  productIdCoSan: number = 0;
   selectProduct(product: any): void {
     this.selectedProduct = product; // Điều chỉnh theo cấu trúc đối tượng sản phẩm của bạn
-    console.log('Tên sản phẩm được chọn:', product);
+    console.log('Sản phẩm được chọn:', this.selectedProduct.productId);
+    this.productIdCoSan = this.selectedProduct.productId;
+    this.selectedProduct = '';
+    console.log('selcetd sau khi truyền: ', this.selectedProduct);
     // console.log('Id sản phẩm được chọn:', product.productId);
   }
 
@@ -634,22 +642,26 @@ cancelChangeStatusJob() {
     return [6, 9, 12, 14].includes(product.statusJob.status_id) || product.statusJob.type === 1;
   }
   productAutoSearch: any[] = [];
-  loadAutoSearchProduct(){
+  loadAutoSearchProduct(): void{
+    this.isLoadding = true;
     this.productListService.getProducts().subscribe(
       (data) => {
-        this.isLoadding = false;
+       
         if (data.code === 1000) {
           this.productAutoSearch = data.result;
-        //   console.log('Danh sách sản phẩm:', this.productAutoSearch);
+           console.log('Danh sách sản phẩm auto complete:', this.productAutoSearch);
+           this.isLoadding = false;
         } else {
           console.error('Failed to fetch products:', data);
           this.toastr.error('Không thể lấy danh sách sản phẩm!', 'Lỗi');
+          this.isLoadding = false;
         }
       },
       (error) => {
-        this.isLoadding = false;
+      
         console.error('Error fetching products:', error);
         this.toastr.error('Có lỗi xảy ra!', 'Lỗi');
+        this.isLoadding = false;
       }
     );
   }

@@ -3,6 +3,7 @@ package com.example.demo.Service.Impl;
 import com.example.demo.Dto.JobDTO.JobDTO;
 import com.example.demo.Dto.JobDTO.JobDoneDTO;
 import com.example.demo.Dto.OrderDTO.JobProductDTO;
+import com.example.demo.Dto.OrderDTO.OderDTO;
 import com.example.demo.Dto.OrderDTO.OrderDetailWithJobStatusDTO;
 import com.example.demo.Dto.ProductDTO.ProductErrorAllDTO;
 import com.example.demo.Dto.ProductDTO.ProductErrorDTO;
@@ -160,6 +161,29 @@ public class JobServiceImpl implements JobService {
         return list;
     }
 
+    @Override
+    public List<ProductErrorAllDTO> MultiFilterErrorProduct(String search, Integer is_fixed) {
+        List<ProductErrorAllDTO> error_list = new ArrayList<>();
+
+        if (is_fixed != null) {
+            if (is_fixed == -1) {
+                // Không lọc theo is_fixed, chỉ lọc theo các tham số khác
+                error_list= jobRepository.MultiFilterErrorProduct(search);
+            } else {
+                // Lọc theo is_fixed (true hoặc false) và các tham số khác
+                boolean is_fixedValue = (is_fixed == 1); // Chuyển đổi 1/0 thành true/false
+                error_list= jobRepository.MultiFilterErrorProductWithBoolean(search, is_fixedValue);
+            }
+        } else {
+            // Không có tham số lọc nào, lấy tất cả đơn hàng
+            error_list= jobRepository.getAllProductError();
+        }
+
+        if (error_list.isEmpty()) {
+            throw new AppException(ErrorCode.NOT_FOUND);
+        }
+        return error_list;
+    }
 
 
     @Override
@@ -167,8 +191,6 @@ public class JobServiceImpl implements JobService {
         //tạo mới job_log, lúc sửa status chứ ko phải lúc phân việc , sau khi đã sauwr status thành đã nghiệm thu của mộc, sơn , nhám
         //sau khi nghiem thu xong thi tra ve trang thai chờ cong viec tiep theo
         Jobs jobs_log = new Jobs();
-
-
         Jobs jobs_history = jobRepository.getJobById(job_id);
         jobs_log.setUser(jobs_history.getUser());
         jobs_log.setProduct(jobs_history.getProduct());
@@ -212,6 +234,26 @@ public class JobServiceImpl implements JobService {
 
             jobs_log.setStatus(statusJobRepository.findById(13));
             jobs_log.setJob_log(true);
+
+            //thêm lương cho thằng thợ sơn
+            //nếu công việc hoàn thành thì set lương cho nhân viên luôn --------------------------------------
+            Advancesalary advancesalary = new Advancesalary();
+            LocalDate today = LocalDate.now();
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("ddMMyy");
+            String dateString = today.format(formatter);
+            Advancesalary lastadvan = advancesalaryRepository.findAdvancesalaryTop(dateString + "AD");
+            int count = lastadvan != null ? Integer.parseInt(lastadvan.getCode().substring(8)) + 1 : 1;
+            String code = dateString + "AD" + String.format("%03d", count);
+            advancesalary.setDate(Date.from(today.atStartOfDay(ZoneId.systemDefault()).toInstant()));
+
+            //  advancesalary.setDate(Date.valueOf(today));
+            advancesalary.setAmount(jobs_history.getCost());
+//            advancesalary.setApprove(null);
+            advancesalary.setAdvanceSuccess(false);
+            advancesalary.setCode(code);
+            advancesalary.setUser(jobs_history.getUser());
+            advancesalaryRepository.save(advancesalary);
+
 
 
             //khi da nghiem thu o cong doan cuoi la son thi` se chuyen status sang trang thai da hoan` thanh

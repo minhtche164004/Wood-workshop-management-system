@@ -80,54 +80,35 @@
                     </div>
                     <div>
                         <div>
-                            <!-- tim` thay san pham -->
-                            <div class="row" *ngIf=!notFoundProduct>
-                                <div class="col-lg-4 col-md-6 col-12 nopadding"
-                                    *ngFor="let product of products | paginate: { itemsPerPage: 6, currentPage: currentPage }; let i = index">
-                                    <div class="product">
-                                        <a style="text-decoration: none;">
-                                            <img [routerLink]="['/product-details', product.productId]"
-                                                src="{{ product.image }}" alt="" class="product-img">
-                                            <div class="product-info">
-                                                <p class="name-product text-center">{{ product.productName }}</p>
-                                                <p class="description"
-                                                    style="text-decoration: none; color: black; text-align: center;">
-                                                    {{
-                                                    product.description }}</p>
-                                                <div class="price-product text-center d-flex align-items-center">
-                                                    <p class="price">{{ product.price | number: '1.0-3' }}
-                                                        vnđ</p>
-
-                                                    <p class="root-price" *ngIf="product.rootPrice">{{
-                                                        product.rootPrice
-                                                        |
-                                                        currency:'VND' }}</p>
-                                                </div>
-                                                <div class="buttons d-flex ">
-                                                    <button (click)="addToWishlist(product.productId)" class="addCart">
-                                                        Thêm vào danh sách yêu thích <i class="fa-solid fa-heart"></i>
-                                                    </button>
-                                                </div>
-                                            </div>
-                                        </a>
+                          <!-- tim` thay san pham -->
+                          <div class="row" *ngIf="!notFoundProduct">
+                            <div class="col-lg-4 col-md-6 col-12 nopadding"
+                                 *ngFor="let product of products | paginate: { itemsPerPage: 6, currentPage: currentPage }; let i = index">
+                              <div class="product">
+                                <a style="text-decoration: none;">
+                                  <img [routerLink]="['/product-details', product.productId]"
+                                       src="{{ product.image }}" alt="" class="product-img">
+                                  <div class="product-info">
+                                    <p class="name-product text-center">{{ product.productName }}</p>
+                                    <p class="description" style="text-decoration: none; color: black; text-align: center;">
+                                      Kiểu sản phẩm: {{ product.categories?.categoryName }}</p>
+                                    <div class="price-product text-center d-flex align-items-center">
+                                      <p class="price">{{ product.price | number: '1.0-3' }} vnđ</p>
+                                      <p class="root-price" *ngIf="product.rootPrice">{{ product.rootPrice | currency:'VND' }}</p>
                                     </div>
-                                </div>
-                            </div>
-                            <!-- khong tim` thay san pham -->
-                            <div *ngIf="notFoundProduct" class="row">
-                                <div class="col-lg-12 col-12 nopadding">
-                                  <div class="product" style="display: flex; justify-content: center; align-items: center; height: 100%;">
-                                    <img src="https://encrypted-tbn2.gstatic.com/images?q=tbn:ANd9GcSG53pYn6cpXaiwT_q6IM45P-rXg5dUw67XqRmr9-vtsbMoHnCG"
-                                        alt="" class="product-img"
-                                        style="width: 150px; height: 150px; object-fit: cover;">
-                                    <p class="name-product text-center">Không tìm thấy sản phẩm!</p>
+                                    <div class="buttons d-flex ">
+                                      <button (click)="addToWishlist(product.productId)" class="addCart">
+                                        Thêm vào danh sách yêu thích <i class="fa-solid fa-heart"></i>
+                                      </button>
+                                    </div>
                                   </div>
-                                </div>
+                                </a>
                               </div>
+                            </div>
+                          </div>
                         </div>
-
-
-                    </div>
+                      </div>
+                      
                     <div class="pagination justify-content-center d-flex">
                         <pagination-controls style="justify-content: right; display: flex;"
                             (pageChange)="currentPage = $event" previousLabel="Trang trước" nextLabel="Trang sau">

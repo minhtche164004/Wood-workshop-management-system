@@ -9,6 +9,7 @@ import com.example.demo.Entity.*;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
 
@@ -44,6 +45,9 @@ public interface JobService {
     Processproducterror AddProductError(int job_id,ProductErrorDTO productErrorDTO);
     List<ProductErrorAllDTO> getAllProductError();
     List<ProductErrorAllDTO> getAllProductErrorByJobId(int job_id);
+     List<ProductErrorAllDTO> MultiFilterErrorProduct(String search, Integer is_fixed);
+
+
     ProductErrorAllDTO getProductErrorDetailById(int query);
     ProductErrorAllDTO EditProductError(int error_id, ProductErrorDTO productErrorDTO);
    // boolean checkOderDoneOrNot(int order_id);

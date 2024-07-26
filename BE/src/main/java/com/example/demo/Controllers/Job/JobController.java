@@ -3,7 +3,9 @@ package com.example.demo.Controllers.Job;
 import com.example.demo.Config.RedisConfig;
 import com.example.demo.Dto.JobDTO.JobDTO;
 import com.example.demo.Dto.JobDTO.JobDoneDTO;
+import com.example.demo.Dto.OrderDTO.DateDTO;
 import com.example.demo.Dto.OrderDTO.JobProductDTO;
+import com.example.demo.Dto.OrderDTO.OderDTO;
 import com.example.demo.Dto.ProductDTO.ProductErrorAllDTO;
 import com.example.demo.Dto.ProductDTO.ProductErrorDTO;
 import com.example.demo.Entity.*;
@@ -75,6 +77,16 @@ public class JobController {
     public ApiResponse<?> checkErrorOfJobHaveFixDoneOrNot(@RequestParam("job_id") int job_id) {
         ApiResponse<Boolean> apiResponse = new ApiResponse<>();
         apiResponse.setResult(jobService.checkErrorOfJobHaveFixDoneOrNot(job_id));
+        return apiResponse;
+    }
+
+    @GetMapping ("/MultiFilterProductError")
+    public ApiResponse<?> MultiFilterOrder(
+            @RequestParam(required = false) String search,
+            @RequestParam(required = false) Integer is_fix
+    ) {
+        ApiResponse<List<ProductErrorAllDTO>> apiResponse = new ApiResponse<>(); // Chỉ định rõ kiểu List<OderDTO>
+        apiResponse.setResult(jobService.MultiFilterErrorProduct(search,is_fix));
         return apiResponse;
     }
 

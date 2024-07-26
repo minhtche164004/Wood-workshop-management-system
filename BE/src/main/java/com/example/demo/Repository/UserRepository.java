@@ -2,6 +2,7 @@ package com.example.demo.Repository;
 
 import com.example.demo.Dto.UserDTO.UserDTO;
 import com.example.demo.Dto.UserDTO.UserUpdateDTO;
+import com.example.demo.Entity.Products;
 import com.example.demo.Entity.User;
 import jakarta.transaction.Transactional;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -11,6 +12,7 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
 
@@ -95,6 +97,16 @@ public interface UserRepository extends JpaRepository<User,Integer> {
                  "INNER JOIN u.status s" +
                  " WHERE u.userId = :userId")
  Optional<UserUpdateDTO> findByIdTest1(@Param("userId") int userId);
+
+    @Query("SELECT u FROM User u  " +
+            " LEFT JOIN u.role r " +
+            " LEFT JOIN u.position p WHERE" +
+            "(u.userInfor.fullname LIKE %:search% OR :search IS NULL) " +
+            "AND (r.roleId = :roleId OR :roleId IS NULL) " +
+            "AND (p.position_id = :position_id OR :position_id IS NULL)")
+    List<User> MultiFilterUser(@Param("search") String search,
+                                        @Param("roleId") Integer roleId,
+                                        @Param("position_id") Integer position_id);
 
 
 //    @Query("SELECT new com.example.demo.Dto.TestDTO(u.username, ui.address) " +

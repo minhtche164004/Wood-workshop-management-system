@@ -116,9 +116,6 @@ public interface AdvancesalaryRepository extends JpaRepository<Advancesalary,Int
 
 
 
-    //tính tổng lương nhân viên phải trả theo tháng và năm
-    @Query("SELECT SUM(a.amount) FROM Advancesalary a WHERE MONTH(a.date) = :month AND YEAR(a.date) = :year")
-    BigDecimal findTotalSalaryByMonthAndYear(@Param("month") int month, @Param("year") int year);
 
     //đếm số lượng job theo tháng và năm
     @Query("SELECT COUNT(*) FROM Jobs j " +
@@ -192,6 +189,12 @@ public interface AdvancesalaryRepository extends JpaRepository<Advancesalary,Int
     //tính số lượng tiền nhập nguyên liệu theo tháng và năm
     @Query("SELECT SUM(s.quantity*s.unitPrice) FROM SubMaterials s WHERE MONTH(s.create_date) = :month AND YEAR(s.create_date) = :year")
     BigDecimal findTotalSubMaterialByMonthAndYear(@Param("month") int month, @Param("year") int year);
+
+
+
+    //tính tổng lương nhân viên phải trả theo tháng và năm
+    @Query("SELECT SUM(a.amount) FROM Advancesalary a WHERE MONTH(a.date) = :month AND YEAR(a.date) = :year")
+    BigDecimal findTotalSalaryByMonthAndYear(@Param("month") int month, @Param("year") int year);
 
 }
 

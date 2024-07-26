@@ -126,42 +126,34 @@
 
             <div class="products">
                 <div class="container">
-                    <div class="row">
-
-                        <div class="col-lg-4 col-md-6 col-12 nopadding"
-                            *ngFor="let product of products | paginate: { itemsPerPage: 9, currentPage: currentPage }; let i = index">
-                            <div class="product">
-                                <a style="text-decoration: none;">
-                                    <img [routerLink]="['/product-details', product.productId]"
-                                    [src]="product.image" alt="" class="product-img">
-                               
-                                    <div class="product-info">
-                                        <p class="name-product text-center">{{ product.productName }}</p>
-                                        <p class="description"
-                                            style="text-decoration: none; color: black; text-align: center;">{{
-                                            product.description }}</p>
-                                        <div class="price-product text-center d-flex align-items-center">
-                                            <p class="price">{{ product.price | number: '1.0-3' }}
-                                                vnđ</p>
-
-                                            <p class="root-price" *ngIf="product.rootPrice">{{ product.rootPrice |
-                                                currency:'VND' }}</p>
-                                        </div>
-                                        <div class="buttons d-flex ">
-                                            <button (click)="addToWishlist(product.productId)" class="addCart">
-                                                Thêm vào danh sách yêu thích <i class="fa-solid fa-heart"></i>
-                                            </button>
-                                        </div>
-                                    </div>
-                                </a>
-
+                  <div class="row">
+                    <div class="col-lg-4 col-md-6 col-12 nopadding"
+                         *ngFor="let product of products | paginate: { itemsPerPage: 9, currentPage: currentPage }; let i = index">
+                      <div class="product">
+                        <a style="text-decoration: none;">
+                          <img [routerLink]="['/product-details', product.productId]"
+                               [src]="product.image" alt="" class="product-img" style="width: 400px; height: 370px;">
+                          <div class="product-info">
+                            <p class="name-product text-center">{{ product.productName }}</p>
+                            <p class="description" style="text-decoration: none; color: black; text-align: center;">
+                              Kiểu sản phẩm: {{ product.categories?.categoryName }}</p>
+                            <div class="price-product text-center d-flex align-items-center">
+                              <p class="price">{{ product.price | number: '1.0-3' }} vnđ</p>
+                              <p class="root-price" *ngIf="product.rootPrice">{{ product.rootPrice | currency:'VND' }}</p>
                             </div>
-                        </div>
-
+                            <div class="buttons d-flex ">
+                              <button (click)="addToWishlist(product.productId)" class="addCart">
+                                Thêm vào danh sách yêu thích <i class="fa-solid fa-heart"></i>
+                              </button>
+                            </div>
+                          </div>
+                        </a>
+                      </div>
                     </div>
+                  </div>
                 </div>
-
-            </div>
+              </div>
+              
             <div class="pagination justify-content-center d-flex">
                 <pagination-controls style="justify-content: right; display: flex;" (pageChange)="currentPage = $event"
                     previousLabel="Trang trước" nextLabel="Trang sau">

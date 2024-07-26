@@ -324,8 +324,8 @@ public class    OrderServiceImpl implements OrderService {
                 order_list= orderRepository.MultiFilterOrderSpecialOrder(search, status_id, paymentMethod, specialOrderValue, startDate, endDate);
             }
         } else {
-            // Không có tham số lọc nào, lấy tất cả đơn hàng
-            order_list= orderRepository.getAllOrder();
+            //filter theo tru ordertype
+            order_list= orderRepository.MultiFilterOrderWithoutOrderType(search, status_id, paymentMethod, startDate, endDate);
         }
 
         if (order_list.isEmpty()) {

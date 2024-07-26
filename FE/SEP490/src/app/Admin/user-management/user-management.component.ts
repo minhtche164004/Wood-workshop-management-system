@@ -69,6 +69,7 @@ interface Province {
   code: string;
   name: string;
   districts: District[];
+  wards: Ward[];
 }
 
 interface District {
@@ -91,8 +92,8 @@ export class UserManagementComponent implements OnInit {
   @ViewChild('confirmDeleteModal', { static: false }) confirmDeleteModal!: ElementRef<HTMLDivElement>;
 
 
-  selectedPositionFilter: any = null;
-  selectedRoleMulti: any = null;
+  selectedPositionFilter: string = '';
+  selectedRoleMulti: string = '';
   isLoadding: boolean = false;   //loading when click button
   isModalOpen = false;
   searchKey: string = '';
@@ -126,7 +127,7 @@ export class UserManagementComponent implements OnInit {
   isPositionEnabled: boolean = false;
   isPositionEnabled_Update: boolean = false;
   selectProvince: any = null;
-  selectProvinceUp = false;
+  selectProvince1 = false;
   selectDistricts: any = null;
   selectWards: any = null;
   selectedUser: any;
@@ -218,37 +219,37 @@ export class UserManagementComponent implements OnInit {
     });
     // khi load trang cai nay` no ghi de` vao` gia tri user nen bi loi~
 
+
+    this.onRoleChangeUpdate(); // gọi hàm này khi form vừa được khởi tạo
+    this.loadAllAcountByAdmin();
+    this.editchange();
+  }
+  editchange(): void {
     this.editUserForm.get('city_province')?.valueChanges.subscribe(provinceName => {
       const selectedProvince = this.provinces.find(province => province.name === provinceName);
       this.districts = selectedProvince ? selectedProvince.districts : [];
-      if (this.selectProvinceUp) {
-        // this.districts = !selectedProvince.districts;
-        this.editUserForm.get('district')?.reset();
-        this.editUserForm.get('wards')?.reset();
-      }
+      this.wards = [];
+      this.editUserForm.get('district')?.reset();
+      this.editUserForm.get('wards')?.reset();
     });
-
-
-
+  
     this.editUserForm.get('district')?.valueChanges.subscribe(districtName => {
       const selectedDistrict = this.districts.find(district => district.name === districtName);
       this.wards = selectedDistrict ? selectedDistrict.wards : [];
+      this.editUserForm.get('wards')?.reset();
     });
-
-
-    this.editUserForm.get('role_id')?.valueChanges.subscribe((roleId) => {
+  
+    this.editUserForm.get('role_id')?.valueChanges.subscribe(roleId => {
       this.selectedRole = roleId;
       this.onRoleChangeUpdate();
     });
-
-    this.editUserForm.get('position_id')?.valueChanges.subscribe((position_id) => {
-      this.selectedPosition_Update = position_id;
+  
+    this.editUserForm.get('position_id')?.valueChanges.subscribe(positionId => {
+      this.selectedPosition_Update = positionId;
       this.onRoleChangeUpdate();
     });
-    this.onRoleChangeUpdate(); // gọi hàm này khi form vừa được khởi tạo
-    this.loadAllAcountByAdmin();
   }
-
+  
   loadAllAcountByAdmin(): void {
     if (this.loginToken) {
 
@@ -394,7 +395,22 @@ export class UserManagementComponent implements OnInit {
         this.selectedPosition_Update = this.position.find(position => position.position_name === this.userData.position_name)?.position_id;
         this.selectedStatus = this.status.find(sa => sa.status_name === this.userData.status_name)?.status_id;
         this.selectBankName_update = this.userData.bank_name;
-
+        const selectedProvince = this.provinces.find(province => province.name === this.userData.city_province);
+        if (selectedProvince) {
+          this.districts = selectedProvince.districts;
+          const selectedDistrict = this.districts.find(district => district.name === this.userData.district);
+          this.wards = selectedDistrict ? selectedDistrict.wards : [];
+        } else {
+          this.districts = [];
+          this.wards = [];
+        }
+        this.editUserForm.patchValue({
+          city_province: this.userData.city_province,
+          district: this.userData.district,
+          wards: this.userData.wards,
+          // other form controls
+        });
+      
       },
       (error) => {
         console.error('Error fetching user data:', error);
@@ -703,29 +719,42 @@ export class UserManagementComponent implements OnInit {
 
     console.log(this.selectedCategory);
     this.isLoadding = true;
+    console.log(
+      "tìm kiem:", this.searchKey, "position:", this.selectedPositionFilter, "role:", this.selectedRoleMulti,
+
+    );
     this.authenListService.getFilterUser(
       this.searchKey,
-      this.selectedPositionFilter,
       this.selectedRoleMulti,
+      this.selectedPositionFilter,
+
     )
       .subscribe(
         (data) => {
 
+          if (data.code === 1000) {
             this.currentPage = 1;
             this.user = data.result;
             console.log(this.user);
             this.isLoadding = false;
 
-          
+          } else if (data.code === 1015) {
+            this.user = [];
+            this.isLoadding = false;
+            // this.toastr.warning(data.message);
+          }
+
+
+
         },
         (error: HttpErrorResponse) => {
           this.isLoadding = false;
-          this.toastr.error('Có lỗi xảy ra, vui lòng thử lại sau');
+          // this.toastr.error('Có lỗi xảy ra, vui lòng thử lại sau');
 
 
         }
       );
-   
+
   }
   openModal() {
     this.isModalOpen = true;

@@ -1,4 +1,4 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder } from '@angular/forms';
 import { Router } from '@angular/router';
@@ -18,7 +18,8 @@ export class ListJobDoneEmployeeComponent implements OnInit {
   job_employee: any[] = [];
   loginToken: string | null = null;
   currentPage: number = 1;
-  isLoadding: boolean = false; 
+  isLoadding: boolean = false;
+  searchKey: string = '';
   constructor(
 
     private authenListService: AuthenListService,
@@ -31,7 +32,7 @@ export class ListJobDoneEmployeeComponent implements OnInit {
 
     this.loginToken = localStorage.getItem('loginToken');
     this.loadAllJobByEmployeID();
- 
+
 
   }
   loadAllJobByEmployeID() {
@@ -60,5 +61,40 @@ export class ListJobDoneEmployeeComponent implements OnInit {
       this.isLoadding = false;
 
     }
+  }
+  searchKey1(): void {
+    console.log(this.searchKey);
+    this.isLoadding = true;
+    this.authenListService.getFilterJobEmployeeByID(
+      this.searchKey,
+
+
+    )
+      .subscribe(
+        (data) => {
+
+          if (data.code === 1000) {
+            this.currentPage = 1;
+            this.job_employee = data.result;
+            console.log(this.job_employee);
+            this.isLoadding = false;
+
+          } else if (data.code === 1015) {
+            this.job_employee = [];
+            this.isLoadding = false;
+            // this.toastr.warning(data.message);
+          }
+          // this.loadAllJobByEmployeID();
+
+        },
+        (error: HttpErrorResponse) => {
+          this.loadAllJobByEmployeID();
+          this.isLoadding = false;
+          // this.toastr.error('Có lỗi xảy ra, vui lòng thử lại sau');
+
+
+        }
+      );
+
   }
 }

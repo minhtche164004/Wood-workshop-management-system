@@ -20,17 +20,24 @@
           </div>
 
           <div class="row">
-            <div class="col-md-7"></div> <!-- Dummy column to push the search box to the right -->
-            <div class="col-md-5 text-end">
+            <div class="col-md-1"></div> <!-- Dummy column to push the search box to the right -->
+            <div class="col-md-11 text-end">
               <div class="input-group mb-3">
-                <!-- product.component.html -->
-                <!-- <select [ngModel]="selectedCategory">
-                    <option value="null" disabled selected>Phân quyền</option>
-                    <option *ngFor="let ps of position" [value]="ps.position_id">{{ ps.position_name }}</option>
-                  </select> -->
+                <label>Từ: </label>
+                <input [(ngModel)]="selectedSDate" style="margin-left: 10px;" type="date" class="form-control"
+                  placeholder="Đến: dd/mm/yyyy">
 
-                <input type="text" class="form-control" placeholder="Mã công việc">
-                <button class="btn search-button" type="button">
+                <label>Đến: </label>
+                <input [(ngModel)]="selectedEDate" style="margin-left: 10px;" type="date" class="form-control"
+                  placeholder="Đến: dd/mm/yyyy">
+
+                  <select [(ngModel)]="selectPayment">
+                    <option value="-1" selected>Tất cả phương thức thanh toán</option>
+                    <option [ngValue]="1">Đã thanh toán</option>
+                    <option [ngValue]="0">Chưa thanh toán</option>
+                  </select>
+                <input type="text" class="form-control" placeholder="Mã lương"  [(ngModel)]="searchKey">
+                <button class="btn search-button" type="button" (click)="MultifilterSalaryEmployee()">
                   <i class="fa fa-search"></i>
                 </button>
 
@@ -45,7 +52,7 @@
               <thead>
                 <tr>
                   <th>STT</th>
-                  <th>Mã công việc</th>
+                  <th>Mã lương</th>
                   <!-- <th>Thao tác</th> -->
                   <th>Ngày hoàn thành</th>
                   <th>Vị trí công việc</th>
@@ -103,7 +110,23 @@
               salary_employee.length }}</b> dữ liệu</div>
         </div>
 
+        <div class="clearfix" style="justify-content: right; display: flex;" *ngIf="salary_employee && salary_employee.length > 0">
+          <div class="hint-text">Hiển thị <b>{{ (currentPage - 1) * 10 + 1 }}</b> tới <b>{{ currentPage * 10 >
+              salary_employee.length ? salary_employee.length : currentPage * 10 }}</b> trong tổng <b>{{
+              salary_employee.length }}</b> dữ liệu</div>
+        </div>
 
+        <div *ngIf="!salary_employee || salary_employee.length === 0">
+
+          <div style="background-color: white;">
+            <div class="" style="display: flex; justify-content: center; align-items: center; height: 100%;">
+              <img
+                src="https://encrypted-tbn2.gstatic.com/images?q=tbn:ANd9GcSG53pYn6cpXaiwT_q6IM45P-rXg5dUw67XqRmr9-vtsbMoHnCG"
+                alt="" class="product-img" style="width: 150px; height: 150px; object-fit: cover;">
+              <p class="name-product text-center">Không tìm thấy thông tin việc làm!</p>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   </div>

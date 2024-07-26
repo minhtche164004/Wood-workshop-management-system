@@ -99,7 +99,8 @@
                   </a>
 
                   <a href="#" data-toggle="modal" data-target="#confirmDeleteModal"
-                    (click)="setOrderForCancellation(us?.orderId, us?.specialOrder)" *ngIf="us?.status_id === 7">
+                    (click)="setOrderForCancellation(us?.orderId, us?.specialOrder)" *ngIf="us?.status_id === 7 
+                    || us?.status_id === 1|| us?.status_id === 8">
                     <i class="fa-solid fa-times-circle"></i>
                   </a>
                 </td>

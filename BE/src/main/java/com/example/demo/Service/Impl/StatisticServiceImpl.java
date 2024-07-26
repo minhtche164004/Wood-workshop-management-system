@@ -47,7 +47,7 @@ public class StatisticServiceImpl implements StatisticService {
         BigDecimal editQuantity = inputSubMaterialRepository.findTotalEditQuantitySubMaterialByMonthAndYear(month, year);
         BigDecimal editQuantityPrice = inputSubMaterialRepository.findTotalEditQuantityAndPriceSubMaterialByMonthAndYear(month, year);
 
-        // Ensure all values are non-null before calculating
+
         input = (input != null) ? input : BigDecimal.ZERO;
         editQuantity = (editQuantity != null) ? editQuantity : BigDecimal.ZERO;
         editQuantityPrice = (editQuantityPrice != null) ? editQuantityPrice : BigDecimal.ZERO;

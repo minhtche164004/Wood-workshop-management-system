@@ -191,8 +191,6 @@ public class JobServiceImpl implements JobService {
         //tạo mới job_log, lúc sửa status chứ ko phải lúc phân việc , sau khi đã sauwr status thành đã nghiệm thu của mộc, sơn , nhám
         //sau khi nghiem thu xong thi tra ve trang thai chờ cong viec tiep theo
         Jobs jobs_log = new Jobs();
-
-
         Jobs jobs_history = jobRepository.getJobById(job_id);
         jobs_log.setUser(jobs_history.getUser());
         jobs_log.setProduct(jobs_history.getProduct());
@@ -236,6 +234,26 @@ public class JobServiceImpl implements JobService {
 
             jobs_log.setStatus(statusJobRepository.findById(13));
             jobs_log.setJob_log(true);
+
+            //thêm lương cho thằng thợ sơn
+            //nếu công việc hoàn thành thì set lương cho nhân viên luôn --------------------------------------
+            Advancesalary advancesalary = new Advancesalary();
+            LocalDate today = LocalDate.now();
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("ddMMyy");
+            String dateString = today.format(formatter);
+            Advancesalary lastadvan = advancesalaryRepository.findAdvancesalaryTop(dateString + "AD");
+            int count = lastadvan != null ? Integer.parseInt(lastadvan.getCode().substring(8)) + 1 : 1;
+            String code = dateString + "AD" + String.format("%03d", count);
+            advancesalary.setDate(Date.from(today.atStartOfDay(ZoneId.systemDefault()).toInstant()));
+
+            //  advancesalary.setDate(Date.valueOf(today));
+            advancesalary.setAmount(jobs_history.getCost());
+//            advancesalary.setApprove(null);
+            advancesalary.setAdvanceSuccess(false);
+            advancesalary.setCode(code);
+            advancesalary.setUser(jobs_history.getUser());
+            advancesalaryRepository.save(advancesalary);
+
 
 
             //khi da nghiem thu o cong doan cuoi la son thi` se chuyen status sang trang thai da hoan` thanh

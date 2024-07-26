@@ -31,7 +31,7 @@ export class JobManagementComponent implements OnInit {
   products: any[] = [];
   errorForm: FormGroup;
   editJob: FormGroup;
-  keyword = 'product_name';
+  keyword = 'productName';
   createJobs: FormGroup;
   productRQs: any[] = [];
   currentPage: number = 1;
@@ -445,7 +445,8 @@ cancelChangeStatusJob() {
       return;
     }
      console.log('Selected product for job:', this.selectedProduct.product_id);
-    this.jobService.addProductForJob(this.selectedProduct.product_id, quantity).subscribe(
+     this.selectedProduct = '';
+    this.jobService.addProductForJob(this.productIdCoSan, quantity).subscribe(
 
       (data) => {
 
@@ -477,7 +478,9 @@ cancelChangeStatusJob() {
     this.empId = event.target.value;
     this.getPositionNameById(this.empId);
   }
-
+  huyTaoSanPhamCoSan():void{
+    this.createJobs.reset();
+  }
   onChangeSearch(search: string) {
     this.searchKey = search;
   }
@@ -485,10 +488,13 @@ cancelChangeStatusJob() {
   sanitize(name: string): SafeHtml {
     return this.sanitizer.bypassSecurityTrustHtml(name);
   }
-
+  productIdCoSan: number = 0;
   selectProduct(product: any): void {
     this.selectedProduct = product; // Điều chỉnh theo cấu trúc đối tượng sản phẩm của bạn
-    console.log('Tên sản phẩm được chọn:', product);
+    console.log('Sản phẩm được chọn:', this.selectedProduct.productId);
+    this.productIdCoSan = this.selectedProduct.productId;
+    this.selectedProduct = '';
+    console.log('selcetd sau khi truyền: ', this.selectedProduct);
     // console.log('Id sản phẩm được chọn:', product.productId);
   }
 
@@ -642,7 +648,7 @@ cancelChangeStatusJob() {
         this.isLoadding = false;
         if (data.code === 1000) {
           this.productAutoSearch = data.result;
-        //   console.log('Danh sách sản phẩm:', this.productAutoSearch);
+           console.log('Danh sách sản phẩm auto complete:', this.productAutoSearch);
         } else {
           console.error('Failed to fetch products:', data);
           this.toastr.error('Không thể lấy danh sách sản phẩm!', 'Lỗi');

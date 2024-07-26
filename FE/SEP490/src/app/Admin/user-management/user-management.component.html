@@ -55,30 +55,32 @@
                 </tr>
               </thead>
               <tbody>
-                <tr *ngFor="let us of user | paginate: { itemsPerPage: 10, currentPage: currentPage }; let i = index">
-                  <td>{{ i + 1 + (currentPage - 1) * 10 }}</td>
-                  <td>{{ us.role_name }}</td>
+                <tr *ngFor="let us of user | paginate: { itemsPerPage: 10, currentPage: currentPage }; let i = index ">
+                  <ng-container *ngIf="us.position_id !== 4">
+                    <td>{{ i + 1 + (currentPage - 1) * 10 }}</td>
+                    <td>{{ us.role_name }}</td>
 
-                  <td class="action-buttons">
-                    <a href="#" class="settings" title="Chỉnh sửa" data-toggle="modal" data-target="#editAccountModal"
-                      (click)="getUserData(us.userId)">
-                      <i class="fa-solid fa-pen-to-square"></i>
-                    </a>
-                    <!-- <a href="#" class="delete" title="Delete" data-toggle="modal" data-target="#confirmDeleteModal"(click)="openModal()">
+                    <td class="action-buttons">
+                      <a href="#" class="settings" title="Chỉnh sửa" data-toggle="modal" data-target="#editAccountModal"
+                        (click)="getUserData(us.userId)">
+                        <i class="fa-solid fa-pen-to-square"></i>
+                      </a>
+                      <!-- <a href="#" class="delete" title="Delete" data-toggle="modal" data-target="#confirmDeleteModal"(click)="openModal()">
                       
                       <i class="fa-regular fa-trash-can"></i>
                     </a>
                     <a href="#" class="info" title="Info" data-toggle="modal" data-target="#productDetailModal">
                       <i class="fa-solid fa-ellipsis-vertical"></i>
                     </a> -->
-                  </td>
+                    </td>
 
-                  <td>{{ us.username }}</td>
-                  <td>{{ us.address }}</td>
-                  <td style="min-width: 150px;">{{ us.position_name }}</td>
-                  <td>{{ us.fullname }}</td>
-                  <td style="min-width: 150px;">{{ us.email }}</td>
-                  <td style="min-width: 150px;">{{ us.phoneNumber }}</td>
+                    <td>{{ us.username }}</td>
+                    <td>{{ us.address }}</td>
+                    <td style="min-width: 150px;">{{ us.position_name }}</td>
+                    <td>{{ us.fullname }}</td>
+                    <td style="min-width: 150px;">{{ us.email }}</td>
+                    <td style="min-width: 150px;">{{ us.phoneNumber }}</td>
+                  </ng-container>
                 </tr>
               </tbody>
             </table>
@@ -163,7 +165,7 @@
               <select [(ngModel)]="selectedRoleAdd" formControlName="role" class="form-control form-control-lg"
                 id="role" (change)="onRoleChange()">
                 <option [ngValue]="null" disabled selected>Chọn Vai Trò</option>
-                <option *ngFor="let rol of role" [ngValue]="rol.roleId"  [hidden]="rol.roleId == 5">
+                <option *ngFor="let rol of role" [ngValue]="rol.roleId" [hidden]="rol.roleId == 5">
                   {{ rol.roleName }}
                 </option>
               </select>
@@ -231,7 +233,7 @@
           <div class="row">
             <div class="col-md-4 mb-5">
               <div class="form-group">
-                <select [ngModel]="selectProvince" formControlName="city" class="form-control">
+                <select [ngModel]="selectProvinceUp" formControlName="city" class="form-control">
                   <option [ngValue]="null" disabled selected>Tỉnh /Thành Phố</option>
                   <option *ngFor="let province of provinces" [ngValue]="province.name">
                     {{ province.name }}
@@ -328,7 +330,7 @@
                 <select (change)="onRoleChangeUpdate()" [(ngModel)]="selectedRole" formControlName="role_id"
                   class="form-control form-control-lg">
                   <option [ngValue]="null" disabled selected>Chọn Vai Trò</option>
-                  <option *ngFor="let rol of role" [ngValue]="rol.roleId"  [hidden]="rol.roleId == 5">
+                  <option *ngFor="let rol of role" [ngValue]="rol.roleId" [hidden]="rol.roleId == 5">
                     {{ rol.roleName }}
                   </option>
                 </select>

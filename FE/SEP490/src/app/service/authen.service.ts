@@ -504,7 +504,7 @@ export class AuthenListService {
       catchError(this.handleError)
     );
   }
-  getFilterStatus(search: string, statusId: string, specialOrder: string, startDate: string, endDate: string): Observable<any> {
+  getFilterStatus(search: string, statusId: string, specialOrder: number, startDate: string, endDate: string): Observable<any> {
 
     const params = {
       search: search,
@@ -522,7 +522,7 @@ export class AuthenListService {
       .filter(([key, value]) => {
         if (key === 'search' && value === '') return false;
         if (key === 'statusId' && value === "0") return false;
-        if (key === 'specialOrder' && value === null) return false;
+        if (key === 'specialOrder' && value === -1) return false;
 
         return value != null && value !== '';
       })
@@ -531,6 +531,7 @@ export class AuthenListService {
 
     const url = `${this.apiUrl_getFilterStatus}?${queryString}`;
     console.log(url);
+    
     return this.http.post<any>(url, body).pipe(
       catchError(this.handleError)
     );

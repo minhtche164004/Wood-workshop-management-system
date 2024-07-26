@@ -39,9 +39,9 @@
 
                 </select>
                 <select [(ngModel)]="selectProduduct">
-                  <option value="" selected>Tất cả loại đơn hàng</option>
-                  <option [ngValue]="true">Đơn hàng có sẵn</option>
-                  <option [ngValue]="false">Đơn hàng đặc biệt</option>
+                  <option value="-1" selected>Tất cả loại đơn hàng</option>
+                  <option [ngValue]="0">Đơn hàng có sẵn</option>
+                  <option [ngValue]="1">Đơn hàng đặc biệt</option>
                 </select>
 
                 <input type="text" class="form-control" placeholder="Tìm kiếm mã đơn hàng..." [(ngModel)]="searchKey">

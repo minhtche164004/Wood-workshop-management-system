@@ -1,6 +1,6 @@
 
 
-import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { ProvincesService } from 'src/app/service/provinces.service';
 import { ProductListService } from 'src/app/service/product/product-list.service';
 import { FormControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
@@ -90,11 +90,7 @@ export class UserManagementComponent implements OnInit {
   @ViewChild('closeButton', { static: false }) closeButton!: ElementRef<any>;
   @ViewChild('confirmDeleteModal', { static: false }) confirmDeleteModal!: ElementRef<HTMLDivElement>;
 
-  ngAfterViewInit() {
-    if (this.closeButton) {
-      this.closeButton.nativeElement.click();
-    }
-  }
+
   selectedRoleFilter: any = null;
   isLoadding: boolean = false;   //loading when click button
   isModalOpen = false;
@@ -129,6 +125,7 @@ export class UserManagementComponent implements OnInit {
   isPositionEnabled: boolean = false;
   isPositionEnabled_Update: boolean = false;
   selectProvince: any = null;
+  selectProvinceUp = false;
   selectDistricts: any = null;
   selectWards: any = null;
   selectedUser: any;
@@ -136,6 +133,7 @@ export class UserManagementComponent implements OnInit {
   selectedProvince: any;
   selectedDistrict: any;
   constructor(private provincesService: ProvincesService,
+    private cd: ChangeDetectorRef,
     private productListService: ProductListService,
     private authenListService: AuthenListService,
     private fb: FormBuilder,
@@ -205,7 +203,7 @@ export class UserManagementComponent implements OnInit {
     this.loadStatus();
     this.loadAllBankName();
     this.isLoadding = true;
- 
+
     this.addAccountForm.get('city')?.valueChanges.subscribe(provinceName => {
       const selectedProvince = this.provinces.find(province => province.name === provinceName);
       this.districts = selectedProvince ? selectedProvince.districts : [];
@@ -218,21 +216,25 @@ export class UserManagementComponent implements OnInit {
       this.addAccountForm.get('wards')?.reset();
     });
     // khi load trang cai nay` no ghi de` vao` gia tri user nen bi loi~
+
     this.editUserForm.get('city_province')?.valueChanges.subscribe(provinceName => {
       const selectedProvince = this.provinces.find(province => province.name === provinceName);
       this.districts = selectedProvince ? selectedProvince.districts : [];
-      if (!selectedProvince || this.editUserForm.get('district')?.value) {
+      if (this.selectProvinceUp) {
+        // this.districts = !selectedProvince.districts;
         this.editUserForm.get('district')?.reset();
         this.editUserForm.get('wards')?.reset();
       }
     });
+
+
+
     this.editUserForm.get('district')?.valueChanges.subscribe(districtName => {
       const selectedDistrict = this.districts.find(district => district.name === districtName);
       this.wards = selectedDistrict ? selectedDistrict.wards : [];
-      if (!selectedDistrict || this.editUserForm.get('wards')?.value) {
-        this.editUserForm.get('wards')?.reset();
-      }
     });
+
+
     this.editUserForm.get('role_id')?.valueChanges.subscribe((roleId) => {
       this.selectedRole = roleId;
       this.onRoleChangeUpdate();
@@ -246,13 +248,14 @@ export class UserManagementComponent implements OnInit {
     this.loadAllAcountByAdmin();
   }
 
-  loadAllAcountByAdmin():void{
+  loadAllAcountByAdmin(): void {
     if (this.loginToken) {
 
       this.productListService.getAllUser().subscribe(
         (data: ApiResponse) => {
           if (data.code === 1000) {
             this.user = data.result;
+            this.cd.detectChanges();
             this.isLoadding = false;
           } else {
             console.error('Failed to fetch products:', data);
@@ -413,7 +416,7 @@ export class UserManagementComponent implements OnInit {
   onRoleChangeUpdate() {
     if (this.selectedRole === 4) {
       this.isPositionEnabled_Update = true;
-      
+
     } else {
       this.isPositionEnabled_Update = false;
       this.editUserForm.patchValue({
@@ -648,7 +651,7 @@ export class UserManagementComponent implements OnInit {
         this.toastr.success('Thêm tài khoản người dùng thành công.');
         this.loadAllAcountByAdmin();
         this.isLoadding = false;
-        
+
         this.addAccountForm.reset(); // Reset the form after successful addition
         $('[data-dismiss="modal"]').click();
       },
@@ -674,7 +677,7 @@ export class UserManagementComponent implements OnInit {
     }
     const editUserRequest: EditUserRequest = this.editUserForm.value;
     const userId = this.userData.userId; // Lấy userId từ userData
-    // console.log("Data: ", editUserRequest)
+    console.log("Data: ", editUserRequest)
     // console.log("Data: ", userId)
     this.authenListService.editUserById(userId, editUserRequest).subscribe(
       () => {
@@ -688,7 +691,7 @@ export class UserManagementComponent implements OnInit {
         this.isLoadding = false;
 
         if (error.error.code === 1035) {
-         
+
         }
 
       }
@@ -696,7 +699,7 @@ export class UserManagementComponent implements OnInit {
   }
 
   SearchUserByNameorAddress(): void {
-    
+
 
     if (this.searchKey.trim() !== "") {
       this.authenListService.findSearchUserByNameorAddress(this.searchKey)
@@ -704,10 +707,10 @@ export class UserManagementComponent implements OnInit {
           (data) => {
             if (data.code === 1000) {
               this.user = data.result;
-           
+
             } else if (data.code === 1015) {
               this.user = [];
-              
+
             }
           }
         );
@@ -734,7 +737,7 @@ export class UserManagementComponent implements OnInit {
   filterRole(): void {
     console.log(this.selectedRoleFilter);
     this.isLoadding = true;
-  
+
     if (this.selectedRoleFilter === 'null') {
       this.loadAllAcountByAdmin();
     } else {
@@ -743,12 +746,12 @@ export class UserManagementComponent implements OnInit {
           (data) => {
             if (data.code === 1000) {
               this.user = data.result;
-           
+
               this.isLoadding = false;
-           
+
             } else if (data.code === 1015) {
               this.user = [];
-           
+
               this.isLoadding = false;
 
             }

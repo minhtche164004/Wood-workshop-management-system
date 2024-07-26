@@ -33,7 +33,7 @@ export class OrderManagementComponent implements OnInit {
   selectedCategory: string = '';
   selectedSDate: string = '';
   selectedEDate: string = '';
-  selectProduduct: string = '';
+  selectProduduct: number = -1;
 
   OrderdetailById: any = {};
   isLoadding: boolean = false;
@@ -369,7 +369,7 @@ export class OrderManagementComponent implements OnInit {
         },
         (error: HttpErrorResponse) => {
 
-          this.toastr.error('Có lỗi xảy ra, vui lòng thử lại sau');
+          // this.toastr.error('Có lỗi xảy ra, vui lòng thử lại sau');
 
 
         }

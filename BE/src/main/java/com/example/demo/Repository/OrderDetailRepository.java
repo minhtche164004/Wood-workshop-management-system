@@ -68,10 +68,13 @@ public interface OrderDetailRepository extends JpaRepository<Orderdetails, Integ
             "od.unitPrice, " +
             "COALESCE(j.status.status_id, 0), " +
             "COALESCE(s.status_name, ''), " +
-            "od.quantity " +
+            "od.quantity," +
+            " COALESCE(u.email, '') " +
             ") " +
             "FROM Orderdetails od " +
             "LEFT JOIN od.product p " +
+            "LEFT JOIN od.order o " +
+            "LEFT JOIN o.userInfor.user u " +
             "LEFT JOIN od.requestProduct rp " +
             "LEFT JOIN od.jobs j " +
             "LEFT JOIN j.status s " +
@@ -91,10 +94,13 @@ public interface OrderDetailRepository extends JpaRepository<Orderdetails, Integ
             "od.unitPrice, " +
             "COALESCE(p.status.status_id , 0), " + // Giá trị mặc định cho status_id
             "COALESCE(p.status.status_name , ''), " + // Giá trị mặc định cho status_name
-            "od.quantity " +
+            "od.quantity ," +
+            " COALESCE(u.email, '') " +
             ") " +
             "FROM Orderdetails od " +
             "LEFT JOIN od.product p " +
+            "LEFT JOIN od.order o " +
+            "LEFT JOIN o.userInfor.user u " +
             "LEFT JOIN od.requestProduct rp " +
             "WHERE od.order.orderId = :query")
     List<OrderDetailWithJobStatusDTO> getAllOrderDetailOfProductByOrderId(int query);
@@ -109,11 +115,14 @@ public interface OrderDetailRepository extends JpaRepository<Orderdetails, Integ
             "od.unitPrice, " +
             "COALESCE(j.status.status_id, 0), " +
             "COALESCE(s.status_name, ''), " +
-            "od.quantity " +
+            "od.quantity ," +
+            " COALESCE(u.email, '') " +
             ") " +
             "FROM Orderdetails od " +
             "JOIN od.product p " + // Sử dụng INNER JOIN
             "JOIN od.requestProduct rp " +  // Sử dụng INNER JOIN
+            "LEFT JOIN od.order o " +
+            "LEFT JOIN o.userInfor.user u " +
             "JOIN od.jobs j " + // Sử dụng INNER JOIN
             "JOIN j.status s " +  // Sử dụng INNER JOIN
             "WHERE od.order.orderId = :query AND s.status_id = 13")

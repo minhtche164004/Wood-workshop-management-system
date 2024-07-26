@@ -490,12 +490,10 @@ cancelChangeStatusJob() {
   }
   productIdCoSan: number = 0;
   selectProduct(product: any): void {
-    this.selectedProduct = product; // Điều chỉnh theo cấu trúc đối tượng sản phẩm của bạn
+    this.selectedProduct = product; 
     console.log('Sản phẩm được chọn:', this.selectedProduct.productId);
     this.productIdCoSan = this.selectedProduct.productId;
-    this.selectedProduct = '';
-    console.log('selcetd sau khi truyền: ', this.selectedProduct);
-    // console.log('Id sản phẩm được chọn:', product.productId);
+    
   }
 
 

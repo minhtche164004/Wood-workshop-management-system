@@ -63,6 +63,7 @@ public class ProductController {
         String cacheKey = "all_products_customer";
         List<Products> products;
         String cachedData = jedis.get(cacheKey);
+      //  jedis.del(cacheKey);
         Gson gson = new GsonBuilder().setDateFormat("MMM dd, yyyy").create();
         if (cachedData != null) {
             Type type = new TypeToken<List<Products>>() {

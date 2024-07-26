@@ -33,8 +33,8 @@ public interface AdvancesalaryRepository extends JpaRepository<Advancesalary,Int
             " WHERE u.user.userId = :query AND" +
             " (u.code LIKE %:search% OR :search IS NULL) AND " +
             " (u.isAdvanceSuccess = :isAdvanceSuccess OR :isAdvanceSuccess IS NULL) AND " + // Sửa đổi tại đây
-            "(u.date > :startDate OR :startDate IS NULL) AND " +
-            "(u.date < :endDate OR :endDate IS NULL) ")
+            "(u.date >= :startDate OR :startDate IS NULL) AND " +
+            "(u.date <= :endDate OR :endDate IS NULL) ")
     List<Advancesalary> MultiFilterAdvansalaryByEmployeeId(int query,@Param("search") String search,@Param("isAdvanceSuccess") Boolean isAdvanceSuccess,
                                                @Param("startDate") Date startDate,
                                                @Param("endDate") Date endDate);
@@ -42,8 +42,8 @@ public interface AdvancesalaryRepository extends JpaRepository<Advancesalary,Int
     @Query("SELECT u FROM Advancesalary u " +
             " WHERE u.user.userId = :query AND " +
             " (u.code LIKE %:search% OR :search IS NULL) AND " +
-            "(u.date > :startDate OR :startDate IS NULL) AND " +
-            "(u.date < :endDate OR :endDate IS NULL) ")
+            "(u.date >= :startDate OR :startDate IS NULL) AND " +
+            "(u.date <= :endDate OR :endDate IS NULL) ")
     List<Advancesalary> MultiFilterAdvansalaryByEmployeeIdByDate(int query,@Param("search") String search,
                                                            @Param("startDate") Date startDate,
                                                            @Param("endDate") Date endDate);

@@ -57,7 +57,8 @@ export class AuthenListService {
 
   private api_getAllOrderDetailById = `${environment.apiUrl}api/auth/order/getAllOrderDetailByOrderId`;
   private apiUrl_Paymentmoney = `${environment.apiUrl}api/auth/order/ConfirmPayment`;
-
+  private apiUrl_SendMail = `${environment.apiUrl}api/auth/order/SendMailToNotifyCationAboutOrder`;
+  
   private apiUrl_NameATM = 'https://api.vietqr.io/v2/banks';
   constructor(private http: HttpClient) { }
   isLoggedIn(): boolean {
@@ -137,7 +138,14 @@ export class AuthenListService {
       catchError(this.handleError)
     );
   }
+  SendMail(orderId: number): Observable<string> {
+    const url = `${this.apiUrl_SendMail}?order_id=${orderId}`;
+    const headers = new HttpHeaders({ 'Content-Type': 'text/plain' });
 
+    return this.http.post<string>(url, { headers }).pipe(
+      catchError(this.handleError)
+    );
+  }
   getOrderDetailById(order_detail_id: string): Observable<any> {
     const url = `${this.apiUrl_GetOrderDeTailById}?id=${order_detail_id}`;
     return this.http.get<any>(url).pipe(

@@ -276,7 +276,9 @@ cancelChangeStatusJob() {
 
   selectedEmpCreateJob: any = {};
   createNewJob() {
+    if(this.selectedEmployee === '' ){
     
+    }
    // this.isLoadding = true;
     console.log('Selected Employee:', this.selectedEmployee);
     console.log('Selected Product:', this.selectedProduct);

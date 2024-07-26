@@ -2,6 +2,7 @@ package com.example.demo.Service;
 
 import com.example.demo.Dto.UserDTO.ChangePassDTO;
 import com.example.demo.Dto.UserDTO.*;
+import com.example.demo.Entity.Products;
 import com.example.demo.Entity.User;
 import com.example.demo.Jwt.JwtAuthenticationResponse;
 import com.example.demo.Jwt.RefreshTokenRequest;
@@ -9,6 +10,7 @@ import com.example.demo.Request.LoginRequest;
 
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 @Service
@@ -53,4 +55,8 @@ public interface UserService {
 
 
     List<UserDTO> FilterByPosition(int position_id);
+
+
+     List<User> MultiFilterUser(String search, Integer roleId, Integer position_id);
+
 }

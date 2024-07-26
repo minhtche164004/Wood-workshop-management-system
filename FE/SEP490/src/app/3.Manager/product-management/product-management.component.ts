@@ -886,7 +886,7 @@ export class ProductManagementComponent implements OnInit {
 
   onSubmit() {
 
-    if (parseFloat(this.editForm.get('price')?.value.replace(/,/g, '')) < this.uploadForm.get('quantity')?.value * this.totalUnitPrice) {
+    if (parseFloat(this.uploadForm.get('price')?.value.replace(/,/g, '')) < this.uploadForm.get('quantity')?.value * this.totalUnitPrice) {
       this.toastr.error('Giá sản phẩm phải lớn hơn giá vật liệu !', 'Lỗi');
       return;
     }

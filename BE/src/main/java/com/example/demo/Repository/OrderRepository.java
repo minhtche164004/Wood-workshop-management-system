@@ -37,13 +37,13 @@ public interface OrderRepository extends JpaRepository<Orders,Integer> {
             " WHERE ( o.code LIKE %:search% OR :search IS NULL) AND" +
             "(s.status_id = :status_id OR :status_id IS NULL) AND " +
             "(o.paymentMethod = :paymentMethod OR :paymentMethod IS NULL) AND " +
-       //     " (:specialOrder IS NULL OR o.specialOrder = :specialOrder) AND " + // Sửa đổi tại đây
+            //     " (:specialOrder IS NULL OR o.specialOrder = :specialOrder) AND " + // Sửa đổi tại đây
             "(o.orderDate > :startDate OR :startDate IS NULL) AND " +
             "(o.orderDate < :endDate OR :endDate IS NULL)")
     List<OderDTO> MultiFilterOrder(@Param("search") String search,
                                    @Param("status_id") Integer status_id,
                                    @Param("paymentMethod") Integer paymentMethod,
-                              //     @Param("specialOrder") Boolean specialOrder,
+                                   //     @Param("specialOrder") Boolean specialOrder,
                                    @Param("startDate") Date startDate,
                                    @Param("endDate") Date endDate);
 
@@ -58,11 +58,26 @@ public interface OrderRepository extends JpaRepository<Orders,Integer> {
             "(o.orderDate > :startDate OR :startDate IS NULL) AND " +
             "(o.orderDate < :endDate OR :endDate IS NULL)")
     List<OderDTO> MultiFilterOrderSpecialOrder(@Param("search") String search,
-                                   @Param("status_id") Integer status_id,
-                                   @Param("paymentMethod") Integer paymentMethod,
-                                   @Param("specialOrder") Boolean specialOrder,
-                                   @Param("startDate") Date startDate,
-                                   @Param("endDate") Date endDate);
+                                               @Param("status_id") Integer status_id,
+                                               @Param("paymentMethod") Integer paymentMethod,
+                                               @Param("specialOrder") Boolean specialOrder,
+                                               @Param("startDate") Date startDate,
+                                               @Param("endDate") Date endDate);
+
+    @Query("SELECT new com.example.demo.Dto.OrderDTO.OderDTO(" +
+            "COALESCE(o.code, ''), o.orderId, COALESCE(o.orderDate, '') , o.totalAmount, COALESCE(s.status_id, 0) , COALESCE(s.status_name, ''), COALESCE(o.paymentMethod, ''), COALESCE(o.deposite, 0) , COALESCE(o.specialOrder, false))" +
+            " FROM Orders o" +
+            " LEFT JOIN o.status s" +
+            " WHERE ( o.code LIKE %:search% OR :search IS NULL) AND" +
+            "(s.status_id = :status_id OR :status_id IS NULL) AND " +
+            "(o.paymentMethod = :paymentMethod OR :paymentMethod IS NULL) AND " +
+            "(o.orderDate > :startDate OR :startDate IS NULL) AND " +
+            "(o.orderDate < :endDate OR :endDate IS NULL)")
+    List<OderDTO> MultiFilterOrderWithoutOrderType(@Param("search") String search,
+                                               @Param("status_id") Integer status_id,
+                                               @Param("paymentMethod") Integer paymentMethod,
+                                               @Param("startDate") Date startDate,
+                                               @Param("endDate") Date endDate);
 
 
     @Query("SELECT new com.example.demo.Dto.OrderDTO.OderDTO(" +

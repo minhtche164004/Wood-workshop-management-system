@@ -585,6 +585,50 @@ public class JobServiceImpl implements JobService {
         System.out.println();
     }
 
+    @Override
+    public List<Advancesalary> MultiFilterOrderSpecialOrder(String search,Integer isAdvanceSuccess, Date startDate, Date endDate) {
+        UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        User user = userRepository.getUserByUsername(userDetails.getUsername());
+        List<Advancesalary> order_list = new ArrayList<>();
+
+        if (isAdvanceSuccess != null) {
+            if (isAdvanceSuccess == -1) {
+                // Không lọc theo specialOrder, chỉ lọc theo các tham số khác
+                order_list= advancesalaryRepository.MultiFilterAdvansalaryByEmployeeIdByDate(user.getUserId(),search,startDate,endDate);
+            } else {
+                // Lọc theo specialOrder (true hoặc false) và các tham số khác
+                boolean specialOrderValue = (isAdvanceSuccess == 1); // Chuyển đổi 1/0 thành true/false
+                order_list= advancesalaryRepository.MultiFilterAdvansalaryByEmployeeId(user.getUserId(),search,specialOrderValue,startDate,endDate);
+            }
+        } else {
+            // Không có tham số lọc nào, lấy tất cả đơn hàng
+            order_list= advancesalaryRepository.findByUserId(user.getUserId());
+        }
+
+        if (order_list.isEmpty()) {
+            throw new AppException(ErrorCode.NOT_FOUND);
+        }
+        return order_list;
+    }
+
+    @Override
+    public List<JobDoneDTO> MultiFilterJobDone(String search, Integer status_id, Integer position_id) {
+        List<JobDoneDTO> productList = new ArrayList<>();
+
+        if (search != null || status_id != null || position_id != null ) {
+            productList = jobRepository.MultiFilterJobDone(search, status_id, position_id);
+        } else {
+            productList = jobRepository.findAllJobForEmployeeDone();
+        }
+
+        if (productList.isEmpty()) {
+            throw new AppException(ErrorCode.NOT_FOUND);
+        }
+
+        return productList;
+    }
+
+
 }
 
 //note : co ne de status cua thang product luc add no la chua thuc hien

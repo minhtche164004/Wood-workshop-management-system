@@ -1,6 +1,7 @@
 package com.example.demo.Controllers.Salary;
 
 import com.example.demo.Dto.OrderDTO.DateDTO;
+import com.example.demo.Dto.OrderDTO.OderDTO;
 import com.example.demo.Entity.Advancesalary;
 import com.example.demo.Repository.MaterialRepository;
 import com.example.demo.Response.ApiResponse;
@@ -27,6 +28,17 @@ public class SalaryController {
     public ApiResponse<?> getAllSalary(){
         ApiResponse<List> apiResponse = new ApiResponse<>();
         apiResponse.setResult(jobService.getAllAdvancesalary());
+        return apiResponse;
+    }
+
+    @PostMapping ("/MultiFilterSalary")
+    public ApiResponse<?> MultiFilterSalary(
+            @RequestParam(required = false) String search,
+            @RequestParam(required = false) Integer isAdvanceSuccess,
+            @RequestBody(required = false) DateDTO dto
+    ) {
+        ApiResponse<List<Advancesalary>> apiResponse = new ApiResponse<>(); // Chỉ định rõ kiểu List<OderDTO>
+        apiResponse.setResult(jobService.MultiFilterOrderSpecialOrder(search,isAdvanceSuccess, dto.getStartDate(), dto.getEndDate()));
         return apiResponse;
     }
 

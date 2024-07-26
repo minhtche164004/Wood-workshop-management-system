@@ -187,7 +187,7 @@ public class OrderController {
             @RequestParam(required = false) String search,
             @RequestParam(required = false) Integer statusId,
             @RequestParam(required = false) Integer paymentMethod,
-            @RequestParam Integer specialOrder,
+            @RequestParam(required = false)Integer specialOrder,
             @RequestBody(required = false) DateDTO dto
     ) {
         ApiResponse<List<OderDTO>> apiResponse = new ApiResponse<>(); // Chỉ định rõ kiểu List<OderDTO>
@@ -250,10 +250,10 @@ public class OrderController {
     }
 
     @PostMapping ("/AddOrder")
-    public ApiResponse<?> AddOrder(@RequestBody RequestOrder requestOrder) {
-        ApiResponse<Orders> apiResponse = new ApiResponse<>();
-        apiResponse.setResult(orderService.AddOrder(requestOrder));
-        return apiResponse;
+    public ResponseEntity<ApiResponse<List<String>>> AddOrder(@RequestBody RequestOrder requestOrder) {
+//        ApiResponse<Orders> apiResponse = new ApiResponse<>();
+//        apiResponse.setResult(orderService.AddOrder(requestOrder));
+        return orderService.AddOrder(requestOrder);
     }
 
     @GetMapping("/filter-by-date")

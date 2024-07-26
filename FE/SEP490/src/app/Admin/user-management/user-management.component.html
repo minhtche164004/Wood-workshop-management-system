@@ -19,17 +19,23 @@
           </div>
 
           <div class="row">
-            <div class="col-md-7"></div> <!-- Dummy column to push the search box to the right -->
-            <div class="col-md-5 text-end">
+            <div class="col-md-3"></div> <!-- Dummy column to push the search box to the right -->
+            <div class="col-md-9 text-end">
               <div class="input-group mb-3">
                 <!-- product.component.html -->
 
-                <select [(ngModel)]="selectedRoleFilter" (change)="filterRole()">
-                  <option value="null" selected>Tất cả vị trí đảm nhận</option>
+                <select [(ngModel)]="selectedPositionFilter">
+                  <option value="null" selected>Tất cả vị trí </option>
                   <option *ngFor="let ps of position" [value]="ps.position_id">{{ ps.position_name }}</option>
                 </select>
+                <select [(ngModel)]="selectedRoleMulti">
+                  <option [ngValue]="null"  selected>Tất cả vai trò</option>
+                  <option *ngFor="let rol of role" [ngValue]="rol.roleId" [hidden]="rol.roleId == 5">
+                    {{ rol.roleName }}
+                  </option>
+                </select>
                 <input type="text" class="form-control" placeholder="Mã người dùng,Tên" [(ngModel)]="searchKey">
-                <button class="btn search-button" type="button" (click)="SearchUserByNameorAddress()">
+                <button class="btn search-button" type="button" (click)="MultifiterUser()">
                   <i class="fa fa-search"></i>
                 </button>
 
@@ -56,7 +62,7 @@
               </thead>
               <tbody>
                 <tr *ngFor="let us of user | paginate: { itemsPerPage: 10, currentPage: currentPage }; let i = index ">
-                  <ng-container *ngIf="us.position_id !== 4">
+             
                     <td>{{ i + 1 + (currentPage - 1) * 10 }}</td>
                     <td>{{ us.role_name }}</td>
 
@@ -80,7 +86,7 @@
                     <td>{{ us.fullname }}</td>
                     <td style="min-width: 150px;">{{ us.email }}</td>
                     <td style="min-width: 150px;">{{ us.phoneNumber }}</td>
-                  </ng-container>
+               
                 </tr>
               </tbody>
             </table>
@@ -233,7 +239,7 @@
           <div class="row">
             <div class="col-md-4 mb-5">
               <div class="form-group">
-                <select [ngModel]="selectProvinceUp" formControlName="city" class="form-control">
+                <select [ngModel]="selectProvince" formControlName="city" class="form-control">
                   <option [ngValue]="null" disabled selected>Tỉnh /Thành Phố</option>
                   <option *ngFor="let province of provinces" [ngValue]="province.name">
                     {{ province.name }}

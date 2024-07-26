@@ -58,7 +58,8 @@ export class AuthenListService {
   private api_getAllOrderDetailById = `${environment.apiUrl}api/auth/order/getAllOrderDetailByOrderId`;
   private apiUrl_Paymentmoney = `${environment.apiUrl}api/auth/order/ConfirmPayment`;
   private apiUrl_SendMail = `${environment.apiUrl}api/auth/order/SendMailToNotifyCationAboutOrder`;
-
+  private apiUrl_getFilterUser = `${environment.apiUrl}api/auth/admin/getMultiFillterUser`;
+  
   private apiUrl_NameATM = 'https://api.vietqr.io/v2/banks';
   constructor(private http: HttpClient) { }
   isLoggedIn(): boolean {
@@ -533,6 +534,35 @@ export class AuthenListService {
     console.log(url);
     
     return this.http.post<any>(url, body).pipe(
+      catchError(this.handleError)
+    );
+  }
+  getFilterUser(search: string, roleId: string, position_id: string): Observable<any> {
+
+    const params = {
+      search: search,
+      roleId: roleId,
+      position_id: position_id,
+      // startDate: startDate,
+      // endDate: endDate
+    };
+  
+    const queryString = Object.entries(params)
+      .filter(([key, value]) => {
+        if (key === 'search' && value === '') return false;
+        if (key === 'roleId' && value === "0") return false;
+        if (key === 'position_id' && value === "0") return false;
+   
+
+        return value != null && value !== '';
+      })
+      .map(([key, value]) => `${encodeURIComponent(key)}=${encodeURIComponent(value)}`)
+      .join('&');
+
+    const url = `${this.apiUrl_getFilterUser}?${queryString}`;
+    console.log(url);
+    
+    return this.http.get<any>(url).pipe(
       catchError(this.handleError)
     );
   }

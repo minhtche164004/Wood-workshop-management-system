@@ -4,7 +4,7 @@ import { ChangeDetectorRef, Component, ElementRef, OnInit, ViewChild } from '@an
 import { ProvincesService } from 'src/app/service/provinces.service';
 import { ProductListService } from 'src/app/service/product/product-list.service';
 import { FormControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { ToastrService } from 'ngx-toastr';
 import { environment } from 'src/app/environments/environment'; // Ensure this is the correct path
 import { Router } from '@angular/router';
@@ -91,7 +91,8 @@ export class UserManagementComponent implements OnInit {
   @ViewChild('confirmDeleteModal', { static: false }) confirmDeleteModal!: ElementRef<HTMLDivElement>;
 
 
-  selectedRoleFilter: any = null;
+  selectedPositionFilter: any = null;
+  selectedRoleMulti: any = null;
   isLoadding: boolean = false;   //loading when click button
   isModalOpen = false;
   searchKey: string = '';
@@ -698,26 +699,33 @@ export class UserManagementComponent implements OnInit {
     );
   }
 
-  SearchUserByNameorAddress(): void {
+  MultifiterUser(): void {
+
+    console.log(this.selectedCategory);
+    this.isLoadding = true;
+    this.authenListService.getFilterUser(
+      this.searchKey,
+      this.selectedPositionFilter,
+      this.selectedRoleMulti,
+    )
+      .subscribe(
+        (data) => {
+
+            this.currentPage = 1;
+            this.user = data.result;
+            console.log(this.user);
+            this.isLoadding = false;
+
+          
+        },
+        (error: HttpErrorResponse) => {
+          this.isLoadding = false;
+          this.toastr.error('Có lỗi xảy ra, vui lòng thử lại sau');
 
 
-    if (this.searchKey.trim() !== "") {
-      this.authenListService.findSearchUserByNameorAddress(this.searchKey)
-        .subscribe(
-          (data) => {
-            if (data.code === 1000) {
-              this.user = data.result;
-
-            } else if (data.code === 1015) {
-              this.user = [];
-
-            }
-          }
-        );
-    } else {
-
-      this.loadAllUsers();
-    }
+        }
+      );
+   
   }
   openModal() {
     this.isModalOpen = true;
@@ -734,29 +742,5 @@ export class UserManagementComponent implements OnInit {
     console.log('Deleting product...');
     this.closeModal();
   }
-  filterRole(): void {
-    console.log(this.selectedRoleFilter);
-    this.isLoadding = true;
 
-    if (this.selectedRoleFilter === 'null') {
-      this.loadAllAcountByAdmin();
-    } else {
-      this.authenListService.getFilterRole(this.selectedRoleFilter)
-        .subscribe(
-          (data) => {
-            if (data.code === 1000) {
-              this.user = data.result;
-
-              this.isLoadding = false;
-
-            } else if (data.code === 1015) {
-              this.user = [];
-
-              this.isLoadding = false;
-
-            }
-          }
-        );
-    }
-  }
 }

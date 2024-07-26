@@ -91,7 +91,7 @@ public interface OrderService {
 
     String ConfirmPayment(int order_id);
 
-    List<OderDTO> MultiFilterOrder(String search, Integer status_id, Integer paymentMethod, boolean specialOrder,Date startDate, Date endDate);
+    List<OderDTO> MultiFilterOrder(String search, Integer status_id, Integer paymentMethod, Integer specialOrder,Date startDate, Date endDate);
 
     String SendMailToNotifyCationAboutOrder(int order_id,String link) throws MessagingException, IOException;
 

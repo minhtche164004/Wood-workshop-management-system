@@ -2,6 +2,7 @@ package com.example.demo.Service.Impl;
 
 import com.example.demo.Entity.SubMaterials;
 import com.example.demo.Repository.AdvancesalaryRepository;
+import com.example.demo.Repository.InputSubMaterialRepository;
 import com.example.demo.Repository.SubMaterialsRepository;
 import com.example.demo.Service.StatisticService;
 import com.nimbusds.jwt.util.DateUtils;
@@ -19,11 +20,28 @@ public class StatisticServiceImpl implements StatisticService {
     private AdvancesalaryRepository advancesalaryRepository;
     @Autowired
     private SubMaterialsRepository subMaterialsRepository;
+    @Autowired
+    private InputSubMaterialRepository inputSubMaterialRepository;
 
     @Override
     public BigDecimal findTotalSalaryByMonthAndYear(int month, int year) {
-        return advancesalaryRepository.findTotalSalaryByMonthAndYear(month,year);
+        BigDecimal result =advancesalaryRepository.findTotalSalaryByMonthAndYear(month,year);
+        return result ;
     }
+
+    @Override
+    public BigDecimal findTotalInputSubMaterialByMonthAndYear(int month, int year) {
+        BigDecimal input = inputSubMaterialRepository.findTotalInputSubMaterialByMonthAndYear(month, year);
+        BigDecimal editQuantity = inputSubMaterialRepository.findTotalEditQuantitySubMaterialByMonthAndYear(month, year);
+        BigDecimal editQuantityPrice = inputSubMaterialRepository.findTotalEditQuantityAndPriceSubMaterialByMonthAndYear(month, year);
+        input = (input != null) ? input : BigDecimal.ZERO;
+        editQuantity = (editQuantity != null) ? editQuantity : BigDecimal.ZERO;
+        editQuantityPrice = (editQuantityPrice != null) ? editQuantityPrice : BigDecimal.ZERO;
+
+        BigDecimal total = input.add(editQuantity).add(editQuantityPrice);
+        return total;
+    }
+
     @Override
     public Long countCompletedJobsByMonthAndYear(int status_id, int month, int year) {
         return advancesalaryRepository.countCompletedJobsByMonthAndYear(status_id,month,year);
@@ -37,6 +55,10 @@ public class StatisticServiceImpl implements StatisticService {
     public Long countCompletedRequestProductOnOrderByMonthAndYear( int month, int year) {
         return advancesalaryRepository.countCompletedRequestProductOnOrderByMonthAndYear(month,year);
     }
+
+
+
+
     @Override
     public Integer countCompletedJobsForProductByMonthAndYear(int status_id, int month, int year) {
         return advancesalaryRepository.countCompletedJobsForProductByMonthAndYear(status_id,month,year);

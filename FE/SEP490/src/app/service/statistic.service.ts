@@ -7,6 +7,8 @@ import { environment } from 'src/app/environments/environment';
   providedIn: 'root'
 })
 export class StatisticService {
+
+
   private apiTotalAmountOrderHaveDone = `${environment.apiUrl}api/auth/statistic/totalAmountOrderHaveDone`
 
   private apiTotalAmountSubMaterial = `${environment.apiUrl}api/auth/statistic/totalAmountSubMaterial`
@@ -27,15 +29,31 @@ export class StatisticService {
 
   private apiCountProductByMonthYear = `${environment.apiUrl}api/auth/statistic`;
 
- 
-
   private apiCountTotalOrderByMonthAndYear = `${environment.apiUrl}api/auth/statistic/countTotalOrderByMonthAndYear`
 
   private apiCountTotalSpecOrderByMonthAndYear = `${environment.apiUrl}api/auth/statistic/countTotalSpecialOrderByMonthAndYear`
 
   private apiCheckJobError = `${environment.apiUrl}api/auth/job/checkErrorOfJobHaveFixDoneOrNot`
 
+  private apiFindTotalInputSubMaterialByMonthAndYear = `${environment.apiUrl}api/auth/statistic`
+
+  private apiFindTotalSalaryByMonthAndYear = `${environment.apiUrl}api/auth/statistic`
+
   constructor(private http: HttpClient) { }
+  statisticFindTotalSalaryByMonthAndYear(month: number, year: number): Observable<any> {
+    const params = new HttpParams()
+      .set('month', month.toString())
+      .set('year', year.toString());
+
+    return this.http.get<any>(`${this.apiFindTotalSalaryByMonthAndYear}/findTotalSalaryByMonthAndYear`, { params });
+  }
+  findTotalInputSubMaterialByMonthAndYear(month: number, year: number): Observable<any> {
+    const params = new HttpParams()
+      .set('month', month.toString())
+      .set('year', year.toString());
+
+    return this.http.get<any>(`${this.apiFindTotalInputSubMaterialByMonthAndYear}/findTotalInputSubMaterialByMonthAndYear`, { params });
+  }
   countCompletedRequestProductOnOrderByMonthAndYear(month: number, year: number): Observable<any> {
     const url = `${this.apiCountProductByMonthYear}/countCompletedRequestProductOnOrderByMonthAndYear`;
     const params = new HttpParams().set('month', month.toString()).set('year', year.toString());

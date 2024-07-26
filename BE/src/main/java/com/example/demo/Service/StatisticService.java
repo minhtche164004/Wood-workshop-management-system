@@ -25,6 +25,8 @@ public interface StatisticService {
     Long countTotalOrder();
     Long countCompletedProductOnOrderByMonthAndYear(int year, int month);
     Long countCompletedRequestProductOnOrderByMonthAndYear(int year, int month);
+    BigDecimal findTotalInputSubMaterialByMonthAndYear(int month, int year);
+
 
 
 

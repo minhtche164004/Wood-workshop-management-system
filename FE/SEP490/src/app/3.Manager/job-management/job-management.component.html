@@ -6,7 +6,7 @@
                 <div class="table-title">
                     <div class="row" style="height: 60px;">
                         <div class="col-sm-5">
-                            <h2>Quản lí Sản Xuất</h2>
+                            <h2>Quản lý Sản Xuất</h2>
                         </div>
                         <div class="col-sm-7 text-end" style="text-align: center;">
                             <!-- {{ selectedCategory }} -->
@@ -35,13 +35,13 @@
                                 </select>
                                 <select [(ngModel)]="selectedStatusJob"
                                     >
-                                    <option value="">Tất cả</option>
+                                    <option value="">Tất cả trạng thái</option>
                                     <option *ngFor="let st of statusSearch" [ngValue]="st.status_id">{{ st.status_name
                                         }}</option>
                                 </select>
                                 <select [(ngModel)]="selectedPosSearch"
                                     >
-                                    <option value="">Tất cả</option>
+                                    <option value="">Tất cả vị trí</option>
                                     <option *ngFor="let poss of positionsSearch" [ngValue]="poss.position_id">{{
                                         poss.position_name }}</option>
                                 </select>
@@ -80,6 +80,10 @@
                             <td>{{ i + 1 + (currentPage - 1) * 10 }}</td>
                             <!-- <td>{{ product?.code }}</td> -->
                             <td class="action-buttons">
+                                <a style="margin-right: 10px;" title="Chi tiết" data-toggle="modal"
+                                data-target="#detailJobModal" (click)="showJobDetail(product)">
+                                <i class="fa-solid fa-circle-info"></i>
+                            </a>
                                 <ng-container
                                     *ngIf="product.statusJob.status_id !== 6 && product.statusJob.status_id !== 9 && product.statusJob.status_id !== 12">
                                     <a href="#" class="settings" title="Chỉnh sửa" data-toggle="modal"
@@ -88,17 +92,14 @@
                                         <i class="fa-solid fa-pen-to-square"></i>
                                     </a>
                                 </ng-container>
-                                <a style="margin-left: 10px;" title="Chi tiết" data-toggle="modal"
-                                    data-target="#detailJobModal" (click)="showJobDetail(product)">
-                                    <i class="fa-solid fa-circle-info"></i>
-                                </a>
+                               
                             </td>
                             <td>
                                 <button style="margin-left: -10px; size: 15px;" data-toggle="modal"
                                     data-target="#assignJobModal" (click)="manageJob(product)" class="btn" 
                                     [class.btn-primary]="!isDisabled(product) && !listErrorJob.includes(product.job_id) "
-                                    [class.btn-secondary]="isDisabled(product) && !listErrorJob.includes(product.job_id)"
-                                    [class.btn-danger]="listErrorJob.includes(product.job_id) "
+                              
+                                    [class.btn-secondary]="listErrorJob.includes(product.job_id) || isDisabled(product) && !listErrorJob.includes(product.job_id) "
                                     [disabled]="listErrorJob.includes(product.job_id) || isDisabled(product)">
                                     Giao việc
                                 </button>
@@ -114,7 +115,7 @@
                                     <i class="fa-solid fa-triangle-exclamation"></i>
                                 </button>                         
                                 <button *ngIf="listErrorJob.includes(product.job_id)" class="btn btn-primary" data-toggle="modal"
-                                    data-target="#otherModal" (click)="editProduct(product.job_id)"
+                                    data-target="#otherModal" (click)="editProduct(product.job_id, product)"
                                     [class.btn-primary]="!isErrorDisabled(product) && !listErrorJob.includes(product.job_id)"
                                     [class.btn-secondary]="isErrorDisabled(product) && !listErrorJob.includes(product.job_id)"
                                     [class.btn-danger]="listErrorJob.includes(product.job_id)"
@@ -208,7 +209,7 @@
     <div class="modal-dialog modal-dialog-centered modal-lg">
         <div class="modal-content">
             <div class="modal-header">
-                <h2 class="modal-title" id="assignJobModalLabel">Chi tiết giao việc làm</h2>
+                <h2 class="modal-title" id="assignJobModalLabel">Giao việc làm</h2>
                 <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body p-4">
@@ -235,19 +236,15 @@
                                                 </div>
                                                 <div class="col-md-6">
 
-                                                    <select class="form-select" [(ngModel)]="selectedEmployee" name="selectedEmployee" (change)="onChangeSelectedEmployee($event)">
-                                                        <option [value]="null" disabled selected>Chọn nhân viên</option>
-                                                        <option [value]="''">Tất cả</option>
+                                                    <select #employeeSelect class="form-select" (change)="onChangeSelectedEmployee($event)">
+                                                        <option value="" selected disabled>Chọn 1 nhân viên</option>
                                                         <option *ngFor="let employee of positionEmployees" [value]="employee.userId">
-                                                          {{ employee.username }} : {{ employee.userId }} : {{employee.position?.position_name}}
+                                                          {{ employee.username }}
                                                         </option>
                                                       </select>
                                                       
-                                                      <!-- Optional: Display an error message if needed -->
-                                                      <div *ngIf="showError" class="alert alert-danger">
-                                                        Không thể chọn "Tất cả". Vui lòng chọn một nhân viên cụ thể.
-                                                      </div>
-                                                                                               
+                                                      
+                                                                                                                                      
                                                 </div>
                                             </div>
                                             <div class="row">
@@ -344,11 +341,9 @@
                         </div>
                     </div>
 
-                    <!-- Modal footer -->
-                    <div class="modal-footer">
-                        
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal"
-                            (click)="cancelAssign()">Hủy</button>
+                    <div class="modal-footer">                   
+                       <button type="button" class="btn btn-secondary" data-dismiss="modal"
+                            (onClick)="cancelAssign()">Hủy</button>
                             <button type="submit" class="btn btn-primary">Tạo việc</button>
                     </div>
                 </form>
@@ -499,7 +494,7 @@
                                 </table>
                                 <!-- Job description -->
                                 <div class="customer-info">
-                                    <h5>Mô tả chi tiết yêu cầu việc làm</h5>
+                                    <h5 style="color: black;">Mô tả chi tiết yêu cầu việc làm</h5>
                                     <textarea class="form-control" rows="6" readonly
                                         placeholder="Nhập mô tả chi tiết..."
                                         required>{{ selectedJob.description }}</textarea>
@@ -658,121 +653,6 @@
         </div>
     </div>
 </div>
-<!-- <div class="modal fade" #otherModal id="otherModal" tabindex="-1" role="dialog" aria-labelledby="otherModalLabel"
-    aria-hidden="true">
-    <div class="modal-dialog modal-lg" role="document">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h5 class="modal-title" id="otherModal">
-              <h2>Chi tiết lỗi sản xuất</h2>
-            </h5>
-            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-              <span aria-hidden="true">&times;</span>
-            </button>
-          </div>
-          <div class="modal-body">
-            <div class="form-group">
-              <div class="row">
-                <div class="col-md-6">
-                  <div class="col-md-6">
-                    <label style="font-size: 16px;" for="productName">Mã việc làm:</label>
-                  </div>
-                  <div class="col-md-6">
-    
-                    <h3>{{ jobErrors.code }}</h3>
-                  </div>
-    
-                </div>
-                <div class="col-md-6">
-                  <div class="col-md-6">
-                    <label style="font-size: 16px;" for="productName">Tên việc làm:</label>
-                  </div>
-                  <div class="col-md-6">
-                    <h3>{{ jobErrors?.job_name }}</h3>
-                  </div>
-                </div>
-                <div class="col-md-1">
-    
-                </div>
-                <div class="col-md-10">
-                  <hr style="justify-content: space-between;">
-                </div>
-    
-                <div class="col-md-6">
-                  <div class="col-md-6">
-                    <label style="font-size: 16px;" for="productName">Mã đơn hàng: </label>
-                  </div>
-                  <div class="col-md-6">
-                    <h3>{{jobErrors?.code_order}}</h3>
-                  </div>
-                </div>
-                <div class="col-md-6">
-                  <div class="col-md-6">
-                    <label style="font-size: 16px;" for="productName">Tên sản phẩm:</label>
-                  </div>
-                  <div class="col-md-6">
-                    <h3>{{ jobErrors?.product_name }} {{jobErrors?.request_product_name}}</h3>
-                  </div>
-                </div>
-                <div class="col-md-1">
-    
-                </div>
-                <div class="col-md-10">
-                  <hr style="justify-content: space-between;">
-                </div>
-                <div class="col-md-6">
-                  <div class="col-md-6">
-                    <label style="font-size: 16px;" for="productName">Tên nhân viên:</label>
-                  </div>
-                  <div class="col-md-6">
-                    <h3>{{ jobErrors?.employee_name}}</h3>
-                  </div>
-                </div>
-                <div class="col-md-6">
-                  <div class="col-md-6">
-                    <label style="font-size: 16px;" for="productName">Tình trạng lỗi:</label>
-                  </div>
-    
-                  <div class="col-md-6">
-    
-                    <h3 [ngStyle]="{'color': jobErrors?.isFixed? 'green' : 'red'}">
-                      {{ jobErrors?.isFixed ? 'Đã khắc phục' : 'Chưa khắc phục' }}
-                     
-                    </h3>
-                    
-                  </div>
-                </div>
-                <div class="col-md-1">
-    
-                </div>
-                <div class="col-md-10">
-                  <hr style="justify-content: space-between;">
-                </div>
-                <div>
-                  <label style="font-size: 16px;margin-top: 3%;" for="productName">Mô tả lỗi:</label>
-                  <textarea style="width: 100%; font-size: 16px; " readonly>
-                    {{ jobErrors?.des}}
-                  </textarea>
-                </div>
-                <div>
-                  <label style="font-size: 16px;margin-top: 3%;" for="productName">Giải pháp:</label>
-                  <textarea style="width: 100%; font-size: 16px; " readonly>
-                    {{ jobErrors?.solution}}
-                  </textarea>
-                </div>
-              </div>
-    
-    
-            </div>
-    
-          </div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
-    
-          </div>
-        </div>
-      </div>
-</div> -->
 
 <div class="modal fade" #otherModal id="otherModal" tabindex="-1" role="dialog" aria-labelledby="otherModalLabel"
   aria-hidden="true">

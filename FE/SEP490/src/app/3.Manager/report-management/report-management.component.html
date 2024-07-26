@@ -45,10 +45,10 @@
             <th>STT</th>
             <th>Mã việc làm</th>
             <th>Thao tác</th>
-            <th>Mô tả lỗi</th>
+            <th style="width: 25%; text-align: center;">Mô tả lỗi</th>
             <th>Tình trạng</th>
-            <th style="text-align: center;">Số sản phẩm lỗi</th>
-            <th>Giải pháp</th>
+            <th style="text-align: center; width: 10%;">Số sản phẩm lỗi</th>
+            <th style="width: 25%; text-align: center;">Giải pháp</th>
           </tr>
         </thead>
 
@@ -68,7 +68,7 @@
               </a>
               <a href="#" class="info" title="Chi tiết" data-toggle="modal" data-target="#productDetailModal"
                 (click)="showErrorDetails(product.id)">
-                <i class="fa-solid fa-ellipsis-vertical"></i>
+                <i class="fa-solid fa-circle-info"></i>
               </a>
             </td>
             <td>{{ product?.des }}</td>
@@ -79,7 +79,7 @@
               </ng-container>
               <ng-template #notFixed>Chưa khắc phục</ng-template>
             </td>
-            <td style="text-align: center;">{{ product?.quantity }}</td>
+            <td style="text-align: end;">{{ product?.quantity }}</td>
             <td>{{ product.solution }}</td>
           </tr>
         </tbody>

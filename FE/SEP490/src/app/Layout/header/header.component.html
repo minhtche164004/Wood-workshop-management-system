@@ -14,7 +14,7 @@
             </div>
             <div class="col-md-6">
                 <div class="header-contact">
-                    <ul class="d-flex justify-content-end" style="margin-right: 6%; margin-top: 1%;">
+                    <ul class="d-flex justify-content-end" style="margin-right: 6%; margin-top: 1%">
                         <li class="contact">
                             <a class="header_link" style="text-decoration: none;"
                                 href="https://www.google.com/maps/place/%C4%90%E1%BB%93+g%E1%BB%97+S%E1%BB%B9+Dung/@18.531967,105.655959,16z/data=!4m6!3m5!1s0x3139c9005e9aace9:0xb6e01106407b1be6!8m2!3d18.5319666!4d105.6559593!16s%2Fg%2F11vsh89tcc?hl=vi&entry=ttu"
@@ -41,17 +41,13 @@
                 </div>
             </div>
         </div>
-        
-        
     </div>
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
-        <div class="container-fluid">
-           
+        <div class="container-fluid">        
                 <a class="navbar-brand" href="index.html">
-                    <img src="assets/img/logomain-removebg-preview.png" class="logo img-fluid" alt="Logo" style="max-height: 100px; margin-top: -16%;">
+                    <img src="assets/img/logomain-removebg-preview.png" class="logo img-fluid" alt="Logo" style="margin-top: -16%;">
                 </a>
-           
-       
+             
             <button class="navbar-toggler justify-content-center " type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
                 aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
@@ -99,7 +95,7 @@
                         <ng-template #loggedInLinks>
                             <a routerLink="/profile">Thông tin cá nhân</a>
                             <a routerLink="/change_pass">Đổi mật khẩu</a>
-                            <a routerLink="/request_product">Danh sách theo yêu cầu</a>
+                            <!-- <a routerLink="/request_product">Danh sách theo yêu cầu</a> -->
                             <a routerLink="/history_order">Lịch sử đơn hàng</a>
                             <a (click)="onLogout()" style="cursor: pointer;">Đăng xuất</a>
                         </ng-template>
@@ -108,7 +104,7 @@
     
                 <li>
                     <a class="icon-buy" href="/wishlist">
-                        <i class="fa-solid fa-heart"></i>
+                        <i  class="fa-solid fa-heart"></i>
                         <div class="number-buy">{{ countwishlist }}</div>
                     </a>
                 </li>
@@ -144,3 +140,6 @@
                 </div>
             </div>
         </div>
+    </div>
+</div>
+        

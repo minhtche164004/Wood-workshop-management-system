@@ -1,4 +1,4 @@
-import { HttpClient, HttpErrorResponse } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
@@ -13,13 +13,19 @@ export class OrderRequestService {
   private urlGetProductbyID = `${environment.apiUrl}api/auth/order/getRequestProductById`
 
   private urlGetAllOrdeDetailByOrderId = `${environment.apiUrl}api/auth/order/getAllOrderDetailByOrderId`;
-  
+  private apiGetAllOrderDetailOfProductByOrderId = `${environment.apiUrl}api/auth/order/getAllOrderDetailOfProductByOrderId`
+ 
   constructor(private http: HttpClient) { }
 
   getAllRequestOrder(): Observable<any>{
     return this.http.get<any>(this.urlGetAllRequestOrder).pipe(
       catchError(this.handleError) 
     );
+  }
+  getAllOrderDetailOfProductByOrderId(orderId: string): Observable<any> {
+    const url = `${this.apiGetAllOrderDetailOfProductByOrderId}?orderId=${orderId}`;
+  
+    return this.http.get<any>(url);
   }
   getAllOrderDetailByOrderId(orderId: string): Observable<any> {
     const url = `${this.urlGetAllOrdeDetailByOrderId}?orderId=${orderId}`;

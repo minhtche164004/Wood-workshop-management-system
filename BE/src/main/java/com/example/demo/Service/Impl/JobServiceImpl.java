@@ -3,6 +3,7 @@ package com.example.demo.Service.Impl;
 import com.example.demo.Dto.JobDTO.JobDTO;
 import com.example.demo.Dto.JobDTO.JobDoneDTO;
 import com.example.demo.Dto.OrderDTO.JobProductDTO;
+import com.example.demo.Dto.OrderDTO.OderDTO;
 import com.example.demo.Dto.OrderDTO.OrderDetailWithJobStatusDTO;
 import com.example.demo.Dto.ProductDTO.ProductErrorAllDTO;
 import com.example.demo.Dto.ProductDTO.ProductErrorDTO;
@@ -21,7 +22,8 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
-import java.sql.Date;
+import java.time.ZoneId;
+import java.util.Date;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -159,6 +161,29 @@ public class JobServiceImpl implements JobService {
         return list;
     }
 
+    @Override
+    public List<ProductErrorAllDTO> MultiFilterErrorProduct(String search, Integer is_fixed) {
+        List<ProductErrorAllDTO> error_list = new ArrayList<>();
+
+        if (is_fixed != null) {
+            if (is_fixed == -1) {
+                // Không lọc theo is_fixed, chỉ lọc theo các tham số khác
+                error_list= jobRepository.MultiFilterErrorProduct(search);
+            } else {
+                // Lọc theo is_fixed (true hoặc false) và các tham số khác
+                boolean is_fixedValue = (is_fixed == 1); // Chuyển đổi 1/0 thành true/false
+                error_list= jobRepository.MultiFilterErrorProductWithBoolean(search, is_fixedValue);
+            }
+        } else {
+            // Không có tham số lọc nào, lấy tất cả đơn hàng
+            error_list= jobRepository.getAllProductError();
+        }
+
+        if (error_list.isEmpty()) {
+            throw new AppException(ErrorCode.NOT_FOUND);
+        }
+        return error_list;
+    }
 
 
     @Override
@@ -223,8 +248,9 @@ public class JobServiceImpl implements JobService {
             Advancesalary lastadvan = advancesalaryRepository.findAdvancesalaryTop(dateString + "AD");
             int count = lastadvan != null ? Integer.parseInt(lastadvan.getCode().substring(8)) + 1 : 1;
             String code = dateString + "AD" + String.format("%03d", count);
+            advancesalary.setDate(Date.from(today.atStartOfDay(ZoneId.systemDefault()).toInstant()));
 
-            advancesalary.setDate(Date.valueOf(today));
+            //  advancesalary.setDate(Date.valueOf(today));
             advancesalary.setAmount(jobs_history.getCost());
 //            advancesalary.setApprove(null);
             advancesalary.setAdvanceSuccess(false);
@@ -427,6 +453,7 @@ public class JobServiceImpl implements JobService {
         }
         return list;
     }
+
 
     @Override
     public List<Advancesalary> multi_filter_salary(Date fromDate, Date toDate, Integer isAdvanceSuccess, Integer position_id, String username, String sortDirection) {

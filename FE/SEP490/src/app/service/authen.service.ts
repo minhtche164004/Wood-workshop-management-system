@@ -57,7 +57,8 @@ export class AuthenListService {
 
   private api_getAllOrderDetailById = `${environment.apiUrl}api/auth/order/getAllOrderDetailByOrderId`;
   private apiUrl_Paymentmoney = `${environment.apiUrl}api/auth/order/ConfirmPayment`;
-
+  private apiUrl_SendMail = `${environment.apiUrl}api/auth/order/SendMailToNotifyCationAboutOrder`;
+  
   private apiUrl_NameATM = 'https://api.vietqr.io/v2/banks';
   constructor(private http: HttpClient) { }
   isLoggedIn(): boolean {
@@ -137,7 +138,14 @@ export class AuthenListService {
       catchError(this.handleError)
     );
   }
+  SendMail(orderId: number): Observable<string> {
+    const url = `${this.apiUrl_SendMail}?order_id=${orderId}`;
+    const headers = new HttpHeaders({ 'Content-Type': 'text/plain' });
 
+    return this.http.post<string>(url, { headers }).pipe(
+      catchError(this.handleError)
+    );
+  }
   getOrderDetailById(order_detail_id: string): Observable<any> {
     const url = `${this.apiUrl_GetOrderDeTailById}?id=${order_detail_id}`;
     return this.http.get<any>(url).pipe(
@@ -496,27 +504,31 @@ export class AuthenListService {
       catchError(this.handleError)
     );
   }
-  getFilterStatus(search: string, statusId: string): Observable<any> {
+  getFilterStatus(search: string, statusId: string, startDate: string, endDate: string): Observable<any> {
+    
     const params = {
       search: search,
-
       statusId: statusId,
-
+      // startDate: startDate,
+      // endDate: endDate
     };
+    const body = {
 
+      startDate: startDate,
+      endDate: endDate
+    };
     const queryString = Object.entries(params)
       .filter(([key, value]) => {
         if (key === 'search' && value === '') return false;
         if (key === 'statusId' && value === "0") return false;
-
-        return value != null;
+        return value != null && value !== '';
       })
       .map(([key, value]) => `${encodeURIComponent(key)}=${encodeURIComponent(value)}`)
       .join('&');
 
     const url = `${this.apiUrl_getFilterStatus}?${queryString}`;
     console.log(url);
-    return this.http.get<any>(url).pipe(
+    return this.http.post<any>(url,body).pipe(
       catchError(this.handleError)
     );
   }
@@ -543,12 +555,16 @@ export class AuthenListService {
     );
   }
 
-  getMultiFillterRHistoryImpact(search: string, sortDirection: string): Observable<any> {
+  getMultiFillterRHistoryImpact(search: string, sortDirection: string,startDate: string, endDate: string): Observable<any> {
     const params = {
       search: search,
       sortDirection: sortDirection,
     };
+    const body = {
 
+      startDate: startDate,
+      endDate: endDate
+    };
     const queryString = Object.entries(params)
       .filter(([key, value]) => {
         if (key === 'search' && value === '') return false;
@@ -561,7 +577,7 @@ export class AuthenListService {
 
     const url = `${this.apiUrl_getMultiFillterRHistoryImpact}?${queryString}`;
     console.log(url);
-    return this.http.get<any>(url).pipe(
+    return this.http.post<any>(url,body).pipe(
       catchError(this.handleError)
     );
   }

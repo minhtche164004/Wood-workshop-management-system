@@ -60,7 +60,7 @@ public class SubMaterialController {
         apiResponse.setResult(subMaterialService.getAll());
         return apiResponse;
     }
-    @GetMapping("/MultiFilterInputSubMaterial")
+    @PostMapping("/MultiFilterInputSubMaterial")
     public ApiResponse<?>  MultiFilterInputSubMaterial(
             @RequestParam(required = false) String search,
             @RequestParam(required = false) Integer materialId,
@@ -68,7 +68,8 @@ public class SubMaterialController {
             @RequestBody(required = false) DateDTO dto,
             @RequestParam(required = false) BigDecimal minPrice,
             @RequestParam(required = false) BigDecimal maxPrice,
-            @RequestParam(required = false) String sortDirection){
+            @RequestParam(required = false) String sortDirection
+    ){
         ApiResponse<List> apiResponse = new ApiResponse<>();
         apiResponse.setResult(subMaterialService.MultiFilterInputSubMaterial(search, materialId,action_type_id, dto.getStartDate(),dto.getEndDate(), minPrice, maxPrice, sortDirection));
         return apiResponse;

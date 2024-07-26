@@ -25,7 +25,7 @@
                 <!-- product.component.html -->
 
                 <select [(ngModel)]="selectedRoleFilter" (change)="filterRole()">
-                  <option value="null" selected>Tất cả vai trò</option>
+                  <option value="null" selected>Tất cả vị trí đảm nhận</option>
                   <option *ngFor="let ps of position" [value]="ps.position_id">{{ ps.position_name }}</option>
                 </select>
                 <input type="text" class="form-control" placeholder="Mã người dùng,Tên" [(ngModel)]="searchKey">
@@ -270,7 +270,7 @@
           </div>
         </div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-mau-do" data-dismiss="modal">Đóng</button>
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
           <button type="submit" class="btn btn-primary">Lưu Thay Đổi</button>
         </div>
       </div>
@@ -443,7 +443,7 @@
           </div>
         </div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-mau-do" data-dismiss="modal" #closeButton>Đóng</button>
+          <button type="button" class="btn btn-secondary" data-dismiss="modal" #closeButton>Đóng</button>
           <button type="submit" class="btn btn-primary">Lưu Thay Đổi</button>
         </div>
       </div>

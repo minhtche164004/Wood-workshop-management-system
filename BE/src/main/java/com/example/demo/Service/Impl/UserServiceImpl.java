@@ -127,8 +127,8 @@ public class UserServiceImpl implements UserService {
         Status_User status = statusRepository.findById(2);
         Position position = positionRepository.findById(userDTO.getPosition());
         UserInfor userInfor = new UserInfor(
-                userDTO.getFullname(),
                 userDTO.getPhoneNumber(),
+                userDTO.getFullname(),
                 userDTO.getAddress(),
                 userDTO.getBank_name(),
                 userDTO.getBank_number(),
@@ -473,7 +473,19 @@ userRepository.save(user);
                 .collect(Collectors.toList());
     }
 
-
+    @Override
+    public List<User> MultiFilterUser(String search, Integer roleId, Integer position_id) {
+      List<User> userList = new ArrayList<>();
+        if (search != null || roleId != null || position_id != null ) {
+            userList = userRepository.MultiFilterUser(search, roleId, position_id);
+        } else {
+            userList = userRepository.findAll();
+        }
+        if (userList.isEmpty()) {
+            throw new AppException(ErrorCode.NOT_FOUND);
+        }
+        return userList;
+    }
 }
 
 

@@ -12,6 +12,7 @@ import com.example.demo.Mail.EmailService;
 import com.example.demo.Mail.MailBody;
 import com.example.demo.Repository.*;
 import com.example.demo.Service.*;
+import jakarta.mail.MessagingException;
 import jakarta.persistence.EntityManager;
 import jakarta.transaction.Transactional;
 import org.apache.poi.util.IOUtils;
@@ -26,6 +27,8 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.math.BigDecimal;
+import java.math.RoundingMode;
+import java.nio.charset.StandardCharsets;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.ZoneId;
@@ -80,6 +83,10 @@ public class    OrderServiceImpl implements OrderService {
     private SubMaterialsRepository subMaterialsRepository;
     @Autowired
     private MultipartFileConverter multipartFileConverter;
+    @Autowired
+    private VNPayService vnPayService;
+
+
 
     @Override
     public Orders AddOrder(RequestOrder requestOrder) {
@@ -296,13 +303,21 @@ public class    OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public List<OderDTO> MultiFilterOrder(String search, Integer status_id, Integer paymentMethod, Date startDate, Date endDate) {
+    public List<OderDTO> MultiFilterOrder(String search, Integer status_id, Integer paymentMethod,Integer specialOrder,  Date startDate, Date endDate) {
         List<OderDTO> order_list = new ArrayList<>();
 
-        if (search != null || status_id != null || paymentMethod != null || startDate != null || endDate != null) {
-            order_list = orderRepository.MultiFilterOrder(search, status_id, paymentMethod, startDate, endDate);
+        if (specialOrder != null) {
+            if (specialOrder == -1) {
+                // Không lọc theo specialOrder, chỉ lọc theo các tham số khác
+                order_list= orderRepository.MultiFilterOrder(search, status_id, paymentMethod, startDate, endDate);
+            } else {
+                // Lọc theo specialOrder (true hoặc false) và các tham số khác
+                boolean specialOrderValue = (specialOrder == 1); // Chuyển đổi 1/0 thành true/false
+                order_list= orderRepository.MultiFilterOrderSpecialOrder(search, status_id, paymentMethod, specialOrderValue, startDate, endDate);
+            }
         } else {
-            order_list = orderRepository.getAllOrder();
+            // Không có tham số lọc nào, lấy tất cả đơn hàng
+            order_list= orderRepository.getAllOrder();
         }
 
         if (order_list.isEmpty()) {
@@ -310,6 +325,8 @@ public class    OrderServiceImpl implements OrderService {
         }
         return order_list;
     }
+
+
 
     //Tạo Request
     //Tạo Request Product
@@ -652,6 +669,16 @@ public class    OrderServiceImpl implements OrderService {
         return results;
     }
 
+    @Override
+    public List<OrderDetailWithJobStatusDTO> getAllOrderDetailOfProductByOrderId(int order_id) {
+        List<OrderDetailWithJobStatusDTO> results = orderDetailRepository.getAllOrderDetailOfProductByOrderId(order_id);
+        if(results.isEmpty()){
+            throw new AppException(ErrorCode.NOT_FOUND);
+        }
+        return results;
+    }
+
+
 
 
 
@@ -694,10 +721,17 @@ public class    OrderServiceImpl implements OrderService {
     @Transactional
     @Override
     public String ChangeStatusOrder(int orderId, int status_id) {
+        LocalDate today = LocalDate.now();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("ddMMyy");
+        String dateString = today.format(formatter);
+        Date requestDate = Date.from(today.atStartOfDay(ZoneId.systemDefault()).toInstant());
         Status_Order statusOrder =statusOrderRepository.findById(status_id);
         Orders orders = orderRepository.findById(orderId);
 
-
+        if(status_id == 5){
+            orders.setOrderFinish(requestDate);
+            orderRepository.save(orders);
+        }
         //send mail cho những đơn hàng đặt theo yêu cầu , vì đơn hàng mau có sẵn thì mua luôn rồi, trả tiền luôn r cần đéo gì nữa mà phải theo dõi tình trạng đơn hàng
         orderRepository.UpdateStatusOrder(orderId,status_id);
 
@@ -712,20 +746,37 @@ public class    OrderServiceImpl implements OrderService {
             String code = orders.getCode();
             SimpleDateFormat dateFormatter = new SimpleDateFormat("dd/MM/yyyy");
 //            String time_finish = dateFormatter.format(orders.getOrderFinish());
-            String time_finish = (orders.getOrderFinish() == null) ? "" : dateFormatter.format(orders.getOrderFinish());
+         //   String time_finish = (orders.getOrderFinish() == null) ? "" : dateFormatter.format(orders.getOrderFinish());
             String time_start = dateFormatter.format(orders.getOrderDate());
             String status_name=statusOrder.getStatus_name();
             MailBody mailBody = MailBody.builder()
                     .to(email)
                     .text("Đơn hàng có mã đơn hàng là : " + code + "\n" +
                             "Có trạng thái: " + status_name + "\n" +
-                            "Với thời gian tạo đơn là: " + time_start + "\n" +
-                            "Và thời gian dự kiến hoàn thành là: " + time_finish)
+                            "Với thời gian tạo đơn là: " + time_start + "\n"
+                           // "Và thời gian dự kiến hoàn thành là: " + time_finish
+                    )
                     .subject("[Thông tin tiến độ của đơn hàng]")
                     .build();
             emailService.sendSimpleMessage(mailBody);
         }
         return "Thay đổi trạng thái đơn hàng thành công";
+    }
+
+    @Override
+    public String SendMailToNotifyCationAboutOrder(int order_id,String linkBaseUrl) throws MessagingException, IOException {
+        List<OrderDetailWithJobStatusDTO> list  = orderDetailRepository.getAllOrderDetailByOrderId(order_id);
+        Orders orders = orderRepository.findById(order_id);
+      //  String baseUrl = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort() + "/api/auth";
+
+//        int total = orders.getTotalAmount().setScale(0, RoundingMode.HALF_UP).intValueExact();
+        int total = (int) orders.getDeposite().longValue(); // Ép kiểu từ long sang int
+       String linkVnPay = vnPayService.createOrder(total,orders.getCode(),linkBaseUrl);
+        String name = orders.getFullname();
+        String email =orders.getUserInfor().getUser().getEmail();
+      //  String link = "";
+        emailService.sendEmailFromTemplate(name,email,list,orders,linkVnPay);
+        return "Gửi thông tin đơn hàng thành công !";
     }
 
 

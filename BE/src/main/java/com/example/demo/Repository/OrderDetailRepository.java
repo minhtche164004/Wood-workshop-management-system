@@ -66,17 +66,39 @@ public interface OrderDetailRepository extends JpaRepository<Orderdetails, Integ
             "COALESCE(rp.requestProductId, 0), " +
             "COALESCE(rp.requestProductName, ''), " +
             "od.unitPrice, " +
-            "COALESCE(j.status.status_id, 0), " + // Sửa lại thành j.status.statusId
-            "COALESCE(s.status_name, ''), " +  // Sửa lại thành s.statusName
+            "COALESCE(j.status.status_id, 0), " +
+            "COALESCE(s.status_name, ''), " +
             "od.quantity " +
             ") " +
             "FROM Orderdetails od " +
             "LEFT JOIN od.product p " +
             "LEFT JOIN od.requestProduct rp " +
             "LEFT JOIN od.jobs j " +
-            "LEFT JOIN j.status s " + // Thêm LEFT JOIN với status_job
-            "WHERE od.order.orderId = :query")
+            "LEFT JOIN j.status s " +
+            "WHERE od.order.orderId = :query AND j.jobId = (" +
+            "SELECT MAX(j2.jobId) " +
+            "FROM Jobs j2 " +
+            "WHERE j2.requestProducts.requestProductId = rp.requestProductId " +
+            ")")
     List<OrderDetailWithJobStatusDTO> getAllOrderDetailByOrderId(int query);
+
+    @Query("SELECT new com.example.demo.Dto.OrderDTO.OrderDetailWithJobStatusDTO(" +
+            "od.orderDetailId, " +
+            "COALESCE(p.productId, 0), " +
+            "COALESCE(p.productName, ''), " +
+            "COALESCE(rp.requestProductId, 0), " +
+            "COALESCE(rp.requestProductName, ''), " +
+            "od.unitPrice, " +
+            "COALESCE(p.status.status_id , 0), " + // Giá trị mặc định cho status_id
+            "COALESCE(p.status.status_name , ''), " + // Giá trị mặc định cho status_name
+            "od.quantity " +
+            ") " +
+            "FROM Orderdetails od " +
+            "LEFT JOIN od.product p " +
+            "LEFT JOIN od.requestProduct rp " +
+            "WHERE od.order.orderId = :query")
+    List<OrderDetailWithJobStatusDTO> getAllOrderDetailOfProductByOrderId(int query);
+
 
     @Query("SELECT new com.example.demo.Dto.OrderDTO.OrderDetailWithJobStatusDTO(" +
             "od.orderDetailId, " +

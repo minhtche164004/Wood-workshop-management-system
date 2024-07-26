@@ -9,6 +9,7 @@ import { ProductListService } from 'src/app/service/product/product-list.service
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { OrderRequestService } from 'src/app/service/order-request.service';
 import { data } from 'jquery';
+import { formatDate } from '@angular/common';
 interface ApiResponse {
   code: number;
   result: any[];
@@ -30,6 +31,10 @@ export class OrderManagementComponent implements OnInit {
   position: any[] = [];
   status_order: any[] = [];
   selectedCategory: string = '';
+  selectedSDate: string = '';
+  selectedEDate: string = '';
+  selectProduduct: string = '';
+  
   OrderdetailById: any = {};
   isLoadding: boolean = false;
   selectedC: number | null = null;
@@ -39,7 +44,9 @@ export class OrderManagementComponent implements OnInit {
   cancelReason: string = '';
   constructor(private http: HttpClient, private productListService: ProductListService, private orderService: OrderService,
     private authenListService: AuthenListService, private toastr: ToastrService, private orderRequestService: OrderRequestService
-  ) { }
+  ) {
+
+  }
 
   ngOnInit(): void {
 
@@ -54,6 +61,10 @@ export class OrderManagementComponent implements OnInit {
   selectedModalId: string = '';
   indexStatus: number = 0;
   previousStatusId: string = '';
+
+
+
+
   cancelChangeStatusJob() {
     this.selectedModalId = '';
   }
@@ -179,15 +190,20 @@ export class OrderManagementComponent implements OnInit {
 
   }
   productOfOrder: any = [];
-
+  totalAmoutOrder: number = 0;
+  selectedOrderDetail: any = {};
   getOrDetailById(us: any, order_detail_id: string): void {
-    //  this.isLoadding = true;
-    //   console.log('Order_detail_id:', order_detail_id);
+    this.isLoadding = true;
+       console.log('Order_detail_id:', order_detail_id);
+    console.log("order detail: ", us)
+    console.log("order detail type: ", us.specialOrder)
+    this.totalAmoutOrder = us.totalAmount
+    this.selectedOrderDetail = us;
     this.authenListService.getOrderDetailById(us.orderId).subscribe(
       (data) => {
         this.OrderdetailById = data.result;
         this.isLoadding = false;
-        console.log('OrderdetailById:', data.result);
+        // console.log('OrderdetailById:', data.result);
         // console.log('OrderdetailById:', this.OrderdetailById);
       },
       (error) => {
@@ -196,22 +212,31 @@ export class OrderManagementComponent implements OnInit {
 
       }
     );
-    // console.log("order detail: ", us)
-    // console.log("order detail id: ", us.orderId)
-    this.orderRequestService.getAllOrderDetailByOrderId(order_detail_id).subscribe(
-      (data) => {
-        this.productOfOrder = data.result;
-        this.isLoadding = false;
+    if (us.specialOrder == true) {
+      this.orderRequestService.getAllOrderDetailByOrderId(order_detail_id).subscribe(
+        (data) => {
+          this.productOfOrder = data.result;
+          //  console.log('Product Orders:', this.productOfOrder);
+        },
+        (error) => {
+          console.error('Error fetching user data:', error);
 
-        console.log('Product Orders:', this.productOfOrder);
-      },
-      (error) => {
-        console.error('Error fetching user data:', error);
-        this.isLoadding = false;
 
-      }
-    );
+        }
+      );
+    } else if (us.specialOrder == false) {
+      this.orderRequestService.getAllOrderDetailOfProductByOrderId(order_detail_id).subscribe(
+        (data) => {
+          this.productOfOrder = data.result;
+            console.log('Product Flase:', this.productOfOrder);
+        },
+        (error) => {
+          console.error('Error fetching user data:', error);
+        }
+      );
+    }
   }
+
   selectedOrder: any = {};
   getOrderDetail(orderId: number): void {
 
@@ -259,45 +284,91 @@ export class OrderManagementComponent implements OnInit {
   }
   filterStatus(): void {
     console.log(this.selectedCategory);
-    console.log("Lọc sản phẩm với từ khóa:", this.searchKey, ", danh mục:", this.selectedCategory);
+
     this.isLoadding = true;
-    if (this.selectedCategory !== "0") {
-      this.authenListService.getFilterStatus(this.searchKey, this.selectedCategory)
-        .subscribe(
-          (data) => {
-            if (data.code === 1000) {
-              this.currentPage = 1;
-              this.user = data.result;
-              this.isLoadding = false;
-
-            } else if (data.code === 1015) {
-              this.user = [];
-            
-
-              this.isLoadding = false;
-            }
-
-          },
-        );
+    let startDate: string = this.selectedSDate || '';
+    let endDate: string = this.selectedEDate || '';
+    if (this.selectedSDate) {
+      startDate = this.selectedSDate.replace(/(\d{2})\/(\d{2})\/(\d{4})/, "$3/$2/$1");
     }
 
+    if (this.selectedEDate) {
+      endDate = this.selectedEDate.replace(/(\d{2})\/(\d{2})\/(\d{4})/, "$3/$2/$1");
+    }
+    console.log("Lọc sản phẩm với từ khóa:", this.searchKey, ", danh mục:", this.selectedCategory,
+      "DateS:", startDate, "DateE:", endDate
+    );
+    this.authenListService.getFilterStatus(
+      this.searchKey,
+      this.selectedCategory,
+      startDate,
+      endDate
+    )
+      .subscribe(
+        (data) => {
+          if (data.code === 1000) {
+            this.currentPage = 1;
+            this.user = data.result;
+            console.log(this.user);
+            this.isLoadding = false;
+
+          } else if (data.code === 1015) {
+            this.user = [];
+            this.isLoadding = false;
+            // this.toastr.warning(data.message);
+          }
+        },
+        (error: HttpErrorResponse) => {
+          this.isLoadding = false;
+          this.toastr.error('Có lỗi xảy ra, vui lòng thử lại sau');
+
+
+        }
+      );
   }
   refilterStatus(): void {
 
-    if (this.selectedCategory !== "0") {
-      this.authenListService.getFilterStatus(this.searchKey, this.selectedCategory)
-        .subscribe(
-          (data) => {
-            if (data.code === 1000) {
-              // this.currentPage = 1;
-              this.user = data.result;
-            } else if (data.code === 1015) {
-              this.user = [];                        
-            }
+    console.log(this.selectedCategory);
 
-          },
-        );
+
+    let startDate: string = this.selectedSDate || '';
+    let endDate: string = this.selectedEDate || '';
+    if (this.selectedSDate) {
+      startDate = this.selectedSDate.replace(/(\d{2})\/(\d{2})\/(\d{4})/, "$3/$2/$1");
     }
+
+    if (this.selectedEDate) {
+      endDate = this.selectedEDate.replace(/(\d{2})\/(\d{2})\/(\d{4})/, "$3/$2/$1");
+    }
+
+    this.authenListService.getFilterStatus(
+      this.searchKey,
+      this.selectedCategory,
+      startDate,
+      endDate
+    )
+      .subscribe(
+        (data) => {
+          if (data.code === 1000) {
+
+            this.user = data.result;
+
+
+          } else if (data.code === 1015) {
+            this.user = [];
+
+          
+            // this.toastr.warning(data.message);
+
+          }
+        },
+        (error: HttpErrorResponse) => {
+
+          this.toastr.error('Có lỗi xảy ra, vui lòng thử lại sau');
+
+
+        }
+      );
 
   }
   setOrderForCancellation(orderId: number | null, specialOrder: boolean | null) {
@@ -357,5 +428,27 @@ export class OrderManagementComponent implements OnInit {
       });
     }
   }
+  sendMail(orderId: number){
+   console.log(orderId);
+   this.isLoadding = true;
+   this.authenListService.SendMail(orderId).subscribe({
+    next: (response: any) => {
 
+        this.toastr.success("Gửi mail cho khách hàng thành công!");
+        this.isLoadding = false;
+        // const closeModalButton = document.querySelector('.close') as HTMLElement;
+        // if (closeModalButton) {
+        //   closeModalButton.click();
+        // }
+        // $('[data-dismiss="modal"]').click();
+      
+    },
+    error: (error: HttpErrorResponse) => {
+      this.isLoadding = false;
+      this.toastr.error('Gửi mail thất bại');
+      this.realoadgetAllUser();
+      $('[data-dismiss="modal"]').click();
+    }
+  });
+  }
 }

@@ -96,6 +96,7 @@ export class OrderRequiredComponent implements OnInit {
     this.imagesPreview = [];
   }
   loadData() {
+    this.isLoadding = true;
     this.authenListService.getUserProfile().subscribe((data) => {
       this.userProfile = data.result;
 
@@ -104,6 +105,7 @@ export class OrderRequiredComponent implements OnInit {
         this.updateControls();
 
       });
+      this.isLoadding = false;
     });
   }
   reloadData() {
@@ -222,7 +224,7 @@ export class OrderRequiredComponent implements OnInit {
   
     // Reset the form values
     this.uploadForm.patchValue({
-      payment_method: 0,
+      payment_method: null,
       files: [],
       description: ''
     });

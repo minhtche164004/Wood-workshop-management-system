@@ -19,24 +19,32 @@
           </div>
 
           <div class="row  justify-content-end">
-            <div class="col-md-9 text-end">
+            <div class="col-md-12 text-end">
               <div class="input-group mb-3">
                 <!-- product.component.html -->
                 <label>Từ: </label>
-                <input style="margin-left: 10px;" type="date" class="form-control" placeholder="Đến: dd/mm/yyyy">
+                <input [(ngModel)]="selectedSDate" style="margin-left: 10px;" type="date" class="form-control"
+                  placeholder="Đến: dd/mm/yyyy">
 
                 <label>Đến: </label>
-                <input style="margin-left: 10px;" type="date" class="form-control" placeholder="Đến: dd/mm/yyyy">
+                <input [(ngModel)]="selectedEDate" style="margin-left: 10px;" type="date" class="form-control"
+                  placeholder="Đến: dd/mm/yyyy">
 
                 <!-- product.component.html -->
-                <select [(ngModel)]="selectedCategory" (change)="filterStatus()">
+                <select [(ngModel)]="selectedCategory">
                   <!-- <option value="0" selected disabled>Chọn đơn hàng</option> -->
+                  <option value="" selected>Tất cả tình trạng đơn hàng</option>
+                  
                   <option *ngFor="let ps of userStatus" [value]="ps.status_id">{{ ps.status_name }}</option>
-                  <option value="" selected>Tất cả danh mục</option>
+
+                </select>
+                <select [(ngModel)]="selectProduduct">
+                  <option value="" selected>Tất cả loại đơn hàng</option>
+                  <option [ngValue]="0">Đơn hàng có sẵn</option>
+                  <option [ngValue]="1">Đơn hàng đặc biệt</option>
                 </select>
 
-                <input type="text" class="form-control" placeholder="Tìm kiếm mã đơn hàng..." [(ngModel)]="searchKey"
-                  (keyup.enter)="filterStatus()">
+                <input type="text" class="form-control" placeholder="Tìm kiếm mã đơn hàng..." [(ngModel)]="searchKey">
 
                 <button class="btn search-button" type="button" (click)="filterStatus()">
                   <i class="fa fa-search"></i>
@@ -55,23 +63,21 @@
                 <th>Mã đơn hàng</th>
 
                 <th>Thao tác</th>
+
                 <th>Loại đơn hàng</th>
                 <th>Ngày đặt hàng</th>
                 <th>Tình trạng</th>
 
                 <th>Kiểu thanh toán</th>
                 <th>Tiền cọc(VNĐ)</th>
-                <th>Số tiền thanh toán(VNĐ)</th>
+
                 <th>Tổng tiền(VNĐ)</th>
-                <th>Thanh toán cọc</th>
-                <th>Hủy đơn hàng</th>
+
               </tr>
             </thead>
             <tbody>
               <tr *ngFor="let us of user | paginate: { itemsPerPage: 10, currentPage: currentPage }; let i = index">
-
                 <td style=" min-width: 140px;">{{ us?.code}}</td>
-
 
                 <td class="action-buttons">
                   <!-- <a href="#" class="settings" title="Edit" data-toggle="modal" data-target="#editProductModal">
@@ -81,15 +87,27 @@
                     (click)="getOrDetailById(us, us?.orderId)">
                     <i class="fa-solid fa-circle-info"></i>
                   </a>
-                  <a href="/product_management/{{ us?.orderId }}" class="info" title="Thêm sản phẩm" *ngIf="us?.status_id === 8 && 
+                  <a href="/product_management/{{ us?.orderId }}" class="info" title="Thêm sản phẩm" *ngIf="us?.status_id === 8   ||
+                  us?.status_id === 1 &&
                   us?.specialOrder === true">
                     <i class="fa-solid fa-circle-plus"></i>
                   </a>
+
+                  <a href="#" data-toggle="modal" data-target="#myModalconfirm" *ngIf="us?.status_id === 1 "
+                    (click)="setOrderForPayment(us?.orderId)" (click)="getOrDetailById(us, us?.orderId)">
+                    <i class="fa-solid fa-credit-card"></i>
+                  </a>
+
+                  <a href="#" data-toggle="modal" data-target="#confirmDeleteModal"
+                    (click)="setOrderForCancellation(us?.orderId, us?.specialOrder)" *ngIf="us?.status_id === 7">
+                    <i class="fa-solid fa-times-circle"></i>
+                  </a>
                 </td>
+
                 <td style="min-width: 140px;">
                   {{ us?.specialOrder ? 'Đơn hàng đặc biệt' : 'Đơn hàng có sẵn' }}
                 </td>
-                <td>{{ us?.orderDate | date:'dd/MM/yyyy' }}</td>
+                <td style="text-align: center;">{{ us?.orderDate | date:'dd/MM/yyyy' }}</td>
 
                 <!-- [disabled]="us?.status.status_id === 6 || us?.status.status_id === 5
               || us?.status.status_id === 1
@@ -141,31 +159,15 @@
                   style="text-align: right; min-width: 100px; max-width: 150px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
                   {{ us?.deposite | number : '1.0-3' }}
                 </td>
-                <td
+                <!-- <td
                   style="text-align: right; min-width: 100px; max-width: 150px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
                   {{ (us?.totalAmount - us?.deposite) | number : '1.0-3' }}
-                </td>
+                </td> -->
                 <td
                   style="text-align: right; min-width: 100px; max-width: 150px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
                   {{ us?.totalAmount | number : '1.0-3' }}
                 </td>
-                <td>
-                  <button style="margin-left: -10px; size: 15px;" data-toggle="modal" data-target="#myModalconfirm"
-                    class="btn btn-primary" *ngIf="us?.status_id === 1 && us?.paymentMethod === 1 "
-                    (click)="setOrderForPayment(us?.orderId)">
-                    Thanh toán cọc
-                  </button>
-                </td>
-                <td>
-                  <a href="#" class="delete" title="Delete" data-toggle="modal" data-target="#confirmDeleteModal"
-                    (click)="setOrderForCancellation(us?.orderId, us?.specialOrder)" *ngIf="us?.status_id === 7">
-                    <svg class="custom-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                      stroke-linecap="round" stroke-linejoin="round">
-                      <line x1="18" y1="6" x2="6" y2="18"></line>
-                      <line x1="6" y1="6" x2="18" y2="18"></line>
-                    </svg>
-                  </a>
-                </td>
+
               </tr>
             </tbody>
           </table>
@@ -174,7 +176,7 @@
 
 
       <pagination-controls style="justify-content: right; display: flex;" (pageChange)="currentPage = $event"
-        previousLabel="Trang trước" nextLabel="Trang sau"  *ngIf="user && user.length > 0">
+        previousLabel="Trang trước" nextLabel="Trang sau" *ngIf="user && user.length > 0">
       </pagination-controls>
       <div class="clearfix" style="justify-content: right; display: flex;" *ngIf="user && user.length > 0">
         <div class="hint-text">Hiển thị <b>{{ (currentPage - 1) * 10 + 1 }}</b> tới <b>{{ currentPage * 10 >
@@ -195,7 +197,6 @@
       </div>
     </div>
   </div>
-
   <div class="modal fade" style="margin-left: 7%;" id="productDetailModal" tabindex="-1" role="dialog"
     aria-labelledby="productDetailModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-xl" role="document">
@@ -210,157 +211,206 @@
           <div class="container">
             <div class="row">
               <div class="col-md-4">
-                <b>Đơn hàng: </b>
+                <!-- <b>Đơn hàng:</b> -->
+                <label style="color: rgba(0, 102, 255, 0.945);">
+                  <!-- Other parts of your form -->
 
-                <label style="color: rgba(0, 102, 255, 0.945);">{{OrderdetailById.code}}</label>
+                  <div *ngIf="selectedOrderDetail.specialOrder; else regularOrder">
+                    <p>Đơn hàng đặc biệt</p>
+                  </div>
+                  <ng-template #regularOrder>
+                    <p>Đơn hàng có sẵn</p>
+                  </ng-template>
+
+                  <!-- Other parts of your form -->
+
+                  {{ OrderdetailById.code}}
+                </label>
               </div>
-              <div class="col-md-4 text-center"> <b>Ngày tạo đơn:</b> {{OrderdetailById.orderDate | date:'dd/MM/yyyy'}}</div>
+              <div class="col-md-4 text-center"> <b>Ngày tạo đơn:</b> {{OrderdetailById.orderDate | date:'dd/MM/yyyy'}}
+              </div>
 
-       
-            <div class="col-md-4 text-end">
-              <b> {{OrderdetailById.status?.status_name}}</b>
+
+              <div class="col-md-4 text-end">
+                <b style="background-color: #007bff; color: whitesmoke; padding: 4px; border-radius: 5px;">
+                  {{OrderdetailById.status?.status_name}}</b>
+              </div>
+            </div>
+            <br>
+            <hr>
+            <div class="row">
+              <div class="col-md-4">
+                <div class="card">
+                  <div class="card-header text-center">
+                    Khách hàng
+
+                  </div>
+                  <div class="card-body">
+                    <h4 class="card-title">{{OrderdetailById.userInfor?.fullname}} -
+                      {{OrderdetailById.userInfor?.phoneNumber}}</h4>
+
+                    <p class="card-text">Địa chỉ: {{OrderdetailById.userInfor?.address}}</p>
+                  </div>
+                </div>
+                <br>
+                <hr>
+                <br>
+                <div class="card">
+                  <div class="card-header text-center">
+                    Thông tin đơn hàng
+
+                  </div>
+                  <div class="card-body">
+                    <!-- <h5 class="card-title">{{OrderdetailById.userInfor?.fullname}}</h5> -->
+                    <p class="card-text"><b>Đã cọc: </b>{{OrderdetailById.deposite | number : '1.0-3' }} vnđ</p>
+                    <p class="card-text"><b>Tổng tiền cần thanh toán: </b>{{ totalAmoutOrder | number : '1.0-3' }} vnđ
+                    </p>
+                    <p class="card-text"><b style="margin-right: 2%;">Thanh toán:</b>{{ OrderdetailById.paymentMethod
+                      === '1' ? 'Tiền mặt' : 'Chuyển khoản' }}</p>
+                    <p class="card-text"><b>Mô tả đơn hàng:</b> {{OrderdetailById.description}}</p>
+                  </div>
+                </div>
+              </div>
+
+              <div class="col-md-8">
+                <h2 class="text-center">Thông tin đơn hàng</h2>
+                <table class="table table-striped table-hover">
+                  <thead>
+                    <tr>
+                      <th style="width: 40%;">Tên sản phẩm</th>
+                      <th>Đơn giá</th>
+                      <th>Trạng thái</th>
+                      <th>Số lượng</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr *ngFor="let product of productOfOrder">
+                      <td>{{product?.product_name}} {{product?.request_product_name}}</td>
+                      <td>{{product?.price | number:'1.0-3'}}</td>
+                      <td>{{product?.status_job_name}}</td>
+                      <td style="text-align: right;">{{product?.quantity}}</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
             </div>
           </div>
-          <br>
-          <hr>
-          <div class="row">
-            <div class="col-md-4">
-              <div class="card">
-                <div class="card-header text-center">
-                  Khách hàng
-                </div>
-                <div class="card-body">
-                  <h3 class="card-title">{{OrderdetailById.userInfor?.fullname}} -
-                    {{OrderdetailById.userInfor?.phoneNumber}}</h3>
 
-                  <p class="card-text">Địa chỉ: {{OrderdetailById.userInfor?.address}}</p>
-                </div>
-              </div>
-              <br>
-              <hr>
-              <br>
-              <div class="card">
-                <div class="card-header text-center">
-                  Thông tin đơn hàng
-                </div>
-                <div class="card-body">
-                  <!-- <h5 class="card-title">{{OrderdetailById.userInfor?.fullname}}</h5> -->
-                  <p class="card-text"><b>Đã cọc: </b>{{OrderdetailById.deposite | number : '1.0-3' }} vnđ</p>
-                  <p class="card-text"><b>Thanh toán:</b>{{OrderdetailById.paymentMethod}}</p>
-                  <p class="card-text"><b>Mô tả đơn hàng:</b> {{OrderdetailById.description}}</p>
-                </div>
-              </div>
-            </div>
+        </div>
+        <div class="modal-footer">
 
-            <div class="col-md-8">
-              <h2 class="text-center">Thông tin đơn hàng</h2>
-              <table class="table table-striped table-hover">
-                <thead>
-                  <tr>
-                    <th style="width: 40%;">Tên sản phẩm</th>
-                    <th>Đơn giá</th>
-                    <th>Trạng thái</th>
-                    <th>Số lượng</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr *ngFor="let product of productOfOrder">
-                    <td>{{product?.product_name}} {{product?.request_product_name}}</td>
-                    <td>{{product?.price | number:'1.0-3'}}</td>
-                    <td>{{product?.status_job_name}}</td>
-                    <td style="text-align: right;">{{product?.quantity}}</td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
+          <button type="button" class="btn btn-primary" *ngIf="OrderdetailById.totalAmount !== null
+          && OrderdetailById.deposite !== null" (click)="sendMail(OrderdetailById.orderId)">Gửi mail</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+
+
+  <div class="modal fade" id="confirmDeleteModal" tabindex="-1" role="dialog" aria-labelledby="confirmDeleteModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="confirmDeleteModalLabel">Xác nhận muốn hủy đơn hàng</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <div class="form-group">
+            <label for="cancelReason">Lý do từ chối đơn hàng:</label>
+            <textarea class="form-control" id="cancelReason" [(ngModel)]="cancelReason" rows="4" required></textarea>
           </div>
         </div>
-
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
-      </div>
-    </div>
-  </div>
-</div>
-
-
-
-
-<div class="modal fade" id="confirmDeleteModal" tabindex="-1" role="dialog" aria-labelledby="confirmDeleteModalLabel"
-  aria-hidden="true">
-  <div class="modal-dialog" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="confirmDeleteModalLabel">Xác nhận muốn hủy đơn hàng</h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-      <div class="modal-body">
-        <div class="form-group">
-          <label for="cancelReason">Lý do từ chối đơn hàng:</label>
-          <textarea class="form-control" id="cancelReason" [(ngModel)]="cancelReason" rows="4" required></textarea>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Hủy</button>
+          <button type="button" class="btn btn-primary" (click)="confirmCancel()">Xác nhận</button>
         </div>
       </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">Hủy</button>
-        <button type="button" class="btn btn-primary" (click)="confirmCancel()">Xác nhận</button>
+    </div>
+  </div>
+
+
+
+
+  <div class="modal fade" id="myModalconfirm" tabindex="-1" aria-labelledby="myModalLabel1" aria-hidden="true"
+    data-backdrop="static" data-keyboard="false">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h2 class="modal-title" id="myModalconfirm">Xác nhận thanh toán cọc</h2>
+          <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close" (click)="closeModal($event) "
+            (click)="cancelChangeStatusJob()"></button>
+        </div>
+        <div class="modal-body">
+          <p>Tiền cọc: {{OrderdetailById.deposite | number : '1.0-3'}}</p>
+          <p>Tiền cần thanh toán: {{ OrderdetailById.totalAmount - OrderdetailById.deposite | number : '1.0-3' }}</p>
+
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal" (click)="closeModal($event)"
+            (click)="cancelChangeStatusJob()">Đóng</button>
+          <button type="button" class="btn btn-primary" (click)="confirmPayment()">Chắc
+            chắn
+          </button>
+        </div>
       </div>
     </div>
   </div>
-</div>
 
+  <div class="modal fade" id="myModal" tabindex="-1" aria-labelledby="myModalLabel" aria-hidden="true"
+    data-backdrop="static" data-keyboard="false">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h2 class="modal-title" id="myModal">Cập nhật trạng thái đơn hàng</h2>
+          <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close"
+            (click)="closeModal($event)"></button>
+        </div>
+        <div class="modal-body">
+          Bạn có chắc chắn muốn cập nhật trạng thái đơn hàng này?
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal" (click)="closeModal($event)"
+            (click)="cancelChangeStatusJob()">Đóng</button>
+          <button type="button" class="btn btn-primary" (click)="changeStatus(selectedModalJob,selectedModalId)">Chắc
+            chắn</button>
 
-
-<div class="modal fade" id="myModal" tabindex="-1" aria-labelledby="myModalLabel" aria-hidden="true"
-  data-backdrop="static" data-keyboard="false">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h2 class="modal-title" id="myModal">Cập nhật trạng thái đơn hàng</h2>
-        <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close"
-          (click)="closeModal($event)"></button>
-      </div>
-      <div class="modal-body">
-        Bạn có chắc chắn muốn cập nhật trạng thái đơn hàng này?
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-dismiss="modal" (click)="closeModal($event)"
-          (click)="cancelChangeStatusJob()">Đóng</button>
-        <button type="button" class="btn btn-primary" (click)="changeStatus(selectedModalJob,selectedModalId)">Chắc
-          chắn</button>
-      </div>
-    </div>
-  </div>
-</div>
-
-
-
-<div class="modal fade" id="myModalconfirm" tabindex="-1" aria-labelledby="myModalLabel1" aria-hidden="true"
-  data-backdrop="static" data-keyboard="false">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h2 class="modal-title" id="myModalconfirm">Xác nhận thanh toán tiền cọc đơn hàng</h2>
-        <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close" (click)="closeModal($event) "
-          (click)="cancelChangeStatusJob()"></button>
-      </div>
-      <div class="modal-body">
-        Bạn có chắc chắn xác nhận thanh toán tiền cọc đơn hàng này?
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-dismiss="modal" (click)="closeModal($event)"
-          (click)="cancelChangeStatusJob()">Đóng</button>
-        <button type="button" class="btn btn-primary" (click)="confirmPayment()">Chắc
-          chắn
-        </button>
+        </div>
       </div>
     </div>
   </div>
-</div>
 
 
-<div *ngIf="isLoadding" class="loading-overlay">
-  <div class="spinner"></div>
-</div>
+
+  <!-- <div class="modal fade" id="myModalconfirm" tabindex="-1" aria-labelledby="myModalLabel1" aria-hidden="true"
+          data-backdrop="static" data-keyboard="false">
+          <div class="modal-dialog">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h2 class="modal-title" id="myModalconfirm">Xác nhận thanh toán tiền cọc đơn hàng</h2>
+                <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close"
+                  (click)="closeModal($event) " (click)="cancelChangeStatusJob()"></button>
+              </div>
+              <div class="modal-body">
+                Bạn có chắc chắn xác nhận thanh toán tiền cọc đơn hàng này?
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal" (click)="closeModal($event)"
+                  (click)="cancelChangeStatusJob()">Đóng</button>
+                <button type="button" class="btn btn-primary" (click)="confirmPayment()">Chắc
+                  chắn
+                </button>
+              </div>
+            </div>
+          </div>
+        </div> -->
+
+
+  <div *ngIf="isLoadding" class="loading-overlay">
+    <div class="spinner"></div>
+  </div>

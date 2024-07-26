@@ -3,7 +3,6 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder } from '@angular/forms';
 import { DomSanitizer } from '@angular/platform-browser';
 import { Chart } from 'chart.js';
-import * as e from 'cors';
 import { ToastrService } from 'ngx-toastr';
 import { DataService } from 'src/app/service/data.service';
 import { EmployeeService } from 'src/app/service/employee.service';
@@ -68,7 +67,7 @@ export class ChartComponent implements OnInit {
   chart5: any = [];
   chart10: any = [];
   emmpChart: any = [];
-  positionLabels = [];
+  positionLabels: string[] = [];
   countEmp: number = 0;
   totalAmouneOrderHaveDone: number = 0;
   totalOrder: number = 0;
@@ -81,64 +80,63 @@ export class ChartComponent implements OnInit {
   percentEmpPos3: number = 0;
   percentEmpPos4: number = 0;
   isLoading: boolean = false;
- 
+
   totalRQProduct: number = 0;
   months = ['Tháng 1', 'Tháng 2', 'Tháng 3', 'Tháng 4', 'Tháng 5', 'Tháng 6', 'Tháng 7', 'Tháng 8', 'Tháng 9', 'Tháng 10', 'Tháng 11', 'Tháng 12'];
   data: any[] = []; // Array to store data for each month
   chartData: any;
+  year: number = new Date().getFullYear();
+  productCounts: number[] = [];
+  productRequestCounts: number[] = [];
+  totalOrderMY: number[] = [];
+  totalOrderSpecMY: number[] = [];
+  totalNormalOrder: number = 0;
+  totalAmountSubMaterial: number = 0;
+  totalEmployee: number = 0; 
+  totalEmpPos1: number = 0;
+  totalEmpPos2: number = 0;
+  totalEmpPos3: number = 0;
+  totalEmpPos4: number = 0;
+
   ngOnInit(): void {
     this.loadData();
-    
   }
 
-  getAllPostionEmp(): void {
-    this.employeeService.getAllPostionEmp().subscribe(
-      (data) => {
-        if (data.code === 1000) {
-          this.positionLabels = data.result.map((item: any) => item.position_name);
-     //     console.log('Danh sách chức vụ nhân viên: ', this.positionLabels);
-        } else {
-          console.error('Failed to fetch products:', data);
-          // Handle error as needed
-        }
-      },
-      (error) => {
-        console.error('Error fetching employee positions:', error);
-        // Handle error as needed
-      }
-    );
-    
-  }
-  loadData() {
+  async loadData() {
     this.isLoading = true; // Hiển thị loading
-    this.getTotalOrder().then(() => {
-      Promise.all([
-        
+
+    try {
+      await this.getTotalOrder();
+      await Promise.all([
         this.getTotalAmountSubMaterial(),
         this.getTotalSpecialOrder(),
-        this.getTotalProduct(),
+        this.percenProduct(),
         this.getAllEmployee(),
-        this.getAllDataForYear(),
+       this.getTotalProductNormal(),
         this.getAllPostionEmp(),
-        // this.countProductByMonthAndYear(),
-
-      ]).then(() => {
-        this.updateEmployeePositions().then(() => {
-          this.initializeCharts();
-          this.isLoading = false; // Ẩn loading
-        }).catch(err => {
-          this.isLoading = false;
-          console.error(err);
-        });
-      }).catch(err => {
-        this.isLoading = false;
-        console.error(err);
-      });
-    }).catch(err => {
-      this.isLoading = false;
+        this.getAllDataForYear()
+        
+      ]);
+      await this.updateEmployeePositions();
+      this.initializeCharts();
+    } catch (err) {
       console.error(err);
-    });
-    
+    } finally {
+      this.isLoading = false;
+    }
+  }
+
+  async getAllPostionEmp(): Promise<void> {
+    try {
+      const data = await this.employeeService.getAllPostionEmp().toPromise();
+      if (data.code === 1000) {
+        this.positionLabels = data.result.map((item: any) => item.position_name);
+      } else {
+        console.error('Failed to fetch positions:', data);
+      }
+    } catch (error) {
+      console.error('Error fetching employee positions:', error);
+    }
   }
 
   initializeCharts() {
@@ -153,19 +151,20 @@ export class ChartComponent implements OnInit {
         datasets: [
           {
             label: 'Nhân viên',
-            data: [this.totalEmpPos1, this.totalEmpPos2, this.totalEmpPos3, this.totalEmpPos4],
+            data: [this.percentEmpPos1, this.percentEmpPos2, this.percentEmpPos3],
             backgroundColor: [
               'rgb(255, 99, 132)',
               'rgb(54, 162, 235)',
               'rgb(255, 205, 86)',
-              'rgb(255, 100, 16)',
+           
             ],
-            hoverOffset: 4
+            hoverOffset: 3
           }
         ]
       },
     });
     this.emmpChart.update();
+
     this.chart2 = new Chart('canvas2', {
       type: 'pie',
       data: {
@@ -178,11 +177,12 @@ export class ChartComponent implements OnInit {
               'rgb(255, 99, 132)',
               'rgb(54, 162, 235)',
             ],
-            hoverOffset: 4
+            hoverOffset: 2
           }
         ]
       },
     });
+
     this.chart3 = new Chart('canvas3', {
       type: 'pie',
       data: {
@@ -190,7 +190,7 @@ export class ChartComponent implements OnInit {
         datasets: [
           {
             label: 'Sản phẩm',
-            data: [this.totalProduct, this.totalRQProduct],
+            data: [this.normalProductPercentage, this.rqProductPercentage],
             backgroundColor: [
               'rgb(255, 99, 132)',
               'rgb(54, 162, 235)',
@@ -239,155 +239,124 @@ export class ChartComponent implements OnInit {
           borderColor: 'rgb(255, 99, 132)',
           backgroundColor: 'rgb(255, 99, 132)',
           tension: 0.1
-        },    
-      ]},
-        //stepSixe = 5
-    //   options: {
-    //     scales: {
-    //         y: {
-    //             beginAtZero: true, // Bắt đầu từ 0
-    //             ticks: {
-    //                 stepSize: 5 // Đặt bước nhảy là 5
-    //             }
-    //         }
-    //     }
-    // }
-    });
-
-  }
-
-  TotalAmountOrderHaveDone() {
-    return new Promise<void>((resolve, reject) => {
-      this.statistic.getTotalAmountOrderHaveDone().subscribe((data) => {
-        this.totalAmouneOrderHaveDone = data.result;
-        resolve();
-      }, err => reject(err));
-    });
-  }
-  getCountRQProduct() {
-    return new Promise<void>((resolve, reject) => {
-      this.statistic.getCountRQProduct().subscribe((data) => {
-        this.totalRQProduct = data.result;
-   //     console.log("totalRQProduct: ", this.totalRQProduct);
-        resolve();
-      }, err => reject(err));
-    });
-  }
-  
-  totalOrderCoSan: number = 0;
-
-  getAllEmployee() {
-    return new Promise<void>((resolve, reject) => {
-      this.employeeService.getAllEmployee().subscribe((data) => {
-        this.countEmp = data.result.length;
-        resolve();
-      }, err => reject(err));
-    });
-  }
-  totalAmountSubMaterial: number = 0;
-  getTotalAmountSubMaterial() {
-    return new Promise<void>((resolve, reject) => {
-      this.statistic.getTotalAmountSubMaterial().subscribe((data) => {
-     //   console.log("totalAmountSubMaterial: ", data.result);
-        this.totalAmountSubMaterial = data.result;
-        resolve();
-      }, err => reject(err));
-    });
-  }
-;
-  getTotalOrder() {
-    return new Promise<void>((resolve, reject) => {
-      this.statistic.getTotalOrder().subscribe((data) => {
-        this.totalOrder = data.result;
-    //    console.log("totalOrder: ", this.totalOrder);
-        resolve();
-      }, err => reject(err));
+        }] 
+      }
     });
   }
 
-  getTotalSpecialOrder() {
-    return new Promise<void>((resolve, reject) => {
-      this.statistic.getCountSpecialOrder().subscribe((data) => {
-        this.totalSpecialOrder = data.result;
-       // console.log("totalSpecialOrder", this.totalSpecialOrder);
-        
-        if (this.totalOrder !== 0) {
-          this.percentSpecialOrder = (this.totalSpecialOrder / this.totalOrder) * 100;
-          this.percentOrder = 100 - this.percentSpecialOrder;
-          this.totalNormalOrder = this.totalOrder - this.totalSpecialOrder;
-          this.totalOrderCoSan = this.totalOrder - this.totalSpecialOrder;
-          console.log("total Order: ", this.totalOrder)
-        } else {
-          this.percentSpecialOrder = 0;
-          this.percentOrder = 0;
-        }
-
-        // console.log("percentSpecialOrder", this.percentSpecialOrder);
-        // console.log("percentOrder", this.percentOrder);
-        resolve();
-      }, err => reject(err));
-    });
-  }
-  totalNormalOrder: number = 0;
-  
-  getTotalProduct() {
-    return new Promise<void>((resolve, reject) => {
-      this.statistic.getCountProduct().subscribe((data) => {
-        this.totalProduct = data.result;
-        resolve();
-      }, err => reject(err));
-      this.statistic.getCountRQProduct().subscribe((data) => {
-        this.totalRQProduct = data.result;
-     //   console.log("totalRQProduct: ", this.totalRQProduct);
-        resolve();
-      }, err => reject(err));
-    });
-  
-  }
-  totalEmpPos1: number = 0;
-  totalEmpPos2: number = 0;
-  totalEmpPos3: number = 0;
-  totalEmpPos4: number = 0;
-  
-  updateEmployeePositions() {
-    return Promise.all([
-      this.statistic.countEmployeeWithTypePosition(1).toPromise(),
-      this.statistic.countEmployeeWithTypePosition(2).toPromise(),
-      this.statistic.countEmployeeWithTypePosition(3).toPromise(),
-      this.statistic.countEmployeeWithTypePosition(4).toPromise()
-    ]).then(results => {
-      this.totalEmpPos1 = results[0].result;
-      this.totalEmpPos2 = results[1].result ;
-      this.totalEmpPos3 = results[2].result ;
-      this.totalEmpPos4 = results[3].result ;
-      // console.log('totalEmpPos1:', this.totalEmpPos1);
-      // console.log('totalEmpPos2:', this.totalEmpPos2);
-      // console.log('totalEmpPos3:', this.totalEmpPos3);
-      // console.log('totalEmpPos4:', this.totalEmpPos4);
-    }).catch(err => {
+  async getTotalOrder(): Promise<void> {
+    try {
+      const data = await this.statistic.getTotalOrder().toPromise();
+      this.totalOrder = data.result;
+    } catch (err) {
       console.error(err);
-    });
-  }
-  productCounts: number[] = [];
-  productRequestCounts: number[] = [];
- 
-  getProductRequestByMonthAndYear(month: number, year: number): Promise<void> {
-    return new Promise<void>((resolve, reject) => {
-      this.statistic.countProductRequestByMonthYear(13, month, year).subscribe((data) => {
-        if (data.result === null || data.result === undefined) {
-          data.result = 0;
-        }
-      //  console.log(`getProductRequestByMonthAndYear result for ${month}/${year}: `, data.result);
-        this.productRequestCounts.push(data.result);
-        resolve();
-      }, err => {
-     //   console.error(`getProductRequestByMonthAndYear error for ${month}/${year}: `, err);
-        reject(err);
-      });
-    });
+    }
   }
 
-  getProductByMonthAndYear(month: number, year: number): Promise<void> {
+  async getTotalAmountSubMaterial(): Promise<void> {
+    try {
+      const data = await this.statistic.getTotalAmountSubMaterial().toPromise();
+      this.totalAmountSubMaterial = data.result;
+    } catch (err) {
+      console.error(err);
+    }
+  }
+
+  async getTotalSpecialOrder(): Promise<void> {
+    try {
+      const data = await this.statistic.getCountSpecialOrder().toPromise();
+      this.totalSpecialOrder = data.result;
+      if (this.totalOrder > 0) {
+        this.percentSpecialOrder = Math.round((this.totalSpecialOrder / this.totalOrder) * 100);
+        this.percentOrder = Math.round(100 - this.percentSpecialOrder);
+        console.log('Phần trăm đơn hàng đặc biệt:', this.percentSpecialOrder.toFixed(2) + '%');
+        console.log('Phần trăm đơn hàng có sẵn:', this.percentOrder.toFixed(2) + '%');
+
+      }
+    } catch (err) {
+      console.error(err);
+    }
+  }
+
+  async getTotalProduct(): Promise<void> {
+    try {
+      const data = await this.statistic.getCountProduct().toPromise();
+      this.totalProduct = data.result;
+      console.log('Tổng sản phẩm:', this.totalProduct);
+      await this.getTotalRQProduct(); // Wait for getTotalRQProduct() to complete
+      await this.getTotalProductNormal(); // Wait for getTotalProductNormal() to complete
+    } catch (err) {
+      console.error(err);
+    }
+  }
+  
+  async getTotalRQProduct(): Promise<void> {
+    try {
+      const data = await this.statistic.getCountRQProduct().toPromise();
+      this.totalRQProduct = data.result;
+    } catch (err) {
+      console.error(err);
+    }
+  }
+  totalNormalProduct: number = 0;
+  normalProductPercentage: number = 0;
+  rqProductPercentage: number = 0;
+  async getTotalProductNormal(): Promise<void> {
+    try {
+      this.totalNormalProduct = this.totalProduct - this.totalRQProduct;
+      console.log('Tổng sản phẩm normal:', this.totalNormalProduct);
+      console.log('Tổng sản phẩm RQ:', this.totalRQProduct);
+      console.log('Tổng sản phẩm:', this.totalProduct);
+      this.normalProductPercentage = Math.round((this.totalNormalProduct / this.totalProduct) * 100);
+      this.rqProductPercentage = Math.round((this.totalRQProduct / this.totalProduct) * 100);
+      console.log('Phần trăm sản phẩm normal:', this.normalProductPercentage.toFixed(2) + '%');
+      console.log('Phần trăm sản phẩm RQ:', this.rqProductPercentage.toFixed(2) + '%');
+    } catch (err) {
+      console.error(err);
+    }
+  }
+  async getAllEmployee(): Promise<void> {
+    try {
+      
+      const data = await this.employeeService.getAllEmployee().toPromise();
+      this.countEmp = data.result.length;
+    } catch (err) {
+      console.error(err);
+    }
+  }
+  numberProduct: number = 0;
+  async percenProduct(): Promise<void> {
+    try {
+      this.getTotalProduct();
+      this.getTotalRQProduct();
+      this.numberProduct = this.totalProduct + this.totalRQProduct;
+      console.log('Tổng sản phẩm:', this.numberProduct);
+     } catch (err) {
+      console.error(err);
+    }
+  }
+  async updateEmployeePositions(): Promise<void> {
+    try {
+      const data = await this.employeeService.getAllEmployee().toPromise();
+      const employees = data.result;
+      this.totalEmployee = employees.length;
+      this.totalEmpPos1 = employees.filter((emp: User) => emp.position.position_id === 1).length;
+      this.totalEmpPos2 = employees.filter((emp: User) => emp.position.position_id === 2).length;
+      this.totalEmpPos3 = employees.filter((emp: User) => emp.position.position_id === 3).length;
+      this.totalEmpPos4 = employees.filter((emp: User) => emp.position.position_id === 4).length;
+
+      if (this.totalEmployee > 0) {
+        this.percentEmpPos1 = Math.round((this.totalEmpPos1 / this.totalEmployee) * 100);
+        this.percentEmpPos2 = Math.round((this.totalEmpPos2 / this.totalEmployee) * 100);
+        this.percentEmpPos3 = Math.round((this.totalEmpPos3 / this.totalEmployee) * 100);
+        this.percentEmpPos4 = Math.round((this.totalEmpPos4 / this.totalEmployee) * 100);
+      }
+    } catch (err) {
+      console.error(err);
+    }
+  }
+
+  async getProductByMonthAndYear(month: number, year: number): Promise<void> {
     return new Promise<void>((resolve, reject) => {
       this.statistic.countCompletedProductOnOrderByMonthAndYear(month, year).subscribe((data) => {
         if (data.result === null || data.result === undefined) {
@@ -416,24 +385,7 @@ export class ChartComponent implements OnInit {
   );
 
   }
-  // countProductByMonthAndYear() {
-  //   const year = new Date().getFullYear(); //Lấy năm hiện tại
-  //   const promises = [];
-  //   for (let month = 1; month <= 12; month++) {
-  //     promises.push(this.getProductByMonthAndYear(month, year));
-      
-  //   }
-  //   Promise.all(promises).then(() => {
-  //     // console.log('All data retrieved successfully.');
-  //      console.log('Product Counts:', this.productCounts);
-  //      console.log('Product Request Counts:', this.productRequestCounts);
-  //     this.initializeCharts(); // Call to initialize charts with the fetched data
-  //   }).catch(err => {
-  //     console.error('Error retrieving data:', err);
-  //   });
-  // }
-  year: number = new Date().getFullYear();
-  getAllDataForYear() {
+  async getAllDataForYear() {
   
     const promises = [];
     for (let month = 1; month <= 12; month++) {
@@ -448,14 +400,27 @@ export class ChartComponent implements OnInit {
       // console.log('Product Request Counts:', this.productRequestCounts);
     //  console.log('Total Order:', this.totalOrderMY);
     //  console.log('Total Special Order:', this.totalOrderSpecMY);
-      this.initializeCharts(); // Call to initialize charts with the fetched data
+      //this.initializeCharts(); // Call to initialize charts with the fetched data
     }).catch(err => {
       console.error('Error retrieving data:', err);
     });
   }
-  totalOrderMY: any[] = [];
-  totalOrderSpecMY: any[] = [];
-  countTotalOrder(month: number, year: number): Promise<void> {
+  async getProductRequestByMonthAndYear(month: number, year: number): Promise<void> {
+    return new Promise<void>((resolve, reject) => {
+      this.statistic.countProductRequestByMonthYear(13, month, year).subscribe((data) => {
+        if (data.result === null || data.result === undefined) {
+          data.result = 0;
+        }
+      //  console.log(`getProductRequestByMonthAndYear result for ${month}/${year}: `, data.result);
+        this.productRequestCounts.push(data.result);
+        resolve();
+      }, err => {
+     //   console.error(`getProductRequestByMonthAndYear error for ${month}/${year}: `, err);
+        reject(err);
+      });
+    });
+  }
+  async countTotalOrder(month: number, year: number): Promise<void> {
     return new Promise<void>((resolve, reject) => {
       this.statistic.countTotalOrderByMonthAndYear(month, year).subscribe((data) => {
         // if (data.result === null || data.result === undefined) {
@@ -470,7 +435,7 @@ export class ChartComponent implements OnInit {
       });
     });
   }
-  countTotalSpecOrder(month: number, year: number): Promise<void> {
+  async countTotalSpecOrder(month: number, year: number): Promise<void> {
     return new Promise<void>((resolve, reject) => {
       this.statistic.countTotalSpecOrderByMonthAndYear(month, year).subscribe((data) => {
         // if (data.result === null || data.result === undefined) {
@@ -485,5 +450,4 @@ export class ChartComponent implements OnInit {
       });
     });
   }
-  
 }

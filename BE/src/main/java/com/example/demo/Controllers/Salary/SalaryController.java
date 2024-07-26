@@ -1,5 +1,6 @@
 package com.example.demo.Controllers.Salary;
 
+import com.example.demo.Dto.OrderDTO.DateDTO;
 import com.example.demo.Entity.Advancesalary;
 import com.example.demo.Repository.MaterialRepository;
 import com.example.demo.Response.ApiResponse;
@@ -10,7 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
-import java.sql.Date;
+import java.util.Date;
 import java.util.List;
 
 @RestController
@@ -42,17 +43,16 @@ public class SalaryController {
         return apiResponse;
     }
 
-    @GetMapping("/getMultiFillterSalary")
+    @PostMapping("/getMultiFillterSalary")
     public ApiResponse<?> getMultiFillterSalary(
             @RequestParam(required = false) String username,
-            @RequestParam(required = false) Date fromDate,
-            @RequestParam(required = false) Date toDate,
+            @RequestBody(required = false) DateDTO dto,
             @RequestParam(required = false) Integer isAdvanceSuccess,
             @RequestParam(required = false) Integer position_id,
             @RequestParam(required = false) String sortDirection
     ){
         ApiResponse<List> apiResponse = new ApiResponse<>();
-        apiResponse.setResult(jobService.multi_filter_salary(fromDate, toDate, isAdvanceSuccess,position_id, username,sortDirection));
+        apiResponse.setResult(jobService.multi_filter_salary(dto.getStartDate(), dto.getEndDate(), isAdvanceSuccess,position_id, username,sortDirection));
         return apiResponse;
     }
 }

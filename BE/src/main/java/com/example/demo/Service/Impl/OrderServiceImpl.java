@@ -160,7 +160,10 @@ public class    OrderServiceImpl implements OrderService {
                         String errorMessage = String.format("Sản phẩm có mã sản phẩm là: " +orderdetail.getProduct().getCode()+" đang thiếu số lượng để đủ cho đơn hàng là " +a+" cái");
                         errors.put(orderdetail.getProduct().getCode(), errorMessage);
                     }
-
+                    if (!errors.isEmpty()) {
+                        apiResponse.setError(1039, errors);
+                        return ResponseEntity.badRequest().body(apiResponse);
+                    }
                     product.setQuantity(product.getQuantity() - item.getQuantity());
                     productRepository.save(product);
                     orderdetail.setRequestProduct(null);
@@ -168,10 +171,7 @@ public class    OrderServiceImpl implements OrderService {
                     BigDecimal itemQuantity = BigDecimal.valueOf(item.getQuantity());
                     total = total.add(itemPrice.multiply(itemQuantity)); // Cộng dồn vào total
                     orderDetailRepository.save(orderdetail);
-                    if (!errors.isEmpty()) {
-                        apiResponse.setError(1039, errors);
-                        return ResponseEntity.badRequest().body(apiResponse);
-                    }
+
 
                 }
             }

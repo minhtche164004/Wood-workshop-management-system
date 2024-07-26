@@ -25,8 +25,23 @@ public class StatisticServiceImpl implements StatisticService {
 
     @Override
     public BigDecimal findTotalSalaryByMonthAndYear(int month, int year) {
-        return advancesalaryRepository.findTotalSalaryByMonthAndYear(month,year);
+        BigDecimal result =advancesalaryRepository.findTotalSalaryByMonthAndYear(month,year);
+        return result ;
     }
+
+    @Override
+    public BigDecimal findTotalInputSubMaterialByMonthAndYear(int month, int year) {
+        BigDecimal input = inputSubMaterialRepository.findTotalInputSubMaterialByMonthAndYear(month, year);
+        BigDecimal editQuantity = inputSubMaterialRepository.findTotalEditQuantitySubMaterialByMonthAndYear(month, year);
+        BigDecimal editQuantityPrice = inputSubMaterialRepository.findTotalEditQuantityAndPriceSubMaterialByMonthAndYear(month, year);
+        input = (input != null) ? input : BigDecimal.ZERO;
+        editQuantity = (editQuantity != null) ? editQuantity : BigDecimal.ZERO;
+        editQuantityPrice = (editQuantityPrice != null) ? editQuantityPrice : BigDecimal.ZERO;
+
+        BigDecimal total = input.add(editQuantity).add(editQuantityPrice);
+        return total;
+    }
+
     @Override
     public Long countCompletedJobsByMonthAndYear(int status_id, int month, int year) {
         return advancesalaryRepository.countCompletedJobsByMonthAndYear(status_id,month,year);
@@ -41,20 +56,6 @@ public class StatisticServiceImpl implements StatisticService {
         return advancesalaryRepository.countCompletedRequestProductOnOrderByMonthAndYear(month,year);
     }
 
-    @Override
-    public BigDecimal findTotalInputSubMaterialByMonthAndYear(int month, int year) {
-        BigDecimal input = inputSubMaterialRepository.findTotalInputSubMaterialByMonthAndYear(month, year);
-        BigDecimal editQuantity = inputSubMaterialRepository.findTotalEditQuantitySubMaterialByMonthAndYear(month, year);
-        BigDecimal editQuantityPrice = inputSubMaterialRepository.findTotalEditQuantityAndPriceSubMaterialByMonthAndYear(month, year);
-
-
-        input = (input != null) ? input : BigDecimal.ZERO;
-        editQuantity = (editQuantity != null) ? editQuantity : BigDecimal.ZERO;
-        editQuantityPrice = (editQuantityPrice != null) ? editQuantityPrice : BigDecimal.ZERO;
-
-        BigDecimal total = input.add(editQuantity).add(editQuantityPrice);
-        return total;
-    }
 
 
 

@@ -305,6 +305,8 @@ export class ChartComponent implements OnInit {
     try {
       this.totalNormalProduct = this.totalProduct - this.totalRQProduct;
       console.log('Tổng sản phẩm normal:', this.totalNormalProduct);
+      console.log('Tổng sản phẩm RQ:', this.totalRQProduct);
+      console.log('Tổng sản phẩm:', this.totalProduct);
       this.normalProductPercentage = Math.round((this.totalNormalProduct / this.totalProduct) * 100);
       this.rqProductPercentage = Math.round((this.totalRQProduct / this.totalProduct) * 100);
       console.log('Phần trăm sản phẩm normal:', this.normalProductPercentage.toFixed(2) + '%');

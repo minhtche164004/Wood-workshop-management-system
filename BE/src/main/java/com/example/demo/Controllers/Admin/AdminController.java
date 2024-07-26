@@ -24,6 +24,7 @@ import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPooled;
 
 import java.lang.reflect.Type;
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -105,6 +106,17 @@ public class AdminController {
         }
         apiResponse.setResult(users);
         return apiResponse;
+    }
+
+    @GetMapping("/getMultiFillterUser")
+    public ApiResponse<?>  getAllProductForAdmin(
+            @RequestParam(required = false) String search,
+            @RequestParam(required = false) Integer roleId,
+            @RequestParam(required = false) Integer position_id){
+        ApiResponse<List> apiResponse = new ApiResponse<>();
+        apiResponse.setResult(userService.MultiFilterUser(search, roleId, position_id));
+        return apiResponse;
+
     }
 
 

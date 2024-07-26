@@ -197,10 +197,10 @@
     <div class="product-container">
         <div *ngFor="let item of wishlistItems | paginate: { itemsPerPage: 4, currentPage: currentPage }; let i = index"
             class="product">
-            <img [routerLink]="['/product-details', item.product.productId]" [src]="item.product.image"
+            <img  [routerLink]="['/product-details', item.product.productId]" [src]="item.product.image" style="width: 400px; height: 300px; " 
                 alt="Sản phẩm 2">
             <div class="product-info">
-                <h3>{{ item.product.productName }}</h3>
+                <h3 class="text-center"><b>{{ item.product.productName }}</b></h3>
                 <h3>Mô tả: {{ item.product.description }}</h3>
                 <p class="price">Giá Tiền: {{ item.product.price | number: '1.0-3' }} VNĐ</p>
                 <div class="actions">

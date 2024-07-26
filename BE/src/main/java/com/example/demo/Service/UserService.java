@@ -57,6 +57,6 @@ public interface UserService {
     List<UserDTO> FilterByPosition(int position_id);
 
 
-     List<User> MultiFilterUser(String search, Integer roleId, Integer position_id);
+     List<UserDTO> MultiFilterUser(String search, Integer roleId, Integer position_id);
 
 }

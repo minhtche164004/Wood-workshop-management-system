@@ -1,4 +1,6 @@
 spring:
+  jackson:
+    time-zone: Asia/Ho_Chi_Minh
   servlet:
     multipart:
       enabled: true

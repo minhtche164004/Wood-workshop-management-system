@@ -21,16 +21,20 @@
             </div>
   
             <div class="row">
-              <div class="col-md-7"></div> <!-- Dummy column to push the search box to the right -->
-              <div class="col-md-5 text-end">
+              <div class="col-md-1"></div> <!-- Dummy column to push the search box to the right -->
+              <div class="col-md-11 text-end">
                 <div class="input-group mb-3">
                   <select [(ngModel)]="selectedRoleFilter" >
-                    <option value="null" selected>Tất cả vị trí đảm nhận</option>
+                    <option value="" selected>Tất cả vị trí đảm nhận</option>
                     <option *ngFor="let ps of position" [value]="ps.position_id">{{ ps.position_name }}</option>
                   </select>
+                  <select [(ngModel)]="selectedJob" >
+                    <option value="" selected>Tất cả tiến độ công việc</option>
+                    <option *ngFor="let ps of job" [value]="ps.status_id">{{ ps.status_name }}</option>
+                  </select>
   
-                  <input type="text" class="form-control" placeholder="Tìm kiếm mã việc làm..." >
-                  <button class="btn search-button" type="button" >
+                  <input type="text" class="form-control" placeholder="Tìm kiếm theo tên nhân viên..." [(ngModel)]="searchKey">
+                  <button class="btn search-button" type="button" (click)="MultifiterJobAdmin()">
                     <i class="fa fa-search"></i>
                   </button>
   
@@ -106,7 +110,23 @@
                 job_admin.length }}</b> dữ liệu</div>
           </div>
   
+          <div class="clearfix" style="justify-content: right; display: flex;" *ngIf="job_admin && job_admin.length > 0">
+            <div class="hint-text">Hiển thị <b>{{ (currentPage - 1) * 10 + 1 }}</b> tới <b>{{ currentPage * 10 >
+                job_admin.length ? job_admin.length : currentPage * 10 }}</b> trong tổng <b>{{
+                job_admin.length }}</b> dữ liệu</div>
+          </div>
   
+          <div *ngIf="!job_admin || job_admin.length === 0">
+  
+            <div style="background-color: white;">
+              <div class="" style="display: flex; justify-content: center; align-items: center; height: 100%;">
+                <img
+                  src="https://encrypted-tbn2.gstatic.com/images?q=tbn:ANd9GcSG53pYn6cpXaiwT_q6IM45P-rXg5dUw67XqRmr9-vtsbMoHnCG"
+                  alt="" class="product-img" style="width: 150px; height: 150px; object-fit: cover;">
+                <p class="name-product text-center">Không tìm thấy thông tin người dùng!</p>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </div>

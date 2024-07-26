@@ -56,32 +56,7 @@ export class HistoryOrderComponent {
     console.log("Lọc sản phẩm với từ khóa:", this.searchKey, ", danh mục:", this.selectedCategory,
       "DateS:", startDate, "DateE:", endDate
     );
-    this.authenListService.getFilterStatus(
-      this.searchKey,
-      this.selectedCategory,
-      startDate,
-      endDate
-    )
-      .subscribe(
-        (data) => {
-          if (data.code === 1000) {
-            this.currentPage = 1;
-            this.history_order = data.result;
-            this.isLoadding = false;
 
-          } else if (data.code === 1015) {
-            this.history_order = [];
-            this.isLoadding = false;
-            this.toastr.warning(data.message);
-          }
-        },
-        (error: HttpErrorResponse) => {
-          this.isLoadding = false;
-          this.toastr.error('Có lỗi xảy ra, vui lòng thử lại sau');
-
-
-        }
-      );
   }
   getOrderStatus(): void {
     this.orderService.getOrderStatus().subscribe(

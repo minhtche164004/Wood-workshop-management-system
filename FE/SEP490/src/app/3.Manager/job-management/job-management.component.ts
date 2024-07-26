@@ -645,7 +645,7 @@ cancelChangeStatusJob() {
   loadAutoSearchProduct(){
     this.productListService.getProducts().subscribe(
       (data) => {
-        this.isLoadding = false;
+       
         if (data.code === 1000) {
           this.productAutoSearch = data.result;
            console.log('Danh sách sản phẩm auto complete:', this.productAutoSearch);
@@ -655,7 +655,7 @@ cancelChangeStatusJob() {
         }
       },
       (error) => {
-        this.isLoadding = false;
+      
         console.error('Error fetching products:', error);
         this.toastr.error('Có lỗi xảy ra!', 'Lỗi');
       }

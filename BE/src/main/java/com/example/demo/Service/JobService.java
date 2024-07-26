@@ -3,6 +3,7 @@ package com.example.demo.Service;
 import com.example.demo.Dto.JobDTO.JobDTO;
 import com.example.demo.Dto.JobDTO.JobDoneDTO;
 import com.example.demo.Dto.OrderDTO.JobProductDTO;
+import com.example.demo.Dto.OrderDTO.OderDTO;
 import com.example.demo.Dto.ProductDTO.ProductErrorAllDTO;
 import com.example.demo.Dto.ProductDTO.ProductErrorDTO;
 import com.example.demo.Entity.*;
@@ -68,4 +69,13 @@ public interface JobService {
     List<JobProductDTO> MultiFilterRequestProductInJob(String search, Integer status_id, Integer position_id);
 
     List<JobProductDTO> MultiFilterListProductJob(String search, Integer status_id, Integer position_id);
+
+    List<Advancesalary> MultiFilterOrderSpecialOrder(String search,Integer isAdvanceSuccess, Date startDate, Date endDate);
+
+
+    List<JobDoneDTO> MultiFilterJobDone(String search,
+                                        Integer status_id,
+                                        Integer position_id);
+
+
 }

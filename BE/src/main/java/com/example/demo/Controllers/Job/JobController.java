@@ -238,6 +238,16 @@ public class JobController {
 
     }
 
+    @GetMapping("/getMultiFillterJobWasDone")
+    public ApiResponse<?>  getMultiFillterJobWasDone(
+            @RequestParam(required = false) String search,
+            @RequestParam(required = false) Integer status_id,
+            @RequestParam(required = false) Integer position_id){
+        ApiResponse<List> apiResponse = new ApiResponse<>();
+        apiResponse.setResult(jobService.MultiFilterJobDone(search, status_id, position_id));
+        return apiResponse;
+    }
+
     @GetMapping("/getListJobWasDone")
     public ApiResponse<?> getJobWasDone() {
         ApiResponse<List> apiResponse = new ApiResponse<>();
@@ -267,6 +277,8 @@ public class JobController {
         apiResponse.setResult(jobService.findAllJobForDoneByEmployeeID());
         return apiResponse;
     }
+
+
 
     @GetMapping("/findAllJobForDoneByEmployeeIDWithJobCode")
     public ApiResponse<?> findAllJobForDoneByEmployeeIDWithJobCode(@RequestParam("query") String query) {

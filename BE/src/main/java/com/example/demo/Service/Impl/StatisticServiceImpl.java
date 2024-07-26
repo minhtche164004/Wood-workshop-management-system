@@ -43,13 +43,19 @@ public class StatisticServiceImpl implements StatisticService {
 
     @Override
     public BigDecimal findTotalInputSubMaterialByMonthAndYear(int month, int year) {
-        BigDecimal input =inputSubMaterialRepository.findTotalInputSubMaterialByMonthAndYear(month,year);
-        BigDecimal edit_quantity=inputSubMaterialRepository.findTotalEditQuantitySubMaterialByMonthAndYear(month,year);
-        BigDecimal edit_quantity_price =inputSubMaterialRepository.findTotalEditQuantityAndPriceSubMaterialByMonthAndYear(month,year);
-        BigDecimal total = input.add(edit_quantity).add(edit_quantity_price);
-        return total;
+        BigDecimal input = inputSubMaterialRepository.findTotalInputSubMaterialByMonthAndYear(month, year);
+        BigDecimal editQuantity = inputSubMaterialRepository.findTotalEditQuantitySubMaterialByMonthAndYear(month, year);
+        BigDecimal editQuantityPrice = inputSubMaterialRepository.findTotalEditQuantityAndPriceSubMaterialByMonthAndYear(month, year);
 
+
+        input = (input != null) ? input : BigDecimal.ZERO;
+        editQuantity = (editQuantity != null) ? editQuantity : BigDecimal.ZERO;
+        editQuantityPrice = (editQuantityPrice != null) ? editQuantityPrice : BigDecimal.ZERO;
+
+        BigDecimal total = input.add(editQuantity).add(editQuantityPrice);
+        return total;
     }
+
 
 
     @Override

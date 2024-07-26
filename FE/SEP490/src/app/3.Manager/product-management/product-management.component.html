@@ -114,12 +114,12 @@
               <td> <a [href]="product.image" target="_blank">
                   <img class="img_product" [src]="product.image" alt="Ảnh đại diện">
                 </a></td>
-              <td>{{ product.completionTime }}</td>
+              <td>{{ product.completionTime | date:'dd / MM / yyyy'}}</td>
               <td>{{ product.productName }}</td>
               <td>{{ product.description }}</td>
               <td>{{ product.categories.categoryName }}</td>
-              <td>{{ product.quantity }}</td>
-              <td>{{ product.price | number: '1.0-3' }}</td>
+              <td style="text-align: end;">{{ product.quantity }}</td>
+              <td style="text-align: end;">{{ product.price | number: '1.0-3' }}</td>
             </tr>
 
           </tbody>
@@ -167,12 +167,12 @@
                   <img class="img_product" [src]="product.fullPath" alt="Ảnh đại diện">
                 </a>
               </td>
-              <td>{{ product.completionTime }}</td>
+              <td>{{ product.completionTime | date:'dd / MM / yyyy'}}</td>
               <td>{{ product.re_productName }}</td>
               <td>{{ product.description }}</td>
               <!-- <td>{{ product.categories.categoryName }}</td> -->
-              <td>{{ product.quantity }}</td>
-              <td>{{ product.price | number: '1.0-3' }}</td>
+              <td style="text-align: end;">{{ product.quantity }}</td>
+              <td style="text-align: end;">{{ product.price | number: '1.0-3' }}</td>
             </tr>
 
           </tbody>
@@ -408,7 +408,7 @@
               <div class="form-group" style="font-size: 14px;">
                 <div *ngFor="let item of pricePerProductAndQuantity | keyvalue">
                   <!-- hien thi neu co gia tri -->
-                  <div *ngIf="item.value[0] || item.value[1]"> 
+                  <div *ngIf="item.value[0] || item.value[1]">
                     Sản phẩm {{+item.key + 1}}: Đơn giá {{item.value[0] | number: '1.0-3'}} VNĐ - Số lượng:
                     {{item.value[1] | number: '1.0-3'}}
                   </div>
@@ -437,8 +437,8 @@
                   <!-- nut xem chi tiet -->
                   <button class="btn btn-link" type="button" data-toggle="collapse"
                     [attr.data-target]="'#formCollapse' + i" aria-expanded="true"
-                    [attr.aria-controls]="'formCollapse' + i">
-                    <i class="fas fa-chevron-down"></i> Chi tiết
+                    [attr.aria-controls]="'formCollapse' + i" (click)="toggleCollapse(i)">
+                    Chi tiết&nbsp;<i [ngClass]="isCollapsed[i] ? 'fas fa-chevron-down' : 'fas fa-chevron-right'"></i> 
                   </button>
                 </div>
                 <br>
@@ -1050,8 +1050,8 @@
         Bản có chắc muốn xóa sản phẩm "{{ selectedProductNameCurrentDelele }}" (thao tác này không thể hoàn tác)?
       </div>
       <div class="modal-footer" id="confirmDeleteModal">
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-        <button type="button" class="btn btn-danger" (click)="deleteProduct()">Delete</button>
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Hủy</button>
+        <button type="button" class="btn btn-primary" (click)="deleteProduct()">Xác nhận</button>
       </div>
     </div>
   </div>
@@ -1073,8 +1073,8 @@
         Bạn có chắc chắn muốn xóa sản phẩm "{{ selectedProductNameCurrentDelele }}" ?
       </div>
       <div class="modal-footer" id="confirmDeleteRequestProductModal">
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">Hủy bỏ</button>
-        <button type="button" class="btn btn-danger" (click)="deleteProductRequest()">Xác nhận</button>
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Hủy</button>
+        <button type="button" class="btn btn-primary" (click)="deleteProductRequest()">Xác nhận</button>
       </div>
     </div>
   </div>

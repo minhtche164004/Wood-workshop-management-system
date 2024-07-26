@@ -886,11 +886,7 @@ export class ProductManagementComponent implements OnInit {
 
   onSubmit() {
 
-    if (this.uploadForm.get('quantity')?.value < 1) {
-      this.toastr.error('Số lượng sản phẩm phải lớn hơn 0!', 'Lỗi');
-      return;
-    }
-    if (parseFloat(this.editForm.get('price')?.value.replace(/,/g, '')) < this.uploadForm.get('quantity')?.value * this.totalUnitPrice) {
+    if (parseFloat(this.uploadForm.get('price')?.value.replace(/,/g, '')) < this.uploadForm.get('quantity')?.value * this.totalUnitPrice) {
       this.toastr.error('Giá sản phẩm phải lớn hơn giá vật liệu !', 'Lỗi');
       return;
     }
@@ -982,10 +978,10 @@ export class ProductManagementComponent implements OnInit {
   }
 
   onEditSubmit(): void {
-    if (this.editForm.get('quantity')?.value < 1) {
-      this.toastr.error('Số lượng sản phẩm phải lớn hơn 0!', 'Lỗi');
-      return;
-    }
+    // if (this.editForm.get('quantity')?.value < 1) {
+    //   this.toastr.warning('Số lượng sản phẩm phải lớn hơn 0!', 'Lỗi');
+    //   return;
+    // }
     if (parseFloat(this.editForm.get('price')?.value.replace(/,/g, '')) < this.totalUnitPrice) {
       this.toastr.error('Giá sản phẩm phải lớn hơn giá vật liệu !', 'Lỗi');
       return;
@@ -1213,6 +1209,11 @@ export class ProductManagementComponent implements OnInit {
 
   totalAmountOfOrder: number = 0;
   onSubmitProductRequest() {
+
+    if (this.listRequestProductForm.get('quantity')?.value < 1) {
+      this.toastr.warning('Số lượng sản phẩm phải lớn hơn 0!', 'Lỗi');
+      return;
+    }
     this.pricePerProductAndQuantity = []; //reset lai gia tri
 
     for (let i = 0; i < this.itemsRProduct.length; i++) {
@@ -1437,7 +1438,7 @@ export class ProductManagementComponent implements OnInit {
 
   onEditRequestProductSubmit(): void {
     if (this.editForm.get('quantity')?.value < 1) {
-      this.toastr.error('Số lượng sản phẩm phải lớn hơn 0!', 'Lỗi');
+      this.toastr.warning('Số lượng sản phẩm phải lớn hơn 0!', 'Lỗi');
       return;
     }
     if (parseFloat(this.editForm.get('price')?.value.replace(/,/g, '')) < this.totalUnitPrice) {
@@ -1583,5 +1584,12 @@ export class ProductManagementComponent implements OnInit {
   //format gia tien
   formatNumberWithCommas(x: number): string {
     return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+  }
+
+  //dieu` huong mui ten chi tiet
+  isCollapsed: boolean[] = [];
+
+  toggleCollapse(index: number): void {
+    this.isCollapsed[index] = !this.isCollapsed[index];
   }
 }

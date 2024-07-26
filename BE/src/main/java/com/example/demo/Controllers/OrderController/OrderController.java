@@ -187,7 +187,7 @@ public class OrderController {
             @RequestParam(required = false) String search,
             @RequestParam(required = false) Integer statusId,
             @RequestParam(required = false) Integer paymentMethod,
-            @RequestParam(required = false) boolean specialOrder,
+            @RequestParam Integer specialOrder,
             @RequestBody(required = false) DateDTO dto
     ) {
         ApiResponse<List<OderDTO>> apiResponse = new ApiResponse<>(); // Chỉ định rõ kiểu List<OderDTO>

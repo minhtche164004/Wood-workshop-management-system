@@ -303,13 +303,21 @@ public class    OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public List<OderDTO> MultiFilterOrder(String search, Integer status_id, Integer paymentMethod,boolean specialOrder,  Date startDate, Date endDate) {
+    public List<OderDTO> MultiFilterOrder(String search, Integer status_id, Integer paymentMethod,Integer specialOrder,  Date startDate, Date endDate) {
         List<OderDTO> order_list = new ArrayList<>();
 
-        if (search != null || status_id != null || paymentMethod != null || startDate != null || endDate != null) {
-            order_list = orderRepository.MultiFilterOrder(search, status_id, paymentMethod,specialOrder, startDate, endDate);
+        if (specialOrder != null) {
+            if (specialOrder == -1) {
+                // Không lọc theo specialOrder, chỉ lọc theo các tham số khác
+                order_list= orderRepository.MultiFilterOrder(search, status_id, paymentMethod, startDate, endDate);
+            } else {
+                // Lọc theo specialOrder (true hoặc false) và các tham số khác
+                boolean specialOrderValue = (specialOrder == 1); // Chuyển đổi 1/0 thành true/false
+                order_list= orderRepository.MultiFilterOrderSpecialOrder(search, status_id, paymentMethod, specialOrderValue, startDate, endDate);
+            }
         } else {
-            order_list = orderRepository.getAllOrder();
+            // Không có tham số lọc nào, lấy tất cả đơn hàng
+            order_list= orderRepository.getAllOrder();
         }
 
         if (order_list.isEmpty()) {
@@ -738,15 +746,16 @@ public class    OrderServiceImpl implements OrderService {
             String code = orders.getCode();
             SimpleDateFormat dateFormatter = new SimpleDateFormat("dd/MM/yyyy");
 //            String time_finish = dateFormatter.format(orders.getOrderFinish());
-            String time_finish = (orders.getOrderFinish() == null) ? "" : dateFormatter.format(orders.getOrderFinish());
+         //   String time_finish = (orders.getOrderFinish() == null) ? "" : dateFormatter.format(orders.getOrderFinish());
             String time_start = dateFormatter.format(orders.getOrderDate());
             String status_name=statusOrder.getStatus_name();
             MailBody mailBody = MailBody.builder()
                     .to(email)
                     .text("Đơn hàng có mã đơn hàng là : " + code + "\n" +
                             "Có trạng thái: " + status_name + "\n" +
-                            "Với thời gian tạo đơn là: " + time_start + "\n" +
-                            "Và thời gian dự kiến hoàn thành là: " + time_finish)
+                            "Với thời gian tạo đơn là: " + time_start + "\n"
+                           // "Và thời gian dự kiến hoàn thành là: " + time_finish
+                    )
                     .subject("[Thông tin tiến độ của đơn hàng]")
                     .build();
             emailService.sendSimpleMessage(mailBody);

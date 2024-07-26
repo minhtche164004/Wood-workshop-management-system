@@ -19,7 +19,7 @@
           </div>
 
           <div class="row  justify-content-end">
-            <div class="col-md-9 text-end">
+            <div class="col-md-12 text-end">
               <div class="input-group mb-3">
                 <!-- product.component.html -->
                 <label>Từ: </label>
@@ -33,8 +33,15 @@
                 <!-- product.component.html -->
                 <select [(ngModel)]="selectedCategory">
                   <!-- <option value="0" selected disabled>Chọn đơn hàng</option> -->
+                  <option value="" selected>Tất cả tình trạng đơn hàng</option>
+                  
                   <option *ngFor="let ps of userStatus" [value]="ps.status_id">{{ ps.status_name }}</option>
-                  <option value="" selected>Tất cả danh mục</option>
+
+                </select>
+                <select [(ngModel)]="selectProduduct">
+                  <option value="" selected>Tất cả loại đơn hàng</option>
+                  <option [ngValue]="0">Đơn hàng có sẵn</option>
+                  <option [ngValue]="1">Đơn hàng đặc biệt</option>
                 </select>
 
                 <input type="text" class="form-control" placeholder="Tìm kiếm mã đơn hàng..." [(ngModel)]="searchKey">
@@ -80,7 +87,8 @@
                     (click)="getOrDetailById(us, us?.orderId)">
                     <i class="fa-solid fa-circle-info"></i>
                   </a>
-                  <a href="/product_management/{{ us?.orderId }}" class="info" title="Thêm sản phẩm" *ngIf="us?.status_id === 8 && 
+                  <a href="/product_management/{{ us?.orderId }}" class="info" title="Thêm sản phẩm" *ngIf="us?.status_id === 8   ||
+                  us?.status_id === 1 &&
                   us?.specialOrder === true">
                     <i class="fa-solid fa-circle-plus"></i>
                   </a>
@@ -221,6 +229,8 @@
               </div>
               <div class="col-md-4 text-center"> <b>Ngày tạo đơn:</b> {{OrderdetailById.orderDate | date:'dd/MM/yyyy'}}
               </div>
+
+
               <div class="col-md-4 text-end">
                 <b style="background-color: #007bff; color: whitesmoke; padding: 4px; border-radius: 5px;">
                   {{OrderdetailById.status?.status_name}}</b>
@@ -233,6 +243,7 @@
                 <div class="card">
                   <div class="card-header text-center">
                     Khách hàng
+
                   </div>
                   <div class="card-body">
                     <h4 class="card-title">{{OrderdetailById.userInfor?.fullname}} -
@@ -247,6 +258,7 @@
                 <div class="card">
                   <div class="card-header text-center">
                     Thông tin đơn hàng
+
                   </div>
                   <div class="card-body">
                     <!-- <h5 class="card-title">{{OrderdetailById.userInfor?.fullname}}</h5> -->
@@ -266,7 +278,7 @@
                   <thead>
                     <tr>
                       <th style="width: 40%;">Tên sản phẩm</th>
-                      <th>Đơn giá (VNĐ)</th>
+                      <th>Đơn giá</th>
                       <th>Trạng thái</th>
                       <th>Số lượng</th>
                     </tr>
@@ -286,7 +298,10 @@
 
         </div>
         <div class="modal-footer">
+
           <button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
+          <button type="button" class="btn btn-primary" *ngIf="OrderdetailById.totalAmount !== null
+          && OrderdetailById.deposite !== null" (click)="sendMail(OrderdetailById.orderId)">Gửi mail</button>
         </div>
       </div>
     </div>

@@ -33,8 +33,8 @@ export class OrderManagementComponent implements OnInit {
   selectedCategory: string = '';
   selectedSDate: string = '';
   selectedEDate: string = '';
-  selectProduduct: string = '';
-  
+  selectProduduct: number = -1;
+
   OrderdetailById: any = {};
   isLoadding: boolean = false;
   selectedC: number | null = null;
@@ -194,7 +194,7 @@ export class OrderManagementComponent implements OnInit {
   selectedOrderDetail: any = {};
   getOrDetailById(us: any, order_detail_id: string): void {
     this.isLoadding = true;
-       console.log('Order_detail_id:', order_detail_id);
+    console.log('Order_detail_id:', order_detail_id);
     console.log("order detail: ", us)
     console.log("order detail type: ", us.specialOrder)
     this.totalAmoutOrder = us.totalAmount
@@ -228,7 +228,7 @@ export class OrderManagementComponent implements OnInit {
       this.orderRequestService.getAllOrderDetailOfProductByOrderId(order_detail_id).subscribe(
         (data) => {
           this.productOfOrder = data.result;
-            console.log('Product Flase:', this.productOfOrder);
+          console.log('Product Flase:', this.productOfOrder);
         },
         (error) => {
           console.error('Error fetching user data:', error);
@@ -296,13 +296,16 @@ export class OrderManagementComponent implements OnInit {
       endDate = this.selectedEDate.replace(/(\d{2})\/(\d{2})\/(\d{4})/, "$3/$2/$1");
     }
     console.log("Lọc sản phẩm với từ khóa:", this.searchKey, ", danh mục:", this.selectedCategory,
-      "DateS:", startDate, "DateE:", endDate
+      "DateS:", startDate, "DateE:", endDate,"DateE:", this.selectProduduct
     );
     this.authenListService.getFilterStatus(
       this.searchKey,
       this.selectedCategory,
+      this.selectProduduct,
       startDate,
       endDate
+
+
     )
       .subscribe(
         (data) => {
@@ -344,8 +347,10 @@ export class OrderManagementComponent implements OnInit {
     this.authenListService.getFilterStatus(
       this.searchKey,
       this.selectedCategory,
+      this.selectProduduct,
       startDate,
       endDate
+
     )
       .subscribe(
         (data) => {
@@ -357,14 +362,14 @@ export class OrderManagementComponent implements OnInit {
           } else if (data.code === 1015) {
             this.user = [];
 
-          
+
             // this.toastr.warning(data.message);
 
           }
         },
         (error: HttpErrorResponse) => {
 
-          this.toastr.error('Có lỗi xảy ra, vui lòng thử lại sau');
+          // this.toastr.error('Có lỗi xảy ra, vui lòng thử lại sau');
 
 
         }
@@ -428,11 +433,11 @@ export class OrderManagementComponent implements OnInit {
       });
     }
   }
-  sendMail(orderId: number){
-   console.log(orderId);
-   this.isLoadding = true;
-   this.authenListService.SendMail(orderId).subscribe({
-    next: (response: any) => {
+  sendMail(orderId: number) {
+    console.log(orderId);
+    this.isLoadding = true;
+    this.authenListService.SendMail(orderId).subscribe({
+      next: (response: any) => {
 
         this.toastr.success("Gửi mail cho khách hàng thành công!");
         this.isLoadding = false;
@@ -441,14 +446,14 @@ export class OrderManagementComponent implements OnInit {
         //   closeModalButton.click();
         // }
         // $('[data-dismiss="modal"]').click();
-      
-    },
-    error: (error: HttpErrorResponse) => {
-      this.isLoadding = false;
-      this.toastr.error('Gửi mail thất bại');
-      this.realoadgetAllUser();
-      $('[data-dismiss="modal"]').click();
-    }
-  });
+
+      },
+      error: (error: HttpErrorResponse) => {
+        this.isLoadding = false;
+        this.toastr.error('Gửi mail thất bại');
+        this.realoadgetAllUser();
+        $('[data-dismiss="modal"]').click();
+      }
+    });
   }
 }

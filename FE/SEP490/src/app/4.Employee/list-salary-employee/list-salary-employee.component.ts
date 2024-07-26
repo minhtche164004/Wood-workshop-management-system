@@ -1,4 +1,4 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder } from '@angular/forms';
 import { Router } from '@angular/router';
@@ -18,6 +18,10 @@ export class ListSalaryEmployeeComponent implements OnInit {
   loginToken: string | null = null;
   currentPage: number = 1;
   isLoadding: boolean = false; 
+  selectedSDate: string = '';
+  selectedEDate: string = '';
+  selectPayment: number = -1;
+  searchKey: string = '';
   constructor(
 
     private authenListService: AuthenListService,
@@ -62,6 +66,50 @@ export class ListSalaryEmployeeComponent implements OnInit {
       this.isLoadding = false;
     }
   }
+  MultifilterSalaryEmployee(): void{
+
+
+    this.isLoadding = true;
+    let startDate: string = this.selectedSDate || '';
+    let endDate: string = this.selectedEDate || '';
+    if (this.selectedSDate) {
+      startDate = this.selectedSDate.replace(/(\d{2})\/(\d{2})\/(\d{4})/, "$3/$2/$1");
+    }
+
+    if (this.selectedEDate) {
+      endDate = this.selectedEDate.replace(/(\d{2})\/(\d{2})\/(\d{4})/, "$3/$2/$1");
+    }
+
+    this.authenListService.getFilterSalaryEmployeeByID(
+      this.searchKey,
+      this.selectPayment,
+      startDate,
+      endDate
+
+
+    )
+      .subscribe(
+        (data) => {
+          if (data.code === 1000) {
+            this.currentPage = 1;
+            this.salary_employee = data.result;
+            console.log(this.salary_employee);
+            this.isLoadding = false;
+
+          } else if (data.code === 1015) {
+            this.salary_employee = [];
+            this.isLoadding = false;
+            // this.toastr.warning(data.message);
+          }
+        },
+        (error: HttpErrorResponse) => {
+          this.isLoadding = false;
+          this.toastr.error('Có lỗi xảy ra, vui lòng thử lại sau');
+
+
+        }
+      );
+  }  
 }
 
 

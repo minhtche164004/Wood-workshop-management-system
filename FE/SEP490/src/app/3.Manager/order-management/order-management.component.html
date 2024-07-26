@@ -34,12 +34,12 @@
                 <select [(ngModel)]="selectedCategory">
                   <!-- <option value="0" selected disabled>Chọn đơn hàng</option> -->
                   <option value="" selected>Tất cả tình trạng đơn hàng</option>
-                  
+
                   <option *ngFor="let ps of userStatus" [value]="ps.status_id">{{ ps.status_name }}</option>
 
                 </select>
                 <select [(ngModel)]="selectProduduct">
-                  <option value="" selected>Tất cả loại đơn hàng</option>
+                  <option value="-1" selected>Tất cả loại đơn hàng</option>
                   <option [ngValue]="0">Đơn hàng có sẵn</option>
                   <option [ngValue]="1">Đơn hàng đặc biệt</option>
                 </select>
@@ -99,7 +99,8 @@
                   </a>
 
                   <a href="#" data-toggle="modal" data-target="#confirmDeleteModal"
-                    (click)="setOrderForCancellation(us?.orderId, us?.specialOrder)" *ngIf="us?.status_id === 7">
+                    (click)="setOrderForCancellation(us?.orderId, us?.specialOrder)" *ngIf="us?.status_id === 7 
+                    || us?.status_id === 1|| us?.status_id === 8">
                     <i class="fa-solid fa-times-circle"></i>
                   </a>
                 </td>

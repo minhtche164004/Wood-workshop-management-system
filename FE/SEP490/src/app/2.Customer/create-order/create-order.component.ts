@@ -465,6 +465,10 @@ export class CreateOrderComponent implements OnInit {
           if (error.error.code == 1029) {
             this.toastr.error(error.error.message, 'Lỗi');
           }
+          else if (error.error.code === 1039) {
+            const errorMessage = Object.values(error.error.errors)[0] as string;
+            this.toastr.error(errorMessage, 'Lỗi');
+          }
           else {
             this.toastr.error('Có lỗi xảy ra!', 'Lỗi');
           }

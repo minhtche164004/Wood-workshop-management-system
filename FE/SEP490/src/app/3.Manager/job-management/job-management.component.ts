@@ -143,7 +143,7 @@ export class JobManagementComponent implements OnInit {
       this.getAllPostionEmp(), 
       this.getAllStatusJob(),
       this.loadPosition(),
-      this.loadAutoSearchProduct()
+      // this.loadAutoSearchProduct()
     ]).then(() => {
       this.hideLoadingIndicator();
     }).catch(error => {
@@ -642,22 +642,26 @@ cancelChangeStatusJob() {
     return [6, 9, 12, 14].includes(product.statusJob.status_id) || product.statusJob.type === 1;
   }
   productAutoSearch: any[] = [];
-  loadAutoSearchProduct(){
+  loadAutoSearchProduct(): void{
+    this.isLoadding = true;
     this.productListService.getProducts().subscribe(
       (data) => {
        
         if (data.code === 1000) {
           this.productAutoSearch = data.result;
            console.log('Danh sách sản phẩm auto complete:', this.productAutoSearch);
+           this.isLoadding = false;
         } else {
           console.error('Failed to fetch products:', data);
           this.toastr.error('Không thể lấy danh sách sản phẩm!', 'Lỗi');
+          this.isLoadding = false;
         }
       },
       (error) => {
       
         console.error('Error fetching products:', error);
         this.toastr.error('Có lỗi xảy ra!', 'Lỗi');
+        this.isLoadding = false;
       }
     );
   }

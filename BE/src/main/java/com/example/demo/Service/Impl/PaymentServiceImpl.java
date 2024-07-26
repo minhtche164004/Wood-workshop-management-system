@@ -20,8 +20,8 @@ public class PaymentServiceImpl implements PaymentService {
     private String accessToken;
     private String deviceId;
     private String accountId = "00002189180";
-    private String username = "0983682547";
-    private String password = "Password@123456";
+    private String username = "";
+    private String password = "";
 
 
     public String login() {

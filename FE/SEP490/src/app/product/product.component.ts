@@ -138,6 +138,7 @@ export class ProductComponent implements OnInit, OnDestroy {
       data => {
         if (data.code === 1000) {
           this.products = data.result;
+          console.log('products:', this.products);
         } else {
           this.toastr.error('Không thể lấy danh sách sản phẩm!', 'Lỗi');
         }
@@ -219,6 +220,7 @@ export class ProductComponent implements OnInit, OnDestroy {
           this.isLoadding = false;
           if (data.code === 1000) {
             this.products = data.result;
+            console.log('products:', this.products);
             this.notFoundProduct = false;
             // this.toastr.success('Lọc sản phẩm thành công!', 'Thành công');
           } else if (data.code === 1015) {

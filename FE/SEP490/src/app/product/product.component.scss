@@ -1,1 +1,8 @@
-    
+.name-product {
+    display: block;
+    width: 100%; /* Adjust as necessary */
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  

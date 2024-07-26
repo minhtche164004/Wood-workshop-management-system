@@ -11,6 +11,7 @@ import com.example.demo.Exception.ErrorCode;
 import com.example.demo.Mail.EmailService;
 import com.example.demo.Mail.MailBody;
 import com.example.demo.Repository.*;
+import com.example.demo.Response.ApiResponse;
 import com.example.demo.Service.*;
 import jakarta.mail.MessagingException;
 import jakarta.persistence.EntityManager;
@@ -89,9 +90,9 @@ public class    OrderServiceImpl implements OrderService {
 
 
     @Override
-    public Orders AddOrder(RequestOrder requestOrder) {
+    public ResponseEntity<ApiResponse<List<String>>> AddOrder(RequestOrder requestOrder) {
         Map<String, String> errors = new HashMap<>(); //hashmap cho error
-
+        ApiResponse<List<String>> apiResponse = new ApiResponse<>();
         LocalDate currentDate = LocalDate.now();
         java.sql.Date sqlCompletionTime = java.sql.Date.valueOf(currentDate); // Chuyển đổi sang java.sql.Date
 
@@ -156,9 +157,10 @@ public class    OrderServiceImpl implements OrderService {
                         int b = orderdetail.getProduct().getQuantity();
                         int c = item.getQuantity();
                         int a = c-b;
-                        String errorMessage = String.format("Sản phẩm có mã sản phẩm là:" +orderdetail.getProduct().getCode()+" đang thiếu số lượng để đủ cho đơn hàng là " +a+" cái");
+                        String errorMessage = String.format("Sản phẩm có mã sản phẩm là: " +orderdetail.getProduct().getCode()+" đang thiếu số lượng để đủ cho đơn hàng là " +a+" cái");
                         errors.put(orderdetail.getProduct().getCode(), errorMessage);
                     }
+
                     product.setQuantity(product.getQuantity() - item.getQuantity());
                     productRepository.save(product);
                     orderdetail.setRequestProduct(null);
@@ -166,7 +168,10 @@ public class    OrderServiceImpl implements OrderService {
                     BigDecimal itemQuantity = BigDecimal.valueOf(item.getQuantity());
                     total = total.add(itemPrice.multiply(itemQuantity)); // Cộng dồn vào total
                     orderDetailRepository.save(orderdetail);
-
+                    if (!errors.isEmpty()) {
+                        apiResponse.setError(1039, errors);
+                        return ResponseEntity.badRequest().body(apiResponse);
+                    }
 
                 }
             }
@@ -174,6 +179,8 @@ public class    OrderServiceImpl implements OrderService {
             orders.setTotalAmount(total);
             orders.setSpecialOrder(false);
         }
+
+
 //        if (requestOrder.getSpecial_order() == 1) {//là hàng ko có sẵn
 //
 //            BigDecimal total = BigDecimal.ZERO; // Khởi tạo total là 0
@@ -220,8 +227,9 @@ public class    OrderServiceImpl implements OrderService {
 //        }
 
         orderRepository.save(orders);
-
-        return orders;
+        apiResponse.setResult(Collections.singletonList("Xuất đơn nguyên vật liệu cho đơn hàng thành công"));
+        return ResponseEntity.ok(apiResponse);
+       // return orders;
     }
     @Override
     public ResponseEntity<String> Cancel_Order(int order_id, boolean special_order_id,String response) {

@@ -8,6 +8,7 @@ import com.example.demo.Dto.RequestDTO.RequestEditCusDTO;
 import com.example.demo.Dto.RequestDTO.RequestEditDTO;
 import com.example.demo.Dto.SubMaterialDTO.CreateExportMaterialProductRequestDTO;
 import com.example.demo.Entity.*;
+import com.example.demo.Response.ApiResponse;
 import jakarta.mail.MessagingException;
 import org.junit.runner.Request;
 import org.springframework.data.repository.query.Param;
@@ -24,7 +25,7 @@ import java.util.Map;
 
 @Service
 public interface OrderService {
-    Orders AddOrder(RequestOrder requestOrder);
+    ResponseEntity<ApiResponse<List<String>>> AddOrder(RequestOrder requestOrder);
 
     List<RequestProductAllDTO> GetAllProductRequest();
 

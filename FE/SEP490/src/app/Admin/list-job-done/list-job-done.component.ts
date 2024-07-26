@@ -1,4 +1,4 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder } from '@angular/forms';
 import { Router } from '@angular/router';
@@ -17,7 +17,10 @@ interface ApiResponse {
 export class ListJobDoneComponent implements OnInit {
   job_admin: any[] = [];
   position: any[] = [];
-  selectedRoleFilter: any = null;
+  job: any[] = [];
+  selectedRoleFilter:string = '';
+  selectedJob:string = '';
+  searchKey: string = '';
   loginToken: string | null = null;
   currentPage: number = 1;
   isLoadding: boolean = false;
@@ -35,6 +38,7 @@ export class ListJobDoneComponent implements OnInit {
     this.loginToken = localStorage.getItem('loginToken');
     this.loadAllJobByEmployeID();
     this.loadPosition();
+    this.loadAllStatusJob();
 
   }
   loadPosition(): void {
@@ -42,6 +46,21 @@ export class ListJobDoneComponent implements OnInit {
       (data: any) => {
         if (data.code === 1000) {
           this.position = data.result;
+
+        } else {
+          console.error('Invalid data returned:', data);
+        }
+      },
+      (error) => {
+        console.error('Error fetching positions:', error);
+      }
+    );
+  }
+  loadAllStatusJob(): void {
+    this.productListService.getAllStatusJob().subscribe(
+      (data: any) => {
+        if (data.code === 1000) {
+          this.job = data.result;
 
         } else {
           console.error('Invalid data returned:', data);
@@ -78,6 +97,43 @@ export class ListJobDoneComponent implements OnInit {
       this.isLoadding = false;
 
     }
+  }
+  MultifiterJobAdmin(): void {
+
+ 
+    this.authenListService.getFilterJobWasDone(
+      this.searchKey,
+     
+      this.selectedJob,
+      this.selectedRoleFilter,
+
+    )
+      .subscribe(
+        (data) => {
+
+          if (data.code === 1000) {
+            this.currentPage = 1;
+            this.job_admin = data.result;
+            console.log(this.job_admin);
+            this.isLoadding = false;
+
+          } else if (data.code === 1015) {
+            this.job_admin = [];
+            this.isLoadding = false;
+            // this.toastr.warning(data.message);
+          }
+
+
+
+        },
+        (error: HttpErrorResponse) => {
+          this.isLoadding = false;
+          // this.toastr.error('Có lỗi xảy ra, vui lòng thử lại sau');
+
+
+        }
+      );
+
   }
 }
 

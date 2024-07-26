@@ -19,17 +19,23 @@
           </div>
 
           <div class="row">
-            <div class="col-md-7"></div> <!-- Dummy column to push the search box to the right -->
-            <div class="col-md-5 text-end">
+            <div class="col-md-3"></div> <!-- Dummy column to push the search box to the right -->
+            <div class="col-md-9 text-end">
               <div class="input-group mb-3">
                 <!-- product.component.html -->
 
-                <select [(ngModel)]="selectedRoleFilter" (change)="filterRole()">
-                  <option value="null" selected>Tất cả vị trí đảm nhận</option>
+                <select [(ngModel)]="selectedPositionFilter">
+                  <option value="" selected>Tất cả vị trí </option>
                   <option *ngFor="let ps of position" [value]="ps.position_id">{{ ps.position_name }}</option>
                 </select>
-                <input type="text" class="form-control" placeholder="Mã người dùng,Tên" [(ngModel)]="searchKey">
-                <button class="btn search-button" type="button" (click)="SearchUserByNameorAddress()">
+                <select [(ngModel)]="selectedRoleMulti">
+                  <option value="" selected>Tất cả vai trò </option>
+                  <option *ngFor="let rol of role" [ngValue]="rol.roleId" [hidden]="rol.roleId == 5 || rol.roleId == 1">
+                    {{ rol.roleName }}
+                  </option>
+                </select>
+                <input type="text" class="form-control" placeholder="Tìm kiếm theo họ tên..." [(ngModel)]="searchKey">
+                <button class="btn search-button" type="button" (click)="MultifiterUser()">
                   <i class="fa fa-search"></i>
                 </button>
 
@@ -44,7 +50,7 @@
               <thead>
                 <tr>
                   <th>STT</th>
-                  <th>Phân quyền</th>
+                  <th>Vai trò</th>
                   <th>Thao tác</th>
                   <th>Tên đăng nhập</th>
                   <th>Địa chỉ</th>
@@ -55,31 +61,24 @@
                 </tr>
               </thead>
               <tbody>
-                <tr *ngFor="let us of user | paginate: { itemsPerPage: 10, currentPage: currentPage }; let i = index">
-                  <td>{{ i + 1 + (currentPage - 1) * 10 }}</td>
-                  <td>{{ us.role_name }}</td>
-
-                  <td class="action-buttons">
-                    <a href="#" class="settings" title="Chỉnh sửa" data-toggle="modal" data-target="#editAccountModal"
-                      (click)="getUserData(us.userId)">
-                      <i class="fa-solid fa-pen-to-square"></i>
-                    </a>
-                    <!-- <a href="#" class="delete" title="Delete" data-toggle="modal" data-target="#confirmDeleteModal"(click)="openModal()">
-                      
-                      <i class="fa-regular fa-trash-can"></i>
-                    </a>
-                    <a href="#" class="info" title="Info" data-toggle="modal" data-target="#productDetailModal">
-                      <i class="fa-solid fa-ellipsis-vertical"></i>
-                    </a> -->
-                  </td>
-
-                  <td>{{ us.username }}</td>
-                  <td>{{ us.address }}</td>
-                  <td style="min-width: 150px;">{{ us.position_name }}</td>
-                  <td>{{ us.fullname }}</td>
-                  <td style="min-width: 150px;">{{ us.email }}</td>
-                  <td style="min-width: 150px;">{{ us.phoneNumber }}</td>
-                </tr>
+                <ng-container *ngFor="let us of user | paginate: { itemsPerPage: 10, currentPage: currentPage }; let i = index">
+                  <tr *ngIf="us.role_name !== 'ADMIN'">
+                    <td>{{ i + 1 + (currentPage - 1) * 10 }}</td>
+                    <td>{{ us.role_name }}</td>
+                    <td class="action-buttons">
+                      <a href="#" class="settings" title="Chỉnh sửa" data-toggle="modal" data-target="#editAccountModal" (click)="getUserData(us.userId)">
+                        <i class="fa-solid fa-pen-to-square"></i>
+                      </a>
+                    </td>
+                    <td>{{ us.username }}</td>
+                    <td>{{ us.address }}</td>
+                    <td style="min-width: 150px;">{{ us.position_name }}</td>
+                    <td>{{ us.fullname }}</td>
+                    <td style="min-width: 150px;">{{ us.email }}</td>
+                    <td style="min-width: 150px;">{{ us.phoneNumber }}</td>
+                  </tr>
+                </ng-container>
+                
               </tbody>
             </table>
           </div>
@@ -94,7 +93,23 @@
               > user.length ? user.length : currentPage * 10 }}</b> trong tổng <b>{{
               user.length }}</b> dữ liệu</div>
         </div>
+        <div class="clearfix" style="justify-content: right; display: flex;" *ngIf="user && user.length > 0">
+          <div class="hint-text">Hiển thị <b>{{ (currentPage - 1) * 10 + 1 }}</b> tới <b>{{ currentPage * 10 >
+              user.length ? user.length : currentPage * 10 }}</b> trong tổng <b>{{
+              user.length }}</b> dữ liệu</div>
+        </div>
 
+        <div *ngIf="!user || user.length === 0">
+
+          <div style="background-color: white;">
+            <div class="" style="display: flex; justify-content: center; align-items: center; height: 100%;">
+              <img
+                src="https://encrypted-tbn2.gstatic.com/images?q=tbn:ANd9GcSG53pYn6cpXaiwT_q6IM45P-rXg5dUw67XqRmr9-vtsbMoHnCG"
+                alt="" class="product-img" style="width: 150px; height: 150px; object-fit: cover;">
+              <p class="name-product text-center">Không tìm thấy thông tin người dùng!</p>
+            </div>
+          </div>
+        </div>
 
       </div>
     </div>
@@ -163,7 +178,7 @@
               <select [(ngModel)]="selectedRoleAdd" formControlName="role" class="form-control form-control-lg"
                 id="role" (change)="onRoleChange()">
                 <option [ngValue]="null" disabled selected>Chọn Vai Trò</option>
-                <option *ngFor="let rol of role" [ngValue]="rol.roleId"  [hidden]="rol.roleId == 5">
+                <option *ngFor="let rol of role" [ngValue]="rol.roleId" [hidden]="rol.roleId == 5 || rol.roleId == 1">
                   {{ rol.roleName }}
                 </option>
               </select>
@@ -328,7 +343,7 @@
                 <select (change)="onRoleChangeUpdate()" [(ngModel)]="selectedRole" formControlName="role_id"
                   class="form-control form-control-lg">
                   <option [ngValue]="null" disabled selected>Chọn Vai Trò</option>
-                  <option *ngFor="let rol of role" [ngValue]="rol.roleId"  [hidden]="rol.roleId == 5">
+                  <option *ngFor="let rol of role" [ngValue]="rol.roleId"  [hidden]="rol.roleId == 5 || rol.roleId == 1">
                     {{ rol.roleName }}
                   </option>
                 </select>
@@ -342,7 +357,7 @@
                 <select [(ngModel)]="selectedPosition_Update" formControlName="position_id"
                   class="form-control form-control-lg">
                   <option disabled *ngFor="let pos of position" [ngValue]="pos.position_id">
-                    {{ pos.position_name }}
+                    {{ pos.position_name }} 
                   </option>
                 </select>
               </div>
@@ -390,7 +405,7 @@
           <div class="row">
             <div class="col-md-4 mb-5">
               <div class="form-group">
-                <select [ngModel]="selectProvince" [(ngModel)]="userData.city_province" formControlName="city_province"
+                <select  [(ngModel)]="userData.city_province" formControlName="city_province"
                   class="form-control">
                   <option [ngValue]="null" disabled selected>Tỉnh / Thành Phố</option>
                   <option *ngFor="let province of provinces" [ngValue]="province.name">
@@ -411,7 +426,7 @@
             </div>
             <div class="col-md-4 mb-5">
               <div class="form-group">
-                <select [(ngModel)]="userData.wards" formControlName="wards" class="form-control">
+                <select [ngModel]="selectProvince1" [(ngModel)]="userData.wards" formControlName="wards" class="form-control">
                   <option [ngValue]="null" disabled selected>Phường / Xã</option>
                   <option *ngFor="let ward of wards" [ngValue]="ward.name">
                     {{ ward.name }}

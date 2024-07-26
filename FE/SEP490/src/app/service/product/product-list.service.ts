@@ -60,7 +60,8 @@ export class ProductListService {
   private api_UrlexportMaterialProductByProductRequestId = `${environment.apiUrl}api/auth/product/getRequestProductSubMaterialAndMaterialByRequestProductId`;  // lay tat ca vat lieu can co de tao 1 san pham theo yeu cau 
   private api_UrlEditSubMateialRequestProduct = `${environment.apiUrl}api/auth/submaterial/EditSubMaterialRequestProduct`;
   private api_UrlcreateExportMaterialListProductRequest = `${environment.apiUrl}api/auth/submaterial/createExportMaterialListProductRequest`; 
-
+  private apiUrl_getAllStatusJob = `${environment.apiUrl}api/auth/job/getAllStatusJob`;
+  
   //
 
   //api danh` cho order dac biet
@@ -164,6 +165,10 @@ export class ProductListService {
 
   getAllPosition(): Observable<any[]> {
     return this.http.get<any[]>(this.apiUrl_Position);
+  }
+  
+  getAllStatusJob(): Observable<any[]> {
+    return this.http.get<any[]>(this.apiUrl_getAllStatusJob);
   }
   getAllRole(): Observable<any[]> {
     return this.http.get<any[]>(this.apiUrl_AllRole);

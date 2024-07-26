@@ -58,6 +58,11 @@ export class AuthenListService {
   private api_getAllOrderDetailById = `${environment.apiUrl}api/auth/order/getAllOrderDetailByOrderId`;
   private apiUrl_Paymentmoney = `${environment.apiUrl}api/auth/order/ConfirmPayment`;
   private apiUrl_SendMail = `${environment.apiUrl}api/auth/order/SendMailToNotifyCationAboutOrder`;
+  private apiUrl_getFilterUser = `${environment.apiUrl}api/auth/admin/getMultiFillterUser`;
+  private apiUrl_getFilterJobEmployeeByID = `${environment.apiUrl}api/auth/job/findAllJobForDoneByEmployeeIDWithJobCode`;
+ 
+  private apiUrl_getFilterSalaryEmployeeByID = `${environment.apiUrl}api/auth/salary/MultiFilterSalary`;
+  private apiUrl_getFilterJobWasDone = `${environment.apiUrl}api/auth/job/getMultiFillterJobWasDone`;
   
   private apiUrl_NameATM = 'https://api.vietqr.io/v2/banks';
   constructor(private http: HttpClient) { }
@@ -504,11 +509,12 @@ export class AuthenListService {
       catchError(this.handleError)
     );
   }
-  getFilterStatus(search: string, statusId: string, startDate: string, endDate: string): Observable<any> {
-    
+  getFilterStatus(search: string, statusId: string, specialOrder: number, startDate: string, endDate: string): Observable<any> {
+
     const params = {
       search: search,
       statusId: statusId,
+      specialOrder: specialOrder,
       // startDate: startDate,
       // endDate: endDate
     };
@@ -521,6 +527,8 @@ export class AuthenListService {
       .filter(([key, value]) => {
         if (key === 'search' && value === '') return false;
         if (key === 'statusId' && value === "0") return false;
+        if (key === 'specialOrder' && value === -1) return false;
+
         return value != null && value !== '';
       })
       .map(([key, value]) => `${encodeURIComponent(key)}=${encodeURIComponent(value)}`)
@@ -528,7 +536,137 @@ export class AuthenListService {
 
     const url = `${this.apiUrl_getFilterStatus}?${queryString}`;
     console.log(url);
-    return this.http.post<any>(url,body).pipe(
+    
+    return this.http.post<any>(url, body).pipe(
+      catchError(this.handleError)
+    );
+  }
+  getFilterUser(search: string, roleId: string, position_id: string): Observable<any> {
+
+    const params = {
+      search: search,
+      roleId: roleId,
+      position_id: position_id,
+      // startDate: startDate,
+      // endDate: endDate
+    };
+  
+    const queryString = Object.entries(params)
+      .filter(([key, value]) => {
+        if (key === 'search' && value === '') return false;
+        if (key === 'roleId' && value === "") return false;
+        if (key === 'position_id' && value === "") return false;
+   
+
+        return value != null && value !== ''&& value !== "";
+      })
+      .map(([key, value]) => `${encodeURIComponent(key)}=${encodeURIComponent(value)}`)
+      .join('&');
+
+    const url = `${this.apiUrl_getFilterUser}?${queryString}`;
+    console.log(url);
+    
+    return this.http.get<any>(url).pipe(
+      catchError(this.handleError)
+    );
+  }
+  getFilterJobWasDone(search: string, status_id: string, position_id: string): Observable<any> {
+
+    const params = {
+      search: search,
+      status_id: status_id,
+      position_id: position_id,
+      // startDate: startDate,
+      // endDate: endDate
+    };
+  
+    const queryString = Object.entries(params)
+      .filter(([key, value]) => {
+        if (key === 'search' && value === '') return false;
+        if (key === 'status_id' && value === "") return false;
+        if (key === 'position_id' && value === "") return false;
+   
+
+        return value != null && value !== ''&& value !== "";
+      })
+      .map(([key, value]) => `${encodeURIComponent(key)}=${encodeURIComponent(value)}`)
+      .join('&');
+
+    const url = `${this.apiUrl_getFilterJobWasDone}?${queryString}`;
+    console.log(url);
+    
+    return this.http.get<any>(url).pipe(
+      catchError(this.handleError)
+    );
+  }
+  getFilterJobEmployeeByID(query: string): Observable<any> {
+
+    const params = {
+      query: query,
+ 
+    };
+  
+    const queryString = Object.entries(params)
+      .filter(([key, value]) => {
+        if (key === 'query' && value === '') return false;
+        return  value !== '';
+      })
+      .map(([key, value]) => `${encodeURIComponent(key)}=${encodeURIComponent(value)}`)
+      .join('&');
+
+    const url = `${this.apiUrl_getFilterJobEmployeeByID}?${queryString}`;
+    console.log(url);
+    const token = localStorage.getItem('loginToken');
+    if (!token) {
+      return throwError(new Error('Login token not found in localStorage.'));
+    }
+
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${token}`,
+      'Content-Type': 'application/json'
+    });
+    return this.http.get<any>(url ,{headers}).pipe(
+      catchError(this.handleError)
+    );
+  }
+  getFilterSalaryEmployeeByID(search: string, isAdvanceSuccess: number, startDate: string, endDate: string): Observable<any> {
+
+    const params = {
+      search: search,
+      isAdvanceSuccess: isAdvanceSuccess,
+ 
+      // startDate: startDate,
+      // endDate: endDate
+    };
+    const body = {
+
+      startDate: startDate,
+      endDate: endDate
+    };
+    const queryString = Object.entries(params)
+      .filter(([key, value]) => {
+        if (key === 'search' && value === '') return false;
+        if (key === 'statusId' && value === "0") return false;
+        if (key === 'isAdvanceSuccess' && value === "-1") return false;
+
+        return value != null && value !== '';
+      })
+      .map(([key, value]) => `${encodeURIComponent(key)}=${encodeURIComponent(value)}`)
+      .join('&');
+
+    const url = `${this.apiUrl_getFilterSalaryEmployeeByID}?${queryString}`;
+    console.log(url);
+    const token = localStorage.getItem('loginToken');
+    if (!token) {
+      return throwError(new Error('Login token not found in localStorage.'));
+    }
+
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${token}`,
+      'Content-Type': 'application/json'
+    });
+
+    return this.http.post<any>(url, body,{headers}).pipe(
       catchError(this.handleError)
     );
   }
@@ -555,7 +693,7 @@ export class AuthenListService {
     );
   }
 
-  getMultiFillterRHistoryImpact(search: string, sortDirection: string,startDate: string, endDate: string): Observable<any> {
+  getMultiFillterRHistoryImpact(search: string, sortDirection: string, startDate: string, endDate: string): Observable<any> {
     const params = {
       search: search,
       sortDirection: sortDirection,
@@ -577,7 +715,7 @@ export class AuthenListService {
 
     const url = `${this.apiUrl_getMultiFillterRHistoryImpact}?${queryString}`;
     console.log(url);
-    return this.http.post<any>(url,body).pipe(
+    return this.http.post<any>(url, body).pipe(
       catchError(this.handleError)
     );
   }

@@ -891,7 +891,7 @@ export class ProductManagementComponent implements OnInit {
       return;
     }
 
-    if (this.uploadForm.valid && this.selectedThumbnail && this.selectedImages.length) {
+    if (this.uploadForm.valid && this.selectedThumbnail && this.selectedImages.length && this.uploadForm.get('category_id')?.value ) {
       this.isLoadding = true;
       const productData = this.uploadForm.value;
       // console.log(productData);
@@ -934,6 +934,8 @@ export class ProductManagementComponent implements OnInit {
           this.toastr.error('Tạo sản phẩm bị lỗi!', 'Lỗi');
         }
       );
+    }else{
+      this.toastr.warning('Vui lòng điền đầy đủ thông tin!', 'Lỗi');
     }
   }
 
@@ -986,7 +988,7 @@ export class ProductManagementComponent implements OnInit {
       this.toastr.error('Giá sản phẩm phải lớn hơn giá vật liệu !', 'Lỗi');
       return;
     }
-    if (this.editForm.valid) {
+    if (this.editForm.get('price')?.value && this.editForm.get('category_id')?.value) {
       const productData = this.editForm.value;
 
       if (productData.price) {
@@ -1051,6 +1053,8 @@ export class ProductManagementComponent implements OnInit {
             $('[data-dismiss="modal"]').click(); // Đóng modal
           }
         );
+    }else{
+      this.toastr.warning('Có lỗi xảy ra vui lòng thử lại', 'Lỗi');
     }
   }
 

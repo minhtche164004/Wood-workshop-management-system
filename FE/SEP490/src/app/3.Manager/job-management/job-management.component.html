@@ -12,7 +12,7 @@
                             <!-- {{ selectedCategory }} -->
                             <div *ngIf="selectedCategory != 0">
                                 <a href="#" class="btn btn-secondary" data-toggle="modal"
-                                    data-target="#addProductModal">
+                                    data-target="#addProductModal" (click)="loadAutoSearchProduct()">
                                     <i class="material-icons">&#xE147;</i> <span>Thêm Sản Phẩm</span>
                                 </a>
                             </div>
@@ -515,7 +515,7 @@
     </div>
 </div>
 
-<div class="modal fade" style="margin-top: 15%;" id="addProductModal" tabindex="-1" role="dialog"
+<div class="modal fade" style="margin-top: 6%;" id="addProductModal" tabindex="-1" role="dialog"
     aria-labelledby="addProductModalLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
@@ -530,7 +530,7 @@
                 <form [formGroup]="productForm" (ngSubmit)="onSubmit()">
                     <div class="row">
                         <div class="col-md-4">
-                            <label style="font-size: 16px;" for="productName">Danh sách sản phẩm có sẵn </label>
+                            <label style="font-size: 16px;">Danh sách sản phẩm có sẵn </label>
                         </div>
                         <div class="col-md-8">
                             <div class="ng-autocomplete" style="width: 100%;">
@@ -538,10 +538,7 @@
                                     [searchKeyword]="keyword" placeholder="Nhập tên sản phẩm có sẵn ..."
                                     historyIdentifier="productAutoSearch" [itemTemplate]="itemTemplate"
                                     [notFoundTemplate]="notFoundTemplate" (selected)="selectProduct($event)">
-                                </ng-autocomplete>
-
-                                
-                              
+                                </ng-autocomplete>             
                                 <ng-template #itemTemplate let-item>
                                     <a [innerHTML]="sanitize(item.productName)"></a>
                                 </ng-template>
@@ -549,6 +546,8 @@
                                 <ng-template #notFoundTemplate let-notFound>
                                     <div>Không tìm thấy sản phẩm!</div>
                                 </ng-template>
+
+                                
                             </div>
                         </div>
                     </div>
@@ -561,7 +560,7 @@
                             <input type="number" class="form-control" id="productPrice" formControlName="quantity">
                         </div>
                     </div>
-                    <div class="modal-footer d-flex justify-content-center">
+                    <div class="modal-footer d-flex justify-content-end">
                        
                         <button type="button" class="btn btn-secondary" (onClick)="huyTaoSanPhamCoSan()" data-dismiss="modal">Hủy</button>
                         <button type="submit" class="btn btn-primary">Thêm mới</button>

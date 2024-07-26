@@ -101,25 +101,43 @@ export class ChartComponent implements OnInit {
   ngOnInit(): void {
     this.loadData();
   }
-
-  async loadData() {
-    this.isLoading = true; // Hiển thị loading
+  ngOnDestroy() {
+    // Destroy existing charts if they exist
+    if (this.emmpChart instanceof Chart) {
+      this.emmpChart.destroy();
+    }
+    if (this.chart2 instanceof Chart) {
+      this.chart2.destroy();
+    }
+    if (this.chart3 instanceof Chart) {
+      this.chart3.destroy();
+    }
+    if (this.chart4 instanceof Chart) {
+      this.chart4.destroy();
+    }
+    if (this.chart5 instanceof Chart) {
+      this.chart5.destroy();
+    }
+  }
+   async loadData() {
+     this.isLoading = true; // Hiển thị loading
 
     try {
       await this.getTotalOrder();
       await Promise.all([
-        this.getTotalAmountSubMaterial(),
-        this.getTotalSpecialOrder(),
-        this.percenProduct(),
-        this.getAllEmployee(),
-       this.getTotalProductNormal(),
-        this.getAllPostionEmp(),
-        this.getAllDataForYear()
+         this.getTotalAmountSubMaterial(),
+         this.getTotalSpecialOrder(),
+         this.percenProduct(),
+         this.getAllEmployee(),
+        this.getTotalProductNormal(),
+         this.getAllPostionEmp(),
+         this.getAllDataForYear()
         
       ]);
       await this.updateEmployeePositions();
       this.initializeCharts();
     } catch (err) {
+      this.isLoading = false;
       console.error(err);
     } finally {
       this.isLoading = false;
@@ -140,10 +158,9 @@ export class ChartComponent implements OnInit {
   }
 
   initializeCharts() {
-    if (this.emmpChart instanceof Chart) {
-      this.emmpChart.destroy();
-    }
-  
+     if (this.emmpChart instanceof Chart) {
+       this.emmpChart.destroy();
+     }
     this.emmpChart = new Chart("canvas1", {
       type: 'pie',
       data: {
@@ -156,7 +173,6 @@ export class ChartComponent implements OnInit {
               'rgb(255, 99, 132)',
               'rgb(54, 162, 235)',
               'rgb(255, 205, 86)',
-           
             ],
             hoverOffset: 3
           }
@@ -164,7 +180,9 @@ export class ChartComponent implements OnInit {
       },
     });
     this.emmpChart.update();
-
+    if (this.chart2 instanceof Chart) {
+      this.chart2.destroy();
+    }
     this.chart2 = new Chart('canvas2', {
       type: 'pie',
       data: {
@@ -182,7 +200,8 @@ export class ChartComponent implements OnInit {
         ]
       },
     });
-
+    
+ 
     this.chart3 = new Chart('canvas3', {
       type: 'pie',
       data: {
@@ -200,7 +219,7 @@ export class ChartComponent implements OnInit {
         ]
       },
     });
-
+  
     this.chart4 = new Chart('canvas4', {
       type: 'bar',
       data: {
@@ -324,7 +343,7 @@ export class ChartComponent implements OnInit {
       console.error(err);
     }
   }
-  numberProduct: number = 0;
+   numberProduct: number = 0;
   async percenProduct(): Promise<void> {
     try {
       this.getTotalProduct();
@@ -450,4 +469,4 @@ export class ChartComponent implements OnInit {
       });
     });
   }
-}
+ }

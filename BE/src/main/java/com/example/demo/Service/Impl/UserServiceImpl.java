@@ -473,7 +473,19 @@ userRepository.save(user);
                 .collect(Collectors.toList());
     }
 
-
+    @Override
+    public List<User> MultiFilterUser(String search, Integer roleId, Integer position_id) {
+      List<User> userList = new ArrayList<>();
+        if (search != null || roleId != null || position_id != null ) {
+            userList = userRepository.MultiFilterUser(search, roleId, position_id);
+        } else {
+            userList = userRepository.findAll();
+        }
+        if (userList.isEmpty()) {
+            throw new AppException(ErrorCode.NOT_FOUND);
+        }
+        return userList;
+    }
 }
 
 

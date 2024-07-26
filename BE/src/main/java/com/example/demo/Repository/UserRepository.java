@@ -101,7 +101,7 @@ public interface UserRepository extends JpaRepository<User,Integer> {
     @Query("SELECT u FROM User u  " +
             " LEFT JOIN u.role r " +
             " LEFT JOIN u.position p WHERE" +
-            "(u.username LIKE %:search% OR :search IS NULL) " +
+            "(u.userInfor.fullname LIKE %:search% OR :search IS NULL) " +
             "AND (r.roleId = :roleId OR :roleId IS NULL) " +
             "AND (p.position_id = :position_id OR :position_id IS NULL)")
     List<User> MultiFilterUser(@Param("search") String search,

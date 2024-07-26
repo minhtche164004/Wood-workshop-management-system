@@ -38,8 +38,8 @@ public interface OrderRepository extends JpaRepository<Orders,Integer> {
             "(s.status_id = :status_id OR :status_id IS NULL) AND " +
             "(o.paymentMethod = :paymentMethod OR :paymentMethod IS NULL) AND " +
             //     " (:specialOrder IS NULL OR o.specialOrder = :specialOrder) AND " + // Sửa đổi tại đây
-            "(o.orderDate > :startDate OR :startDate IS NULL) AND " +
-            "(o.orderDate < :endDate OR :endDate IS NULL)")
+            "(o.orderDate >= :startDate OR :startDate IS NULL) AND " +
+            "(o.orderDate <= :endDate OR :endDate IS NULL)")
     List<OderDTO> MultiFilterOrder(@Param("search") String search,
                                    @Param("status_id") Integer status_id,
                                    @Param("paymentMethod") Integer paymentMethod,
@@ -55,8 +55,8 @@ public interface OrderRepository extends JpaRepository<Orders,Integer> {
             "(s.status_id = :status_id OR :status_id IS NULL) AND " +
             "(o.paymentMethod = :paymentMethod OR :paymentMethod IS NULL) AND " +
             " (o.specialOrder = :specialOrder OR :specialOrder IS NULL) AND " + // Sửa đổi tại đây
-            "(o.orderDate > :startDate OR :startDate IS NULL) AND " +
-            "(o.orderDate < :endDate OR :endDate IS NULL)")
+            "(o.orderDate >= :startDate OR :startDate IS NULL) AND " +
+            "(o.orderDate <= :endDate OR :endDate IS NULL)")
     List<OderDTO> MultiFilterOrderSpecialOrder(@Param("search") String search,
                                                @Param("status_id") Integer status_id,
                                                @Param("paymentMethod") Integer paymentMethod,
@@ -71,8 +71,8 @@ public interface OrderRepository extends JpaRepository<Orders,Integer> {
             " WHERE ( o.code LIKE %:search% OR :search IS NULL) AND" +
             "(s.status_id = :status_id OR :status_id IS NULL) AND " +
             "(o.paymentMethod = :paymentMethod OR :paymentMethod IS NULL) AND " +
-            "(o.orderDate > :startDate OR :startDate IS NULL) AND " +
-            "(o.orderDate < :endDate OR :endDate IS NULL)")
+            "(o.orderDate >= :startDate OR :startDate IS NULL) AND " +
+            "(o.orderDate <= :endDate OR :endDate IS NULL)")
     List<OderDTO> MultiFilterOrderWithoutOrderType(@Param("search") String search,
                                                @Param("status_id") Integer status_id,
                                                @Param("paymentMethod") Integer paymentMethod,

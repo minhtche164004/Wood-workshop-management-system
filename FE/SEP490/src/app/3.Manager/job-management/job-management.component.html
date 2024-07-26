@@ -530,7 +530,7 @@
                 <form [formGroup]="productForm" (ngSubmit)="onSubmit()">
                     <div class="row">
                         <div class="col-md-4">
-                            <label style="font-size: 16px;" for="productName">Danh sách sản phẩm có sẵn </label>
+                            <label style="font-size: 16px;">Danh sách sản phẩm có sẵn </label>
                         </div>
                         <div class="col-md-8">
                             <div class="ng-autocomplete" style="width: 100%;">
@@ -538,10 +538,7 @@
                                     [searchKeyword]="keyword" placeholder="Nhập tên sản phẩm có sẵn ..."
                                     historyIdentifier="productAutoSearch" [itemTemplate]="itemTemplate"
                                     [notFoundTemplate]="notFoundTemplate" (selected)="selectProduct($event)">
-                                </ng-autocomplete>
-
-                                
-                              
+                                </ng-autocomplete>             
                                 <ng-template #itemTemplate let-item>
                                     <a [innerHTML]="sanitize(item.productName)"></a>
                                 </ng-template>
@@ -549,6 +546,8 @@
                                 <ng-template #notFoundTemplate let-notFound>
                                     <div>Không tìm thấy sản phẩm!</div>
                                 </ng-template>
+
+                                
                             </div>
                         </div>
                     </div>

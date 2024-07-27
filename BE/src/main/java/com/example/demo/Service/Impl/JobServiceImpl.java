@@ -25,12 +25,9 @@ import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.time.ZoneId;
-import java.util.Date;
+import java.util.*;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
 
 @Service
 public class JobServiceImpl implements JobService {
@@ -589,6 +586,10 @@ public class JobServiceImpl implements JobService {
             throw new AppException(ErrorCode.NOT_FOUND);
         }
         return productList;
+    }
+
+    public static void main(String[] args) {
+        System.out.println();
     }
 
     @Override

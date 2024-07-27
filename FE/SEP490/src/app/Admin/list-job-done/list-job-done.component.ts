@@ -102,7 +102,7 @@ export class ListJobDoneComponent implements OnInit {
 
  
     this.authenListService.getFilterJobWasDone(
-      this.searchKey,
+      this.searchKey.trim(),
      
       this.selectedJob,
       this.selectedRoleFilter,

@@ -79,8 +79,9 @@
                 <th>Kiểu nguyên vật liệu</th>
                 <th>Mô tả nguyên vật liệu</th>
                 <th>Số lượng</th>
-                <th style="width: 10%;">Giá nhập (vnd)</th>
                 <th style="width: 10%;">Giá bán (vnđ)</th>
+                <th style="width: 10%;">Giá nhập (vnd)</th>
+                
               </tr>
             </thead>
 
@@ -168,14 +169,21 @@
                 [(ngModel)]="description" name="description">
             </div>
             <div class="row">
-              <div class="col-md-6">
+              <div class="col-md-4">
                 <div class="form-group">
                   <label for="productPrice">Số lượng</label>
                   <input type="number" class="form-control" id="productPrice" placeholder="Enter price"
                     [(ngModel)]="quantity" name="quantity">
                 </div>
               </div>
-              <div class="col-md-6">
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label for="productImage">Giá nhập</label>
+                  <input type="number" class="form-control" id="productPrice" placeholder="Enter price"
+                    [(ngModel)]="input_price" name="input_price">
+                </div>
+              </div>
+              <div class="col-md-4">
                 <div class="form-group">
                   <label for="productImage">Giá bán</label>
                   <input type="number" class="form-control" id="productPrice" placeholder="Enter price"

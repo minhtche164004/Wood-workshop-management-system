@@ -29,24 +29,26 @@
                             <div class="col-auto">
                               <div class="input-group mb-3">
                                 <div class="ng-autocomplete" style="width: 300px; margin-left: 5px;">
-                                  <ng-autocomplete *ngIf="employeeInfoList" [data]="employeeInfoList"
-                                                   [searchKeyword]="keyword" placeholder="Nhập tên nhân viên tìm kiếm"
-                                                   [(ngModel)]="searchKey" historyIdentifier="employeeFullnames"
-                                                   [itemTemplate]="itemTemplate" [notFoundTemplate]="notFoundTemplate"
-                                                   (selected)="selectEmp($event)">
-                                  </ng-autocomplete>
-                          
-                                  <ng-template #itemTemplate let-item>
-                                    <a [innerHTML]="sanitize(item.fullname)"></a>
-                                  </ng-template>
-                          
-                                  <ng-template #notFoundTemplate let-notFound>
-                                    <div>Không tìm thấy nhân viên hợp lệ!</div>
-                                  </ng-template>
-                                </div>
-                                <button class="btn search-button ms-2" type="button" (click)="searchSalary()">
-                                  <i class="fa fa-search"></i>
-                                </button>
+                                    <ng-autocomplete *ngIf="employeeInfoList" [data]="employeeInfoList"
+                                                     [searchKeyword]="keyword" placeholder="Nhập tên nhân viên tìm kiếm"
+                                                     [(ngModel)]="searchKey" historyIdentifier="employeeInfoList"
+                                                     [itemTemplate]="itemTemplate" [notFoundTemplate]="notFoundTemplate"
+                                                     (selected)="selectEmp($event)">
+                                    </ng-autocomplete>
+                                  
+                                    <ng-template #itemTemplate let-item>
+                                      <a [innerHTML]="sanitize(item.fullname)"></a>
+                                    </ng-template>
+                                  
+                                    <ng-template #notFoundTemplate let-notFound>
+                                      <div>Không tìm thấy nhân viên hợp lệ!</div>
+                                    </ng-template>
+                                  </div>
+                                  <button class="btn search-button ms-2" type="button" (click)="searchSalary()">
+                                    <i class="fa fa-search"></i>
+                                  </button>
+                                  
+                              
                               </div>
                             </div>
                           </div>
@@ -97,7 +99,7 @@
                                 <td>{{ product?.position_name }}</td>
                                 <td>{{ product?.subMaterialName }}</td>
                                 <td>{{ product?.quantity }}</td>
-                                <td>{{ product?.timeStart }}</td>
+                                <td>{{ product?.timeStart | date:'dd/MM/yyyy'}}</td>
                             </tr>
                         </tbody>
                     </table>
@@ -105,7 +107,7 @@
                     <!-- Pagination controls -->
                     <pagination-controls style="justify-content: right; display: flex;"
                         (pageChange)="currentPage = $event" previousLabel="Trang trước" nextLabel="Trang sau"
-                        [maxSize]="4">
+                        >
                     </pagination-controls>
 
                     <!-- Display data information -->

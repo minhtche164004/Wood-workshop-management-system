@@ -126,7 +126,7 @@ export class JobManagementComponent implements OnInit {
       quantity: [''],
     });
     this.productForm = this.fb.group({
-      quantity: ['', [Validators.required, Validators.min(1)]]
+      quantity: ['']
     });
     this.quantityJobs = this.fb.group({
       quantity: ['']
@@ -430,45 +430,51 @@ cancelChangeStatusJob() {
   }
 
   onSubmit() {
-    this.isLoadding = true;
+   // this.isLoadding = true;
     if (this.productForm.invalid) {
       return;
     }
+    console.log('Sản phẩm autoSearch: ', this.productAutoSearch)
+    console.log('Selected product for job:', this.productIdCoSan);
     this.createJobs.reset();
     const quantity = this.productForm.get('quantity')?.value;
-    if (this.selectedProduct === null) {
-      this.toastr.error('Hãy chọn một sản phẩm');
+    console.log('productForm:', this.productForm.value);
+    if (this.productIdCoSan === 0) {
+      this.toastr.error('Sai tên sản phẩm có sẵn');
+      console.log("Kiểm tra lại tên sản phẩm có sẵn");
       return;
     }
     if (quantity <= 0) {
-      this.toastr.error('Có lỗi xảy ra!', 'Lỗi');
+      this.toastr.error('Số lượng phải lớn hơn 0');
+     
       return;
     }
-     console.log('Selected product for job:', this.selectedProduct.product_id);
+     
+     
      this.selectedProduct = '';
-    this.jobService.addProductForJob(this.productIdCoSan, quantity).subscribe(
+    // this.jobService.addProductForJob(this.productIdCoSan, quantity).subscribe(
 
-      (data) => {
+    //   (data) => {
 
-        if (data.code === 1000) {
-          this.pForJob = data.result;
-          // console.log('Add product for job:', this.pForJob);
-          this.toastr.success('Thêm sản phẩm sản xuất thành công!', 'Thành công');
-          $('[data-dismiss="modal"]').click(); this.isLoadding = false;
-          this.loadProduct();
-        } else {
-          console.error('Failed to fetch products:', data);
-          this.toastr.error('Thêm sản phẩm sản xuất thất bại!', 'Lỗi');
-          $('[data-dismiss="modal"]').click(); this.isLoadding = false;
-          this.loadProduct();
-        }
-      },
-      (error) => {
-        console.error('Error fetching products:', error);
-        this.toastr.error('Có lỗi xảy ra!', 'Lỗi');
-        $('[data-dismiss="modal"]').click(); this.isLoadding = false;
-      }
-    );
+    //     if (data.code === 1000) {
+    //       this.pForJob = data.result;
+    //       // console.log('Add product for job:', this.pForJob);
+    //       this.toastr.success('Thêm sản phẩm sản xuất thành công!', 'Thành công');
+    //       $('[data-dismiss="modal"]').click(); this.isLoadding = false;
+    //       this.loadProduct();
+    //     } else {
+    //       console.error('Failed to fetch products:', data);
+    //       this.toastr.error('Thêm sản phẩm sản xuất thất bại!', 'Lỗi');
+    //       $('[data-dismiss="modal"]').click(); this.isLoadding = false;
+    //       this.loadProduct();
+    //     }
+    //   },
+    //   (error) => {
+    //     console.error('Error fetching products:', error);
+    //     this.toastr.error('Có lỗi xảy ra!', 'Lỗi');
+    //     $('[data-dismiss="modal"]').click(); this.isLoadding = false;
+    //   }
+    // );
   }
   selectedPosEmp: any = {};
   empId: number = 0;

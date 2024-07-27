@@ -67,6 +67,7 @@ import { EmployeeSubmaterialManagementComponent } from './employee-submaterial-m
 import { ImpactHistoryManagerComponent } from './3.Manager/impact-history-manager/impact-history-manager.component';
 
 
+
 const routes: Routes = [
   { path: 'homepage', component: HomepageComponent },
   { path: 'api-province', component: ApiProvinceComponent },
@@ -84,7 +85,7 @@ const routes: Routes = [
 
   { path: 'product', component: ProductComponent, },
 
-  { path: 'employee-submaterial-management', component: EmployeeSubmaterialManagementComponent },
+  { path: 'employee_submaterial_management', component: EmployeeSubmaterialManagementComponent },
 
 
   { path: 'productsList', component: ProductListComponent, canActivate: [AuthGuard], data: { roles: ['MANAGER'] } },
@@ -112,12 +113,9 @@ const routes: Routes = [
   { path: 'employee-job', component: EmployeeJobComponent },
   { path: 'bill', component: BillComponent },
   { path: 'product-details/:id', component: ProductDetailComponent },
-
   { path: 'wishlist', component: WishlistComponent },
   { path: 'template', component: TemplateComponent },
-
   { path: 'ds', component: DashboardComponent },
-
   { path: 'static-report', component: ChartComponent, canActivate: [AuthGuard], data: { roles: ['MANAGER'] } },
   { path: 'manager', component: ChartComponent, canActivate: [AuthGuard], data: { roles: ['MANAGER'] } },
   { path: 'material_management', component: MaterialManagementComponent, canActivate: [AuthGuard], data: { roles: ['MANAGER'] } },
@@ -129,12 +127,12 @@ const routes: Routes = [
   { path: 'autoComplete', component: AutoCompleteComponent },
   { path: 'history_order', component: HistoryOrderComponent },
   { path: 'request_product', component: ListRequestProductComponent },
-
   { path: 'employee', component: ListJobDoneEmployeeComponent, canActivate: [AuthGuard], data: { roles: ['EMPLOYEE'] } },
   { path: 'list_job_done', component: ListJobDoneComponent, canActivate: [AuthGuard], data: { roles: ['ADMIN'] } },
   { path: 'list_request_customer', component: ListRequestCustomerComponent, canActivate: [AuthGuard], data: { roles: ['MANAGER'] } },
   { path: 'list_salary_employee', component: ListSalaryEmployeeComponent, canActivate: [AuthGuard], data: { roles: ['EMPLOYEE'] } },
   { path: 'temperlate', component: TemplateComponent },
+
   //danh` cho order-vnpay
   { path: 'order-vnpay-success', component: OrderSuccessComponent },
   { path: 'order-vnpay-fail', component: OrderFailComponent },

@@ -9,7 +9,7 @@ import { environment } from 'src/app/environments/environment';
 })
 export class EmployeeService {
 
-  private apiGetAllEmployee = `${environment.apiUrl}api/auth/admin/getAllEmployee`;
+  private apiGetAllEmployee = `${environment.apiUrl}api/auth/submaterial/getAllEmpMate`;
 
   private apiGetAllPosition = `${environment.apiUrl}api/auth/admin/GetAllPosition`;
 
@@ -29,8 +29,13 @@ export class EmployeeService {
   searchEmployeeByName(name: string): Observable<any> {
     const params = new HttpParams().set('key', name);
     const url = `${this.apiSearchMTREmployee}/submaterial/findEmployeematerialsByNameEmployee`;
+    const fullUrl = `${url}?${params.toString()}`;
+  
+    console.log(fullUrl); // In ra URL đầy đủ
+  
     return this.http.get<any>(url, { params });
   }
+  
   getSubMaterialForEmp(): Observable<any> {
     return this.http.get<any>(this.apiGetAllSubMaterialForEmp).pipe(
       catchError(this.handleError)

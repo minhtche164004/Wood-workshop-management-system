@@ -573,10 +573,10 @@ public class SubMaterialServiceImpl implements SubMaterialService {
         Products products = productRepository.findById(product_id);
         List<ProductSubMaterials> list = productSubMaterialsRepository.findByProductID(product_id);
         List<ProductSubMaterials> productSubMaterialsList = new ArrayList<>();
-        List<Employeematerials> list_emp =employeeMaterialRepository.findEmployeematerialsByProductId(product_id);
-        if(!list_emp.isEmpty()){
-            throw new AppException(ErrorCode.EMPLOYEE_MATERIAL_EXISTED);
-        }
+//        List<Employeematerials> list_emp =employeeMaterialRepository.findEmployeematerialsByProductId(product_id);
+//        if(!list_emp.isEmpty()){
+//            throw new AppException(ErrorCode.EMPLOYEE_MATERIAL_EXISTED);
+//        }
         if(!list.isEmpty()){
             for(ProductSubMaterials re :list){
                 productSubMaterialsRepository.deleteProductSubMaterialsById(re.getProductSubMaterialId()); // Xóa trước khi thêm mới
@@ -601,10 +601,10 @@ public class SubMaterialServiceImpl implements SubMaterialService {
         RequestProducts requestProducts = requestProductRepository.findById(request_product_id);
         List<RequestProductsSubmaterials> list = requestProductsSubmaterialsRepository.findByRequestProductID(request_product_id);
         List<RequestProductsSubmaterials> requestProductsSubmaterialsList = new ArrayList<>();
-        List<Employeematerials> list_emp = employeeMaterialRepository.findEmployeematerialsByRequestProductId(request_product_id);
-        if (!list_emp.isEmpty()) {
-            throw new AppException(ErrorCode.EMPLOYEE_MATERIAL_EXISTED);
-        }
+//        List<Employeematerials> list_emp = employeeMaterialRepository.findEmployeematerialsByRequestProductId(request_product_id);
+//        if (!list_emp.isEmpty()) {
+//            throw new AppException(ErrorCode.EMPLOYEE_MATERIAL_EXISTED);
+//        }
         if (!list.isEmpty()) {
             for(RequestProductsSubmaterials re :list){
                 requestProductsSubmaterialsRepository.deleteRequestProductSubMaterialsById(re.getRequestProductsSubmaterialsId()); // Xóa trước khi thêm mới

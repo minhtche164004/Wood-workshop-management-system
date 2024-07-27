@@ -89,7 +89,7 @@ public interface JobRepository extends JpaRepository<Jobs,Integer> {
 
     @Query("SELECT new com.example.demo.Dto.OrderDTO.JobProductDTO(" +
             "j.jobId,j.code,o.code, p.requestProductId, p.requestProductName, p.description, p.price, j.status, od.quantity, " +
-            "COALESCE(u.userId, 0), COALESCE(u.username, ''), COALESCE(pos.position_id, 0), COALESCE(pos.position_name, ''),COALESCE(e.processProductErrorId, 0)) " + // Sử dụng COALESCE
+            "COALESCE(u.userId, 0), COALESCE(u.username, ''), COALESCE(pos.position_id, 0), COALESCE(pos.position_name, ''),MIN(e.processProductErrorId)) " + // Sử dụng COALESCE
             "FROM Jobs j " +
             "LEFT JOIN j.orderdetails od " +
             "LEFT JOIN od.order o " +
@@ -98,7 +98,8 @@ public interface JobRepository extends JpaRepository<Jobs,Integer> {
             "LEFT JOIN j.status s " +
             "LEFT JOIN u.position pos " +
             "LEFT JOIN j.processProductErrors e " +
-            "WHERE j.job_log = false AND p.requestProductId IS NOT NULL AND s.status_id != 14 ")
+            "WHERE j.job_log = false AND p.requestProductId IS NOT NULL AND s.status_id != 14 " +
+            "GROUP BY j.jobId, j.code, o.code, p.requestProductId, p.requestProductName, p.description, p.price, j.status, od.quantity, u.userId, u.username, pos.position_id, pos.position_name")
     List<JobProductDTO> getRequestProductInJob();
 
     @Query("SELECT new com.example.demo.Dto.OrderDTO.JobProductDTO(" +
@@ -141,13 +142,14 @@ public interface JobRepository extends JpaRepository<Jobs,Integer> {
 
 
     @Query("SELECT new com.example.demo.Dto.OrderDTO.JobProductDTO(j.jobId,j.code,null, COALESCE(p.productId, 0) ,COALESCE(p.productName, '') ,  COALESCE(p.description, ''),COALESCE(j.cost, 0) , j.status,COALESCE(j.quantityProduct, 0) ," +
-            "COALESCE(u.userId, 0), COALESCE(u.username, ''), COALESCE(pos.position_id, 0), COALESCE(pos.position_name, ''),COALESCE(e.processProductErrorId, 0)) " +
+            "COALESCE(u.userId, 0), COALESCE(u.username, ''), COALESCE(pos.position_id, 0), COALESCE(pos.position_name, ''),MIN(e.processProductErrorId)) " +
             "FROM Jobs j " +
             "LEFT JOIN j.product p " +
             "LEFT JOIN j.user u " +
             "LEFT JOIN u.position pos " +  // Thêm JOIN với Position
             "LEFT JOIN j.processProductErrors e " +
-            "WHERE p.productId IS NOT NULL AND j.job_log = false")
+            "WHERE p.productId IS NOT NULL AND j.job_log = false" +
+            " GROUP BY j.jobId, j.code, p.productId, p.productName, p.description, p.price, j.status, j.quantityProduct, u.userId, u.username, pos.position_id, pos.position_name")
     List<JobProductDTO> getListProductJob();
 
     @Query("SELECT new com.example.demo.Dto.OrderDTO.JobProductDTO(j.jobId,j.code,null, COALESCE(p.productId, 0),COALESCE(p.productName, '') ,COALESCE(p.description, '') ,COALESCE(j.cost, 0), j.status, COALESCE(j.quantityProduct, '') , " +
@@ -162,7 +164,7 @@ public interface JobRepository extends JpaRepository<Jobs,Integer> {
 
     @Query("SELECT new com.example.demo.Dto.OrderDTO.JobProductDTO(" +
             "j.jobId,j.code,o.code, p.requestProductId, p.requestProductName, p.description, p.price, j.status, od.quantity, " +
-            "COALESCE(u.userId, 0), COALESCE(u.username, ''), COALESCE(pos.position_id, 0), COALESCE(pos.position_name, ''),COALESCE(e.processProductErrorId, 0)) " + // Sử dụng COALESCE
+            "COALESCE(u.userId, 0), COALESCE(u.username, ''), COALESCE(pos.position_id, 0), COALESCE(pos.position_name, ''),MIN(e.processProductErrorId)) " + // Sử dụng COALESCE
             "FROM Jobs j " +
             "LEFT JOIN j.orderdetails od " +
             "LEFT JOIN od.order o " +
@@ -519,7 +521,7 @@ List<ProductErrorAllDTO> getAllProductError();
             "LEFT JOIN j.requestProducts rq " +
             "LEFT JOIN j.orderdetails od " +
             "LEFT JOIN od.order o " + // Sửa đổi đường dẫn đến orders
-            "LEFT JOIN o.userInfor ui WHERE  ( j.code LIKE %:search% OR :search IS NULL)")
+            "LEFT JOIN o.userInfor ui WHERE j.code LIKE %:search% OR :search IS NULL")
     List<ProductErrorAllDTO> MultiFilterErrorProduct(@Param("search") String search);
 
 

@@ -104,6 +104,50 @@ public class JobServiceImpl implements JobService {
         return jobProductDTOS;
     }
 
+    @Override
+    public Jobs EmployeeSick(int user_id, int job_id, BigDecimal cost_employee) {
+        LocalDate today = LocalDate.now();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("ddMMyy");
+        String dateString = today.format(formatter);
+        Jobs jobs = jobRepository.getJobById(job_id);
+        User user = userRepository.findByIdJob(user_id);
+        String fullname = user.getUserInfor().getFullname();
+        //set job lại như ban đầu(giá sẽ - đi giá của thg bệnh nhận đc, time sẽ trừ đi time thằng bệnh đã làm được)
+        jobs.setCost(jobs.getCost().subtract(cost_employee));
+        jobs.setUser(null);
+        jobs.setTimeStart(Date.from(today.atStartOfDay(ZoneId.systemDefault()).toInstant())); //ngày bắt đầu là ngay ngày thằng bị bệnh nghỉ làm
+        jobs.setTimeFinish(jobs.getTimeFinish());
+
+        //set cho thằng bệnh 1 job xem như đã hoàn thành
+        Jobs job_Employee_Sick = new Jobs();
+        job_Employee_Sick.setTimeFinish(Date.from(today.atStartOfDay(ZoneId.systemDefault()).toInstant()));
+        job_Employee_Sick.setJob_log(true);
+        job_Employee_Sick.setTimeStart(jobs.getTimeStart());
+        job_Employee_Sick.setUser(user);
+        Status_Job statusJob = statusJobRepository.findById(16); //set  status job theo input
+        job_Employee_Sick.setStatus(statusJob); //status là hoàn thành do lí do ngoài dự kiến
+        job_Employee_Sick.setCost(cost_employee);
+        job_Employee_Sick.setCode(jobs.getCode());
+        job_Employee_Sick.setProduct(jobs.getProduct() != null ? jobs.getProduct() : null);
+        job_Employee_Sick.setRequestProducts(jobs.getRequestProducts() != null ? jobs.getRequestProducts() : null);
+        job_Employee_Sick.setOrderdetails(jobs.getOrderdetails() != null ? jobs.getOrderdetails() : null);
+        job_Employee_Sick.setDescription("Nhân Viên có tên "+fullname+ " nghỉ trước công việc này !");
+        jobRepository.save(job_Employee_Sick);
+
+        //set lương cho thằng bệnh vào bảng lương
+        Advancesalary advancesalary = new Advancesalary();
+        Advancesalary lastadvan = advancesalaryRepository.findAdvancesalaryTop(dateString + "AD");
+        int count = lastadvan != null ? Integer.parseInt(lastadvan.getCode().substring(8)) + 1 : 1;
+        String code = dateString + "AD" + String.format("%03d", count);
+        advancesalary.setDate(Date.from(today.atStartOfDay(ZoneId.systemDefault()).toInstant()));
+        advancesalary.setAmount(cost_employee);
+        advancesalary.setAdvanceSuccess(false);
+        advancesalary.setCode(code);
+        advancesalary.setUser(user);
+        advancesalaryRepository.save(advancesalary);
+        return job_Employee_Sick;
+    }
+
     //nếu check màn bên kia status đang là chưa giao việc , thì lúc giao việc , status tự động là giao làm mộc
     //nếu màn bên kia là đang là Đã nghiệm thu làm mộc thì lúc giao việc , status tự động màn bên cạnh là đang làm nhám
     //nếu màn bên kia là đang là Đã nghiệm thu làm nhám thì lúc giao việc , status tự động màn bên cạnh là đang làm sơn
@@ -670,6 +714,8 @@ public class JobServiceImpl implements JobService {
 
         return productList;
     }
+
+
 
 
 }

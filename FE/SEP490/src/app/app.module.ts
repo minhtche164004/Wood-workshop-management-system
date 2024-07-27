@@ -75,7 +75,7 @@ import { OrderSuccessComponent } from './Order-payment-vnpay/order-success/order
 import { OrderFailComponent } from './Order-payment-vnpay/order-fail/order-fail.component';
 import { EmployeeSubmaterialManagementComponent } from './employee-submaterial-management/employee-submaterial-management.component';
 import { ImpactHistoryManagerComponent } from './3.Manager/impact-history-manager/impact-history-manager.component';
-import { LoginAdminComponent } from './login-admin/login-admin.component';
+
 import { ListProductErrorEmployeeComponent } from './4.Employee/list-product-error-employee/list-product-error-employee.component';
 
 
@@ -147,7 +147,7 @@ import { ListProductErrorEmployeeComponent } from './4.Employee/list-product-err
     EmployeeSubmaterialManagementComponent,
     ImpactHistoryManagerComponent,
 
-    LoginAdminComponent,
+
     ListProductErrorEmployeeComponent,
 
 

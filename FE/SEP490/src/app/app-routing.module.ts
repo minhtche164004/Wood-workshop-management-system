@@ -65,7 +65,7 @@ import { OrderFailComponent } from './Order-payment-vnpay/order-fail/order-fail.
 import { AuthGuard } from './AuthGuard';
 import { EmployeeSubmaterialManagementComponent } from './employee-submaterial-management/employee-submaterial-management.component';
 import { ImpactHistoryManagerComponent } from './3.Manager/impact-history-manager/impact-history-manager.component';
-import { LoginAdminComponent } from './login-admin/login-admin.component';
+
 import { ListProductErrorEmployeeComponent } from './4.Employee/list-product-error-employee/list-product-error-employee.component';
 
 
@@ -144,7 +144,7 @@ const routes: Routes = [
   // { path: '', redirectTo: '/homepage', pathMatch: 'full' },
   { path: 'report-cost', component: ReportCostManagementComponent },
   { path: 'im_history', component: ImpactHistoryManagerComponent, canActivate: [AuthGuard], data: { roles: ['MANAGER'] } },
-  { path: 'login_admin', component: LoginAdminComponent },
+
   { path: '', redirectTo: '/homepage', pathMatch: 'full' },
   { path: '**', redirectTo: '/homepage', pathMatch: 'full' },
 

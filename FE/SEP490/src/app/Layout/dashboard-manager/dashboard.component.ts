@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 import 'jquery';
 
 declare var $: any; // khai bao jquery
@@ -9,6 +10,7 @@ declare var $: any; // khai bao jquery
   styleUrls: ['./dashboard.component.scss']
 })
 export class DashboardComponent implements OnInit{
+  constructor( private router: Router) { }
   ngOnInit(): void {
     $('[data-dismiss="modal"]').click();        
   }
@@ -21,5 +23,10 @@ export class DashboardComponent implements OnInit{
 
   toggleSidebar() {
     this.sidebarVisible = !this.sidebarVisible;
+  }
+  onLogout(): void {
+    const token = localStorage.getItem('loginToken');
+    localStorage.removeItem('loginToken');
+    this.router.navigateByUrl('/login');
   }
 }

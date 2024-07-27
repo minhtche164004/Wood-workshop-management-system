@@ -61,8 +61,8 @@
                 </tr>
               </thead>
               <tbody>
-                <ng-container *ngFor="let us of user | paginate: { itemsPerPage: 10, currentPage: currentPage }; let i = index">
-                  <tr *ngIf="us.role_name !== 'ADMIN'">
+              
+                  <tr *ngFor="let us of user | paginate: { itemsPerPage: 10, currentPage: currentPage }; let i = index">
                     <td>{{ i + 1 + (currentPage - 1) * 10 }}</td>
                     <td>{{ us.role_name }}</td>
                     <td class="action-buttons">
@@ -77,22 +77,17 @@
                     <td style="min-width: 150px;">{{ us.email }}</td>
                     <td style="min-width: 150px;">{{ us.phoneNumber }}</td>
                   </tr>
-                </ng-container>
+               
                 
               </tbody>
             </table>
           </div>
         </div>
 
-
         <pagination-controls style="justify-content: right; display: flex;" (pageChange)="currentPage = $event"
-          previousLabel="Trang trước" nextLabel="Trang sau">
-        </pagination-controls>
-        <div class="clearfix" style="justify-content: right; display: flex;">
-          <div class="hint-text">Hiển thị <b>{{ (currentPage - 1) * 10 + 1 }}</b> tới <b>{{ currentPage * 10
-              > user.length ? user.length : currentPage * 10 }}</b> trong tổng <b>{{
-              user.length }}</b> dữ liệu</div>
-        </div>
+        previousLabel="Trang trước" nextLabel="Trang sau" *ngIf="user && user.length > 0">
+      </pagination-controls>
+     
         <div class="clearfix" style="justify-content: right; display: flex;" *ngIf="user && user.length > 0">
           <div class="hint-text">Hiển thị <b>{{ (currentPage - 1) * 10 + 1 }}</b> tới <b>{{ currentPage * 10 >
               user.length ? user.length : currentPage * 10 }}</b> trong tổng <b>{{

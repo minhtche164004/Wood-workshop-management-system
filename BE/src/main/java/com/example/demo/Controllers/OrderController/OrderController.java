@@ -195,6 +195,19 @@ public class OrderController {
         return apiResponse;
     }
 
+    @PostMapping ("/MultiFilterOrderForCustomer")
+    public ApiResponse<?> MultiFilterOrderForCustomer(
+            @RequestParam(required = false) String search,
+            @RequestParam(required = false) Integer statusId,
+            @RequestParam(required = false) Integer paymentMethod,
+            @RequestParam(required = false)Integer specialOrder,
+            @RequestBody(required = false) DateDTO dto
+    ) {
+        ApiResponse<List<Orders>> apiResponse = new ApiResponse<>(); // Chỉ định rõ kiểu List<OderDTO>
+        apiResponse.setResult(orderService.MultiFilterOrderForEmployee(search, statusId, paymentMethod,specialOrder, dto.getStartDate(), dto.getEndDate()));
+        return apiResponse;
+    }
+
     @PostMapping(value = "/AddNewRequest", consumes = MediaType.MULTIPART_FORM_DATA_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ApiResponse<?> AddNewRequest(
             @RequestPart("requestDTO") RequestDTO requestDTO,

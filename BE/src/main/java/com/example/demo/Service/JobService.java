@@ -45,6 +45,8 @@ public interface JobService {
 
     Processproducterror AddProductError(int job_id,ProductErrorDTO productErrorDTO);
     List<ProductErrorAllDTO> getAllProductError();
+    List<ProductErrorAllDTO> getAllProductErrorForEmployee();
+    List<ProductErrorAllDTO> MultiFilterErrorProductForEmployee(String search, Integer is_fixed);
     List<ProductErrorAllDTO> getAllProductErrorByJobId(int job_id);
      List<ProductErrorAllDTO> MultiFilterErrorProduct(String search, Integer is_fixed);
 

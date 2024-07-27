@@ -1,7 +1,9 @@
 package com.example.demo.Service.Impl;
 
+import com.example.demo.Dto.JobDTO.JobCreateDTO;
 import com.example.demo.Dto.JobDTO.JobDTO;
 import com.example.demo.Dto.JobDTO.JobDoneDTO;
+import com.example.demo.Dto.JobDTO.ListEmployeeDTO;
 import com.example.demo.Dto.OrderDTO.JobProductDTO;
 import com.example.demo.Dto.OrderDTO.OderDTO;
 import com.example.demo.Dto.OrderDTO.OrderDetailWithJobStatusDTO;
@@ -23,12 +25,9 @@ import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.time.ZoneId;
-import java.util.Date;
+import java.util.*;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
 
 @Service
 public class JobServiceImpl implements JobService {
@@ -62,6 +61,11 @@ public class JobServiceImpl implements JobService {
     private CheckConditionService checkConditionService;
     @Autowired
     private Employee_Material_Repository employeeMaterialRepository;
+
+    @Autowired
+    private RequestProductsSubmaterialsRepository requestProductsSubmaterialsRepository;
+    @Autowired
+    private ProductSubMaterialsRepository productSubMaterialsRepository;
 
     @Override
     public List<JobProductDTO> getListRequestProductJob() {
@@ -130,13 +134,13 @@ public class JobServiceImpl implements JobService {
         jobs.setTimeStart(jobDTO.getStart());
         Status_Job statusJob = statusJobRepository.findById(status_id); //set  status job theo input
         jobs.setStatus(statusJob);
-        LocalDate today = LocalDate.now();
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("ddMMyy");
-        String dateString = today.format(formatter);
-        Jobs lastJob = jobRepository.findJobsTop(dateString + "JB");
-        int count = lastJob != null ? Integer.parseInt(lastJob.getCode().substring(8)) + 1 : 1;
-        String code = dateString + "JB" + String.format("%03d", count);
-        jobs.setCode(code);
+//        LocalDate today = LocalDate.now();
+//        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("ddMMyy");
+//        String dateString = today.format(formatter);
+//        Jobs lastJob = jobRepository.findJobsTop(dateString + "JB");
+//        int count = lastJob != null ? Integer.parseInt(lastJob.getCode().substring(8)) + 1 : 1;
+//        String code = dateString + "JB" + String.format("%03d", count);
+        jobs.setCode(jobs_order_detail.getCode());
         jobs.setJob_log(false);
         jobRepository.save(jobs);
         List<Processproducterror> processproducterrorList = processproducterrorRepository.getProcessproducterrorByJobId(job_id);
@@ -159,6 +163,42 @@ public class JobServiceImpl implements JobService {
             throw new AppException(ErrorCode.NOT_FOUND);
         }
         return list;
+    }
+
+    @Override
+    public List<ProductErrorAllDTO> getAllProductErrorForEmployee() {
+        UserDetails userDetails =(UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        User user =userRepository.getUserByUsername(userDetails.getUsername());
+        List<ProductErrorAllDTO> list = jobRepository.getAllProductErrorForEmployee(user.getUserId());
+        if(list == null){
+            throw new AppException(ErrorCode.NOT_FOUND);
+        }
+        return list;
+    }
+
+    @Override
+    public List<ProductErrorAllDTO> MultiFilterErrorProductForEmployee(String search, Integer is_fixed) {
+        List<ProductErrorAllDTO> error_list = new ArrayList<>();
+        UserDetails userDetails =(UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        User user =userRepository.getUserByUsername(userDetails.getUsername());
+        if (is_fixed != null) {
+            if (is_fixed == -1) {
+                // Không lọc theo is_fixed, chỉ lọc theo các tham số khác
+                error_list= jobRepository.MultiFilterErrorProductForEmployee(user.getUserId(),search);
+            } else {
+                // Lọc theo is_fixed (true hoặc false) và các tham số khác
+                boolean is_fixedValue = (is_fixed == 1); // Chuyển đổi 1/0 thành true/false
+                error_list= jobRepository.MultiFilterErrorProductWithBooleanForEmployee(user.getUserId(),search, is_fixedValue);
+            }
+        } else {
+            // Không có tham số lọc nào, lấy tất cả đơn hàng
+            error_list= jobRepository.getAllProductErrorForEmployee(user.getUserId());
+        }
+
+        if (error_list.isEmpty()) {
+            throw new AppException(ErrorCode.NOT_FOUND);
+        }
+        return error_list;
     }
 
     @Override
@@ -582,6 +622,10 @@ public class JobServiceImpl implements JobService {
             throw new AppException(ErrorCode.NOT_FOUND);
         }
         return productList;
+    }
+
+    public static void main(String[] args) {
+        System.out.println();
     }
 
     @Override

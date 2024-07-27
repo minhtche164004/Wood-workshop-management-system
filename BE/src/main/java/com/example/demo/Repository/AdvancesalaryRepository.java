@@ -33,8 +33,8 @@ public interface AdvancesalaryRepository extends JpaRepository<Advancesalary,Int
             " WHERE u.user.userId = :query AND" +
             " (u.code LIKE %:search% OR :search IS NULL) AND " +
             " (u.isAdvanceSuccess = :isAdvanceSuccess OR :isAdvanceSuccess IS NULL) AND " + // Sửa đổi tại đây
-            "(u.date > :startDate OR :startDate IS NULL) AND " +
-            "(u.date < :endDate OR :endDate IS NULL) ")
+            "(u.date >= :startDate OR :startDate IS NULL) AND " +
+            "(u.date <= :endDate OR :endDate IS NULL) ")
     List<Advancesalary> MultiFilterAdvansalaryByEmployeeId(int query,@Param("search") String search,@Param("isAdvanceSuccess") Boolean isAdvanceSuccess,
                                                @Param("startDate") Date startDate,
                                                @Param("endDate") Date endDate);
@@ -42,8 +42,8 @@ public interface AdvancesalaryRepository extends JpaRepository<Advancesalary,Int
     @Query("SELECT u FROM Advancesalary u " +
             " WHERE u.user.userId = :query AND " +
             " (u.code LIKE %:search% OR :search IS NULL) AND " +
-            "(u.date > :startDate OR :startDate IS NULL) AND " +
-            "(u.date < :endDate OR :endDate IS NULL) ")
+            "(u.date >= :startDate OR :startDate IS NULL) AND " +
+            "(u.date <= :endDate OR :endDate IS NULL) ")
     List<Advancesalary> MultiFilterAdvansalaryByEmployeeIdByDate(int query,@Param("search") String search,
                                                            @Param("startDate") Date startDate,
                                                            @Param("endDate") Date endDate);
@@ -61,8 +61,8 @@ public interface AdvancesalaryRepository extends JpaRepository<Advancesalary,Int
 
     //hien tai lay fulllname thay cho username do khong tao DTO de chua fullname
     @Query("SELECT a FROM Advancesalary a LEFT JOIN a.user.userInfor i WHERE " +
-            "(:fromDate IS NULL OR a.date > :fromDate) AND " +
-            "(:toDate IS NULL OR a.date < :toDate) AND " +
+            "(:fromDate IS NULL OR a.date >= :fromDate) AND " +
+            "(:toDate IS NULL OR a.date <= :toDate) AND " +
             "(a.user.position.position_id IN :position_id OR :position_id IS NULL) AND " +
             "(:fullname IS NULL OR i.fullname LIKE %:fullname%) " +
             "ORDER BY a.date DESC")

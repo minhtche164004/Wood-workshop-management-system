@@ -88,7 +88,7 @@ public interface JobRepository extends JpaRepository<Jobs,Integer> {
 
 
     @Query("SELECT new com.example.demo.Dto.OrderDTO.JobProductDTO(" +
-            "j.jobId,o.code, p.requestProductId, p.requestProductName, p.description, p.price, j.status, od.quantity, " +
+            "j.jobId,j.code,o.code, p.requestProductId, p.requestProductName, p.description, p.price, j.status, od.quantity, " +
             "COALESCE(u.userId, 0), COALESCE(u.username, ''), COALESCE(pos.position_id, 0), COALESCE(pos.position_name, ''),COALESCE(e.processProductErrorId, 0)) " + // Sử dụng COALESCE
             "FROM Jobs j " +
             "LEFT JOIN j.orderdetails od " +
@@ -102,7 +102,7 @@ public interface JobRepository extends JpaRepository<Jobs,Integer> {
     List<JobProductDTO> getRequestProductInJob();
 
     @Query("SELECT new com.example.demo.Dto.OrderDTO.JobProductDTO(" +
-            "j.jobId,o.code, p.requestProductId, p.requestProductName, p.description, p.price, j.status, od.quantity, " +
+            "j.jobId,j.code,o.code, p.requestProductId, p.requestProductName, p.description, p.price, j.status, od.quantity, " +
             "COALESCE(u.userId, 0), COALESCE(u.username, ''), COALESCE(pos.position_id, 0), COALESCE(pos.position_name, ''),COALESCE(e.processProductErrorId, 0)) " + // Sử dụng COALESCE
             "FROM Jobs j " +
             "LEFT JOIN j.orderdetails od " +
@@ -120,7 +120,7 @@ public interface JobRepository extends JpaRepository<Jobs,Integer> {
                                                        @Param("position_id") Integer position_id);
 
 
-    @Query("SELECT new com.example.demo.Dto.OrderDTO.JobProductDTO(j.jobId,null, COALESCE(p.productId, 0) ,COALESCE(p.productName, '') ,  COALESCE(p.description, ''),COALESCE(j.cost, 0) , j.status,COALESCE(j.quantityProduct, 0) ," +
+    @Query("SELECT new com.example.demo.Dto.OrderDTO.JobProductDTO(j.jobId,j.code,null, COALESCE(p.productId, 0) ,COALESCE(p.productName, '') ,  COALESCE(p.description, ''),COALESCE(j.cost, 0) , j.status,COALESCE(j.quantityProduct, 0) ," +
             "COALESCE(u.userId, 0), COALESCE(u.username, ''), COALESCE(pos.position_id, 0), COALESCE(pos.position_name, ''),COALESCE(e.processProductErrorId, 0)) " +
             "FROM Jobs j " +
             "LEFT JOIN j.product p " +
@@ -140,7 +140,7 @@ public interface JobRepository extends JpaRepository<Jobs,Integer> {
 
 
 
-    @Query("SELECT new com.example.demo.Dto.OrderDTO.JobProductDTO(j.jobId,null, COALESCE(p.productId, 0) ,COALESCE(p.productName, '') ,  COALESCE(p.description, ''),COALESCE(j.cost, 0) , j.status,COALESCE(j.quantityProduct, 0) ," +
+    @Query("SELECT new com.example.demo.Dto.OrderDTO.JobProductDTO(j.jobId,j.code,null, COALESCE(p.productId, 0) ,COALESCE(p.productName, '') ,  COALESCE(p.description, ''),COALESCE(j.cost, 0) , j.status,COALESCE(j.quantityProduct, 0) ," +
             "COALESCE(u.userId, 0), COALESCE(u.username, ''), COALESCE(pos.position_id, 0), COALESCE(pos.position_name, ''),COALESCE(e.processProductErrorId, 0)) " +
             "FROM Jobs j " +
             "LEFT JOIN j.product p " +
@@ -150,7 +150,7 @@ public interface JobRepository extends JpaRepository<Jobs,Integer> {
             "WHERE p.productId IS NOT NULL AND j.job_log = false")
     List<JobProductDTO> getListProductJob();
 
-    @Query("SELECT new com.example.demo.Dto.OrderDTO.JobProductDTO(j.jobId,null, COALESCE(p.productId, 0),COALESCE(p.productName, '') ,COALESCE(p.description, '') ,COALESCE(j.cost, 0), j.status, COALESCE(j.quantityProduct, '') , " +
+    @Query("SELECT new com.example.demo.Dto.OrderDTO.JobProductDTO(j.jobId,j.code,null, COALESCE(p.productId, 0),COALESCE(p.productName, '') ,COALESCE(p.description, '') ,COALESCE(j.cost, 0), j.status, COALESCE(j.quantityProduct, '') , " +
             "COALESCE(u.userId, 0), COALESCE(u.username, ''), COALESCE(pos.position_id, 0), COALESCE(pos.position_name, ''),COALESCE(e.processProductErrorId, 0)) " +  // Sử dụng COALESCE
             "FROM Jobs j " +
             "JOIN j.product p " +
@@ -161,7 +161,7 @@ public interface JobRepository extends JpaRepository<Jobs,Integer> {
     List<JobProductDTO> getListProductJobByNameOrCodeProduct(@Param("keyword") String keyword);
 
     @Query("SELECT new com.example.demo.Dto.OrderDTO.JobProductDTO(" +
-            "j.jobId,o.code, p.requestProductId, p.requestProductName, p.description, p.price, j.status, od.quantity, " +
+            "j.jobId,j.code,o.code, p.requestProductId, p.requestProductName, p.description, p.price, j.status, od.quantity, " +
             "COALESCE(u.userId, 0), COALESCE(u.username, ''), COALESCE(pos.position_id, 0), COALESCE(pos.position_name, ''),COALESCE(e.processProductErrorId, 0)) " + // Sử dụng COALESCE
             "FROM Jobs j " +
             "LEFT JOIN j.orderdetails od " +
@@ -317,6 +317,34 @@ List<ProductErrorAllDTO> getAllProductError();
             "LEFT JOIN o.userInfor ui WHERE j.jobId = :query")
     List<ProductErrorAllDTO> getAllProductErrorByJobId(int query);
 
+    @Query("SELECT new com.example.demo.Dto.ProductDTO.ProductErrorAllDTO(" +
+            "p.processProductErrorId, " +
+            "COALESCE(j.code, 0), " +
+            "COALESCE(p.description, ''), " +
+            "COALESCE(p.isFixed, false), " +
+            "COALESCE(p.solution, ''), " +
+            "COALESCE(j.job_name, ''), " +
+            "COALESCE(j.jobId, 0), " +
+            "COALESCE(pr.productId, 0), " +
+            "COALESCE(pr.productName, ''), " +
+            "COALESCE(rq.requestProductId, 0), " +
+            "COALESCE(rq.requestProductName, ''), " +
+            "COALESCE(o.code, ''), " +
+            "COALESCE(ui.fullname, ''), " +
+            "COALESCE(j.user.username, ''), " +
+            "COALESCE(ps.position_name, ''), " +
+            "COALESCE(ps.position_id, 0), " +
+            "COALESCE(p.quantity, 0)) " +
+            "FROM Processproducterror p " +
+            "LEFT JOIN p.job j " +
+            "LEFT JOIN j.product pr " +
+            "LEFT JOIN j.user.position ps " +
+            "LEFT JOIN j.requestProducts rq " +
+            "LEFT JOIN j.orderdetails od " +
+            "LEFT JOIN od.order o " + // Sửa đổi đường dẫn đến orders
+            "LEFT JOIN o.userInfor ui WHERE j.user.userId = :userId")
+    List<ProductErrorAllDTO> getAllProductErrorForEmployee(int userId);
+
 
     @Query("SELECT new com.example.demo.Dto.ProductDTO.ProductErrorAllDTO(" +
             "p.processProductErrorId, " +
@@ -378,6 +406,93 @@ List<ProductErrorAllDTO> getAllProductError();
     List<ProductErrorAllDTO> MultiFilterErrorProductWithBoolean(@Param("search") String search,
                                                @Param("isFixed") Boolean isFixed);
 
+    @Query("SELECT new com.example.demo.Dto.ProductDTO.ProductErrorAllDTO(" +
+            "p.processProductErrorId, " +
+            "COALESCE(j.code, 0), " +
+            "COALESCE(p.description, ''), " +
+            "COALESCE(p.isFixed, false), " +
+            "COALESCE(p.solution, ''), " +
+            "COALESCE(j.job_name, ''), " +
+            "COALESCE(j.jobId, 0), " +
+            "COALESCE(pr.productId, 0), " +
+            "COALESCE(pr.productName, ''), " +
+            "COALESCE(rq.requestProductId, 0), " +
+            "COALESCE(rq.requestProductName, ''), " +
+            "COALESCE(o.code, ''), " +
+            "COALESCE(ui.fullname, ''), " +
+            "COALESCE(j.user.username, ''), " +
+            "COALESCE(ps.position_name, ''), " +
+            "COALESCE(ps.position_id, 0), " +
+            "COALESCE(p.quantity, 0)) " +
+            "FROM Processproducterror p " +
+            "LEFT JOIN p.job j " +
+            "LEFT JOIN j.product pr " +
+            "LEFT JOIN j.user.position ps " +
+            "LEFT JOIN j.requestProducts rq " +
+            "LEFT JOIN j.orderdetails od " +
+            "LEFT JOIN od.order o " + // Sửa đổi đường dẫn đến orders
+            "LEFT JOIN o.userInfor ui WHERE j.user.userId = :userId AND  ( j.code LIKE %:search% OR :search IS NULL) AND " +
+            "(p.isFixed = :isFixed OR :isFixed IS NULL)")
+    List<ProductErrorAllDTO> MultiFilterErrorProductWithBooleanForEmployee(int userId,@Param("search") String search,
+                                                                @Param("isFixed") Boolean isFixed);
+
+
+//    @Query("SELECT new com.example.demo.Dto.ProductDTO.ProductErrorAllDTO(" +
+//            "p.processProductErrorId, " +
+//            "COALESCE(j.code, 0), " +
+//            "COALESCE(p.description, ''), " +
+//            "COALESCE(p.isFixed, false), " +
+//            "COALESCE(p.solution, ''), " +
+//            "COALESCE(j.job_name, ''), " +
+//            "COALESCE(j.jobId, 0), " +
+//            "COALESCE(pr.productId, 0), " +
+//            "COALESCE(pr.productName, ''), " +
+//            "COALESCE(rq.requestProductId, 0), " +
+//            "COALESCE(rq.requestProductName, ''), " +
+//            "COALESCE(o.code, ''), " +
+//            "COALESCE(ui.fullname, ''), " +
+//            "COALESCE(j.user.username, ''), " +
+//            "COALESCE(ps.position_name, ''), " +
+//            "COALESCE(ps.position_id, 0), " +
+//            "COALESCE(p.quantity, 0)) " +
+//            "FROM Processproducterror p " +
+//            "LEFT JOIN p.job j " +
+//            "LEFT JOIN j.product pr " +
+//            "LEFT JOIN j.user.position ps " +
+//            "LEFT JOIN j.requestProducts rq " +
+//            "LEFT JOIN j.orderdetails od " +
+//            "LEFT JOIN od.order o " + // Sửa đổi đường dẫn đến orders
+//            "LEFT JOIN o.userInfor ui WHERE j.user.userId = : userId")
+//    List<ProductErrorAllDTO> getAllProductError(int userId);
+
+    @Query("SELECT new com.example.demo.Dto.ProductDTO.ProductErrorAllDTO(" +
+            "p.processProductErrorId, " +
+            "COALESCE(j.code, 0), " +
+            "COALESCE(p.description, ''), " +
+            "COALESCE(p.isFixed, false), " +
+            "COALESCE(p.solution, ''), " +
+            "COALESCE(j.job_name, ''), " +
+            "COALESCE(j.jobId, 0), " +
+            "COALESCE(pr.productId, 0), " +
+            "COALESCE(pr.productName, ''), " +
+            "COALESCE(rq.requestProductId, 0), " +
+            "COALESCE(rq.requestProductName, ''), " +
+            "COALESCE(o.code, ''), " +
+            "COALESCE(ui.fullname, ''), " +
+            "COALESCE(j.user.username, ''), " +
+            "COALESCE(ps.position_name, ''), " +
+            "COALESCE(ps.position_id, 0), " +
+            "COALESCE(p.quantity, 0)) " +
+            "FROM Processproducterror p " +
+            "LEFT JOIN p.job j " +
+            "LEFT JOIN j.product pr " +
+            "LEFT JOIN j.user.position ps " +
+            "LEFT JOIN j.requestProducts rq " +
+            "LEFT JOIN j.orderdetails od " +
+            "LEFT JOIN od.order o " + // Sửa đổi đường dẫn đến orders
+            "LEFT JOIN o.userInfor ui WHERE j.user.userId = :userId AND  ( j.code LIKE %:search% OR :search IS NULL)")
+    List<ProductErrorAllDTO> MultiFilterErrorProductForEmployee(int userId,@Param("search") String search);
+
 
     @Query("SELECT new com.example.demo.Dto.ProductDTO.ProductErrorAllDTO(" +
             "p.processProductErrorId, " +
@@ -406,6 +521,9 @@ List<ProductErrorAllDTO> getAllProductError();
             "LEFT JOIN od.order o " + // Sửa đổi đường dẫn đến orders
             "LEFT JOIN o.userInfor ui WHERE  ( j.code LIKE %:search% OR :search IS NULL)")
     List<ProductErrorAllDTO> MultiFilterErrorProduct(@Param("search") String search);
+
+
+
 
 
 

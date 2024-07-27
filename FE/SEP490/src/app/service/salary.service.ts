@@ -78,7 +78,7 @@ export class SalaryService {
       .filter(([key, value]) => {
         if (key === 'username' && value === '') return false;
         if (key === 'statusId' && value === "0") return false;
-        if (key === 'isAdvanceSuccess' && value === "0") return false;
+        if (key === 'isAdvanceSuccess' && value === '') return false;
         return value != null && value !== '';
       })
       .map(([key, value]) => `${encodeURIComponent(key)}=${encodeURIComponent(value)}`)

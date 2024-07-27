@@ -8,7 +8,7 @@
         <div class="table-title">
           <div class="row " style="height: 60px;">
             <div class="col-sm-5 ">
-              <h2 style="margin-bottom: 0;"> Tra cứu việc làm</h2>
+              <h2 style="margin-bottom: 0;"> Tra cứu sản phẩm lỗi</h2>
             </div>
             <div class="col-sm-7 text-end d-flex align-items-center justify-content-end">
               <!-- <a href="#" class="btn btn-secondary btn-sm" data-toggle="modal" data-target="#addAccountModal"
@@ -20,14 +20,18 @@
           </div>
 
           <div class="row">
-            <div class="col-md-7"></div> <!-- Dummy column to push the search box to the right -->
-            <div class="col-md-5 text-end">
+            <div class="col-md-3"></div> <!-- Dummy column to push the search box to the right -->
+            <div class="col-md-9 text-end">
               <div class="input-group mb-3">
                 <!-- product.component.html -->
+                <select [(ngModel)]="selectProductError">
+                  <option value="-1" selected>Tất cả tình trạng sản phẩm lỗi</option>
+                  <option [ngValue]="0">Chưa sửa sản phẩm </option>
+                  <option [ngValue]="1">Đã sửa sản phẩm </option>
+                </select>
 
-
-                <input type="text" class="form-control" placeholder="Mã công việc" [(ngModel)]="searchKey">
-                <button class="btn search-button" type="button" (click)="searchKey1()">
+                <input type="text" class="form-control" placeholder="Mã sản phẩm lỗi" [(ngModel)]="searchKey">
+                <button class="btn search-button" type="button" (click)="MultifilterProductError()">
                   <i class="fa fa-search"></i>
                 </button>
 
@@ -42,40 +46,24 @@
               <thead>
                 <tr>
 
-                  <th>Mã công việc</th>
-
-
-
-                  <th>Vị trí đảm nhận</th>
-                  <th>Tình trạng công việc</th>
-
-
-
-                  <th>Sản phẩm </th>
-                  <th style="min-width: 100px; text-align: right;">Số lượng</th>
-                  <th>Tiền công (VNĐ)</th>
+                  <th>Mã lỗi sản phẩm</th>
+                  <th>Tên sản phẩm</th>
+                  <th>Phương án sửa</th>
+                  <th>Tình trạng</th>
+                  <th>Mô tả sản phẩm lỗi</th>
+                  <th>Tên công việc</th>
                 </tr>
               </thead>
               <tbody>
                 <tr
-                  *ngFor="let job of job_employee | paginate: { itemsPerPage: 10, currentPage: currentPage }; let i = index">
+                  *ngFor="let job of product_error | paginate: { itemsPerPage: 10, currentPage: currentPage }; let i = index">
 
                   <td style="min-width: 190px;"> {{ job.code }}</td>
-
-
-
-
-
-
-                  <td style="min-width: 100px;">{{ job.position_name }}</td>
-                  <td style="min-width: 150px;">{{ job.status_job_name }}</td>
-
-
-
-                  <td style="min-width: 50px;">{{ job.request_name }}</td>
-                  <td style="min-width: 100px; text-align: right;">{{ job.quantity }}</td>
-                  <td style="min-width: 140px; text-align: right;">{{ job.cost | number : '1.0-3'}} </td>
-
+                  <td style="min-width: 100px;">{{ job.product_name }}</td>
+                  <td style="min-width: 150px;">{{ job.solution }}</td>
+                  <td style="min-width: 50px;">{{ job.fix ? 'Đã sửa sản phẩm' : 'Chưa sửa sản phẩm'}}</td>
+                  <td style="min-width: 100px; ">{{ job.des }}</td>
+                  <td style="min-width: 140px; ">{{ job.job_name }} </td>
                 </tr>
               </tbody>
             </table>
@@ -84,23 +72,23 @@
 
 
         <pagination-controls style="justify-content: right; display: flex;" (pageChange)="currentPage = $event"
-          previousLabel="Trang trước" nextLabel="Trang sau" *ngIf="job_employee && job_employee.length > 0">
+          previousLabel="Trang trước" nextLabel="Trang sau" *ngIf="product_error && product_error.length > 0">
         </pagination-controls>
         <div class="clearfix" style="justify-content: right; display: flex;"
-          *ngIf="job_employee && job_employee.length > 0">
+          *ngIf="product_error && product_error.length > 0">
           <div class="hint-text">Hiển thị <b>{{ (currentPage - 1) * 10 + 1 }}</b> tới <b>{{ currentPage * 10 >
-              job_employee.length ? job_employee.length : currentPage * 10 }}</b> trong tổng <b>{{
-              job_employee.length }}</b> dữ liệu</div>
+              product_error.length ? product_error.length : currentPage * 10 }}</b> trong tổng <b>{{
+              product_error.length }}</b> dữ liệu</div>
         </div>
 
-        <div *ngIf="!job_employee || job_employee.length === 0">
+        <div *ngIf="!product_error || product_error.length === 0">
 
           <div style="background-color: white;">
             <div class="" style="display: flex; justify-content: center; align-items: center; height: 100%;">
               <img
                 src="https://encrypted-tbn2.gstatic.com/images?q=tbn:ANd9GcSG53pYn6cpXaiwT_q6IM45P-rXg5dUw67XqRmr9-vtsbMoHnCG"
                 alt="" class="product-img" style="width: 150px; height: 150px; object-fit: cover;">
-              <p class="name-product text-center">Không tìm thấy việc làm!</p>
+              <p class="name-product text-center">Không tìm thấy sản phẩm lỗi!</p>
             </div>
           </div>
         </div>

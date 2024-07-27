@@ -24,11 +24,15 @@
         <span class="text">Quản lý sản xuất </span>
       </a>
     </li>
-    <li>
-      <a routerLink="/submtr_management" routerLinkActive="active">
+    <li class="dropdown">
+      <a href="#" class="dropdown-toggle" (click)="toggleDropdown($event)">
         <i class='bx bxs-cube'></i>
         <span class="text">Quản lý nguyên vật liệu</span>
       </a>
+      <ul class="dropdown-menu" [ngClass]="{'show': dropdownVisible}">
+        <li><a routerLink="/submtr_management"><i style="margin-left: -5% ;" class='bx bxs-square-rounded'></i>Quản lý nhập xuất</a></li>
+        <li><a routerLink="/im_history"><i  style="margin-left: -5% ;" class='bx bx-history'></i>Lịch sử nhập xuất</a></li>
+      </ul>
     </li>
     <li>
       <a routerLink="/material_management" routerLinkActive="active">
@@ -42,12 +46,13 @@
         <span class="text">Quản lý đơn đặt hàng</span>
       </a>
     </li>
-    <li>
+    <!-- <li>
       <a routerLink="/im_history" routerLinkActive="active">
         <i class='bx bxs-file-find'></i>
         <span class="text">Quản lý lịch sử nhập vật liệu</span>
       </a>
-    </li>
+    </li> -->
+    
     <li>
       <a routerLink="/product_management" routerLinkActive="active">
         <i class='bx bxs-package'></i>
@@ -74,11 +79,12 @@
     </li>
   </ul>
   <ul class="side-menu">
-    <li>
-      <a href="#" class="logout">
-        <i class='bx bxs-log-out-circle'></i>
-        <span class="text">Đăng xuất</span>
-      </a>
-    </li>
-  </ul>
+
+    <li style="cursor: pointer;">
+			<a (click)="onLogout()" class="logout">
+				<i class='bx bxs-log-out'></i>
+				<span class="text">Đăng xuất</span>
+			</a>
+		</li>
+	</ul>
 </section>

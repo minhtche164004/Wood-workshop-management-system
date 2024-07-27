@@ -255,7 +255,7 @@ export class RegisterComponent implements OnInit {
         console.log('Truy cập API đăng nhập thành công');
         if (response.code === 1000) {
           console.log('Đăng nhập thành công:', response.code);
-         
+
           const token = response.result.token;
           console.log('Access Token:', token);
           localStorage.setItem('loginToken', token);
@@ -264,10 +264,15 @@ export class RegisterComponent implements OnInit {
           console.log('Thông tin người dùng:', userData);
 
           const authorities = userData.authorities.map((authority: { authority: any }) => authority.authority);
-          if (authorities.includes('CUSTOMER')) {
+          if (authorities.includes('GUEST')) {
             this.router.navigateByUrl('/homepage');
             this.toastr.success('Đăng nhập thành công!', 'Thành công');
-          } else if (authorities.includes('MANAGER')) {
+          } else if (authorities.includes('CUSTOMER')) {
+            this.router.navigateByUrl('/homepage');
+            this.toastr.success('Đăng nhập thành công!', 'Thành công');
+
+          }
+          else if (authorities.includes('MANAGER')) {
             this.router.navigateByUrl('/static-report');
             this.toastr.success('Đăng nhập thành công!', 'Thành công');
           } else if (authorities.includes('ADMIN')) {
@@ -277,8 +282,7 @@ export class RegisterComponent implements OnInit {
             this.router.navigateByUrl('/employee');
             this.toastr.success('Đăng nhập thành công!', 'Thành công');
           } else {
-            console.error('Vai trò người dùng không hợp lệ:', authorities);
-            this.toastr.error('Vai trò người dùng không hợp lệ', 'Lỗi cố khi thực hiện đăng nhập');
+            this.toastr.error('Sai Tên đăng nhập ! Vui lòng kiểm tra lại', 'Lỗi cố khi thực hiện đăng nhập');
           }
         }
         this.isLoading = false; // Stop the loading spinner

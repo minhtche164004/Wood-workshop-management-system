@@ -10,11 +10,7 @@
               <h2 style="margin-bottom: 0;">Quản lý đơn đặt hàng</h2>
             </div>
             <div class="col-sm-7 text-end d-flex align-items-center justify-content-end">
-              <a routerLink="/order_rq" class="btn btn-secondary btn-sm" data-toggle="modal" data-target=""
-                style="font-size: 14px;">
-                <i class="material-icons align-middle" style="font-size: 18px;">&#xE147;</i>
-                <span class="align-middle">Thêm đơn hàng</span>
-              </a>
+
             </div>
           </div>
 
@@ -79,7 +75,7 @@
               <tr *ngFor="let us of user | paginate: { itemsPerPage: 10, currentPage: currentPage }; let i = index">
                 <td style=" min-width: 140px;">{{ us?.code}}</td>
 
-                <td class="action-buttons">
+                <td class="action-buttons" style=" min-width: 140px;">
                   <!-- <a href="#" class="settings" title="Edit" data-toggle="modal" data-target="#editProductModal">
                   <i class="fa-solid fa-pen-to-square"></i>
                 </a> -->
@@ -93,12 +89,13 @@
                     <i class="fa-solid fa-circle-plus"></i>
                   </a>
 
-                  <a href="#" data-toggle="modal" data-target="#myModalconfirm" *ngIf="us?.status_id === 1 "
-                    (click)="setOrderForPayment(us?.orderId)" (click)="getOrDetailById(us, us?.orderId)">
+                  <a href="#" data-toggle="modal" title="Thanh toán tiền cọc" data-target="#myModalconfirm"
+                    *ngIf="us?.status_id === 1 && us?.deposite !== null&& us?.totalAmount!== null" (click)="setOrderForPayment(us?.orderId)"
+                    (click)="getOrDetailById(us, us?.orderId)">
                     <i class="fa-solid fa-credit-card"></i>
                   </a>
 
-                  <a href="#" data-toggle="modal" data-target="#confirmDeleteModal"
+                  <a href="#" data-toggle="modal" title="Hủy đơn hàng" data-target="#confirmDeleteModal"
                     (click)="setOrderForCancellation(us?.orderId, us?.specialOrder)" *ngIf="us?.status_id === 7 
                     || us?.status_id === 1|| us?.status_id === 8">
                     <i class="fa-solid fa-times-circle"></i>
@@ -179,7 +176,7 @@
       <pagination-controls style="justify-content: right; display: flex;" (pageChange)="currentPage = $event"
         previousLabel="Trang trước" nextLabel="Trang sau" *ngIf="user && user.length > 0">
       </pagination-controls>
-      <div class="clearfix" style="justify-content: right; display: flex;" *ngIf="user && user.length > 0">
+      <div class="clearfix" style="justify-content:  right; display: flex;" *ngIf="user && user.length > 0">
         <div class="hint-text">Hiển thị <b>{{ (currentPage - 1) * 10 + 1 }}</b> tới <b>{{ currentPage * 10 >
             user.length ? user.length : currentPage * 10 }}</b> trong tổng <b>{{
             user.length }}</b> dữ liệu</div>
@@ -301,7 +298,7 @@
         <div class="modal-footer">
 
           <button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
-          <button type="button" class="btn btn-primary" *ngIf="OrderdetailById.totalAmount !== null
+          <button type="button" class="btn btn-primary" *ngIf="OrderdetailById.status?.status_id === 1 
           && OrderdetailById.deposite !== null" (click)="sendMail(OrderdetailById.orderId)">Gửi mail</button>
         </div>
       </div>
@@ -334,7 +331,7 @@
       </div>
     </div>
   </div>
-
+ 
 
 
 
@@ -349,7 +346,7 @@
         </div>
         <div class="modal-body">
           <p>Tiền cọc: {{OrderdetailById.deposite | number : '1.0-3'}}</p>
-          <p>Tiền cần thanh toán: {{ OrderdetailById.totalAmount - OrderdetailById.deposite | number : '1.0-3' }}</p>
+          <p>Số tiền cần thanh toán còn lại: {{ OrderdetailById.totalAmount - OrderdetailById.deposite | number : '1.0-3' }}</p>
 
         </div>
         <div class="modal-footer">

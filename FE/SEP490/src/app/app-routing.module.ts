@@ -66,81 +66,85 @@ import { AuthGuard } from './AuthGuard';
 import { EmployeeSubmaterialManagementComponent } from './employee-submaterial-management/employee-submaterial-management.component';
 import { ImpactHistoryManagerComponent } from './3.Manager/impact-history-manager/impact-history-manager.component';
 
+import { ListProductErrorEmployeeComponent } from './4.Employee/list-product-error-employee/list-product-error-employee.component';
+
+
 
 const routes: Routes = [
-  { path: 'homepage', component: HomepageComponent }, 
+  { path: 'homepage', component: HomepageComponent },
   { path: 'api-province', component: ApiProvinceComponent },
   { path: 'login', component: RegisterComponent },
   { path: 'otp', component: VerifyOtpComponent },
-  { path: 'admin', component: UserManagementComponent , canActivate: [AuthGuard], data: { roles: ['ADMIN'] }},
+  { path: 'admin', component: UserManagementComponent, canActivate: [AuthGuard], data: { roles: ['ADMIN'] } },
   { path: 'verifyMail', component: VerifyMailComponent },
   { path: 'verifyOtp', component: VerifyOtpMailComponent },
   { path: 'change_pass', component: ChangePasswordComponent },
-  { path: 'admin_manager_user', component: UserManagementComponent , canActivate: [AuthGuard], data: { roles: ['ADMIN'] }},
+  { path: 'admin_manager_user', component: UserManagementComponent, canActivate: [AuthGuard], data: { roles: ['ADMIN'] } },
   { path: 'payment-salary', component: PaymentSalaryComponent },
   { path: 'verifyOtp/:email', component: VerifyOtpMailComponent },  // Route with email as a parameter
   { path: 'forgot_pass/:email', component: ForgotPassComponent },
 
 
-  { path: 'product', component: ProductComponent , }, 
+  { path: 'product', component: ProductComponent, },
 
-  { path: 'employee-submaterial-management', component: EmployeeSubmaterialManagementComponent },
+  { path: 'employee_submaterial_management', component: EmployeeSubmaterialManagementComponent },
 
 
-  { path: 'productsList', component: ProductListComponent , canActivate: [AuthGuard], data: { roles: ['MANAGER'] }}, 
+  { path: 'productsList', component: ProductListComponent, canActivate: [AuthGuard], data: { roles: ['MANAGER'] } },
   { path: 'product_management', component: ProductManagementComponent, canActivate: [AuthGuard], data: { roles: ['MANAGER'] } },
   { path: 'product_management/:id', component: ProductManagementComponent, canActivate: [AuthGuard], data: { roles: ['MANAGER'] } },
 
-  { path: 'order_rq', component: OrderRequiredComponent ,}, 
-  { path: 'supplier_management', component: SupplierManagementComponent , canActivate: [AuthGuard], data: { roles: ['MANAGER'] }}, 
+  { path: 'order_rq', component: OrderRequiredComponent, canActivate: [AuthGuard] },
+  { path: 'supplier_management', component: SupplierManagementComponent, canActivate: [AuthGuard], data: { roles: ['MANAGER'] } },
   { path: 'profile', component: ViewProfileComponent },
-  { path: 'submtr_management', component: SubMaterialManagementComponent , canActivate: [AuthGuard], data: { roles: ['MANAGER'] }}, 
-  { path: 'create_order', component: CreateOrderComponent }, 
+  { path: 'submtr_management', component: SubMaterialManagementComponent, canActivate: [AuthGuard], data: { roles: ['MANAGER'] } },
+  { path: 'create_order', component: CreateOrderComponent},
+  { path: 'payment-salary', component: PaymentSalaryComponent },
   { path: 'upload', component: FileUploadComponent },
   { path: 'product_list', component: ProductListComponent },
-  { path: 'order_detail_management', component: OrderDetailManagementComponent , canActivate: [AuthGuard], data: { roles: ['MANAGER'] }  },
-  { path: 'order_request_management', component: OrderRequestComponentComponent , canActivate: [AuthGuard], data: { roles: ['MANAGER'] }  },
-  { path: 'order_request_management/:id', component: OrderRequestComponentComponent , canActivate: [AuthGuard], data: { roles: ['MANAGER'] }  },
-  { path: 'orderRq_detail', component: OrderRqDetailComponent , canActivate: [AuthGuard], data: { roles: ['MANAGER'] }  },
+  { path: 'order_detail_management', component: OrderDetailManagementComponent, canActivate: [AuthGuard], data: { roles: ['MANAGER'] } },
+  { path: 'order_request_management', component: OrderRequestComponentComponent, canActivate: [AuthGuard], data: { roles: ['MANAGER'] } },
+  { path: 'order_request_management/:id', component: OrderRequestComponentComponent, canActivate: [AuthGuard], data: { roles: ['MANAGER'] } },
+  { path: 'orderRq_detail', component: OrderRqDetailComponent, canActivate: [AuthGuard], data: { roles: ['MANAGER'] } },
   { path: 'contact', component: ContactComponent },
-  { path: 'about-us', component:  AboutUsComponent},
-  { path: 'order_management', component: OrderManagementComponent , canActivate: [AuthGuard], data: { roles: ['MANAGER'] }  },
+  { path: 'about-us', component: AboutUsComponent },
+  { path: 'order_management', component: OrderManagementComponent, canActivate: [AuthGuard], data: { roles: ['MANAGER'] } },
   { path: 'product-details', component: ProductDetailComponent },
-  { path: 'job_management', component: JobManagementComponent , canActivate: [AuthGuard], data: { roles: ['MANAGER'] }}, 
+  { path: 'job_management', component: JobManagementComponent, canActivate: [AuthGuard], data: { roles: ['MANAGER'] } },
   { path: 'changePassWord', component: ChangePasswordComponent },
   { path: 'employee-job', component: EmployeeJobComponent },
   { path: 'bill', component: BillComponent },
   { path: 'product-details/:id', component: ProductDetailComponent },
-
   { path: 'wishlist', component: WishlistComponent },
   { path: 'template', component: TemplateComponent },
-
   { path: 'ds', component: DashboardComponent },
-    
-  { path: 'static-report', component: ChartComponent, canActivate: [AuthGuard], data: { roles: ['MANAGER'] }  },
-  { path: 'manager', component: ChartComponent, canActivate: [AuthGuard], data: { roles: ['MANAGER'] }  },
-  { path: 'material_management', component: MaterialManagementComponent , canActivate: [AuthGuard], data: { roles: ['MANAGER'] }  },
-  { path: 'report_management', component: ReportManagementComponent , canActivate: [AuthGuard], data: { roles: ['MANAGER'] }  },
-  { path: 'report_management/:id', component: ReportManagementComponent , canActivate: [AuthGuard], data: { roles: ['MANAGER'] }  },
-  { path: 'advanced_bill', component: AdvancedBillManagementComponent , canActivate: [AuthGuard], data: { roles: ['MANAGER'] }  },
-  { path: 'feedback_defective', component: FeedbackDefectiveComponent , canActivate: [AuthGuard], data: { roles: ['MANAGER'] }  },
-  { path: 'total_salary', component: TotalSalaryComponent , canActivate: [AuthGuard], data: { roles: ['MANAGER'] }  },
+  { path: 'static-report', component: ChartComponent, canActivate: [AuthGuard], data: { roles: ['MANAGER'] } },
+  { path: 'manager', component: ChartComponent, canActivate: [AuthGuard], data: { roles: ['MANAGER'] } },
+  { path: 'material_management', component: MaterialManagementComponent, canActivate: [AuthGuard], data: { roles: ['MANAGER'] } },
+  { path: 'report_management', component: ReportManagementComponent, canActivate: [AuthGuard], data: { roles: ['MANAGER'] } },
+  { path: 'report_management/:id', component: ReportManagementComponent, canActivate: [AuthGuard], data: { roles: ['MANAGER'] } },
+  { path: 'advanced_bill', component: AdvancedBillManagementComponent, canActivate: [AuthGuard], data: { roles: ['MANAGER'] } },
+  { path: 'feedback_defective', component: FeedbackDefectiveComponent, canActivate: [AuthGuard], data: { roles: ['MANAGER'] } },
+  { path: 'total_salary', component: TotalSalaryComponent, canActivate: [AuthGuard], data: { roles: ['MANAGER'] } },
   { path: 'autoComplete', component: AutoCompleteComponent },
-  { path: 'history_order', component: HistoryOrderComponent }, 
-  { path: 'request_product', component: ListRequestProductComponent}, 
-    
-  { path: 'employee', component: ListJobDoneEmployeeComponent , canActivate: [AuthGuard], data: { roles: ['EMPLOYEE'] }}, 
-  { path: 'list_job_done', component: ListJobDoneComponent , canActivate: [AuthGuard], data: { roles: ['ADMIN'] }}, 
-  { path: 'list_request_customer', component: ListRequestCustomerComponent , canActivate: [AuthGuard], data: { roles: ['MANAGER'] }}, 
-  { path: 'list_salary_employee', component: ListSalaryEmployeeComponent , canActivate: [AuthGuard], data: { roles: ['EMPLOYEE'] }}, 
+  { path: 'history_order', component: HistoryOrderComponent },
+  { path: 'request_product', component: ListRequestProductComponent },
+  { path: 'employee', component: ListJobDoneEmployeeComponent, canActivate: [AuthGuard], data: { roles: ['EMPLOYEE'] } },
+  { path: 'product_error_employee', component: ListProductErrorEmployeeComponent, canActivate: [AuthGuard], data: { roles: ['EMPLOYEE'] } },
+  
+  { path: 'list_job_done', component: ListJobDoneComponent, canActivate: [AuthGuard], data: { roles: ['ADMIN'] } },
+  { path: 'list_request_customer', component: ListRequestCustomerComponent, canActivate: [AuthGuard], data: { roles: ['MANAGER'] } },
+  { path: 'list_salary_employee', component: ListSalaryEmployeeComponent, canActivate: [AuthGuard], data: { roles: ['EMPLOYEE'] } },
   { path: 'temperlate', component: TemplateComponent },
+
   //danh` cho order-vnpay
   { path: 'order-vnpay-success', component: OrderSuccessComponent },
   { path: 'order-vnpay-fail', component: OrderFailComponent },
 
   // { path: '', redirectTo: '/homepage', pathMatch: 'full' },
   { path: 'report-cost', component: ReportCostManagementComponent },
-  { path: 'im_history', component: ImpactHistoryManagerComponent },
+  { path: 'im_history', component: ImpactHistoryManagerComponent, canActivate: [AuthGuard], data: { roles: ['MANAGER'] } },
+
   { path: '', redirectTo: '/homepage', pathMatch: 'full' },
   { path: '**', redirectTo: '/homepage', pathMatch: 'full' },
 

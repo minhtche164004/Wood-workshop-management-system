@@ -1054,9 +1054,10 @@ export class ProductManagementComponent implements OnInit {
             this.reloadProduct();
             if (error.status === 400 && error.error.code === 1038) {
               this.toastr.warning(error.error.message, 'Lỗi');
-            } else {
-              this.toastr.error('Cập nhật sản phẩm bị lỗi!', 'Lỗi');
-            }
+            } 
+            // else {
+            //   this.toastr.error('Cập nhật sản phẩm bị lỗi!', 'Lỗi');
+            // }
             console.error('Update error', error);
             this.isLoadding = false;
             $('[data-dismiss="modal"]').click(); // Đóng modal

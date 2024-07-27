@@ -2,6 +2,7 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { Component } from '@angular/core';
 import { ToastrService } from 'ngx-toastr';
 import { AuthenListService } from 'src/app/service/authen.service';
+import { OrderRequestService } from 'src/app/service/order-request.service';
 import { OrderService } from 'src/app/service/order.service';
 interface ApiResponse {
   code: number;
@@ -23,7 +24,7 @@ export class HistoryOrderComponent {
   searchKey: string = '';
   selectedSDate: string = '';
   selectedEDate: string = '';
-  constructor(private toastr: ToastrService,private authenListService: AuthenListService,private orderService: OrderService) { }
+  constructor(private orderRequestService: OrderRequestService,private toastr: ToastrService,private authenListService: AuthenListService,private orderService: OrderService) { }
   ngOnInit(): void {
     this.orderData = {
       order_detail_id: '',
@@ -114,5 +115,53 @@ export class HistoryOrderComponent {
         console.error('Error fetching user data:', error);
       }
     )
+  }
+  totalAmoutOrder: number = 0;
+  selectedOrderDetail: any = {};
+  OrderdetailById: any = {};
+  productOfOrder: any = [];
+  getOrDetailById(us: any, order_detail_id: string): void {
+    this.isLoadding = true;
+    console.log('Order_detail_id:', order_detail_id);
+    console.log("order detail: ", us)
+    console.log("order detail type: ", us.specialOrder)
+    this.totalAmoutOrder = us.totalAmount
+    this.selectedOrderDetail = us;
+    this.authenListService.getOrderDetailById(us.orderId).subscribe(
+      (data) => {
+        this.OrderdetailById = data.result;
+        this.isLoadding = false;
+        // console.log('OrderdetailById:', data.result);
+        // console.log('OrderdetailById:', this.OrderdetailById);
+      },
+      (error) => {
+        console.error('Error fetching user data:', error);
+        this.isLoadding = false;
+
+      }
+    );
+    if (us.specialOrder == true) {
+      this.orderRequestService.getAllOrderDetailByOrderId(order_detail_id).subscribe(
+        (data) => {
+          this.productOfOrder = data.result;
+          //  console.log('Product Orders:', this.productOfOrder);
+        },
+        (error) => {
+          console.error('Error fetching user data:', error);
+
+
+        }
+      );
+    } else if (us.specialOrder == false) {
+      this.orderRequestService.getAllOrderDetailOfProductByOrderId(order_detail_id).subscribe(
+        (data) => {
+          this.productOfOrder = data.result;
+          console.log('Product Flase:', this.productOfOrder);
+        },
+        (error) => {
+          console.error('Error fetching user data:', error);
+        }
+      );
+    }
   }
 }

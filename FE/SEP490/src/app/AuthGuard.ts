@@ -35,7 +35,7 @@ export class AuthGuard implements CanActivate {
           return true;
         } else {
           this.router.navigate(['/homepage']);
-          this.toastr.error('Vai trò của bạn không hợp lệ');
+          // this.toastr.error('Vai trò của bạn không hợp lệ');
           return false;
         }
       })

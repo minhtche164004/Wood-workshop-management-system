@@ -15,6 +15,7 @@ interface SubMaterial {
   description: string,
   quantity: number | undefined,
   unit_price: number
+  input_price: number
 }
 declare var $: any; // khai bao jquery
 
@@ -39,6 +40,7 @@ export class SubMaterialManagementComponent implements OnInit {
   description: string = '';
   quantity: number = 0;
   unit_price: number = 0;
+  input_price: number = 0;
   selectedSubMtr: any = {};
   isProduct: boolean = true; // check product or product request
   isLoadding: boolean = false;
@@ -50,7 +52,8 @@ export class SubMaterialManagementComponent implements OnInit {
     description: '',
     material_name: '',
     quantity: 0,
-    unit_price: 0
+    unit_price: 0,
+    input_price: 0
   };
   checkNotFound: boolean = false;
   editForm: FormGroup;
@@ -86,7 +89,8 @@ export class SubMaterialManagementComponent implements OnInit {
       description: [''],
       material_name: [''],
       quantity: [''],
-      unit_price: ['']
+      unit_price: [''],
+      input_price: ['']
     });
   }
 
@@ -200,6 +204,7 @@ export class SubMaterialManagementComponent implements OnInit {
       description: this.description,
       quantity: this.quantity,
       unit_price: this.unit_price,
+      input_price: this.input_price,
     };
 
     console.log('SubMaterial request:', subMaterial);
@@ -270,7 +275,8 @@ export class SubMaterialManagementComponent implements OnInit {
             description: subMaterial.description,
             material_name: subMaterial.materialName,
             quantity: subMaterial.quantity,
-            unit_price: subMaterial.unitPrice
+            unit_price: subMaterial.unitPrice,
+            input_price: subMaterial.input_price
           };
           this.originalSubMaterial = { ...this.selectedSubMaterial };
 
@@ -282,6 +288,7 @@ export class SubMaterialManagementComponent implements OnInit {
             materialName: this.selectedSubMaterial.material_name,
             quantity: this.selectedSubMaterial.quantity,
             unitPrice: this.selectedSubMaterial.unit_price
+          
           });
 
           console.log('Form Values after patchValue:', this.editForm.value);

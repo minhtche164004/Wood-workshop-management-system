@@ -256,7 +256,7 @@ export class UserManagementComponent implements OnInit {
       this.productListService.getAllUser().subscribe(
         (data: ApiResponse) => {
           if (data.code === 1000) {
-            this.user = data.result.filter(user => user.role_name !== 'QUẢN TRỊ VIÊN');
+            this.user = data.result.filter(user => user.role_name !== 'ADMIN');
             this.cd.detectChanges();
             this.isLoadding = false;
           } else {
@@ -593,11 +593,17 @@ export class UserManagementComponent implements OnInit {
       this.toastr.error('Không được bỏ trống trường Địa chỉ cụ thể');
       return false;
     }
-
-    if (this.editUserForm.controls['fullname'].value.trim() === "") {
+    const fullNameControl = this.editUserForm.controls['fullname'];
+    const trimmedFullName = fullNameControl.value.trim();
+    
+    if (trimmedFullName === "") {
       this.toastr.error('Không được bỏ trống trường Họ Và Tên');
       return false;
     }
+    
+    // Update the form control with the trimmed value
+    fullNameControl.setValue(trimmedFullName);
+    
 
     // const positionValue = this.editUserForm.controls['position_id'].value;
     // if (!positionValue || positionValue.toString().trim() === "") {
@@ -724,7 +730,7 @@ export class UserManagementComponent implements OnInit {
 
     );
     this.authenListService.getFilterUser(
-      this.searchKey,
+      this.searchKey.trim(),
       this.selectedRoleMulti,
       this.selectedPositionFilter,
 

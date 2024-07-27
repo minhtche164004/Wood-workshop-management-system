@@ -264,16 +264,19 @@ export class RegisterComponent implements OnInit {
           console.log('Thông tin người dùng:', userData);
 
           const authorities = userData.authorities.map((authority: { authority: any }) => authority.authority);
-          if (authorities.includes('KHÁCH HÀNG')) {
+          if (authorities.includes('GUEST')) {
             this.router.navigateByUrl('/homepage');
             this.toastr.success('Đăng nhập thành công!', 'Thành công');
-          } else if (authorities.includes('QUẢN LÝ')) {
+          } else if (authorities.includes('CUSTOMER')) {
+            this.router.navigateByUrl('/homepage');
+            this.toastr.success('Đăng nhập thành công!', 'Thành công');
+          } else if (authorities.includes('MANAGER')) {
             this.router.navigateByUrl('/static-report');
             this.toastr.success('Đăng nhập thành công!', 'Thành công');
-          } else if (authorities.includes('QUẢN TRỊ VIÊN')) {
+          } else if (authorities.includes('ADMIN')) {
             this.router.navigateByUrl('/admin_manager_user');
             this.toastr.success('Đăng nhập thành công!', 'Thành công');
-          } else if (authorities.includes('NHÂN VIÊN')) {
+          } else if (authorities.includes('EMPLOYEE')) {
             this.router.navigateByUrl('/employee');
             this.toastr.success('Đăng nhập thành công!', 'Thành công');
           } else {

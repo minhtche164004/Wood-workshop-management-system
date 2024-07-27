@@ -347,6 +347,11 @@ export class ProductManagementComponent implements OnInit {
 
   populateFormWithData(productId: number) {
     this.totalUnitPrice = 0;
+    this.subMaterialData = [];
+    this.selectedSubMaterialId = [];
+    this.subMaterials = [];
+    // this.materials = [];
+    // this.loadMaterials();
     this.productListService.exportMaterialProductByProductId(productId).subscribe(
       (data) => {
         if (data.code === 1000) {
@@ -371,6 +376,7 @@ export class ProductManagementComponent implements OnInit {
             this.quantityPerSubMaterial[index] = materialItem.quantity;
             this.unitPriceSubMaterial[index] = materialItem.unitPrice;
           });
+
 
           // console.log(this.itemsEditArray.value);
 
@@ -665,6 +671,7 @@ export class ProductManagementComponent implements OnInit {
 
   filterProducts(): void {
     this.isLoadding = true;
+    this.searchKey = this.searchKey.trim();
     console.log("Lọc sản phẩm với từ khóa:", this.searchKey, ", danh mục:", this.selectedCategory, "và giá:", this.selectedSortByPrice);
 
     this.productListService.getMultiFillterProductForAdmin(this.searchKey, this.selectedCategory, this.selectedStatus, this.selectedSortByPrice)
@@ -686,6 +693,7 @@ export class ProductManagementComponent implements OnInit {
   }
 
   filterProductsRequest(): void {
+    this.searchKey = this.searchKey.trim();
     // console.log("Lọc sản phẩm với từ khóa:", this.searchKey, ", danh mục:", this.selectedCategory, "và giá:", this.selectedSortByPrice);
     this.isLoadding = true;
     this.productListService.getMultiFillterRequestProductForAdmin(this.searchKey, this.selectedStatus, this.selectedSortByPrice)
@@ -891,7 +899,7 @@ export class ProductManagementComponent implements OnInit {
       return;
     }
 
-    if (this.uploadForm.valid && this.selectedThumbnail && this.selectedImages.length && this.uploadForm.get('category_id')?.value ) {
+    if (this.uploadForm.valid && this.selectedThumbnail && this.selectedImages.length && this.uploadForm.get('category_id')?.value) {
       this.isLoadding = true;
       const productData = this.uploadForm.value;
       // console.log(productData);
@@ -934,7 +942,7 @@ export class ProductManagementComponent implements OnInit {
           this.toastr.error('Tạo sản phẩm bị lỗi!', 'Lỗi');
         }
       );
-    }else{
+    } else {
       this.toastr.warning('Vui lòng điền đầy đủ thông tin!', 'Lỗi');
     }
   }
@@ -1043,6 +1051,7 @@ export class ProductManagementComponent implements OnInit {
             $('[data-dismiss="modal"]').click(); // Đóng modal
           },
           error => {
+            this.reloadProduct();
             if (error.status === 400 && error.error.code === 1038) {
               this.toastr.warning(error.error.message, 'Lỗi');
             } else {
@@ -1053,7 +1062,7 @@ export class ProductManagementComponent implements OnInit {
             $('[data-dismiss="modal"]').click(); // Đóng modal
           }
         );
-    }else{
+    } else {
       this.toastr.warning('Có lỗi xảy ra vui lòng thử lại', 'Lỗi');
     }
   }
@@ -1113,6 +1122,9 @@ export class ProductManagementComponent implements OnInit {
 
   populateFormWithDataRequestProduct(productId: number) {
     this.totalUnitPrice = 0;
+    this.subMaterialData = [];
+    this.selectedSubMaterialId = [];
+    this.subMaterials = [];
     this.productListService.exportMaterialProductRequestByProductId(productId).subscribe(
       (data) => {
         if (data.code === 1000) {
@@ -1503,9 +1515,16 @@ export class ProductManagementComponent implements OnInit {
           $('[data-dismiss="modal"]').click(); // Đóng modal
         },
         error => {
+
+          if (error.status === 400 && error.error.code === 1038) {
+            this.toastr.warning(error.error.message, 'Lỗi');
+          } else {
+            this.toastr.error('Cập nhật sản phẩm bị lỗi!', 'Lỗi');
+          }
           console.error('Update error', error);
-          this.toastr.error('Cập nhật sản phẩm bị lỗi!', 'Lỗi');
           this.isLoadding = false;
+          $('[data-dismiss="modal"]').click(); // Đóng modal
+
         }
       );
 

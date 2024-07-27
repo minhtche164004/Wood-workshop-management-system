@@ -43,7 +43,7 @@ export class TotalSalaryComponent implements OnInit {
   endDate: string = '';
   position: number = 0;
   selectedBanking: any;
-  selectedStatusBanking: string = '0';
+  selectedStatusBanking: string = '';
   advanceSuccessValues: any = {
     trueValue: true,
     falseValue: false
@@ -158,8 +158,8 @@ export class TotalSalaryComponent implements OnInit {
   searchSalary(): void {
     this.checkNotFound = false;
     this.isLoadding = true;
-    //  console.log('Search key before search:', this.searchKey);
-    //  console.log('Selected position:', this.selectedStatusBanking);
+     console.log('Search key before search:', this.searchKey);
+     console.log('Selected position:', this.selectedStatusBanking);
     let startDate: string = this.fromDate || '';
     let endDate: string = this.toDate || '';
     if (this.fromDate) {
@@ -178,18 +178,18 @@ export class TotalSalaryComponent implements OnInit {
           this.currentPage = 1;
           //this.selectedEmp = '';
           //     this.searchKey = '';
+       
+        } else if(data.code === 1015) {
+          this.totalSalary = [];
 
-        } else {
-          console.error('Failed to fetch products:', data);
-          // this.toastr.error('Không tìm thấy lương của nhân viên', 'Lỗi');
-
-          this.checkNotFound = true;
+    
 
         }
         this.isLoadding = false;
       },
       (error) => {
         console.log(error);
+        this.checkNotFound = true;
         this.isLoadding = false;
       }
     )

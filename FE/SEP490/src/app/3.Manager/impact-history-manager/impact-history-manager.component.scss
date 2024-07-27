@@ -335,11 +335,11 @@ option[value="option3"] {
 .table-title .row:last-child {
   margin-bottom: 0;
 }
-.table-responsive table {
-  white-space: nowrap; /* Không cho phép xuống dòng */
-}
+// .table-responsive table {
+//   white-space: nowrap; /* Không cho phép xuống dòng */
+// }
 
-.table-responsive td,
-.table-responsive th {
-  white-space: nowrap; /* Không cho phép xuống dòng */
-}
+// .table-responsive td,
+// .table-responsive th {
+//   white-space: nowrap; /* Không cho phép xuống dòng */
+// }

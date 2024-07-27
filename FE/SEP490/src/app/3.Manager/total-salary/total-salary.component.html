@@ -41,8 +41,7 @@
                                     <input [(ngModel)]="toDate" style="margin-left: 10px;" type="date"
                                         class="form-control" placeholder="Đến: dd/mm/yyyy">
 
-                                    <select [(ngModel)]="selectedPosition" 
-                                        class="form-select">
+                                    <select [(ngModel)]="selectedPosition" class="form-select">
                                         <!-- <option [ngValue]="4" selected disabled>Chọn vị trí</option> -->
                                         <option value="">Tất cả</option>
                                         <option *ngFor="let category of positionEmpList"
@@ -50,13 +49,12 @@
                                             {{ category.position_name }}
                                         </option>
                                     </select>
-                                    <select [(ngModel)]="selectedStatusBanking" 
-                                    class="form-select">
-                                    <!-- <option [ngValue]="4" selected disabled>Chọn vị trí</option> -->
-                                    <option value="">Tất cả</option>
-                                    <option value="1">Đã Thanh Toán</option>
-                                    <option value="0">Chưa Thanh Toán</option>
-                                </select>
+                                    <select [(ngModel)]="selectedStatusBanking" class="form-select">
+                                        <!-- <option [ngValue]="4" selected disabled>Chọn vị trí</option> -->
+                                        <option value="">Tất cả</option>
+                                        <option value="1">Đã Thanh Toán</option>
+                                        <option value="0">Chưa Thanh Toán</option>
+                                    </select>
                                     <div class="ng-autocomplete" style="width: 30%; margin-left: 5px;">
                                         <ng-autocomplete *ngIf="employeeInfoList" [data]="employeeInfoList"
                                             [searchKeyword]="keyword" placeholder="Nhập tên nhân viên tìm kiếm"
@@ -92,13 +90,13 @@
                                 <!-- <th>Mã việc</th> -->
                                 <th style="width: 10%;">Thanh toán</th>
                                 <th>Ngày hoàn thành</th>
-                                
+
                                 <th>Tên nhân viên</th>
                                 <th>Vị trí</th>
                                 <th>Tình trạng</th>
                                 <th>Đơn giá (vnđ)</th>
                                 <th>Ngân hàng</th>
-                                <th style="width: 13%;">Số tài khoản</th>                              
+                                <th style="width: 13%;">Số tài khoản</th>
                             </tr>
                         </thead>
                         <!-- Table body -->
@@ -106,7 +104,7 @@
                             <tr
                                 *ngFor="let product of totalSalary | paginate: { itemsPerPage: 10, currentPage: currentPage }; let i = index">
                                 <td>{{ i + 1 + (currentPage - 1) * 10 }}</td>
-                                <td >
+                                <td>
                                     <button class="btn"
                                         [ngClass]="{'btn-primary': !product?.advanceSuccess, 'btn-secondary': product?.advanceSuccess}"
                                         data-toggle="modal" data-target="#QRPAY" (click)="thanhToan(product)"
@@ -120,9 +118,8 @@
                                 <td>{{ product?.user?.userInfor?.fullname }}</td>
                                 <td>{{ product?.user?.position?.position_name }}</td>
                                 <td>
-                                    <select class="custom-select" [(ngModel)]="product.advanceSuccess"style="width: 120%;" 
-                                    
-                                       (change)="modalThanhToan(product, $event)"
+                                    <select class="custom-select" [(ngModel)]="product.advanceSuccess"
+                                        style="width: 120%;" (change)="modalThanhToan(product, $event)"
                                         name="advanceSuccess">
                                         <option [ngValue]="false" disabled>Chưa thanh toán</option>
                                         <option [value]="true">Đã thanh toán</option>
@@ -133,40 +130,36 @@
                                     </select>
 
                                 </td>
-                                <td  style="text-align: right;">{{ product?.amount | number: '1.0-3'}}</td>
+                                <td style="text-align: right;">{{ product?.amount | number: '1.0-3'}}</td>
                                 <td>{{ product?.user?.userInfor?.bank_name }}</td>
-                                <td  style="text-align: right;">{{ product?.user?.userInfor?.bank_number }}</td>
-                               
+                                <td style="text-align: right;">{{ product?.user?.userInfor?.bank_number }}</td>
+
                             </tr>
                         </tbody>
 
                     </table>
 
                     <!-- Pagination controls -->
-                    <pagination-controls style="justify-content: right; display: flex;"
-                        (pageChange)="currentPage = $event" previousLabel="Trang trước" nextLabel="Trang sau">
-                    </pagination-controls>
+                    <pagination-controls style="justify-content: right; display: flex;" (pageChange)="currentPage = $event"
+        previousLabel="Trang trước" nextLabel="Trang sau" *ngIf="totalSalary && totalSalary.length > 0">
+      </pagination-controls>
+      <div class="clearfix" style="justify-content: right; display: flex;" *ngIf="totalSalary && totalSalary.length > 0">
+        <div class="hint-text">Hiển thị <b>{{ (currentPage - 1) * 10 + 1 }}</b> tới <b>{{ currentPage * 10 >
+            totalSalary.length ? totalSalary.length : currentPage * 10 }}</b> trong tổng <b>{{
+            totalSalary.length }}</b> dữ liệu</div>
+      </div>
 
-                    <!-- Display data information -->
-                    <div class="clearfix" style="justify-content: right; display: flex;">
-                        <div class="hint-text">
-                            Hiển thị <b>{{ (currentPage - 1) * 10 + 1 }}</b> tới <b>{{ currentPage * 10 >
-                                totalSalary.length ? totalSalary.length : currentPage * 10 }}</b> trong tổng <b>{{
-                                totalSalary.length }}</b> dữ liệu
-                        </div>
-                    </div>
-                </div>
+      <div *ngIf="!totalSalary || totalSalary.length === 0">
 
-                <!-- Display 404 Not Found if no data -->
-                <div *ngIf="checkNotFound">
-                    <div style="background-color: white;">
-                        <div class="d-flex justify-content-center align-items-center" style="height: 200px;">
-                            <img src="https://encrypted-tbn2.gstatic.com/images?q=tbn:ANd9GcSG53pYn6cpXaiwT_q6IM45P-rXg5dUw67XqRmr9-vtsbMoHnCG"
-                                alt="Not Found" style="width: 150px; height: 150px; object-fit: cover;">
-                            <p class="text-center">Không tìm thấy!</p>
-                        </div>
-                    </div>
-                </div>
+        <div style="background-color: white;">
+          <div class="" style="display: flex; justify-content: center; align-items: center; height: 100%;">
+            <img
+              src="https://encrypted-tbn2.gstatic.com/images?q=tbn:ANd9GcSG53pYn6cpXaiwT_q6IM45P-rXg5dUw67XqRmr9-vtsbMoHnCG"
+              alt="" class="product-img" style="width: 150px; height: 150px; object-fit: cover;">
+            <p class="name-product text-center">Không tìm thấy lương công khoán!</p>
+          </div>
+        </div>
+      </div>
             </div>
         </div>
     </div>
@@ -189,7 +182,7 @@
                     (click)="confirmThanhToan()">Đã
                     thanh toán</button>
                 <!-- updateBankingModal(this.selectedBanking) -->
-                
+
             </div>
         </div>
     </div>
@@ -207,7 +200,8 @@
                 Bạn có chắc chắn muốn cập nhật trạng thái từ "Chưa thanh toán" thành "Đã thanh toán"?
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" (click)="closeModal()" data-dismiss="modal">Đóng</button>
+                <button type="button" class="btn btn-secondary" (click)="closeModal()"
+                    data-dismiss="modal">Đóng</button>
                 <button type="button" class="btn btn-primary" (click)="updateBankingModal(selectedBanking)">Chắc
                     chắn</button>
             </div>

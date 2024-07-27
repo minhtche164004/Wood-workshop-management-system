@@ -203,7 +203,7 @@ public class OrderController {
             @RequestParam(required = false)Integer specialOrder,
             @RequestBody(required = false) DateDTO dto
     ) {
-        ApiResponse<List<OderDTO>> apiResponse = new ApiResponse<>(); // Chỉ định rõ kiểu List<OderDTO>
+        ApiResponse<List<Orders>> apiResponse = new ApiResponse<>(); // Chỉ định rõ kiểu List<OderDTO>
         apiResponse.setResult(orderService.MultiFilterOrderForEmployee(search, statusId, paymentMethod,specialOrder, dto.getStartDate(), dto.getEndDate()));
         return apiResponse;
     }

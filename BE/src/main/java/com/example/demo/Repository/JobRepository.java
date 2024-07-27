@@ -410,6 +410,9 @@ List<ProductErrorAllDTO> getAllProductError();
 
 
 
+
+
+
     //đếm số lượng job theo tháng và năm
     @Query("SELECT COUNT(*) FROM Jobs j " +
             "JOIN j.status s " +

@@ -1,7 +1,9 @@
 package com.example.demo.Service.Impl;
 
+import com.example.demo.Dto.JobDTO.JobCreateDTO;
 import com.example.demo.Dto.JobDTO.JobDTO;
 import com.example.demo.Dto.JobDTO.JobDoneDTO;
+import com.example.demo.Dto.JobDTO.ListEmployeeDTO;
 import com.example.demo.Dto.OrderDTO.JobProductDTO;
 import com.example.demo.Dto.OrderDTO.OderDTO;
 import com.example.demo.Dto.OrderDTO.OrderDetailWithJobStatusDTO;
@@ -62,6 +64,11 @@ public class JobServiceImpl implements JobService {
     private CheckConditionService checkConditionService;
     @Autowired
     private Employee_Material_Repository employeeMaterialRepository;
+
+    @Autowired
+    private RequestProductsSubmaterialsRepository requestProductsSubmaterialsRepository;
+    @Autowired
+    private ProductSubMaterialsRepository productSubMaterialsRepository;
 
     @Override
     public List<JobProductDTO> getListRequestProductJob() {
@@ -130,13 +137,13 @@ public class JobServiceImpl implements JobService {
         jobs.setTimeStart(jobDTO.getStart());
         Status_Job statusJob = statusJobRepository.findById(status_id); //set  status job theo input
         jobs.setStatus(statusJob);
-        LocalDate today = LocalDate.now();
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("ddMMyy");
-        String dateString = today.format(formatter);
-        Jobs lastJob = jobRepository.findJobsTop(dateString + "JB");
-        int count = lastJob != null ? Integer.parseInt(lastJob.getCode().substring(8)) + 1 : 1;
-        String code = dateString + "JB" + String.format("%03d", count);
-        jobs.setCode(code);
+//        LocalDate today = LocalDate.now();
+//        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("ddMMyy");
+//        String dateString = today.format(formatter);
+//        Jobs lastJob = jobRepository.findJobsTop(dateString + "JB");
+//        int count = lastJob != null ? Integer.parseInt(lastJob.getCode().substring(8)) + 1 : 1;
+//        String code = dateString + "JB" + String.format("%03d", count);
+        jobs.setCode(jobs_order_detail.getCode());
         jobs.setJob_log(false);
         jobRepository.save(jobs);
         List<Processproducterror> processproducterrorList = processproducterrorRepository.getProcessproducterrorByJobId(job_id);

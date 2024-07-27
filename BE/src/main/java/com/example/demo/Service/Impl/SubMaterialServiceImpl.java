@@ -43,12 +43,13 @@ public class SubMaterialServiceImpl implements SubMaterialService {
     @Autowired
     private CheckConditionService checkConditionService;
 
-    @Autowired
-    private RequestProductsSubmaterialsRepository requestProductsSubmaterialsRepository;
+
     @Autowired
     private RequestProductRepository requestProductRepository;
     @Autowired
     private ProductRepository productRepository;
+    @Autowired
+    private RequestProductsSubmaterialsRepository requestProductsSubmaterialsRepository;
     @Autowired
     private ProductSubMaterialsRepository productSubMaterialsRepository;
     @Autowired

@@ -14,6 +14,7 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.math.BigDecimal;
 import java.util.List;
 @EnableJpaRepositories
 @Repository
@@ -49,4 +50,8 @@ public interface RequestProductsSubmaterialsRepository extends JpaRepository<Req
             "LEFT JOIN sub.material m " +
             "WHERE j.requestProduct.requestProductId = :requestProductId")
     List<SubMateProductRequestDTO> getRequestProductSubMaterialByRequestProductIdDTO(int requestProductId);
+
+    @Query("SELECT SUM(s.quantity*sub.unitPrice) FROM RequestProductsSubmaterials s " +
+            " LEFT JOIN s.subMaterial sub WHERE s.requestProduct.requestProductId = :requestProductId")
+    BigDecimal ToTalRequestProductSubMaterialByRequestProductId(int requestProductId);
 }

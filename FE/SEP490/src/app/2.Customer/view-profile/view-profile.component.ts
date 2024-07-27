@@ -53,7 +53,7 @@ export class ViewProfileComponent implements OnInit {
   }
 
   loadData() {
-
+    this.isLoadding = true;
     this.authenListService.getUserProfile().subscribe((data) => {
       this.userProfile = data.result;
 
@@ -62,6 +62,7 @@ export class ViewProfileComponent implements OnInit {
         this.provinces = data;
         this.updateControls();
       });
+      this.isLoadding = false;
     });
   }
 
@@ -184,7 +185,7 @@ export class ViewProfileComponent implements OnInit {
         this.isLoadding = false;
         console.log('Profile updated successfully:', response);
         this.toastr.success('Thông tin đã được cập nhật thành công!', 'Thành công');
-       
+        this.cancelChanges();
       },
       (error: any) => {
         this.isLoadding = false;

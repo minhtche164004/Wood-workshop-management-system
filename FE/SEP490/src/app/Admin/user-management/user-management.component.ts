@@ -256,7 +256,7 @@ export class UserManagementComponent implements OnInit {
       this.productListService.getAllUser().subscribe(
         (data: ApiResponse) => {
           if (data.code === 1000) {
-            this.user = data.result;
+            this.user = data.result.filter(user => user.role_name !== 'QUẢN TRỊ VIÊN');
             this.cd.detectChanges();
             this.isLoadding = false;
           } else {

@@ -10,10 +10,23 @@ import { AuthenListService } from 'src/app/service/authen.service';
 })
 export class AuthGuard implements CanActivate {
 
-  constructor(private toastr: ToastrService,private authenListService: AuthenListService, private router: Router) { }
+  constructor(
+    private toastr: ToastrService,
+    private authenListService: AuthenListService,
+    private router: Router
+  ) {}
 
   canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<boolean> | Promise<boolean> | boolean {
+    if (!this.authenListService.isLoggedIn()) {
+      this.toastr.error('Vui lòng đăng nhập');
+      this.router.navigate(['/login']);
+      return false;
+    }
+
     const expectedRoles = route.data['roles'];
+    if (!expectedRoles || expectedRoles.length === 0) {
+      return true;  // No role-based access control specified
+    }
 
     return this.authenListService.getUserProfile().pipe(
       map(data => {
@@ -22,7 +35,7 @@ export class AuthGuard implements CanActivate {
           return true;
         } else {
           this.router.navigate(['/homepage']);
-          this.toastr.error('Vai trò của bạn không hợp lệ',);
+          this.toastr.error('Vai trò của bạn không hợp lệ');
           return false;
         }
       })

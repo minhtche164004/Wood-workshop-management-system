@@ -347,6 +347,11 @@ export class ProductManagementComponent implements OnInit {
 
   populateFormWithData(productId: number) {
     this.totalUnitPrice = 0;
+    this.subMaterialData = [];
+    this.selectedSubMaterialId = [];
+    this.subMaterials = [];
+    // this.materials = [];
+    // this.loadMaterials();
     this.productListService.exportMaterialProductByProductId(productId).subscribe(
       (data) => {
         if (data.code === 1000) {
@@ -371,6 +376,7 @@ export class ProductManagementComponent implements OnInit {
             this.quantityPerSubMaterial[index] = materialItem.quantity;
             this.unitPriceSubMaterial[index] = materialItem.unitPrice;
           });
+          
 
           // console.log(this.itemsEditArray.value);
 
@@ -665,6 +671,7 @@ export class ProductManagementComponent implements OnInit {
 
   filterProducts(): void {
     this.isLoadding = true;
+    this.searchKey = this.searchKey.trim();
     console.log("Lọc sản phẩm với từ khóa:", this.searchKey, ", danh mục:", this.selectedCategory, "và giá:", this.selectedSortByPrice);
 
     this.productListService.getMultiFillterProductForAdmin(this.searchKey, this.selectedCategory, this.selectedStatus, this.selectedSortByPrice)
@@ -686,6 +693,7 @@ export class ProductManagementComponent implements OnInit {
   }
 
   filterProductsRequest(): void {
+    this.searchKey = this.searchKey.trim();
     // console.log("Lọc sản phẩm với từ khóa:", this.searchKey, ", danh mục:", this.selectedCategory, "và giá:", this.selectedSortByPrice);
     this.isLoadding = true;
     this.productListService.getMultiFillterRequestProductForAdmin(this.searchKey, this.selectedStatus, this.selectedSortByPrice)
@@ -1113,6 +1121,9 @@ export class ProductManagementComponent implements OnInit {
 
   populateFormWithDataRequestProduct(productId: number) {
     this.totalUnitPrice = 0;
+    this.subMaterialData = [];
+    this.selectedSubMaterialId = [];
+    this.subMaterials = [];
     this.productListService.exportMaterialProductRequestByProductId(productId).subscribe(
       (data) => {
         if (data.code === 1000) {

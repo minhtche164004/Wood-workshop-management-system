@@ -81,7 +81,7 @@ public class JobController {
     }
 
     @GetMapping ("/MultiFilterProductError")
-    public ApiResponse<?> MultiFilterOrder(
+    public ApiResponse<?> MultiFilterProductError(
             @RequestParam(required = false) String search,
             @RequestParam(required = false) Integer is_fix
     ) {

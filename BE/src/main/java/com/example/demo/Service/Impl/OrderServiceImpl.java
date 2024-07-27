@@ -283,6 +283,80 @@ public class  OrderServiceImpl implements OrderService {
     }
 
     @Override
+    public ResponseEntity<String> Refund_Order(int order_id, boolean special_order_id,String response) {
+
+        Orders orders = orderRepository.findById(order_id);
+        if(special_order_id == false){//là hàng có sẵn
+            List<Orderdetails> list = orderDetailRepository.getOrderDetailByOrderId(order_id);
+            for(Orderdetails orderdetails : list){
+                int product_id =  orderdetails.getProduct().getProductId();
+                Products products = productRepository.findById(product_id);
+                products.setQuantity(products.getQuantity()+orderdetails.getProduct().getQuantity());
+                productRepository.save(products);
+            }
+            orders.setStatus(statusOrderRepository.findById(9));//set cho nó là đơn hàng hoàn tiền
+            orders.setResponse(response);
+            orderRepository.save(orders);
+
+
+            return ResponseEntity.ok("Hoàn tiền đơn hàng thành công");
+
+        }
+        if(special_order_id == true){//là hàng ko có sẵn (nếu jb đang làm dở thì cho làm cho xong , còn nếu job chưa giao việc thì xoá nó đi )
+            List<Orderdetails> list = orderDetailRepository.getOrderDetailByOrderId(order_id);
+            for(Orderdetails orderdetails : list){
+//                int request_product_id =  orderdetails.getRequestProduct().getRequestProductId();
+//                RequestProducts requestProducts = requestProductRepository.findById(request_product_id);
+                List<Jobs> jobsList = jobRepository.getJobByOrderDetailByOrderCode(orders.getCode());
+
+                for(Jobs jobs : jobsList){
+                    if(jobs.isJob_log() == false && jobs.getUser() == null){
+                        List<Processproducterror> processproducterrorList=processproducterrorRepository.getProcessproducterrorByJobId(jobs.getJobId());
+                        for(Processproducterror processproducterror : processproducterrorList){
+                            processproducterrorRepository.delete(processproducterror);
+                        }
+                        jobRepository.delete(jobs);
+                        return ResponseEntity.ok("Hoàn tiền đơn hàng thành công");
+                    }
+                    if(jobs.isJob_log()==false && jobs.getUser() != null){
+                        return ResponseEntity.badRequest().body("Hãy hoàn thành công việc của "+jobs.getUser().getPosition().getPosition_name()+" có tên là "+jobs.getUser().getUsername()+" trước khi huỷ đơn hàng");
+                    }
+                }
+//                requestProducts.setQuantity(requestProducts.getQuantity()+orderdetails.getRequestProduct().getQuantity());
+//                requestProductRepository.save(requestProducts);
+            }
+            orders.setStatus(statusOrderRepository.findById(9));//set cho nó là đơn hàng bị huỷ
+            orders.setResponse(response);
+            orderRepository.save(orders);
+
+        }
+
+        if(orders.getSpecialOrder() == true){
+            String email=orderDetailRepository.getMailOrderForSendMail(order_id);
+            String code = orders.getCode();
+            SimpleDateFormat dateFormatter = new SimpleDateFormat("dd/MM/yyyy");
+//            String time_finish = dateFormatter.format(orders.getOrderFinish());
+            //   String time_finish = (orders.getOrderFinish() == null) ? "" : dateFormatter.format(orders.getOrderFinish());
+            String time_start = dateFormatter.format(orders.getOrderDate());
+//            String status_name=statusOrder.getStatus_name();
+            MailBody mailBody = MailBody.builder()
+                    .to(email)
+                    .text("Đơn hàng có mã đơn hàng là : " + code + "\n" +
+                                    "Có trạng thái: " +"Đơn hàng hoàn tiền\n" + "\n" +
+                                    "Với thời gian tạo đơn là: " + time_start + "\n" +
+                                    "Số tiền hoàn:" + orders.getDeposite() + "VNĐ" +"\n" +
+                                    "Lý do hoàn tiền: " + response + "\n" +
+                                    "Xin lỗi vì trải nghiệm không tốt của bạn, chúng tôi sẽ cố gắng cải thiện dịch vụ của mình. Hân hạnh được phục vụ quý khách lần tới!\n"
+                    )
+                    .subject("[Thông tin hoàn tiền của đơn hàng]")
+                    .build();
+            emailService.sendSimpleMessage(mailBody);
+        }
+
+        return ResponseEntity.ok("Hoàn tiền đơn hàng thành công");
+    }
+
+    @Override
     public String ConfirmPayment(int order_id) {
         Orders orders = orderRepository.findById(order_id);
         if(orders.getStatus().getStatus_id() == 1){//đang trong trạng thái là chờ đặt cọc

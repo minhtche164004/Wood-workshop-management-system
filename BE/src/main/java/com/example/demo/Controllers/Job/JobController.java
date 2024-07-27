@@ -90,6 +90,16 @@ public class JobController {
         return apiResponse;
     }
 
+    @GetMapping ("/MultiFilterErrorProductForEmployee")
+    public ApiResponse<?> MultiFilterErrorProductForEmployee(
+            @RequestParam(required = false) String search,
+            @RequestParam(required = false) Integer is_fix
+    ) {
+        ApiResponse<List<ProductErrorAllDTO>> apiResponse = new ApiResponse<>(); // Chỉ định rõ kiểu List<OderDTO>
+        apiResponse.setResult(jobService.MultiFilterErrorProductForEmployee(search,is_fix));
+        return apiResponse;
+    }
+
     @GetMapping("/countCompletedJobsByMonthAndYear")
     public ApiResponse<?> countCompletedJobsByMonthAndYear(@RequestParam("status_name") String status_name,@RequestParam("month")int month,
                                                            @RequestParam("year") int year) {
@@ -394,6 +404,13 @@ public class JobController {
     public ApiResponse<?> getAllProductErrorByJobId(@RequestParam("job_id") int job_id) {
         ApiResponse<List> apiResponse = new ApiResponse<>();
         apiResponse.setResult(jobService.getAllProductErrorByJobId(job_id));
+        return apiResponse;
+    }
+
+    @GetMapping("/getAllProductErrorByJobIdForEmployee")
+    public ApiResponse<?> getAllProductErrorByJobIdForEmployee() {
+        ApiResponse<List> apiResponse = new ApiResponse<>();
+        apiResponse.setResult(jobService.getAllProductErrorForEmployee());
         return apiResponse;
     }
 

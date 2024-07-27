@@ -335,8 +335,8 @@ public class  OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public List<OderDTO> MultiFilterOrderForEmployee(String search, Integer status_id, Integer paymentMethod,Integer specialOrder,  Date startDate, Date endDate) {
-        List<OderDTO> order_list = new ArrayList<>();
+    public List<Orders> MultiFilterOrderForEmployee(String search, Integer status_id, Integer paymentMethod,Integer specialOrder,  Date startDate, Date endDate) {
+        List<Orders> order_list = new ArrayList<>();
         UserDetails userDetails =(UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         User user =userRepository.getUserByUsername(userDetails.getUsername());
 

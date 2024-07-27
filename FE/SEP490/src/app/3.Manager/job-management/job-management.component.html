@@ -239,7 +239,7 @@
                                                     <select #employeeSelect class="form-select" (change)="onChangeSelectedEmployee($event)">
                                                         <option value="" selected disabled>Chọn 1 nhân viên</option>
                                                         <option *ngFor="let employee of positionEmployees" [value]="employee.userId">
-                                                          {{ employee.username }}
+                                                          {{ employee.userInfor.fullname }}
                                                         </option>
                                                       </select>
                                                       

@@ -85,7 +85,7 @@ const routes: Routes = [
 
   { path: 'product', component: ProductComponent, },
 
-  { path: 'employee-submaterial-management', component: EmployeeSubmaterialManagementComponent },
+  { path: 'employee_submaterial_management', component: EmployeeSubmaterialManagementComponent },
 
 
   { path: 'productsList', component: ProductListComponent, canActivate: [AuthGuard], data: { roles: ['MANAGER'] } },

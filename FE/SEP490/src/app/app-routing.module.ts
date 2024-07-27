@@ -66,6 +66,7 @@ import { AuthGuard } from './AuthGuard';
 import { EmployeeSubmaterialManagementComponent } from './employee-submaterial-management/employee-submaterial-management.component';
 import { ImpactHistoryManagerComponent } from './3.Manager/impact-history-manager/impact-history-manager.component';
 import { LoginAdminComponent } from './login-admin/login-admin.component';
+import { ListProductErrorEmployeeComponent } from './4.Employee/list-product-error-employee/list-product-error-employee.component';
 
 
 const routes: Routes = [
@@ -132,6 +133,8 @@ const routes: Routes = [
   { path: 'request_product', component: ListRequestProductComponent },
 
   { path: 'employee', component: ListJobDoneEmployeeComponent, canActivate: [AuthGuard], data: { roles: ['EMPLOYEE'] } },
+  { path: 'product_error_employee', component: ListProductErrorEmployeeComponent, canActivate: [AuthGuard], data: { roles: ['EMPLOYEE'] } },
+  
   { path: 'list_job_done', component: ListJobDoneComponent, canActivate: [AuthGuard], data: { roles: ['ADMIN'] } },
   { path: 'list_request_customer', component: ListRequestCustomerComponent, canActivate: [AuthGuard], data: { roles: ['MANAGER'] } },
   { path: 'list_salary_employee', component: ListSalaryEmployeeComponent, canActivate: [AuthGuard], data: { roles: ['EMPLOYEE'] } },

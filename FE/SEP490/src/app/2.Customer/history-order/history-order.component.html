@@ -15,27 +15,29 @@
           </div>
 
           <div class="row  justify-content-end">
-            <div class="col-md-9 text-end">
+            <div class="col-md-11 text-end">
               <div class="input-group mb-3">
                 <!-- product.component.html -->
-                <label>Từ: </label>
+                <label>Ngày đặt hàng từ ngày: </label>
                 <input [(ngModel)]="selectedSDate" style="margin-left: 10px;" type="date" class="form-control"
                   placeholder="Đến: dd/mm/yyyy">
 
-                <label>Đến: </label>
+                <label>Ngày đặt hàng đến ngày: </label>
                 <input [(ngModel)]="selectedEDate" style="margin-left: 10px;" type="date" class="form-control"
                   placeholder="Đến: dd/mm/yyyy">
 
                 <!-- product.component.html -->
                 <select [(ngModel)]="selectedCategory">
                   <!-- <option value="0" selected disabled>Chọn đơn hàng</option> -->
+                  <option value="" selected>Tất cả tình trạng đơn hàng</option>
+
                   <option *ngFor="let ps of userStatus" [value]="ps.status_id">{{ ps.status_name }}</option>
-                  <option value="" selected>Tất cả danh mục</option>
+
                 </select>
 
                 <input type="text" class="form-control" placeholder="Tìm kiếm mã đơn hàng..." [(ngModel)]="searchKey">
 
-                <button class="btn search-button" type="button" (click)="filterStatus()">
+                <button class="btn search-button" type="button" (click)="filterHistoryOrder()">
                   <i class="fa fa-search"></i>
                 </button>
               </div>
@@ -64,11 +66,11 @@
                   *ngFor="let hs of history_order | paginate: { itemsPerPage: 10, currentPage: currentPage }; let i = index">
                   <td>{{ hs?.code }}</td>
                   <td>
-                  <a href="#" class="info" title="Xem chi tiết" data-toggle="modal" data-target="#productDetailModal"
-                    (click)="getOrDetailById(hs, hs.orderId)">
-                    <i class="fa-solid fa-circle-info"></i>
-                  </a>
-                </td>
+                    <a href="#" class="info" title="Xem chi tiết" data-toggle="modal" data-target="#productDetailModal"
+                      (click)="getOrDetailById(hs, hs.orderId)">
+                      <i class="fa-solid fa-circle-info"></i>
+                    </a>
+                  </td>
                   <td>{{ hs?.specialOrder ? 'Đơn hàng đặc biệt' : 'Đơn hàng có sẵn' }}</td>
                   <td>{{ hs?.orderDate | date:'dd/MM/yyyy' }}</td>
                   <td>{{ hs?.orderFinish | date:'dd/MM/yyyy' }}</td>
@@ -85,9 +87,27 @@
           </div>
         </div>
 
-        <pagination-controls class="d-flex justify-content-end" (pageChange)="currentPage = $event"
-          previousLabel="Trang trước" nextLabel="Trang sau">
+        <pagination-controls style="justify-content: right; display: flex;" (pageChange)="currentPage = $event"
+          previousLabel="Trang trước" nextLabel="Trang sau" *ngIf="history_order && history_order.length > 0">
         </pagination-controls>
+        <div class="clearfix" style="justify-content:  right; display: flex;"
+          *ngIf="history_order && history_order.length > 0">
+          <div class="hint-text">Hiển thị <b>{{ (currentPage - 1) * 10 + 1 }}</b> tới <b>{{ currentPage * 10 >
+              history_order.length ? history_order.length : currentPage * 10 }}</b> trong tổng <b>{{
+              history_order.length }}</b> dữ liệu</div>
+        </div>
+
+        <div *ngIf="!history_order || history_order.length === 0">
+
+          <div style="background-color: white;">
+            <div class="" style="display: flex; justify-content: center; align-items: center; height: 100%;">
+              <img
+                src="https://encrypted-tbn2.gstatic.com/images?q=tbn:ANd9GcSG53pYn6cpXaiwT_q6IM45P-rXg5dUw67XqRmr9-vtsbMoHnCG"
+                alt="" class="product-img" style="width: 150px; height: 150px; object-fit: cover;">
+              <p class="name-product text-center">Không tìm thấy lịch sử đơn hàng!</p>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -124,13 +144,14 @@
                 Mã đơn hàng: {{ OrderdetailById.code}}
               </label>
             </div>
-            <div class="col-md-4 text-center"> <b>Ngày đặt đơn hàng:</b> {{OrderdetailById.orderDate | date:'dd/MM/yyyy'}}
+            <div class="col-md-4 text-center"> <b>Ngày đặt đơn hàng:</b> {{OrderdetailById.orderDate |
+              date:'dd/MM/yyyy'}}
             </div>
 
 
             <div class="col-md-4 text-end">
               <b style="background-color: #007bff; color: whitesmoke; padding: 4px; border-radius: 5px;">
-               {{OrderdetailById.status?.status_name}}</b>
+                {{OrderdetailById.status?.status_name}}</b>
             </div>
           </div>
           <br>
@@ -144,7 +165,7 @@
                 </div>
                 <div class="card-body">
                   <h4 class="card-title">{{OrderdetailById.userInfor?.fullname}} -
-                     {{OrderdetailById.userInfor?.phoneNumber}}</h4>
+                    {{OrderdetailById.userInfor?.phoneNumber}}</h4>
 
                   <p class="card-text">Địa chỉ nhận hàng: {{OrderdetailById.userInfor?.address}}</p>
                 </div>

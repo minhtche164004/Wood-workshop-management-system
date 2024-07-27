@@ -27,5 +27,6 @@ public class SubMaterialDTO implements Serializable {
     @NotNull(message = "MUST_REQUIRED") // Không được để trống
   //  @DecimalMin(value = "0.0", inclusive = false, message = "PRICE_INVALID") // Giá trị tối thiểu lớn hơn 0
     private BigDecimal unit_price;
+    private BigDecimal input_price;
 
 }

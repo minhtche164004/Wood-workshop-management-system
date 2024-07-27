@@ -87,8 +87,9 @@ public class SubMaterialServiceImpl implements SubMaterialService {
         subMaterials.setMaterial(materials);
         subMaterials.setCreate_date(create);
         subMaterials.setQuantity(subMaterialDTO.getQuantity());
-        subMaterials.setUnitPrice(BigDecimal.ZERO);//mới đầu nhập nguyên vật liệu thì giá bán là 0
-        subMaterials.setInputPrice(subMaterialDTO.getUnit_price());
+        subMaterials.setUnitPrice(subMaterialDTO.getUnit_price());//mới đầu nhập nguyên vật liệu thì giá bán là 0
+        subMaterials.setInputPrice(subMaterialDTO.getInput_price());
+
         subMaterials.setDescription(subMaterialDTO.getDescription());
 
 //        if (!checkConditionService.checkInputName(subMaterialDTO.getSub_material_name())) {

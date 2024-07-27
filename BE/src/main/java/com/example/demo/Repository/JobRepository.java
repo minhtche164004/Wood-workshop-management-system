@@ -317,6 +317,34 @@ List<ProductErrorAllDTO> getAllProductError();
             "LEFT JOIN o.userInfor ui WHERE j.jobId = :query")
     List<ProductErrorAllDTO> getAllProductErrorByJobId(int query);
 
+    @Query("SELECT new com.example.demo.Dto.ProductDTO.ProductErrorAllDTO(" +
+            "p.processProductErrorId, " +
+            "COALESCE(j.code, 0), " +
+            "COALESCE(p.description, ''), " +
+            "COALESCE(p.isFixed, false), " +
+            "COALESCE(p.solution, ''), " +
+            "COALESCE(j.job_name, ''), " +
+            "COALESCE(j.jobId, 0), " +
+            "COALESCE(pr.productId, 0), " +
+            "COALESCE(pr.productName, ''), " +
+            "COALESCE(rq.requestProductId, 0), " +
+            "COALESCE(rq.requestProductName, ''), " +
+            "COALESCE(o.code, ''), " +
+            "COALESCE(ui.fullname, ''), " +
+            "COALESCE(j.user.username, ''), " +
+            "COALESCE(ps.position_name, ''), " +
+            "COALESCE(ps.position_id, 0), " +
+            "COALESCE(p.quantity, 0)) " +
+            "FROM Processproducterror p " +
+            "LEFT JOIN p.job j " +
+            "LEFT JOIN j.product pr " +
+            "LEFT JOIN j.user.position ps " +
+            "LEFT JOIN j.requestProducts rq " +
+            "LEFT JOIN j.orderdetails od " +
+            "LEFT JOIN od.order o " + // Sửa đổi đường dẫn đến orders
+            "LEFT JOIN o.userInfor ui WHERE j.user.userId = :userId")
+    List<ProductErrorAllDTO> getAllProductErrorForEmployee(int userId);
+
 
     @Query("SELECT new com.example.demo.Dto.ProductDTO.ProductErrorAllDTO(" +
             "p.processProductErrorId, " +
@@ -377,6 +405,93 @@ List<ProductErrorAllDTO> getAllProductError();
             "(p.isFixed = :isFixed OR :isFixed IS NULL)")
     List<ProductErrorAllDTO> MultiFilterErrorProductWithBoolean(@Param("search") String search,
                                                @Param("isFixed") Boolean isFixed);
+
+    @Query("SELECT new com.example.demo.Dto.ProductDTO.ProductErrorAllDTO(" +
+            "p.processProductErrorId, " +
+            "COALESCE(j.code, 0), " +
+            "COALESCE(p.description, ''), " +
+            "COALESCE(p.isFixed, false), " +
+            "COALESCE(p.solution, ''), " +
+            "COALESCE(j.job_name, ''), " +
+            "COALESCE(j.jobId, 0), " +
+            "COALESCE(pr.productId, 0), " +
+            "COALESCE(pr.productName, ''), " +
+            "COALESCE(rq.requestProductId, 0), " +
+            "COALESCE(rq.requestProductName, ''), " +
+            "COALESCE(o.code, ''), " +
+            "COALESCE(ui.fullname, ''), " +
+            "COALESCE(j.user.username, ''), " +
+            "COALESCE(ps.position_name, ''), " +
+            "COALESCE(ps.position_id, 0), " +
+            "COALESCE(p.quantity, 0)) " +
+            "FROM Processproducterror p " +
+            "LEFT JOIN p.job j " +
+            "LEFT JOIN j.product pr " +
+            "LEFT JOIN j.user.position ps " +
+            "LEFT JOIN j.requestProducts rq " +
+            "LEFT JOIN j.orderdetails od " +
+            "LEFT JOIN od.order o " + // Sửa đổi đường dẫn đến orders
+            "LEFT JOIN o.userInfor ui WHERE j.user.userId = :userId AND  ( j.code LIKE %:search% OR :search IS NULL) AND " +
+            "(p.isFixed = :isFixed OR :isFixed IS NULL)")
+    List<ProductErrorAllDTO> MultiFilterErrorProductWithBooleanForEmployee(int userId,@Param("search") String search,
+                                                                @Param("isFixed") Boolean isFixed);
+
+
+//    @Query("SELECT new com.example.demo.Dto.ProductDTO.ProductErrorAllDTO(" +
+//            "p.processProductErrorId, " +
+//            "COALESCE(j.code, 0), " +
+//            "COALESCE(p.description, ''), " +
+//            "COALESCE(p.isFixed, false), " +
+//            "COALESCE(p.solution, ''), " +
+//            "COALESCE(j.job_name, ''), " +
+//            "COALESCE(j.jobId, 0), " +
+//            "COALESCE(pr.productId, 0), " +
+//            "COALESCE(pr.productName, ''), " +
+//            "COALESCE(rq.requestProductId, 0), " +
+//            "COALESCE(rq.requestProductName, ''), " +
+//            "COALESCE(o.code, ''), " +
+//            "COALESCE(ui.fullname, ''), " +
+//            "COALESCE(j.user.username, ''), " +
+//            "COALESCE(ps.position_name, ''), " +
+//            "COALESCE(ps.position_id, 0), " +
+//            "COALESCE(p.quantity, 0)) " +
+//            "FROM Processproducterror p " +
+//            "LEFT JOIN p.job j " +
+//            "LEFT JOIN j.product pr " +
+//            "LEFT JOIN j.user.position ps " +
+//            "LEFT JOIN j.requestProducts rq " +
+//            "LEFT JOIN j.orderdetails od " +
+//            "LEFT JOIN od.order o " + // Sửa đổi đường dẫn đến orders
+//            "LEFT JOIN o.userInfor ui WHERE j.user.userId = : userId")
+//    List<ProductErrorAllDTO> getAllProductError(int userId);
+
+    @Query("SELECT new com.example.demo.Dto.ProductDTO.ProductErrorAllDTO(" +
+            "p.processProductErrorId, " +
+            "COALESCE(j.code, 0), " +
+            "COALESCE(p.description, ''), " +
+            "COALESCE(p.isFixed, false), " +
+            "COALESCE(p.solution, ''), " +
+            "COALESCE(j.job_name, ''), " +
+            "COALESCE(j.jobId, 0), " +
+            "COALESCE(pr.productId, 0), " +
+            "COALESCE(pr.productName, ''), " +
+            "COALESCE(rq.requestProductId, 0), " +
+            "COALESCE(rq.requestProductName, ''), " +
+            "COALESCE(o.code, ''), " +
+            "COALESCE(ui.fullname, ''), " +
+            "COALESCE(j.user.username, ''), " +
+            "COALESCE(ps.position_name, ''), " +
+            "COALESCE(ps.position_id, 0), " +
+            "COALESCE(p.quantity, 0)) " +
+            "FROM Processproducterror p " +
+            "LEFT JOIN p.job j " +
+            "LEFT JOIN j.product pr " +
+            "LEFT JOIN j.user.position ps " +
+            "LEFT JOIN j.requestProducts rq " +
+            "LEFT JOIN j.orderdetails od " +
+            "LEFT JOIN od.order o " + // Sửa đổi đường dẫn đến orders
+            "LEFT JOIN o.userInfor ui WHERE j.user.userId = :userId AND  ( j.code LIKE %:search% OR :search IS NULL)")
+    List<ProductErrorAllDTO> MultiFilterErrorProductForEmployee(int userId,@Param("search") String search);
 
 
     @Query("SELECT new com.example.demo.Dto.ProductDTO.ProductErrorAllDTO(" +

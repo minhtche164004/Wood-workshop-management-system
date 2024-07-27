@@ -166,6 +166,42 @@ public class JobServiceImpl implements JobService {
     }
 
     @Override
+    public List<ProductErrorAllDTO> getAllProductErrorForEmployee() {
+        UserDetails userDetails =(UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        User user =userRepository.getUserByUsername(userDetails.getUsername());
+        List<ProductErrorAllDTO> list = jobRepository.getAllProductErrorForEmployee(user.getUserId());
+        if(list == null){
+            throw new AppException(ErrorCode.NOT_FOUND);
+        }
+        return list;
+    }
+
+    @Override
+    public List<ProductErrorAllDTO> MultiFilterErrorProductForEmployee(String search, Integer is_fixed) {
+        List<ProductErrorAllDTO> error_list = new ArrayList<>();
+        UserDetails userDetails =(UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        User user =userRepository.getUserByUsername(userDetails.getUsername());
+        if (is_fixed != null) {
+            if (is_fixed == -1) {
+                // Không lọc theo is_fixed, chỉ lọc theo các tham số khác
+                error_list= jobRepository.MultiFilterErrorProductForEmployee(user.getUserId(),search);
+            } else {
+                // Lọc theo is_fixed (true hoặc false) và các tham số khác
+                boolean is_fixedValue = (is_fixed == 1); // Chuyển đổi 1/0 thành true/false
+                error_list= jobRepository.MultiFilterErrorProductWithBooleanForEmployee(user.getUserId(),search, is_fixedValue);
+            }
+        } else {
+            // Không có tham số lọc nào, lấy tất cả đơn hàng
+            error_list= jobRepository.getAllProductErrorForEmployee(user.getUserId());
+        }
+
+        if (error_list.isEmpty()) {
+            throw new AppException(ErrorCode.NOT_FOUND);
+        }
+        return error_list;
+    }
+
+    @Override
     public List<ProductErrorAllDTO> MultiFilterErrorProduct(String search, Integer is_fixed) {
         List<ProductErrorAllDTO> error_list = new ArrayList<>();
 

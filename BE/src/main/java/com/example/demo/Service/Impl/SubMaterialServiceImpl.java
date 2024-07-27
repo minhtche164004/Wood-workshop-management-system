@@ -171,6 +171,7 @@ public class SubMaterialServiceImpl implements SubMaterialService {
                             InputSubMaterial input = new InputSubMaterial();
                             input.setSubMaterials(existingSubMaterial);
                             input.setUnit_price(isPriceUpdated ? unit_price : existingSubMaterial.getUnitPrice()); // Nếu không thay đổi, giữ nguyên giá cũ
+
                             input.setQuantity(isQuantityUpdated ? dto.getQuantity() : 0); // Lưu thay đổi số lượng hoặc 0 nếu không thay đổi (thay đổi số lượng ở đây chỉ có thể là tăng chứu ko có giảm)
                             input.setDate_input(create);
 
@@ -200,6 +201,7 @@ public class SubMaterialServiceImpl implements SubMaterialService {
                         subMaterials.setMaterial(materials);
                         subMaterials.setQuantity(dto.getQuantity());
                         subMaterials.setUnitPrice(dto.getUnit_price());
+                        subMaterials.setInputPrice(dto.getInput_price());
                         subMaterials.setDescription(dto.getDescription());
                         subMaterials.setCode(codeCount.get(i));
                         subMaterialsList.add(subMaterials); // Thêm vào danh sách để save sau
@@ -209,7 +211,7 @@ public class SubMaterialServiceImpl implements SubMaterialService {
                         input.setActionType(actionType);
                         input.setSubMaterials(subMaterials);
                         input.setUnit_price(dto.getUnit_price());
-                        input.setOut_price(BigDecimal.ZERO); //lưu vào lịch sử giá nhập , còn giá bán chưa có thì cho null
+                        input.setOut_price(dto.getInput_price()); //lưu vào lịch sử giá nhập , còn giá bán chưa có thì cho null
                         input.setQuantity(dto.getQuantity());
                         input.setDate_input(create);
                         inputSubMaterialRepository.save(input);

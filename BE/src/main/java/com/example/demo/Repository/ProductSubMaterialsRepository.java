@@ -16,6 +16,7 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 @Repository
@@ -63,6 +64,11 @@ public interface ProductSubMaterialsRepository extends JpaRepository<ProductSubM
             "LEFT JOIN sub.material m " +
             "WHERE j.product.productId = :productId")
     List<SubMateProductDTO> getProductSubMaterialByProductIdDTO(int productId);
+
+
+    @Query("SELECT SUM(s.quantity*sub.unitPrice) FROM ProductSubMaterials s " +
+            " LEFT JOIN s.subMaterial sub WHERE s.product.productId = :productId")
+    BigDecimal ToTalProductSubMaterialByProductId(int productId);
 
 //    @Query("SELECT new com.example.demo.Dto.SubMaterialDTO.SubMateProductDTO( " +
 //            "CAST(m.materialId AS string), CAST(sub.subMaterialId AS string),sub.subMaterialName, m.type, sub.unitPrice, j.quantity) " +

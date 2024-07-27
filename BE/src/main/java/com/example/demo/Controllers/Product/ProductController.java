@@ -63,7 +63,7 @@ public class ProductController {
         String cacheKey = "all_products_customer";
         List<Products> products;
         String cachedData = jedis.get(cacheKey);
-      //  jedis.del(cacheKey);
+
         Gson gson = new GsonBuilder().setDateFormat("MMM dd, yyyy").create();
         if (cachedData != null) {
             Type type = new TypeToken<List<Products>>() {
@@ -339,6 +339,7 @@ public class ProductController {
     ) {
         ApiResponse<Products> apiResponse = new ApiResponse<>();
         jedis.del("all_products_admin");
+        jedis.del("all_products_customer");
         apiResponse.setResult(productService.AddNewProduct(productAddDTO, files, file_thumbnail));
         return apiResponse;
     }
@@ -374,6 +375,9 @@ public class ProductController {
             @RequestPart("file_thumbnail") MultipartFile file_thumbnail
     ) throws Exception {
         ApiResponse<Products> apiResponse = new ApiResponse<>();
+        jedis.del("all_sub_mate_product");
+        jedis.del("all_sub_mate_re_product");
+        jedis.del("all_products_customer");
         jedis.del("all_products_admin");
         apiResponse.setResult(productService.EditProduct(productId,productEditDTO,files, file_thumbnail));
         return apiResponse;
@@ -386,6 +390,9 @@ public class ProductController {
             @RequestPart("files") MultipartFile[] files
     ) throws Exception {
         ApiResponse<RequestProducts> apiResponse = new ApiResponse<>();
+        jedis.del("all_sub_mate_product");
+        jedis.del("all_products_customer");
+        jedis.del("all_sub_mate_re_product");
         jedis.del("all_products_admin");
         apiResponse.setResult(productService.EditRequestProduct(productId,requestProductEditDTO,files));
         return apiResponse;
@@ -405,6 +412,7 @@ public class ProductController {
     public ApiResponse<?> deleteProduct(@RequestParam("id") int product_id) {
       ApiResponse<String> apiResponse = new ApiResponse<>();
       productService.DeleteProduct(product_id);
+        jedis.del("all_products_customer");
       apiResponse.setResult("Xoá thành công");
       return apiResponse;
     }
@@ -468,6 +476,10 @@ public class ProductController {
             @RequestParam(required = false) BigDecimal maxPrice,
             @RequestParam(required = false) String sortDirection){
         ApiResponse<List> apiResponse = new ApiResponse<>();
+        jedis.del("all_products_customer");
+        jedis.del("all_sub_mate_product");
+        jedis.del("all_sub_mate_re_product");
+        jedis.del("all_products_admin");
         apiResponse.setResult(productService.filterProductsForAdmin(search, categoryId, statusId, minPrice, maxPrice, sortDirection));
         return apiResponse;
 
@@ -482,6 +494,9 @@ public class ProductController {
             @RequestParam(required = false) String sortDirection
          ){
         ApiResponse<List> apiResponse = new ApiResponse<>();
+        jedis.del("all_sub_mate_product");
+        jedis.del("all_sub_mate_re_product");
+        jedis.del("all_products_admin");
         apiResponse.setResult(orderService.filterRequestProductsForAdmin(search, statusId, minPrice, maxPrice, sortDirection));
         return apiResponse;
     }
@@ -491,6 +506,7 @@ public class ProductController {
     public ApiResponse<?> getProductSubMaterialAndMaterialByProductId(@RequestParam("id") int id) {
         ApiResponse<List> apiResponse = new ApiResponse<>();
         String cacheKey = "all_sub_mate_product";
+       // jedis.del("all_products_customer");
         List<SubMateProductDTO> products;
         String cachedData = jedis.hget(cacheKey, id + "");
         Gson gson = new GsonBuilder().setDateFormat("MMM dd, yyyy").create();

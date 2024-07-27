@@ -1,18 +1,13 @@
-import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
-import { HttpClient, HttpErrorResponse } from '@angular/common/http';
+import { Component, OnInit } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
 import { ToastrService } from 'ngx-toastr';
 import { JobService } from 'src/app/service/job.service';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { MatDatepickerModule } from '@angular/material/datepicker';
-import { CalendarModule } from 'primeng/calendar';
+import { FormBuilder } from '@angular/forms';
 import { ProductListService } from 'src/app/service/product/product-list.service';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { ProductService } from 'src/app/service/product.service';
-import { MatDialog, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import 'jquery';
 import { EmployeeService } from '../service/employee.service';
 
-declare var $: any;
 export interface Position {
   position_id: number;
   position_name: string;
@@ -81,7 +76,6 @@ export interface ApiResponse {
   templateUrl: './employee-submaterial-management.component.html',
   styleUrls: ['./employee-submaterial-management.component.scss']
 })
-
 export class EmployeeSubmaterialManagementComponent implements OnInit {
   isLoadding: boolean = false;
   subMaterialList: any;
@@ -106,61 +100,40 @@ export class EmployeeSubmaterialManagementComponent implements OnInit {
   isProduct: boolean = true; // check product or product request
   empList: any;
   employeeList: any[] = [];
-  employeeInfoList: { fullname: any }[] = [];
+  employeeInfoList: any[] = [];
+  selectedEmp: any;
+
+  constructor(
+    private empService: EmployeeService,
+    private fb: FormBuilder,
+    private productList: ProductService,
+    private productListService: ProductListService,
+    private jobService: JobService,
+    private toastr: ToastrService,
+    private sanitizer: DomSanitizer
+  ) { }
+
   ngOnInit(): void {
     this.loadSubMaterialForEmp();
     this.getAllEmployee();
   }
-  constructor(private empService: EmployeeService, private fb: FormBuilder, private productList: ProductService, private productListService: ProductListService, private jobService: JobService, private toastr: ToastrService, private sanitizer: DomSanitizer) {
 
-
+  selectProduct(event: any): void {
+    this.searchKey = event.item.fullname;
+    console.log('Selected fullname:', this.searchKey);
   }
-  selectProduct(product: any): void {
-    this.isLoadding = true;
-    this.selectedSubMtr = product; // Adjust based on your product object structure
-    console.log('Selected mtr seacu:', this.selectedSubMtr.subMaterialName);
 
-
-  }
-  getAllEmployee(): void {
-    this.isLoadding = true;
-    this.empService.getAllEmployee().subscribe(
-      (data) => {
-        if (data.code === 1000) {
-          this.employeeList = data.result;
-         // console.log('Employee list:', this.employeeList);
-          this.employeeInfoList = this.employeeList.map(employee => {
-            return {
-              fullname: employee.userInfor?.fullname,
-            };
-          });
-
-          console.log('fullname: ', this.employeeInfoList);
-          this.isLoadding = false;
-        } else {
-          console.error('Failed to fetch products:', data);
-           this.isLoadding = false;
-        }
-
-      },
-      (error) => {
-        console.log(error);
-        this.isLoadding = false;
-      }
-    );
-  }
-  selectedEmp: any;
-  selectEmp(product: any): void {
-    
-    this.selectedEmp = product;
-    // Clear the search key before performing the search
-    console.log('Selected employee:', this.selectedEmp.fullname);
+  selectEmp(employee: any): void {
+    this.selectedEmp = employee;
     this.searchKey = this.selectedEmp.fullname;
-    this.searchSalary();
+    console.log('Selected employee:', this.selectedEmp);
+    console.log('Search key:', this.searchKey, typeof this.searchKey);
+    console.log('Selected employee :', typeof this.searchKey);
   }
   searchSalary() {
-    this.isLoadding = true
-    console.log('Search key:', this.searchKey);
+    this.isLoadding = true;
+    console.log('Search key seacrSaka:', this.searchKey, typeof this.searchKey);
+
     this.empService.searchEmployeeByName(this.searchKey).subscribe(
       (data) => {
         this.currentPage = 1;
@@ -176,16 +149,54 @@ export class EmployeeSubmaterialManagementComponent implements OnInit {
       }
     );
   }
+
+
+  getAllEmployee(): void {
+    this.isLoadding = true;
+    this.empService.getAllEmployee().subscribe(
+      (data) => {
+        if (data.code === 1000) {
+          this.employeeList = data.result;
+          const uniqueUserIds = new Set<number>();
+
+          this.employeeInfoList = this.employeeList.filter(employee => {
+            if (!uniqueUserIds.has(employee.userId)) {
+              uniqueUserIds.add(employee.userId);
+              return true;
+            }
+            return false;
+          }).map(employee => {
+            return {
+              fullname: employee.fullname,
+              userId: employee.userId
+            };
+          });
+
+          console.log('fullname: ', this.employeeInfoList);
+          this.isLoadding = false;
+        } else {
+          console.error('Failed to fetch products:', data);
+          this.isLoadding = false;
+        }
+      },
+      (error) => {
+        console.log(error);
+        this.isLoadding = false;
+      }
+    );
+  }
+
   sanitize(name: string): SafeHtml {
     return this.sanitizer.bypassSecurityTrustHtml(name);
   }
+
   loadSubMaterialForEmp() {
     this.isLoadding = true;
     this.empService.getSubMaterialForEmp().subscribe(
       (data) => {
         this.subMaterialList = data.result;
         console.log('SubMaterial for emp:', this.subMaterialList);
-        this.isLoadding = false
+        this.isLoadding = false;
       },
       (error) => {
         console.log('Error:', error);
@@ -193,11 +204,9 @@ export class EmployeeSubmaterialManagementComponent implements OnInit {
       }
     );
   }
-  product: any;
 
   showDetails(subMaterial: any) {
     this.selectedDetail = subMaterial;
     console.log('Selected detail:', this.selectedDetail);
-
   }
 }

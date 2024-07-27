@@ -76,6 +76,9 @@ import { OrderFailComponent } from './Order-payment-vnpay/order-fail/order-fail.
 import { EmployeeSubmaterialManagementComponent } from './employee-submaterial-management/employee-submaterial-management.component';
 import { ImpactHistoryManagerComponent } from './3.Manager/impact-history-manager/impact-history-manager.component';
 
+import { ListProductErrorEmployeeComponent } from './4.Employee/list-product-error-employee/list-product-error-employee.component';
+
+
 // import { AuthInterceptor } from './service/auth.interceptor';
 @NgModule({
 
@@ -143,6 +146,10 @@ import { ImpactHistoryManagerComponent } from './3.Manager/impact-history-manage
     OrderFailComponent,
     EmployeeSubmaterialManagementComponent,
     ImpactHistoryManagerComponent,
+
+
+    ListProductErrorEmployeeComponent,
+
 
   ],
   imports: [

@@ -21,7 +21,7 @@ interface ApiResponse {
   styleUrls: ['./order-management.component.scss']
 })
 export class OrderManagementComponent implements OnInit {
-
+ 
   @ViewChild('launchModalButton')
   launchModalButton!: ElementRef;
   user: any[] = [];

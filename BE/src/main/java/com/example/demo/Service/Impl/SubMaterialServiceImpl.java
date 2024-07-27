@@ -139,6 +139,7 @@ public class SubMaterialServiceImpl implements SubMaterialService {
                 for (SubMaterialDTO dto : subMaterialDTOs) {
                     rowIndex++; // Tăng số hàng trước khi xử lý từng dòng
 
+
                     // Thực hiện các kiểm tra điều kiện
                     if (!checkConditionService.checkInputName(dto.getSub_material_name())) {
                         errors.add(new ExcelError(rowIndex, 1, "Tên không hợp lệ"));
@@ -177,8 +178,10 @@ public class SubMaterialServiceImpl implements SubMaterialService {
                             input.setDate_input(create);
 
                             if (isPriceUpdated && isQuantityUpdated) {
+                                updatePriceAllProduct(existingSubMaterial.getSubMaterialId(),dto.getUnit_price());
                                 input.setActionType(subMaterialsRepository.findByIdAction(5)); // Cập nhật cả giá và số lượng
                             } else if (isPriceUpdated) {
+                                updatePriceAllProduct(existingSubMaterial.getSubMaterialId(),dto.getUnit_price());
                                 input.setActionType(subMaterialsRepository.findByIdAction(4)); // Cập nhật giá
                             } else {
                                 input.setActionType(subMaterialsRepository.findByIdAction(3)); // Cập nhật số lượng
@@ -377,8 +380,25 @@ public class SubMaterialServiceImpl implements SubMaterialService {
         subMaterials.getMaterial().setMaterialId(subMaterialViewDTO.getMaterialId());
         subMaterials.setDescription(subMaterialViewDTO.getDescription());
         subMaterials.setSubMaterialName(subMaterialViewDTO.getSubMaterialName());
+        updatePriceAllProduct(id,subMaterialViewDTO.getUnitPrice());
         subMaterialsRepository.save(subMaterials);
+
         return subMaterialsRepository.findSubMaterialsById(id);
+    }
+
+    //@Override
+    private void updatePriceAllProduct(int subMaterialId,BigDecimal unit_price) {
+        List<Products> list_product = productSubMaterialsRepository.getProductIdsBySubMaterialId(subMaterialId);
+        BigDecimal current_unit_price = subMaterialsRepository.findSubMaterialsById(subMaterialId).getUnitPrice();
+        BigDecimal new_unit_price = unit_price;
+        for(Products p : list_product){
+            double quantity = productSubMaterialsRepository.getQuantityInProductSubMaterialsByProductId(p.getProductId(),subMaterialId);
+            BigDecimal change = (current_unit_price == null ? BigDecimal.ZERO : current_unit_price)
+                    .subtract(new_unit_price == null ? BigDecimal.ZERO : new_unit_price)
+                    .multiply(BigDecimal.valueOf(quantity));
+            p.setPrice(p.getPrice().add(change));
+            productRepository.save(p);
+        }
     }
 
 //    @Override
@@ -666,6 +686,8 @@ public class SubMaterialServiceImpl implements SubMaterialService {
 
         return inputSubMaterials;
     }
+
+
 
 //    @Override
 //    public List<Employeematerials> createEMaterial(int emp_id, int mate_id, int product_id) {

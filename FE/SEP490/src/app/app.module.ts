@@ -78,6 +78,7 @@ import { ImpactHistoryManagerComponent } from './3.Manager/impact-history-manage
 import { LoginAdminComponent } from './login-admin/login-admin.component';
 import { ListProductErrorEmployeeComponent } from './4.Employee/list-product-error-employee/list-product-error-employee.component';
 
+
 // import { AuthInterceptor } from './service/auth.interceptor';
 @NgModule({
 
@@ -145,8 +146,10 @@ import { ListProductErrorEmployeeComponent } from './4.Employee/list-product-err
     OrderFailComponent,
     EmployeeSubmaterialManagementComponent,
     ImpactHistoryManagerComponent,
+
     LoginAdminComponent,
     ListProductErrorEmployeeComponent,
+
 
   ],
   imports: [

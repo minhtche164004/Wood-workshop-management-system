@@ -13,8 +13,8 @@ interface SubMaterial {
   sub_material_name: string,
   material_name: string,
   description: string,
-  quantity: number | undefined,
-  unit_price: number
+  quantity: number ,
+  unit_price: number,
   input_price: number
 }
 declare var $: any; // khai bao jquery
@@ -80,7 +80,8 @@ export class SubMaterialManagementComponent implements OnInit {
       description: [''],
       materialName: [''],
       quantity: [''],
-      unitPrice: ['']
+      unitPrice: [''],
+      input_price: ['']
     });
     this.createJobs = this.fb.group({
       sub_material_id: [''],
@@ -198,6 +199,7 @@ export class SubMaterialManagementComponent implements OnInit {
   addSubMaterial(): void {
     this.isLoadding = true;
     //  console.log("Bắt đầu chạy thêm vật liệu")
+   
     const subMaterial: SubMaterial = {
       sub_material_name: this.sub_material_name,
       material_name: this.selectedMaterial,
@@ -206,7 +208,42 @@ export class SubMaterialManagementComponent implements OnInit {
       unit_price: this.unit_price,
       input_price: this.input_price,
     };
-
+    if (Object.values(subMaterial).includes(null)) {
+      this.isLoadding = false;
+      this.toastr.error('Vui lòng điền đầy đủ thông tin, không được để trống!', 'Lỗi');
+      return;
+    }if (!subMaterial.sub_material_name || subMaterial.sub_material_name.length < 3) {
+      this.isLoadding = false;
+      this.toastr.error('Tên vật liệu phụ phải lớn hơn 3 ký tự!', 'Lỗi');
+      return;
+  }
+  if (subMaterial.description === null || subMaterial.description === '') {
+    this.isLoadding = false;
+    this.toastr.error('Không được để trống mô tả sản phẩm', 'Lỗi');
+    return;
+}
+  if (subMaterial.quantity <= 0) {
+      this.isLoadding = false;
+      this.toastr.error('Số lượng phải lớn hơn 0!', 'Lỗi');
+      return;
+  }
+  
+  if (subMaterial.unit_price <= 0) {
+      this.isLoadding = false;
+      this.toastr.error('Giá bán phải lớn hơn 0!', 'Lỗi');
+      return;
+  }
+  
+  if (subMaterial.input_price <= 0) {
+      this.isLoadding = false;
+      this.toastr.error('Giá nhập phải lớn hơn 0!', 'Lỗi');
+      return;
+  }
+  if(subMaterial.input_price > subMaterial.unit_price){
+    this.isLoadding = false;
+    this.toastr.error('Giá nhập phải nhỏ hơn giá bán!', 'Lỗi');
+    return;
+  }
     console.log('SubMaterial request:', subMaterial);
     this.materialService.addNewSubMaterial(subMaterial).subscribe(
       (response) => {
@@ -230,37 +267,51 @@ export class SubMaterialManagementComponent implements OnInit {
   }
   saveChanges() {
     this.isLoadding = true;
-    // Here, you can access the updated values from selectedSubMtr2
-    const formData = this.editForm.value;
-    console.log('Updated Data:', formData);
-    this.subMaterialService.editSubMaterial(formData.subMaterialId, formData).subscribe(
-      (data) => {
-        if (data.code === 1000) {
-          this.toastr.success('Cập nhật nguyên vật liệu thành công!', 'Thành công');
-          this.getAllSubMaterials();
-          $('[data-dismiss="modal"]').click();
-          this.isLoadding = false;
-        } else {
-          console.error('Failed to search sub-materials:', data);
-          this.toastr.error('Không thể tìm kiếm sub-materials!', 'Lỗi');
-          this.isLoadding = false;
-        }
-      },
-      (error) => {
-        console.error('Error searching sub-materials:', error);
-        this.toastr.error('Có lỗi xảy ra!', 'Lỗi');
-        this.isLoadding = false;
-      }
-    )
 
-    // );
-    // Example: You can send the updated data to your API endpoint here
-    // Replace with your actual API call logic
-    // this.yourService.updateSubMaterial(this.selectedSubMtr2).subscribe(response => {
-    //   console.log('Updated successfully:', response);
-    //   // Handle success or error response
-    // });
-  }
+    // Lấy giá trị từ form
+    const formData = this.editForm.value;
+
+    // Kiểm tra các điều kiện
+    if (!formData.subMaterialName || formData.subMaterialName.length < 3) {
+        this.isLoadding = false;
+        this.toastr.error('Tên vật liệu phụ phải lớn hơn 3 ký tự!', 'Lỗi');
+        return;
+    }
+
+    if (formData.quantity <= 0) {
+        this.isLoadding = false;
+        this.toastr.error('Số lượng phải lớn hơn 0!', 'Lỗi');
+        return;
+    }
+
+    if (formData.unitPrice <= 0) {
+        this.isLoadding = false;
+        this.toastr.error('Giá đơn vị phải lớn hơn 0!', 'Lỗi');
+        return;
+    }
+
+    // Gửi dữ liệu đến API
+    this.subMaterialService.editSubMaterial(formData.subMaterialId, formData).subscribe(
+        (data) => {
+            if (data.code === 1000) {
+                this.toastr.success('Cập nhật nguyên vật liệu thành công!', 'Thành công');
+                this.getAllSubMaterials();
+                $('[data-dismiss="modal"]').click();
+                this.isLoadding = false;
+            } else {
+                console.error('Failed to search sub-materials:', data);
+                this.toastr.error('Không thể cập nhật nguyên vật liệu!', 'Lỗi');
+                this.isLoadding = false;
+            }
+        },
+        (error) => {
+            console.error('Error updating sub-materials:', error);
+            this.toastr.error('Có lỗi xảy ra!', 'Lỗi');
+            this.isLoadding = false;
+        }
+    );
+}
+
   loadSubMaterialDetails(subMaterialId: number) {
     this.isLoadding = true;
     this.subMaterialService.getSubMaterialById(subMaterialId)
@@ -287,8 +338,8 @@ export class SubMaterialManagementComponent implements OnInit {
             description: this.selectedSubMaterial.description,
             materialName: this.selectedSubMaterial.material_name,
             quantity: this.selectedSubMaterial.quantity,
-            unitPrice: this.selectedSubMaterial.unit_price
-          
+            unitPrice: this.selectedSubMaterial.unit_price,
+            input_price: this.selectedSubMaterial.input_price
           });
 
           console.log('Form Values after patchValue:', this.editForm.value);
@@ -336,46 +387,6 @@ export class SubMaterialManagementComponent implements OnInit {
   sanitize(name: string): SafeHtml {
     return this.sanitizer.bypassSecurityTrustHtml(name);
   }
-  // uploadFile(file: File) {
-  //   this.isLoadding = true;
-  //   this.subMaterialService.uploadExcel(file).subscribe(
-  //     (event: any) => {
-  //       if (event.type === HttpEventType.UploadProgress) {
-  //         const progress = Math.round((100 * event.loaded) / event.total);
-  //         console.log(`File is ${progress}% uploaded.`);
-  //       } else if (event instanceof HttpResponse) {
-  //         console.log('File is completely uploaded!', event.body);
-  //         // Xử lý phản hồi khi tải lên thành công ở đây
-  //       }
-  //       this.isLoadding = false;
-  //     },
-  //     (error) => {
-  //       console.error('Upload error:', error);
-  //       this.isLoadding = false;
-  //     }
-  //   );
-  // }
- 
-  // onFileSelected(event: Event) {
-  //   this.isLoadding = true;
-  //   const inputElement = event.target as HTMLInputElement;
-  //   if (inputElement.files && inputElement.files.length > 0) {
-  //     this.selectedFile = inputElement.files[0];
-  //   } else {
-  //     this.selectedFile = undefined;
-  //     console.error('No file selected.');
-  //   }
-  //   this.isLoadding = false;
-  // }
-
-  // uploadSelectedFile() {
-  //   if (this.selectedFile) {
-  //     this.uploadFile(this.selectedFile);
-  //   } else {
-  //     console.error('No file selected.');
-  //   }
-  // }
-  
 
   onFileSelectedAndUpload(event: Event) {
     this.isLoadding = true;
@@ -448,10 +459,6 @@ export class SubMaterialManagementComponent implements OnInit {
     );
   }
   
-  
-  
-  
-
 resetFileInput(inputElement: HTMLInputElement) {
   inputElement.value = ''; // Reset the file input
   this.selectedFile = undefined; // Optionally reset the selected file in the component

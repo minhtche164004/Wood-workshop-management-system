@@ -75,13 +75,13 @@ export class SupplierManagementComponent implements OnInit {
     this.loadMaterials();
 
     this.isLoadding = true;
-   
+
     this.supplierService.getAllSuppliers().subscribe(
 
       (data) => {
         if (data.code === 1000) {
           this.suppliers = data.result;
-    this.isLoadding = false;
+          this.isLoadding = false;
 
           // console.log('Danh sách nhà cung cấp: :', this.suppliers);
         } else {
@@ -110,13 +110,13 @@ export class SupplierManagementComponent implements OnInit {
               this.currentPage = 1;
               this.suppliers = data.result;
               this.isLoadding = false;
-             
+
             } else if (data.code === 1015) {
               this.suppliers = []; // Clear previous results
-          //    console.error('Tìm kiếm không thành công:', data);
+              //    console.error('Tìm kiếm không thành công:', data);
               this.isLoadding = false;
               this.checkNotFound = true;
-           //   this.toastr.error('Không tìm thấy Nhà cung cấp nguyên vật liệu!', 'Tìm kiếm thất bại');
+              //   this.toastr.error('Không tìm thấy Nhà cung cấp nguyên vật liệu!', 'Tìm kiếm thất bại');
               // Handle specific error message
             }
           }
@@ -125,13 +125,41 @@ export class SupplierManagementComponent implements OnInit {
       this.isLoadding = false;
       console.error('Empty search term');
       this.checkNotFound = false;
-    //  this.ngOnInit();
+      //  this.ngOnInit();
       // Optionally display a message to the user indicating an empty search term
     }
   }
 
   addSupplier(): void {
     this.isLoadding = true;
+    if (this.supplierName == '' || this.phoneNumber == '' || this.selectedMaterial == null) {
+      this.isLoadding = false;
+      this.toastr.error('Vui lòng nhập đầy đủ thông tin!', 'Lỗi');
+      return;
+    }
+    console.log("suplier Name: ", this.supplierName, typeof this.supplierName);
+    const supplierName = this.supplierName;
+
+    // Kiểm tra tên nhà cung cấp
+    if (supplierName.length < 3 || /\d/.test(supplierName) || /[!@#$%^&*(),.?":{}|<>]/.test(supplierName)) {
+        this.isLoadding = false;
+        this.toastr.error('Tên nhà cung cấp phải lớn hơn 3 ký tự, không chứa số hoặc ký tự đặc biệt!', 'Lỗi');
+        return;
+    }
+    
+    // Tiếp tục xử lý nếu tên nhà cung cấp hợp lệ
+    
+    const phoneNumber = this.phoneNumber;
+
+    // Kiểm tra số điện thoại
+    if (!/^0\d{9}$/.test(phoneNumber)) {
+        this.isLoadding = false;
+        this.toastr.error('Số điện thoại phải bắt đầu bằng số 0, có 10 ký tự số!', 'Lỗi');
+        return;
+    }
+    
+    // Tiếp tục xử lý nếu số điện thoại hợp lệ
+    
     const supplier: Supplier = {
       supplierName: this.supplierName,
       phoneNumber: this.phoneNumber,
@@ -162,7 +190,7 @@ export class SupplierManagementComponent implements OnInit {
         }
       );
   }
- 
+
   setDeleteId(supplierId: number) {
     console.log('Set deleteId:', supplierId);
     this.deleteId = supplierId;

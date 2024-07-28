@@ -210,6 +210,25 @@ export class ReportManagementComponent implements OnInit {
     // console.log('Form Values:', this.errorForm.value);
     const errorFormData = this.errorForm.value;
     console.log('error edit form saveChanges:', errorFormData);
+    if (!errorFormData.description || !errorFormData.solution) {
+      this.isLoadding = false;
+      this.toastr.error('Description và Solution không được bỏ trống!', 'Lỗi');
+      return;
+  }
+
+  // Kiểm tra nếu description hoặc solution ngắn hơn 3 ký tự
+  if (errorFormData.description.length < 3) {
+      this.isLoadding = false;
+      this.toastr.error('Description phải có ít nhất 3 ký tự!', 'Lỗi');
+      return;
+  }
+
+  if (errorFormData.solution.length < 3) {
+      this.isLoadding = false;
+      this.toastr.error('Solution phải có ít nhất 3 ký tự!', 'Lỗi');
+      return;
+  }
+
     this.errorProductService.editProductError(errorFormData.id, errorFormData).subscribe(
       (response) => {
         if (response.code === 1000) {

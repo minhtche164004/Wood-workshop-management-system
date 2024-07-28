@@ -158,9 +158,7 @@ export class ChartComponent implements OnInit {
   }
 
   initializeCharts() {
-     if (this.emmpChart instanceof Chart) {
-       this.emmpChart.destroy();
-     }
+    
     this.emmpChart = new Chart("canvas1", {
       type: 'pie',
       data: {
@@ -179,10 +177,7 @@ export class ChartComponent implements OnInit {
         ]
       },
     });
-    this.emmpChart.update();
-    if (this.chart2 instanceof Chart) {
-      this.chart2.destroy();
-    }
+  
     this.chart2 = new Chart('canvas2', {
       type: 'pie',
       data: {
@@ -356,6 +351,7 @@ export class ChartComponent implements OnInit {
   }
   async updateEmployeePositions(): Promise<void> {
     try {
+      console.log('Tinh phan tram nhan vien');
       const data = await this.employeeService.getAllEmployee().toPromise();
       const employees = data.result;
       this.totalEmployee = employees.length;
@@ -370,6 +366,10 @@ export class ChartComponent implements OnInit {
         this.percentEmpPos3 = Math.round((this.totalEmpPos3 / this.totalEmployee) * 100);
         this.percentEmpPos4 = Math.round((this.totalEmpPos4 / this.totalEmployee) * 100);
       }
+      console.log('Phần trăm nhân viên vị trí 1:', this.percentEmpPos1.toFixed(2) + '%');
+      console.log('Phần trăm nhân viên vị trí 2:', this.percentEmpPos2.toFixed(2) + '%');
+      console.log('Phần trăm nhân viên vị trí 3:', this.percentEmpPos3.toFixed(2) + '%');
+      console.log('Phần trăm nhân viên vị trí 4:', this.percentEmpPos4.toFixed(2) + '%');
     } catch (err) {
       console.error(err);
     }

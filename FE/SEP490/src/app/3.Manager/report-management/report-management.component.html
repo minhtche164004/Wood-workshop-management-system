@@ -182,13 +182,12 @@
                   <label style="font-size: 16px;" for="productName">Tình trạng lỗi:</label>
                 </div>
                 <div class="col-md-6">         
-                  <div class="col-md-6">
-                
-                    <select formControlName="isFixed" [ngModel]="errorDetail?.isFixed"  class="custom-select" style="width: 160%;">
+                  
+                    <select formControlName="isFixed" [ngModel]="errorDetail?.isFixed"  class="custom-select">
                       <option [ngValue]="true" [selected]="errorDetail?.isFixed">Đã khắc phục</option>
                       <option [ngValue]="false" [selected]="!errorDetail?.isFixed">Chưa khắc phục</option>
                     </select>
-                  </div>
+                 
                   
                 </div>
               </div>

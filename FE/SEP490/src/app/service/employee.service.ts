@@ -9,7 +9,7 @@ import { environment } from 'src/app/environments/environment';
 })
 export class EmployeeService {
 
-  private apiGetAllEmployee = `${environment.apiUrl}api/auth/submaterial/getAllEmpMate`;
+  private apiGetAllEmployee = `${environment.apiUrl}api/auth/admin/getAllEmployee`;
 
   private apiGetAllPosition = `${environment.apiUrl}api/auth/admin/GetAllPosition`;
 

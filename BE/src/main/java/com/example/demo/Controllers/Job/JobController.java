@@ -221,6 +221,15 @@ public class JobController {
         return apiResponse;
     }
 
+    @PostMapping("/EmployeeSick")
+    public ApiResponse<?> EmployeeSick( @RequestParam("user_id") int user_id, @RequestParam("job_id") int job_id,@RequestParam("cost_employee") BigDecimal cost_employee) {
+        ApiResponse<Jobs> apiResponse = new ApiResponse<>();
+        jedis.del("all_products_job");
+        jedis.del("all_products_request_job");
+        apiResponse.setResult(jobService.EmployeeSick(user_id,job_id,cost_employee));
+        return apiResponse;
+    }
+
     @PostMapping("/CreateProductForJobs")
     public ApiResponse<?> CreateProductForJobs(@RequestParam("p_id") int p_id, @RequestParam("quantity") int quantity) {
         ApiResponse<Jobs> apiResponse = new ApiResponse<>();

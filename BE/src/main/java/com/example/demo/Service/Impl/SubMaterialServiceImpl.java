@@ -393,8 +393,8 @@ public class SubMaterialServiceImpl implements SubMaterialService {
         BigDecimal new_unit_price = unit_price;
         for(Products p : list_product){
             double quantity = productSubMaterialsRepository.getQuantityInProductSubMaterialsByProductId(p.getProductId(),subMaterialId);
-            BigDecimal change = (current_unit_price == null ? BigDecimal.ZERO : current_unit_price)
-                    .subtract(new_unit_price == null ? BigDecimal.ZERO : new_unit_price)
+            BigDecimal change = (new_unit_price == null ? BigDecimal.ZERO : new_unit_price)
+                    .subtract(current_unit_price == null ? BigDecimal.ZERO : current_unit_price)
                     .multiply(BigDecimal.valueOf(quantity));
             p.setPrice(p.getPrice().add(change));
             productRepository.save(p);

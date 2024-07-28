@@ -180,8 +180,18 @@
                 </div>
                 <div class="card-body">
                   <!-- <h5 class="card-title">{{OrderdetailById.userInfor?.fullname}}</h5> -->
-                  <p class="card-text"><b>Đã cọc (VNĐ): </b>{{OrderdetailById.deposite | number : '1.0-3' }}</p>
-                  <p class="card-text"><b>Tổng tiền cần thanh toán (VNĐ): </b>{{ totalAmoutOrder | number : '1.0-3' }}
+                  <p class="card-text">
+                    <b>Số tiền cọc: </b>
+                    <span style="float: right;">{{OrderdetailById.deposite | number : '1.0-3' }} &nbsp; VNĐ</span>
+                  </p>
+                  <p class="card-text">
+                    <b>Tổng tiền cần thanh toán: </b>
+                    <span style="float: right;">{{ totalAmoutOrder | number : '1.0-3' }} &nbsp; VNĐ</span>
+                  </p>
+                  <p class="card-text">
+                    <b>Tổng giá trị đơn hàng: </b>
+                    <span style="float: right;">{{ totalAmoutOrder + OrderdetailById.deposite | number : '1.0-3'
+                      }} &nbsp; VNĐ</span>
                   </p>
                   <p class="card-text"><b style="margin-right: 2%;">Thanh toán:</b>{{ OrderdetailById.paymentMethod
                     === '1' ? 'Tiền mặt' : 'Chuyển khoản' }}</p>

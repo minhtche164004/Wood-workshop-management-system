@@ -87,7 +87,7 @@ export class EmployeeSubmaterialManagementComponent implements OnInit {
   loginToken: string | null = null;
 
   selectedMaterial: any = null;
-  searchKey: string = '';
+  searchKey: any;
   categories: any[] = [];
   selectedFile: File | undefined;
   keyword = 'userInfor?.fullname';
@@ -132,9 +132,9 @@ export class EmployeeSubmaterialManagementComponent implements OnInit {
   }
   searchSalary() {
     this.isLoadding = true;
-    console.log('Search key seacrSaka:', this.searchKey, typeof this.searchKey);
-
-    this.empService.searchEmployeeByName(this.searchKey).subscribe(
+    console.log('Search key seacrSaka:',this.searchKey.fullname as string);
+    
+    this.empService.searchEmployeeByName(this.searchKey.fullname as string || this.searchKey as string).subscribe(
       (data) => {
         this.currentPage = 1;
         this.subMaterialList = data.result;
@@ -168,11 +168,16 @@ export class EmployeeSubmaterialManagementComponent implements OnInit {
             return false;
           }).map(employee => {
             return {
-              fullname: employee.fullname,
+              fullname: employee.userInfor.fullname,
               userId: employee.userId
             };
           });
 
+          // this.employeeInfoList = [
+          //   {'fullname': 'hehe'},
+          //   {'fullname': 'haha'}
+          // ];
+          console.log('employeeList: ', this.employeeList);
           console.log('fullname: ', this.employeeInfoList);
           this.isLoadding = false;
         } else {

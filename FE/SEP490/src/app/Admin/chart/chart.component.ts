@@ -65,6 +65,7 @@ export class ChartComponent implements OnInit {
   chart3: any = [];
   chart4: any = [];
   chart5: any = [];
+  chart6: any = [];
   chart10: any = [];
   emmpChart: any = [];
   positionLabels: string[] = [];
@@ -117,6 +118,9 @@ export class ChartComponent implements OnInit {
     }
     if (this.chart5 instanceof Chart) {
       this.chart5.destroy();
+    }
+    if (this.chart6 instanceof Chart) {
+      this.chart6.destroy();
     }
   }
    async loadData() {
@@ -256,6 +260,29 @@ export class ChartComponent implements OnInit {
         }] 
       }
     });
+
+    this.chart6 = new Chart('canvas6', {
+      type: 'line',
+      data: {
+        labels: this.months,
+        datasets: [{
+          label: 'Tổng giá vật liệu đã bán',
+          data: this.totalInput,
+          fill: false,
+          borderColor: 'rgb(75, 192, 192)',
+          backgroundColor: 'rgb(75, 192, 192)',
+          tension: 0.1
+        },
+        {
+          label: 'Tổng lương',
+          data: this.totalSalary,
+          fill: false,
+          borderColor: 'rgb(255, 99, 132)',
+          backgroundColor: 'rgb(255, 99, 132)',
+          tension: 0.1
+        }] 
+      }
+    });
   }
 
   async getTotalOrder(): Promise<void> {
@@ -295,8 +322,8 @@ export class ChartComponent implements OnInit {
   async getTotalProduct(): Promise<void> {
     try {
       const data = await this.statistic.getCountProduct().toPromise();
-      this.totalProduct = data.result;
-      console.log('Tổng sản phẩm:', this.totalProduct);
+      this.totalNormalProduct = data.result;
+      console.log('Tổng sản phẩm thường:', this.totalNormalProduct);
       await this.getTotalRQProduct(); // Wait for getTotalRQProduct() to complete
       await this.getTotalProductNormal(); // Wait for getTotalProductNormal() to complete
     } catch (err) {
@@ -317,7 +344,7 @@ export class ChartComponent implements OnInit {
   rqProductPercentage: number = 0;
   async getTotalProductNormal(): Promise<void> {
     try {
-      this.totalNormalProduct = this.totalProduct - this.totalRQProduct;
+      this.totalProduct = this.totalNormalProduct + this.totalRQProduct;
       console.log('Tổng sản phẩm normal:', this.totalNormalProduct);
       console.log('Tổng sản phẩm RQ:', this.totalRQProduct);
       console.log('Tổng sản phẩm:', this.totalProduct);
@@ -409,11 +436,15 @@ export class ChartComponent implements OnInit {
     const promises = [];
     for (let month = 1; month <= 12; month++) {
       promises.push(this.getProductByMonthAndYear(month, this.year));
-     
+      
       promises.push(this.countTotalOrder(month, this.year));
       promises.push(this.countTotalSpecOrder(month, this.year));
+      promises.push(this.findTotalInputSmt(month, this.year));
+      promises.push(this.findTotalSalary(month, this.year));
     }
     Promise.all(promises).then(() => {
+      console.log('Tổng tiền luowng theo tháng:', this.totalSalary);
+      console.log('Tổng tiền vật liệu:', this.totalInput);
       // console.log('All data retrieved successfully.');
       // console.log('Product Counts:', this.productCounts);
       // console.log('Product Request Counts:', this.productRequestCounts);
@@ -423,6 +454,42 @@ export class ChartComponent implements OnInit {
     }).catch(err => {
       console.error('Error retrieving data:', err);
     });
+  }
+  totalInput: number[] = []; //tính số tiền vật liệu theo tháng
+  totalSalary: number[] = []; //tính số tiền lương theo tháng
+  async findTotalInputSmt(month: number, year: number): Promise<void> {
+    return new Promise<void>((resolve, reject) => {
+      this.statistic.findTotalInputSubMaterialByMonthAndYear(month, year).subscribe((data) => {
+        // if (data.result === null || data.result === undefined) {
+        //   data.result = 0;
+        // }
+      //  console.log(`total order ${month}/${year}: `, data.result);
+        this.totalInput.push(data.result);
+        
+        resolve();
+      }, err => {
+      //  console.error(`getProductByMonthAndYear error for ${month}/${year}: `, err);
+        reject(err);
+      });
+    });
+    
+  }
+  async findTotalSalary(month: number, year: number): Promise<void> {
+    return new Promise<void>((resolve, reject) => {
+      this.statistic.findTotalSalaryByMonthAndYear(month, year).subscribe((data) => {
+        if (data.result === null || data.result === undefined) {
+          data.result = 0;
+        }
+      //  console.log(`total order ${month}/${year}: `, data.result);
+        this.totalSalary.push(data.result);
+        
+        resolve();
+      }, err => {
+      //  console.error(`getProductByMonthAndYear error for ${month}/${year}: `, err);
+        reject(err);
+      });
+    });
+    
   }
   async getProductRequestByMonthAndYear(month: number, year: number): Promise<void> {
     return new Promise<void>((resolve, reject) => {

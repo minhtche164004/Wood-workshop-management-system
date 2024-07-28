@@ -1065,7 +1065,7 @@ formatDateToYYYYMMDD(date: string): string {
     // console.log('checkNotFound:', this.checkNotFound);
     //  console.log("Selected cate: ", this.selectedStatusJob)
     // console.log('Thực hiện tìm kiếm:', searchKey);
-    // console.log('Category:', selectedCategory);
+     console.log('Category:', selectedCategory);
     this.isLoadding = true;
     if (selectedCategory === 1) {
       this.jobService.multiSearchJob(searchKey, this.selectedStatusJob, this.selectedPosSearch).subscribe(
@@ -1074,19 +1074,19 @@ formatDateToYYYYMMDD(date: string): string {
           if (data.code === 1000) {
             this.productRQs = data.result;
             this.currentPage = 1;
-            //      console.log('Danh sách sản phẩm search:', this.productRQs);
+                  console.log('Danh sách sản phẩm search:', this.productRQs);
           } else if (data.code === 1015) {
             //     console.log('Danh sách sản phẩm search:', this.productRQs);
             this.checkNotFound = true;
             this.productRQs = [];
-            //     console.log("checkNotFound job:", this.checkNotFound);
+            //    console.log("checkNotFound job:", this.checkNotFound);
           }
 
           this.isLoadding = false;
           this.checkNotFound = true;
         },
         (error) => {
-          //   console.log('Error fetching products:', error);
+             console.log('Error fetching products multiSearchJob:', error);
 
           this.isLoadding = false;
           this.checkNotFound = true;
@@ -1227,13 +1227,13 @@ formatDateToYYYYMMDD(date: string): string {
   errorId: any;
   editProduct(errorid: number, product: any) {
     this.errorId = errorid;
-    //console.log('report product function:', errorid);
-    // console.log('Product:', product);
+    console.log('report product function:', errorid);
+     console.log('Product:', product);
     this.error_job_id = product.product_error_id;
     this.jobService.getAllProductErrorsByJobId(errorid).subscribe(
       (response) => {
         this.jobErrors = response.result;
-        // console.log('error history: ', this.editForm.value);
+         console.log('error report detail: ', this.editForm.value);
         if (this.jobErrors.length > 0) {
           this.editForm.patchValue(this.jobErrors[0]);
         }
@@ -1256,13 +1256,14 @@ formatDateToYYYYMMDD(date: string): string {
     );
   }
   saveChangesError() {
-    //  this.isLoadding = true;
+      this.isLoadding = true;
     const errorFormData = {
       description: this.editForm.value.des,
       solution: this.editForm.value.solution,
       isFixed: this.editForm.value.fix,
       quantity: this.editForm.value.quantity
     };
+    console.log('error edit form saveChanges:', errorFormData);
     if (!errorFormData.description || !errorFormData.solution || errorFormData.quantity == null) {
       this.isLoadding = false;
       this.toastr.error('Vui lòng điền đầy đủ thông tin, không được để trống!', 'Lỗi');
@@ -1287,15 +1288,21 @@ formatDateToYYYYMMDD(date: string): string {
       this.toastr.error('Số lượng phải lớn hơn 0!', 'Lỗi');
       return;
     }
-    const jobid = this.selectedProduct.job_id;
-    console.log('error edit form saveChanges:', errorFormData);
-    //     console.log('error_job_id: ', this.error_job_id)
+   
+    console.log('form api EditProductError', errorFormData);
+         console.log('error_job_id: ', this.error_job_id)
     this.errorProductService.editProductError(this.error_job_id, errorFormData).subscribe(
       (response) => {
         if (response.code === 1000) {
           this.toastr.success('Sửa lỗi sản phẩm thành công!', 'Thành công');
           $('[data-dismiss="modal"]').click(); this.isLoadding = false;
-          this.ngOnInit();
+          console.log("after edit error, selectedCategory: ", this.selectedCategory);
+          if (this.selectedCategory === 1) {
+            this.loadProduct();
+          } else if (this.selectedCategory === 0) {
+            this.loadProductRQForJob();
+          }
+          this.editForm.reset();
         } else {
           console.error('Failed to edit product:', response);
           this.toastr.error('Không thể sửa sản phẩm!', 'Lỗi'); this.isLoadding = false;
@@ -1308,20 +1315,5 @@ formatDateToYYYYMMDD(date: string): string {
       }
     );
   }
-  selectedError: any = {
-    code: null,
-    code_order: null,
-    description: null,
-    employee_name: null,
-    id: null,
-    job_id: null,
-    job_name: null,
-    product_id: null,
-    product_name: null,
-    request_product_id: null,
-    request_product_name: null,
-    solution: null,
-    user_name_order: null,
-    isFixed: null
-  };
+
 }

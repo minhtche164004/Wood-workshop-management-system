@@ -736,9 +736,11 @@
                 <div class="col-md-6">         
                 
                     <div *ngIf="isEditing; else readOnlyFix">
+                      
                         <select formControlName="fix" class="custom-select" style="width: 100%;">
-                          <option [ngValue]="true">Đã khắc phục</option>
-                          <option [ngValue]="false">Chưa khắc phục</option>
+                            <option value="false" selected>Chưa khắc phục</option>
+                            <option value="true">Đã khắc phục</option>
+                            
                         </select>
                       </div>
                       <ng-template #readOnlyFix>

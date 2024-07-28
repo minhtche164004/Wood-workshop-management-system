@@ -90,7 +90,7 @@ export class EmployeeSubmaterialManagementComponent implements OnInit {
   searchKey: any;
   categories: any[] = [];
   selectedFile: File | undefined;
-  keyword = 'fullname';
+  keyword = 'userInfor?.fullname';
   sub_material_name: string = '';
   SubMaterData: any = {};
   description: string = '';
@@ -157,6 +157,7 @@ export class EmployeeSubmaterialManagementComponent implements OnInit {
       (data) => {
         if (data.code === 1000) {
           this.employeeList = data.result;
+          console.log("Employee list:", this.employeeList);
           const uniqueUserIds = new Set<number>();
 
           this.employeeInfoList = this.employeeList.filter(employee => {

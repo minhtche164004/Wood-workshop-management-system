@@ -135,8 +135,8 @@ export class ChartComponent implements OnInit {
          this.getAllEmployee(),
         this.getTotalProductNormal(),
          this.getAllPostionEmp(),
-         this.getAllDataForYear()
-        
+         this.getAllDataForYear(),
+          this.getTotalAmountHaveDone()
       ]);
       await this.updateEmployeePositions();
       this.initializeCharts();
@@ -160,7 +160,14 @@ export class ChartComponent implements OnInit {
       console.error('Error fetching employee positions:', error);
     }
   }
-
+  async getTotalAmountHaveDone(): Promise<void> {
+    try {
+      const data = await this.statistic.getTotalAmountOrderHaveDone().toPromise();
+      this.totalAmouneOrderHaveDone = data.result;
+    } catch (err) {
+      console.error(err);
+    }
+  }
   initializeCharts() {
     
     this.emmpChart = new Chart("canvas1", {

@@ -93,6 +93,7 @@ export class OrderRequiredComponent implements OnInit {
   }
   onResetImage() {
     this.selectedImages = [];
+    (document.getElementById('thumbnailImage') as HTMLInputElement).value = '';
     this.imagesPreview = [];
   }
   loadData() {
@@ -189,9 +190,33 @@ export class OrderRequiredComponent implements OnInit {
       // console.log('Selected Product Images:', this.productImages);
     }
   }
+  validateCreateOrder(): boolean {
+    const paymentMethod = this.uploadForm.controls['payment_method'].value;
+    if (paymentMethod == null) {
+      this.toastr.error('Không được bỏ trống trường Phương thức thanh toán');
+      return false;
+    }
+    if (this.selectedImages.length === 0) {
+      this.toastr.error('Không được bỏ trống trường Ảnh minh họa');
+      return false;
+    }
+    const description = this.uploadForm.controls['description'].value.trim();;
+    if (description == '') {
+      this.toastr.error('Không được bỏ trống trường Mô tả sản phẩm');
+      return false;
+    }
 
+    
+   
+
+    return true;
+  }
   onSubmit1(): void {
     this.isLoadding = true;
+    if (!this.validateCreateOrder()) {
+      this.isLoadding = false;
+      return;
+    }
     if (this.uploadForm.valid && this.selectedImages.length) {
       const productData = this.uploadForm.value;
       console.log('Form Data order:', productData);

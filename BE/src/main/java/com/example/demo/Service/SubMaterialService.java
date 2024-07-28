@@ -56,4 +56,6 @@ public interface SubMaterialService {
 
     List<InputSubMaterial> MultiFilterInputSubMaterial(String search, Integer materialId,Integer action_type_id, Date startDate, Date endDate, BigDecimal minPrice, BigDecimal maxPrice,String sortDirection);
 
+//    void updatePriceAllProduct(int subMaterialId,BigDecimal unit_price);
+
 }

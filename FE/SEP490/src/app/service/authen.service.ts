@@ -60,9 +60,12 @@ export class AuthenListService {
   private apiUrl_SendMail = `${environment.apiUrl}api/auth/order/SendMailToNotifyCationAboutOrder`;
   private apiUrl_getFilterUser = `${environment.apiUrl}api/auth/admin/getMultiFillterUser`;
   private apiUrl_getFilterJobEmployeeByID = `${environment.apiUrl}api/auth/job/findAllJobForDoneByEmployeeIDWithJobCode`;
- 
+
   private apiUrl_getFilterSalaryEmployeeByID = `${environment.apiUrl}api/auth/salary/MultiFilterSalary`;
   private apiUrl_getFilterJobWasDone = `${environment.apiUrl}api/auth/job/getMultiFillterJobWasDone`;
+  private apiUrl_getFilterHistoryOrder = `${environment.apiUrl}api/auth/order/MultiFilterOrderForCustomer`;
+  private apiUrl_getProductErrorByID = `${environment.apiUrl}api/auth/job/getAllProductErrorByJobIdForEmployee`;
+  private apiUrl_getFilterProductError = `${environment.apiUrl}api/auth/job/MultiFilterErrorProductForEmployee`;
   
   private apiUrl_NameATM = 'https://api.vietqr.io/v2/banks';
   constructor(private http: HttpClient) { }
@@ -210,6 +213,23 @@ export class AuthenListService {
     console.log("Authorization header:", headers.get('Authorization'));
 
     return this.http.get<any>(this.apiUrl_getfindAllJobForDoneByEmployeeID, { headers }).pipe(
+      catchError(this.handleError)
+    );
+  }
+  getProductErrorByID(): Observable<any> {
+    const token = localStorage.getItem('loginToken');
+
+    if (!token) {
+      return throwError(new Error('Login token not found in localStorage.'));
+    }
+
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${token}`
+    });
+
+    console.log("Authorization header:", headers.get('Authorization'));
+
+    return this.http.get<any>(this.apiUrl_getProductErrorByID, { headers }).pipe(
       catchError(this.handleError)
     );
   }
@@ -536,8 +556,49 @@ export class AuthenListService {
 
     const url = `${this.apiUrl_getFilterStatus}?${queryString}`;
     console.log(url);
-    
+
     return this.http.post<any>(url, body).pipe(
+      catchError(this.handleError)
+    );
+  }
+  getFilterHistoryOrder(search: string, statusId: string, startDate: string, endDate: string): Observable<any> {
+
+    const params = {
+      search: search,
+      statusId: statusId,
+
+      // startDate: startDate,
+      // endDate: endDate
+    };
+    const body = {
+
+      startDate: startDate,
+      endDate: endDate
+    };
+    const queryString = Object.entries(params)
+      .filter(([key, value]) => {
+        if (key === 'search' && value === '') return false;
+        if (key === 'statusId' && value === "0") return false;
+
+
+        return value != null && value !== '';
+      })
+      .map(([key, value]) => `${encodeURIComponent(key)}=${encodeURIComponent(value)}`)
+      .join('&');
+
+    const url = `${this.apiUrl_getFilterHistoryOrder}?${queryString}`;
+    console.log(url);
+    const token = localStorage.getItem('loginToken');
+    if (!token) {
+      return throwError(new Error('Login token not found in localStorage.'));
+    }
+
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${token}`,
+      'Content-Type': 'application/json'
+    });
+
+    return this.http.post<any>(url, body, { headers }).pipe(
       catchError(this.handleError)
     );
   }
@@ -550,22 +611,22 @@ export class AuthenListService {
       // startDate: startDate,
       // endDate: endDate
     };
-  
+
     const queryString = Object.entries(params)
       .filter(([key, value]) => {
         if (key === 'search' && value === '') return false;
         if (key === 'roleId' && value === "") return false;
         if (key === 'position_id' && value === "") return false;
-   
 
-        return value != null && value !== ''&& value !== "";
+
+        return value != null && value !== '' && value !== "";
       })
       .map(([key, value]) => `${encodeURIComponent(key)}=${encodeURIComponent(value)}`)
       .join('&');
 
     const url = `${this.apiUrl_getFilterUser}?${queryString}`;
     console.log(url);
-    
+
     return this.http.get<any>(url).pipe(
       catchError(this.handleError)
     );
@@ -579,22 +640,22 @@ export class AuthenListService {
       // startDate: startDate,
       // endDate: endDate
     };
-  
+
     const queryString = Object.entries(params)
       .filter(([key, value]) => {
         if (key === 'search' && value === '') return false;
         if (key === 'status_id' && value === "") return false;
         if (key === 'position_id' && value === "") return false;
-   
 
-        return value != null && value !== ''&& value !== "";
+
+        return value != null && value !== '' && value !== "";
       })
       .map(([key, value]) => `${encodeURIComponent(key)}=${encodeURIComponent(value)}`)
       .join('&');
 
     const url = `${this.apiUrl_getFilterJobWasDone}?${queryString}`;
     console.log(url);
-    
+
     return this.http.get<any>(url).pipe(
       catchError(this.handleError)
     );
@@ -603,13 +664,13 @@ export class AuthenListService {
 
     const params = {
       query: query,
- 
+
     };
-  
+
     const queryString = Object.entries(params)
       .filter(([key, value]) => {
         if (key === 'query' && value === '') return false;
-        return  value !== '';
+        return value !== '';
       })
       .map(([key, value]) => `${encodeURIComponent(key)}=${encodeURIComponent(value)}`)
       .join('&');
@@ -625,7 +686,7 @@ export class AuthenListService {
       'Authorization': `Bearer ${token}`,
       'Content-Type': 'application/json'
     });
-    return this.http.get<any>(url ,{headers}).pipe(
+    return this.http.get<any>(url, { headers }).pipe(
       catchError(this.handleError)
     );
   }
@@ -634,7 +695,7 @@ export class AuthenListService {
     const params = {
       search: search,
       isAdvanceSuccess: isAdvanceSuccess,
- 
+
       // startDate: startDate,
       // endDate: endDate
     };
@@ -666,7 +727,7 @@ export class AuthenListService {
       'Content-Type': 'application/json'
     });
 
-    return this.http.post<any>(url, body,{headers}).pipe(
+    return this.http.post<any>(url, body, { headers }).pipe(
       catchError(this.handleError)
     );
   }
@@ -719,5 +780,41 @@ export class AuthenListService {
       catchError(this.handleError)
     );
   }
+  getFilterProductError(search: string, is_fix: number): Observable<any> {
 
+    const params = {
+      search: search,
+      is_fix: is_fix,
+
+      // startDate: startDate,
+      // endDate: endDate
+    };
+
+    const queryString = Object.entries(params)
+      .filter(([key, value]) => {
+        if (key === 'search' && value === '') return false;
+
+        if (key === 'is_fix' && value === "-1") return false;
+
+        return value != null && value !== '';
+      })
+      .map(([key, value]) => `${encodeURIComponent(key)}=${encodeURIComponent(value)}`)
+      .join('&');
+
+    const url = `${this.apiUrl_getFilterProductError}?${queryString}`;
+    console.log(url);
+    const token = localStorage.getItem('loginToken');
+    if (!token) {
+      return throwError(new Error('Login token not found in localStorage.'));
+    }
+
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${token}`,
+      'Content-Type': 'application/json'
+    });
+
+    return this.http.get<any>(url, { headers }).pipe(
+      catchError(this.handleError)
+    );
+  }
 }

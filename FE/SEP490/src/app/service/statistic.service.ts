@@ -94,7 +94,7 @@ export class StatisticService {
   }
 
   findTotalSalaryByMonthAndYear(month: number, year: number): Observable<any> {
-    const url = `${this.apifindTotalSalaryByMonthAndYear}/findTotalSalaryByMonthAndYear`;
+    const url = `${this.apifindTotalSalaryByMonthAndYear}`;
     const params = new HttpParams()
       .set('month', month.toString())
       .set('year', year.toString());

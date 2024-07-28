@@ -286,7 +286,7 @@ export class SubMaterialManagementComponent implements OnInit {
 
     if (formData.unitPrice <= 0) {
         this.isLoadding = false;
-        this.toastr.error('Giá đơn vị phải lớn hơn 0!', 'Lỗi');
+        this.toastr.error('Giá bán phải lớn hơn 0!', 'Lỗi');
         return;
     }
 

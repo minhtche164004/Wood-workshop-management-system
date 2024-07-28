@@ -76,6 +76,9 @@ export class ReportManagementComponent implements OnInit {
           this.errorProducts = data.result;
           console.log('Danh sách lỗi sản phẩm ngOninit:', this.errorProducts);
           this.isLoadding = false;
+        } else {
+          this.toastr.error(data.message, 'Lỗi');
+          this.isLoadding = false;
         }
       },
       (error) => {

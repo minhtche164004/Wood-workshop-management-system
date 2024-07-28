@@ -588,7 +588,7 @@ export class JobManagementComponent implements OnInit {
         },
         (error) => {
           console.error('Error fetching products:', error);
-          this.toastr.error('Có lỗi xảy ra!', 'Lỗi');
+          this.toastr.error('Có lỗi xảy ra get data request!', 'Lỗi');
           this.isLoadding = false;
           reject(error);
         }
@@ -829,7 +829,7 @@ export class JobManagementComponent implements OnInit {
       },
       (error) => {
         console.error('Error fetching products:', error);
-        this.toastr.error('Có lỗi xảy ra!', 'Lỗi');
+    
         this.isLoadding = false;
       }
     );
@@ -875,7 +875,7 @@ formatDateToYYYYMMDD(date: string): string {
             job_name: data.result.job_name,
             quantity_product: data.result.quantityProduct,
             finish: this.formatDateToYYYYMMDD(data.result.timeFinish),
-    start: this.formatDateToYYYYMMDD(data.result.timeStart),
+          start: this.formatDateToYYYYMMDD(data.result.timeStart),
             cost: data.result.cost
           });
           console.log('editJob form:', this.editJob.value);
@@ -888,7 +888,7 @@ formatDateToYYYYMMDD(date: string): string {
       },
       (error) => {
         console.error('Error fetching job detail:', error);
-        this.toastr.error('Có lỗi xảy ra khi lấy thông tin công việc!', 'Lỗi');
+      //  this.toastr.error('Có lỗi xảy ra khi lấy thông tin công việc!', 'Lỗi');
         this.isLoadding = false;
       }
     );
@@ -954,7 +954,7 @@ formatDateToYYYYMMDD(date: string): string {
       },
       (error) => {
         console.error('Error editing product:', error);
-        this.toastr.error('Có lỗi xảy ra!', 'Lỗi'); this.isLoadding = false;
+    //    this.toastr.error('Có lỗi xảy ra!', 'Lỗi'); this.isLoadding = false;
       }
     );
 
@@ -996,8 +996,7 @@ formatDateToYYYYMMDD(date: string): string {
       formValues.solution,
       formValues.quantity
     )
-
-      .subscribe(
+     .subscribe(
         (data) => {
           console.log('Form values:', formValues);
           if (data.code === 1000) {
@@ -1022,7 +1021,7 @@ formatDateToYYYYMMDD(date: string): string {
             //  console.error('Error message:', error.error.message);
             this.toastr.error(error.error.message, error.error.code); this.isLoadding = false;
           }
-          this.toastr.error('Có lỗi xảy ra!', 'Lỗi');
+       
           this.isLoadding = false;
         }
 

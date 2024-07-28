@@ -35,7 +35,9 @@ export class ReportManagementComponent implements OnInit {
       isFixed: []
     });
   }
+  searchKey: string = '';
   originalError: any = {};
+  selectedFixed: number = 0;
   selectedError: any = {
     code: null,
     code_order: null,
@@ -65,6 +67,23 @@ export class ReportManagementComponent implements OnInit {
   ngOnInit(): void {
     this.getAllProductError();
 
+  }
+  searchError(){
+    this.isLoadding = true;
+    this.errorProductService.filterProductErrors(this.searchKey, this.selectedFixed).subscribe(
+      (data) => {
+        if (data.code === 1000) {
+          this.errorProducts = data.result;
+          console.log('Danh sách lỗi sản phẩm ngOninit:', this.errorProducts);
+          this.isLoadding = false;
+        }
+      },
+      (error) => {
+        console.error('Error fetching products:', error);
+        this.toastr.error('Có lỗi xảy ra!', 'Lỗi');
+        this.isLoadding = false;
+      }
+    );
   }
   getAllProductError(): void {
     this.isLoadding = true;

@@ -11,7 +11,7 @@ export class ErrorProductService {
 
   private getError = `${environment.apiUrl}api/auth/job/getAllProductError`;
   private errorDetail = `${environment.apiUrl}api/auth/job/getAllProductErrorDetail`
-
+  private filterError = `${environment.apiUrl}api/auth/job/MultiFilterProductError`;
   private editError = `${environment.apiUrl}api/auth/job/EditProductError`;
   constructor(private http: HttpClient) { }
   deleteProductError(productId: number): Observable<any> {
@@ -31,7 +31,13 @@ export class ErrorProductService {
       catchError(this.handleError)
     );
   }
+  filterProductErrors(search: string, isFix: number): Observable<any> {
+    let params = new HttpParams()
+      .set('search', search)
+      .set('is_fix', isFix.toString());
 
+    return this.http.get<any>(this.filterError, { params });
+  }
   getRrrorDetailById(productId: number): Observable<any> {
     const url = `${this.errorDetail}?id=${productId}`;
     return this.http.get<any>(url).pipe(

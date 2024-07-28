@@ -55,6 +55,7 @@ export class TotalSalaryComponent implements OnInit {
     this.getAllEmployee();
     this.getAllPostionEmp();
     this.getBankList();
+    this.searchSalary();
   }
   getBankList(): void {
     // this.isLoadding = true;

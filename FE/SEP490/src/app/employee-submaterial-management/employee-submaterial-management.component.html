@@ -29,15 +29,15 @@
                             <div class="col-auto">
                               <div class="input-group mb-3">
                                 <div class="ng-autocomplete" style="width: 300px; margin-left: 5px;">
-                                    <ng-autocomplete *ngIf="employeeInfoList" [data]="employeeInfoList"
+                                    <ng-autocomplete *ngIf="employeeList" [data]="employeeList"
                                                      [searchKeyword]="keyword" placeholder="Nhập tên nhân viên tìm kiếm"
-                                                     [(ngModel)]="searchKey" historyIdentifier="employeeInfoList"
+                                                     [(ngModel)]="searchKey" historyIdentifier="employeeList"
                                                      [itemTemplate]="itemTemplate" [notFoundTemplate]="notFoundTemplate"
-                                                     (selected)="selectEmp($event)">
+                                                     >
                                     </ng-autocomplete>
                                   
                                     <ng-template #itemTemplate let-item>
-                                      <a [innerHTML]="sanitize(item.fullname)"></a>
+                                      <a [innerHTML]="sanitize(item.userInfor?.fullname)"></a>
                                     </ng-template>
                                   
                                     <ng-template #notFoundTemplate let-notFound>
@@ -46,9 +46,7 @@
                                   </div>
                                   <button class="btn search-button ms-2" type="button" (click)="searchSalary()">
                                     <i class="fa fa-search"></i>
-                                  </button>
-                                  
-                              
+                                  </button> 
                               </div>
                             </div>
                           </div>

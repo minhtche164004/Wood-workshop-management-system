@@ -452,29 +452,29 @@ export class JobManagementComponent implements OnInit {
 
 
     this.selectedProduct = '';
-    // this.jobService.addProductForJob(this.productIdCoSan, quantity).subscribe(
+    this.jobService.addProductForJob(this.productIdCoSan, quantity).subscribe(
 
-    //   (data) => {
+      (data) => {
 
-    //     if (data.code === 1000) {
-    //       this.pForJob = data.result;
-    //       // console.log('Add product for job:', this.pForJob);
-    //       this.toastr.success('Thêm sản phẩm sản xuất thành công!', 'Thành công');
-    //       $('[data-dismiss="modal"]').click(); this.isLoadding = false;
-    //       this.loadProduct();
-    //     } else {
-    //       console.error('Failed to fetch products:', data);
-    //       this.toastr.error('Thêm sản phẩm sản xuất thất bại!', 'Lỗi');
-    //       $('[data-dismiss="modal"]').click(); this.isLoadding = false;
-    //       this.loadProduct();
-    //     }
-    //   },
-    //   (error) => {
-    //     console.error('Error fetching products:', error);
-    //     this.toastr.error('Có lỗi xảy ra!', 'Lỗi');
-    //     $('[data-dismiss="modal"]').click(); this.isLoadding = false;
-    //   }
-    // );
+        if (data.code === 1000) {
+          this.pForJob = data.result;
+          // console.log('Add product for job:', this.pForJob);
+          this.toastr.success('Thêm sản phẩm sản xuất thành công!', 'Thành công');
+          $('[data-dismiss="modal"]').click(); this.isLoadding = false;
+          this.loadProduct();
+        } else {
+          console.error('Failed to fetch products:', data);
+          this.toastr.error('Thêm sản phẩm sản xuất thất bại!', 'Lỗi');
+          $('[data-dismiss="modal"]').click(); this.isLoadding = false;
+          this.loadProduct();
+        }
+      },
+      (error) => {
+        console.error('Error fetching products:', error);
+        this.toastr.error('Có lỗi xảy ra!', 'Lỗi');
+        $('[data-dismiss="modal"]').click(); this.isLoadding = false;
+      }
+    );
   }
   selectedPosEmp: any = {};
   empId: number = 0;
@@ -913,7 +913,7 @@ formatDateToYYYYMMDD(date: string): string {
     console.log("employeeAbsentId: ", this.employeeAbsentId);
     console.log("employeeAbsentCost: ", this.employeeAbsentCost);
     console.log("jobID: ", this.JOBID);
-    this.jobService.getEmployeeSick(this.employeeAbsentId, this.employeeAbsentCost, this.JOBID).subscribe(
+    this.jobService.getEmployeeSick(this.employeeAbsentId, this.JOBID,this.employeeAbsentCost).subscribe(
       (data) => {
         if (data.code === 1000) {
           console.log('Change employee absent success:', data.result);
@@ -978,11 +978,17 @@ formatDateToYYYYMMDD(date: string): string {
       (response) => {
         if (response.code === 1000) {
           this.toastr.success('Cập nhật thông tin sản xuất thành công!', 'Thành công');
-          $('[data-dismiss="modal"]').click(); this.isLoadding = false;
-          this.ngOnInit();
+          $('[data-dismiss="modal"]').click();
+           this.isLoadding = false;
+         if(this.selectedCategory === 0) {
+          this.loadProductRQForJob();
+         } else {
+          this.loadProduct();
+         }
         } else {
           console.error('Failed to edit product:', response);
-          this.toastr.error('Không thể cập nhật thông tin sản xuất!', 'Lỗi'); this.isLoadding = false;
+          this.toastr.error('Không thể cập nhật thông tin sản xuất!', 'Lỗi'); 
+          this.isLoadding = false;
           $('[data-dismiss="modal"]').click();
         }
       },

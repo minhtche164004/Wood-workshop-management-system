@@ -58,7 +58,7 @@
 
 
 
-                <div *ngIf="!checkNotFound">
+                <div *ngIf="subMaterialList.length !== 0">
                     <table class="table table-striped table-hover">
                         <!-- Table header -->
                         <thead>
@@ -101,7 +101,7 @@
                             </tr>
                         </tbody>
                     </table>
-
+                    
                     <!-- Pagination controls -->
                     <pagination-controls style="justify-content: right; display: flex;"
                         (pageChange)="currentPage = $event" previousLabel="Trang trước" nextLabel="Trang sau"
@@ -117,14 +117,16 @@
                         </div>
                     </div>
                 </div>
-
+           
                 <!-- Display 404 Not Found if no data -->
-                <div *ngIf="checkNotFound">
+                <div *ngIf="!subMaterialList || subMaterialList.length === 0">
+
                     <div style="background-color: white;">
-                        <div class="d-flex justify-content-center align-items-center" style="height: 200px;">
+                        <div class=""
+                            style="display: flex; justify-content: center; align-items: center; height: 100%;">
                             <img src="https://encrypted-tbn2.gstatic.com/images?q=tbn:ANd9GcSG53pYn6cpXaiwT_q6IM45P-rXg5dUw67XqRmr9-vtsbMoHnCG"
-                                alt="Not Found" style="width: 150px; height: 150px; object-fit: cover;">
-                            <p class="text-center">Không tìm thấy!</p>
+                                alt="" class="product-img" style="width: 150px; height: 150px; object-fit: cover;">
+                            <p class="name-product text-center">Không tìm thấy lịch sử phân phối vật liệu!</p>
                         </div>
                     </div>
                 </div>

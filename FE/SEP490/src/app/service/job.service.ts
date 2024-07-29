@@ -35,7 +35,7 @@ export class JobService {
 
   private apiMultiSeachJobRequest = `${environment.apiUrl}api/auth/job/MultiFilterRequestProductInJob`
 
- 
+  private apiEmpAbsent = `${environment.apiUrl}api/auth/job/EmployeeSick`;
   private apigetAllProductErrorByJobId = `${environment.apiUrl}api/auth/job`
     // user_id={{$random.integer(100)}}&
     // p_id={{$random.integer(100)}}&                                  ?job_id=152&status_id=9
@@ -46,6 +46,13 @@ export class JobService {
     const url = `${this.apiGetProductSubMaterial}?id=${productId}&mate_id=${mateId}`;
     console.log('URL:', url);
     return this.http.get<any>(url);
+  }
+ 
+  getEmployeeSick(userId: number, jobId: number, costEmployee: number): Observable<any> {
+    const url = `${this.apiEmpAbsent}?user_id=${userId}&job_id=${jobId}&cost_employee=${costEmployee}`;
+
+    console.log('URL:', url);
+    return this.http.post(url, '');
   }
   //gam get detail by id 
   getJobDetailById(jobId: number): Observable<any> {

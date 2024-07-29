@@ -845,6 +845,9 @@ export class JobManagementComponent implements OnInit {
     const year = d.getFullYear();
     return `${day} / ${month} / ${year}`;
 }
+employeeAbsentCost: any = 0;
+employeeAbsentId: any = 0;
+employeeAbsentCode: any = '';
 formatDateToYYYYMMDD(date: string): string {
   const d = new Date(date);
   const year = d.getFullYear();
@@ -853,7 +856,8 @@ formatDateToYYYYMMDD(date: string): string {
   return `${year}-${month}-${day}`;
 }
   editJobDetail(job: any, job_id: number): void {
-    //  console.log('Job ID:', job_id);
+     console.log('Job:', job);
+     this.employeeAbsentCode = job.code;
     this.JOBID = job_id;
     this.isLoadding = true;
     this.user_name = job.user_name;
@@ -879,6 +883,11 @@ formatDateToYYYYMMDD(date: string): string {
             cost: data.result.cost
           });
           console.log('editJob form:', this.editJob.value);
+          console.log('Job Cost:', this.editJob.value.cost);
+          this.employeeAbsentCost = this.editJob.value.cost;
+          this.employeeAbsentId = job.user_id;
+          console.log("employeeAbsentCost: ", this.employeeAbsentCost);
+          console.log("employeeAbsentId: ", this.employeeAbsentId);
           this.isLoadding = false;
         } else {
           //   console.error('Failed to fetch job detail:', data);
@@ -899,7 +908,32 @@ formatDateToYYYYMMDD(date: string): string {
     //console.log("Sản phẩm được chọn để báo cáo lỗi:", this.selectedProduct);
 
   }
+  changeEmployeeAbsent():void {
+    this.isLoadding = true;
+    console.log("employeeAbsentId: ", this.employeeAbsentId);
+    console.log("employeeAbsentCost: ", this.employeeAbsentCost);
+    console.log("jobID: ", this.JOBID);
+    this.jobService.getEmployeeSick(this.employeeAbsentId, this.employeeAbsentCost, this.JOBID).subscribe(
+      (data) => {
+        if (data.code === 1000) {
+          console.log('Change employee absent success:', data.result);
+          this.toastr.success('Thay đổi nhân viên nghỉ thành công!', 'Thành công');
+          this.loadProduct();
+          this.isLoadding = false;
 
+        } else {
+          console.error('Failed to fetch products:', data);
+          this.toastr.error('Thay đổi nhân viên nghỉ thất bại!', 'Lỗi');
+          this.isLoadding = false;
+        }
+      },
+      (error) => {
+        console.error('Error fetching products:', error);
+        this.toastr.error('Có lỗi xảy ra!', 'Lỗi');
+        this.isLoadding = false;
+      }
+    );
+  }
   saveChanges(): void {
     // this.isLoadding = true;
     // console.log('Form Values:', this.errorForm.value);

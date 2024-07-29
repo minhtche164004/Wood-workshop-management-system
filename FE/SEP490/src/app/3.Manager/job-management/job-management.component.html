@@ -953,7 +953,8 @@
 
                     <!-- Modal footer -->
                     <div class="modal-footer">
-
+                        <button type="button" data-toggle="modal"
+                        data-target="#confirmChangeEmployee"  class="btn btn-success" data-dismiss="modal">Thay đổi nhân viên</button>
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Hủy</button>
                         <button type="submit" class="btn btn-primary">Lưu thay đổi</button>
                     </div>
@@ -962,7 +963,27 @@
         </div>
     </div>
 </div>
-
+<div class="modal fade" id="confirmChangeEmployee" tabindex="-1" aria-labelledby="confirmChangeEmployeeLabel" aria-hidden="true"
+    data-backdrop="static" data-keyboard="false">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title" id="confirmChangeEmployee">Cập nhật trạng thái việc làm</h2>
+                <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close"
+                    ></button>
+            </div>
+            <div class="modal-body">
+               <p style="font-size: 16px;">Bạn chắc chắn muốn thay đổi nhân viên <span style="color: red;">{{user_name}}</span> có mã sản xuất <span style="color: red;">{{employeeAbsentCode}}? </span> </p> 
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal"
+                    >Đóng</button>
+                <button type="button" class="btn btn-primary" (click)="changeEmployeeAbsent()">Chắc
+                    chắn</button>
+            </div>
+        </div>
+    </div>
+</div>
 <div *ngIf="isLoadding" class="loading-overlay">
     <div class="spinner"></div>
 </div>

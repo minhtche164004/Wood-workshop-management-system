@@ -35,7 +35,9 @@ export class ReportManagementComponent implements OnInit {
       isFixed: []
     });
   }
+  searchKey: string = '';
   originalError: any = {};
+  selectedFixed: number = 0;
   selectedError: any = {
     code: null,
     code_order: null,
@@ -65,6 +67,27 @@ export class ReportManagementComponent implements OnInit {
   ngOnInit(): void {
     this.getAllProductError();
 
+  }
+  searchError(){
+    this.isLoadding = true;
+    this.searchKey.trim();
+    this.errorProductService.filterProductErrors(this.searchKey, this.selectedFixed).subscribe(
+      (data) => {
+        if (data.code === 1000) {
+          this.errorProducts = data.result;
+          console.log('Danh sách lỗi sản phẩm ngOninit:', this.errorProducts);
+          this.isLoadding = false;
+        } else {
+          this.toastr.error(data.message, 'Lỗi');
+          this.isLoadding = false;
+        }
+      },
+      (error) => {
+        console.error('Error fetching products:', error);
+        this.toastr.error('Có lỗi xảy ra!', 'Lỗi');
+        this.isLoadding = false;
+      }
+    );
   }
   getAllProductError(): void {
     this.isLoadding = true;
@@ -210,6 +233,25 @@ export class ReportManagementComponent implements OnInit {
     // console.log('Form Values:', this.errorForm.value);
     const errorFormData = this.errorForm.value;
     console.log('error edit form saveChanges:', errorFormData);
+    if (!errorFormData.description || !errorFormData.solution) {
+      this.isLoadding = false;
+      this.toastr.error('Description và Solution không được bỏ trống!', 'Lỗi');
+      return;
+  }
+
+  // Kiểm tra nếu description hoặc solution ngắn hơn 3 ký tự
+  if (errorFormData.description.length < 3) {
+      this.isLoadding = false;
+      this.toastr.error('Description phải có ít nhất 3 ký tự!', 'Lỗi');
+      return;
+  }
+
+  if (errorFormData.solution.length < 3) {
+      this.isLoadding = false;
+      this.toastr.error('Solution phải có ít nhất 3 ký tự!', 'Lỗi');
+      return;
+  }
+
     this.errorProductService.editProductError(errorFormData.id, errorFormData).subscribe(
       (response) => {
         if (response.code === 1000) {

@@ -36,6 +36,21 @@ public interface ProductSubMaterialsRepository extends JpaRepository<ProductSubM
             "LEFT JOIN s.material m WHERE  p.product.productId = :query AND p.subMaterial.material.materialId IN (1, 4)")
     List<SubMaterialViewDTO> GetSubMaterialByProductId(int query);
 
+    @Query("SELECT p.product " +
+            "FROM ProductSubMaterials p " +
+            "JOIN p.subMaterial s " +
+            "WHERE s.subMaterialId = :query")
+    List<Products> getProductIdsBySubMaterialId(@Param("query") int subMaterialId);
+
+    @Query("SELECT p.quantity " +
+            "FROM ProductSubMaterials p " +
+            "LEFT JOIN p.product pr " +
+            "JOIN p.subMaterial s " +
+            "WHERE pr.productId = :productId AND s.subMaterialId = :subMaterialId")
+    Double getQuantityInProductSubMaterialsByProductId(@Param("productId") int productId,@Param("subMaterialId") int subMaterialId);
+
+
+
     @Transactional
     @Modifying
     @Query("DELETE FROM ProductSubMaterials u WHERE u.productSubMaterialId = :query")

@@ -55,6 +55,7 @@ export class TotalSalaryComponent implements OnInit {
     this.getAllEmployee();
     this.getAllPostionEmp();
     this.getBankList();
+    this.searchSalary();
   }
   getBankList(): void {
     // this.isLoadding = true;
@@ -158,6 +159,7 @@ export class TotalSalaryComponent implements OnInit {
   searchSalary(): void {
     this.checkNotFound = false;
     this.isLoadding = true;
+    this.searchKey.trim();
      console.log('Search key before search:', this.searchKey);
      console.log('Selected position:', this.selectedStatusBanking);
     let startDate: string = this.fromDate || '';
@@ -304,34 +306,47 @@ export class TotalSalaryComponent implements OnInit {
     this.isLoadding = true;
     this.qrImageUrl = '';
 
-    // console.log('Thanh toan:', product);
-    // console.log('Amount: ', product.amount);
-    // console.log('accountId: ', product.user?.userInfor?.bank_number)
-    // console.log('username: ', product?.user?.userInfor?.fullname)
-    // console.log('code: ', product.code)
+     console.log('Thanh toan:', product);
+     console.log('Amount: ', product.amount);
+     console.log('accountId: ', product.user?.userInfor?.bank_number)
+     console.log('username: ', product?.user?.userInfor?.fullname)
+     console.log('code: ', product.code)
     this.selectedBanking = product.advanceSalaryId;
-    // const bankName = product.user?.userInfor?.bank_name;
+    const bankName = product.user?.userInfor?.bank_name;
     const formattedNdChuyenKhoan = this.ndChuyenKhoan.replace('{{code}}', product.code.toString());
 
-    //  console.log('orderInfo:  ', formattedNdChuyenKhoan);
+      console.log('orderInfo:  ', formattedNdChuyenKhoan);
 
     const bin = this.getBinByBankNameOrShortName(product.user?.userInfor?.bank_name);
-    //    console.log('BIN:', bin);
-    this.salaryService.getQRBanking(product.amount, product.user?.userInfor?.bank_number, product?.user?.userInfor?.fullname, bin, formattedNdChuyenKhoan)
+        console.log('BIN:', bin);
+    this.salaryService.getQRBanking(product.amount, bankName, product?.user?.userInfor?.fullname, bin, formattedNdChuyenKhoan)
       .subscribe(
         (response) => {
-          this.qrImageUrl = response;
-          //       console.log('QR Image URL:', this.qrImageUrl);
+          if (response) {
+            this.qrImageUrl = response;
+            console.log('QR Image URL:', this.qrImageUrl);
+            $('[data-dismiss="modal"]');
+            this.isLoadding = false;
+           
+          } else {
+            // Nếu phản hồi không có dữ liệu hợp lệ
+            console.error('Invalid response:', response);
+            this.toastr.error('Có lỗi xảy ra khi tạo mã QR thanh toán. Vui lòng thử lại sau.', 'Lỗi');
+            $('[data-dismiss="modal"]');
           this.isLoadding = false;
+         
+          }
+      
         },
         (error) => {
           console.error('API Error:', error);
           this.toastr.error('Có lỗi xảy ra khi tạo mã QR thanh toán. Vui lòng thử lại sau.', 'Lỗi');
           // Xử lý lỗi nếu có
-          $('[data-dismiss="modal"]').click();
+          $('[data-dismiss="modal"]');
           this.isLoadding = false;
+         
         }
-
+        
       );
 
   }

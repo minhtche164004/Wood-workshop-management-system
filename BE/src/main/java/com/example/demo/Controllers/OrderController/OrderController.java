@@ -144,6 +144,16 @@ public class OrderController {
       //  apiResponse.setResult(orderService.Cancel_Order(order_id,special_order_id));
         return orderService.Cancel_Order(order_id,special_order_id,response);
     }
+
+    @PostMapping("/Refund_Order")
+    public ResponseEntity<String> Refund_Order(@RequestParam("order_id") int order_id,@RequestParam("special_order_id") boolean special_order_id,
+                                               @RequestParam("percent_order_price") int percent_order_price,
+                                               @RequestBody String response) {
+        //  ApiResponse<ResponseEntity<?>> apiResponse = new ApiResponse<>();
+        //  apiResponse.setResult(orderService.Cancel_Order(order_id,special_order_id));
+        return orderService.Refund_Order(order_id,special_order_id, percent_order_price,response);
+    }
+
     @GetMapping("/GetWhiteListByUser")
     public ApiResponse<?> GetWhiteListByUser() {
         ApiResponse<List> apiResponse = new ApiResponse<>();

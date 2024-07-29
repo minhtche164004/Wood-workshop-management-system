@@ -78,6 +78,12 @@ public class Orders {
     @Column(name = "description") //tương tự như bên class request
     private String description;
 
+    @Column(name = "discount")
+    private BigDecimal discount;
+
+    @Column(name = "refund")
+    private BigDecimal refund;
+
     @OneToMany(mappedBy = "orders", cascade = CascadeType.ALL)
     private List<Requestimages> requestImages;
 

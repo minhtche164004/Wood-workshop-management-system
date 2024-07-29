@@ -90,6 +90,9 @@ public interface OrderService {
 
    ResponseEntity<String> Cancel_Order(int order_id, boolean special_order_id,String response);
 
+    ResponseEntity<String> Refund_Order(int order_id, boolean special_order_id, int percent_order_price,String response);
+
+
     String ConfirmPayment(int order_id);
 
     List<OderDTO> MultiFilterOrder(String search, Integer status_id, Integer paymentMethod, Integer specialOrder,Date startDate, Date endDate);

@@ -17,7 +17,7 @@
                 <span class="align-middle">Thêm sản phẩm</span>
               </a>
               <!-- Them san pham trong bang request product theo yeu cau -->
-              <a id="addRequestProductButton" *ngIf="!isProduct" href="#" class="btn btn-secondary btn-sm"
+              <a id="addRequestProductButton" *ngIf="!isProduct && idOrder" href="#" class="btn btn-secondary btn-sm"
                 data-toggle="modal" data-target="#addRequestProductModal" style="font-size: 14px;"
                 (click)="resetFormAdd()">
                 <i class="material-icons align-middle" style="font-size: 18px;">&#xE147;</i>
@@ -346,7 +346,7 @@
           <!-- Nhap gia tien -->
           <div class="form-row">
             <div class="col-md-12">
-              <label style="font-size: 16px;" for="productPrice">Đơn giá(VNĐ)<span
+              <label style="font-size: 16px;" for="productPrice">Đơn giá 1 đơn vị của sản phẩm (VNĐ)<span
                   class="required-asterisk">*</span></label>
               <input type="text" min="0" class="form-control" id="productPrice" formControlName="price"
                 (input)="formatInputValue($event)">
@@ -797,7 +797,7 @@
 
           <div class="form-row">
             <div class="form-group col-md-12">
-              <label style="font-size: 16px;" for="editProductPrice">Đơn giá(VNĐ)<span
+              <label style="font-size: 16px;" for="editProductPrice">Đơn giá 1 đơn vị của sản phẩm (VNĐ)<span
                   class="required-asterisk">*</span></label>
               <input type="text" min="0" class="form-control" id="editProductPrice" name="editProductPrice"
                 formControlName="price" (input)="formatInputValue($event)">
@@ -1017,7 +1017,7 @@
 
           <div class="form-row">
             <div class="form-group col-md-12">
-              <label style="font-size: 16px;" for="editProductPrice">Đơn giá(VNĐ)</label>
+              <label style="font-size: 16px;" for="editProductPrice">Đơn giá 1 đơn vị của sản phẩm (VNĐ)</label>
               <input type="text" min="0" class="form-control" id="editProductPrice" name="editProductPrice"
                 formControlName="price" (input)="formatInputValue($event)">
             </div>

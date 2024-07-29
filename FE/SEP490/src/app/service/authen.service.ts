@@ -66,6 +66,7 @@ export class AuthenListService {
   private apiUrl_getFilterHistoryOrder = `${environment.apiUrl}api/auth/order/MultiFilterOrderForCustomer`;
   private apiUrl_getProductErrorByID = `${environment.apiUrl}api/auth/job/getAllProductErrorByJobIdForEmployee`;
   private apiUrl_getFilterProductError = `${environment.apiUrl}api/auth/job/MultiFilterErrorProductForEmployee`;
+  private apiUrl_RefundcancelOrder = `${environment.apiUrl}api/auth/order/Refund_Order`;
   
   private apiUrl_NameATM = 'https://api.vietqr.io/v2/banks';
   constructor(private http: HttpClient) { }
@@ -132,6 +133,14 @@ export class AuthenListService {
   }
   cancelOrder(orderId: number, specialOrderId: boolean, cancelReason: string): Observable<string> {
     const url = `${this.apiUrl_cancelOrder}?order_id=${orderId}&special_order_id=${specialOrderId}`;
+    const headers = new HttpHeaders({ 'Content-Type': 'text/plain' });
+
+    return this.http.post<string>(url, cancelReason, { headers }).pipe(
+      catchError(this.handleError)
+    );
+  }
+  RefundcancelOrder(orderId: number, specialOrderId: boolean, cancelReason: string, percentDepositPrice: number, percentOrderPrice: number): Observable<string> {
+    const url = `${this.apiUrl_RefundcancelOrder}?order_id=${orderId}&special_order_id=${specialOrderId}&percent_deposite_price=${percentDepositPrice}&percent_order_price=${percentOrderPrice}`;
     const headers = new HttpHeaders({ 'Content-Type': 'text/plain' });
 
     return this.http.post<string>(url, cancelReason, { headers }).pipe(

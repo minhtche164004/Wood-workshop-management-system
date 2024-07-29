@@ -132,6 +132,7 @@ export class EmployeeSubmaterialManagementComponent implements OnInit {
   }
   searchSalary() {
     this.isLoadding = true;
+    this.searchKey.trim();
     console.log('Search key seacrSaka:',this.searchKey.fullname as string);
     
     this.empService.searchEmployeeByName(this.searchKey.fullname as string || this.searchKey as string).subscribe(

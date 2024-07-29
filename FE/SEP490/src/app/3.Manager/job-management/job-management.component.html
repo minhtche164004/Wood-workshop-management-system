@@ -11,8 +11,8 @@
                         <div class="col-sm-7 text-end" style="text-align: center;">
                             <!-- {{ selectedCategory }} -->
                             <div *ngIf="selectedCategory != 0">
-                                <a href="#" class="btn btn-secondary" data-toggle="modal"
-                                    data-target="#addProductModal" (click)="loadAutoSearchProduct()">
+                                <a href="#" class="btn btn-secondary" data-toggle="modal" data-target="#addProductModal"
+                                    (click)="loadAutoSearchProduct()">
                                     <i class="material-icons">&#xE147;</i> <span>Sản xuất sản phẩm có sẵn</span>
                                 </a>
                             </div>
@@ -33,14 +33,12 @@
                                     </option>
 
                                 </select>
-                                <select [(ngModel)]="selectedStatusJob"
-                                    >
+                                <select [(ngModel)]="selectedStatusJob">
                                     <option value="">Tất cả trạng thái</option>
                                     <option *ngFor="let st of statusSearch" [ngValue]="st.status_id">{{ st.status_name
                                         }}</option>
                                 </select>
-                                <select [(ngModel)]="selectedPosSearch"
-                                    >
+                                <select [(ngModel)]="selectedPosSearch">
                                     <option value="">Tất cả vị trí</option>
                                     <option *ngFor="let poss of positionsSearch" [ngValue]="poss.position_id">{{
                                         poss.position_name }}</option>
@@ -81,9 +79,9 @@
                             <!-- <td>{{ product?.code }}</td> -->
                             <td class="action-buttons">
                                 <a style="margin-right: 10px;" title="Chi tiết" data-toggle="modal"
-                                data-target="#detailJobModal" (click)="showJobDetail(product)">
-                                <i class="fa-solid fa-circle-info"></i>
-                            </a>
+                                    data-target="#detailJobModal" (click)="showJobDetail(product)">
+                                    <i class="fa-solid fa-circle-info"></i>
+                                </a>
                                 <ng-container
                                     *ngIf="product.statusJob.status_id !== 6 && product.statusJob.status_id !== 9 && product.statusJob.status_id !== 12">
                                     <a href="#" class="settings" title="Chỉnh sửa" data-toggle="modal"
@@ -92,35 +90,41 @@
                                         <i class="fa-solid fa-pen-to-square"></i>
                                     </a>
                                 </ng-container>
-                               
+
                             </td>
                             <td>
-                                <button style="margin-left: -10px; size: 15px;" data-toggle="modal"
-                                    data-target="#assignJobModal" (click)="manageJob(product)" class="btn" 
-                                    [class.btn-primary]="!isDisabled(product) && !listErrorJob.includes(product.job_id) "
-                              
-                                    [class.btn-secondary]="listErrorJob.includes(product.job_id) || isDisabled(product) && !listErrorJob.includes(product.job_id) "
+                                <button *ngIf="product.user_name === ''" style="margin-left: -10px; size: 15px;"
+                                    data-toggle="modal" data-target="#assignJobModal" (click)="manageJob(product)"
+                                    class="btn btn-success">
+                                    Giao việc
+                                </button>
+                                <button *ngIf="product.user_name !== ''" style="margin-left: -10px; size: 15px;"
+                                    data-toggle="modal" data-target="#assignJobModal" (click)="manageJob(product)"
+                                    class="btn"
+                                    [class.btn-primary]="!isDisabled(product) && !listErrorJob.includes(product.job_id) || product.user_id === ''"
+                                    [class.btn-secondary]="listErrorJob.includes(product.job_id) || isDisabled(product) && !listErrorJob.includes(product.job_id)"
                                     [disabled]="listErrorJob.includes(product.job_id) || isDisabled(product)">
                                     Giao việc
                                 </button>
+
                             </td>
                             <td>
                                 <!-- Button to open the "errorProduct" modal -->
-                                <button *ngIf="!listErrorJob.includes(product.job_id)" class="btn btn-primary" data-toggle="modal"
-                                    data-target="#errorProduct" (click)="errorJob(product)"
+                                <button *ngIf="!listErrorJob.includes(product.job_id)" class="btn btn-primary"
+                                    data-toggle="modal" data-target="#errorProduct" (click)="errorJob(product)"
                                     [class.btn-primary]="!isErrorDisabled(product) && !listErrorJob.includes(product.job_id)"
                                     [class.btn-secondary]="isErrorDisabled(product) && !listErrorJob.includes(product.job_id)"
                                     [class.btn-danger]="listErrorJob.includes(product.job_id)"
                                     [disabled]="isErrorDisabled(product)">
                                     <i class="fa-solid fa-triangle-exclamation"></i>
-                                </button>                         
-                                <button *ngIf="listErrorJob.includes(product.job_id)" class="btn btn-primary" data-toggle="modal"
-                                    data-target="#otherModal" (click)="editProduct(product.job_id, product)"
+                                </button>
+                                <button *ngIf="listErrorJob.includes(product.job_id)" class="btn btn-primary"
+                                    data-toggle="modal" data-target="#otherModal"
+                                    (click)="editProduct(product.job_id, product)"
                                     [class.btn-primary]="!isErrorDisabled(product) && !listErrorJob.includes(product.job_id)"
                                     [class.btn-secondary]="isErrorDisabled(product) && !listErrorJob.includes(product.job_id)"
-                                    [class.btn-danger]="listErrorJob.includes(product.job_id)"
-                                    [disabled]="">
-                                    <i class="fa-solid fa-triangle-exclamation"></i> 
+                                    [class.btn-danger]="listErrorJob.includes(product.job_id)" [disabled]="">
+                                    <i class="fa-solid fa-triangle-exclamation"></i>
                                 </button>
                             </td>
                             <td>{{ product?.product_name }}</td>
@@ -236,15 +240,17 @@
                                                 </div>
                                                 <div class="col-md-6">
 
-                                                    <select #employeeSelect class="form-select" (change)="onChangeSelectedEmployee($event)">
+                                                    <select #employeeSelect class="form-select"
+                                                        (change)="onChangeSelectedEmployee($event)">
                                                         <option value="" selected disabled>Chọn 1 nhân viên</option>
-                                                        <option *ngFor="let employee of positionEmployees" [value]="employee.userId">
-                                                          {{ employee.userInfor.fullname }}
+                                                        <option *ngFor="let employee of positionEmployees"
+                                                            [value]="employee.userId">
+                                                            {{ employee.userInfor.fullname }}
                                                         </option>
-                                                      </select>
-                                                      
-                                                      
-                                                                                                                                      
+                                                    </select>
+
+
+
                                                 </div>
                                             </div>
                                             <div class="row">
@@ -315,7 +321,7 @@
                                             <th>Khối lượng</th>
                                             <th>Tổng số lượng </th>
                                             <th>Đơn vị</th>
-                                            
+
                                         </tr>
                                     </thead>
 
@@ -333,7 +339,8 @@
                                 </table>
                                 <!-- Job description -->
                                 <div class="customer-info">
-                                    <h5 style="color: black;">Mô tả chi tiết yêu cầu việc làm<span class="required-asterisk"> *</span></h5>
+                                    <h5 style="color: black;">Mô tả chi tiết yêu cầu việc làm<span
+                                            class="required-asterisk"> *</span></h5>
                                     <textarea class="form-control" rows="6" formControlName="description"
                                         name="jobDescription" placeholder="Nhập mô tả chi tiết..." required></textarea>
                                 </div>
@@ -341,10 +348,10 @@
                         </div>
                     </div>
 
-                    <div class="modal-footer">                   
-                       <button type="button" class="btn btn-secondary" data-dismiss="modal"
-                            (onClick)="cancelAssign()">Hủy</button>
-                            <button type="submit" class="btn btn-primary">Tạo việc</button>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal"
+                            (click)="cancelAssign()">Hủy</button>
+                        <button type="submit" class="btn btn-primary">Tạo việc</button>
                     </div>
                 </form>
             </div>
@@ -538,7 +545,7 @@
                                     [searchKeyword]="keyword" placeholder="Nhập tên sản phẩm có sẵn ..."
                                     historyIdentifier="productAutoSearch" [itemTemplate]="itemTemplate"
                                     [notFoundTemplate]="notFoundTemplate" (selected)="selectProduct($event)">
-                                </ng-autocomplete>             
+                                </ng-autocomplete>
                                 <ng-template #itemTemplate let-item>
                                     <a [innerHTML]="sanitize(item.productName)"></a>
                                 </ng-template>
@@ -547,7 +554,7 @@
                                     <div>Không tìm thấy sản phẩm!</div>
                                 </ng-template>
 
-                                
+
                             </div>
                         </div>
                     </div>
@@ -561,8 +568,9 @@
                         </div>
                     </div>
                     <div class="modal-footer d-flex justify-content-end">
-                       
-                        <button type="button" class="btn btn-secondary" (onClick)="huyTaoSanPhamCoSan()" data-dismiss="modal">Hủy</button>
+
+                        <button type="button" class="btn btn-secondary" (onClick)="huyTaoSanPhamCoSan()"
+                            data-dismiss="modal">Hủy</button>
                         <button type="submit" class="btn btn-primary">Thêm mới</button>
                     </div>
                 </form>
@@ -645,7 +653,7 @@
                     </div>
 
                     <div class="modal-footer d-flex justify-content-end">
-                       
+
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Hủy</button>
                         <button type="submit" class="btn btn-primary">Tạo báo cáo</button>
                     </div>
@@ -656,150 +664,163 @@
 </div>
 
 <div class="modal fade" #otherModal id="otherModal" tabindex="-1" role="dialog" aria-labelledby="otherModalLabel"
-  aria-hidden="true">
-  <div class="modal-dialog modal-dialog-wide" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h2 class="modal-title" id="editProductModalLabel">Chỉnh sửa lỗi sản phẩm</h2>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-      <div class="modal-body">
-        <form [formGroup]="editForm">
-          <div class="form-group">
-            <div class="row">
-              <div class="col-md-6">
-                <div class="col-md-6">
-                  <label style="font-size: 16px;" for="code">Mã việc làm:</label>
-                </div>
-                <div class="col-md-6">         
-                  <input type="text" class="form-control" id="code" formControlName="code" name="code" readonly>
-                </div>
-              </div>
-              <div class="col-md-6">
-                <div class="col-md-6">
-                  <label style="font-size: 16px;" for="job_name">Tên việc làm:</label>
-                </div>
-                <div class="col-md-6">
-                 
-                  <input type="text" class="form-control" id="job_name" formControlName="job_name" readonly>
-                </div>
-              </div>
-              <div class="col-md-1">
-              </div>
-              <div class="col-md-10">
-                <hr style="justify-content: space-between;">
-              </div>
+    aria-hidden="true">
+    <div class="modal-dialog modal-dialog-wide" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title" id="editProductModalLabel">Chỉnh sửa lỗi sản phẩm</h2>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form [formGroup]="editForm">
+                    <div class="form-group">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="col-md-6">
+                                    <label style="font-size: 16px;" for="code">Mã việc làm:</label>
+                                </div>
+                                <div class="col-md-6">
+                                    <input type="text" class="form-control" id="code" formControlName="code" name="code"
+                                        readonly>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="col-md-6">
+                                    <label style="font-size: 16px;" for="job_name">Tên việc làm:</label>
+                                </div>
+                                <div class="col-md-6">
 
-              <div class="col-md-6">
-                <div class="col-md-6">
-                  <label style="font-size: 16px;" for="code_order">Mã đơn hàng: </label>
-                </div>
-                <div class="col-md-6">           
-                  <input type="text" class="form-control" id="code_order" formControlName="code_order" name="code_order" readonly>
-                </div>
-              </div>
-              <div class="col-md-6">
-                <div class="col-md-6">
-                  <label style="font-size: 16px;" for="product_name">Tên sản phẩm:</label>
-                </div>
-                <div class="col-md-6">
-                  <h3>{{ errorDetail?.product_name }} {{errorDetail?.request_product_name}}</h3>
-                  <div *ngIf="editForm.get('product_name')?.value">
-                    <input type="text" class="form-control" id="product_name" formControlName="product_name" name="product_name" readonly>
-                  </div>
-                  <div *ngIf="editForm.get('request_product_name')?.value">
-                    <input type="text" class="form-control" id="request_product_name" formControlName="request_product_name" name="request_product_name" readonly>
-                  </div>
-                </div>
-              </div>
-              <div class="col-md-1">
-              </div>
-              <div class="col-md-10">
-                
-                <hr style="justify-content: space-between;">
-              </div>
-              <div class="col-md-6">
-                <div class="col-md-6">
-                  <label style="font-size: 16px;" for="employee_name">Tên nhân viên:</label>
-                </div>
-                <div class="col-md-6">
-                  <h3>{{ errorDetail?.employee_name}}</h3>
-                  <input type="text" class="form-control" id="employee_name" formControlName="employee_name" name="employee_name" readonly>
-                </div>
-              </div>
-              <div class="col-md-6">
-                <div class="col-md-6">
-                  <label style="font-size: 16px;" for="productName">Tình trạng lỗi:</label>
-                </div>
-                <div class="col-md-6">         
-                
-                    <div *ngIf="isEditing; else readOnlyFix">
-                      
-                        <select formControlName="fix" class="custom-select" style="width: 100%;">
-                            <option value="false" selected>Chưa khắc phục</option>
-                            <option value="true">Đã khắc phục</option>
-                            
-                        </select>
-                      </div>
-                      <ng-template #readOnlyFix>
-                        <h3>{{ errorDetail?.fix ? 'Đã khắc phục' : 'Chưa khắc phục' }}</h3>
-                      </ng-template>
-      
-                  
-                </div>
-              </div>
-              <div class="col-md-1">
-              </div>
-              <div class="col-md-10">
-                <hr style="justify-content: space-between;">
-              </div>
-              <div class="row">
-                <div class="col-md-2">
-                  <label style="font-size: 16px;margin-top: 3%;" for="productName">Mô tả lỗi:<span class="required-asterisk">*</span></label>
-                </div>
-                <div class="col-md-8" style="margin-top:1%">
-                  <textarea style="width: 100%; padding: 2%; font-size: 16px;" id="des" formControlName="des" name="des" [readonly]="!isEditing" >        
+                                    <input type="text" class="form-control" id="job_name" formControlName="job_name"
+                                        readonly>
+                                </div>
+                            </div>
+                            <div class="col-md-1">
+                            </div>
+                            <div class="col-md-10">
+                                <hr style="justify-content: space-between;">
+                            </div>
+
+                            <div class="col-md-6">
+                                <div class="col-md-6">
+                                    <label style="font-size: 16px;" for="code_order">Mã đơn hàng: </label>
+                                </div>
+                                <div class="col-md-6">
+                                    <input type="text" class="form-control" id="code_order" formControlName="code_order"
+                                        name="code_order" readonly>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="col-md-6">
+                                    <label style="font-size: 16px;" for="product_name">Tên sản phẩm:</label>
+                                </div>
+                                <div class="col-md-6">
+                                    <h3>{{ errorDetail?.product_name }} {{errorDetail?.request_product_name}}</h3>
+                                    <div *ngIf="editForm.get('product_name')?.value">
+                                        <input type="text" class="form-control" id="product_name"
+                                            formControlName="product_name" name="product_name" readonly>
+                                    </div>
+                                    <div *ngIf="editForm.get('request_product_name')?.value">
+                                        <input type="text" class="form-control" id="request_product_name"
+                                            formControlName="request_product_name" name="request_product_name" readonly>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-1">
+                            </div>
+                            <div class="col-md-10">
+
+                                <hr style="justify-content: space-between;">
+                            </div>
+                            <div class="col-md-6">
+                                <div class="col-md-6">
+                                    <label style="font-size: 16px;" for="employee_name">Tên nhân viên:</label>
+                                </div>
+                                <div class="col-md-6">
+                                    <h3>{{ errorDetail?.employee_name}}</h3>
+                                    <input type="text" class="form-control" id="employee_name"
+                                        formControlName="employee_name" name="employee_name" readonly>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="col-md-6">
+                                    <label style="font-size: 16px;" for="productName">Tình trạng lỗi:</label>
+                                </div>
+                                <div class="col-md-6">
+
+                                    <div *ngIf="isEditing; else readOnlyFix">
+
+                                        <select formControlName="fix" class="custom-select" style="width: 100%;">
+                                            <option value="false" selected>Chưa khắc phục</option>
+                                            <option value="true">Đã khắc phục</option>
+
+                                        </select>
+                                    </div>
+                                    <ng-template #readOnlyFix>
+                                        <h3>{{ errorDetail?.fix ? 'Đã khắc phục' : 'Chưa khắc phục' }}</h3>
+                                    </ng-template>
+
+
+                                </div>
+                            </div>
+                            <div class="col-md-1">
+                            </div>
+                            <div class="col-md-10">
+                                <hr style="justify-content: space-between;">
+                            </div>
+                            <div class="row">
+                                <div class="col-md-2">
+                                    <label style="font-size: 16px;margin-top: 3%;" for="productName">Mô tả lỗi:<span
+                                            class="required-asterisk">*</span></label>
+                                </div>
+                                <div class="col-md-8" style="margin-top:1%">
+                                    <textarea style="width: 100%; padding: 2%; font-size: 16px;" id="des"
+                                        formControlName="des" name="des" [readonly]="!isEditing">
                   </textarea>
-                </div>
-            </div>
-              <div class="col-md-1">
-              </div>        
-              <div class="row">
-                <div class="col-md-2">
-                  <label style="font-size: 16px;margin-top: 3%;" for="productName">Giải pháp:<span class="required-asterisk">*</span></label>
-                </div>
-                <div class="col-md-8" style="margin-top:1% ;">
-                  <textarea style="width: 100%; font-size: 16px; padding: 2%; "id="solution" formControlName="solution" name="solution" [readonly]="!isEditing" >
-               
-                 </textarea>
-                </div>               
-              </div>
-            </div>
-          </div>
-          
-        </form>
-      </div>
-      <div class="modal-footer">
-        <div class="row">
-            <div class="col-sm-9"></div>
-            <div class="col-sm-3 text-right text-secondary">
-              <button class="btn btn-primary px-4 float-right " *ngIf="!isEditing" (click)="editProfile()">Chỉnh
-                sửa</button>
-              <div *ngIf="isEditing" class="btn-group float-right">
-                <button style="margin-right: 10px;" class="btn btn-primary" (click)="saveChangesError()">Lưu thay
-                  đổi</button>
-                <button class="btn btn-secondary" data-dismiss="modal" (click)="cancelChanges()">Hủy bỏ</button>
+                                </div>
+                            </div>
+                            <div class="col-md-1">
+                            </div>
+                            <div class="row">
+                                <div class="col-md-2">
+                                    <label style="font-size: 16px;margin-top: 3%;" for="productName">Giải pháp:<span
+                                            class="required-asterisk">*</span></label>
+                                </div>
+                                <div class="col-md-8" style="margin-top:1% ;">
+                                    <textarea style="width: 100%; font-size: 16px; padding: 2%; " id="solution"
+                                        formControlName="solution" name="solution" [readonly]="!isEditing">
 
-              </div>
+                 </textarea>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </form>
             </div>
-          </div>
-        <!-- <button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
+            <div class="modal-footer">
+                <div class="row">
+                    <div class="col-sm-9"></div>
+                    <div class="col-sm-3 text-right text-secondary">
+                        <button class="btn btn-primary px-4 float-right " *ngIf="!isEditing"
+                            (click)="editProfile()">Chỉnh
+                            sửa</button>
+                        <div *ngIf="isEditing" class="btn-group float-right">
+                            <button style="margin-right: 10px;" class="btn btn-primary" (click)="saveChangesError()">Lưu
+                                thay
+                                đổi</button>
+                            <button class="btn btn-secondary" data-dismiss="modal" (click)="cancelChanges()">Hủy
+                                bỏ</button>
+
+                        </div>
+                    </div>
+                </div>
+                <!-- <button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
         <button type="button" class="btn btn-primary" (click)="saveChanges()">Lưu thay đổi</button> -->
-      </div>
+            </div>
+        </div>
     </div>
-  </div>
 </div>
 <!-- Modal for Editing Product -->
 <div class="modal fade" id="editProductJobModal" tabindex="-1" role="dialog" aria-labelledby="editProductJobModalLabel"
@@ -908,7 +929,8 @@
                                                             *</span></strong>
                                                 </div>
                                                 <div class="col-md-6">
-                                                    <input type="date" class="form-control" id="finish" formControlName="finish"
+                                                    <input type="date" class="form-control" id="finish"
+                                                        formControlName="finish"
                                                         placeholder="Nhập ngày hoàn thành công việc ">
                                                 </div>
                                             </div>
@@ -953,31 +975,33 @@
 
                     <!-- Modal footer -->
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-success" data-toggle="modal" data-target="#confirmChangeEmployee">Thay đổi nhân viên</button>
+                        <button *ngIf="user_name" type="button" class="btn btn-success" data-toggle="modal"
+                            data-target="#confirmChangeEmployee">Thay đổi nhân viên</button>
+
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Hủy</button>
                         <button type="submit" class="btn btn-primary">Lưu thay đổi</button>
-                        
+
                     </div>
                 </form>
             </div>
         </div>
     </div>
 </div>
-<div class="modal fade" id="confirmChangeEmployee" tabindex="-1" aria-labelledby="confirmChangeEmployeeLabel" aria-hidden="true"
-    data-backdrop="static" data-keyboard="false">
+<div class="modal fade" id="confirmChangeEmployee" tabindex="-1" aria-labelledby="confirmChangeEmployeeLabel"
+    aria-hidden="true" data-backdrop="static" data-keyboard="false">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
                 <h2 class="modal-title" id="confirmChangeEmployee">Thay đổi nhân viên sản xuất</h2>
-                <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close"
-                    ></button>
+                <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-               <p style="font-size: 16px;">Bạn chắc chắn muốn thay đổi nhân viên <span style="color: red;">{{user_name}}</span> có mã sản xuất <span style="color: red;">{{employeeAbsentCode}}? </span> </p> 
+                <p style="font-size: 16px;">Bạn chắc chắn muốn thay đổi nhân viên <span
+                        style="color: red;">{{user_name}}</span> có mã sản xuất <span
+                        style="color: red;">{{employeeAbsentCode}}? </span> </p>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal"
-                    >Đóng</button>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
                 <button type="button" class="btn btn-primary" (click)="changeEmployeeAbsent()">Chắc
                     chắn</button>
             </div>

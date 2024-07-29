@@ -64,13 +64,13 @@
                         <thead>
                             <tr>
                                 <th>STT</th>
-                                <th>Thao tác</th>
+                                <!-- <th>Thao tác</th> -->
                                 <th>Mã sản xuất</th>
                                 <th>Tên nhân viên</th>               
                                 <th>Vị trí</th>
                                 <th>Tên nguyên vật liệu</th>
-                                <th>Số lượng</th>
-                                <th style="width: 10%;">Ngày nhận</th>
+                                <th style="width: 9%;">Số lượng</th>
+                                <th style="width: 15%;">Ngày nhận</th>
                             </tr>
                         </thead>
                         <!-- Table body -->
@@ -78,25 +78,12 @@
                             <tr
                                 *ngFor="let product of subMaterialList | paginate: { itemsPerPage: 10, currentPage: currentPage }; let i = index">
                                 <td>{{ i + 1 + (currentPage - 1) * 10 }}</td>
-                                <td class="action-buttons">
-                                    <a href="#" class="settings" title="Chỉnh sửa" data-toggle="modal"
-                                        data-target="#editProductJobModal">
-                                        <i class="fa-solid fa-pen-to-square"></i>
-                                    </a>
-                                    <!-- <a href="#" class="delete" title="Xóa" data-toggle="modal"
-                                data-target="#confirmDeleteModal">
-                                <i class="fa-regular fa-trash-can"></i>
-                            </a> -->
-                                    <a style="margin-left: 10px;" title="Chi tiết" data-toggle="modal"
-                                        data-target="#detailEmpSubMaterial">
-                                        <i class="fa-solid fa-ellipsis-vertical" (click)="showDetails(product)"></i>
-                                    </a>
-                                </td>
+                               
                                 <td>{{ product?.code }}</td>
                                 <td>{{ product?.fullname }}</td>
                                 <td>{{ product?.position_name }}</td>
                                 <td>{{ product?.subMaterialName }}</td>
-                                <td>{{ product?.quantity }}</td>
+                                <td style="text-align: right;">{{ product?.quantity }}</td>
                                 <td>{{ product?.timeStart | date:'dd/MM/yyyy'}}</td>
                             </tr>
                         </tbody>

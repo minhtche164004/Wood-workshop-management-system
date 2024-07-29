@@ -47,13 +47,12 @@ export class JobService {
     console.log('URL:', url);
     return this.http.get<any>(url);
   }
-  getEmployeeSick(userId: any, jobId: any, costEmployee: any): Observable<any> {
-    let params = new HttpParams()
-      .set('user_id', userId.toString())
-      .set('job_id', jobId.toString())
-      .set('cost_employee', costEmployee.toString());
+ 
+  getEmployeeSick(userId: number, jobId: number, costEmployee: number): Observable<any> {
+    const url = `${this.apiEmpAbsent}?user_id=${userId}&job_id=${jobId}&cost_employee=${costEmployee}`;
 
-    return this.http.get(this.apiEmpAbsent, { params });
+    console.log('URL:', url);
+    return this.http.post(url, '');
   }
   //gam get detail by id 
   getJobDetailById(jobId: number): Observable<any> {

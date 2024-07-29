@@ -276,6 +276,7 @@ export class JobManagementComponent implements OnInit {
 
   selectedEmpCreateJob: any = {};
   createNewJob() {
+    this.isCancel = true;
     if (this.selectedEmployee === '') {
 
     }
@@ -288,7 +289,53 @@ export class JobManagementComponent implements OnInit {
     const job_id = this.selectedProduct.job_id; // Thay đổi giá trị tùy theo công việc
     const type_id = this.selectedCategory; // cho sp có sẵn     0 - k có sẵn
     let position_id = this.selectedProduct.position_id + 1;
+    // if (!user_id || !p_id || !status_id || !job_id || !type_id || !position_id) {
+    //   // Nếu bất kỳ trường nào là null hoặc không được cung cấp
+    //   this.toastr.error('Vui lòng nhập đầy đủ thông tin trước khi tiếp tục.', 'Lỗi');
+    //   // Có thể thêm logic để dừng tiến trình nếu cần
+    //   return;
+    // }
+    const quantity = this.selectedProduct.quantity;
+    const cost = this.createJobs.get('cost')?.value;
+    const start = this.createJobs.get('start')?.value;
+    const finish = this.createJobs.get('finish')?.value;
+    const description = this.createJobs.get('description')?.value;
+    const today = new Date();
+    if(!user_id){
+      this.toastr.error('Vui lòng chọn nhân viên', 'Lỗi');
+      return;
+    }
+    if (!quantity || quantity <= 0) {
+      this.toastr.error('Số lượng sản phẩm phải lớn hơn 0.', 'Lỗi');
+      return;
+    }
 
+    if (!cost || cost <= 0) {
+      this.toastr.error('Giá công khoán phải lớn hơn 0.', 'Lỗi');
+      return;
+    }
+    if (!start) {
+      this.toastr.error('Không được để trống ngày yêu cầu nhận công việc.', 'Lỗi');
+      return;
+    }
+    if (!finish) {
+      this.toastr.error('Không được để trống ngày yêu cầu hoàn thành công việc.', 'Lỗi');
+      return;
+    }
+    if (start < today) {
+      this.toastr.error('Ngày nhận việc phải chọn sau hôm nay.', 'Lỗi');
+      return;
+    }
+
+    if (finish < start) {
+      this.toastr.error('Ngày yêu cầu hoàn thành công việc phải sau ngày yêu cầu nhận việc.', 'Lỗi');
+      return;
+    }
+
+    if (!description || description.length < 3) {
+      this.toastr.error('Mô tả không được để trống hoặc ít hơn 3 ký tự.', 'Lỗi');
+      return;
+    }
     //  console.log('JobName:', this.selectedProduct.position_name);
     const jobData = this.createJobs.value;
 
@@ -304,26 +351,27 @@ export class JobManagementComponent implements OnInit {
     // console.log('mate_id:', position_id);
 
 
-    const quantity = this.selectedProduct.quantity;
+   
     let modifiedPositionName = this.positionName.replace(/Thợ/g, 'Làm');
     console.log('Modified Position Name:', modifiedPositionName);
     const createJobs = {
       quantity_product: quantity,
-      job_name: modifiedPositionName
+      job_name: modifiedPositionName,
+  
     };
-    console.log('createJobs before API call:', createJobs);
+    console.log('createJobs before API call:', this.createJobs.value);
 
-    console.log('code :', this.selectedProduct.code);
+    console.log('cost :', this.createJobs.value.cost);
     if (this.selectedProduct.code == null) {
-      this.isLoadding = true
+  //    this.isLoadding = true
       //  console.log("consolo lod: ", this.isLoadding)
       console.log("create form:", createJobs);
-      console.log('API parameters:', p_id, position_id, user_id, createJobs);
+      console.log('API parameters:' ,user_id, p_id, status_id,job_id, type_id, createJobs);
       this.jobService.createExportMaterialProductTotalJob(p_id, position_id, user_id, createJobs).subscribe(
         (data) => {
           if (data.code === 1000) {
             console.log('Xuất nguyên liệu thành công');
-            this.jobService.addJob(user_id, p_id, status_id, job_id, type_id, createJobs).subscribe(
+            this.jobService.addJob(user_id, p_id, status_id, job_id, type_id, this.createJobs.value).subscribe(
               (data) => {
                 if (data.code === 1000) {
                   this.toastr.success('Giao việc thành công', 'Thành công');
@@ -422,7 +470,7 @@ export class JobManagementComponent implements OnInit {
         }
       );
     }
-
+    
   }
 
   selectEvent(item: any) {
@@ -731,14 +779,11 @@ export class JobManagementComponent implements OnInit {
 
   isCancel: boolean = false;
 
-
-
   cancelAssign(): void {
+  
     this.employeeSelect.nativeElement.value = '';
     if (this.isCancel) {
       console.log('Cancel Assign Called');
-
-
       if (this.selectedCategory === 0) {
         this.loadProductRQForJob();
       } else if (this.selectedCategory === 1) {
@@ -861,8 +906,7 @@ formatDateToYYYYMMDD(date: string): string {
     this.JOBID = job_id;
     this.isLoadding = true;
     this.user_name = job.user_name;
-    //   console.log('User name:', this.user_name);
-    // Fetch job detail by ID
+
     this.jobService.getJobDetailById(job_id).subscribe(
       (data) => {
           console.log('Job detail api:', data.result);
@@ -920,17 +964,19 @@ formatDateToYYYYMMDD(date: string): string {
           this.toastr.success('Thay đổi nhân viên nghỉ thành công!', 'Thành công');
           this.loadProduct();
           this.isLoadding = false;
-
+          $('[data-dismiss="modal"]').click();
         } else {
           console.error('Failed to fetch products:', data);
           this.toastr.error('Thay đổi nhân viên nghỉ thất bại!', 'Lỗi');
           this.isLoadding = false;
+          $('[data-dismiss="modal"]').click();
         }
       },
       (error) => {
         console.error('Error fetching products:', error);
         this.toastr.error('Có lỗi xảy ra!', 'Lỗi');
         this.isLoadding = false;
+        $('[data-dismiss="modal"]').click();
       }
     );
   }
@@ -1235,11 +1281,7 @@ formatDateToYYYYMMDD(date: string): string {
 
   errorDetail: any = {};
 
-  shouldShowAnotherButton(): boolean {
-    // Replace this logic with your own conditions
-    // For example, return true if some condition is met to show the second button
-    return this.isCancel; // or use any logic you need
-  }
+
   isEditing: boolean = false;
   editProfile() {
     this.isEditing = true;

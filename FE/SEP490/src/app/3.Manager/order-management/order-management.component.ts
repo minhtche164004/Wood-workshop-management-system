@@ -299,7 +299,7 @@ export class OrderManagementComponent implements OnInit {
       "DateS:", startDate, "DateE:", endDate,"DateE:", this.selectProduduct
     );
     this.authenListService.getFilterStatus(
-      this.searchKey,
+      this.searchKey.trim(),
       this.selectedCategory,
       this.selectProduduct,
       startDate,
@@ -345,7 +345,7 @@ export class OrderManagementComponent implements OnInit {
     }
 
     this.authenListService.getFilterStatus(
-      this.searchKey,
+      this.searchKey.trim(),
       this.selectedCategory,
       this.selectProduduct,
       startDate,

@@ -66,7 +66,7 @@ export class ListJobDoneEmployeeComponent implements OnInit {
     console.log(this.searchKey);
     this.isLoadding = true;
     this.authenListService.getFilterJobEmployeeByID(
-      this.searchKey,
+      this.searchKey.trim(),
 
 
     )

@@ -58,7 +58,7 @@
                   <th>Tình trạng đơn hàng</th>
                   <th>Kiểu thanh toán</th>
                   <th>Tổng tiền (VNĐ)</th>
-                  <th>Lí do từ chối</th>
+                  <th>Lí do từ chối/hoàn tiền</th>
                 </tr>
               </thead>
               <tbody>
@@ -186,11 +186,11 @@
                   </p>
                   <p class="card-text">
                     <b>Tổng tiền cần thanh toán: </b>
-                    <span style="float: right;">{{ totalAmoutOrder | number : '1.0-3' }} &nbsp; VNĐ</span>
+                    <span style="float: right;">{{ totalAmoutOrder - OrderdetailById.deposite | number : '1.0-3' }} &nbsp; VNĐ</span>
                   </p>
                   <p class="card-text">
                     <b>Tổng giá trị đơn hàng: </b>
-                    <span style="float: right;">{{ totalAmoutOrder + OrderdetailById.deposite | number : '1.0-3'
+                    <span style="float: right;">{{ totalAmoutOrder | number : '1.0-3'
                       }} &nbsp; VNĐ</span>
                   </p>
                   <p class="card-text"><b style="margin-right: 2%;">Thanh toán:</b>{{ OrderdetailById.paymentMethod

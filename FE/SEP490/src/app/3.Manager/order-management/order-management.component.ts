@@ -21,7 +21,7 @@ interface ApiResponse {
   styleUrls: ['./order-management.component.scss']
 })
 export class OrderManagementComponent implements OnInit {
- 
+
   @ViewChild('launchModalButton')
   launchModalButton!: ElementRef;
   user: any[] = [];
@@ -39,17 +39,63 @@ export class OrderManagementComponent implements OnInit {
   isLoadding: boolean = false;
   selectedC: number | null = null;
   selectedOrderId: number | null = null;
+
   selectedSpecialOrder: boolean | null = null;
   activeModal: any;
   cancelReason: string = '';
+  cancelReasonPrice: string = '';
+  percentDepositPrice: number = 0;
+  percentOrderPrice: number = 0;
+  depositeAmount: number = 0;
+  totalAmountA: number = 0;
+  totalAmount: number = 0;
+  totalRefundAmount: number = 0;
+  totalAmount102: number = 0;
   constructor(private http: HttpClient, private productListService: ProductListService, private orderService: OrderService,
     private authenListService: AuthenListService, private toastr: ToastrService, private orderRequestService: OrderRequestService
   ) {
 
   }
+  calculateTotalAmount() {
+    this.totalAmount = this.depositeAmount + this.totalAmountA;
+  }
+  updateDepositeAmount() {
+    if (this.percentDepositPrice >= 0 && this.percentDepositPrice <= 100) {
+      this.depositeAmount = (this.OrderdetailById.deposite * this.percentDepositPrice) / 100;
+      this.updateTotalRefundAmount();
+    }
+  }
+
+  // Update the total amount and calculate the total refund
+  updateTotalAmount() {
+    if (this.percentOrderPrice >= 0 && this.percentOrderPrice <= 100) {
+      this.totalAmountA = (this.OrderdetailById.totalAmount * this.percentOrderPrice) / 100;
+      this.updateTotalRefundAmount();
+    }
+  }
+
+  // Calculate the total refund amount
+  updateTotalRefundAmount() {
+    // Calculate deposit amount
+    if (this.percentDepositPrice >= 0 && this.percentDepositPrice <= 100) {
+      this.depositeAmount = (this.OrderdetailById.deposite * this.percentDepositPrice) / 100;
+    }
+
+    // Calculate total amount
+    if (this.percentOrderPrice >= 0 && this.percentOrderPrice <= 100) {
+      this.totalAmountA = (this.OrderdetailById.totalAmount * this.percentOrderPrice) / 100;
+    }
+
+    // Update total refund amount
+    this.totalRefundAmount = this.depositeAmount + this.totalAmountA;
+  }
+
+  
 
   ngOnInit(): void {
-
+    this.updateDepositeAmount();
+    this.updateTotalAmount();
+    this.calculateTotalAmount();
     this.loadPosition();
     this.loadStatus();
     this.getOrderStatus();
@@ -65,6 +111,25 @@ export class OrderManagementComponent implements OnInit {
 
 
 
+  tempTotalAmount: number = 0;
+
+  cancelRefundModal() {
+    this.percentDepositPrice= 0;
+    this.percentOrderPrice= 0;
+    // Reset form fields
+    this.OrderdetailById.deposite = 0;
+    this.depositeAmount = 0;
+    this.OrderdetailById.totalAmount = 0;
+    this.totalAmountA = 0;
+    this.totalRefundAmount = 0;
+    this.cancelReasonPrice = '';
+  
+    // If you are using Angular Forms, you may need to reset the form
+    // this.refundForm.reset(); // Uncomment this if you are using FormGroup
+    
+ 
+  }
+  
   cancelChangeStatusJob() {
     this.selectedModalId = '';
   }
@@ -296,7 +361,7 @@ export class OrderManagementComponent implements OnInit {
       endDate = this.selectedEDate.replace(/(\d{2})\/(\d{2})\/(\d{4})/, "$3/$2/$1");
     }
     console.log("Lọc sản phẩm với từ khóa:", this.searchKey, ", danh mục:", this.selectedCategory,
-      "DateS:", startDate, "DateE:", endDate,"DateE:", this.selectProduduct
+      "DateS:", startDate, "DateE:", endDate, "DateE:", this.selectProduduct
     );
     this.authenListService.getFilterStatus(
       this.searchKey.trim(),
@@ -407,6 +472,75 @@ export class OrderManagementComponent implements OnInit {
       });
     }
   }
+  RefundcancelOrder() {
+    // Reset loading state and close modal in case of failure
+    const closeModal = () => {
+      this.isLoadding = false;
+      const closeModalButton = document.querySelector('.close') as HTMLElement;
+      if (closeModalButton) {
+        closeModalButton.click();
+      }
+      $('[data-dismiss="modal"]').click();
+    };
+  
+    // Validate percentage fields
+    const isValidPercentage = (value: number | null): boolean => {
+      if (value === null || value === undefined || isNaN(value)) {
+        return false;
+      }
+      const percentageString = value.toString().trim();
+      const percentageRegex = /^(100(\.0{1,2})?|(\d{1,2})(\.\d{1,2})?)$/;
+      return percentageRegex.test(percentageString) && parseFloat(percentageString) >= 0;
+    };
+  
+    const percentDepositPriceTrimmed = this.percentDepositPrice !== null ? this.percentDepositPrice.toString().trim() : '';
+    const percentOrderPriceTrimmed = this.percentOrderPrice !== null ? this.percentOrderPrice.toString().trim() : '';
+    const cancelReasonPriceTrimmed = this.cancelReasonPrice ? this.cancelReasonPrice.trim() : '';
+  
+    if (percentDepositPriceTrimmed === '' || percentOrderPriceTrimmed === '' || cancelReasonPriceTrimmed === '') {
+      this.toastr.error('Các trường không được để trống');
+      return;
+    }
+  
+    if (!isValidPercentage(this.percentDepositPrice) || !isValidPercentage(this.percentOrderPrice)) {
+      this.toastr.error('Phần trăm phải nằm trong khoảng 0-100% và không được là số âm');
+      return;
+    }
+  
+    this.isLoadding = true;
+    console.log({
+      selectedOrderId: this.selectedOrderId,
+      selectedSpecialOrder: this.selectedSpecialOrder,
+      cancelReasonPrice: this.cancelReasonPrice,
+      percentDepositPrice: this.percentDepositPrice,
+      percentOrderPrice: this.percentOrderPrice
+    });
+  
+    if (this.selectedOrderId !== null && this.selectedSpecialOrder !== null) {
+      this.authenListService.RefundcancelOrder(
+        this.selectedOrderId, this.selectedSpecialOrder, 
+        this.cancelReasonPrice, this.percentDepositPrice, this.percentOrderPrice
+      ).subscribe({
+        next: (response) => {
+          this.toastr.success('Hoàn tiền đơn hàng thành công');
+          this.isLoadding = false;
+          this.cancelRefundModal();
+          closeModal();
+        },
+        error: (error: HttpErrorResponse) => {
+          this.isLoadding = false;
+          this.toastr.success('Hoàn tiền đơn hàng thành công');
+          this.realoadgetAllUser();
+          this.cancelRefundModal();
+          closeModal();
+        }
+      });
+    } else {
+      this.toastr.error('Thông tin đơn hàng không hợp lệ');
+      this.isLoadding = false;
+    }
+  }
+  
   confirmPayment() {
     this.isLoadding = true;
     if (this.selectedOrderId !== null) {

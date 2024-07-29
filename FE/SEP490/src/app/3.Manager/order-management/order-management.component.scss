@@ -11,13 +11,12 @@
   max-width: 100%;
   padding: 0 15px; // khoảng cách cho các thiết bị nhỏ hơn
 }
-.refund-icon {
-  color: #4CAF50; /* Màu xanh lá cây để thể hiện hoàn tiền */
-  font-size: 24px; /* Kích thước icon */
-  margin-right: 8px; /* Khoảng cách giữa icon và văn bản */
-}
+
 .table-responsive {
   margin: 30px 0;
+}
+.blue-text {
+  color: blue;
 }
 
 .table-wrapper {

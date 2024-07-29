@@ -133,6 +133,7 @@ public class JobServiceImpl implements JobService {
         job_Employee_Sick.setOrderdetails(jobs.getOrderdetails() != null ? jobs.getOrderdetails() : null);
         job_Employee_Sick.setDescription("Nhân Viên có tên "+fullname+ " nghỉ trước công việc này !");
         jobRepository.save(job_Employee_Sick);
+        jobRepository.save(jobs);
 
         //set lương cho thằng bệnh vào bảng lương
         Advancesalary advancesalary = new Advancesalary();

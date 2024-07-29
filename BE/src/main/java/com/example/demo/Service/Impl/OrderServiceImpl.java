@@ -283,7 +283,7 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public ResponseEntity<String> Refund_Order(int order_id, boolean special_order_id, String response) {
+    public ResponseEntity<String> Refund_Order(int order_id, boolean special_order_id, int percent_order_price ,String response) {
 
         Orders orders = orderRepository.findById(order_id);
         if (special_order_id == false) {//là hàng có sẵn
@@ -338,19 +338,21 @@ public class OrderServiceImpl implements OrderService {
 //            String time_finish = dateFormatter.format(orders.getOrderFinish());
         //   String time_finish = (orders.getOrderFinish() == null) ? "" : dateFormatter.format(orders.getOrderFinish());
         String time_start = dateFormatter.format(orders.getOrderDate());
-        BigDecimal fivePercentOfOrder = orders.getTotalAmount().multiply(new BigDecimal("0.05"));
-        BigDecimal totalRefund = orders.getDeposite().add(fivePercentOfOrder);
+        BigDecimal percentOfOrder = orders.getTotalAmount().multiply(new BigDecimal(percent_order_price).divide(new BigDecimal(100)));
+        BigDecimal totalRefund = orders.getDeposite().add(percentOfOrder);
 
         //bo di so thap phan
         BigDecimal deposite = orders.getDeposite().setScale(0, RoundingMode.HALF_UP);
-        BigDecimal fivePercentOrder = fivePercentOfOrder.setScale(0, RoundingMode.HALF_UP);
+        BigDecimal percentOrder = percentOfOrder.setScale(0, RoundingMode.HALF_UP);
         BigDecimal total = totalRefund.setScale(0, RoundingMode.HALF_UP);
+
+        orders.setRefund(total); // them truong refund vao order de lay ra so tien hoan
 
         //format gia tien` them dau '.' sau moi 3 so vd: 1.000.000
         NumberFormat nf = NumberFormat.getInstance(new Locale("de", "DE"));
 
         String depositeStr = nf.format(deposite);
-        String fivePercentOrderStr = nf.format(fivePercentOrder);
+        String percentOrderStr = nf.format(percentOrder);
         String totalStr = nf.format(total);
 //            String status_name=statusOrder.getStatus_name();
         MailBody mailBody = MailBody.builder()
@@ -358,7 +360,7 @@ public class OrderServiceImpl implements OrderService {
                 .text("Đơn hàng có mã đơn hàng là : " + code + "\n" +
                         "Có trạng thái: " + "Đơn hàng hoàn tiền\n" + "\n" +
                         "Với thời gian tạo đơn là: " + time_start + "\n" +
-                        "Số tiền hoàn(số tiền đặt cọc + 5% giá trị đơn hàng): " + depositeStr + " + " + fivePercentOrderStr + " = " + totalStr + " VNĐ" + "\n" +
+                        "Số tiền hoàn(số tiền đặt cọc + " + percent_order_price + "% giá trị đơn hàng): " + depositeStr + " + " + percentOrderStr + " = " + totalStr + " VNĐ" + "\n" +
                         "Lý do hoàn tiền: " + response + "\n" +
                         "Xin lỗi vì trải nghiệm không tốt của bạn, chúng tôi sẽ cố gắng cải thiện dịch vụ của mình. Hân hạnh được phục vụ quý khách lần tới!\n"
                 )

@@ -288,7 +288,7 @@ public class JobServiceImpl implements JobService {
         LocalDate timeFinishLocalDate = jobs_history.getTimeFinish().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
         Jobs waitNextJob = jobRepository.findById(job_id).orElseThrow(() -> new RuntimeException("Job not found"));
         if (jobs_log.getProduct() == null) {
-            if (timeFinishLocalDate.isAfter(today)) {
+            if (timeFinishLocalDate.isBefore(today)) {
                 BigDecimal totalAmount = jobRepository.findToTalAmountOrderByJobId(job_id);
                 BigDecimal discount = totalAmount.multiply(new BigDecimal("0.05"), MathContext.DECIMAL64);
                 jobRepository.updateOrderDiscountByJobId(job_id, discount);
@@ -296,7 +296,7 @@ public class JobServiceImpl implements JobService {
                 waitNextJob.setCost(waitNextJob.getCost().subtract(fee_late_employee));
             }
         }else{
-            if (timeFinishLocalDate.isAfter(today)) {
+            if (timeFinishLocalDate.isBefore(today)) {
                 BigDecimal fee_late_employee = waitNextJob.getCost().multiply(new BigDecimal("0.15"), MathContext.DECIMAL64); //trừ lương thằng nhân viên 15% cho công việc làm những sản phẩm có sẵn
                 waitNextJob.setCost(waitNextJob.getCost().subtract(fee_late_employee));
             }

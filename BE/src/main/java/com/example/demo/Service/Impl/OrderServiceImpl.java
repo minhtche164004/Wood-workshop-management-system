@@ -347,7 +347,7 @@ public class OrderServiceImpl implements OrderService {
         BigDecimal total = totalRefund.setScale(0, RoundingMode.HALF_UP);
 
         orders.setRefund(total); // them truong refund vao order de lay ra so tien hoan
-
+        orderRepository.save(orders);
         //format gia tien` them dau '.' sau moi 3 so vd: 1.000.000
         NumberFormat nf = NumberFormat.getInstance(new Locale("de", "DE"));
 

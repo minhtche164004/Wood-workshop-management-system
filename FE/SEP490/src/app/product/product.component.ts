@@ -60,7 +60,7 @@ export class ProductComponent implements OnInit, OnDestroy {
       if (!searchKey && (this.searchKey === '' || this.selectedCategory !== 0 || this.selectedSortByPrice !== '')) {
         this.searchProductCustomer();
         const queryParamsWithSearchKey = {
-          searchKey: this.searchKey,
+          searchKey: this.searchKey.trim(),
           category: this.selectedCategory,
           sortByPrice: this.selectedSortByPrice
         };

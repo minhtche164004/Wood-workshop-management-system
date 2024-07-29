@@ -81,7 +81,7 @@ export class ListSalaryEmployeeComponent implements OnInit {
     }
 
     this.authenListService.getFilterSalaryEmployeeByID(
-      this.searchKey,
+      this.searchKey.trim(),
       this.selectPayment,
       startDate,
       endDate

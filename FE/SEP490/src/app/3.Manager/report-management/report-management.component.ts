@@ -70,6 +70,7 @@ export class ReportManagementComponent implements OnInit {
   }
   searchError(){
     this.isLoadding = true;
+    this.searchKey.trim();
     this.errorProductService.filterProductErrors(this.searchKey, this.selectedFixed).subscribe(
       (data) => {
         if (data.code === 1000) {

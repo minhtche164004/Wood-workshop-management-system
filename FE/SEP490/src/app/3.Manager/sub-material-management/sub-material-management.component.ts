@@ -355,6 +355,7 @@ export class SubMaterialManagementComponent implements OnInit {
   searchSubMaterial(): void {
     this.checkNotFound = false;
     this.isLoadding = true;
+    this.searchKey.trim();
     this.materialService.searchSubMaterial(this.searchKey).subscribe(
       (data) => {
         if (data.code === 1000) {

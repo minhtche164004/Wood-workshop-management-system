@@ -751,9 +751,21 @@ export class ProductManagementComponent implements OnInit {
 
 
   onSubMaterialChange(event: Event, index: number) {
+    this.totalUnitPrice = 0;
     this.selectedSubMaterialId[index] = Number((event.target as HTMLSelectElement).value);
     const selectedSubMaterial = this.subMaterials[index].find(subMaterial => subMaterial.subMaterialId === this.selectedSubMaterialId[index]);
     this.unitPriceSubMaterial[index] = selectedSubMaterial ? selectedSubMaterial.unitPrice : '';
+    
+    //tinh lai totalUnitPrice(tong gia uoc tinh nguyen vat lieu)
+    if (this.unitPriceSubMaterial && this.quantityPerSubMaterial) {
+      for (const key of Object.keys(this.unitPriceSubMaterial)) {
+        const index = Number(key);
+        const numericUnitPrice = Number(this.unitPriceSubMaterial[index]) || 0;
+        const quantity = Number(this.quantityPerSubMaterial[index]) || 0;
+        const totalForThisItem = numericUnitPrice * quantity;
+        this.totalUnitPrice += totalForThisItem;
+      }
+    }
   }
 
   onQuantityChange(event: Event, index: number) {

@@ -45,11 +45,7 @@ public class JobServiceImpl implements JobService {
     @Autowired
     private RequestProductRepository requestProductRepository;
     @Autowired
-    private Status_Product_Repository statusProductRepository;
-    @Autowired
     private Status_Job_Repository statusJobRepository;
-    @Autowired
-    private EntityManager entityManager;
     @Autowired
     private ProcessproducterrorRepository processproducterrorRepository;
     @Autowired
@@ -62,11 +58,16 @@ public class JobServiceImpl implements JobService {
     private CheckConditionService checkConditionService;
     @Autowired
     private Employee_Material_Repository employeeMaterialRepository;
-
     @Autowired
     private RequestProductsSubmaterialsRepository requestProductsSubmaterialsRepository;
     @Autowired
     private ProductSubMaterialsRepository productSubMaterialsRepository;
+
+    @Autowired
+    private SharedData sharedData;
+    @Autowired
+    private ShareDataRequest sharedDataRequest;
+
 
     @Override
     public List<JobProductDTO> getListRequestProductJob() {
@@ -111,11 +112,21 @@ public class JobServiceImpl implements JobService {
 //    }
 
     @Override
-    public Jobs EmployeeSick(int user_id, int job_id, BigDecimal cost_employee) {
+    public Jobs EmployeeSick(int user_id, int job_id, BigDecimal cost_employee,int quantity_product) {
         LocalDate today = LocalDate.now();
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("ddMMyy");
         String dateString = today.format(formatter);
         Jobs jobs = jobRepository.getJobById(job_id);
+        //set số lượng sản phẩm hoàn thành đc của khách, tương ứng với số vật liệu đã làm mà nhân viên ốm nhận
+        List<Employeematerials> list = employeeMaterialRepository.findEmployeematerialsByJobIdAndUserId(job_id,user_id);
+        for(Employeematerials e : list){
+            if(jobs.getRequestProducts() == null){
+                e.setTotal_material(quantity_product*employeeMaterialRepository.findByProductSubMaterialByEmployeeMaterialsId(e.getEmpMaterialId()));
+            }else{
+                e.setTotal_material(quantity_product*employeeMaterialRepository.findByRequestSubMaterialByEmployeeMaterialsId(e.getEmpMaterialId()));
+            }
+            employeeMaterialRepository.save(e);
+        }
         User user = userRepository.findByIdJob(user_id);
         String fullname = user.getUserInfor().getFullname();
         //set job lại như ban đầu(giá sẽ - đi giá của thg bệnh nhận đc, time sẽ trừ đi time thằng bệnh đã làm được)
@@ -123,6 +134,7 @@ public class JobServiceImpl implements JobService {
         jobs.setUser(null);
         jobs.setTimeStart(Date.from(today.atStartOfDay(ZoneId.systemDefault()).toInstant())); //ngày bắt đầu là ngay ngày thằng bị bệnh nghỉ làm
         jobs.setTimeFinish(jobs.getTimeFinish());
+        jobs.setQuantityProduct(jobs.getQuantityProduct()-quantity_product);//số lương còn lại sau khi trừ đi số lượng thằng ốm đã làm
 
         //set cho thằng bệnh 1 job xem như đã hoàn thành
         Jobs job_Employee_Sick = new Jobs();
@@ -134,6 +146,7 @@ public class JobServiceImpl implements JobService {
         job_Employee_Sick.setStatus(statusJob); //status là hoàn thành do lí do ngoài dự kiến
         job_Employee_Sick.setCost(cost_employee);
         job_Employee_Sick.setCode(jobs.getCode());
+        job_Employee_Sick.setQuantityProduct(quantity_product);
         job_Employee_Sick.setProduct(jobs.getProduct() != null ? jobs.getProduct() : null);
         job_Employee_Sick.setRequestProducts(jobs.getRequestProducts() != null ? jobs.getRequestProducts() : null);
         job_Employee_Sick.setOrderdetails(jobs.getOrderdetails() != null ? jobs.getOrderdetails() : null);
@@ -194,6 +207,20 @@ public class JobServiceImpl implements JobService {
         jobs.setCode(jobs_order_detail.getCode());
         jobs.setJob_log(false);
         jobRepository.save(jobs);
+
+        List<Employeematerials> employeeMaterialsList =  new ArrayList<>();
+        if (jobRepository.isProductJob(job_id) == true) {
+            employeeMaterialsList = sharedData.getEmployeeMaterialsList(); // Lấy từ shared bean
+        }else{
+             employeeMaterialsList = sharedDataRequest.getEmployeeMaterialsList(); // Lấy từ shared bean
+        }
+//        List<Employeematerials> list = employeeMaterialRepository.findEmployeematerialsByJobIdAndUserId(jobs.getJobId(),user_id);
+        for(Employeematerials e :employeeMaterialsList){
+            e.setJobs(jobs);
+            employeeMaterialRepository.save(e);
+        }
+        sharedData.setEmployeeMaterialsList(null); // Xóa dữ liệu sau khi sử dụng (tùy chọn)
+        sharedDataRequest.setEmployeeMaterialsList(null);
         List<Processproducterror> processproducterrorList = processproducterrorRepository.getProcessproducterrorByJobId(job_id);
         for (Processproducterror p : processproducterrorList) {
             p.setJob(jobs);
@@ -289,7 +316,8 @@ public class JobServiceImpl implements JobService {
         Jobs waitNextJob = jobRepository.findById(job_id).orElseThrow(() -> new RuntimeException("Job not found"));
         if (jobs_log.getProduct() == null) {
             if (timeFinishLocalDate.isBefore(today)) {
-                BigDecimal totalAmount = jobRepository.findToTalAmountOrderByJobId(job_id);
+            //    BigDecimal totalAmount = jobRepository.findToTalAmountOrderByJobId(job_id);
+                BigDecimal totalAmount = jobRepository.findToTalAmountOrderByJobId(job_id) != null ? jobRepository.findToTalAmountOrderByJobId(job_id) : BigDecimal.ZERO;
                 BigDecimal discount = totalAmount.multiply(new BigDecimal("0.05"), MathContext.DECIMAL64);
                 jobRepository.updateOrderDiscountByJobId(job_id, discount);
                 BigDecimal fee_late_employee = waitNextJob.getCost().multiply(new BigDecimal("0.05"), MathContext.DECIMAL64);

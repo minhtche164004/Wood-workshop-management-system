@@ -60,6 +60,11 @@ public class SubMaterialServiceImpl implements SubMaterialService {
 
     @Autowired
     private InputSubMaterialRepository inputSubMaterialRepository;
+    @Autowired
+    private SharedData sharedData;
+    @Autowired
+    private ShareDataRequest sharedDataRequest;
+
 
     LocalDate today = LocalDate.now();
     Date create = Date.from(today.atStartOfDay(ZoneId.systemDefault()).toInstant());
@@ -458,12 +463,16 @@ public class SubMaterialServiceImpl implements SubMaterialService {
                 Employeematerials employeeMaterials = new Employeematerials();
                 employeeMaterials.setRequestProductsSubmaterials(requestProductsSubmaterials);
                 employeeMaterials.setEmployee(user);
+                employeeMaterials.setTotal_material(quantity);
+
+
 
 
                 // Lưu từng đối tượng và thêm vào danh sách kết quả
                 employeeMaterialsList.add(employeeMaterialRepository.save(employeeMaterials));
 
             }
+            sharedDataRequest.setEmployeeMaterialsList(employeeMaterialsList); // Lưu vào shared bean
             apiResponse.setResult(Collections.singletonList("Xuất đơn nguyên vật liệu cho đơn hàng thành công"));
             return ResponseEntity.ok(apiResponse);
         }
@@ -580,10 +589,12 @@ public class SubMaterialServiceImpl implements SubMaterialService {
                 Employeematerials employeeMaterials = new Employeematerials();
                 employeeMaterials.setProductSubMaterial(productSubMaterials);
                 employeeMaterials.setEmployee(user);
+                employeeMaterials.setTotal_material(quantity);
 
                 // Lưu từng đối tượng và thêm vào danh sách kết quả
                 employeeMaterialsList.add(employeeMaterialRepository.save(employeeMaterials));
             }
+            sharedData.setEmployeeMaterialsList(employeeMaterialsList); // Lưu vào shared bean
             apiResponse.setResult(Collections.singletonList("Xuất đơn nguyên vật liệu cho đơn hàng thành công"));
             return ResponseEntity.ok(apiResponse);
         }

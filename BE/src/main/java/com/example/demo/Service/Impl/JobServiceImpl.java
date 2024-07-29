@@ -24,6 +24,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.math.MathContext;
 import java.time.ZoneId;
 import java.util.*;
 import java.time.LocalDate;
@@ -103,6 +104,11 @@ public class JobServiceImpl implements JobService {
         }
         return jobProductDTOS;
     }
+
+//    private boolean CheckDeadline(int job_id){
+//        if()
+//
+//    }
 
     @Override
     public Jobs EmployeeSick(int user_id, int job_id, BigDecimal cost_employee) {
@@ -271,19 +277,38 @@ public class JobServiceImpl implements JobService {
     }
 
 
+    @Transactional
     @Override
     public Jobs CreateJob_Log(int job_id, int status_id) {
+        LocalDate today = LocalDate.now();
         //tạo mới job_log, lúc sửa status chứ ko phải lúc phân việc , sau khi đã sauwr status thành đã nghiệm thu của mộc, sơn , nhám
         //sau khi nghiem thu xong thi tra ve trang thai chờ cong viec tiep theo
         Jobs jobs_log = new Jobs();
         Jobs jobs_history = jobRepository.getJobById(job_id);
+        LocalDate timeFinishLocalDate = jobs_history.getTimeFinish().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+        Jobs waitNextJob = jobRepository.findById(job_id).orElseThrow(() -> new RuntimeException("Job not found"));
+        if (jobs_log.getProduct() == null) {
+            if (timeFinishLocalDate.isAfter(today)) {
+                BigDecimal totalAmount = jobRepository.findToTalAmountOrderByJobId(job_id);
+                BigDecimal discount = totalAmount.multiply(new BigDecimal("0.05"), MathContext.DECIMAL64);
+                jobRepository.updateOrderDiscountByJobId(job_id, discount);
+                BigDecimal fee_late_employee = waitNextJob.getCost().multiply(new BigDecimal("0.05"), MathContext.DECIMAL64);
+                waitNextJob.setCost(waitNextJob.getCost().subtract(fee_late_employee));
+            }
+        }else{
+            if (timeFinishLocalDate.isAfter(today)) {
+                BigDecimal fee_late_employee = waitNextJob.getCost().multiply(new BigDecimal("0.15"), MathContext.DECIMAL64); //trừ lương thằng nhân viên 15% cho công việc làm những sản phẩm có sẵn
+                waitNextJob.setCost(waitNextJob.getCost().subtract(fee_late_employee));
+            }
+        }
         jobs_log.setUser(jobs_history.getUser());
         jobs_log.setProduct(jobs_history.getProduct());
         jobs_log.setDescription(jobs_history.getDescription());
         jobs_log.setCost(jobs_history.getCost());
         jobs_log.setTimeStart(jobs_history.getTimeStart());
         jobs_log.setStatus(statusJobRepository.findById(status_id)); //set status thanh da nghiem thu
-        jobs_log.setTimeFinish(jobs_history.getTimeFinish());
+     //   jobs_log.setTimeFinish(jobs_history.getTimeFinish());
+        jobs_log.setTimeFinish(Date.from(today.atStartOfDay(ZoneId.systemDefault()).toInstant()));
         jobs_log.setRequestProducts(jobs_history.getRequestProducts());
         jobs_log.setQuantityProduct(jobs_history.getQuantityProduct());
         jobs_log.setOrderdetails(jobs_history.getOrderdetails());
@@ -293,7 +318,7 @@ public class JobServiceImpl implements JobService {
         jobRepository.save(jobs_log);
 
         //cai nay` la de tao ra job tiep theo cho san pham va o trang thai dang cho giao cong viec tiep
-        Jobs waitNextJob = jobRepository.findById(job_id).orElseThrow(() -> new RuntimeException("Job not found"));
+
         waitNextJob.setProduct(jobs_history.getProduct());
         waitNextJob.setRequestProducts(jobs_history.getRequestProducts());
         if (status_id == 12) {
@@ -319,11 +344,12 @@ public class JobServiceImpl implements JobService {
 
             jobs_log.setStatus(statusJobRepository.findById(13));
             jobs_log.setJob_log(true);
+            jobRepository.save(jobs_log);
 
             //thêm lương cho thằng thợ sơn
             //nếu công việc hoàn thành thì set lương cho nhân viên luôn --------------------------------------
             Advancesalary advancesalary = new Advancesalary();
-            LocalDate today = LocalDate.now();
+
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("ddMMyy");
             String dateString = today.format(formatter);
             Advancesalary lastadvan = advancesalaryRepository.findAdvancesalaryTop(dateString + "AD");
@@ -345,7 +371,7 @@ public class JobServiceImpl implements JobService {
         } else {
             //nếu công việc hoàn thành thì set lương cho nhân viên luôn --------------------------------------
             Advancesalary advancesalary = new Advancesalary();
-            LocalDate today = LocalDate.now();
+           // LocalDate today = LocalDate.now();
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("ddMMyy");
             String dateString = today.format(formatter);
             Advancesalary lastadvan = advancesalaryRepository.findAdvancesalaryTop(dateString + "AD");

@@ -194,7 +194,7 @@ public class PaymentServiceImpl implements PaymentService {
 
     @Override
     public String getQRCodeBankingForEmployee(int amout,String accountNo,String username,String bin_bank, String orderInfo) {
-        accessToken =  login();
+     //   accessToken =  login();
 
         Map<String, Object> data = new HashMap<>();
         data.put("accountNo", accountNo); //stk ngân hàng

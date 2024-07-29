@@ -41,6 +41,22 @@ public interface JobRepository extends JpaRepository<Jobs,Integer> {
 //            "(SELECT COUNT( j.jobId) FROM Jobs j WHERE j.user.userId = u.userId) < 3")
 //    List<User> findUsersWithPositionAndLessThan3Jobs(@Param("type") int type);
 
+    @Query("SELECT o.totalAmount FROM Orders o JOIN Orderdetails od ON o.orderId = od.order.orderId JOIN Jobs j ON od.orderDetailId = j.orderdetails.orderDetailId WHERE j.jobId = ?1")
+    BigDecimal findToTalAmountOrderByJobId(int jobId);
+
+    @Transactional
+    @Modifying
+    @Query("UPDATE Orders o " +
+            "SET o.discount = ?2 " +
+            "WHERE o.orderId IN (" +
+            "    SELECT od.order.orderId " +
+            "    FROM Orderdetails od " +
+            "    JOIN Jobs j ON od.orderDetailId = j.orderdetails.orderDetailId " +
+            "    WHERE j.jobId = ?1" +
+            ")")
+    void updateOrderDiscountByJobId(int jobId, BigDecimal discount);
+
+
     @Query("SELECT u FROM User u " +
             "WHERE u.position.position_id = :type AND u.role.roleId= 4 AND " +
             "(SELECT COUNT( j.jobId) FROM Jobs j WHERE j.user.userId = u.userId AND j.job_log = false ) < 3")

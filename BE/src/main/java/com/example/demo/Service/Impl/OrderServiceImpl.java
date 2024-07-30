@@ -604,6 +604,7 @@ public class OrderServiceImpl implements OrderService {
             Jobs jobs = new Jobs();
             jobs.setRequestProducts(re);
             jobs.setQuantityProduct(orderdetail.getQuantity());
+            jobs.setOriginalQuantityProduct(orderdetail.getQuantity());
             Jobs lastJob = jobRepository.findJobsTop(dateString + "JB");
             int count1 = lastJob != null ? Integer.parseInt(lastJob.getCode().substring(8)) + 1 : 1;
             String code1 = dateString + "JB" + String.format("%03d", count1);

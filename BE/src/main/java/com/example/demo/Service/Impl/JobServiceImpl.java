@@ -142,8 +142,9 @@ public class JobServiceImpl implements JobService {
         jobs.setUser(null);
         jobs.setTimeStart(Date.from(today.atStartOfDay(ZoneId.systemDefault()).toInstant())); //ngày bắt đầu là ngay ngày thằng bị bệnh nghỉ làm
         jobs.setTimeFinish(jobs.getTimeFinish());
-        jobs.setQuantityProduct(jobs.getQuantityProduct()-quantity_product);//số lương còn lại sau khi trừ đi số lượng thằng ốm đã làm
+        jobs.setQuantityProduct(jobs.getOriginalQuantityProduct()-quantity_product);//số lương còn lại sau khi trừ đi số lượng thằng ốm đã làm
         jobs.setReassigned(true);//tức là job này đc phân công lại
+
 
         //set cho thằng bệnh 1 job xem như đã hoàn thành
         Jobs job_Employee_Sick = new Jobs();
@@ -160,7 +161,9 @@ public class JobServiceImpl implements JobService {
         job_Employee_Sick.setRequestProducts(jobs.getRequestProducts() != null ? jobs.getRequestProducts() : null);
         job_Employee_Sick.setOrderdetails(jobs.getOrderdetails() != null ? jobs.getOrderdetails() : null);
         job_Employee_Sick.setDescription("Nhân Viên có tên "+fullname+ " nghỉ trước công việc này !");
-        job_Employee_Sick.setReassigned(false);
+        job_Employee_Sick.setReassigned(true);
+        job_Employee_Sick.setOriginalQuantityProduct(jobs.getOriginalQuantityProduct());
+
         jobRepository.save(job_Employee_Sick);
         jobRepository.save(jobs);
 
@@ -199,7 +202,27 @@ public class JobServiceImpl implements JobService {
             jobs.setRequestProducts(null);
         }
         jobs.setDescription(jobDTO.getDescription());
-        jobs.setQuantityProduct(jobDTO.getQuantity_product());
+
+
+
+        Jobs current = jobRepository.getJobById(job_id);
+        int originalQuantityProduct = current.getOriginalQuantityProduct();// Lấy số lượng ban đầu
+        int totalQuantityProduct = 0;
+        if(current.getUser() == null){
+             totalQuantityProduct = 0;
+        }else{
+            int a = user.getPosition().getPosition_id();
+            totalQuantityProduct = jobRepository.sumQuantityProductByCodeAndPosition(current.getCode(),a);
+        }
+        int quantityRemaining = originalQuantityProduct - totalQuantityProduct; // Số lượng còn lại
+
+        if (current.isReassigned()) {
+            jobs.setQuantityProduct(quantityRemaining); // Gán số lượng còn lại nếu job đã được giao lại
+        } else {
+            jobs.setQuantityProduct(current.getOriginalQuantityProduct()); // Giữ nguyên số lượng ban đầu nếu job chưa được giao lại
+        }
+
+        jobs.setOriginalQuantityProduct(current.getOriginalQuantityProduct());
         jobs.setCost(jobDTO.getCost());
         jobs.setJob_name(jobDTO.getJob_name());
         jobs.setTimeFinish(jobDTO.getFinish());
@@ -209,12 +232,6 @@ public class JobServiceImpl implements JobService {
         Status_Job statusJob = statusJobRepository.findById(status_id); //set  status job theo input
         jobs.setStatus(statusJob);
         jobs.setReassigned(false);
-//        LocalDate today = LocalDate.now();
-//        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("ddMMyy");
-//        String dateString = today.format(formatter);
-//        Jobs lastJob = jobRepository.findJobsTop(dateString + "JB");
-//        int count = lastJob != null ? Integer.parseInt(lastJob.getCode().substring(8)) + 1 : 1;
-//        String code = dateString + "JB" + String.format("%03d", count);
         jobs.setCode(jobs_order_detail.getCode());
         jobs.setJob_log(false);
         jobRepository.save(jobs);
@@ -228,6 +245,7 @@ public class JobServiceImpl implements JobService {
 //        List<Employeematerials> list = employeeMaterialRepository.findEmployeematerialsByJobIdAndUserId(jobs.getJobId(),user_id);
         for(Employeematerials e :employeeMaterialsList){
             e.setJobs(jobs);
+            e.setEmployee(user);
             employeeMaterialRepository.save(e);
         }
         sharedData.setEmployeeMaterialsList(null); // Xóa dữ liệu sau khi sử dụng (tùy chọn)
@@ -236,6 +254,11 @@ public class JobServiceImpl implements JobService {
         for (Processproducterror p : processproducterrorList) {
             p.setJob(jobs);
             processproducterrorRepository.save(p);
+        }
+        List<Employeematerials> list = employeeMaterialRepository.findEmployeematerialsByJobId(jobs_order_detail.getJobId());
+        for (Employeematerials p : list) {
+            p.setJobs(jobs);
+            employeeMaterialRepository.save(p);
         }
         jobRepository.delete(jobs_order_detail);
 //        if(jobs_order_detail.getUser() == null){
@@ -346,10 +369,12 @@ public class JobServiceImpl implements JobService {
         jobs_log.setCost(jobs_history.getCost());
         jobs_log.setTimeStart(jobs_history.getTimeStart());
         jobs_log.setStatus(statusJobRepository.findById(status_id)); //set status thanh da nghiem thu
-        jobs_log.setReassigned(false);
+        jobs_log.setReassigned(jobs_history.isReassigned());
      //   jobs_log.setTimeFinish(jobs_history.getTimeFinish());
         jobs_log.setTimeFinish(Date.from(today.atStartOfDay(ZoneId.systemDefault()).toInstant()));
         jobs_log.setRequestProducts(jobs_history.getRequestProducts());
+        jobs_log.setOriginalQuantityProduct(jobs_history.getOriginalQuantityProduct());
+
         jobs_log.setQuantityProduct(jobs_history.getQuantityProduct());
         jobs_log.setOrderdetails(jobs_history.getOrderdetails());
         jobs_log.setJob_name(jobs_history.getJob_name());
@@ -360,12 +385,13 @@ public class JobServiceImpl implements JobService {
         //cai nay` la de tao ra job tiep theo cho san pham va o trang thai dang cho giao cong viec tiep
 
         waitNextJob.setProduct(jobs_history.getProduct());
+        waitNextJob.setQuantityProduct(jobs_history.getOriginalQuantityProduct()); // Sử dụng originalQuantityProduct
         waitNextJob.setRequestProducts(jobs_history.getRequestProducts());
         if (status_id == 12) {
             //nếu công việc hoàn thành thì + số lượng của sản phẩm vào số lượng đã có trước đấy
             if (jobs_log.getProduct() == null) {
                 RequestProducts requestProducts = requestProductRepository.findById(jobs_history.getRequestProducts().getRequestProductId());
-                requestProducts.setQuantity(requestProducts.getQuantity() + jobs_history.getQuantityProduct());
+                requestProducts.setQuantity(requestProducts.getQuantity() + jobs_history.getOriginalQuantityProduct());
                 requestProductRepository.save(requestProducts);
                 jobs_log.setProduct(null);
                 //------ đoạn này chỉ dành cho request product , vì nó là đơn hàng , còn product có sẵn thì lúc cọc xong thì chuyển sang status là đã thi công xong luôn
@@ -377,7 +403,7 @@ public class JobServiceImpl implements JobService {
             }
             if (jobs_log.getRequestProducts() == null) {
                 Products products = productRepository.findById(jobs_history.getProduct().getProductId());
-                products.setQuantity(products.getQuantity() + jobs_history.getQuantityProduct());
+                products.setQuantity(products.getQuantity() + jobs_history.getOriginalQuantityProduct());
                 productRepository.save(products);
                 jobs_log.setRequestProducts(null);
             }
@@ -499,6 +525,7 @@ public class JobServiceImpl implements JobService {
         jobs.setQuantityProduct(quantity_product);
         jobs.setStatus(statusJobRepository.findById(3));
         jobs.setReassigned(false);
+        jobs.setOriginalQuantityProduct(quantity_product);
 
         LocalDate today = LocalDate.now();
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("ddMMyy");

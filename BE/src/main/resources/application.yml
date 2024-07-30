@@ -15,7 +15,7 @@ spring:
 
         url: jdbc:mysql://leadderdeptraivl.mysql.database.azure.com:3306/test1?useSSL=false
         username: sep490_g58
-        password: Leaddeptrai
+        password: Leaddeptrai@
   mvc:
     pathmatch:
       matching-strategy: ant_path_matcher

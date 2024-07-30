@@ -160,7 +160,7 @@ export class SubMaterialManagementComponent implements OnInit {
         // Creating an anchor element to trigger download
         const anchor = document.createElement('a');
         anchor.href = url;
-        anchor.download = 'dowload.xlsx'; // Specify the file name here
+        anchor.download = 'NhapVatLieu.xlsx'; // Specify the file name here
         document.body.appendChild(anchor); // Append anchor to the body to make it clickable
         anchor.click();
 

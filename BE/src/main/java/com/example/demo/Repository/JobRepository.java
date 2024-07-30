@@ -72,6 +72,11 @@ public interface JobRepository extends JpaRepository<Jobs,Integer> {
     @Query(value = "SELECT p.* FROM jobs p WHERE p.code LIKE :prefix% ORDER BY p.code DESC LIMIT 1", nativeQuery = true)
     Jobs findJobsTop(@Param("prefix") String prefix);
 
+    @Transactional
+    @Modifying
+    @Query("DELETE FROM Jobs p WHERE p.jobId = :jobId")
+    void deleteJobById(@Param("jobId") int jobId);
+
 
     @Query("SELECT u FROM Jobs u WHERE u.orderdetails.order.code = :query")
     List<Jobs> getJobByOrderDetailByOrderCode(String query);
@@ -82,7 +87,7 @@ public interface JobRepository extends JpaRepository<Jobs,Integer> {
     @Query("SELECT u FROM Jobs u WHERE u.product.productId = :query")
     List<Jobs> getJobByProductId(int query);
 
-    @Query("SELECT u FROM Jobs u WHERE u.requestProducts.requestProductId = :query")
+    @Query("SELECT u FROM Jobs u WHERE u.requestProducts.requestProductId = :query AND u.status.status_id != 14") //nếu job có trạng thái là khác chờ đtawj cọc thì ko đc xoá các job ấy nữa
     List<Jobs> getJobByRequestProductId(int query);
 
     @Query("SELECT u FROM Jobs u WHERE u.job_log IS TRUE")

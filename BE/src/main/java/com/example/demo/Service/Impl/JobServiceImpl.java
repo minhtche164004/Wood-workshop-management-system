@@ -122,8 +122,16 @@ public class JobServiceImpl implements JobService {
         for(Employeematerials e : list){
             if(jobs.getRequestProducts() == null){
                 e.setTotal_material(quantity_product*employeeMaterialRepository.findByProductSubMaterialByEmployeeMaterialsId(e.getEmpMaterialId()));
+
+                RequestProducts requestProducts = requestProductRepository.findById(jobs.getRequestProducts().getRequestProductId());
+                requestProducts.setQuantity(requestProducts.getQuantity() + quantity_product);
+                requestProductRepository.save(requestProducts);
             }else{
                 e.setTotal_material(quantity_product*employeeMaterialRepository.findByRequestSubMaterialByEmployeeMaterialsId(e.getEmpMaterialId()));
+
+                Products products = productRepository.findById(jobs.getProduct().getProductId());
+                products.setQuantity(products.getQuantity() + quantity_product);
+                productRepository.save(products);
             }
             employeeMaterialRepository.save(e);
         }

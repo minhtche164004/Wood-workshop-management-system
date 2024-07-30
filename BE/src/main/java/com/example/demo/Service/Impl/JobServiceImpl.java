@@ -143,6 +143,7 @@ public class JobServiceImpl implements JobService {
         jobs.setTimeStart(Date.from(today.atStartOfDay(ZoneId.systemDefault()).toInstant())); //ngày bắt đầu là ngay ngày thằng bị bệnh nghỉ làm
         jobs.setTimeFinish(jobs.getTimeFinish());
         jobs.setQuantityProduct(jobs.getQuantityProduct()-quantity_product);//số lương còn lại sau khi trừ đi số lượng thằng ốm đã làm
+        jobs.setReassigned(true);//tức là job này đc phân công lại
 
         //set cho thằng bệnh 1 job xem như đã hoàn thành
         Jobs job_Employee_Sick = new Jobs();
@@ -159,6 +160,7 @@ public class JobServiceImpl implements JobService {
         job_Employee_Sick.setRequestProducts(jobs.getRequestProducts() != null ? jobs.getRequestProducts() : null);
         job_Employee_Sick.setOrderdetails(jobs.getOrderdetails() != null ? jobs.getOrderdetails() : null);
         job_Employee_Sick.setDescription("Nhân Viên có tên "+fullname+ " nghỉ trước công việc này !");
+        job_Employee_Sick.setReassigned(false);
         jobRepository.save(job_Employee_Sick);
         jobRepository.save(jobs);
 
@@ -206,6 +208,7 @@ public class JobServiceImpl implements JobService {
         jobs.setTimeStart(jobDTO.getStart());
         Status_Job statusJob = statusJobRepository.findById(status_id); //set  status job theo input
         jobs.setStatus(statusJob);
+        jobs.setReassigned(false);
 //        LocalDate today = LocalDate.now();
 //        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("ddMMyy");
 //        String dateString = today.format(formatter);
@@ -343,6 +346,7 @@ public class JobServiceImpl implements JobService {
         jobs_log.setCost(jobs_history.getCost());
         jobs_log.setTimeStart(jobs_history.getTimeStart());
         jobs_log.setStatus(statusJobRepository.findById(status_id)); //set status thanh da nghiem thu
+        jobs_log.setReassigned(false);
      //   jobs_log.setTimeFinish(jobs_history.getTimeFinish());
         jobs_log.setTimeFinish(Date.from(today.atStartOfDay(ZoneId.systemDefault()).toInstant()));
         jobs_log.setRequestProducts(jobs_history.getRequestProducts());

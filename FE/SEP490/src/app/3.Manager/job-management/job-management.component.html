@@ -94,7 +94,7 @@
                             </td>
                             <td>
                                 <button *ngIf="product.user_name === ''" style="margin-left: -10px; size: 15px;"
-                                    data-toggle="modal" data-target="#assignJobModal" (click)="manageJob(product)"
+                                    data-toggle="modal" data-target="#assignJobModalEmployeeAbsent" (click)="manageJob(product)"
                                     class="btn btn-success">
                                     Giao việc
                                 </button>
@@ -113,17 +113,17 @@
                                 <button *ngIf="!listErrorJob.includes(product.job_id)" class="btn btn-primary"
                                     data-toggle="modal" data-target="#errorProduct" (click)="errorJob(product)"
                                     [class.btn-primary]="!isErrorDisabled(product) && !listErrorJob.includes(product.job_id)"
-                                    [class.btn-secondary]="isErrorDisabled(product) && !listErrorJob.includes(product.job_id)"
+                                    [class.btn-secondary]="isErrorDisabled(product) && !listErrorJob.includes(product.job_id) || product.user_id === ''"
                                     [class.btn-danger]="listErrorJob.includes(product.job_id)"
-                                    [disabled]="isErrorDisabled(product)">
+                                    [disabled]="isErrorDisabled(product)|| product.user_id === ''">
                                     <i class="fa-solid fa-triangle-exclamation"></i>
                                 </button>
                                 <button *ngIf="listErrorJob.includes(product.job_id)" class="btn btn-primary"
                                     data-toggle="modal" data-target="#otherModal"
                                     (click)="editProduct(product.job_id, product)"
                                     [class.btn-primary]="!isErrorDisabled(product) && !listErrorJob.includes(product.job_id)"
-                                    [class.btn-secondary]="isErrorDisabled(product) && !listErrorJob.includes(product.job_id)"
-                                    [class.btn-danger]="listErrorJob.includes(product.job_id)" [disabled]="">
+                                    [class.btn-secondary]="isErrorDisabled(product) && !listErrorJob.includes(product.job_id)||product.user_name === '' "
+                                    [class.btn-danger]="listErrorJob.includes(product.job_id)" [disabled]=" product.user_id === ''">
                                     <i class="fa-solid fa-triangle-exclamation"></i>
                                 </button>
                             </td>
@@ -999,6 +999,7 @@
                 <p style="font-size: 16px;">Thay đổi nhân viên thực hiện sản xuất <span
                         style="color: red;">{{user_name}}</span>? </p>
                 <input type="number" style="padding: 3%; width: 70%; font-size: 16px;" placeholder="Số sản phẩm đã hoàn thành" [(ngModel)]="quantityProductDone">
+                <input type="number" style="padding: 3%; width: 70%; font-size: 16px;" placeholder="Lương nhân viên nhận được" [(ngModel)]="costEmplopyee">
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" (click)="cancelChangeEmployee()" data-dismiss="modal">Đóng</button>
@@ -1008,7 +1009,155 @@
         </div>
     </div>
 </div>
+<div class="modal fade" id="assignJobModalEmployeeAbsent" role="dialog" aria-labelledby="assignJobModalEmployeeAbsent" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title" id="assignJobModalEmployeeAbsentLabel">Giao việc làm</h2>
+                <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body p-4">
+                <form [formGroup]="createJobs" (ngSubmit)="createNewJob()">
+                    <!-- Content of the form -->
+                    <div class="container">
+                        <div class="card order-detail-card">
+                            <div class="card-body p-4">
+                                <!-- Employee information -->
+                                <div class="row">
+                                    <div class="col-md-6">
 
+                                        <section class="customer-info mb-4">
+
+                                            <h5 style="text-align: center; color: black;">Thông tin việc làm</h5>
+
+
+                                            <div class="row">
+                                                <div class="col-md-6">
+                                                    <p>
+                                                        <strong>Tên nhân viên<span class="required-asterisk">
+                                                                *</span></strong>
+                                                    </p>
+                                                </div>
+                                                <div class="col-md-6">
+
+                                                    <select #employeeSelect class="form-select"
+                                                        (change)="onChangeSelectedEmployee($event)">
+                                                        <option value="" selected disabled>Chọn 1 nhân viên</option>
+                                                        <option *ngFor="let employee of positionEmployees"
+                                                            [value]="employee.userId">
+                                                            {{ employee.userInfor.fullname }}
+                                                        </option>
+                                                    </select>
+
+
+
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-md-6">
+                                                    <p>
+                                                        <strong>Số lượng sản phẩm:</strong>
+                                                    </p>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <!-- {{ selectedProduct.quantity }}  -->
+                                                    {{ this.selectedProduct.quantity }}
+
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-md-6">
+                                                    <strong>Giá công khoán (VNĐ)<span class="required-asterisk">
+                                                            *</span></strong>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <input type="text" name="costJob" formControlName="cost"
+                                                        [(ngModel)]="costJob" readonly> 
+                                                </div>
+                                            </div>
+                                        </section>
+                                    </div>
+
+                                    <div class="col-md-6">
+                                        <section class="order-summary mb-4">
+                                            <h5 style="text-align: center; color: black;">Mô tả việc làm</h5>
+                                            <div class="row">
+                                                <div class="col-md-6">
+                                                    <strong>Mã đơn hàng:</strong>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    {{ selectedProduct.code }}
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="row">
+                                                    <div class="col-md-6">
+                                                        <strong>Nhận việc trước ngày<span class="required-asterisk">
+                                                                *</span> </strong>
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        <input type="date" placeholder="dd / mm / YYYY" name="start"
+                                                            formControlName="start">
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <strong>Hoàn thành trước ngày<span class="required-asterisk">
+                                                            *</span></strong>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <input type="date" formControlName="finish"
+                                                        placeholder="Nhập ngày hoàn thành công việc ">
+                                                </div>
+                                            </div>
+
+                                        </section>
+                                    </div>
+                                </div>
+                                <table style="text-align: center;" class="table table-striped table-hover">
+                                    <thead>
+                                        <tr>
+                                            <th>STT</th>
+                                            <th>Tên nguyên liệu</th>
+                                            <th>Khối lượng</th>
+                                            <th>Tổng số lượng </th>
+                                            <th>Đơn vị</th>
+
+                                        </tr>
+                                    </thead>
+
+                                    <tbody>
+                                        <tr *ngFor="let product of subMaterialProduct; let i = index">
+                                            <td>{{ i + 1 }}</td>
+                                            <td>{{ product?.sub_name }}</td>
+                                            <td style="text-align: right;">{{ product?.quantity }}</td>
+                                            <td style="text-align: right;">{{ product.quantity *
+                                                (selectedProduct?.quantity ?? 1) }}</td>
+                                            <td>{{ product?.sub_type }}</td>
+                                        </tr>
+                                    </tbody>
+
+                                </table>
+                                <!-- Job description -->
+                                <div class="customer-info">
+                                    <h5 style="color: black;">Mô tả chi tiết yêu cầu việc làm<span
+                                            class="required-asterisk"> *</span></h5>
+                                    <textarea class="form-control" rows="6" formControlName="description"
+                                        name="jobDescription" placeholder="Nhập mô tả chi tiết..." required></textarea>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal"
+                            (click)="cancelAssign()">Hủy</button>
+                        <button type="submit" class="btn btn-primary">Tạo việc</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
 <div *ngIf="isLoadding" class="loading-overlay">
     <div class="spinner"></div>
 </div>

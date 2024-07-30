@@ -366,6 +366,20 @@ export class CreateOrderComponent implements OnInit {
             price: productItem.price
           });
           this.unitPriceProduct[index] = productItem.price;
+          console.log('unitPriceProduct:', this.unitPriceProduct)
+
+          this.totalUnitPrice = 0;
+
+          if (this.unitPriceProduct && this.quantityPerProduct) {
+            for (const key of Object.keys(this.unitPriceProduct)) {
+              const index = Number(key);
+              const numericUnitPrice = Number(this.unitPriceProduct[index]) || 0;
+              const quantity = Number(this.quantityPerProduct[index]) || 0;
+              const totalForThisItem = numericUnitPrice * quantity;
+              this.totalUnitPrice += totalForThisItem;
+            }
+            console.log('totalprice:', this.totalUnitPrice);
+          }
         }
 
       },
@@ -373,6 +387,9 @@ export class CreateOrderComponent implements OnInit {
         console.error('Error fetching phoneList:', error);
       }
     );
+
+    //cap nhat lai gia tien` khi chon san pham
+
   }
 
   onProductRequestChange(item: any, index: number): void {

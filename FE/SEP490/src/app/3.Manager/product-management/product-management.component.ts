@@ -237,9 +237,61 @@ export class ProductManagementComponent implements OnInit {
   }
 
   removeItem(index: number) {
-    const items = this.materialForm.get('items') as FormArray;
-    items.removeAt(index);
-    this.onRemoveMaterial(index);
+    // const items = this.materialForm.get('items') as FormArray;
+    // items.removeAt(index);
+
+    this.subMaterialDataArray = []; // reset lai mang subMaterialDataArray
+    if (this.items.length - 1 === 0) {
+      this.toastr.error('Không thể xóa hết nguyên liệu!', 'Lỗi');
+      return;
+    }
+
+    if (this.items && this.items.length > index) {
+
+      this.onRemoveMaterial(index); // cap nhat gia tien` uoc tinh
+
+      // Shift the elements to the left 
+      if (index < this.items.length - 1) {
+        for (let i = index, j = 0; i < this.items.length - 1; i++, j++) {
+          this.items.at(i).setValue(this.items.at(i + 1).value);
+          this.selectedMaterialId[i] = this.selectedMaterialId[i + 1];
+          this.onMaterialChangeFirstEdit(Number(this.selectedMaterialId[i]), i);
+          this.selectedSubMaterialId[i] = this.selectedMaterialId[i + 1];
+          this.unitPriceSubMaterial[i] = this.unitPriceSubMaterial[i + 1];
+          this.quantityPerSubMaterial[i] = this.quantityPerSubMaterial[i + 1];
+          this.subMaterialDataArray[j] = this.items.at(i).value;
+
+          // do chua binding data price nen phai set value cho price
+          this.subMaterialDataArray[j].price = this.unitPriceSubMaterial[i];
+        }
+      }
+
+      // Remove the last element
+      while (this.items.length > index && this.items.length > 0) {
+        this.items.removeAt(this.items.length - 1);
+      }
+
+      for (let i = 0; i < this.subMaterialDataArray.length; i++) {
+        const subMaterialData = this.subMaterialDataArray[i];
+        if (subMaterialData) {
+          const itemFormGroup = this.fb.group({
+            materialId: [subMaterialData.materialId],
+            subMaterialId: [subMaterialData.subMaterialId],
+            // subMaterialName: [subMaterialData.subMaterialName],
+            // materialType: [subMaterialData.materialType],
+            quantity: [subMaterialData.quantity],
+            price: [subMaterialData.price]
+          });
+          this.items.push(itemFormGroup);
+          console.log('subMaterialDataArray:', this.subMaterialData);
+        } else {
+          console.error(`subMaterialDataArray[${i}] is undefined`);
+        }
+      }
+      console.log('subMaterialDataArray:', this.subMaterialDataArray);
+
+
+    }
   }
   //
   //phan material cho request product theo order
@@ -284,18 +336,69 @@ export class ProductManagementComponent implements OnInit {
     materialFormRequests.push(newRequest);
   }
 
+  subMaterialDataArrayRProduct: any[][] = [];
   removeMaterialFormRequest(sectionIndex: number, formIndex: number) {
+    this.subMaterialDataArrayRProduct[sectionIndex] = [];
     const materialFormRequests = this.getMaterialFormRequests(sectionIndex);
-    if (materialFormRequests && formIndex >= 0 && formIndex < materialFormRequests.length) {
-      materialFormRequests.removeAt(formIndex);
-    }
-
+    // if (materialFormRequests && formIndex >= 0 && formIndex < materialFormRequests.length) {
+    //   materialFormRequests.removeAt(formIndex);
+    // }
     const numericUnitPrice = Number(this.unitPriceSubMaterial[sectionIndex * 10 + formIndex]) || 0;
     const quantity = Number(this.quantityPerSubMaterial[sectionIndex * 10 + formIndex]) || 0;
     const totalForThisItem = numericUnitPrice * quantity;
-
+    // console.log("submate", this.selectedSubMaterialId);
     //tru tong gia uoc tinh cua san pham neu xoa 1 material
     this.totalPriceSubmatePerProducRequest[sectionIndex] = this.totalPriceSubmatePerProducRequest[sectionIndex] - totalForThisItem;
+
+    // Shift the elements to the left 
+    if (formIndex < materialFormRequests.length - 1) {
+      for (let i = formIndex, j = 0; i < materialFormRequests.length - 1; i++, j++) {
+        this.subMaterialDataArrayRProduct[sectionIndex][j] = {}; // reset value cua subMaterialDataArrayRProduct
+        materialFormRequests.at(i).setValue(materialFormRequests.at(i + 1).value);
+        this.selectedMaterialId[sectionIndex * 10 + i] = this.selectedMaterialId[sectionIndex * 10 + i + 1];
+        delete this.selectedMaterialId[sectionIndex * 10 + i + 1];
+
+        this.onMaterialChangeFirstEdit(Number(this.selectedMaterialId[sectionIndex * 10 + i]), sectionIndex * 10 + i);
+
+        this.selectedSubMaterialId[sectionIndex * 10 + i] = Number(this.selectedSubMaterialId[sectionIndex * 10 + i + 1]);
+        delete this.selectedSubMaterialId[sectionIndex * 10 + i + 1];
+        this.unitPriceSubMaterial[sectionIndex * 10 + i] = Number(this.unitPriceSubMaterial[sectionIndex * 10 + i + 1]);
+        delete this.unitPriceSubMaterial[sectionIndex * 10 + i + 1];
+        this.quantityPerSubMaterial[sectionIndex * 10 + i] = Number(this.quantityPerSubMaterial[sectionIndex * 10 + i + 1]);
+        delete this.quantityPerSubMaterial[sectionIndex * 10 + i + 1];
+
+        this.subMaterialDataArrayRProduct[sectionIndex][j].materialId = Number(this.selectedMaterialId[sectionIndex * 10 + i]);
+        this.subMaterialDataArrayRProduct[sectionIndex][j].submateId = Number(this.selectedSubMaterialId[sectionIndex * 10 + i]); //gan gia tri cho subMaterialDataArrayRProduct
+        this.subMaterialDataArrayRProduct[sectionIndex][j].unitPriceSubMaterial = Number(this.unitPriceSubMaterial[sectionIndex * 10 + i]);
+        this.subMaterialDataArrayRProduct[sectionIndex][j].quantity = Number(this.quantityPerSubMaterial[sectionIndex * 10 + i]);
+      }
+      // console.log('this.selectedSubMaterialId:', this.selectedSubMaterialId);
+    }
+
+    // console.log('subMaterialDataArrayRProduct:', this.subMaterialDataArrayRProduct);
+    // console.log('test: ', this.subMaterialDataArrayRProduct[0]);
+    // Remove the last element
+    while (materialFormRequests.length > formIndex && materialFormRequests.length > 0) {
+      materialFormRequests.removeAt(materialFormRequests.length - 1);
+    }
+
+    for (let i = 0; i < this.subMaterialDataArrayRProduct[sectionIndex].length; i++) {
+      const subMaterialData = this.subMaterialDataArrayRProduct[sectionIndex][i];
+      if (subMaterialData) {
+
+        const itemFormGroup = this.fb.group({
+          materialId: [subMaterialData.materialId],
+          submateId: [subMaterialData.submateId],
+          // subMaterialName: [subMaterialData.subMaterialName],
+          // materialType: [subMaterialData.materialType],
+          quantity: [subMaterialData.quantity],
+        });
+        materialFormRequests.push(itemFormGroup);
+        console.log('subMaterialData:', subMaterialData);
+      } else {
+        console.error(`subMaterialDataArrayRProduct[${sectionIndex}] is undefined`);
+      }
+    }
 
 
   }
@@ -371,7 +474,7 @@ export class ProductManagementComponent implements OnInit {
             this.selectedSubMaterialId[index] = materialItem.subMaterialId;
             this.onMaterialChangeFirstEdit(Number(this.selectedMaterialId[index]), index);
 
-            this.fillMaterialItemEdit(materialItem);
+            this.fillMaterialItemEdit(materialItem); // Fill the form with the data
             this.totalUnitPrice += materialItem.unitPrice * materialItem.quantity;
             this.quantityPerSubMaterial[index] = materialItem.quantity;
             this.unitPriceSubMaterial[index] = materialItem.unitPrice;
@@ -423,11 +526,56 @@ export class ProductManagementComponent implements OnInit {
     this.itemsEditArray.push(item);
   }
 
+  subMaterialDataArray: any[] = [];
   removeItemEdit(index: number) {
-    if (this.itemsEditArray && this.itemsEditArray.length > index) {
-      this.itemsEditArray.removeAt(index);
+    this.subMaterialDataArray = []; // reset lai mang subMaterialDataArray
+    if (this.itemsEditArray.length === 1) {
+      this.toastr.error('Không thể xóa hết nguyên liệu!', 'Lỗi');
+      return;
     }
-    this.onRemoveMaterial(index);
+
+    if (this.itemsEditArray && this.itemsEditArray.length > index) {
+
+      this.onRemoveMaterial(index); // cap nhat gia tien` uoc tinh
+
+      // Shift the elements to the left 
+      if (index < this.itemsEditArray.length - 1) {
+        for (let i = index, j = 0; i < this.itemsEditArray.length - 1; i++, j++) {
+          this.itemsEditArray.at(i).setValue(this.itemsEditArray.at(i + 1).value);
+          this.selectedMaterialId[i] = this.selectedMaterialId[i + 1];
+          this.onMaterialChangeFirstEdit(Number(this.selectedMaterialId[i]), i);
+          this.selectedSubMaterialId[i] = this.selectedMaterialId[i + 1];
+          this.unitPriceSubMaterial[i] = this.unitPriceSubMaterial[i + 1];
+          this.quantityPerSubMaterial[i] = this.quantityPerSubMaterial[i + 1];
+          this.subMaterialDataArray[j] = this.itemsEditArray.at(i).value;
+        }
+      }
+
+
+      // Remove the last element
+      while (this.itemsEditArray.length > index && this.itemsEditArray.length > 0) {
+        this.itemsEditArray.removeAt(this.itemsEditArray.length - 1);
+      }
+
+      for (let i = 0; i < this.subMaterialDataArray.length; i++) {
+        const subMaterialData = this.subMaterialDataArray[i];
+        if (subMaterialData) {
+          const itemFormGroup = this.fb.group({
+            materialId: [subMaterialData.materialId],
+            subMaterialId: [subMaterialData.subMaterialId],
+            subMaterialName: [subMaterialData.subMaterialName],
+            materialType: [subMaterialData.materialType],
+            quantity: [subMaterialData.quantity],
+            unitPrice: [subMaterialData.unitPrice]
+          });
+          this.itemsEditArray.push(itemFormGroup);
+          // console.log('subMaterialDataArray:', this.subMaterialDataArray);
+        } else {
+          console.error(`subMaterialDataArray[${i}] is undefined`);
+        }
+      }
+    }
+
   }
   //
   buttonClickModalFlag: boolean = true;
@@ -755,7 +903,7 @@ export class ProductManagementComponent implements OnInit {
     this.selectedSubMaterialId[index] = Number((event.target as HTMLSelectElement).value);
     const selectedSubMaterial = this.subMaterials[index].find(subMaterial => subMaterial.subMaterialId === this.selectedSubMaterialId[index]);
     this.unitPriceSubMaterial[index] = selectedSubMaterial ? selectedSubMaterial.unitPrice : '';
-    
+
     //tinh lai totalUnitPrice(tong gia uoc tinh nguyen vat lieu)
     if (this.unitPriceSubMaterial && this.quantityPerSubMaterial) {
       for (const key of Object.keys(this.unitPriceSubMaterial)) {
@@ -792,6 +940,31 @@ export class ProductManagementComponent implements OnInit {
     // console.log("goiham`calculateTotalPriceOfOrder", index);
   }
 
+  onSubMaterialChangeRProduct(event: Event, index: number,indexOfItemRProduct: number, indexOfMaterial: number) {
+    this.totalUnitPrice = 0;
+    this.selectedSubMaterialId[index] = Number((event.target as HTMLSelectElement).value);
+    const selectedSubMaterial = this.subMaterials[index].find(subMaterial => subMaterial.subMaterialId === this.selectedSubMaterialId[index]);
+    this.unitPriceSubMaterial[index] = selectedSubMaterial ? selectedSubMaterial.unitPrice : '';
+  
+    this.totalPriceSubmatePerProducRequest[indexOfItemRProduct] = 0;
+    if (this.unitPriceSubMaterial && this.quantityPerSubMaterial) {
+      // Calculate the start and end index based on indexOfItemRProduct and indexOfMaterial
+      const startIndex = indexOfItemRProduct * 10;
+      const endIndex = startIndex + indexOfMaterial;
+
+      // Iterate from startIndex to endIndex
+      for (let index = startIndex; index <= endIndex; index++) {
+
+        const numericUnitPrice = Number(this.unitPriceSubMaterial[index]) || 0;
+        const quantity = Number(this.quantityPerSubMaterial[index]) || 0;
+        const totalForThisItem = numericUnitPrice * quantity;
+        console.log('totalForThisItem:' + index, totalForThisItem);
+
+        this.totalPriceSubmatePerProducRequest[indexOfItemRProduct] += totalForThisItem;
+        // console.log('totalPriceSubmatePerProducRequest123:'+index, this.totalPriceSubmatePerProducRequest[indexOfItemRProduct]);
+      }
+    }  }
+
   totalPriceSubmatePerProducRequest: { [key: number]: number | number } = {}; // tinh tong gia cua tung san pham (chua nhan voi quantity)
   onQuantityChangeSubMaterialRProduct(event: Event, index: number, indexOfItemRProduct: number, indexOfMaterial: number) {
     this.quantityPerSubMaterial[index] = (event.target as HTMLInputElement).value;
@@ -803,10 +976,6 @@ export class ProductManagementComponent implements OnInit {
 
       // Iterate from startIndex to endIndex
       for (let index = startIndex; index <= endIndex; index++) {
-        // console.log('index:', index);
-        // console.log('unitPriceSubMaterial:' + index, this.unitPriceSubMaterial[index]);
-        // console.log('quantityPerSubMaterial:' + index, this.quantityPerSubMaterial[index]);
-        // Ensure that unitPriceSubMaterial and quantityPerSubMaterial exist for the current index
 
         const numericUnitPrice = Number(this.unitPriceSubMaterial[index]) || 0;
         const quantity = Number(this.quantityPerSubMaterial[index]) || 0;
@@ -996,14 +1165,14 @@ export class ProductManagementComponent implements OnInit {
         // console.log('Thumbnailpre:', product.result);
       });
     this.populateFormWithData(productId);
-
   }
 
   onEditSubmit(): void {
-    // if (this.editForm.get('quantity')?.value < 1) {
-    //   this.toastr.warning('Số lượng sản phẩm phải lớn hơn 0!', 'Lỗi');
-    //   return;
-    // }
+    if (this.editForm.get('quantity')?.value < 1) {
+      this.toastr.warning('Số lượng sản phẩm phải lớn hơn 0!', 'Lỗi');
+      return;
+    }
+
     if (parseFloat(this.editForm.get('price')?.value.replace(/,/g, '')) < this.totalUnitPrice) {
       this.toastr.error('Giá sản phẩm phải lớn hơn giá vật liệu !', 'Lỗi');
       return;
@@ -1066,7 +1235,7 @@ export class ProductManagementComponent implements OnInit {
             this.reloadProduct();
             if (error.status === 400 && error.error.code === 1038) {
               this.toastr.warning(error.error.message, 'Lỗi');
-            } 
+            }
             // else {
             //   this.toastr.error('Cập nhật sản phẩm bị lỗi!', 'Lỗi');
             // }
@@ -1238,14 +1407,23 @@ export class ProductManagementComponent implements OnInit {
 
   totalAmountOfOrder: number = 0;
   onSubmitProductRequest() {
+    const currentDate = new Date();
+    
 
-    if (this.listRequestProductForm.get('quantity')?.value < 1) {
-      this.toastr.warning('Số lượng sản phẩm phải lớn hơn 0!', 'Lỗi');
-      return;
-    }
+
     this.pricePerProductAndQuantity = []; //reset lai gia tri
 
     for (let i = 0; i < this.itemsRProduct.length; i++) {
+
+      const completionTime = this.listRequestProductForm.value.itemsRProduct[i].completionTime;
+      const completionTimeDate = new Date(completionTime);
+    
+      if (completionTimeDate < currentDate) {
+        this.toastr.error('Ngày hoàn thành không được nhỏ hơn ngày hiện tại!', 'Lỗi');
+        return;
+      }
+
+
       const materialFormRequests = this.getMaterialFormRequests(i);
       // console.log("do dai cua j:" ,materialFormRequests.length)
       // console.log("do dai cua i: ", i)
@@ -1470,6 +1648,14 @@ export class ProductManagementComponent implements OnInit {
       this.toastr.warning('Số lượng sản phẩm phải lớn hơn 0!', 'Lỗi');
       return;
     }
+
+    const currentDate = new Date();
+    const completionTime = new Date(this.editForm.get('completionTime')?.value);
+    if (currentDate > completionTime) {
+      this.toastr.error('Ngày hoàn thành phải lớn hơn ngày hiện tại!', 'Lỗi');
+      return;
+    }
+
     if (parseFloat(this.editForm.get('price')?.value.replace(/,/g, '')) < this.totalUnitPrice) {
       this.toastr.error('Giá sản phẩm phải lớn hơn giá vật liệu !', 'Lỗi');
       return;

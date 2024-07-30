@@ -995,15 +995,15 @@
                 <h2 class="modal-title" id="confirmChangeEmployee">Thay đổi nhân viên sản xuất</h2>
                 <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close"></button>
             </div>
-            <div class="modal-body">
-                <p style="font-size: 16px;">Bạn chắc chắn muốn thay đổi nhân viên <span
+            <div class="modal-body text-center" >
+                <p style="font-size: 16px;">Thay đổi nhân viên thực hiện sản xuất <span
                         style="color: red;">{{user_name}}</span>? </p>
-                <input type="number" placeholder="Nhập số sản phẩm nhân viên đã hoàn thành" [(ngModel)]="quantityProductDone">
+                <input type="number" style="padding: 3%; width: 70%; font-size: 16px;" placeholder="Số sản phẩm đã hoàn thành" [(ngModel)]="quantityProductDone">
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
-                <button type="button" class="btn btn-primary" (click)="changeEmployeeAbsent()">Chắc
-                    chắn</button>
+                <button type="button" class="btn btn-secondary" (click)="cancelChangeEmployee()" data-dismiss="modal">Đóng</button>
+                <button type="button" class="btn btn-primary" (click)="changeEmployeeAbsent()">Thay đổi
+                    </button>
             </div>
         </div>
     </div>

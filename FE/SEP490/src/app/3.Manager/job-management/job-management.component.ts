@@ -1416,5 +1416,7 @@ formatDateToYYYYMMDD(date: string): string {
       }
     );
   }
-
+  cancelChangeEmployee(): void{
+    this.quantityProductDone = '';
+  }
 }

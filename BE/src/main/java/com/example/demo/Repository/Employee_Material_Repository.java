@@ -41,6 +41,12 @@ public interface Employee_Material_Repository extends JpaRepository<Employeemate
     List<Employeematerials> findEmployeematerialsByJobIdAndUserId(@Param("jobId") Integer jobId, @Param("userId") Integer userId);
 
     @Query("SELECT e FROM Employeematerials e" +
+            " LEFT JOIN e.employee ep" +
+            " LEFT JOIN e.jobs j" +
+            " WHERE j.jobId = :jobId")
+    List<Employeematerials> findEmployeematerialsByJobId(@Param("jobId") Integer jobId);
+
+    @Query("SELECT e FROM Employeematerials e" +
             " LEFT JOIN e.jobs j" +
             " WHERE j.jobId = :query")
     List<Employeematerials> findEmployeematerialsByJobId(int query);

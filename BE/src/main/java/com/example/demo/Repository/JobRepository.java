@@ -49,8 +49,20 @@ public interface JobRepository extends JpaRepository<Jobs,Integer> {
     boolean isProductJob(@Param("jobId") int jobId);
 
     //tính tổng số lượng sản phẩm
-    @Query("SELECT SUM(p.quantityProduct) FROM Jobs p WHERE p.code = :code AND p.reassigned = true ")
+    @Query("SELECT COALESCE(SUM(p.quantityProduct), 0) FROM Jobs p WHERE p.code = :code AND p.reassigned = true ORDER BY p.code DESC LIMIT 1 ")
     int countProductOfReassigned(String code);
+
+    @Query("SELECT COALESCE(SUM(p.quantityProduct), 0) FROM Jobs p WHERE p.code = :code AND p.status.status_id < :status_id AND p.job_log = true")
+    int sumQuantityProductByCodeAndStatusLessThan(String code, int status_id);
+
+    @Query("SELECT COALESCE(SUM(p.quantityProduct), 0) FROM Jobs p JOIN p.user u JOIN u.position pos WHERE p.code = :code AND p.status.status_id = 16 AND pos.position_id = :position_id")
+    Integer sumQuantityProductByCodeAndPosition(String code, int position_id);
+    
+    @Query("SELECT p.originalQuantityProduct FROM Jobs p WHERE p.jobId = :jobId")
+    Integer getOriginalQuantityProduct(int jobId);
+
+
+
 
 
     @Transactional

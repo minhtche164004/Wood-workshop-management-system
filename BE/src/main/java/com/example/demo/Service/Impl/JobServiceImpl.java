@@ -498,6 +498,7 @@ public class JobServiceImpl implements JobService {
         jobs.setProduct(products);
         jobs.setQuantityProduct(quantity_product);
         jobs.setStatus(statusJobRepository.findById(3));
+        jobs.setReassigned(false);
 
         LocalDate today = LocalDate.now();
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("ddMMyy");

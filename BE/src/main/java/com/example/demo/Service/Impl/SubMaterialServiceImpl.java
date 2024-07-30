@@ -584,7 +584,10 @@ public class SubMaterialServiceImpl implements SubMaterialService {
                 input.setUnit_price(subMaterial.getInputPrice());
                 input.setOut_price(subMaterial.getUnitPrice());
                 input.setDate_input(create);
+                input.setQuantity(quantity);
                 inputSubMaterialRepository.save(input);
+
+
 
                 Employeematerials employeeMaterials = new Employeematerials();
                 employeeMaterials.setProductSubMaterial(productSubMaterials);

@@ -96,7 +96,7 @@ const routes: Routes = [
 
   { path: 'order_rq', component: OrderRequiredComponent, canActivate: [AuthGuard] },
   { path: 'supplier_management', component: SupplierManagementComponent, canActivate: [AuthGuard], data: { roles: ['MANAGER'] } },
-  { path: 'profile', component: ViewProfileComponent },
+  { path: 'profile', component: ViewProfileComponent , canActivate: [AuthGuard], data: { roles: ['MANAGER', 'ADMIN', 'CUSTOMER', 'EMPLOYEE'] }},
   { path: 'submtr_management', component: SubMaterialManagementComponent, canActivate: [AuthGuard], data: { roles: ['MANAGER'] } },
   { path: 'create_order', component: CreateOrderComponent},
   { path: 'payment-salary', component: PaymentSalaryComponent },

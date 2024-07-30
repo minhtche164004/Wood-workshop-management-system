@@ -64,7 +64,7 @@
                             <th>Lỗi</th>
                             <th>Tên sản phẩm</th>
                             <th>Số lượng</th>
-                            <th>Đơn giá sản phẩm(vnd)</th>
+                            <th>Giá công khoán(vnd)</th>
                             <th>Trạng thái</th>
                             <th>Nhân viên</th>
 
@@ -93,37 +93,46 @@
 
                             </td>
                             <td>
-                                <button *ngIf="product.user_name === ''" style="margin-left: -10px; size: 15px;"
-                                    data-toggle="modal" data-target="#assignJobModalEmployeeAbsent" (click)="manageJob(product)"
-                                    class="btn btn-success">
-                                    Giao việc
+                                <button
+                                    *ngIf="(product.statusJob.status_id === 4 || product.statusJob.status_id === 7 || product.statusJob.status_id === 10) && !product.user_id"
+                                    style="margin-left: -10px; size: 15px;" data-toggle="modal"
+                                    data-target="#assignJobModalEmployeeAbsent" (click)="manageJob(product)"
+                                    class="btn btn-primary">
+                                    Phân công lại
                                 </button>
-                                <button *ngIf="product.user_name !== ''" style="margin-left: -10px; size: 15px;"
-                                    data-toggle="modal" data-target="#assignJobModal" (click)="manageJob(product)"
-                                    class="btn"
-                                    [class.btn-primary]="!isDisabled(product) && !listErrorJob.includes(product.job_id) || product.user_id === ''"
+                                <button *ngIf="product.user_id === 0 && product.price === 0 "
+                                    style="margin-left: -10px; size: 15px;" data-toggle="modal"
+                                    data-target="#assignJobModal" (click)="manageJob(product)" class="btn"
+                                    [class.btn-primary]="!isDisabled(product) && !listErrorJob.includes(product.job_id) "
                                     [class.btn-secondary]="listErrorJob.includes(product.job_id) || isDisabled(product) && !listErrorJob.includes(product.job_id)"
                                     [disabled]="listErrorJob.includes(product.job_id) || isDisabled(product)">
                                     Giao việc
                                 </button>
-
+                                <button *ngIf="product.user_id !== 0 && product.price !== 0 "
+                                    style="margin-left: -10px; size: 15px;" data-toggle="modal"
+                                    data-target="#assignJobModal" (click)="manageJob(product)" class="btn"
+                                    [class.btn-primary]="!isDisabled(product) && !listErrorJob.includes(product.job_id) "
+                                    [class.btn-secondary]="listErrorJob.includes(product.job_id) || isDisabled(product) && !listErrorJob.includes(product.job_id)"
+                                    [disabled]="listErrorJob.includes(product.job_id) || isDisabled(product)">
+                                    Giao việc
+                                </button>
                             </td>
                             <td>
                                 <!-- Button to open the "errorProduct" modal -->
                                 <button *ngIf="!listErrorJob.includes(product.job_id)" class="btn btn-primary"
                                     data-toggle="modal" data-target="#errorProduct" (click)="errorJob(product)"
                                     [class.btn-primary]="!isErrorDisabled(product) && !listErrorJob.includes(product.job_id)"
-                                    [class.btn-secondary]="isErrorDisabled(product) && !listErrorJob.includes(product.job_id) || product.user_id === ''"
+                                    [class.btn-secondary]="isErrorDisabled(product) && !listErrorJob.includes(product.job_id)"
                                     [class.btn-danger]="listErrorJob.includes(product.job_id)"
-                                    [disabled]="isErrorDisabled(product)|| product.user_id === ''">
+                                    [disabled]="isErrorDisabled(product)">
                                     <i class="fa-solid fa-triangle-exclamation"></i>
                                 </button>
                                 <button *ngIf="listErrorJob.includes(product.job_id)" class="btn btn-primary"
                                     data-toggle="modal" data-target="#otherModal"
                                     (click)="editProduct(product.job_id, product)"
                                     [class.btn-primary]="!isErrorDisabled(product) && !listErrorJob.includes(product.job_id)"
-                                    [class.btn-secondary]="isErrorDisabled(product) && !listErrorJob.includes(product.job_id)||product.user_name === '' "
-                                    [class.btn-danger]="listErrorJob.includes(product.job_id)" [disabled]=" product.user_id === ''">
+                                    [class.btn-secondary]="isErrorDisabled(product) && !listErrorJob.includes(product.job_id)"
+                                    [class.btn-danger]="listErrorJob.includes(product.job_id)" [disabled]="">
                                     <i class="fa-solid fa-triangle-exclamation"></i>
                                 </button>
                             </td>
@@ -135,7 +144,7 @@
 
                                 <ng-container *ngIf="product?.statusJob.type !== 1 && product?.statusJob.type !== 6">
                                     <select id="mySelect{{i}}" class="custom-select"
-                                        [disabled]="listErrorJob.includes(product.job_id) || isErrorDisabled(product) || product.user_name === ''"
+                                        [disabled]="listErrorJob.includes(product.job_id) || isErrorDisabled(product)"
                                         [ngModel]="product?.statusJob.status_id"
                                         (change)="openModal($event,product?.job_id, i)">
                                         <ng-container *ngFor="let status of statusType">
@@ -272,7 +281,7 @@
                                                 </div>
                                                 <div class="col-md-6">
                                                     <input type="number" name="costJob" formControlName="cost"
-                                                        [(ngModel)]="costJob"> 
+                                                        [(ngModel)]="costJob">
                                                 </div>
                                             </div>
                                         </section>
@@ -405,7 +414,7 @@
                                                     <strong>Giá công khoán (VNĐ):</strong>
                                                 </div>
                                                 <div class="col-md-6">
-                                                    {{ selectedJob.cost }} 
+                                                    {{ selectedJob.cost }}
                                                 </div>
                                             </div>
 
@@ -828,7 +837,7 @@
     <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h2 class="modal-title" id="assignJobModalLabel">Cập nhật giao việc làm</h2>
+                <h2 class="modal-title" id="assignJobModalLabel">Cập nhật giao việc </h2>
                 <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body p-4">
@@ -882,7 +891,7 @@
                                                             *</span></strong>
                                                 </div>
                                                 <div class="col-md-6">
-                                                    <input type="number" name="costJob" formControlName="cost"> 
+                                                    <input type="number" name="costJob" formControlName="cost">
                                                 </div>
                                             </div>
                                             <div class="row">
@@ -995,21 +1004,25 @@
                 <h2 class="modal-title" id="confirmChangeEmployee">Thay đổi nhân viên sản xuất</h2>
                 <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close"></button>
             </div>
-            <div class="modal-body text-center" >
+            <div class="modal-body text-center">
                 <p style="font-size: 16px;">Thay đổi nhân viên thực hiện sản xuất <span
                         style="color: red;">{{user_name}}</span>? </p>
-                <input type="number" style="padding: 3%; width: 70%; font-size: 16px;" placeholder="Số sản phẩm đã hoàn thành" [(ngModel)]="quantityProductDone">
-                <input type="number" style="padding: 3%; width: 70%; font-size: 16px;" placeholder="Lương nhân viên nhận được" [(ngModel)]="costEmplopyee">
+                Có <input type="number" style="padding: 3%; width: 70%; font-size: 16px;"
+                    placeholder="Số sản phẩm đã hoàn thành" [(ngModel)]="quantityProductDone"> sản phẩm lỗi
+                <input type="number" style="padding: 3%; width: 70%; font-size: 16px;"
+                    placeholder="Lương nhân viên nhận được" [(ngModel)]="costEmplopyee">
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" (click)="cancelChangeEmployee()" data-dismiss="modal">Đóng</button>
+                <button type="button" class="btn btn-secondary" (click)="cancelChangeEmployee()"
+                    data-dismiss="modal">Đóng</button>
                 <button type="button" class="btn btn-primary" (click)="changeEmployeeAbsent()">Thay đổi
-                    </button>
+                </button>
             </div>
         </div>
     </div>
 </div>
-<div class="modal fade" id="assignJobModalEmployeeAbsent" role="dialog" aria-labelledby="assignJobModalEmployeeAbsent" aria-hidden="true">
+<div class="modal fade" id="assignJobModalEmployeeAbsent" role="dialog" aria-labelledby="assignJobModalEmployeeAbsent"
+    aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered modal-lg">
         <div class="modal-content">
             <div class="modal-header">
@@ -1071,8 +1084,7 @@
                                                             *</span></strong>
                                                 </div>
                                                 <div class="col-md-6">
-                                                    <input type="text" name="costJob" formControlName="cost"
-                                                        [(ngModel)]="costJob" readonly> 
+                                                    {{selectedJob.cost | number: '1.0-3'}}
                                                 </div>
                                             </div>
                                         </section>

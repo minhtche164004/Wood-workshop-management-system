@@ -229,7 +229,7 @@ export class ReportManagementComponent implements OnInit {
 
 
   saveChanges(): void {
-    // this.isLoadding = true;
+     this.isLoadding = true;
     // console.log('Form Values:', this.errorForm.value);
     const errorFormData = this.errorForm.value;
     console.log('error edit form saveChanges:', errorFormData);

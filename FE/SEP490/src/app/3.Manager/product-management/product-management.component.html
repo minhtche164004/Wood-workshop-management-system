@@ -514,7 +514,7 @@
                       <div class="col-md-2 mb-3">
                         <div class="form-group">
                           <label for="materialId-{{i}}">Loại vật liệu<span class="required-asterisk">*</span></label>
-                          <select id="materialId-{{i}}" class="form-control" [ngModel]="selectedMaterialId[i+j]"
+                          <select id="materialId-{{i}}" class="form-control"  formControlName="materialId"
                             (change)="onMaterialChange($event, i*10+j)">
                             <option *ngFor="let material of materials" [value]="material.materialId">{{
                               material.materialName
@@ -527,8 +527,8 @@
                         <div class="form-group">
                           <label for="subMaterialId-{{i}}">Tên nguyên vật liệu<span
                               class="required-asterisk">*</span></label>
-                          <select id="subMaterialId-{{i}}" class="form-control" *ngIf="subMaterials[i*10+j]"
-                            (change)="onSubMaterialChange($event, i*10+j)">
+                          <select id="subMaterialId-{{i}}" class="form-control" *ngIf="subMaterials[i*10+j]" formControlName="submateId"
+                            (change)="onSubMaterialChangeRProduct($event, i*10+j, i,j)">
                             <option disabled value="" selected>Chọn vật liệu</option>
                             <option *ngFor="let subMaterial of subMaterials[i*10+j]"
                               [value]="subMaterial?.subMaterialId">{{
@@ -557,7 +557,7 @@
                       <div class="col-md-1 mb-3">
                         <div class="form-group">
                           <label for="quantity-{{i}}">Số lượng</label>
-                          <input id="quantity-{{i}}" class="form-control" type="number" min="1"
+                          <input id="quantity-{{i}}" class="form-control" type="number" min="1" formControlName="quantity"
                             (input)="onQuantityChangeSubMaterialRProduct($event, i*10+j,i,j)"
                             placeholder="Nhập số lượng">
                         </div>
@@ -748,7 +748,7 @@
                 <div class="col-md-4 mb-3">
                   <div class="form-group">
                     <label for="subMaterialId-{{i}}">Tên nguyên vật liệu<span class="required-asterisk">*</span></label>
-                    <select id="subMaterialId-{{i}}" class="form-control" *ngIf="subMaterials[i]"
+                    <select id="subMaterialId-{{i}}" class="form-control" 
                       (change)="onSubMaterialChange($event, i)" formControlName="subMaterialId">
                       <option *ngFor="let subMaterial of subMaterials[i]" [value]="subMaterial?.subMaterialId">{{
                         subMaterial?.subMaterialName

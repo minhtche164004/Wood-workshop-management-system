@@ -23,9 +23,11 @@ export class AuthGuard implements CanActivate {
       return false;
     }
 
+    //
     const expectedRoles = route.data['roles'];
-    if (!expectedRoles || expectedRoles.length === 0) {
-      return true;  // No role-based access control specified
+    if (!expectedRoles || expectedRoles.length === 0 || expectedRoles.includes('GUEST')) {
+      this.router.navigate(['/login']);
+      return true;  
     }
 
     return this.authenListService.getUserProfile().pipe(

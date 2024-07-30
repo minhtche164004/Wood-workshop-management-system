@@ -12,8 +12,9 @@ export class DashboardComponent implements OnInit {
 
   constructor(private router: Router) {}
 
-  ngOnInit(): void {}
-
+  ngOnInit(): void {
+    $('[data-dismiss="modal"]').click();        
+  }
   toggleSidebar() {
     this.sidebarVisible = !this.sidebarVisible;
   }

@@ -44,6 +44,10 @@ public interface JobRepository extends JpaRepository<Jobs,Integer> {
     @Query("SELECT o.totalAmount FROM Orders o JOIN Orderdetails od ON o.orderId = od.order.orderId JOIN Jobs j ON od.orderDetailId = j.orderdetails.orderDetailId WHERE j.jobId = ?1")
     BigDecimal findToTalAmountOrderByJobId(int jobId);
 
+    @Query("SELECT CASE WHEN j.product IS NOT NULL THEN true ELSE false END FROM Jobs j WHERE j.jobId = :jobId")
+    boolean isProductJob(@Param("jobId") int jobId);
+
+
     @Transactional
     @Modifying
     @Query("UPDATE Orders o " +

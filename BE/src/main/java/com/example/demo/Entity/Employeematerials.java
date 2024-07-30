@@ -1,5 +1,6 @@
 package com.example.demo.Entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -14,8 +15,8 @@ public class Employeematerials {
     @Column(name = "emp_material_id")
     private int empMaterialId;
 
-//    @Column(name = "quantity")
-//    private int quantity;
+    @Column(name = "total_material")
+    private double total_material;
 
     @ManyToOne
     @JoinColumn(name = "employee_id")
@@ -28,6 +29,11 @@ public class Employeematerials {
     @ManyToOne
     @JoinColumn(name = "request_products_submaterials_id") // Liên kết RequestProductsSubmaterials
     private RequestProductsSubmaterials requestProductsSubmaterials;
+
+    @ManyToOne(cascade = CascadeType.ALL)
+    @JsonIgnore
+    @JoinColumn(name = "job_id")
+    private Jobs jobs;
 
 }
 

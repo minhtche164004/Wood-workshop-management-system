@@ -132,11 +132,11 @@ export class ChartComponent implements OnInit {
          this.getTotalAmountSubMaterial(),
          this.getTotalSpecialOrder(),
          this.percenProduct(),
-         this.getAllEmployee(),
+        this.getAllEmployee(),
         this.getTotalProductNormal(),
-         this.getAllPostionEmp(),
-         this.getAllDataForYear(),
-          this.getTotalAmountHaveDone()
+        this.getAllPostionEmp(),
+        this.getAllDataForYear(),
+        this.getTotalAmountHaveDone()
       ]);
       await this.updateEmployeePositions();
       this.initializeCharts();
@@ -519,7 +519,7 @@ export class ChartComponent implements OnInit {
         // if (data.result === null || data.result === undefined) {
         //   data.result = 0;
         // }
-      //  console.log(`total order ${month}/${year}: `, data.result);
+        console.log(`total order ${month}/${year}: `, data.result);
         this.totalOrderMY.push(data.result);
         resolve();
       }, err => {
@@ -534,7 +534,7 @@ export class ChartComponent implements OnInit {
         // if (data.result === null || data.result === undefined) {
         //   data.result = 0;
         // }
-      //  console.log(`total spec order result for ${month}/${year}: `, data.result);
+        console.log(`total spec order result for ${month}/${year}: `, data.result);
         this.totalOrderSpecMY.push(data.result);
         resolve();
       }, err => {

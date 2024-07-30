@@ -79,7 +79,7 @@ public interface JobService {
                                         Integer status_id,
                                         Integer position_id);
 
-    Jobs EmployeeSick(int user_id, int job_id,BigDecimal cost_employee);
+    Jobs EmployeeSick(int user_id, int job_id,BigDecimal cost_employee,int quantity_product);
 
 
 

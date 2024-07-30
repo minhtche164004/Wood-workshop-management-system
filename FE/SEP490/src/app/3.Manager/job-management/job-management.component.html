@@ -135,7 +135,7 @@
 
                                 <ng-container *ngIf="product?.statusJob.type !== 1 && product?.statusJob.type !== 6">
                                     <select id="mySelect{{i}}" class="custom-select"
-                                        [disabled]="listErrorJob.includes(product.job_id) || isErrorDisabled(product)"
+                                        [disabled]="listErrorJob.includes(product.job_id) || isErrorDisabled(product) || product.user_name === ''"
                                         [ngModel]="product?.statusJob.status_id"
                                         (change)="openModal($event,product?.job_id, i)">
                                         <ng-container *ngFor="let status of statusType">
@@ -267,12 +267,12 @@
                                             </div>
                                             <div class="row">
                                                 <div class="col-md-6">
-                                                    <strong>Giá công khoán<span class="required-asterisk">
+                                                    <strong>Giá công khoán (VNĐ)<span class="required-asterisk">
                                                             *</span></strong>
                                                 </div>
                                                 <div class="col-md-6">
                                                     <input type="number" name="costJob" formControlName="cost"
-                                                        [(ngModel)]="costJob">
+                                                        [(ngModel)]="costJob"> 
                                                 </div>
                                             </div>
                                         </section>
@@ -402,10 +402,10 @@
                                             </div>
                                             <div class="row">
                                                 <div class="col-md-6">
-                                                    <strong>Giá công khoán:</strong>
+                                                    <strong>Giá công khoán (VNĐ):</strong>
                                                 </div>
                                                 <div class="col-md-6">
-                                                    {{ selectedJob.cost }}
+                                                    {{ selectedJob.cost }} 
                                                 </div>
                                             </div>
 
@@ -878,11 +878,11 @@
 
                                             <div class="row">
                                                 <div class="col-md-6">
-                                                    <strong>Giá công khoán <span class="required-asterisk">
+                                                    <strong>Giá công khoán (VNĐ) <span class="required-asterisk">
                                                             *</span></strong>
                                                 </div>
                                                 <div class="col-md-6">
-                                                    <input type="number" name="costJob" formControlName="cost">
+                                                    <input type="number" name="costJob" formControlName="cost"> 
                                                 </div>
                                             </div>
                                             <div class="row">
@@ -995,19 +995,20 @@
                 <h2 class="modal-title" id="confirmChangeEmployee">Thay đổi nhân viên sản xuất</h2>
                 <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close"></button>
             </div>
-            <div class="modal-body">
-                <p style="font-size: 16px;">Bạn chắc chắn muốn thay đổi nhân viên <span
-                        style="color: red;">{{user_name}}</span> có mã sản xuất <span
-                        style="color: red;">{{employeeAbsentCode}}? </span> </p>
+            <div class="modal-body text-center" >
+                <p style="font-size: 16px;">Thay đổi nhân viên thực hiện sản xuất <span
+                        style="color: red;">{{user_name}}</span>? </p>
+                <input type="number" style="padding: 3%; width: 70%; font-size: 16px;" placeholder="Số sản phẩm đã hoàn thành" [(ngModel)]="quantityProductDone">
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
-                <button type="button" class="btn btn-primary" (click)="changeEmployeeAbsent()">Chắc
-                    chắn</button>
+                <button type="button" class="btn btn-secondary" (click)="cancelChangeEmployee()" data-dismiss="modal">Đóng</button>
+                <button type="button" class="btn btn-primary" (click)="changeEmployeeAbsent()">Thay đổi
+                    </button>
             </div>
         </div>
     </div>
 </div>
+
 <div *ngIf="isLoadding" class="loading-overlay">
     <div class="spinner"></div>
 </div>

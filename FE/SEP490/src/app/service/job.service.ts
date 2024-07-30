@@ -48,8 +48,8 @@ export class JobService {
     return this.http.get<any>(url);
   }
  
-  getEmployeeSick(userId: number, jobId: number, costEmployee: number): Observable<any> {
-    const url = `${this.apiEmpAbsent}?user_id=${userId}&job_id=${jobId}&cost_employee=${costEmployee}`;
+  getEmployeeSick(userId: number, jobId: number, costEmployee: number, quantity: number): Observable<any> {
+    const url = `${this.apiEmpAbsent}?user_id=${userId}&job_id=${jobId}&cost_employee=${costEmployee}&quantity_product_done=${quantity}`;
 
     console.log('URL:', url);
     return this.http.post(url, '');

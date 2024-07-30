@@ -893,6 +893,7 @@ export class JobManagementComponent implements OnInit {
 employeeAbsentCost: any = 0;
 employeeAbsentId: any = 0;
 employeeAbsentCode: any = '';
+quantityProduct: any;
 formatDateToYYYYMMDD(date: string): string {
   const d = new Date(date);
   const year = d.getFullYear();
@@ -902,11 +903,12 @@ formatDateToYYYYMMDD(date: string): string {
 }
   editJobDetail(job: any, job_id: number): void {
      console.log('Job:', job);
-     this.employeeAbsentCode = job.code;
+    this.employeeAbsentCode = job.code;
     this.JOBID = job_id;
     this.isLoadding = true;
     this.user_name = job.user_name;
-
+    this.quantityProduct = job.quantity;
+    console.log('quantityProduct:', this.quantityProduct);
     this.jobService.getJobDetailById(job_id).subscribe(
       (data) => {
           console.log('Job detail api:', data.result);
@@ -952,17 +954,34 @@ formatDateToYYYYMMDD(date: string): string {
     //console.log("Sản phẩm được chọn để báo cáo lỗi:", this.selectedProduct);
 
   }
+  quantityProductDone: any;
   changeEmployeeAbsent():void {
     this.isLoadding = true;
     console.log("employeeAbsentId: ", this.employeeAbsentId);
     console.log("employeeAbsentCost: ", this.employeeAbsentCost);
     console.log("jobID: ", this.JOBID);
-    this.jobService.getEmployeeSick(this.employeeAbsentId, this.JOBID,this.employeeAbsentCost).subscribe(
+    console.log("quantityProductDone: ", this.quantityProductDone);
+    if(this.quantityProductDone == null) {
+      this.toastr.error('Vui lòng nhập số lượng sản phẩm nhân viên đã hoàn thành!', 'Lỗi');
+      this.isLoadding = false;
+      return;
+    }
+    if(this.quantityProductDone <= 0) {
+      this.toastr.error('Số lượng sản phẩm nhân viên đã hoàn thành phải lớn hơn 0!', 'Lỗi');
+      this.isLoadding = false;
+      return;
+    }
+    if(this.quantityProductDone > this.quantityProduct) {
+      this.toastr.error('Số lượng sản phẩm nhân viên đã hoàn thành không thể lớn hơn số lượng sản phẩm cần làm!', 'Lỗi');
+      this.isLoadding = false;
+      return;
+    }
+    this.jobService.getEmployeeSick(this.employeeAbsentId, this.JOBID,this.employeeAbsentCost, this.quantityProductDone).subscribe(
       (data) => {
         if (data.code === 1000) {
           console.log('Change employee absent success:', data.result);
           this.toastr.success('Thay đổi nhân viên nghỉ thành công!', 'Thành công');
-          this.loadProduct();
+          this.onSearch(this.selectedCategory, this.searchKey);
           this.isLoadding = false;
           $('[data-dismiss="modal"]').click();
         } else {

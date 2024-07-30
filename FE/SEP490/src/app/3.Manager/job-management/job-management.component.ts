@@ -646,11 +646,12 @@ export class JobManagementComponent implements OnInit {
 
   checkJobsForErrors() {
     this.listErrorJob = [];
+    console.log('Checking jobs for errors...');
     const errorCheckPromises = this.productRQs.map((product) => {
       return this.jobService.checkErrorOfJob(product.job_id).toPromise().then(
         (data) => {
           if (data.result === false) {
-            //          console.log(`Job ${product.job_id} has errors`);
+              console.log(`Job ${product.job_id} has errors`);
             this.listErrorJob.push(product.job_id);
           }
         },
@@ -662,7 +663,7 @@ export class JobManagementComponent implements OnInit {
 
     Promise.all(errorCheckPromises).then(() => {
       this.isLoadding = false;
-      //   console.log('Jobs with errors:', this.listErrorJob);
+         console.log('Jobs with errors:', this.listErrorJob);
     });
   }
   loadProduct() {
@@ -955,6 +956,7 @@ formatDateToYYYYMMDD(date: string): string {
 
   }
   quantityProductDone: any;
+  costEmplopyee: any;
   changeEmployeeAbsent():void {
     this.isLoadding = true;
     console.log("employeeAbsentId: ", this.employeeAbsentId);
@@ -966,17 +968,33 @@ formatDateToYYYYMMDD(date: string): string {
       this.isLoadding = false;
       return;
     }
+    if(this.quantityProductDone == null) {
+      this.toastr.error('Vui lòng nhập lương nhân viên nhận được!', 'Lỗi');
+      this.isLoadding = false;
+      return;
+    }
     if(this.quantityProductDone <= 0) {
       this.toastr.error('Số lượng sản phẩm nhân viên đã hoàn thành phải lớn hơn 0!', 'Lỗi');
       this.isLoadding = false;
       return;
     }
+    if(this.costEmplopyee <= 0) {
+      this.toastr.error('Lương phải lớn hơn!', 'Lỗi');
+      this.isLoadding = false;
+      return;
+    }
+    if(this.costEmplopyee > this.employeeAbsentCost) {
+      this.toastr.error('Lương được nhận không thể lớn hơn tổng công khoán !', 'Lỗi');
+      this.isLoadding = false;
+      return;
+    }
+    
     if(this.quantityProductDone > this.quantityProduct) {
       this.toastr.error('Số lượng sản phẩm nhân viên đã hoàn thành không thể lớn hơn số lượng sản phẩm cần làm!', 'Lỗi');
       this.isLoadding = false;
       return;
     }
-    this.jobService.getEmployeeSick(this.employeeAbsentId, this.JOBID,this.employeeAbsentCost, this.quantityProductDone).subscribe(
+    this.jobService.getEmployeeSick(this.employeeAbsentId, this.JOBID,this.costEmplopyee, this.quantityProductDone).subscribe(
       (data) => {
         if (data.code === 1000) {
           console.log('Change employee absent success:', data.result);
@@ -1066,7 +1084,7 @@ formatDateToYYYYMMDD(date: string): string {
   }
 
   createErrorJob() {
-    this.isLoadding = true;
+   // this.isLoadding = true;
 
     const jobId = this.selectedProduct.job_id; // Hoặc lấy từ giá trị khác nếu cần
     //  console.log('Job ID:', jobId);
@@ -1094,7 +1112,7 @@ formatDateToYYYYMMDD(date: string): string {
       return;
     }
 
-    //  console.log('Form values:', formValues);
+      console.log('Form create job error report:', formValues);
     this.productListService.createProductError(
       jobId,
       formValues.description,
@@ -1180,6 +1198,7 @@ formatDateToYYYYMMDD(date: string): string {
             this.productRQs = data.result;
             this.currentPage = 1;
                   console.log('Danh sách sản phẩm search:', this.productRQs);
+                  this.checkJobsForErrors();
           } else if (data.code === 1015) {
             //     console.log('Danh sách sản phẩm search:', this.productRQs);
             this.checkNotFound = true;
@@ -1205,6 +1224,7 @@ formatDateToYYYYMMDD(date: string): string {
         (data) => {
           if (data.code === 1000) {
             this.productRQs = data.result;
+            this.checkJobsForErrors();
             //      console.log('Danh sách sản phẩm request:', this.productRQs);
             this.currentPage = 1;
           } else if (data.code === 1015) {

@@ -94,13 +94,13 @@
                             </td>
                             <td>
                                 <button
-                                    *ngIf="(product.statusJob.status_id === 4 || product.statusJob.status_id === 7 || product.statusJob.status_id === 10) && !product.user_id"
+                                    *ngIf="product.reassigned === true"
                                     style="margin-left: -10px; size: 15px;" data-toggle="modal"
                                     data-target="#assignJobModalEmployeeAbsent" (click)="manageJob(product)"
                                     class="btn btn-primary">
                                     Phân công lại
                                 </button>
-                                <button *ngIf="product.user_id === 0 && product.price === 0 "
+                                <button *ngIf="product.reassigned === false "
                                     style="margin-left: -10px; size: 15px;" data-toggle="modal"
                                     data-target="#assignJobModal" (click)="manageJob(product)" class="btn"
                                     [class.btn-primary]="!isDisabled(product) && !listErrorJob.includes(product.job_id) "
@@ -108,14 +108,7 @@
                                     [disabled]="listErrorJob.includes(product.job_id) || isDisabled(product)">
                                     Giao việc
                                 </button>
-                                <button *ngIf="product.user_id !== 0 && product.price !== 0 "
-                                    style="margin-left: -10px; size: 15px;" data-toggle="modal"
-                                    data-target="#assignJobModal" (click)="manageJob(product)" class="btn"
-                                    [class.btn-primary]="!isDisabled(product) && !listErrorJob.includes(product.job_id) "
-                                    [class.btn-secondary]="listErrorJob.includes(product.job_id) || isDisabled(product) && !listErrorJob.includes(product.job_id)"
-                                    [disabled]="listErrorJob.includes(product.job_id) || isDisabled(product)">
-                                    Giao việc
-                                </button>
+                            
                             </td>
                             <td>
                                 <!-- Button to open the "errorProduct" modal -->
@@ -150,7 +143,7 @@
                                         <ng-container *ngFor="let status of statusType">
                                             <option *ngIf="status.type === product.statusJob.type"
                                                 [value]="status.status_id"
-                                                [disabled]="status.status_id === 4 || status.status_id === 7 || status.status_id === 10">
+                                                [disabled]="status.status_id === 4 || status.status_id === 7 || status.status_id === 10 || product.reassigned == true">
                                                 {{ status.status_name }}
                                             </option>
                                         </ng-container>
@@ -1021,16 +1014,16 @@
         </div>
     </div>
 </div>
-<div class="modal fade" id="assignJobModalEmployeeAbsent" role="dialog" aria-labelledby="assignJobModalEmployeeAbsent"
+<div class="modal fade" id="assignJobModalEmployeeAbsent" role="dialog" aria-labelledby="assignJobModalEmployeeAbsentLabel"
     aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered modal-lg">
         <div class="modal-content">
             <div class="modal-header">
-                <h2 class="modal-title" id="assignJobModalEmployeeAbsentLabel">Giao việc làm</h2>
+                <h2 class="modal-title" id="assignJobModalEmployeeAbsent">Giao việc làm</h2>
                 <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body p-4">
-                <form [formGroup]="createJobs" (ngSubmit)="createNewJob()">
+                <form [formGroup]="createJobs" (ngSubmit)="assignedJob()">
                     <!-- Content of the form -->
                     <div class="container">
                         <div class="card order-detail-card">
@@ -1053,7 +1046,8 @@
                                                 </div>
                                                 <div class="col-md-6">
 
-                                                    <select #employeeSelect class="form-select"
+                                                   
+                                                    <select #employeeSelect2 class="form-select"
                                                         (change)="onChangeSelectedEmployee($event)">
                                                         <option value="" selected disabled>Chọn 1 nhân viên</option>
                                                         <option *ngFor="let employee of positionEmployees"
@@ -1061,8 +1055,6 @@
                                                             {{ employee.userInfor.fullname }}
                                                         </option>
                                                     </select>
-
-
 
                                                 </div>
                                             </div>

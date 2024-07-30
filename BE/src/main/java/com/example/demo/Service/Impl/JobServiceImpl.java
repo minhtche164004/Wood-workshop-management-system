@@ -208,7 +208,7 @@ public class JobServiceImpl implements JobService {
         Jobs current = jobRepository.getJobById(job_id);
         int originalQuantityProduct = current.getOriginalQuantityProduct();// Lấy số lượng ban đầu
         int totalQuantityProduct = 0;
-        if(current.getUser() == null){
+        if(current.getUser() != null){
              totalQuantityProduct = 0;
         }else{
             int a = user.getPosition().getPosition_id();
@@ -337,10 +337,13 @@ public class JobServiceImpl implements JobService {
         return error_list;
     }
 
-
+    //jobs_history: Chứa thông tin của job hiện tại trước khi chuyển sang trạng thái "đã nghiệm thu".
+    //jobs_log: Chứa thông tin của job hiện tại sau khi đã được nghiệm thu và lưu lại vào cơ sở dữ liệu để theo dõi lịch sử.
+    //waitNextJob: Chứa thông tin của job tiếp theo trong quy trình sản xuất, được tạo ra hoặc cập nhật dựa trên công việc hiện tại.
     @Transactional
     @Override
     public Jobs CreateJob_Log(int job_id, int status_id) {
+
         LocalDate today = LocalDate.now();
         //tạo mới job_log, lúc sửa status chứ ko phải lúc phân việc , sau khi đã sauwr status thành đã nghiệm thu của mộc, sơn , nhám
         //sau khi nghiem thu xong thi tra ve trang thai chờ cong viec tiep theo
@@ -375,7 +378,9 @@ public class JobServiceImpl implements JobService {
         jobs_log.setRequestProducts(jobs_history.getRequestProducts());
         jobs_log.setOriginalQuantityProduct(jobs_history.getOriginalQuantityProduct());
 
-        jobs_log.setQuantityProduct(jobs_history.getQuantityProduct());
+      //  jobs_log.setQuantityProduct(jobs_history.getQuantityProduct());
+        jobs_log.setQuantityProduct(jobs_history.getOriginalQuantityProduct());
+
         jobs_log.setOrderdetails(jobs_history.getOrderdetails());
         jobs_log.setJob_name(jobs_history.getJob_name());
         jobs_log.setCode(jobs_history.getCode());
@@ -385,7 +390,7 @@ public class JobServiceImpl implements JobService {
         //cai nay` la de tao ra job tiep theo cho san pham va o trang thai dang cho giao cong viec tiep
 
         waitNextJob.setProduct(jobs_history.getProduct());
-        waitNextJob.setQuantityProduct(jobs_history.getOriginalQuantityProduct()); // Sử dụng originalQuantityProduct
+        waitNextJob.setQuantityProduct(jobs_history.getQuantityProduct());
         waitNextJob.setRequestProducts(jobs_history.getRequestProducts());
         if (status_id == 12) {
             //nếu công việc hoàn thành thì + số lượng của sản phẩm vào số lượng đã có trước đấy

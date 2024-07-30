@@ -122,16 +122,16 @@ public class JobServiceImpl implements JobService {
         for(Employeematerials e : list){
             if(jobs.getRequestProducts() == null){
                 e.setTotal_material(quantity_product*employeeMaterialRepository.findByProductSubMaterialByEmployeeMaterialsId(e.getEmpMaterialId()));
-
-                RequestProducts requestProducts = requestProductRepository.findById(jobs.getRequestProducts().getRequestProductId());
-                requestProducts.setQuantity(requestProducts.getQuantity() + quantity_product);
-                requestProductRepository.save(requestProducts);
-            }else{
-                e.setTotal_material(quantity_product*employeeMaterialRepository.findByRequestSubMaterialByEmployeeMaterialsId(e.getEmpMaterialId()));
-
                 Products products = productRepository.findById(jobs.getProduct().getProductId());
                 products.setQuantity(products.getQuantity() + quantity_product);
                 productRepository.save(products);
+
+            }else{
+                e.setTotal_material(quantity_product*employeeMaterialRepository.findByRequestSubMaterialByEmployeeMaterialsId(e.getEmpMaterialId()));
+                RequestProducts requestProducts = requestProductRepository.findById(jobs.getRequestProducts().getRequestProductId());
+                requestProducts.setQuantity(requestProducts.getQuantity() + quantity_product);
+                requestProductRepository.save(requestProducts);
+
             }
             employeeMaterialRepository.save(e);
         }
@@ -199,7 +199,13 @@ public class JobServiceImpl implements JobService {
             jobs.setRequestProducts(null);
         }
         jobs.setDescription(jobDTO.getDescription());
-        jobs.setQuantityProduct(jobDTO.getQuantity_product());
+        Jobs current = jobRepository.getJobById(job_id);
+        int quantity_current = jobRepository.countProductOfReassigned(current.getCode());
+        if(current.isReassigned() == true){ //nếu là tru thì giai đoạn tiếp theo quantity vẫn phải trả về như ban đầu để thưucj hiện sang giai đoạn tiếp theo(nhám 4 thì sơn vẫn phải đủ 6...)
+            jobs.setQuantityProduct(jobDTO.getQuantity_product()+quantity_current);
+        }else{
+            jobs.setQuantityProduct(jobDTO.getQuantity_product());
+        }
         jobs.setCost(jobDTO.getCost());
         jobs.setJob_name(jobDTO.getJob_name());
         jobs.setTimeFinish(jobDTO.getFinish());

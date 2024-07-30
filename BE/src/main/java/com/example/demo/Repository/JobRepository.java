@@ -5,6 +5,7 @@ import com.example.demo.Dto.OrderDTO.JobProductDTO;
 import com.example.demo.Dto.OrderDTO.OderDTO;
 import com.example.demo.Dto.ProductDTO.ProductErrorAllDTO;
 import com.example.demo.Entity.*;
+import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.transaction.Transactional;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
@@ -46,6 +47,10 @@ public interface JobRepository extends JpaRepository<Jobs,Integer> {
 
     @Query("SELECT CASE WHEN j.product IS NOT NULL THEN true ELSE false END FROM Jobs j WHERE j.jobId = :jobId")
     boolean isProductJob(@Param("jobId") int jobId);
+
+    //tính tổng số lượng sản phẩm
+    @Query("SELECT SUM(p.quantityProduct) FROM Jobs p WHERE p.code = :code AND p.reassigned = true ")
+    int countProductOfReassigned(String code);
 
 
     @Transactional

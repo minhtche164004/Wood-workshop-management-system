@@ -430,8 +430,8 @@
               <div class="form-group">
                 <label for="percentDepositPrice">Phần trăm tiền đặt cọc (%)</label> <span style="font-size: 16px;"
                   class="required-asterisk">*</span>
-                <input class="form-control" id="percentDepositPrice" [(ngModel)]="percentDepositPrice"
-                  (ngModelChange)="updateDepositeAmount()" required max="100">
+                  <input type="number" class="form-control" id="percentDepositPrice" [(ngModel)]="percentDepositPrice"
+                  (ngModelChange)="updateDepositeAmount()" required min="0" max="100">
 
               </div>
             </div>
@@ -448,7 +448,7 @@
               <div class="form-group">
                 <label for="percentOrderPrice">Phần trăm giá đơn hàng (%)</label> <span style="font-size: 16px;"
                   class="required-asterisk">*</span>
-                <input class="form-control" id="percentOrderPrice" [(ngModel)]="percentOrderPrice" required
+                <input  type="number" class="form-control" id="percentOrderPrice" [(ngModel)]="percentOrderPrice" required
                   (ngModelChange)="updateTotalAmount()" max="100">
               </div>
             </div>

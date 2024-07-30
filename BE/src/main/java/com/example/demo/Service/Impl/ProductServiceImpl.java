@@ -513,10 +513,18 @@ public class ProductServiceImpl implements ProductService {
         // Kiểm tra các ràng buộc
         // productImageRepository.findImageByProductId(product_id).isEmpty()
         // productSubMaterialsRepository.findByProductID(product_id).isEmpty()
-        if (orderDetailRepository.getOrderDetailByRequestProductId(re_product_id).isEmpty() &&
+        if (
                 jobRepository.getJobByRequestProductId(re_product_id).isEmpty() &&
                 processproducterrorRepository.getProcessproducterrorByRequestProductId(re_product_id).isEmpty()
         ) {
+            List<Jobs> list_job = jobRepository.getJobByRequestProductId(re_product_id);
+            for(Jobs job : list_job){
+                jobRepository.deleteJobById(job.getJobId());
+            }
+            List<Orderdetails> list = orderDetailRepository.getOrderDetailByRequestProductId(re_product_id);
+            for (Orderdetails o : list) {
+                orderDetailRepository.deleteOrderDetailByOrderDetailId(o.getOrderDetailId());
+            }
             // Không có ràng buộc nào, có thể xóa sản phẩm
             List<Product_Requestimages> productImages = productRequestimagesRepository.findImageByProductId(re_product_id);
             for (Product_Requestimages productImage : productImages) {

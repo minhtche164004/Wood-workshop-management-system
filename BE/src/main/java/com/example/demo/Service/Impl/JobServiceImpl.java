@@ -351,21 +351,21 @@ public class JobServiceImpl implements JobService {
         Jobs jobs_history = jobRepository.getJobById(job_id);
         LocalDate timeFinishLocalDate = jobs_history.getTimeFinish().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
         Jobs waitNextJob = jobRepository.findById(job_id).orElseThrow(() -> new RuntimeException("Job not found"));
-        if (jobs_log.getProduct() == null) {
+      //  if (jobs_log.getProduct() == null) {
             if (timeFinishLocalDate.isBefore(today)) {
             //    BigDecimal totalAmount = jobRepository.findToTalAmountOrderByJobId(job_id);
-                BigDecimal totalAmount = jobRepository.findToTalAmountOrderByJobId(job_id) != null ? jobRepository.findToTalAmountOrderByJobId(job_id) : BigDecimal.ZERO;
-                BigDecimal discount = totalAmount.multiply(new BigDecimal("0.05"), MathContext.DECIMAL64);
-                jobRepository.updateOrderDiscountByJobId(job_id, discount);
-                BigDecimal fee_late_employee = waitNextJob.getCost().multiply(new BigDecimal("0.05"), MathContext.DECIMAL64);
+             //   BigDecimal totalAmount = jobRepository.findToTalAmountOrderByJobId(job_id) != null ? jobRepository.findToTalAmountOrderByJobId(job_id) : BigDecimal.ZERO;
+              //  BigDecimal discount = totalAmount.multiply(new BigDecimal("0.05"), MathContext.DECIMAL64);
+                //    jobRepository.updateOrderDiscountByJobId(job_id, discount);
+                BigDecimal fee_late_employee = waitNextJob.getCost().multiply(new BigDecimal("0.05"), MathContext.DECIMAL64);//trừ lương thằng nhân viên 5% cho công việc làm những sản phẩm
                 waitNextJob.setCost(waitNextJob.getCost().subtract(fee_late_employee));
             }
-        }else{
-            if (timeFinishLocalDate.isBefore(today)) {
-                BigDecimal fee_late_employee = waitNextJob.getCost().multiply(new BigDecimal("0.15"), MathContext.DECIMAL64); //trừ lương thằng nhân viên 15% cho công việc làm những sản phẩm có sẵn
-                waitNextJob.setCost(waitNextJob.getCost().subtract(fee_late_employee));
-            }
-        }
+     //   }else{
+//            if (timeFinishLocalDate.isBefore(today)) {
+//                BigDecimal fee_late_employee = waitNextJob.getCost().multiply(new BigDecimal("0.15"), MathContext.DECIMAL64); //trừ lương thằng nhân viên 15% cho công việc làm những sản phẩm có sẵn
+//                waitNextJob.setCost(waitNextJob.getCost().subtract(fee_late_employee));
+//            }
+      // }
         jobs_log.setUser(jobs_history.getUser());
         jobs_log.setProduct(jobs_history.getProduct());
         jobs_log.setDescription(jobs_history.getDescription());

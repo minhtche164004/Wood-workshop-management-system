@@ -21,17 +21,44 @@ import java.util.List;
 @Repository
 public interface OrderRepository extends JpaRepository<Orders,Integer> {
 
+    @Query("SELECT rp.completionTime " +
+            "FROM RequestProducts rp " +
+            "WHERE rp.orders.orderId = :orderId " +
+            "ORDER BY rp.completionTime DESC " +
+            "LIMIT 1") // Giới hạn chỉ lấy 1 bản ghi
+    Date findLatestCompletionTimeByOrderId(@Param("orderId") int orderId);
+
+    @Query("SELECT new com.example.demo.Dto.OrderDTO.OderDTO(" +
+            "COALESCE(o.code, ''), o.orderId, COALESCE(o.orderDate, '') , o.totalAmount,COALESCE(s.status_id, 0) ,COALESCE(s.status_name, '') , COALESCE(o.paymentMethod, ''),COALESCE(o.deposite, 0) ,COALESCE(o.specialOrder, false), o.contractDate)" + // Sử dụng COALESCE
+            " FROM Orders o" +
+            " LEFT JOIN o.status s" +
+            " WHERE s.status_id = 3")
+    List<OderDTO> getAllOrderWithStatus3();
+
+    @Query("SELECT u.totalAmount FROM Orders u WHERE u.orderId = :query")
+    BigDecimal findTotalAmountById(int query);
+
+//    @Query("SELECT SUM(o.unitPrice*o.quantity) FROM Orderdetails o WHERE o.order.orderId = :orderId")
+//    BigDecimal totalAmountBaseOrder(int orderId);
+
+    @Transactional
+    @Modifying
+    @Query("UPDATE Orders o " +
+            "SET o.discount = ?2 ,o.totalAmount = ?3,o.status.status_id = 3,o.contractDate = ?4 " +
+            "WHERE o.orderId = ?1")
+    void updateOrderDiscountById(int orderId, BigDecimal discount,BigDecimal totalAmount,Date contractDate);
+
     @Query(value = "SELECT p.* FROM orders p WHERE p.code LIKE :prefix% ORDER BY p.code DESC LIMIT 1", nativeQuery = true)
     Orders findOrderTop(@Param("prefix") String prefix);
 
     @Query("SELECT new com.example.demo.Dto.OrderDTO.OderDTO(" +
-            "COALESCE(o.code, ''), o.orderId, COALESCE(o.orderDate, '') , o.totalAmount,COALESCE(s.status_id, 0) ,COALESCE(s.status_name, '') , COALESCE(o.paymentMethod, ''),COALESCE(o.deposite, 0) ,COALESCE(o.specialOrder, false))" + // Sử dụng COALESCE
+            "COALESCE(o.code, ''), o.orderId, COALESCE(o.orderDate, '') , o.totalAmount,COALESCE(s.status_id, 0) ,COALESCE(s.status_name, '') , COALESCE(o.paymentMethod, ''),COALESCE(o.deposite, 0) ,COALESCE(o.specialOrder, false), o.contractDate)" + // Sử dụng COALESCE
             " FROM Orders o" +
             " LEFT JOIN o.status s")
     List<OderDTO> getAllOrder();
 
     @Query("SELECT new com.example.demo.Dto.OrderDTO.OderDTO(" +
-            "COALESCE(o.code, ''), o.orderId, COALESCE(o.orderDate, '') , o.totalAmount, COALESCE(s.status_id, 0) , COALESCE(s.status_name, ''), COALESCE(o.paymentMethod, ''), COALESCE(o.deposite, 0) , COALESCE(o.specialOrder, false))" +
+            "COALESCE(o.code, ''), o.orderId, COALESCE(o.orderDate, '') , o.totalAmount, COALESCE(s.status_id, 0) , COALESCE(s.status_name, ''), COALESCE(o.paymentMethod, ''), COALESCE(o.deposite, 0) , COALESCE(o.specialOrder, false), o.contractDate)" +
             " FROM Orders o" +
             " LEFT JOIN o.status s" +
             " WHERE ( o.code LIKE %:search% OR :search IS NULL) AND" +
@@ -97,7 +124,7 @@ public interface OrderRepository extends JpaRepository<Orders,Integer> {
                                                    @Param("endDate") Date endDate);
 
     @Query("SELECT new com.example.demo.Dto.OrderDTO.OderDTO(" +
-            "COALESCE(o.code, ''), o.orderId, COALESCE(o.orderDate, '') , o.totalAmount, COALESCE(s.status_id, 0) , COALESCE(s.status_name, ''), COALESCE(o.paymentMethod, ''), COALESCE(o.deposite, 0) , COALESCE(o.specialOrder, false))" +
+            "COALESCE(o.code, ''), o.orderId, COALESCE(o.orderDate, '') , o.totalAmount, COALESCE(s.status_id, 0) , COALESCE(s.status_name, ''), COALESCE(o.paymentMethod, ''), COALESCE(o.deposite, 0) , COALESCE(o.specialOrder, false), o.contractDate)" +
             " FROM Orders o" +
             " LEFT JOIN o.status s" +
             " WHERE ( o.code LIKE %:search% OR :search IS NULL) AND" +
@@ -114,7 +141,7 @@ public interface OrderRepository extends JpaRepository<Orders,Integer> {
                                                @Param("endDate") Date endDate);
 
     @Query("SELECT new com.example.demo.Dto.OrderDTO.OderDTO(" +
-            "COALESCE(o.code, ''), o.orderId, COALESCE(o.orderDate, '') , o.totalAmount, COALESCE(s.status_id, 0) , COALESCE(s.status_name, ''), COALESCE(o.paymentMethod, ''), COALESCE(o.deposite, 0) , COALESCE(o.specialOrder, false))" +
+            "COALESCE(o.code, ''), o.orderId, COALESCE(o.orderDate, '') , o.totalAmount, COALESCE(s.status_id, 0) , COALESCE(s.status_name, ''), COALESCE(o.paymentMethod, ''), COALESCE(o.deposite, 0) , COALESCE(o.specialOrder, false), o.contractDate)" +
             " FROM Orders o" +
             " LEFT JOIN o.status s" +
             " WHERE ( o.code LIKE %:search% OR :search IS NULL) AND" +
@@ -130,7 +157,7 @@ public interface OrderRepository extends JpaRepository<Orders,Integer> {
 
 
     @Query("SELECT new com.example.demo.Dto.OrderDTO.OderDTO(" +
-            "COALESCE(o.code, ''), o.orderId, COALESCE(o.orderDate, '') , o.totalAmount, COALESCE(s.status_id, 0) , COALESCE(s.status_name, ''), COALESCE(o.paymentMethod, ''), COALESCE(o.deposite, 0) , COALESCE(o.specialOrder, false))" +
+            "COALESCE(o.code, ''), o.orderId, COALESCE(o.orderDate, '') , o.totalAmount, COALESCE(s.status_id, 0) , COALESCE(s.status_name, ''), COALESCE(o.paymentMethod, ''), COALESCE(o.deposite, 0) , COALESCE(o.specialOrder, false), o.contractDate)" +
             " FROM Orders o" +
             " LEFT JOIN o.status s" +
             " WHERE o.specialOrder = :specialOrder OR :specialOrder IS NULL")
@@ -145,7 +172,7 @@ public interface OrderRepository extends JpaRepository<Orders,Integer> {
     Orders findById(int query);
 
     @Query("SELECT new com.example.demo.Dto.OrderDTO.OderDTO(" +
-            "COALESCE(o.code, ''), o.orderId, COALESCE(o.orderDate, '') , o.totalAmount,COALESCE(s.status_id, 0) ,COALESCE(s.status_name, '') , COALESCE(o.paymentMethod, ''),COALESCE(o.deposite, 0) ,COALESCE(o.specialOrder, false))" + // Sử dụng COALESCE
+            "COALESCE(o.code, ''), o.orderId, COALESCE(o.orderDate, '') , o.totalAmount,COALESCE(s.status_id, 0) ,COALESCE(s.status_name, '') , COALESCE(o.paymentMethod, ''),COALESCE(o.deposite, 0) ,COALESCE(o.specialOrder, false), o.contractDate)" + // Sử dụng COALESCE
             " FROM Orders o" +
             " LEFT JOIN o.status s WHERE o.address LIKE CONCAT('%', :keyword, '%') OR " +
             "o.code LIKE CONCAT('%', :keyword, '%')")
@@ -156,7 +183,7 @@ public interface OrderRepository extends JpaRepository<Orders,Integer> {
 //    List<Orders> findOrderByAddressorCode(@Param("keyword") String keyword);
 
     @Query("SELECT new com.example.demo.Dto.OrderDTO.OderDTO(" +
-            "COALESCE(o.code, ''), o.orderId, COALESCE(o.orderDate, '') , o.totalAmount,COALESCE(s.status_id, 0) ,COALESCE(s.status_name, '') , COALESCE(o.paymentMethod, ''),COALESCE(o.deposite, 0) ,COALESCE(o.specialOrder, false))" + // Sử dụng COALESCE
+            "COALESCE(o.code, ''), o.orderId, COALESCE(o.orderDate, '') , o.totalAmount,COALESCE(s.status_id, 0) ,COALESCE(s.status_name, '') , COALESCE(o.paymentMethod, ''),COALESCE(o.deposite, 0) ,COALESCE(o.specialOrder, false), o.contractDate)" + // Sử dụng COALESCE
             " FROM Orders o" +
             " LEFT JOIN o.status s WHERE o.orderDate BETWEEN :startDate AND :endDate")
     List<OderDTO> findByOrderDateBetween(@Param("startDate") Date startDate, @Param("endDate") Date endDate);
@@ -165,7 +192,7 @@ public interface OrderRepository extends JpaRepository<Orders,Integer> {
 //    List<Orders> findByOrderDateBetween(@Param("startDate") Date startDate, @Param("endDate") Date endDate);
 
     @Query("SELECT new com.example.demo.Dto.OrderDTO.OderDTO(" +
-            "COALESCE(o.code, ''), o.orderId, COALESCE(o.orderDate, '') , o.totalAmount,COALESCE(s.status_id, 0) ,COALESCE(s.status_name, '') , COALESCE(o.paymentMethod, ''),COALESCE(o.deposite, 0) ,COALESCE(o.specialOrder, false))" + // Sử dụng COALESCE
+            "COALESCE(o.code, ''), o.orderId, COALESCE(o.orderDate, '') , o.totalAmount,COALESCE(s.status_id, 0) ,COALESCE(s.status_name, '') , COALESCE(o.paymentMethod, ''),COALESCE(o.deposite, 0) ,COALESCE(o.specialOrder, false),o.contractDate)" + // Sử dụng COALESCE
             " FROM Orders o" +
             " LEFT JOIN o.status s WHERE o.status.status_id = :query")
     List<OderDTO> filterByStatus(int query);

@@ -28,6 +28,7 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.math.BigDecimal;
+import java.math.MathContext;
 import java.math.RoundingMode;
 import java.nio.charset.StandardCharsets;
 import java.text.NumberFormat;
@@ -620,6 +621,8 @@ public class OrderServiceImpl implements OrderService {
         orders.setDeposite(totalOrder.multiply(BigDecimal.valueOf(0.2))); // 20% tiền cọc của tổng tiền đơn hàng
         orders.setTotalAmount(totalOrder);
         orders.setSpecialOrder(true);
+        Date contract_date = orderRepository.findLatestCompletionTimeByOrderId(order_id);
+        orders.setContractDate(contract_date);
         orderRepository.save(orders);
         return addedProducts;
     }
@@ -702,7 +705,32 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public List<OderDTO> GetAllOrder() {
+        CheckOrderAfterDeadline();
         return orderRepository.getAllOrder();
+    }
+
+    private void CheckOrderAfterDeadline() {
+        LocalDate today = LocalDate.now();
+        List<OderDTO> list = orderRepository.getAllOrderWithStatus3();
+        for(OderDTO o : list){
+            if(o.getContractDate() != null){
+                LocalDate timeFinishLocalDate = o.getContractDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+                if(timeFinishLocalDate.isBefore(today)){
+                    orderRepository.UpdateStatusOrder(o.getOrderId(),10);
+                }
+            }
+        }
+    }
+
+
+
+    @Override
+    public String TimeContract(int order_id, double percentage_discount,Date NewDate) { //xử lý trường hợp đơn hàng chậm dealine
+           BigDecimal totalAmount = orderRepository.findTotalAmountById(order_id) != null ? orderRepository.findTotalAmountById(order_id) : BigDecimal.ZERO;
+           BigDecimal discount = totalAmount.multiply(BigDecimal.valueOf(percentage_discount / 100));
+           BigDecimal totalUpdate = totalAmount.subtract(discount);
+           orderRepository.updateOrderDiscountById(order_id,discount,totalUpdate,NewDate); //update lại status là đang sản xuất
+        return "Giảm giá cho đơn hàng thành công";
     }
 
     @Override
@@ -908,6 +936,8 @@ public class OrderServiceImpl implements OrderService {
 
         return "";
     }
+
+
 
 
     @Override

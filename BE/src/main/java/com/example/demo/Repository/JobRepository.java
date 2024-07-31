@@ -65,17 +65,7 @@ public interface JobRepository extends JpaRepository<Jobs,Integer> {
 
 
 
-    @Transactional
-    @Modifying
-    @Query("UPDATE Orders o " +
-            "SET o.discount = ?2 " +
-            "WHERE o.orderId IN (" +
-            "    SELECT od.order.orderId " +
-            "    FROM Orderdetails od " +
-            "    JOIN Jobs j ON od.orderDetailId = j.orderdetails.orderDetailId " +
-            "    WHERE j.jobId = ?1" +
-            ")")
-    void updateOrderDiscountByJobId(int jobId, BigDecimal discount);
+
 
 
     @Query("SELECT u FROM User u " +

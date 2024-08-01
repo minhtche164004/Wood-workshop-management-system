@@ -43,7 +43,7 @@ export class TotalSalaryComponent implements OnInit {
   endDate: string = '';
   position: number = 0;
   selectedBanking: any;
-  selectedStatusBanking: string = '';
+  selectedStatusBanking: string = '0';
   advanceSuccessValues: any = {
     trueValue: true,
     falseValue: false

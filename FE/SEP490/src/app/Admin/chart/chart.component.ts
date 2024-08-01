@@ -164,6 +164,7 @@ export class ChartComponent implements OnInit {
     try {
       const data = await this.statistic.getTotalAmountOrderHaveDone().toPromise();
       this.totalAmouneOrderHaveDone = data.result;
+      console.log('Doanh thu:', this.totalAmouneOrderHaveDone);
     } catch (err) {
       console.error(err);
     }
@@ -317,8 +318,8 @@ export class ChartComponent implements OnInit {
       if (this.totalOrder > 0) {
         this.percentSpecialOrder = Math.round((this.totalSpecialOrder / this.totalOrder) * 100);
         this.percentOrder = Math.round(100 - this.percentSpecialOrder);
-        console.log('Phần trăm đơn hàng đặc biệt:', this.percentSpecialOrder.toFixed(2) + '%');
-        console.log('Phần trăm đơn hàng có sẵn:', this.percentOrder.toFixed(2) + '%');
+      //  console.log('Phần trăm đơn hàng đặc biệt:', this.percentSpecialOrder.toFixed(2) + '%');
+      //  console.log('Phần trăm đơn hàng có sẵn:', this.percentOrder.toFixed(2) + '%');
 
       }
     } catch (err) {
@@ -330,7 +331,7 @@ export class ChartComponent implements OnInit {
     try {
       const data = await this.statistic.getCountProduct().toPromise();
       this.totalNormalProduct = data.result;
-      console.log('Tổng sản phẩm thường:', this.totalNormalProduct);
+     // console.log('Tổng sản phẩm thường:', this.totalNormalProduct);
       await this.getTotalRQProduct(); // Wait for getTotalRQProduct() to complete
       await this.getTotalProductNormal(); // Wait for getTotalProductNormal() to complete
     } catch (err) {
@@ -352,13 +353,13 @@ export class ChartComponent implements OnInit {
   async getTotalProductNormal(): Promise<void> {
     try {
       this.totalProduct = this.totalNormalProduct + this.totalRQProduct;
-      console.log('Tổng sản phẩm normal:', this.totalNormalProduct);
-      console.log('Tổng sản phẩm RQ:', this.totalRQProduct);
-      console.log('Tổng sản phẩm:', this.totalProduct);
+     // console.log('Tổng sản phẩm normal:', this.totalNormalProduct);
+    //  console.log('Tổng sản phẩm RQ:', this.totalRQProduct);
+     // console.log('Tổng sản phẩm:', this.totalProduct);
       this.normalProductPercentage = Math.round((this.totalNormalProduct / this.totalProduct) * 100);
       this.rqProductPercentage = Math.round((this.totalRQProduct / this.totalProduct) * 100);
-      console.log('Phần trăm sản phẩm normal:', this.normalProductPercentage.toFixed(2) + '%');
-      console.log('Phần trăm sản phẩm RQ:', this.rqProductPercentage.toFixed(2) + '%');
+     // console.log('Phần trăm sản phẩm normal:', this.normalProductPercentage.toFixed(2) + '%');
+    //  console.log('Phần trăm sản phẩm RQ:', this.rqProductPercentage.toFixed(2) + '%');
     } catch (err) {
       console.error(err);
     }
@@ -378,14 +379,14 @@ export class ChartComponent implements OnInit {
       this.getTotalProduct();
       this.getTotalRQProduct();
       this.numberProduct = this.totalProduct + this.totalRQProduct;
-      console.log('Tổng sản phẩm:', this.numberProduct);
+     // console.log('Tổng sản phẩm:', this.numberProduct);
      } catch (err) {
       console.error(err);
     }
   }
   async updateEmployeePositions(): Promise<void> {
     try {
-      console.log('Tinh phan tram nhan vien');
+     // console.log('Tinh phan tram nhan vien');
       const data = await this.employeeService.getAllEmployee().toPromise();
       const employees = data.result;
       this.totalEmployee = employees.length;
@@ -400,10 +401,10 @@ export class ChartComponent implements OnInit {
         this.percentEmpPos3 = Math.round((this.totalEmpPos3 / this.totalEmployee) * 100);
         this.percentEmpPos4 = Math.round((this.totalEmpPos4 / this.totalEmployee) * 100);
       }
-      console.log('Phần trăm nhân viên vị trí 1:', this.percentEmpPos1.toFixed(2) + '%');
-      console.log('Phần trăm nhân viên vị trí 2:', this.percentEmpPos2.toFixed(2) + '%');
-      console.log('Phần trăm nhân viên vị trí 3:', this.percentEmpPos3.toFixed(2) + '%');
-      console.log('Phần trăm nhân viên vị trí 4:', this.percentEmpPos4.toFixed(2) + '%');
+   //   console.log('Phần trăm nhân viên vị trí 1:', this.percentEmpPos1.toFixed(2) + '%');
+    //  console.log('Phần trăm nhân viên vị trí 2:', this.percentEmpPos2.toFixed(2) + '%');
+    //  console.log('Phần trăm nhân viên vị trí 3:', this.percentEmpPos3.toFixed(2) + '%');
+    //  console.log('Phần trăm nhân viên vị trí 4:', this.percentEmpPos4.toFixed(2) + '%');
     } catch (err) {
       console.error(err);
     }
@@ -415,22 +416,22 @@ export class ChartComponent implements OnInit {
         if (data.result === null || data.result === undefined) {
           data.result = 0;
         }
-     //   console.log(`getProductByMonthAndYear result for ${month}/${year}: `, data.result);
+      console.log(`getProductByMonthAndYear result for ${month}/${year}: `, data.result);
         this.productCounts.push(data.result);
         resolve();
       }, err => {
-      //  console.error(`getProductByMonthAndYear error for ${month}/${year}: `, err);
+        console.error(`getProductByMonthAndYear error for ${month}/${year}: `, err);
         reject(err);
       });
       this.statistic.countCompletedRequestProductOnOrderByMonthAndYear(month, year).subscribe((data) => {
         if (data.result === null || data.result === undefined) {
           data.result = 0;
         }
-   //     console.log(`getProductByMonthAndYear result for ${month}/${year}: `, data.result);
+     console.log(`getProductByMonthAndYear result for ${month}/${year}: `, data.result);
         this.productRequestCounts.push(data.result);
         resolve();
       }, err => {
-      //  console.error(`getProductByMonthAndYear error for ${month}/${year}: `, err);
+        console.error(`getProductByMonthAndYear error for ${month}/${year}: `, err);
         reject(err);
       });
     }
@@ -450,8 +451,8 @@ export class ChartComponent implements OnInit {
       promises.push(this.findTotalSalary(month, this.year));
     }
     Promise.all(promises).then(() => {
-      console.log('Tổng tiền luowng theo tháng:', this.totalSalary);
-      console.log('Tổng tiền vật liệu:', this.totalInput);
+     // console.log('Tổng tiền luowng theo tháng:', this.totalSalary);
+     // console.log('Tổng tiền vật liệu:', this.totalInput);
       // console.log('All data retrieved successfully.');
       // console.log('Product Counts:', this.productCounts);
       // console.log('Product Request Counts:', this.productRequestCounts);
@@ -519,7 +520,7 @@ export class ChartComponent implements OnInit {
         // if (data.result === null || data.result === undefined) {
         //   data.result = 0;
         // }
-        console.log(`total order ${month}/${year}: `, data.result);
+       // console.log(`total order ${month}/${year}: `, data.result);
         this.totalOrderMY.push(data.result);
         resolve();
       }, err => {
@@ -534,7 +535,7 @@ export class ChartComponent implements OnInit {
         // if (data.result === null || data.result === undefined) {
         //   data.result = 0;
         // }
-        console.log(`total spec order result for ${month}/${year}: `, data.result);
+       // console.log(`total spec order result for ${month}/${year}: `, data.result);
         this.totalOrderSpecMY.push(data.result);
         resolve();
       }, err => {

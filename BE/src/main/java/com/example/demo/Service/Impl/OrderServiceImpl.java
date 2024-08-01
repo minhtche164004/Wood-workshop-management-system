@@ -724,13 +724,37 @@ public class OrderServiceImpl implements OrderService {
 
 
 
+    @Transactional
     @Override
-    public String TimeContract(int order_id, double percentage_discount,Date NewDate) { //xử lý trường hợp đơn hàng chậm dealine
+    public String TimeContract(int order_id, double percentage_discount,Date NewDate) throws MessagingException { //xử lý trường hợp đơn hàng chậm dealine
+        Orders orders = orderRepository.findById(order_id);
            BigDecimal totalAmount = orderRepository.findTotalAmountById(order_id) != null ? orderRepository.findTotalAmountById(order_id) : BigDecimal.ZERO;
            BigDecimal discount = totalAmount.multiply(BigDecimal.valueOf(percentage_discount / 100));
            BigDecimal totalUpdate = totalAmount.subtract(discount);
            orderRepository.updateOrderDiscountById(order_id,discount,totalUpdate,NewDate); //update lại status là đang sản xuất
+        orderRepository.save(orders);
+        //send mail cho khách
+        List<OrderDetailWithJobStatusDTO> list = orderDetailRepository.getAllOrderDetailByOrderId(order_id);
+        String name = orders.getFullname();
+        String email = orders.getUserInfor().getUser().getEmail();
+        emailService.sendEmailFromTemplate2(name, email, list, orders);
         return "Giảm giá cho đơn hàng thành công";
+    }
+
+    @Override
+    public String SendMailToNotifyCationAboutOrder(int order_id, String linkBaseUrl) throws MessagingException, IOException {
+        List<OrderDetailWithJobStatusDTO> list = orderDetailRepository.getAllOrderDetailByOrderId(order_id);
+        Orders orders = orderRepository.findById(order_id);
+        //  String baseUrl = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort() + "/api/auth";
+
+//        int total = orders.getTotalAmount().setScale(0, RoundingMode.HALF_UP).intValueExact();
+        int total = (int) orders.getDeposite().longValue(); // Ép kiểu từ long sang int
+        String linkVnPay = vnPayService.createOrder(total, orders.getCode(), linkBaseUrl);
+        String name = orders.getFullname();
+        String email = orders.getUserInfor().getUser().getEmail();
+        //  String link = "";
+        emailService.sendEmailFromTemplate(name, email, list, orders, linkVnPay);
+        return "Gửi thông tin đơn hàng thành công !";
     }
 
     @Override
@@ -913,21 +937,7 @@ public class OrderServiceImpl implements OrderService {
         return "Thay đổi trạng thái đơn hàng thành công";
     }
 
-    @Override
-    public String SendMailToNotifyCationAboutOrder(int order_id, String linkBaseUrl) throws MessagingException, IOException {
-        List<OrderDetailWithJobStatusDTO> list = orderDetailRepository.getAllOrderDetailByOrderId(order_id);
-        Orders orders = orderRepository.findById(order_id);
-        //  String baseUrl = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort() + "/api/auth";
 
-//        int total = orders.getTotalAmount().setScale(0, RoundingMode.HALF_UP).intValueExact();
-        int total = (int) orders.getDeposite().longValue(); // Ép kiểu từ long sang int
-        String linkVnPay = vnPayService.createOrder(total, orders.getCode(), linkBaseUrl);
-        String name = orders.getFullname();
-        String email = orders.getUserInfor().getUser().getEmail();
-        //  String link = "";
-        emailService.sendEmailFromTemplate(name, email, list, orders, linkVnPay);
-        return "Gửi thông tin đơn hàng thành công !";
-    }
 
     @Override
     public String RefundDeposite(int order_id) {

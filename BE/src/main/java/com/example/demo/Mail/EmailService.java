@@ -81,6 +81,31 @@ public class EmailService {
     }
 
 
+    public void sendEmailFromTemplate2(String name,String email, List<OrderDetailWithJobStatusDTO> orderDetails, Orders order) throws MessagingException {
+
+        MimeMessage mimeMessage = mailSender.createMimeMessage();
+        MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, MimeMessageHelper.MULTIPART_MODE_MIXED_RELATED, StandardCharsets.UTF_8.name());
+
+        helper.setFrom(new InternetAddress(emailSentTo)); // Địa chỉ email người gửi
+        helper.setTo(email);
+        helper.setSubject("Thông tin chi tiết đơn hàng"); // Tiêu đề email
+
+        // Tạo context cho Thymeleaf (chỉ cần một đối tượng Context)
+        Context context = new Context();
+        context.setVariable("orderDetails", orderDetails); // Đưa danh sách vào context
+        context.setVariable("name", name); // Đưa danh sách vào context
+        context.setVariable("order", order); // Đưa danh sách vào context
+
+        // Xử lý template HTML bằng Thymeleaf
+        String htmlContent = templateEngine.process("sendmailtemplate2.html", context);
+
+        helper.setText(htmlContent, true); // Đặt nội dung email là HTML
+
+        mailSender.send(mimeMessage);
+
+    }
+
+
 
 
 

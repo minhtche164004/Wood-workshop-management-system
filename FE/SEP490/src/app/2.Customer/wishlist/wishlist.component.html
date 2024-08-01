@@ -129,11 +129,10 @@ footer {
     <header style="margin-top: 150px;">
         <h1>Sản phẩm yêu thích <i class="fas fa-heart"></i></h1>
     </header>
-
     <div class="products">
         <div class="container">
             <div class="row">
-                <div class="col-lg-4 col-md-6 col-12" *ngFor="let item of wishlistItems | paginate: { itemsPerPage: 4, currentPage: currentPage }; let i = index">
+                <div class="col-lg-6 col-md-6 col-12" *ngFor="let item of wishlistItems | paginate: { itemsPerPage: 4, currentPage: currentPage }; let i = index">
                     <div class="product-card">
                         <img class="product-img" [routerLink]="['/product-details', item.product.productId]" [src]="item.product.image" alt="Product Image">
                         <div class="product-info">
@@ -149,7 +148,7 @@ footer {
                     </div>
                 </div>
             </div>
-           
+            
         </div>
     </div>
     

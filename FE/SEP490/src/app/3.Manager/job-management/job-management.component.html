@@ -95,7 +95,7 @@
                             <td>
                                 <button *ngIf="product.reassigned === true" style="margin-left: -10px; size: 15px;"
                                     data-toggle="modal" data-target="#assignJobModalEmployeeAbsent"
-                                    (click)="manageJob(product)" class="btn btn-primary">
+                                    (click)="manageJob2(product)" class="btn btn-primary">
                                     Phân công lại
                                 </button>
                                 <button *ngIf="product.reassigned === false " style="margin-left: -10px; size: 15px;"
@@ -704,11 +704,11 @@
 
                             <div class="col-md-6">
                                 <div class="col-md-6">
-                                    <label style="font-size: 16px;" for="code_order">Mã đơn hàng: </label>
+                                    <label style="font-size: 16px;" for="code_order">Số sản phẩm lỗi: </label>
                                 </div>
                                 <div class="col-md-6">
-                                    <input type="text" class="form-control" id="code_order" formControlName="code_order"
-                                        name="code_order" readonly>
+                                    <input type="text" class="form-control" id="quantity" formControlName="quantity"
+                                        name="quantity" readonly>
                                 </div>
                             </div>
                             <div class="col-md-6">
@@ -1048,7 +1048,7 @@
 
 
                                                     <select #employeeSelect2 class="form-select"
-                                                        (change)="onChangeSelectedEmployee($event)">
+                                                        (change)="onChangeSelectedEmployee2($event)">
                                                         <option value="" selected disabled>Chọn 1 nhân viên</option>
                                                         <option *ngFor="let employee of positionEmployees"
                                                             [value]="employee.userId">

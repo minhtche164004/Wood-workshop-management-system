@@ -83,6 +83,10 @@ nav .spacer {
   position: relative;
 }
 
+.dropdown:hover .dropdown-menu {
+  display: block;
+}
+
 .dropdown-menu {
   display: none;
   position: absolute;
@@ -97,17 +101,12 @@ nav .spacer {
   overflow: visible; /* Ensure overflow is visible, no scrolling */
 }
 
-.dropdown-menu.show {
-  display: block;
-}
-
 .dropdown-menu li {
   margin: 0;
 }
 
 .dropdown-menu li a {
   color: #fff; /* Ensure text color is visible */
- 
   display: block;
   text-decoration: none; /* Remove underline if any */
 }
@@ -125,8 +124,6 @@ nav .spacer {
   -ms-overflow-style: none; /* Hides scrollbar for IE and Edge */
   scrollbar-width: none; /* Hides scrollbar for Firefox */
 }
-
-
 
 .upgrade-btn {
   background: #ff4d4d;

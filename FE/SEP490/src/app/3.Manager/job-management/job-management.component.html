@@ -240,15 +240,18 @@
                                                 </div>
                                                 <div class="col-md-6">
 
-                                                    <select #employeeSelect class="form-select" (change)="onChangeSelectedEmployee($event)">
+                                                    <select #employeeSelect class="form-select"
+                                                        (change)="onChangeSelectedEmployee($event)">
                                                         <option value="" selected disabled>Chọn 1 nhân viên</option>
-                                                        <option *ngFor="let employee of positionEmployees" [value]="employee.userId">
-                                                          {{ employee.userInfor.fullname }} ({{ employee.position?.position_name }})
+                                                        <option *ngFor="let employee of positionEmployees"
+                                                            [value]="employee.userId">
+                                                            {{ employee.userInfor.fullname }} ({{
+                                                            employee.position?.position_name }})
                                                         </option>
-                                                      </select>
-                                                    
-                                                      
-                                                      
+                                                    </select>
+
+
+
                                                 </div>
                                             </div>
                                             <div class="row">
@@ -541,7 +544,8 @@
                             <div class="ng-autocomplete" style="width: 100%;">
                                 <ng-autocomplete *ngIf="productAutoSearch" [data]="productAutoSearch"
                                     [searchKeyword]="keyword" placeholder="Nhập tên sản phẩm có sẵn ..."
-                                    historyIdentifier="productAutoSearch" [itemTemplate]="itemTemplate" ([ngModel])="selectedAddProduct"
+                                    historyIdentifier="productAutoSearch" [itemTemplate]="itemTemplate"
+                                    [(ngModel)]="selectedAddProduct" name="selectedAddProduct"
                                     [notFoundTemplate]="notFoundTemplate" (selected)="selectProduct($event)">
                                 </ng-autocomplete>
                                 <ng-template #itemTemplate let-item>
@@ -990,17 +994,19 @@
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h2 class="modal-title" id="confirmChangeEmployee"><p style="font-size: 20px;">Thay đổi nhân viên sản xuất <span
-                    style="color: red;">{{user_name}}</span>? </p></h2>
+                <h2 class="modal-title" id="confirmChangeEmployee">
+                    <p style="font-size: 20px;">Thay đổi nhân viên sản xuất <span
+                            style="color: red;">{{user_name}}</span>? </p>
+                </h2>
                 <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body text-center">
-                
-                <p style="  font-size: 16px;"> Đã hoàn thành  <input type="number" style=" width: 12%; font-size: 16px;"
-                        [(ngModel)]="quantityProductDone"> sản phẩm </p>
-              
 
-                    <p style="  font-size: 16px;"> Nhân viên nhận được <input type="number" style="font-size: 16px;" 
+                <p style="  font-size: 16px;"> Đã hoàn thành <input type="number" style=" width: 12%; font-size: 16px;"
+                        [(ngModel)]="quantityProductDone"> sản phẩm </p>
+
+
+                <p style="  font-size: 16px;"> Nhân viên nhận được <input type="number" style="font-size: 16px;"
                         [(ngModel)]="costEmplopyee"> vnđ </p>
             </div>
             <div class="modal-footer">
@@ -1050,7 +1056,8 @@
                                                         <option value="" selected disabled>Chọn 1 nhân viên</option>
                                                         <option *ngFor="let employee of positionEmployees"
                                                             [value]="employee.userId">
-                                                            {{ employee.userInfor.fullname }} ({{ employee.position?.position_name }})
+                                                            {{ employee.userInfor.fullname }} ({{
+                                                            employee.position?.position_name }})
                                                         </option>
                                                     </select>
 

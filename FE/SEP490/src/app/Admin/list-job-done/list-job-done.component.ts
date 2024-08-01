@@ -80,7 +80,7 @@ export class ListJobDoneComponent implements OnInit {
         (data: ApiResponse) => {
           if (data.code === 1000) {
             this.job_admin = data.result;
-            console.log('Danh sách đơn hàng:', data);
+            console.log('Danh sách list job was done:', data);
             this.isLoadding = false;
           } else {
             console.error('Failed to fetch products:', data);

@@ -5,6 +5,7 @@ import com.example.demo.Dto.OrderDTO.JobProductDTO;
 import com.example.demo.Dto.OrderDTO.OderDTO;
 import com.example.demo.Dto.ProductDTO.ProductErrorAllDTO;
 import com.example.demo.Entity.*;
+import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.transaction.Transactional;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
@@ -47,18 +48,24 @@ public interface JobRepository extends JpaRepository<Jobs,Integer> {
     @Query("SELECT CASE WHEN j.product IS NOT NULL THEN true ELSE false END FROM Jobs j WHERE j.jobId = :jobId")
     boolean isProductJob(@Param("jobId") int jobId);
 
+    //tính tổng số lượng sản phẩm
+    @Query("SELECT COALESCE(SUM(p.quantityProduct), 0) FROM Jobs p WHERE p.code = :code AND p.reassigned = true ORDER BY p.code DESC LIMIT 1 ")
+    int countProductOfReassigned(String code);
 
-    @Transactional
-    @Modifying
-    @Query("UPDATE Orders o " +
-            "SET o.discount = ?2 " +
-            "WHERE o.orderId IN (" +
-            "    SELECT od.order.orderId " +
-            "    FROM Orderdetails od " +
-            "    JOIN Jobs j ON od.orderDetailId = j.orderdetails.orderDetailId " +
-            "    WHERE j.jobId = ?1" +
-            ")")
-    void updateOrderDiscountByJobId(int jobId, BigDecimal discount);
+    @Query("SELECT COALESCE(SUM(p.quantityProduct), 0) FROM Jobs p WHERE p.code = :code AND p.status.status_id < :status_id AND p.job_log = true")
+    int sumQuantityProductByCodeAndStatusLessThan(String code, int status_id);
+
+    @Query("SELECT COALESCE(SUM(p.quantityProduct), 0) FROM Jobs p JOIN p.user u JOIN u.position pos WHERE p.code = :code AND p.status.status_id = 16 AND pos.position_id = :position_id")
+    Integer sumQuantityProductByCodeAndPosition(String code, int position_id);
+    
+    @Query("SELECT p.originalQuantityProduct FROM Jobs p WHERE p.jobId = :jobId")
+    Integer getOriginalQuantityProduct(int jobId);
+
+
+
+
+
+
 
 
     @Query("SELECT u FROM User u " +

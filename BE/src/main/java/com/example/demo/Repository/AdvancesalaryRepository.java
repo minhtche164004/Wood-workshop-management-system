@@ -203,8 +203,9 @@ public interface AdvancesalaryRepository extends JpaRepository<Advancesalary,Int
     Long countEmployeeWithTypePosition(int query);
 
     //tổng tiền các đơn hàng đã hoàn thành(status_id là 5, tức là đã hoàn thành)
-    @Query("SELECT SUM(o.totalAmount-o.refund) FROM Orders o WHERE o.status.status_id = 5")
+    @Query("SELECT SUM(o.totalAmount - COALESCE(o.refund, 0)) AS totalAmount FROM Orders o WHERE o.status.status_id = 5")
     BigDecimal totalAmountOrderHaveDone();
+
 
     //tổng số tiền nhập nguyên vật liệu
     @Query("SELECT SUM(s.quantity*s.unitPrice) FROM SubMaterials s")

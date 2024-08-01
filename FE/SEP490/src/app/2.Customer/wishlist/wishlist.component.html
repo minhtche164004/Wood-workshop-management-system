@@ -37,7 +37,7 @@
 
         .product-container {
             display: grid;
-            grid-template-columns: repeat(2, 1fr);
+            grid-template-columns: repeat(2, 2fr);
             grid-gap: 40px;
             padding: 40px;
         }
@@ -192,7 +192,7 @@
     <app-header></app-header>
     <header style="margin-top: 150px;">
         <h1>Sản phẩm yêu thích <i class="fas fa-heart"></i></h1>
-    </header>
+    </header> 
 
     <div class="product-container">
         <div *ngFor="let item of wishlistItems | paginate: { itemsPerPage: 4, currentPage: currentPage }; let i = index"
@@ -201,7 +201,7 @@
                 style="width: 400px; height: 300px; " alt="Sản phẩm 2">
             <div class="product-info">
                 <h3 class="text-center"><b>{{ item.product.productName }}</b></h3>
-                <h3>Mô tả: {{ item.product.description }}</h3>
+                <h3> Kiểu sản phẩm:  {{ item.product.categories.categoryName }}</h3>
                 <p class="price">Giá Tiền: {{ item.product.price | number: '1.0-3' }} VNĐ</p>
                 <div class="actions">
                     <button class="delete-btn" title="Delete" data-toggle="modal" data-target="#confirmDeleteModal"

@@ -22,11 +22,39 @@ h1 {
     font-weight: bold;
     margin: 0;
 }
+.header-container {
+    display: flex;
+    justify-content: center; /* Centers the content horizontally */
+    align-items: center; /* Centers the content vertically */
+    gap: 10px; /* Adjust the spacing between elements as needed */
+    margin-top: 5px; /* Optional: adds some space above the header */
+    margin-bottom: 5px; /* Optional: adds some space above the header */
+  }
+  
+  .header-container h2 {
+    margin: 0;
+  }
+  .fo{
+    text-decoration: none;
+  
+  }
+  .header-container a {
+    margin: 0;
+    display: flex;
+    justify-content: right; /* Centers the content horizontally */
+    align-items: right; /* Centers the content vertically */
+    color: inherit; /* Optional: inherit color from parent */
+    font-size: 16px;
+  }
+  
 
-h2 {
-    text-align: center;
-}
 
+  .home-link {
+    position: absolute;
+    left: 10px; /* Adjust as needed for the desired left margin */
+    text-decoration: none; /* Optional: remove underline from link */
+    color: inherit; /* Optional: inherit color from parent */
+  }
 p {
     font-size: 14px;
     font-weight: 100;
@@ -42,7 +70,7 @@ span {
 a {
     color: #333;
     font-size: 14px;
-    text-decoration: none;
+    // text-decoration: none;
     margin: 15px 0;
 }
 
@@ -60,11 +88,6 @@ button {
     display: inline-flex;
     align-items: center;
     justify-content: center;
-}
-
-button:disabled {
-    background-color: #6c757d;
-    cursor: not-allowed;
 }
 
 .loader {

@@ -34,7 +34,7 @@
 
                                 </select>
                                 <select [(ngModel)]="selectedStatusJob">
-                                    <option value="">Tất cả trạng thái</option>
+                                    <option value="">Tất cả trạng thái sản xuất</option>
                                     <option *ngFor="let st of statusSearch" [ngValue]="st.status_id">{{ st.status_name
                                         }}</option>
                                 </select>
@@ -43,7 +43,7 @@
                                     <option *ngFor="let poss of positionsSearch" [ngValue]="poss.position_id">{{
                                         poss.position_name }}</option>
                                 </select>
-                                <input type="text" class="form-control" placeholder="Tìm kiếm sản phẩm..."
+                                <input type="text" class="form-control" placeholder="Tìm kiếm theo tên sản phẩm..."
                                     [(ngModel)]="searchKey" name="search">
                                 <button class="btn search-button" type="submit"
                                     (click)="onSearch(selectedCategory, searchKey)">
@@ -65,7 +65,7 @@
                             <th>Tên sản phẩm</th>
                             <th>Số lượng</th>
                             <th>Giá công khoán(vnd)</th>
-                            <th>Trạng thái</th>
+                            <th style="width: 15%;">Trạng thái</th>
                             <th>Nhân viên</th>
 
 
@@ -83,7 +83,7 @@
                                     <i class="fa-solid fa-circle-info"></i>
                                 </a>
                                 <ng-container
-                                    *ngIf="product.statusJob.status_id !== 6 && product.statusJob.status_id !== 9 && product.statusJob.status_id !== 12">
+                                    *ngIf="product.statusJob.status_id !== 6 && product.statusJob.status_id !== 9 && product.statusJob.status_id !== 12 && !listErrorJob.includes(product.job_id)">
                                     <a href="#" class="settings" title="Chỉnh sửa" data-toggle="modal"
                                         data-target="#editProductJobModal"
                                         (click)="editJobDetail(product, product.job_id)">
@@ -135,13 +135,13 @@
 
                                 <ng-container *ngIf="product?.statusJob.type !== 1 && product?.statusJob.type !== 6">
                                     <select id="mySelect{{i}}" class="custom-select"
-                                        [disabled]="listErrorJob.includes(product.job_id) || isErrorDisabled(product)"
+                                        [disabled]="listErrorJob.includes(product.job_id) || isErrorDisabled(product) || product.reassigned == true"
                                         [ngModel]="product?.statusJob.status_id"
                                         (change)="openModal($event,product?.job_id, i)">
                                         <ng-container *ngFor="let status of statusType">
                                             <option *ngIf="status.type === product.statusJob.type"
                                                 [value]="status.status_id"
-                                                [disabled]="status.status_id === 4 || status.status_id === 7 || status.status_id === 10 || product.reassigned == true">
+                                                [disabled]="status.status_id === 4 || status.status_id === 7 || status.status_id === 10">
                                                 {{ status.status_name }}
                                             </option>
                                         </ng-container>
@@ -240,17 +240,17 @@
                                                 </div>
                                                 <div class="col-md-6">
 
-                                                    <select #employeeSelect class="form-select"
-                                                        (change)="onChangeSelectedEmployee($event)">
+                                                    <select *ngIf="checkEmployeeList" #employeeSelect class="form-select" (change)="onChangeSelectedEmployee($event)">
                                                         <option value="" selected disabled>Chọn 1 nhân viên</option>
-                                                        <option *ngFor="let employee of positionEmployees"
-                                                            [value]="employee.userId">
-                                                            {{ employee.userInfor.fullname }}
+                                                        <option *ngFor="let employee of positionEmployees" [value]="employee.userId">
+                                                          {{ employee.userInfor.fullname }}
                                                         </option>
-                                                    </select>
-
-
-
+                                                      </select>
+                                                      <p *ngIf="!checkEmployeeList" style="color: red;">
+                                                        Không còn nhân viên trống lịch sản xuất
+                                                      </p>
+                                                      
+                                                      
                                                 </div>
                                             </div>
                                             <div class="row">
@@ -998,8 +998,8 @@
             </div>
             <div class="modal-body text-center">
                 
-                <p style="  font-size: 16px;"> Có <input type="number" style=" width: 12%; font-size: 16px;"
-                        [(ngModel)]="quantityProductDone"> sản phẩm lỗi</p>
+                <p style="  font-size: 16px;"> Đã hoàn thành  <input type="number" style=" width: 12%; font-size: 16px;"
+                        [(ngModel)]="quantityProductDone"> sản phẩm </p>
               
 
                     <p style="  font-size: 16px;"> Nhân viên nhận được <input type="number" style="font-size: 16px;" 

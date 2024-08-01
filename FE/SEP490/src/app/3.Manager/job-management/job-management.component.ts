@@ -784,9 +784,8 @@ export class JobManagementComponent implements OnInit {
     this.createJobs.reset();
     //console.log("employee:", this.selectedProduct.user_name);
 
-    if (this.selectedProduct) {
       this.loadPosition3(product);
-    }
+    
     // Sử dụng regex để thay thế chữ "Thợ" bằng chữ "Làm"
     let modifiedPositionName = '';
     if (this.selectedProduct.position_id === 0) {
@@ -1296,7 +1295,7 @@ export class JobManagementComponent implements OnInit {
   //   console.log("Selected cate: ", cate)
   //   console.log("Search key: ", searchKey)
   // }
-
+  checkEmployeeList: boolean = false;
   loadPosition3(product: any) {
     this.selectedProduct = { ...product };
     this.type = this.selectedProduct.statusJob.type;
@@ -1304,14 +1303,14 @@ export class JobManagementComponent implements OnInit {
 
     const statusId = this.selectedProduct.statusJob?.status_id;
     //  console.log('Status ID:', this.selectedProduct.statusJob?.status_id);
-
     positon += 1;
-    console.log('posion api:', positon);
+   // console.log('posion api:', positon);
     this.jobService.GetPosition3(positon).subscribe(
       (data) => {
         this.positionEmployees = data.result;
-        console.log('manageJob2 employeeList:', this.positionEmployees);
-
+        console.log('manageJob employeeList load position 3:', this.positionEmployees);
+        this.positionEmpLength = this.positionEmployees.length;
+        
       },
       (error) => {
         console.error('Error fetching:', error);
@@ -1725,6 +1724,7 @@ export class JobManagementComponent implements OnInit {
     console.log("status_id:", this.selectedProduct.statusJob?.status_id);
     if (this.selectedProduct.statusJob?.status_id === 4) {
       this.getPositionEmpAbsent(1);
+     
     }
     if (this.selectedProduct.statusJob?.status_id === 7) {
       this.getPositionEmpAbsent(2);
@@ -1732,9 +1732,7 @@ export class JobManagementComponent implements OnInit {
     if (this.selectedProduct.statusJob?.status_id === 10) {
       this.getPositionEmpAbsent(3);
     }
-    if (this.selectedProduct) {
-      this.loadPositionManageJob2(product);
-    }
+
     // Sử dụng regex để thay thế chữ "Thợ" bằng chữ "Làm"
     let modifiedPositionName = '';
     if (this.selectedProduct.position_id === 0) {
@@ -1770,12 +1768,14 @@ export class JobManagementComponent implements OnInit {
 
     $('[data-dismiss="modal"]').click(); this.isLoadding = false;
   }
+  positionEmpLength: number = 0;
   getPositionEmpAbsent(type_id: number): void {
     this.jobService.GetPosition3(type_id).subscribe(
       (data) => {
         if (data.code === 1000) {
           this.positionEmployees = data.result;
           console.log('Position employee absent 2:', this.positionEmployees);
+         this.positionEmpLength = this.positionEmployees.length;
         } else {
           console.error('Failed to fetch positions 2:', data);
         }

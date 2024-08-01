@@ -111,23 +111,6 @@ public class JobController {
     @GetMapping("/getListProductForJob")
     public ApiResponse<?> getListProductForJob() {
         ApiResponse<List> apiResponse = new ApiResponse<>();
-//        String cacheKey = "all_products_job";
-//
-////        jedis.del(cacheKey);
-//        List<JobProductDTO> jobProductDTOS;
-//        String cachedData = jedis.get(cacheKey);
-//        Gson gson = new GsonBuilder().setDateFormat("MMM dd, yyyy").create();
-//        if (cachedData != null) {
-//            Type type = new TypeToken<List<JobProductDTO>>() {
-//            }.getType();
-//
-//            jobProductDTOS = gson.fromJson(cachedData, type);
-//        } else {
-//            jobProductDTOS = jobService.getListProductJob();
-//            String jsonData = gson.toJson(jobProductDTOS);
-//            jedis.set(cacheKey, jsonData);
-//            jedis.expire(cacheKey, 1200);
-//        }
         apiResponse.setResult(jobService.getListProductJob());
         return apiResponse;
     }

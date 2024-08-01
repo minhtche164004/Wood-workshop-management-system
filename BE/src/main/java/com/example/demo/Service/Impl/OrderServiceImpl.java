@@ -28,8 +28,10 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.math.BigDecimal;
+import java.math.MathContext;
 import java.math.RoundingMode;
 import java.nio.charset.StandardCharsets;
+import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.ZoneId;
@@ -37,9 +39,8 @@ import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 
-
 @Service
-public class  OrderServiceImpl implements OrderService {
+public class OrderServiceImpl implements OrderService {
     @Autowired
     private Status_Order_Repository statusOrderRepository;
     @Autowired
@@ -86,7 +87,6 @@ public class  OrderServiceImpl implements OrderService {
     private MultipartFileConverter multipartFileConverter;
     @Autowired
     private VNPayService vnPayService;
-
 
 
     @Override
@@ -156,8 +156,8 @@ public class  OrderServiceImpl implements OrderService {
 //                        throw new AppException(ErrorCode.OUT_OF_STOCK);
                         int b = orderdetail.getProduct().getQuantity();
                         int c = item.getQuantity();
-                        int a = c-b;
-                        String errorMessage = String.format("Sản phẩm có mã sản phẩm là: " +orderdetail.getProduct().getCode()+" đang thiếu số lượng để đủ cho đơn hàng là " +a+" cái");
+                        int a = c - b;
+                        String errorMessage = String.format("Sản phẩm có mã sản phẩm là: " + orderdetail.getProduct().getCode() + " đang thiếu số lượng để đủ cho đơn hàng là " + a + " cái");
                         errors.put(orderdetail.getProduct().getCode(), errorMessage);
                     }
                     if (!errors.isEmpty()) {
@@ -231,16 +231,17 @@ public class  OrderServiceImpl implements OrderService {
         return ResponseEntity.ok(apiResponse);
         // return orders;
     }
+
     @Override
-    public ResponseEntity<String> Cancel_Order(int order_id, boolean special_order_id,String response) {
+    public ResponseEntity<String> Cancel_Order(int order_id, boolean special_order_id, String response) {
 
         Orders orders = orderRepository.findById(order_id);
-        if(special_order_id == false){//là hàng có sẵn
+        if (special_order_id == false) {//là hàng có sẵn
             List<Orderdetails> list = orderDetailRepository.getOrderDetailByOrderId(order_id);
-            for(Orderdetails orderdetails : list){
-              int product_id =  orderdetails.getProduct().getProductId();
+            for (Orderdetails orderdetails : list) {
+                int product_id = orderdetails.getProduct().getProductId();
                 Products products = productRepository.findById(product_id);
-                products.setQuantity(products.getQuantity()+orderdetails.getProduct().getQuantity());
+                products.setQuantity(products.getQuantity() + orderdetails.getProduct().getQuantity());
                 productRepository.save(products);
             }
             orders.setStatus(statusOrderRepository.findById(6));//set cho nó là đơn hàng bị huỷ
@@ -251,24 +252,24 @@ public class  OrderServiceImpl implements OrderService {
             return ResponseEntity.ok("Huỷ đơn hàng thành công");
 
         }
-        if(special_order_id == true){//là hàng ko có sẵn (nếu jb đang làm dở thì cho làm cho xong , còn nếu job chưa giao việc thì xoá nó đi )
+        if (special_order_id == true) {//là hàng ko có sẵn (nếu jb đang làm dở thì cho làm cho xong , còn nếu job chưa giao việc thì xoá nó đi )
             List<Orderdetails> list = orderDetailRepository.getOrderDetailByOrderId(order_id);
-            for(Orderdetails orderdetails : list){
+            for (Orderdetails orderdetails : list) {
 //                int request_product_id =  orderdetails.getRequestProduct().getRequestProductId();
 //                RequestProducts requestProducts = requestProductRepository.findById(request_product_id);
                 List<Jobs> jobsList = jobRepository.getJobByOrderDetailByOrderCode(orders.getCode());
 
-                for(Jobs jobs : jobsList){
-                    if(jobs.isJob_log() == false && jobs.getUser() == null){
-                        List<Processproducterror> processproducterrorList=processproducterrorRepository.getProcessproducterrorByJobId(jobs.getJobId());
-                        for(Processproducterror processproducterror : processproducterrorList){
+                for (Jobs jobs : jobsList) {
+                    if (jobs.isJob_log() == false && jobs.getUser() == null) {
+                        List<Processproducterror> processproducterrorList = processproducterrorRepository.getProcessproducterrorByJobId(jobs.getJobId());
+                        for (Processproducterror processproducterror : processproducterrorList) {
                             processproducterrorRepository.delete(processproducterror);
                         }
                         jobRepository.delete(jobs);
                         return ResponseEntity.ok("Huỷ đơn hàng thành công");
                     }
-                    if(jobs.isJob_log()==false && jobs.getUser() != null){
-                        return ResponseEntity.badRequest().body("Hãy hoàn thành công việc của "+jobs.getUser().getPosition().getPosition_name()+" có tên là "+jobs.getUser().getUsername()+" trước khi huỷ đơn hàng");
+                    if (jobs.isJob_log() == false && jobs.getUser() != null) {
+                        return ResponseEntity.badRequest().body("Hãy hoàn thành công việc của " + jobs.getUser().getPosition().getPosition_name() + " có tên là " + jobs.getUser().getUsername() + " trước khi huỷ đơn hàng");
                     }
                 }
 //                requestProducts.setQuantity(requestProducts.getQuantity()+orderdetails.getRequestProduct().getQuantity());
@@ -283,15 +284,15 @@ public class  OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public ResponseEntity<String> Refund_Order(int order_id, boolean special_order_id,String response) {
+    public ResponseEntity<String> Refund_Order(int order_id, boolean special_order_id, int percent_deposite_price,int percent_order_price ,String response) {
 
         Orders orders = orderRepository.findById(order_id);
-        if(special_order_id == false){//là hàng có sẵn
+        if (special_order_id == false) {//là hàng có sẵn
             List<Orderdetails> list = orderDetailRepository.getOrderDetailByOrderId(order_id);
-            for(Orderdetails orderdetails : list){
-                int product_id =  orderdetails.getProduct().getProductId();
+            for (Orderdetails orderdetails : list) {
+                int product_id = orderdetails.getProduct().getProductId();
                 Products products = productRepository.findById(product_id);
-                products.setQuantity(products.getQuantity()+orderdetails.getProduct().getQuantity());
+                products.setQuantity(products.getQuantity() + orderdetails.getProduct().getQuantity());
                 productRepository.save(products);
             }
             orders.setStatus(statusOrderRepository.findById(9));//set cho nó là đơn hàng hoàn tiền
@@ -299,27 +300,27 @@ public class  OrderServiceImpl implements OrderService {
             orderRepository.save(orders);
 
 
-            return ResponseEntity.ok("Hoàn tiền đơn hàng thành công");
+//            return ResponseEntity.ok("Hoàn tiền đơn hàng thành công");
 
         }
-        if(special_order_id == true){//là hàng ko có sẵn (nếu jb đang làm dở thì cho làm cho xong , còn nếu job chưa giao việc thì xoá nó đi )
+        if (special_order_id == true) {//là hàng ko có sẵn (nếu jb đang làm dở thì cho làm cho xong , còn nếu job chưa giao việc thì xoá nó đi )
             List<Orderdetails> list = orderDetailRepository.getOrderDetailByOrderId(order_id);
-            for(Orderdetails orderdetails : list){
+            for (Orderdetails orderdetails : list) {
 //                int request_product_id =  orderdetails.getRequestProduct().getRequestProductId();
 //                RequestProducts requestProducts = requestProductRepository.findById(request_product_id);
                 List<Jobs> jobsList = jobRepository.getJobByOrderDetailByOrderCode(orders.getCode());
 
-                for(Jobs jobs : jobsList){
-                    if(jobs.isJob_log() == false && jobs.getUser() == null){
-                        List<Processproducterror> processproducterrorList=processproducterrorRepository.getProcessproducterrorByJobId(jobs.getJobId());
-                        for(Processproducterror processproducterror : processproducterrorList){
+                for (Jobs jobs : jobsList) {
+                    if (jobs.isJob_log() == false && jobs.getUser() == null) {
+                        List<Processproducterror> processproducterrorList = processproducterrorRepository.getProcessproducterrorByJobId(jobs.getJobId());
+                        for (Processproducterror processproducterror : processproducterrorList) {
                             processproducterrorRepository.delete(processproducterror);
                         }
                         jobRepository.delete(jobs);
                         return ResponseEntity.ok("Hoàn tiền đơn hàng thành công");
                     }
-                    if(jobs.isJob_log()==false && jobs.getUser() != null){
-                        return ResponseEntity.badRequest().body("Hãy hoàn thành công việc của "+jobs.getUser().getPosition().getPosition_name()+" có tên là "+jobs.getUser().getUsername()+" trước khi huỷ đơn hàng");
+                    if (jobs.isJob_log() == false && jobs.getUser() != null) {
+                        return ResponseEntity.badRequest().body("Hãy hoàn thành công việc của " + jobs.getUser().getPosition().getPosition_name() + " có tên là " + jobs.getUser().getUsername() + " trước khi huỷ đơn hàng");
                     }
                 }
 //                requestProducts.setQuantity(requestProducts.getQuantity()+orderdetails.getRequestProduct().getQuantity());
@@ -331,27 +332,44 @@ public class  OrderServiceImpl implements OrderService {
 
         }
 
-        if(orders.getSpecialOrder() == true){
-            String email=orderDetailRepository.getMailOrderForSendMail(order_id);
-            String code = orders.getCode();
-            SimpleDateFormat dateFormatter = new SimpleDateFormat("dd/MM/yyyy");
+
+        String email = orderDetailRepository.getMailOrderForSendMail(order_id);
+        String code = orders.getCode();
+        SimpleDateFormat dateFormatter = new SimpleDateFormat("dd/MM/yyyy");
 //            String time_finish = dateFormatter.format(orders.getOrderFinish());
-            //   String time_finish = (orders.getOrderFinish() == null) ? "" : dateFormatter.format(orders.getOrderFinish());
-            String time_start = dateFormatter.format(orders.getOrderDate());
+        //   String time_finish = (orders.getOrderFinish() == null) ? "" : dateFormatter.format(orders.getOrderFinish());
+        String time_start = dateFormatter.format(orders.getOrderDate());
+        BigDecimal percentOfOrder = orders.getTotalAmount().multiply(new BigDecimal(percent_order_price).divide(new BigDecimal(100)));
+        BigDecimal percentOfDeposite = orders.getDeposite().multiply(new BigDecimal(percent_deposite_price).divide(new BigDecimal(100)));
+        BigDecimal totalRefund = percentOfDeposite.add(percentOfOrder);
+
+        //bo di so thap phan
+        BigDecimal percentDeposite =percentOfDeposite.setScale(0, RoundingMode.HALF_UP);
+        BigDecimal percentOrder = percentOfOrder.setScale(0, RoundingMode.HALF_UP);
+        BigDecimal total = totalRefund.setScale(0, RoundingMode.HALF_UP);
+
+        orders.setRefund(total); // them truong refund vao order de lay ra so tien hoan
+        orderRepository.save(orders);
+        //format gia tien` them dau '.' sau moi 3 so vd: 1.000.000
+        NumberFormat nf = NumberFormat.getInstance(new Locale("de", "DE"));
+
+        String depositeStr = nf.format(percentDeposite);
+        String percentOrderStr = nf.format(percentOrder);
+        String totalStr = nf.format(total);
 //            String status_name=statusOrder.getStatus_name();
-            MailBody mailBody = MailBody.builder()
-                    .to(email)
-                    .text("Đơn hàng có mã đơn hàng là : " + code + "\n" +
-                                    "Có trạng thái: " +"Đơn hàng hoàn tiền\n" + "\n" +
-                                    "Với thời gian tạo đơn là: " + time_start + "\n" +
-                                    "Số tiền hoàn:" + orders.getDeposite() + "VNĐ" +"\n" +
-                                    "Lý do hoàn tiền: " + response + "\n" +
-                                    "Xin lỗi vì trải nghiệm không tốt của bạn, chúng tôi sẽ cố gắng cải thiện dịch vụ của mình. Hân hạnh được phục vụ quý khách lần tới!\n"
-                    )
-                    .subject("[Thông tin hoàn tiền của đơn hàng]")
-                    .build();
-            emailService.sendSimpleMessage(mailBody);
-        }
+        MailBody mailBody = MailBody.builder()
+                .to(email)
+                .text("Đơn hàng có mã đơn hàng là : " + code + "\n" +
+                        "Có trạng thái: " + "Đơn hàng hoàn tiền\n" + "\n" +
+                        "Với thời gian tạo đơn là: " + time_start + "\n" +
+                        "Số tiền hoàn("+percent_deposite_price+"% số tiền đặt cọc + " + percent_order_price + "% tổng giá trị đơn hàng): " + depositeStr + " + " + percentOrderStr + " = " + totalStr + " VNĐ" + "\n" +
+                        "Lý do hoàn tiền: " + response + "\n" +
+                        "Xin lỗi vì trải nghiệm không tốt của bạn, chúng tôi sẽ cố gắng cải thiện dịch vụ của mình. Hân hạnh được phục vụ quý khách lần tới!\n"
+                )
+                .subject("[Thông tin hoàn tiền của đơn hàng]")
+                .build();
+        emailService.sendSimpleMessage(mailBody);
+
 
         return ResponseEntity.ok("Hoàn tiền đơn hàng thành công");
     }
@@ -359,47 +377,47 @@ public class  OrderServiceImpl implements OrderService {
     @Override
     public String ConfirmPayment(int order_id) {
         Orders orders = orderRepository.findById(order_id);
-        if(orders.getStatus().getStatus_id() == 1){//đang trong trạng thái là chờ đặt cọc
+        if (orders.getStatus().getStatus_id() == 1) {//đang trong trạng thái là chờ đặt cọc
             Status_Order statusOrder = new Status_Order();
-            if(orders.getSpecialOrder() == false){//nếu là hàng có sẵn thì set status order cho nó là đã thi công xong luôn(vì nó ko cần sản xuất nữa)
+            if (orders.getSpecialOrder() == false) {//nếu là hàng có sẵn thì set status order cho nó là đã thi công xong luôn(vì nó ko cần sản xuất nữa)
                 statusOrder = statusOrderRepository.findById(4);
                 orders.setStatus(statusOrder);
                 orderRepository.save(orders);
-                return "Cập nhật đơn hàng sang tình trạng "+ statusOrder.getStatus_name()+ " thành công";
+                return "Cập nhật đơn hàng sang tình trạng " + statusOrder.getStatus_name() + " thành công";
             }
-            if(orders.getSpecialOrder() == true){//nếu là hàng đặt làm theo yêu cầu thì set status order cho nó là đã đặt cọc thành công
+            if (orders.getSpecialOrder() == true) {//nếu là hàng đặt làm theo yêu cầu thì set status order cho nó là đã đặt cọc thành công
                 statusOrder = statusOrderRepository.findById(3);//đã đặt cọc, đang thi công
                 orders.setStatus(statusOrder);
                 Status_Job statusJob = statusJobRepository.findById(3); // 3 la status job sau khi dat coc thi set status la chua giao viec
                 List<Jobs> jobsList = jobRepository.getJobByOrderDetailByOrderCode(orders.getCode());
-                for(Jobs jobs : jobsList){
+                for (Jobs jobs : jobsList) {
                     jobs.setStatus(statusJob);
                     jobRepository.save(jobs);
                 }
 
                 orderRepository.save(orders);
-                return "Cập nhật đơn hàng sang tình trạng "+ statusOrder.getStatus_name()+ " thành công";
+                return "Cập nhật đơn hàng sang tình trạng " + statusOrder.getStatus_name() + " thành công";
             }
         }
         return "";
     }
 
     @Override
-    public List<OderDTO> MultiFilterOrder(String search, Integer status_id, Integer paymentMethod,Integer specialOrder,  Date startDate, Date endDate) {
+    public List<OderDTO> MultiFilterOrder(String search, Integer status_id, Integer paymentMethod, Integer specialOrder, Date startDate, Date endDate) {
         List<OderDTO> order_list = new ArrayList<>();
 
         if (specialOrder != null) {
             if (specialOrder == -1) {
                 // Không lọc theo specialOrder, chỉ lọc theo các tham số khác
-                order_list= orderRepository.MultiFilterOrder(search, status_id, paymentMethod, startDate, endDate);
+                order_list = orderRepository.MultiFilterOrder(search, status_id, paymentMethod, startDate, endDate);
             } else {
                 // Lọc theo specialOrder (true hoặc false) và các tham số khác
                 boolean specialOrderValue = (specialOrder == 1); // Chuyển đổi 1/0 thành true/false
-                order_list= orderRepository.MultiFilterOrderSpecialOrder(search, status_id, paymentMethod, specialOrderValue, startDate, endDate);
+                order_list = orderRepository.MultiFilterOrderSpecialOrder(search, status_id, paymentMethod, specialOrderValue, startDate, endDate);
             }
         } else {
             //filter theo tru ordertype
-            order_list= orderRepository.MultiFilterOrderWithoutOrderType(search, status_id, paymentMethod, startDate, endDate);
+            order_list = orderRepository.MultiFilterOrderWithoutOrderType(search, status_id, paymentMethod, startDate, endDate);
         }
 
         if (order_list.isEmpty()) {
@@ -409,23 +427,23 @@ public class  OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public List<Orders> MultiFilterOrderForEmployee(String search, Integer status_id, Integer paymentMethod,Integer specialOrder,  Date startDate, Date endDate) {
+    public List<Orders> MultiFilterOrderForEmployee(String search, Integer status_id, Integer paymentMethod, Integer specialOrder, Date startDate, Date endDate) {
         List<Orders> order_list = new ArrayList<>();
-        UserDetails userDetails =(UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        User user =userRepository.getUserByUsername(userDetails.getUsername());
+        UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        User user = userRepository.getUserByUsername(userDetails.getUsername());
 
         if (specialOrder != null) {
             if (specialOrder == -1) {
                 // Không lọc theo specialOrder, chỉ lọc theo các tham số khác
-                order_list= orderRepository.MultiFilterOrderForEmployee(user.getUserId(),search, status_id, paymentMethod, startDate, endDate);
+                order_list = orderRepository.MultiFilterOrderForEmployee(user.getUserId(), search, status_id, paymentMethod, startDate, endDate);
             } else {
                 // Lọc theo specialOrder (true hoặc false) và các tham số khác
                 boolean specialOrderValue = (specialOrder == 1); // Chuyển đổi 1/0 thành true/false
-                order_list= orderRepository.MultiFilterOrderSpecialOrderForEmployee(user.getUserId(),search, status_id, paymentMethod, specialOrderValue, startDate, endDate);
+                order_list = orderRepository.MultiFilterOrderSpecialOrderForEmployee(user.getUserId(), search, status_id, paymentMethod, specialOrderValue, startDate, endDate);
             }
         } else {
             //filter theo tru ordertype
-            order_list= orderRepository.MultiFilterOrderWithoutOrderTypeForEmployee(user.getUserId(),search, status_id, paymentMethod, startDate, endDate);
+            order_list = orderRepository.MultiFilterOrderWithoutOrderTypeForEmployee(user.getUserId(), search, status_id, paymentMethod, startDate, endDate);
         }
 
         if (order_list.isEmpty()) {
@@ -440,8 +458,8 @@ public class  OrderServiceImpl implements OrderService {
     @Override
     public Orders AddNewRequest(RequestDTO requestDTO, MultipartFile[] multipartFiles) {
         Orders requests = new Orders();
-        UserDetails userDetails =(UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        User user =userRepository.getUserByUsername(userDetails.getUsername());
+        UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        User user = userRepository.getUserByUsername(userDetails.getUsername());
         //lấy thông tin thằng đang login
         //   User user = userRepository.findById(requestDTO.getUser_id()).get();
         LocalDate today = LocalDate.now();
@@ -449,7 +467,7 @@ public class  OrderServiceImpl implements OrderService {
         String dateString = today.format(formatter);
         Date requestDate = Date.from(today.atStartOfDay(ZoneId.systemDefault()).toInstant());
         requests.setUserInfor(user.getUserInfor());
-        Status_Order statusRequest =statusOrderRepository.findById(7);//nghĩa là request đang chờ phê duyệt
+        Status_Order statusRequest = statusOrderRepository.findById(7);//nghĩa là request đang chờ phê duyệt
         requests.setOrderDate(requestDate); //lấy time hiện tại
         requests.setDescription(requestDTO.getDescription());
         requests.setStatus(statusRequest);
@@ -488,10 +506,10 @@ public class  OrderServiceImpl implements OrderService {
     public Orders EditRequest(int request_id, RequestEditCusDTO requestEditDTO, MultipartFile[] multipartFiles) throws IOException {
         Orders requests = orderRepository.findById(request_id);
         if (multipartFiles != null && Arrays.stream(multipartFiles).anyMatch(file -> file != null && !file.isEmpty())) {
-            List<Requestimages> requestimagesList= requestimagesRepository.findRequestImageByRequestId(request_id);
-            for(Requestimages requestimages : requestimagesList){
-                String full_path= requestimages.getFullPath();
-                String id_image =cloudinaryService.extractPublicIdFromUrl(full_path);
+            List<Requestimages> requestimagesList = requestimagesRepository.findRequestImageByRequestId(request_id);
+            for (Requestimages requestimages : requestimagesList) {
+                String full_path = requestimages.getFullPath();
+                String id_image = cloudinaryService.extractPublicIdFromUrl(full_path);
                 cloudinaryService.deleteImage(id_image);
             }
             requestimagesRepository.deleteRequestImages(request_id); // Xóa những ảnh trước đó
@@ -523,7 +541,7 @@ public class  OrderServiceImpl implements OrderService {
     //Tạo Request Product
     @Transactional
     @Override
-    public List<RequestProducts> AddNewProductRequest(RequestProductWithFiles[] requestProductsWithFiles,int order_id) { //lấy từ request
+    public List<RequestProducts> AddNewProductRequest(RequestProductWithFiles[] requestProductsWithFiles, int order_id) { //lấy từ request
         List<RequestProductsSubmaterials> result = new ArrayList<>();
         Orders orders = orderRepository.findById(order_id);
         Status_Order statusOrder = statusOrderRepository.findById(1);//tự set cho nó là 1
@@ -558,7 +576,7 @@ public class  OrderServiceImpl implements OrderService {
             requestProducts = requestProductRepository.save(requestProducts);
 
             //set ảnh của product
-        //    RequestProducts requestProduct = requestProductRepository.findByName(requestProductDTO.getRequestProductName());
+            //    RequestProducts requestProduct = requestProductRepository.findByName(requestProductDTO.getRequestProductName());
             // Upload ảnh từ danh sách base64
             List<String> filesBase64 = r.getFilesBase64(); // Lấy danh sách base64
             for (String base64Data : filesBase64) {
@@ -571,7 +589,7 @@ public class  OrderServiceImpl implements OrderService {
             addedProducts.add(requestProducts);
         }
         BigDecimal totalOrder = BigDecimal.ZERO;
-        for(RequestProducts re : addedProducts){
+        for (RequestProducts re : addedProducts) {
 //        if (requestSpecialOrder.getSpecial_order() == 1) {//là hàng ko có sẵn
             BigDecimal total = BigDecimal.ZERO; // Khởi tạo total là 0
             Orderdetails orderdetail = new Orderdetails();
@@ -587,6 +605,7 @@ public class  OrderServiceImpl implements OrderService {
             Jobs jobs = new Jobs();
             jobs.setRequestProducts(re);
             jobs.setQuantityProduct(orderdetail.getQuantity());
+            jobs.setOriginalQuantityProduct(orderdetail.getQuantity());
             Jobs lastJob = jobRepository.findJobsTop(dateString + "JB");
             int count1 = lastJob != null ? Integer.parseInt(lastJob.getCode().substring(8)) + 1 : 1;
             String code1 = dateString + "JB" + String.format("%03d", count1);
@@ -599,13 +618,14 @@ public class  OrderServiceImpl implements OrderService {
             totalOrder = totalOrder.add(total); // Cộng dồn total của orderDetail vào totalOrder
         }
 
-            orders.setDeposite(totalOrder.multiply(BigDecimal.valueOf(0.2))); // 20% tiền cọc của tổng tiền đơn hàng
-            orders.setTotalAmount(totalOrder);
-            orders.setSpecialOrder(true);
-            orderRepository.save(orders);
+        orders.setDeposite(totalOrder.multiply(BigDecimal.valueOf(0.2))); // 20% tiền cọc của tổng tiền đơn hàng
+        orders.setTotalAmount(totalOrder);
+        orders.setSpecialOrder(true);
+        Date contract_date = orderRepository.findLatestCompletionTimeByOrderId(order_id);
+        orders.setContractDate(contract_date);
+        orderRepository.save(orders);
         return addedProducts;
     }
-
 
 
 //    @Override
@@ -685,7 +705,32 @@ public class  OrderServiceImpl implements OrderService {
 
     @Override
     public List<OderDTO> GetAllOrder() {
+        CheckOrderAfterDeadline();
         return orderRepository.getAllOrder();
+    }
+
+    private void CheckOrderAfterDeadline() {
+        LocalDate today = LocalDate.now();
+        List<OderDTO> list = orderRepository.getAllOrderWithStatus3();
+        for(OderDTO o : list){
+            if(o.getContractDate() != null){
+                LocalDate timeFinishLocalDate = o.getContractDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+                if(timeFinishLocalDate.isBefore(today)){
+                    orderRepository.UpdateStatusOrder(o.getOrderId(),10);
+                }
+            }
+        }
+    }
+
+
+
+    @Override
+    public String TimeContract(int order_id, double percentage_discount,Date NewDate) { //xử lý trường hợp đơn hàng chậm dealine
+           BigDecimal totalAmount = orderRepository.findTotalAmountById(order_id) != null ? orderRepository.findTotalAmountById(order_id) : BigDecimal.ZERO;
+           BigDecimal discount = totalAmount.multiply(BigDecimal.valueOf(percentage_discount / 100));
+           BigDecimal totalUpdate = totalAmount.subtract(discount);
+           orderRepository.updateOrderDiscountById(order_id,discount,totalUpdate,NewDate); //update lại status là đang sản xuất
+        return "Giảm giá cho đơn hàng thành công";
     }
 
     @Override
@@ -742,7 +787,7 @@ public class  OrderServiceImpl implements OrderService {
     @Override
     public List<Orderdetails> getAllOrderDetail() {
         List<Orderdetails> orderdetailsList = orderDetailRepository.findAll();
-        if(orderdetailsList.isEmpty()){
+        if (orderdetailsList.isEmpty()) {
             throw new AppException(ErrorCode.NOT_FOUND);
         }
         return orderdetailsList;
@@ -750,7 +795,7 @@ public class  OrderServiceImpl implements OrderService {
 
     @Override
     public List<RequestProductAllDTO> GetAllProductRequest() {
-      //  List<RequestProductAllDTO> list_request = new ArrayList<>();
+        //  List<RequestProductAllDTO> list_request = new ArrayList<>();
         List<RequestProductAllDTO> list = requestProductRepository.getAllRequestProduct();
         return list;
     }
@@ -770,7 +815,7 @@ public class  OrderServiceImpl implements OrderService {
     @Override
     public List<OrderDetailWithJobStatusDTO> getOrderDetailByOrderId(int order_id) {
         List<OrderDetailWithJobStatusDTO> results = orderDetailRepository.getAllOrderDetailByOrderId(order_id);
-        if(results.isEmpty()){
+        if (results.isEmpty()) {
             throw new AppException(ErrorCode.NOT_FOUND);
         }
         return results;
@@ -779,14 +824,11 @@ public class  OrderServiceImpl implements OrderService {
     @Override
     public List<OrderDetailWithJobStatusDTO> getAllOrderDetailOfProductByOrderId(int order_id) {
         List<OrderDetailWithJobStatusDTO> results = orderDetailRepository.getAllOrderDetailOfProductByOrderId(order_id);
-        if(results.isEmpty()){
+        if (results.isEmpty()) {
             throw new AppException(ErrorCode.NOT_FOUND);
         }
         return results;
     }
-
-
-
 
 
 //    @Override
@@ -813,6 +855,7 @@ public class  OrderServiceImpl implements OrderService {
     public void deleteRequestById(int requestId) {
         orderRepository.deleteById(requestId);
     }
+
     @Transactional
     @Override
     public Orders ManagerEditRequest(int request_id, RequestEditDTO requestEditDTO) {
@@ -832,36 +875,36 @@ public class  OrderServiceImpl implements OrderService {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("ddMMyy");
         String dateString = today.format(formatter);
         Date requestDate = Date.from(today.atStartOfDay(ZoneId.systemDefault()).toInstant());
-        Status_Order statusOrder =statusOrderRepository.findById(status_id);
+        Status_Order statusOrder = statusOrderRepository.findById(status_id);
         Orders orders = orderRepository.findById(orderId);
 
-        if(status_id == 5){
+        if (status_id == 5) {
             orders.setOrderFinish(requestDate);
             orderRepository.save(orders);
         }
         //send mail cho những đơn hàng đặt theo yêu cầu , vì đơn hàng mau có sẵn thì mua luôn rồi, trả tiền luôn r cần đéo gì nữa mà phải theo dõi tình trạng đơn hàng
-        orderRepository.UpdateStatusOrder(orderId,status_id);
+        orderRepository.UpdateStatusOrder(orderId, status_id);
 
         List<Jobs> list_jobs = jobRepository.getJobByOrderDetailByOrderCode(orders.getCode());
-        for(Jobs job : list_jobs){
-            if(job.getStatus().getStatus_id() != 13) { //tức là công việc đã hoàn thành
+        for (Jobs job : list_jobs) {
+            if (job.getStatus().getStatus_id() != 13) { //tức là công việc đã hoàn thành
                 return "Đơn hàng chưa hoàn thành công việc, không thể sửa trạng thái đơn hàng !";
             }
         }
-        if(orders.getSpecialOrder() == true){
-            String email=orderDetailRepository.getMailOrderForSendMail(orderId);
+        if (orders.getSpecialOrder() == true) {
+            String email = orderDetailRepository.getMailOrderForSendMail(orderId);
             String code = orders.getCode();
             SimpleDateFormat dateFormatter = new SimpleDateFormat("dd/MM/yyyy");
 //            String time_finish = dateFormatter.format(orders.getOrderFinish());
-         //   String time_finish = (orders.getOrderFinish() == null) ? "" : dateFormatter.format(orders.getOrderFinish());
+            //   String time_finish = (orders.getOrderFinish() == null) ? "" : dateFormatter.format(orders.getOrderFinish());
             String time_start = dateFormatter.format(orders.getOrderDate());
-            String status_name=statusOrder.getStatus_name();
+            String status_name = statusOrder.getStatus_name();
             MailBody mailBody = MailBody.builder()
                     .to(email)
                     .text("Đơn hàng có mã đơn hàng là : " + code + "\n" +
-                            "Có trạng thái: " + status_name + "\n" +
-                            "Với thời gian tạo đơn là: " + time_start + "\n"
-                           // "Và thời gian dự kiến hoàn thành là: " + time_finish
+                                    "Có trạng thái: " + status_name + "\n" +
+                                    "Với thời gian tạo đơn là: " + time_start + "\n"
+                            // "Và thời gian dự kiến hoàn thành là: " + time_finish
                     )
                     .subject("[Thông tin tiến độ của đơn hàng]")
                     .build();
@@ -871,18 +914,18 @@ public class  OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public String SendMailToNotifyCationAboutOrder(int order_id,String linkBaseUrl) throws MessagingException, IOException {
-        List<OrderDetailWithJobStatusDTO> list  = orderDetailRepository.getAllOrderDetailByOrderId(order_id);
+    public String SendMailToNotifyCationAboutOrder(int order_id, String linkBaseUrl) throws MessagingException, IOException {
+        List<OrderDetailWithJobStatusDTO> list = orderDetailRepository.getAllOrderDetailByOrderId(order_id);
         Orders orders = orderRepository.findById(order_id);
-      //  String baseUrl = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort() + "/api/auth";
+        //  String baseUrl = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort() + "/api/auth";
 
 //        int total = orders.getTotalAmount().setScale(0, RoundingMode.HALF_UP).intValueExact();
         int total = (int) orders.getDeposite().longValue(); // Ép kiểu từ long sang int
-       String linkVnPay = vnPayService.createOrder(total,orders.getCode(),linkBaseUrl);
+        String linkVnPay = vnPayService.createOrder(total, orders.getCode(), linkBaseUrl);
         String name = orders.getFullname();
-        String email =orders.getUserInfor().getUser().getEmail();
-      //  String link = "";
-        emailService.sendEmailFromTemplate(name,email,list,orders,linkVnPay);
+        String email = orders.getUserInfor().getUser().getEmail();
+        //  String link = "";
+        emailService.sendEmailFromTemplate(name, email, list, orders, linkVnPay);
         return "Gửi thông tin đơn hàng thành công !";
     }
 
@@ -898,10 +941,10 @@ public class  OrderServiceImpl implements OrderService {
 
 
     @Override
-    public List<RequestProductAllDTO> filterRequestProductsForAdmin(String search,  Integer statusId, BigDecimal minPrice, BigDecimal maxPrice, String sortDirection) {
+    public List<RequestProductAllDTO> filterRequestProductsForAdmin(String search, Integer statusId, BigDecimal minPrice, BigDecimal maxPrice, String sortDirection) {
         List<RequestProductAllDTO> productList = new ArrayList<>();
 
-        if (search != null|| statusId != null  || minPrice != null || maxPrice != null) {
+        if (search != null || statusId != null || minPrice != null || maxPrice != null) {
             productList = requestProductRepository.filterRequestProductsForAdmin(search, statusId, minPrice, maxPrice);
         } else {
             productList = requestProductRepository.getAllRequestProduct();
@@ -927,10 +970,11 @@ public class  OrderServiceImpl implements OrderService {
         return productList;
 //        return productList;
     }
+
     @Override
     public List<RequestProducts> findByPriceRange(BigDecimal min, BigDecimal max) {
-        List<RequestProducts> productsList = requestProductRepository.findByPriceRange(min,max);
-        if(productsList == null ){
+        List<RequestProducts> productsList = requestProductRepository.findByPriceRange(min, max);
+        if (productsList == null) {
             throw new AppException(ErrorCode.NOT_FOUND);
         }
         return productsList;
@@ -941,7 +985,7 @@ public class  OrderServiceImpl implements OrderService {
         UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         User user = userRepository.getUserByUsername(userDetails.getUsername());
         List<RequestProducts> list = requestProductRepository.findByUserId(user.getUserId());
-        if(list == null ){
+        if (list == null) {
             throw new AppException(ErrorCode.NOT_FOUND);
         }
         return list;
@@ -952,7 +996,7 @@ public class  OrderServiceImpl implements OrderService {
         UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         User user = userRepository.getUserByUsername(userDetails.getUsername());
         List<Orders> list = orderRepository.findByUserId(user.getUserId());
-        if(list == null ){
+        if (list == null) {
             throw new AppException(ErrorCode.NOT_FOUND);
         }
         return list;
@@ -985,7 +1029,7 @@ public class  OrderServiceImpl implements OrderService {
         requestProductDTOShow.setCompletionTime(requestProducts.getCompletionTime());
         requestProductDTOShow.setStatus(requestProducts.getStatus());
         int request_id = requestProducts.getOrders().getOrderId();
-        Orders requests= orderRepository.findById(request_id);
+        Orders requests = orderRepository.findById(request_id);
         requestProductDTOShow.setRequest_id(request_id);
         requestProductDTOShow.setCode(requests.getCode());
 //        requestProductDTOShow.setRequests(requests);
@@ -1022,7 +1066,7 @@ public class  OrderServiceImpl implements OrderService {
             requestProductDTOShow.setStatus(requestProducts.getStatus());
             int request_id = requestProducts.getOrders().getOrderId();
             System.out.println(request_id);
-            Orders requests= orderRepository.findById(request_id);
+            Orders requests = orderRepository.findById(request_id);
             requestProductDTOShow.setRequest_id(request_id);
             requestProductDTOShow.setCode(requests.getCode());
 //            requestProductDTOShow.setRequests(requests);
@@ -1042,7 +1086,6 @@ public class  OrderServiceImpl implements OrderService {
     }
 
 
-
     private String getAddressLocalComputer(String imagePath) {
         int assetsIndex = imagePath.indexOf("/assets/");
         if (assetsIndex != -1) {
@@ -1053,7 +1096,6 @@ public class  OrderServiceImpl implements OrderService {
         }
         return imagePath;
     }// Trả về đường dẫn tương đối hoặc đường dẫn ban đầu nếu không tìm thấy "/assets/"
-
 
 
 }

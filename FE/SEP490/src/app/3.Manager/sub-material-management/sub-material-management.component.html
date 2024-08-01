@@ -8,11 +8,11 @@
 
           <div class="row" style="height: 60px;">
             <div class="col-sm-4">
-              <h2>Quản lý nguyên vật liệu</h2>
+              <h2>Quản lý vật liệu</h2>
             </div>
             <div class="col-sm-5 text-end d-flex align-items-center justify-content-end">
               <a href="#" class="btn btn-secondary" data-toggle="modal" data-target="#addProductModal">
-                <i class="material-icons">&#xE147;</i> <span>Thêm nguyên vật liệu</span>
+                <i class="material-icons">&#xE147;</i> <span>Thêm vật liệu</span>
               </a>
               <a href="#" class="btn btn-secondary" (click)="dowloadExcelLink($event)">
                 <span>Xuất Excel</span> <i style="margin-left: 5px;" class="fa-solid fa-file-excel"></i>
@@ -39,7 +39,7 @@
                 <!-- Chọn product thường hay product request -->
                 <select [(ngModel)]="selectedMaterial" (change)="searchSelectedMaterial(selectedMaterial)"
                   class="form-select">
-                  <option [ngValue]="null" selected>Tất cả nguyên vật liệu</option>
+                  <option [ngValue]="null" selected>Tất cả vật liệu</option>
                   <option *ngFor="let category of categories" [ngValue]="category.materialId">
                     {{ category.materialName }}
                   </option>
@@ -127,7 +127,7 @@
               <img
                 src="https://encrypted-tbn2.gstatic.com/images?q=tbn:ANd9GcSG53pYn6cpXaiwT_q6IM45P-rXg5dUw67XqRmr9-vtsbMoHnCG"
                 alt="Not Found" style="width: 150px; height: 150px; object-fit: cover;">
-              <p class="text-center">Không tìm thấy!</p>
+              <p class="text-center">Không tìm thấy nguyên vật liệu!</p>
             </div>
           </div>
         </div>

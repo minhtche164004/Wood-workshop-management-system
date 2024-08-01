@@ -19,6 +19,15 @@ import java.util.Optional;
 
 @Repository
 public interface RequestProductRepository extends JpaRepository<RequestProducts,Integer> {
+
+//    @Query("SELECT rp.completionTime " +
+//            "FROM RequestProducts rp " +
+//            "WHERE rp.orders.orderId = :orderId " +
+//            "ORDER BY rp.completionTime DESC " +
+//            "LIMIT 1") // Giới hạn chỉ lấy 1 bản ghi
+//    Date findLatestCompletionTimeByOrderId(@Param("orderId") int orderId);
+
+
     @Query("SELECT u FROM RequestProducts u WHERE u.requestProductName = :query")
     RequestProducts findByName(String query);
 

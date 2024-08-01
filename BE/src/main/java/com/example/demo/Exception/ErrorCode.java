@@ -77,7 +77,9 @@ public enum ErrorCode {
     QUANTITY_INVALID(1024,"Số lượng phải là số nguyên và lớn hơn 0 , nhập sai định dạng ",HttpStatus.BAD_REQUEST),
     EMPLOYEE_MATERIAL_EXISTED(1038,"Sản phẩm đã được giao nguyên vật liệu cho nhân viên, không thể chỉnh sửa",HttpStatus.BAD_REQUEST),
     QUANTITY_JOB_EXCEPTION(1040,"Số lượng sản phẩm được phân vượt qúa số lượng yêu cầu",HttpStatus.BAD_REQUEST),
-    COST_JOB_EXCEPTION(1041,"Số tiền công vượt quá số tiền lợi nhuận , vui lòng nhập lại ",HttpStatus.BAD_REQUEST)
+    COST_JOB_EXCEPTION(1041,"Số tiền công vượt quá số tiền lợi nhuận , vui lòng nhập lại ",HttpStatus.BAD_REQUEST),
+    COST_DISCOUNT_ORDER_EXCEPTION(1042,"Số tiền giảm giá vượt quá số tiền lợi nhuận , vui lòng nhập lại",HttpStatus.BAD_REQUEST)
+
 
     // OTP_EXPIRED(1013,"OTP has expired! A new OTP has been sent to your email",HttpStatus.EXPECTATION_FAILED),
     ;

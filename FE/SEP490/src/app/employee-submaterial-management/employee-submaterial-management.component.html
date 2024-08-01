@@ -29,15 +29,15 @@
                             <div class="col-auto">
                               <div class="input-group mb-3">
                                 <div class="ng-autocomplete" style="width: 300px; margin-left: 5px;">
-                                    <ng-autocomplete *ngIf="employeeList" [data]="employeeList"
+                                    <ng-autocomplete *ngIf="employeeInfoList" [data]="employeeInfoList"
                                                      [searchKeyword]="keyword" placeholder="Nhập tên nhân viên tìm kiếm"
-                                                     [(ngModel)]="searchKey" historyIdentifier="employeeList"
+                                                     [(ngModel)]="searchKey" historyIdentifier="employeeInfoList"
                                                      [itemTemplate]="itemTemplate" [notFoundTemplate]="notFoundTemplate"
                                                      >
                                     </ng-autocomplete>
                                   
                                     <ng-template #itemTemplate let-item>
-                                      <a [innerHTML]="sanitize(item.userInfor?.fullname)"></a>
+                                      <a [innerHTML]="sanitize(item.fullname)"></a>
                                     </ng-template>
                                   
                                     <ng-template #notFoundTemplate let-notFound>
@@ -58,19 +58,19 @@
 
 
 
-                <div *ngIf="!checkNotFound">
+                <div *ngIf="subMaterialList.length !== 0">
                     <table class="table table-striped table-hover">
                         <!-- Table header -->
                         <thead>
                             <tr>
                                 <th>STT</th>
-                                <th>Thao tác</th>
+                                <!-- <th>Thao tác</th> -->
                                 <th>Mã sản xuất</th>
                                 <th>Tên nhân viên</th>               
                                 <th>Vị trí</th>
                                 <th>Tên nguyên vật liệu</th>
-                                <th>Số lượng</th>
-                                <th style="width: 10%;">Ngày nhận</th>
+                                <th style="width: 9%;">Số lượng</th>
+                                <th style="width: 15%;">Ngày nhận</th>
                             </tr>
                         </thead>
                         <!-- Table body -->
@@ -78,30 +78,17 @@
                             <tr
                                 *ngFor="let product of subMaterialList | paginate: { itemsPerPage: 10, currentPage: currentPage }; let i = index">
                                 <td>{{ i + 1 + (currentPage - 1) * 10 }}</td>
-                                <td class="action-buttons">
-                                    <a href="#" class="settings" title="Chỉnh sửa" data-toggle="modal"
-                                        data-target="#editProductJobModal">
-                                        <i class="fa-solid fa-pen-to-square"></i>
-                                    </a>
-                                    <!-- <a href="#" class="delete" title="Xóa" data-toggle="modal"
-                                data-target="#confirmDeleteModal">
-                                <i class="fa-regular fa-trash-can"></i>
-                            </a> -->
-                                    <a style="margin-left: 10px;" title="Chi tiết" data-toggle="modal"
-                                        data-target="#detailEmpSubMaterial">
-                                        <i class="fa-solid fa-ellipsis-vertical" (click)="showDetails(product)"></i>
-                                    </a>
-                                </td>
+                               
                                 <td>{{ product?.code }}</td>
                                 <td>{{ product?.fullname }}</td>
                                 <td>{{ product?.position_name }}</td>
                                 <td>{{ product?.subMaterialName }}</td>
-                                <td>{{ product?.quantity }}</td>
+                                <td style="text-align: right;">{{ product?.quantity }}</td>
                                 <td>{{ product?.timeStart | date:'dd/MM/yyyy'}}</td>
                             </tr>
                         </tbody>
                     </table>
-
+                    
                     <!-- Pagination controls -->
                     <pagination-controls style="justify-content: right; display: flex;"
                         (pageChange)="currentPage = $event" previousLabel="Trang trước" nextLabel="Trang sau"
@@ -117,14 +104,16 @@
                         </div>
                     </div>
                 </div>
-
+           
                 <!-- Display 404 Not Found if no data -->
-                <div *ngIf="checkNotFound">
+                <div *ngIf="!subMaterialList || subMaterialList.length === 0">
+
                     <div style="background-color: white;">
-                        <div class="d-flex justify-content-center align-items-center" style="height: 200px;">
+                        <div class=""
+                            style="display: flex; justify-content: center; align-items: center; height: 100%;">
                             <img src="https://encrypted-tbn2.gstatic.com/images?q=tbn:ANd9GcSG53pYn6cpXaiwT_q6IM45P-rXg5dUw67XqRmr9-vtsbMoHnCG"
-                                alt="Not Found" style="width: 150px; height: 150px; object-fit: cover;">
-                            <p class="text-center">Không tìm thấy!</p>
+                                alt="" class="product-img" style="width: 150px; height: 150px; object-fit: cover;">
+                            <p class="name-product text-center">Không tìm thấy lịch sử phân phối vật liệu!</p>
                         </div>
                     </div>
                 </div>

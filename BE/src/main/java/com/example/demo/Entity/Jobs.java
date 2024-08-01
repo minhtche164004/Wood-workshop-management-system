@@ -75,6 +75,12 @@ public class Jobs {
     @Column(name = "job_log")
     private boolean job_log;
 
+    @Column(name = "reassigned") //được phân công lại
+    private boolean reassigned;
+
+    @Column(name = "original_quantity_product")
+    private Integer originalQuantityProduct;
+
 //    @OneToMany(mappedBy = "process_product_error")
 //    @JsonIgnore
 //    private List<Processproducterror> processproducterrors;

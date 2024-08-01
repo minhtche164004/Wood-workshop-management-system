@@ -90,7 +90,7 @@ export class EmployeeSubmaterialManagementComponent implements OnInit {
   searchKey: any;
   categories: any[] = [];
   selectedFile: File | undefined;
-  keyword = 'userInfor?.fullname';
+  keyword = 'fullname';
   sub_material_name: string = '';
   SubMaterData: any = {};
   description: string = '';
@@ -132,6 +132,7 @@ export class EmployeeSubmaterialManagementComponent implements OnInit {
   }
   searchSalary() {
     this.isLoadding = true;
+    
     console.log('Search key seacrSaka:',this.searchKey.fullname as string);
     
     this.empService.searchEmployeeByName(this.searchKey.fullname as string || this.searchKey as string).subscribe(
@@ -177,7 +178,7 @@ export class EmployeeSubmaterialManagementComponent implements OnInit {
           //   {'fullname': 'hehe'},
           //   {'fullname': 'haha'}
           // ];
-          console.log('employeeList: ', this.employeeList);
+          //console.log('employeeList: ', this.employeeList);
           console.log('fullname: ', this.employeeInfoList);
           this.isLoadding = false;
         } else {
@@ -201,7 +202,7 @@ export class EmployeeSubmaterialManagementComponent implements OnInit {
     this.empService.getSubMaterialForEmp().subscribe(
       (data) => {
         this.subMaterialList = data.result;
-        console.log('SubMaterial for emp:', this.subMaterialList);
+     //   console.log('SubMaterial for emp:', this.subMaterialList);
         this.isLoadding = false;
       },
       (error) => {

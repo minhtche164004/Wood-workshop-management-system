@@ -17,7 +17,7 @@
                 <span class="align-middle">Thêm sản phẩm</span>
               </a>
               <!-- Them san pham trong bang request product theo yeu cau -->
-              <a id="addRequestProductButton" *ngIf="!isProduct" href="#" class="btn btn-secondary btn-sm"
+              <a id="addRequestProductButton" *ngIf="!isProduct && idOrder" href="#" class="btn btn-secondary btn-sm"
                 data-toggle="modal" data-target="#addRequestProductModal" style="font-size: 14px;"
                 (click)="resetFormAdd()">
                 <i class="material-icons align-middle" style="font-size: 18px;">&#xE147;</i>
@@ -346,7 +346,7 @@
           <!-- Nhap gia tien -->
           <div class="form-row">
             <div class="col-md-12">
-              <label style="font-size: 16px;" for="productPrice">Đơn giá(VNĐ)<span
+              <label style="font-size: 16px;" for="productPrice">Đơn giá 1 đơn vị của sản phẩm (VNĐ)<span
                   class="required-asterisk">*</span></label>
               <input type="text" min="0" class="form-control" id="productPrice" formControlName="price"
                 (input)="formatInputValue($event)">
@@ -514,7 +514,7 @@
                       <div class="col-md-2 mb-3">
                         <div class="form-group">
                           <label for="materialId-{{i}}">Loại vật liệu<span class="required-asterisk">*</span></label>
-                          <select id="materialId-{{i}}" class="form-control" [ngModel]="selectedMaterialId[i+j]"
+                          <select id="materialId-{{i}}" class="form-control"  formControlName="materialId"
                             (change)="onMaterialChange($event, i*10+j)">
                             <option *ngFor="let material of materials" [value]="material.materialId">{{
                               material.materialName
@@ -527,8 +527,8 @@
                         <div class="form-group">
                           <label for="subMaterialId-{{i}}">Tên nguyên vật liệu<span
                               class="required-asterisk">*</span></label>
-                          <select id="subMaterialId-{{i}}" class="form-control" *ngIf="subMaterials[i*10+j]"
-                            (change)="onSubMaterialChange($event, i*10+j)">
+                          <select id="subMaterialId-{{i}}" class="form-control" *ngIf="subMaterials[i*10+j]" formControlName="submateId"
+                            (change)="onSubMaterialChangeRProduct($event, i*10+j, i,j)">
                             <option disabled value="" selected>Chọn vật liệu</option>
                             <option *ngFor="let subMaterial of subMaterials[i*10+j]"
                               [value]="subMaterial?.subMaterialId">{{
@@ -557,7 +557,7 @@
                       <div class="col-md-1 mb-3">
                         <div class="form-group">
                           <label for="quantity-{{i}}">Số lượng</label>
-                          <input id="quantity-{{i}}" class="form-control" type="number" min="1"
+                          <input id="quantity-{{i}}" class="form-control" type="number" min="1" formControlName="quantity"
                             (input)="onQuantityChangeSubMaterialRProduct($event, i*10+j,i,j)"
                             placeholder="Nhập số lượng">
                         </div>
@@ -748,7 +748,7 @@
                 <div class="col-md-4 mb-3">
                   <div class="form-group">
                     <label for="subMaterialId-{{i}}">Tên nguyên vật liệu<span class="required-asterisk">*</span></label>
-                    <select id="subMaterialId-{{i}}" class="form-control" *ngIf="subMaterials[i]"
+                    <select id="subMaterialId-{{i}}" class="form-control" 
                       (change)="onSubMaterialChange($event, i)" formControlName="subMaterialId">
                       <option *ngFor="let subMaterial of subMaterials[i]" [value]="subMaterial?.subMaterialId">{{
                         subMaterial?.subMaterialName
@@ -797,7 +797,7 @@
 
           <div class="form-row">
             <div class="form-group col-md-12">
-              <label style="font-size: 16px;" for="editProductPrice">Đơn giá(VNĐ)<span
+              <label style="font-size: 16px;" for="editProductPrice">Đơn giá 1 đơn vị của sản phẩm (VNĐ)<span
                   class="required-asterisk">*</span></label>
               <input type="text" min="0" class="form-control" id="editProductPrice" name="editProductPrice"
                 formControlName="price" (input)="formatInputValue($event)">
@@ -1017,7 +1017,7 @@
 
           <div class="form-row">
             <div class="form-group col-md-12">
-              <label style="font-size: 16px;" for="editProductPrice">Đơn giá(VNĐ)</label>
+              <label style="font-size: 16px;" for="editProductPrice">Đơn giá 1 đơn vị của sản phẩm (VNĐ)</label>
               <input type="text" min="0" class="form-control" id="editProductPrice" name="editProductPrice"
                 formControlName="price" (input)="formatInputValue($event)">
             </div>

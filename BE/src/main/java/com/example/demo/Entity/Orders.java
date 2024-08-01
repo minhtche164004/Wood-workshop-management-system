@@ -78,6 +78,15 @@ public class Orders {
     @Column(name = "description") //tương tự như bên class request
     private String description;
 
+    @Column(name = "discount")
+    private BigDecimal discount;
+
+    @Column(name = "refund")
+    private BigDecimal refund;
+
+    @Column(name = "contract_date") //ngày đơn hàng thi công xong , bắt theo cái date cảu sản phẩm muộn nhất có trong đơn hàng(dành cho đơn hàng đặc biệt)
+    private Date contractDate;
+
     @OneToMany(mappedBy = "orders", cascade = CascadeType.ALL)
     private List<Requestimages> requestImages;
 

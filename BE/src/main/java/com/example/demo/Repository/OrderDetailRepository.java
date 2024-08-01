@@ -6,7 +6,9 @@ import com.example.demo.Dto.OrderDTO.OrderDetailDTO;
 import com.example.demo.Dto.OrderDTO.OrderDetailWithJobStatusDTO;
 import com.example.demo.Entity.Orderdetails;
 import com.example.demo.Entity.User;
+import jakarta.transaction.Transactional;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
@@ -23,6 +25,11 @@ public interface OrderDetailRepository extends JpaRepository<Orderdetails, Integ
     List<Orderdetails> getOrderDetailByProductId(int query);
     @Query("SELECT u FROM Orderdetails u WHERE u.requestProduct.requestProductId = :query")
     List<Orderdetails> getOrderDetailByRequestProductId(int query);
+
+    @Transactional
+    @Modifying
+    @Query("DELETE FROM Orderdetails p WHERE p.orderDetailId = :orderDetailId")
+    void deleteOrderDetailByOrderDetailId(@Param("orderDetailId") int orderDetailId);
 
 //    @Query("SELECT u FROM Orderdetails u WHERE u.orderDetailId = :query")
 //    Orderdetails getOrderDetailById(int query);
@@ -125,7 +132,7 @@ public interface OrderDetailRepository extends JpaRepository<Orderdetails, Integ
             "LEFT JOIN o.userInfor.user u " +
             "JOIN od.jobs j " + // Sử dụng INNER JOIN
             "JOIN j.status s " +  // Sử dụng INNER JOIN
-            "WHERE od.order.orderId = :query AND s.status_id = 13")
+            "WHERE od.order.orderId = :query AND s.status_id = 13 OR s.status_id = 16")
     List<OrderDetailWithJobStatusDTO> getAllOrderDetailByOrderIdCheck(int query);
 
 

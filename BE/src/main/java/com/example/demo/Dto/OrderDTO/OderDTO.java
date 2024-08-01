@@ -20,6 +20,7 @@ public class OderDTO  {
     private int paymentMethod;
     private BigDecimal deposite;
     private boolean specialOrder;
+    private Date contractDate;
 
 
 

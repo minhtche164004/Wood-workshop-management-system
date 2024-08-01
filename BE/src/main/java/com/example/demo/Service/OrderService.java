@@ -90,7 +90,7 @@ public interface OrderService {
 
    ResponseEntity<String> Cancel_Order(int order_id, boolean special_order_id,String response);
 
-    ResponseEntity<String> Refund_Order(int order_id, boolean special_order_id,String response);
+    ResponseEntity<String> Refund_Order(int order_id, boolean special_order_id, int percent_deposite_price,int percent_order_price,String response);
 
 
     String ConfirmPayment(int order_id);
@@ -101,8 +101,8 @@ public interface OrderService {
 
     String SendMailToNotifyCationAboutOrder(int order_id,String link) throws MessagingException, IOException;
 
-
     String RefundDeposite(int order_id);
+    String TimeContract(int order_id, double percentage_discount,Date NewDate);
 
 
 

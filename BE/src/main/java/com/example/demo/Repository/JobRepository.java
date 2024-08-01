@@ -5,6 +5,7 @@ import com.example.demo.Dto.OrderDTO.JobProductDTO;
 import com.example.demo.Dto.OrderDTO.OderDTO;
 import com.example.demo.Dto.ProductDTO.ProductErrorAllDTO;
 import com.example.demo.Entity.*;
+import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.transaction.Transactional;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
@@ -41,6 +42,32 @@ public interface JobRepository extends JpaRepository<Jobs,Integer> {
 //            "(SELECT COUNT( j.jobId) FROM Jobs j WHERE j.user.userId = u.userId) < 3")
 //    List<User> findUsersWithPositionAndLessThan3Jobs(@Param("type") int type);
 
+    @Query("SELECT o.totalAmount FROM Orders o JOIN Orderdetails od ON o.orderId = od.order.orderId JOIN Jobs j ON od.orderDetailId = j.orderdetails.orderDetailId WHERE j.jobId = ?1")
+    BigDecimal findToTalAmountOrderByJobId(int jobId);
+
+    @Query("SELECT CASE WHEN j.product IS NOT NULL THEN true ELSE false END FROM Jobs j WHERE j.jobId = :jobId")
+    boolean isProductJob(@Param("jobId") int jobId);
+
+    //tính tổng số lượng sản phẩm
+    @Query("SELECT COALESCE(SUM(p.quantityProduct), 0) FROM Jobs p WHERE p.code = :code AND p.reassigned = true ORDER BY p.code DESC LIMIT 1 ")
+    int countProductOfReassigned(String code);
+
+    @Query("SELECT COALESCE(SUM(p.quantityProduct), 0) FROM Jobs p WHERE p.code = :code AND p.status.status_id < :status_id AND p.job_log = true")
+    int sumQuantityProductByCodeAndStatusLessThan(String code, int status_id);
+
+    @Query("SELECT COALESCE(SUM(p.quantityProduct), 0) FROM Jobs p JOIN p.user u JOIN u.position pos WHERE p.code = :code AND p.status.status_id = 16 AND pos.position_id = :position_id")
+    Integer sumQuantityProductByCodeAndPosition(String code, int position_id);
+    
+    @Query("SELECT p.originalQuantityProduct FROM Jobs p WHERE p.jobId = :jobId")
+    Integer getOriginalQuantityProduct(int jobId);
+
+
+
+
+
+
+
+
     @Query("SELECT u FROM User u " +
             "WHERE u.position.position_id = :type AND u.role.roleId= 4 AND " +
             "(SELECT COUNT( j.jobId) FROM Jobs j WHERE j.user.userId = u.userId AND j.job_log = false ) < 3")
@@ -52,6 +79,11 @@ public interface JobRepository extends JpaRepository<Jobs,Integer> {
     @Query(value = "SELECT p.* FROM jobs p WHERE p.code LIKE :prefix% ORDER BY p.code DESC LIMIT 1", nativeQuery = true)
     Jobs findJobsTop(@Param("prefix") String prefix);
 
+    @Transactional
+    @Modifying
+    @Query("DELETE FROM Jobs p WHERE p.jobId = :jobId")
+    void deleteJobById(@Param("jobId") int jobId);
+
 
     @Query("SELECT u FROM Jobs u WHERE u.orderdetails.order.code = :query")
     List<Jobs> getJobByOrderDetailByOrderCode(String query);
@@ -62,7 +94,7 @@ public interface JobRepository extends JpaRepository<Jobs,Integer> {
     @Query("SELECT u FROM Jobs u WHERE u.product.productId = :query")
     List<Jobs> getJobByProductId(int query);
 
-    @Query("SELECT u FROM Jobs u WHERE u.requestProducts.requestProductId = :query")
+    @Query("SELECT u FROM Jobs u WHERE u.requestProducts.requestProductId = :query AND u.status.status_id != 14") //nếu job có trạng thái là khác chờ đtawj cọc thì ko đc xoá các job ấy nữa
     List<Jobs> getJobByRequestProductId(int query);
 
     @Query("SELECT u FROM Jobs u WHERE u.job_log IS TRUE")
@@ -89,7 +121,7 @@ public interface JobRepository extends JpaRepository<Jobs,Integer> {
 
     @Query("SELECT new com.example.demo.Dto.OrderDTO.JobProductDTO(" +
             "j.jobId,j.code,o.code, p.requestProductId, p.requestProductName, p.description, p.price, j.status, od.quantity, " +
-            "COALESCE(u.userId, 0), COALESCE(u.username, ''), COALESCE(pos.position_id, 0), COALESCE(pos.position_name, ''),COALESCE(MIN(e.processProductErrorId),0L)) " + // Sử dụng COALESCE
+            "COALESCE(u.userId, 0), COALESCE(u.username, ''), COALESCE(pos.position_id, 0), COALESCE(pos.position_name, ''),COALESCE(MIN(e.processProductErrorId),0L),COALESCE(j.reassigned, false)) " + // Sử dụng COALESCE
             "FROM Jobs j " +
             "LEFT JOIN j.orderdetails od " +
             "LEFT JOIN od.order o " +
@@ -104,7 +136,7 @@ public interface JobRepository extends JpaRepository<Jobs,Integer> {
 
     @Query("SELECT new com.example.demo.Dto.OrderDTO.JobProductDTO(" +
             "j.jobId,j.code,o.code, p.requestProductId, p.requestProductName, p.description, p.price, j.status, od.quantity, " +
-            "COALESCE(u.userId, 0), COALESCE(u.username, ''), COALESCE(pos.position_id, 0), COALESCE(pos.position_name, ''),COALESCE(MIN(e.processProductErrorId),0L)) " + // Sử dụng COALESCE
+            "COALESCE(u.userId, 0), COALESCE(u.username, ''), COALESCE(pos.position_id, 0), COALESCE(pos.position_name, ''),COALESCE(MIN(e.processProductErrorId),0L),COALESCE(j.reassigned, false)) " + // Sử dụng COALESCE
             "FROM Jobs j " +
             "LEFT JOIN j.orderdetails od " +
             "LEFT JOIN od.order o " +
@@ -124,7 +156,7 @@ public interface JobRepository extends JpaRepository<Jobs,Integer> {
 
 
     @Query("SELECT new com.example.demo.Dto.OrderDTO.JobProductDTO(j.jobId,j.code,null, COALESCE(p.productId, 0) ,COALESCE(p.productName, '') ,  COALESCE(p.description, ''),COALESCE(j.cost, 0) , j.status,COALESCE(j.quantityProduct, 0) ," +
-            "COALESCE(u.userId, 0), COALESCE(u.username, ''), COALESCE(pos.position_id, 0), COALESCE(pos.position_name, ''),COALESCE(MIN(e.processProductErrorId),0L)) " +
+            "COALESCE(u.userId, 0), COALESCE(u.username, ''), COALESCE(pos.position_id, 0), COALESCE(pos.position_name, ''),COALESCE(MIN(e.processProductErrorId),0L),COALESCE(j.reassigned, false)) " +
             "FROM Jobs j " +
             "LEFT JOIN j.product p " +
             "LEFT JOIN j.user u " +
@@ -145,7 +177,7 @@ public interface JobRepository extends JpaRepository<Jobs,Integer> {
 
 
     @Query("SELECT new com.example.demo.Dto.OrderDTO.JobProductDTO(j.jobId,j.code,null, COALESCE(p.productId, 0) ,COALESCE(p.productName, '') ,  COALESCE(p.description, ''),COALESCE(j.cost, 0) , j.status,COALESCE(j.quantityProduct, 0) ," +
-            "COALESCE(u.userId, 0), COALESCE(u.username, ''), COALESCE(pos.position_id, 0), COALESCE(pos.position_name, ''),COALESCE(MIN(e.processProductErrorId),0L)) " +
+            "COALESCE(u.userId, 0), COALESCE(u.username, ''), COALESCE(pos.position_id, 0), COALESCE(pos.position_name, ''),COALESCE(MIN(e.processProductErrorId),0L),COALESCE(j.reassigned, false)) " +
             "FROM Jobs j " +
             "LEFT JOIN j.product p " +
             "LEFT JOIN j.user u " +
@@ -156,7 +188,7 @@ public interface JobRepository extends JpaRepository<Jobs,Integer> {
     List<JobProductDTO> getListProductJob();
 
     @Query("SELECT new com.example.demo.Dto.OrderDTO.JobProductDTO(j.jobId,j.code,null, COALESCE(p.productId, 0),COALESCE(p.productName, '') ,COALESCE(p.description, '') ,COALESCE(j.cost, 0), j.status, COALESCE(j.quantityProduct, '') , " +
-            "COALESCE(u.userId, 0), COALESCE(u.username, ''), COALESCE(pos.position_id, 0), COALESCE(pos.position_name, ''),COALESCE(MIN(e.processProductErrorId),0L)) " +  // Sử dụng COALESCE
+            "COALESCE(u.userId, 0), COALESCE(u.username, ''), COALESCE(pos.position_id, 0), COALESCE(pos.position_name, ''),COALESCE(MIN(e.processProductErrorId),0L),COALESCE(j.reassigned, false)) " +  // Sử dụng COALESCE
             "FROM Jobs j " +
             "JOIN j.product p " +
             "LEFT JOIN j.user u " +
@@ -168,7 +200,7 @@ public interface JobRepository extends JpaRepository<Jobs,Integer> {
 
     @Query("SELECT new com.example.demo.Dto.OrderDTO.JobProductDTO(" +
             "j.jobId,j.code,o.code, p.requestProductId, p.requestProductName, p.description, p.price, j.status, od.quantity, " +
-            "COALESCE(u.userId, 0), COALESCE(u.username, ''), COALESCE(pos.position_id, 0), COALESCE(pos.position_name, ''),COALESCE(MIN(e.processProductErrorId),0L)) " + // Sử dụng COALESCE
+            "COALESCE(u.userId, 0), COALESCE(u.username, ''), COALESCE(pos.position_id, 0), COALESCE(pos.position_name, ''),COALESCE(MIN(e.processProductErrorId),0L),COALESCE(j.reassigned, false)) " + // Sử dụng COALESCE
             "FROM Jobs j " +
             "LEFT JOIN j.orderdetails od " +
             "LEFT JOIN od.order o " +

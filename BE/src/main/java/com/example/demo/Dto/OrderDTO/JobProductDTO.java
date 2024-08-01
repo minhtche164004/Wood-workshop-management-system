@@ -27,9 +27,11 @@ public class JobProductDTO {
     private int position_id;
     private String position_name;
     private int product_error_id;
+    private boolean reassigned;
 
 
-    public JobProductDTO(int job_id,String job_code,String code, int product_id, String product_name, String description, BigDecimal price, Status_Job statusJob, int quantity, int user_id, String user_name, int position_id, String position_name,int product_error_id) {
+    public JobProductDTO(int job_id,String job_code,String code, int product_id, String product_name, String description,
+                         BigDecimal price, Status_Job statusJob, int quantity, int user_id, String user_name, int position_id, String position_name,int product_error_id,boolean reassigned) {
         this.job_id=job_id;
         this.job_code = job_code;
         this.code = code;
@@ -44,5 +46,6 @@ public class JobProductDTO {
         this.position_id = position_id;
         this.position_name = position_name;
         this.product_error_id = product_error_id;
+        this.reassigned= reassigned;
     }
 }

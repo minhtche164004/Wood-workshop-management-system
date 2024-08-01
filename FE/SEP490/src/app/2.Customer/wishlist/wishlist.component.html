@@ -7,184 +7,120 @@
     <title>Sản phẩm yêu thích</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
     <style>
-        /* General Styles */
-        body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 0;
-        }
+   body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+}
 
-        /* Header Styles */
-        header {
-            background-color: #C89551;
-            color: #fff;
-            padding: 20px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
+/* Header Styles */
+header {
+    background-color: #C89551;
+    color: #fff;
+    padding: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
 
-        header h1 {
-            margin: 0;
-            font-size: 32px;
-        }
+header h1 {
+    margin: 0;
+    font-size: 32px;
+}
 
-        header .fa-heart {
-            color: red;
-            margin-left: 10px;
-            font-size: 24px;
-        }
+header .fa-heart {
+    color: red;
+    margin-left: 10px;
+    font-size: 24px;
+}
 
-        .product-container {
-            display: grid;
-            grid-template-columns: repeat(2, 2fr);
-            grid-gap: 40px;
-            padding: 40px;
-        }
+/* Product Styles */
+.product-card {
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    margin: 10px 0;
+    overflow: hidden;
+    transition: transform 0.3s;
+}
 
-        @media (max-width: 767px) {
-            .product-container {
-                grid-gap: 20px;
-                padding: 20px;
-            }
-        }
+.product-card:hover {
+    transform: scale(1.05);
+}
 
-        .product {
-            border: 1px solid #ccc;
-            padding: 20px;
-            display: flex;
-            align-items: center;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-            transition: transform 0.3s ease;
-        }
+.product-img {
+    width: 100%;
+    height: 370px;
+    object-fit: cover;
+}
+.product-info {
+    padding: 1rem;
+    text-align: center;
+}
 
-        .product:hover {
-            transform: translateY(-5px);
-        }
+.product-info h3 {
+    margin-top: 0;
+    font-size: 1.2rem;
+}
 
-        .product {
-            display: flex;
-            flex-wrap: wrap;
-            align-items: center;
-            margin-bottom: 20px;
-        }
+.product-info .price {
+    color: #007bff;
+    font-weight: bold;
+}
 
-        .product img {
-            width: 340px;
-            height: 200px;
-            object-fit: cover;
-            margin-right: 20px;
-        }
+.product-info .actions {
+    display: flex;
+    justify-content: center;
+    margin-top: 1rem;
+}
 
-        @media (max-width: 768px) {
-            .product {
-                flex-direction: column;
-                align-items: flex-start;
-            }
+.product-info .delete-btn {
+    background-color: #dc3545;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    padding: 0.5rem 1rem;
+    cursor: pointer;
+}
 
-            .product img {
-                width: 100%;
-                height: auto;
-                margin-right: 0;
-                margin-bottom: 10px;
-            }
-        }
+.product-info .delete-btn:hover {
+    background-color: #c82333;
+}
 
-        .product-info {
-            padding: 1rem;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-        }
+/* Pagination Styles */
+.pagination {
+    display: flex;
+    justify-content: center;
+    margin-top: 40px;
+}
 
-        .product-info h3 {
-            margin-top: 0;
-            font-size: 1.2rem;
-        }
+.pagination a {
+    color: #333;
+    padding: 10px 20px;
+    text-decoration: none;
+    margin: 0 5px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    transition: background-color 0.3s ease;
+}
 
-        .product-info .price {
-            color: #007bff;
-            font-weight: bold;
-        }
+.pagination a.active {
+    background-color: #ff6b6b;
+    color: #fff;
+    border-color: #ff6b6b;
+}
 
-        .product-info .actions {
-            display: flex;
-            justify-content: flex-end;
-            margin-top: 1rem;
-        }
+.pagination a:hover {
+    background-color: #f2f2f2;
+}
 
-        .product-info .delete-btn {
-            background-color: #dc3545;
-            color: #fff;
-            border: none;
-            border-radius: 4px;
-            padding: 0.5rem 1rem;
-            cursor: pointer;
-        }
-
-        .product-info .delete-btn:hover {
-            background-color: #c82333;
-        }
-
-        .product h3 {
-            margin-top: 0;
-            font-size: 20px;
-        }
-
-        .product p {
-            margin-top: 10px;
-            font-size: 16px;
-        }
-
-        .product button {
-            background-color: #ff6b6b;
-            color: #fff;
-            border: none;
-            padding: 10px 20px;
-            cursor: pointer;
-            font-size: 16px;
-            margin-top: 20px;
-            transition: background-color 0.3s ease;
-        }
-
-        .product button:hover {
-            background-color: #e53935;
-        }
-
-        /* Pagination Styles */
-        .pagination {
-            display: flex;
-            justify-content: center;
-            margin-top: 40px;
-        }
-
-        .pagination a {
-            color: #333;
-            padding: 10px 20px;
-            text-decoration: none;
-            margin: 0 5px;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-            transition: background-color 0.3s ease;
-        }
-
-        .pagination a.active {
-            background-color: #ff6b6b;
-            color: #fff;
-            border-color: #ff6b6b;
-        }
-
-        .pagination a:hover {
-            background-color: #f2f2f2;
-        }
-
-        /* Footer Styles */
-        footer {
-            background-color: #333;
-            color: #fff;
-            padding: 20px;
-            text-align: center;
-            font-size: 14px;
-        }
+/* Footer Styles */
+footer {
+    background-color: #333;
+    color: #fff;
+    padding: 20px;
+    text-align: center;
+    font-size: 14px;
+}
     </style>
 </head>
 
@@ -192,26 +128,33 @@
     <app-header></app-header>
     <header style="margin-top: 150px;">
         <h1>Sản phẩm yêu thích <i class="fas fa-heart"></i></h1>
-    </header> 
+    </header>
 
-    <div class="product-container">
-        <div *ngFor="let item of wishlistItems | paginate: { itemsPerPage: 4, currentPage: currentPage }; let i = index"
-            class="product">
-            <img [routerLink]="['/product-details', item.product.productId]" [src]="item.product.image"
-                style="width: 400px; height: 300px; " alt="Sản phẩm 2">
-            <div class="product-info">
-                <h3 class="text-center"><b>{{ item.product.productName }}</b></h3>
-                <h3> Kiểu sản phẩm:  {{ item.product.categories.categoryName }}</h3>
-                <p class="price">Giá Tiền: {{ item.product.price | number: '1.0-3' }} VNĐ</p>
-                <div class="actions">
-                    <button class="delete-btn" title="Delete" data-toggle="modal" data-target="#confirmDeleteModal"
-                        (click)="setDeleteId(item.id)">
-                        <i class="fas fa-trash-alt"></i> Xóa
-                    </button>
+    <div class="products">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-4 col-md-6 col-12" *ngFor="let item of wishlistItems | paginate: { itemsPerPage: 4, currentPage: currentPage }; let i = index">
+                    <div class="product-card">
+                        <img class="product-img" [routerLink]="['/product-details', item.product.productId]" [src]="item.product.image" alt="Product Image">
+                        <div class="product-info">
+                            <h3 class="text-center"><b>{{ item.product.productName }}</b></h3>
+                            <h3> Kiểu sản phẩm: {{ item.product.categories.categoryName }}</h3>
+                            <p class="price">Giá Tiền: {{ item.product.price | number: '1.0-3' }} VNĐ</p>
+                            <div class="actions">
+                                <button class="delete-btn" title="Delete" data-toggle="modal" data-target="#confirmDeleteModal" (click)="setDeleteId(item.id)">
+                                    <i class="fas fa-trash-alt"></i> Xóa
+                                </button>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
+           
         </div>
     </div>
+    
+
+
     <pagination-controls style="justify-content: right; display: flex;" (pageChange)="currentPage = $event"
         previousLabel="Trang trước" nextLabel="Trang sau" *ngIf="wishlistItems && wishlistItems.length > 0">
     </pagination-controls>

@@ -132,9 +132,10 @@
                 <button class="btn btn-primary px-4 float-right " *ngIf="!isEditing" (click)="editProfile()">Chỉnh
                   sửa</button>
                 <div *ngIf="isEditing" class="btn-group float-right">
-                  <button style="margin-right: 10px;" class="btn btn-primary" (click)="saveChanges()">Lưu thay
+                  <button class="btn btn-secondary" (click)="cancelChanges()">Hủy bỏ</button>
+                  <button style="margin-left: 10px;" class="btn btn-primary" (click)="saveChanges()">Lưu thay
                     đổi</button>
-                  <button class="btn btn-mau-do" (click)="cancelChanges()">Hủy bỏ</button>
+               
 
                 </div>
               </div>

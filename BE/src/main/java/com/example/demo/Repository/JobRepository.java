@@ -240,7 +240,7 @@ public interface JobRepository extends JpaRepository<Jobs,Integer> {
             " JOIN j.status s" +
             " LEFT JOIN j.product pr" +
             " LEFT JOIN j.requestProducts rp" +
-            " WHERE  u.userId = :userId AND j.status.status_id != 10")
+            " WHERE  u.userId = :userId AND j.status.status_id != 10 AND j.status.status_id != 15")
     //j.job_log = true AND
     List<JobDoneDTO> findAllJobForDoneByEmployeeID(int userId);
 
@@ -273,7 +273,7 @@ public interface JobRepository extends JpaRepository<Jobs,Integer> {
             " JOIN j.status s" +
             " LEFT JOIN j.product pr" +
             " LEFT JOIN j.requestProducts rp" +
-            " WHERE  u.userId = :userId AND j.code LIKE CONCAT('%', :query, '%') AND j.status.status_id != 10")
+            " WHERE  u.userId = :userId AND j.code LIKE CONCAT('%', :query, '%') AND j.status.status_id != 10 AND j.status.status_id != 15")
         //j.job_log = true AND
     List<JobDoneDTO> findAllJobForDoneByEmployeeIDWithJobCode(int userId,String query);
 

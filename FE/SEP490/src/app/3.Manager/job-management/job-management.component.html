@@ -240,15 +240,13 @@
                                                 </div>
                                                 <div class="col-md-6">
 
-                                                    <select *ngIf="checkEmployeeList" #employeeSelect class="form-select" (change)="onChangeSelectedEmployee($event)">
+                                                    <select #employeeSelect class="form-select" (change)="onChangeSelectedEmployee($event)">
                                                         <option value="" selected disabled>Chọn 1 nhân viên</option>
                                                         <option *ngFor="let employee of positionEmployees" [value]="employee.userId">
-                                                          {{ employee.userInfor.fullname }}
+                                                          {{ employee.userInfor.fullname }} ({{ employee.position?.position_name }})
                                                         </option>
                                                       </select>
-                                                      <p *ngIf="!checkEmployeeList" style="color: red;">
-                                                        Không còn nhân viên trống lịch sản xuất
-                                                      </p>
+                                                    
                                                       
                                                       
                                                 </div>
@@ -543,7 +541,7 @@
                             <div class="ng-autocomplete" style="width: 100%;">
                                 <ng-autocomplete *ngIf="productAutoSearch" [data]="productAutoSearch"
                                     [searchKeyword]="keyword" placeholder="Nhập tên sản phẩm có sẵn ..."
-                                    historyIdentifier="productAutoSearch" [itemTemplate]="itemTemplate"
+                                    historyIdentifier="productAutoSearch" [itemTemplate]="itemTemplate" ([ngModel])="selectedAddProduct"
                                     [notFoundTemplate]="notFoundTemplate" (selected)="selectProduct($event)">
                                 </ng-autocomplete>
                                 <ng-template #itemTemplate let-item>
@@ -1052,7 +1050,7 @@
                                                         <option value="" selected disabled>Chọn 1 nhân viên</option>
                                                         <option *ngFor="let employee of positionEmployees"
                                                             [value]="employee.userId">
-                                                            {{ employee.userInfor.fullname }}
+                                                            {{ employee.userInfor.fullname }} ({{ employee.position?.position_name }})
                                                         </option>
                                                     </select>
 

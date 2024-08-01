@@ -51,6 +51,14 @@ export class OrderManagementComponent implements OnInit {
   totalAmount: number = 0;
   totalRefundAmount: number = 0;
   totalAmount102: number = 0;
+
+
+
+  priceDiscount: number = 0;
+  datepriceDiscount: string = '';
+
+
+
   constructor(private http: HttpClient, private productListService: ProductListService, private orderService: OrderService,
     private authenListService: AuthenListService, private toastr: ToastrService, private orderRequestService: OrderRequestService
   ) {
@@ -90,7 +98,7 @@ export class OrderManagementComponent implements OnInit {
     this.totalRefundAmount = this.depositeAmount + this.totalAmountA;
   }
 
-  
+
 
   ngOnInit(): void {
     this.updateDepositeAmount();
@@ -107,15 +115,20 @@ export class OrderManagementComponent implements OnInit {
   selectedModalId: string = '';
   indexStatus: number = 0;
   previousStatusId: string = '';
-
-
-
+  contactUser(phoneNumber?: string): void {
+    console.log(phoneNumber);
+    if (phoneNumber) {
+      window.location.href = `https://zalo.me/${phoneNumber}`;
+    } else {
+      console.error('Phone number is not available.');
+    }
+  }
 
   tempTotalAmount: number = 0;
 
   cancelRefundModal() {
-    this.percentDepositPrice= 0;
-    this.percentOrderPrice= 0;
+    this.percentDepositPrice = 0;
+    this.percentOrderPrice = 0;
     // Reset form fields
     this.OrderdetailById.deposite = 0;
     this.depositeAmount = 0;
@@ -123,13 +136,13 @@ export class OrderManagementComponent implements OnInit {
     this.totalAmountA = 0;
     this.totalRefundAmount = 0;
     this.cancelReasonPrice = '';
-  
+
     // If you are using Angular Forms, you may need to reset the form
     // this.refundForm.reset(); // Uncomment this if you are using FormGroup
-    
- 
+
+
   }
-  
+
   cancelChangeStatusJob() {
     this.selectedModalId = '';
   }
@@ -482,7 +495,7 @@ export class OrderManagementComponent implements OnInit {
       }
       $('[data-dismiss="modal"]').click();
     };
-  
+
     // Validate percentage fields
     const isValidPercentage = (value: number | null): boolean => {
       if (value === null || value === undefined || isNaN(value)) {
@@ -492,21 +505,21 @@ export class OrderManagementComponent implements OnInit {
       const percentageRegex = /^(100(\.0{1,2})?|(\d{1,2})(\.\d{1,2})?)$/;
       return percentageRegex.test(percentageString) && parseFloat(percentageString) >= 0;
     };
-  
+
     const percentDepositPriceTrimmed = this.percentDepositPrice !== null ? this.percentDepositPrice.toString().trim() : '';
     const percentOrderPriceTrimmed = this.percentOrderPrice !== null ? this.percentOrderPrice.toString().trim() : '';
     const cancelReasonPriceTrimmed = this.cancelReasonPrice ? this.cancelReasonPrice.trim() : '';
-  
+
     if (percentDepositPriceTrimmed === '' || percentOrderPriceTrimmed === '' || cancelReasonPriceTrimmed === '') {
       this.toastr.error('Các trường không được để trống');
       return;
     }
-  
+
     if (!isValidPercentage(this.percentDepositPrice) || !isValidPercentage(this.percentOrderPrice)) {
       this.toastr.error('Phần trăm phải nằm trong khoảng 0-100% và không được là số âm');
       return;
     }
-  
+
     this.isLoadding = true;
     console.log({
       selectedOrderId: this.selectedOrderId,
@@ -515,10 +528,10 @@ export class OrderManagementComponent implements OnInit {
       percentDepositPrice: this.percentDepositPrice,
       percentOrderPrice: this.percentOrderPrice
     });
-  
+
     if (this.selectedOrderId !== null && this.selectedSpecialOrder !== null) {
       this.authenListService.RefundcancelOrder(
-        this.selectedOrderId, this.selectedSpecialOrder, 
+        this.selectedOrderId, this.selectedSpecialOrder,
         this.cancelReasonPrice, this.percentDepositPrice, this.percentOrderPrice
       ).subscribe({
         next: (response) => {
@@ -540,7 +553,7 @@ export class OrderManagementComponent implements OnInit {
       this.isLoadding = false;
     }
   }
-  
+
   confirmPayment() {
     this.isLoadding = true;
     if (this.selectedOrderId !== null) {
@@ -590,4 +603,91 @@ export class OrderManagementComponent implements OnInit {
       }
     });
   }
+
+  cancelDiscountModal() {
+    this.priceDiscount = 0;
+    this.datepriceDiscount = '';
+  }
+  DiscountOrder() {
+    // Reset loading state and close modal in case of failure
+    const closeModal = () => {
+      this.isLoadding = false;
+      const closeModalButton = document.querySelector('.close') as HTMLElement;
+      if (closeModalButton) {
+        closeModalButton.click();
+      }
+      $('[data-dismiss="modal"]').click();
+    };
+  
+    // Validate percentage fields
+    const isValidPercentage = (value: number | null): boolean => {
+      if (value === null || value === undefined || isNaN(value)) {
+        return false;
+      }
+      const priceDiscount = value.toString().trim();
+      const percentageRegex = /^(100(\.0{1,2})?|(\d{1,2})(\.\d{1,2})?)$/;
+      return percentageRegex.test(priceDiscount) && parseFloat(priceDiscount) >= 0;
+    };
+  
+    const percentDepositPriceTrimmed = this.percentDepositPrice !== null ? this.percentDepositPrice.toString().trim() : '';
+  
+    if (percentDepositPriceTrimmed === '') {
+      this.toastr.error('Các trường không được để trống');
+      return;
+    }
+  
+    if (!isValidPercentage(this.priceDiscount)) {
+      this.toastr.error('Phần trăm phải nằm trong khoảng 0-100% và không được là số âm');
+      return;
+    }
+  
+    // Validate date
+    let datepriceDiscountString: string = '';
+    if (this.datepriceDiscount) {
+      datepriceDiscountString = this.datepriceDiscount.replace(/(\d{2})\/(\d{2})\/(\d{4})/, "$3/$2/$1");
+      const discountDate = new Date(datepriceDiscountString);
+      const currentDate = new Date();
+  
+      if (discountDate <= currentDate) {
+        this.toastr.error('Ngày hoàn thành đơn hàng phải lớn hơn ngày hiện tại');
+        return;
+      }
+    } else {
+      this.toastr.error('Ngày hoàn thành đơn hàng không được để trống');
+      return;
+    }
+  
+    this.isLoadding = true;
+    console.log({
+      selectedOrderId: this.selectedOrderId,
+      priceDiscount: this.priceDiscount,
+      datepriceDiscount: this.datepriceDiscount,
+    });
+  
+    if (this.selectedOrderId !== null) {
+      this.authenListService.DateDiscountlOrder(
+        this.selectedOrderId, this.priceDiscount, datepriceDiscountString
+      ).subscribe({
+        next: (response: any) => {
+          if (response.code == 1000) {
+            this.toastr.success('Giảm giá cho đơn hàng thành công');
+            this.isLoadding = false;
+            this.cancelDiscountModal();
+            closeModal();
+          }
+        },
+        error: (error: HttpErrorResponse) => {
+          this.isLoadding = false;
+          this.toastr.error('Giảm giá thất bại');
+          this.realoadgetAllUser();
+          this.cancelDiscountModal();
+          closeModal();
+        }
+      });
+    } else {
+      this.toastr.error('Thông tin đơn hàng không hợp lệ');
+      this.isLoadding = false;
+    }
+  }
+  
 }

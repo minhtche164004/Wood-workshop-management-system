@@ -1,5 +1,11 @@
+
 <title>Đăng ký / Đăng nhập</title>
-<h2>Đăng ký / Đăng nhập</h2>
+<div class="header-container">
+    <a class="home-link" routerLink="/homepage">Trang chủ</a>
+    <h2>Đăng ký / Đăng nhập</h2>
+    
+  </div>
+  
 <div class="container" id="container">
     <!-- Form Đăng ký -->
     <div style="margin-top: 40px;" class="form-container sign-up-container">
@@ -89,7 +95,7 @@
                 <input type="password" id="loginPassword" [(ngModel)]="loginObj.password" name="password" required placeholder="Mật khẩu" required />
             </div>
 
-            <a routerLink="/verifyMail">Quên mật khẩu của bạn?</a>
+            <a class="fo" routerLink="/verifyMail">Quên mật khẩu của bạn?</a>
             <div *ngIf="errorMessage" class="message error">{{ errorMessage }}</div>
             <div *ngIf="successMessage" class="message success">{{ successMessage }}</div>
             <button [disabled]="isLoading" (click)="onLogin()">

@@ -83,6 +83,14 @@ public class OrderController {
         return apiResponse;
 
     }
+
+    @GetMapping("/TimeContract")
+    public ApiResponse<?> TimeContract(@RequestParam("order_id") int order_id, @RequestParam("percentage_discount") double percentage_discount,@RequestParam("new_date") @DateTimeFormat(pattern = "yyyy-MM-dd") Date new_date) {
+        ApiResponse<String> apiResponse = new ApiResponse<>();
+        apiResponse.setResult(orderService.TimeContract(order_id,percentage_discount,new_date));
+        return apiResponse;
+
+    }
 //    @GetMapping("/GetAllRequestByAccountId")
 //    public ApiResponse<?> GetAllRequestByAccountId(@RequestParam("acc_id") int acc_id) {
 //        ApiResponse<List> apiResponse = new ApiResponse<>();
@@ -245,6 +253,13 @@ public class OrderController {
     public ApiResponse<?> GetAllOrder(){
         ApiResponse<List> apiResponse = new ApiResponse<>();
         apiResponse.setResult(orderService.GetAllOrder());
+        return apiResponse;
+    }
+
+    @GetMapping("getAllOrderWithStatus3")
+    public ApiResponse<?> getAllOrderWithStatus3(){
+        ApiResponse<List> apiResponse = new ApiResponse<>();
+        apiResponse.setResult(orderRepository.getAllOrderWithStatus3());
         return apiResponse;
     }
 

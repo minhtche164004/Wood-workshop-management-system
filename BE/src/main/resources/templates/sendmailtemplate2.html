@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Thông tin chi tiết đơn hàng</title>
+    <style>
+        /* CSS styles */
+        body { font-family: Arial, sans-serif; background-color: #F5F5F5; }
+        .header { background-color: #E9E9E9; padding: 10px; text-align: center; }
+        .content { padding: 20px; }
+        .order-details { border-collapse: collapse; width: 100%; }
+        .order-details th, .order-details td { border: 1px solid #ddd; padding: 8px; }
+        .order-details th { background-color: #f2f2f2; text-align: left; }
+        .footer { background-color: #E9E9E9; padding: 10px; text-align: center; }
+    </style>
+</head>
+<body>
+<div class="header">
+    <h1>Xưởng Gỗ Sỹ Dung</h1>
+</div>
+
+<div class="content">
+    <h2>Xin Chào, <span th:text="${name}"></span>!</h2>
+    <p>Thông tin chi tiết đơn hàng của bạn:</p>
+    <div class="order-summary">
+        <p><strong>Mã đơn hàng:</strong> <span th:text="${order.code}"></span></p>
+        <p><strong>Tổng tiền đơn hàng:</strong> <span th:text="${#numbers.formatDecimal(order.totalAmount, 1, 'COMMA', 0, 'POINT')} + ' vnđ'"></span></p>
+        <p><strong>Tổng tiền đặt cọc:</strong> <span th:text="${#numbers.formatDecimal(order.deposite, 1, 'COMMA', 0, 'POINT')} + ' vnđ'"></span></p>
+        <p><strong>Ngày tạo đơn:</strong> <span th:text="${#dates.format(order.orderDate, 'dd/MM/yyyy')}"></span></p> <div class="order-details">
+        <p><strong>Ngày dự kiến hoàn thành:</strong> <span th:text="${#dates.format(order.contractDate, 'dd/MM/yyyy')}"></span></p> <div class="order-details">
+        <p><strong>Địa chỉ giao hàng:</strong> <span th:text="${order.address + ', ' + order.wards + ', ' + order.district + ', ' + order.city_province}"></span></p>
+        <p><strong>Mô tả đơn hàng:</strong> <span th:text="${order.description}"></span></p>
+
+    </div>
+        <table class="order-details">
+            <thead>
+            <tr>
+                <!--            <th>Mã sản phẩm</th>-->
+                <th>Tên sản phẩm</th>
+                <th>Số lượng</th>
+                <th>Đơn giá</th>
+                <th>Trạng thái</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="detail : ${orderDetails}">
+                <!--            <td th:text="${detail.request_product_id != 0 ? detail.request_product_id : detail.product_id}"></td>-->
+                <td th:text="${detail.request_product_name != '' ? detail.request_product_name : detail.product_name}"></td>
+                <td th:text="${detail.quantity}"></td>
+                <td th:text="${#numbers.formatDecimal(detail.price, 1, 'COMMA', 3, 'POINT')} + ' vnđ'"></td>
+                <td th:text="${detail.status_job_name}"></td>
+            </tr>
+            </tbody>
+        </table>
+
+        <a href="https://dogosydungs.azurewebsites.net/homepage">Liên Kết Đến Shop</a>
+        <br>
+<!--        <a th:href="@{${link}}">Liên Kết VNPay để thanh toán tiền cọc</a>-->
+    </div>
+
+        <div class="footer">
+            <p>© 2023 Xưởng Gỗ Sỹ Dung. All rights reserved.</p>
+        </div>
+</body>
+</html>

@@ -85,7 +85,7 @@ public class OrderController {
     }
 
     @GetMapping("/TimeContract")
-    public ApiResponse<?> TimeContract(@RequestParam("order_id") int order_id, @RequestParam("percentage_discount") double percentage_discount,@RequestParam("new_date") @DateTimeFormat(pattern = "yyyy-MM-dd") Date new_date) {
+    public ApiResponse<?> TimeContract(@RequestParam("order_id") int order_id, @RequestParam("percentage_discount") double percentage_discount,@RequestParam("new_date") @DateTimeFormat(pattern = "yyyy-MM-dd") Date new_date) throws MessagingException {
         ApiResponse<String> apiResponse = new ApiResponse<>();
         apiResponse.setResult(orderService.TimeContract(order_id,percentage_discount,new_date));
         return apiResponse;

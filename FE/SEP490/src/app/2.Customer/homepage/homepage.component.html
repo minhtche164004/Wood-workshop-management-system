@@ -66,20 +66,20 @@
         </div>
     </div>
     <div class="service text-center">
-        
-                <!-- <div class="service1">
+
+        <!-- <div class="service1">
                     <div class="service-icon">
                         <i class="fas fa-share"></i>
                     </div> -->
-                    <!-- <div class="service-title">
+        <!-- <div class="service-title">
                         Phương thức đổi trả
                     </div>
                     <hr class="slash">
                     <div class="service-text">
                         Đổi trả miễn phí trong vòng 30 ngày
                     </div> -->
-                <!-- </div> -->
-                <!-- <div class="service1">
+        <!-- </div> -->
+        <!-- <div class="service1">
                     <div class="service-icon">
                         <i class="fas fa-truck"></i>
                     </div>
@@ -91,7 +91,7 @@
                         Áp dụng với tất cả các sản phẩm
                     </div>
                 </div> -->
-                <!-- <div class="service1">
+        <!-- <div class="service1">
                     <div class="service-icon">
                         <i class="fas fa-headphones-alt"></i>
                     </div>
@@ -103,7 +103,7 @@
                         Luôn hỗ trợ về mọi câu hỏi
                     </div>
                 </div> -->
-                <!-- <div class="service1">
+        <!-- <div class="service1">
                     <div class="service-icon">
                         <i class="fab fa-angellist"></i>
                     </div>
@@ -115,56 +115,58 @@
                         Luôn có nhiều mã giảm giá cho bạn
                     </div>
                 </div> -->
-           
-        </div>
+
     </div>
-    <div class="all-product text-center">
-        <div class="container">
+</div>
+<div class="all-product text-center">
+    <div class="container">
 
-            <p class="all-heading">Sản phẩm</p>
-            <p class="all-intro">Tất cả sản phẩm có sẵn tại cửa hàng</p>
+        <p class="all-heading">Sản phẩm</p>
+        <p class="all-intro">Tất cả sản phẩm có sẵn tại cửa hàng</p>
 
-            <div class="products">
-                <div class="container">
-                  <div class="row">
+        <div class="products">
+            <div class="container">
+                <div class="row">
                     <div class="col-lg-4 col-md-6 col-12 nopadding"
-                         *ngFor="let product of products | paginate: { itemsPerPage: 9, currentPage: currentPage }; let i = index">
-                      <div class="product">
-                        <a style="text-decoration: none;">
-                          <img [routerLink]="['/product-details', product.productId]"
-                               [src]="product.image" alt="" class="product-img" style="width: 400px; height: 370px;">
-                          <div class="product-info">
-                            <p class="name-product text-center">{{ product.productName }}</p>
-                            <p class="description" style="text-decoration: none; color: black; text-align: center;">
-                              Kiểu sản phẩm: {{ product.categories?.categoryName }}</p>
-                            <div class="price-product text-center d-flex align-items-center">
-                              <p class="price">{{ product.price | number: '1.0-3' }} vnđ</p>
-                              <p class="root-price" *ngIf="product.rootPrice">{{ product.rootPrice | currency:'VND' }}</p>
-                            </div>
-                            <div class="buttons d-flex ">
-                              <button (click)="addToWishlist(product.productId)" class="addCart">
-                                Thêm vào danh sách yêu thích <i class="fa-solid fa-heart"></i>
-                              </button>
-                            </div>
-                          </div>
-                        </a>
-                      </div>
+                        *ngFor="let product of products | paginate: { itemsPerPage: 9, currentPage: currentPage }; let i = index">
+                        <div class="product">
+                            <a style="text-decoration: none;">
+                                <img [routerLink]="['/product-details', product.productId]" [src]="product.image" alt=""
+                                    class="product-img" style="width: 400px; height: 370px;">
+                                <div class="product-info">
+                                    <p class="name-product text-center">{{ product.productName }}</p>
+                                    <p class="description"
+                                        style="text-decoration: none; color: black; text-align: center;">
+                                        Kiểu sản phẩm: {{ product.categories?.categoryName }}</p>
+                                    <div class="price-product text-center d-flex align-items-center">
+                                        <p class="price">{{ product.price | number: '1.0-3' }} vnđ</p>
+                                        <p class="root-price" *ngIf="product.rootPrice">{{ product.rootPrice |
+                                            currency:'VND' }}</p>
+                                    </div>
+                                    <div class="buttons d-flex ">
+                                        <button (click)="addToWishlist(product.productId)" class="addCart">
+                                            Thêm vào danh sách yêu thích <i class="fa-solid fa-heart"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                            </a>
+                        </div>
                     </div>
-                  </div>
-                </div>
-              </div>
-              
-            <div class="pagination justify-content-center d-flex">
-                <pagination-controls style="justify-content: right; display: flex;" (pageChange)="currentPage = $event"
-                    previousLabel="Trang trước" nextLabel="Trang sau">
-                </pagination-controls>
-                <div class="clearfix" style="justify-content: right; display: flex;">
-
                 </div>
             </div>
         </div>
 
+        <div class="pagination justify-content-center d-flex">
+            <pagination-controls style="justify-content: right; display: flex;" (pageChange)="currentPage = $event"
+                previousLabel="Trang trước" nextLabel="Trang sau">
+            </pagination-controls>
+            <div class="clearfix" style="justify-content: right; display: flex;">
+
+            </div>
+        </div>
     </div>
-    <div class="zalo-chat-widget" data-oaid="2628068117103072011" data-welcome-message="Rất vui khi được hỗ trợ bạn!"
-        data-autopopup="0" data-width="" data-height=""></div>
-    <app-footer></app-footer>
+
+</div>
+<div class="zalo-chat-widget" data-oaid="2628068117103072011" data-welcome-message="Rất vui khi được hỗ trợ bạn!"
+    data-autopopup="0" data-width="" data-height=""></div>
+<app-footer></app-footer>

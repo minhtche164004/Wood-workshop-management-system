@@ -740,7 +740,8 @@ export class UserManagementComponent implements OnInit {
 
           if (data.code === 1000) {
             this.currentPage = 1;
-            this.user = data.result;
+            // this.user = data.result;
+            this.user = data.result.filter((user: { role_name: string; }) => user.role_name !== 'ADMIN');
             console.log(this.user);
             this.isLoadding = false;
 

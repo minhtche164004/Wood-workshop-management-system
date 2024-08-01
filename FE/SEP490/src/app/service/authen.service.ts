@@ -67,6 +67,7 @@ export class AuthenListService {
   private apiUrl_getProductErrorByID = `${environment.apiUrl}api/auth/job/getAllProductErrorByJobIdForEmployee`;
   private apiUrl_getFilterProductError = `${environment.apiUrl}api/auth/job/MultiFilterErrorProductForEmployee`;
   private apiUrl_RefundcancelOrder = `${environment.apiUrl}api/auth/order/Refund_Order`;
+  private apiUrl_DateDiscountlOrder = `${environment.apiUrl}api/auth/order/TimeContract`;
   
   private apiUrl_NameATM = 'https://api.vietqr.io/v2/banks';
   constructor(private http: HttpClient) { }
@@ -144,6 +145,14 @@ export class AuthenListService {
     const headers = new HttpHeaders({ 'Content-Type': 'text/plain' });
 
     return this.http.post<string>(url, cancelReason, { headers }).pipe(
+      catchError(this.handleError)
+    );
+  }
+  DateDiscountlOrder(orderId: number, percentDepositPrice: number, new_date: string): Observable<string> {
+    const url = `${this.apiUrl_DateDiscountlOrder}?order_id=${orderId}&percentage_discount=${percentDepositPrice}&new_date=${new_date}`;
+    const headers = new HttpHeaders({ 'Content-Type': 'text/plain' });
+
+    return this.http.get<string>(url, { headers }).pipe(
       catchError(this.handleError)
     );
   }

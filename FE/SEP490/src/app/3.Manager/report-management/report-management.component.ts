@@ -37,7 +37,7 @@ export class ReportManagementComponent implements OnInit {
   }
   searchKey: string = '';
   originalError: any = {};
-  selectedFixed: number = 0;
+  selectedFixed: number = -1;
   selectedError: any = {
     code: null,
     code_order: null,

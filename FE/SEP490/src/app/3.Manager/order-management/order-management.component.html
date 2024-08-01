@@ -72,26 +72,23 @@
               </tr>
             </thead>
             <tbody>
-              <tr *ngFor="let us of user | paginate: { itemsPerPage: 10, currentPage: currentPage }; let i = index">
-
-                <td style=" min-width: 140px;">{{ us?.code}}</td>
-
+              <tr *ngFor="let us of user | paginate: { itemsPerPage: 10, currentPage: currentPage }; let i = index"
+            >
+                <td   [ngStyle]="{'background-color': us?.status_id === 10 ? 'red' : 'transparent'}" style=" min-width: 140px;">{{ us?.code}}</td>
                 <td class="action-buttons" style=" min-width: 140px;">
-
                   <a href="#" class="info" title="Xem chi tiết" data-toggle="modal" data-target="#productDetailModal"
-                  (click)="getOrDetailById(us, us?.orderId)">
-                  <i class="fa-solid fa-circle-info"></i>
-                </a>
-                  <a (click)="setOrderForCancellation(us?.orderId, us?.specialOrder)"
+                    (click)="getOrDetailById(us, us?.orderId)">
+                    <i class="fa-solid fa-circle-info"></i>
+                  </a>
+                  <a  (click)="setOrderForCancellation(us?.orderId, us?.specialOrder)"
                     (click)="getOrDetailById(us, us?.orderId)" *ngIf="us?.status_id !== 9  &&
                   us?.status_id !== 1  &&
                   us?.status_id !== 6  &&
                   us?.status_id !== 7  " class="info" title="Hoàn tiền" data-toggle="modal"
                     data-target="#refundProductModal">
                     <i style="cursor: pointer;" class="fa-solid fa-money-bill-transfer"></i>
-
                   </a>
-                 
+
                   <a href="/product_management/{{ us?.orderId }}" class="info" title="Thêm sản phẩm" *ngIf="us?.status_id === 8   ||
                   us?.status_id === 1 &&
                   us?.specialOrder === true">
@@ -103,6 +100,10 @@
                     (click)="setOrderForPayment(us?.orderId)" (click)="getOrDetailById(us, us?.orderId)">
                     <i class="fa-solid fa-credit-card"></i>
                   </a>
+                  <a href="#" data-toggle="modal" title="Gia hạn ngày hoàn thành" data-target="#myModalDateContact"
+                    *ngIf="us?.status_id === 10" (click)="setOrderForPayment(us?.orderId)">
+                    <i class="fa fa-calendar-o" aria-hidden="true"></i>
+                  </a>
 
                   <a href="#" data-toggle="modal" title="Hủy đơn hàng" data-target="#confirmDeleteModal"
                     (click)="setOrderForCancellation(us?.orderId, us?.specialOrder)" *ngIf="us?.status_id === 7 
@@ -111,7 +112,7 @@
                   </a>
                 </td>
 
-                <td style="min-width: 140px;">
+                <td style="min-width: 140px;" >
                   {{ us?.specialOrder ? 'Đơn hàng đặc biệt' : 'Đơn hàng có sẵn' }}
                 </td>
                 <td style="text-align: center;">{{ us?.orderDate | date:'dd/MM/yyyy' }}</td>
@@ -235,6 +236,9 @@
                 </label>
               </div>
               <div class="col-md-4 text-center"> <b>Ngày tạo đơn:</b> {{OrderdetailById.orderDate | date:'dd/MM/yyyy'}}
+          
+                
+              
               </div>
 
 
@@ -318,6 +322,10 @@
         <div class="modal-footer">
 
           <button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
+          <button *ngIf="OrderdetailById?.status?.status_id === 10" (click)="contactUser(OrderdetailById.phoneNumber)"
+            type="button" class="btn btn-primary">Liên hệ</button>
+
+
           <button type="button" class="btn btn-primary" *ngIf="OrderdetailById.status?.status_id === 1 
           && OrderdetailById.deposite !== null" (click)="sendMail(OrderdetailById.orderId)">Gửi mail</button>
         </div>
@@ -430,7 +438,7 @@
               <div class="form-group">
                 <label for="percentDepositPrice">Phần trăm tiền đặt cọc (%)</label> <span style="font-size: 16px;"
                   class="required-asterisk">*</span>
-                  <input type="number" class="form-control" id="percentDepositPrice" [(ngModel)]="percentDepositPrice"
+                <input type="number" class="form-control" id="percentDepositPrice" [(ngModel)]="percentDepositPrice"
                   (ngModelChange)="updateDepositeAmount()" required min="0" max="100">
 
               </div>
@@ -448,8 +456,8 @@
               <div class="form-group">
                 <label for="percentOrderPrice">Phần trăm giá đơn hàng (%)</label> <span style="font-size: 16px;"
                   class="required-asterisk">*</span>
-                <input  type="number" class="form-control" id="percentOrderPrice" [(ngModel)]="percentOrderPrice" required
-                  (ngModelChange)="updateTotalAmount()" max="100">
+                <input type="number" class="form-control" id="percentOrderPrice" [(ngModel)]="percentOrderPrice"
+                  required (ngModelChange)="updateTotalAmount()" max="100">
               </div>
             </div>
             <div class="col-md-6">
@@ -487,6 +495,50 @@
           <button type="button" class="btn btn-secondary" data-dismiss="modal" (click)="closeModal($event)"
             (click)="cancelRefundModal()">Đóng</button>
           <button type="button" class="btn btn-primary" (click)="RefundcancelOrder()">Chắc
+            chắn
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal fade" id="myModalDateContact" tabindex="-1" aria-labelledby="myModalLabel1" aria-hidden="true"
+    data-backdrop="static" data-keyboard="false">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h2 class="modal-title" id="myModalDateContact">Xác nhận gia hạn ngày hoàn thành đơn hàng</h2>
+          <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close" (click)="closeModal($event)"
+            (click)="cancelRefundModal()"></button>
+        </div>
+
+        <div class="modal-body">
+
+          <div class="row">
+            <div class="col-md-6">
+              <div class="form-group">
+                <label for="percentDepositPrice">Phần trăm giảm giá đơn hàng (%)</label> <span style="font-size: 16px;"
+                  class="required-asterisk">*</span>
+                <input type="number" class="form-control" id="percentDepositPrice" [(ngModel)]="priceDiscount"
+                  (ngModelChange)="updateDepositeAmount()" required min="0" max="100">
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="form-group">
+                <label for="depositeAmount">Ngày hoàn thành mới</label><span style="font-size: 16px;"
+                class="required-asterisk">*</span>
+                <input type="date" class="form-control" id="depositeAmount"  [(ngModel)]="datepriceDiscount"
+                 >
+              </div>
+            </div>
+          </div>
+
+
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal" (click)="closeModal($event)"
+            (click)="cancelRefundModal()">Đóng</button>
+          <button type="button" class="btn btn-primary" (click)="DiscountOrder()">Chắc
             chắn
           </button>
         </div>

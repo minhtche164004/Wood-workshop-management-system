@@ -326,37 +326,38 @@ export class JobManagementComponent implements OnInit {
     const today = new Date();
     if(!user_id){
       this.toastr.error('Vui lòng chọn nhân viên', 'Lỗi');
+      this.isLoadding = false;
       return;
     }
     if (!quantity || quantity <= 0) {
-      this.toastr.error('Số lượng sản phẩm phải lớn hơn 0.', 'Lỗi');
+      this.toastr.error('Số lượng sản phẩm phải lớn hơn 0.', 'Lỗi'); this.isLoadding = false;
       return;
     }
 
     if (!cost || cost <= 0) {
-      this.toastr.error('Giá công khoán phải lớn hơn 0.', 'Lỗi');
+      this.toastr.error('Giá công khoán phải lớn hơn 0.', 'Lỗi'); this.isLoadding = false;
       return;
     }
     if (!start) {
-      this.toastr.error('Không được để trống ngày yêu cầu nhận công việc.', 'Lỗi');
+      this.toastr.error('Không được để trống ngày yêu cầu nhận công việc.', 'Lỗi'); this.isLoadding = false;
       return;
     }
     if (!finish) {
-      this.toastr.error('Không được để trống ngày yêu cầu hoàn thành công việc.', 'Lỗi');
+      this.toastr.error('Không được để trống ngày yêu cầu hoàn thành công việc.', 'Lỗi'); this.isLoadding = false;
       return;
     }
     if (start < today) {
-      this.toastr.error('Ngày nhận việc phải chọn sau hôm nay.', 'Lỗi');
+      this.toastr.error('Ngày nhận việc phải chọn sau hôm nay.', 'Lỗi'); this.isLoadding = false;
       return;
     }
 
     if (finish < start) {
-      this.toastr.error('Ngày yêu cầu hoàn thành công việc phải sau ngày yêu cầu nhận việc.', 'Lỗi');
+      this.toastr.error('Ngày yêu cầu hoàn thành công việc phải sau ngày yêu cầu nhận việc.', 'Lỗi'); this.isLoadding = false;
       return;
     }
 
     if (!description || description.length < 3) {
-      this.toastr.error('Mô tả không được để trống hoặc ít hơn 3 ký tự.', 'Lỗi');
+      this.toastr.error('Mô tả không được để trống hoặc ít hơn 3 ký tự.', 'Lỗi'); this.isLoadding = false;
       return;
     }
     //  console.log('JobName:', this.selectedProduct.position_name);

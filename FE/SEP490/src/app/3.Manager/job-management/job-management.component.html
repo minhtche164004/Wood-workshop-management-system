@@ -93,22 +93,20 @@
 
                             </td>
                             <td>
-                                <button
-                                    *ngIf="product.reassigned === true"
-                                    style="margin-left: -10px; size: 15px;" data-toggle="modal"
-                                    data-target="#assignJobModalEmployeeAbsent" (click)="manageJob(product)"
-                                    class="btn btn-primary">
+                                <button *ngIf="product.reassigned === true" style="margin-left: -10px; size: 15px;"
+                                    data-toggle="modal" data-target="#assignJobModalEmployeeAbsent"
+                                    (click)="manageJob(product)" class="btn btn-primary">
                                     Phân công lại
                                 </button>
-                                <button *ngIf="product.reassigned === false "
-                                    style="margin-left: -10px; size: 15px;" data-toggle="modal"
-                                    data-target="#assignJobModal" (click)="manageJob(product)" class="btn"
+                                <button *ngIf="product.reassigned === false " style="margin-left: -10px; size: 15px;"
+                                    data-toggle="modal" data-target="#assignJobModal" (click)="manageJob(product)"
+                                    class="btn"
                                     [class.btn-primary]="!isDisabled(product) && !listErrorJob.includes(product.job_id) "
                                     [class.btn-secondary]="listErrorJob.includes(product.job_id) || isDisabled(product) && !listErrorJob.includes(product.job_id)"
                                     [disabled]="listErrorJob.includes(product.job_id) || isDisabled(product)">
                                     Giao việc
                                 </button>
-                            
+
                             </td>
                             <td>
                                 <!-- Button to open the "errorProduct" modal -->
@@ -989,21 +987,23 @@
         </div>
     </div>
 </div>
-<div class="modal fade" id="confirmChangeEmployee" tabindex="-1" aria-labelledby="confirmChangeEmployeeLabel"
-    aria-hidden="true" data-backdrop="static" data-keyboard="false">
+<div class="modal fade" id="confirmChangeEmployee" style="margin-top: 10%;" tabindex="-1"
+    aria-labelledby="confirmChangeEmployeeLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h2 class="modal-title" id="confirmChangeEmployee">Thay đổi nhân viên sản xuất</h2>
+                <h2 class="modal-title" id="confirmChangeEmployee"><p style="font-size: 20px;">Thay đổi nhân viên sản xuất <span
+                    style="color: red;">{{user_name}}</span>? </p></h2>
                 <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body text-center">
-                <p style="font-size: 16px;">Thay đổi nhân viên thực hiện sản xuất <span
-                        style="color: red;">{{user_name}}</span>? </p>
-                Có <input type="number" style="padding: 3%; width: 70%; font-size: 16px;"
-                    placeholder="Số sản phẩm đã hoàn thành" [(ngModel)]="quantityProductDone"> sản phẩm lỗi
-                <input type="number" style="padding: 3%; width: 70%; font-size: 16px;"
-                    placeholder="Lương nhân viên nhận được" [(ngModel)]="costEmplopyee">
+                
+                <p style="  font-size: 16px;"> Có <input type="number" style=" width: 12%; font-size: 16px;"
+                        [(ngModel)]="quantityProductDone"> sản phẩm lỗi</p>
+              
+
+                    <p style="  font-size: 16px;"> Nhân viên nhận được <input type="number" style="font-size: 16px;" 
+                        [(ngModel)]="costEmplopyee"> vnđ </p>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" (click)="cancelChangeEmployee()"
@@ -1014,8 +1014,8 @@
         </div>
     </div>
 </div>
-<div class="modal fade" id="assignJobModalEmployeeAbsent" role="dialog" aria-labelledby="assignJobModalEmployeeAbsentLabel"
-    aria-hidden="true">
+<div class="modal fade" id="assignJobModalEmployeeAbsent" role="dialog"
+    aria-labelledby="assignJobModalEmployeeAbsentLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered modal-lg">
         <div class="modal-content">
             <div class="modal-header">
@@ -1046,7 +1046,7 @@
                                                 </div>
                                                 <div class="col-md-6">
 
-                                                   
+
                                                     <select #employeeSelect2 class="form-select"
                                                         (change)="onChangeSelectedEmployee($event)">
                                                         <option value="" selected disabled>Chọn 1 nhân viên</option>

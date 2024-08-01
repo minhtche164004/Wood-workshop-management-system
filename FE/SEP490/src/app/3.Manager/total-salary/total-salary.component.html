@@ -43,7 +43,7 @@
 
                                     <select [(ngModel)]="selectedPosition" class="form-select">
                                         <!-- <option [ngValue]="4" selected disabled>Chọn vị trí</option> -->
-                                        <option value="">Tất cả</option>
+                                        <option value="">Tất cả vị trí</option>
                                         <option *ngFor="let category of positionEmpList"
                                             [ngValue]="category.position_id">
                                             {{ category.position_name }}
@@ -51,9 +51,9 @@
                                     </select>
                                     <select [(ngModel)]="selectedStatusBanking" class="form-select">
                                         <!-- <option [ngValue]="4" selected disabled>Chọn vị trí</option> -->
-                                        <option value="">Tất cả</option>
+                                        <option value="" >Tất cả trạng thái</option>
                                         <option value="1">Đã Thanh Toán</option>
-                                        <option value="0">Chưa Thanh Toán</option>
+                                        <option value="0" selected>Chưa Thanh Toán</option>
                                     </select>
                                     <div class="ng-autocomplete" style="width: 30%; margin-left: 5px;">
                                         <ng-autocomplete *ngIf="employeeInfoList" [data]="employeeInfoList"

@@ -18,9 +18,9 @@
               <div class="input-group mb-3">
            
                 <select [(ngModel)]="selectedFixed">
-                   
-                    <option [value]="-1">Tất cả</option>
-                    <option [value]="0">Chưa khắc phục</option>
+                  <option [value]="0">Chưa khắc phục</option>
+                    <option [value]="-1">Tất cả trạng thái</option>
+
                     <option [value]="1">Đã khắc phục</option>
                   </select> 
                 <input type="text" class="form-control" placeholder="Tìm kiếm báo cáo lỗi sản phẩm..." [(ngModel)]="searchKey">

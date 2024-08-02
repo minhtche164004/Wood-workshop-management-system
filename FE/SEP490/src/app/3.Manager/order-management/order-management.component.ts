@@ -534,15 +534,17 @@ export class OrderManagementComponent implements OnInit {
         this.selectedOrderId, this.selectedSpecialOrder,
         this.cancelReasonPrice, this.percentDepositPrice, this.percentOrderPrice
       ).subscribe({
-        next: (response) => {
+        next: (response: any) => {
+          if (response.code == 1000) {
           this.toastr.success('Hoàn tiền đơn hàng thành công');
           this.isLoadding = false;
           this.cancelRefundModal();
           closeModal();
-        },
+        }},
         error: (error: HttpErrorResponse) => {
           this.isLoadding = false;
-          this.toastr.success('Hoàn tiền đơn hàng thành công');
+          this.toastr.success('Hoàn tiền đơn hàng thất bại');
+          console.log(error);
           this.realoadgetAllUser();
           this.cancelRefundModal();
           closeModal();

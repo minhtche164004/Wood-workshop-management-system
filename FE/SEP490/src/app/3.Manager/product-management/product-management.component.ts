@@ -815,8 +815,6 @@ export class ProductManagementComponent implements OnInit {
     );
   }
 
-
-
   filterProducts(): void {
     this.isLoadding = true;
     this.searchKey = this.searchKey.trim();
@@ -834,7 +832,7 @@ export class ProductManagementComponent implements OnInit {
           } else if (data.code === 1015) {
             this.products = [];
             console.error('Lọc sản phẩm không thành công:', data);
-            this.toastr.error('Không tìm thấy sản phẩm phù hợp!', 'Lọc thất bại');
+            this.toastr.warning('Không tìm thấy sản phẩm phù hợp!', 'Lọc thất bại');
           }
         }
       );
@@ -856,7 +854,7 @@ export class ProductManagementComponent implements OnInit {
           } else if (data.code === 1015) {
             this.products = [];
             //    console.error('Lọc sản phẩm không thành công:', data);
-            this.toastr.error('Không tìm thấy sản phẩm phù hợp!', 'Lọc thất bại');
+            this.toastr.warning('Không tìm thấy sản phẩm phù hợp!', 'Lọc thất bại');
           }
         }
       );

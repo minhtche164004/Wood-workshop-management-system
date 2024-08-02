@@ -515,7 +515,7 @@ export class JobManagementComponent implements OnInit {
     console.log('Sản phẩm autoSearch: ', this.productAutoSearch)
     console.log('Selected product for job:', this.productIdCoSan);
     console.log('Selected product for job:', this.selectedProduct);
-    console.log('searchKeyword:', this.keyword);
+    console.log('searchKeyword:', this.selectedAddProduct);
    // console.log('Selected AddProduct:', this.selectedAddProduct);
     this.createJobs.reset();
     const quantity = this.productForm.get('quantity')?.value;

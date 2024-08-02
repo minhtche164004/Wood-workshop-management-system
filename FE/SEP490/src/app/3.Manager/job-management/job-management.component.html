@@ -545,7 +545,7 @@
                                 <ng-autocomplete *ngIf="productAutoSearch" [data]="productAutoSearch"
                                     [searchKeyword]="keyword" placeholder="Nhập tên sản phẩm có sẵn ..."
                                     historyIdentifier="productAutoSearch" [itemTemplate]="itemTemplate"
-                                    [(ngModel)]="selectedAddProduct" name="selectedAddProduct"
+                                    [(ngModel)]="selectedAddProduct"  name="selectedAddProduct"
                                     [notFoundTemplate]="notFoundTemplate" (selected)="selectProduct($event)">
                                 </ng-autocomplete>
                                 <ng-template #itemTemplate let-item>

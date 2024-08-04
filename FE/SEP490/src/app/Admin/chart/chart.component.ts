@@ -290,7 +290,7 @@ export class ChartComponent implements OnInit {
       data: {
         labels: this.months,
         datasets: [{
-          label: 'Tổng giá vật liệu đã bán',
+          label: 'Tổng tiền mua nguyên vật liệu',
           data: this.totalInput,
           fill: false,
           borderColor: 'rgb(75, 192, 192)',

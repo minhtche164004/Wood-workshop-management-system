@@ -18,8 +18,8 @@ import java.util.List;
 
 @Repository
 public interface AdvancesalaryRepository extends JpaRepository<Advancesalary,Integer> {
-
-    @Query("SELECT u FROM Advancesalary u where u.isAdvanceSuccess = false")
+//    where u.isAdvanceSuccess = false
+    @Query("SELECT u FROM Advancesalary u ")
     List<Advancesalary> getAllByFalseAdvanceSuccess();
     @Query(value = "SELECT p.* FROM advancesalary p WHERE p.code LIKE :prefix% ORDER BY p.code DESC LIMIT 1", nativeQuery = true)
     Advancesalary findAdvancesalaryTop(@Param("prefix") String prefix);
@@ -53,10 +53,10 @@ public interface AdvancesalaryRepository extends JpaRepository<Advancesalary,Int
     @Query("SELECT u FROM Advancesalary u WHERE u.advanceSalaryId = :query")
     Advancesalary findById(int query);
 
-    @Transactional
-    @Modifying
-    @Query("update Advancesalary u set u.isAdvanceSuccess = ?2 where u.advanceSalaryId = ?1")
-    void update_banking(int advanceSalaryId, boolean isAdvanceSuccess);
+//    @Transactional
+//    @Modifying
+//    @Query("update Advancesalary u set u.isAdvanceSuccess = ?2 , u.paymentdate = ?3 where u.advanceSalaryId = ?1")
+//    void update_banking(int advanceSalaryId, boolean isAdvanceSuccess, Date paymentdate);
 
 
     //hien tai lay fulllname thay cho username do khong tao DTO de chua fullname

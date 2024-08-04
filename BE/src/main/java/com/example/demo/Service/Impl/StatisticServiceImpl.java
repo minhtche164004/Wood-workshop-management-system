@@ -30,7 +30,7 @@ public class StatisticServiceImpl implements StatisticService {
     }
 
     @Override
-    public BigDecimal findTotalInputSubMaterialByMonthAndYear(int month, int year) {
+    public BigDecimal findTotalInputSubMaterialByMonthAndYear(int month, int year) { // đây là số tiền nhập nguyên liệu + số tiền nhập kho lúc thay đổi số lượng + số tiền nhập kho lúc thay đổi số lượng và giá
         BigDecimal input = inputSubMaterialRepository.findTotalInputSubMaterialByMonthAndYear(month, year);
         BigDecimal editQuantity = inputSubMaterialRepository.findTotalEditQuantitySubMaterialByMonthAndYear(month, year);
         BigDecimal editQuantityPrice = inputSubMaterialRepository.findTotalEditQuantityAndPriceSubMaterialByMonthAndYear(month, year);

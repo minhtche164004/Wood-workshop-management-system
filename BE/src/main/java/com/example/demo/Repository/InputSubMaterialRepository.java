@@ -28,10 +28,12 @@ public interface InputSubMaterialRepository extends JpaRepository<InputSubMateri
     BigDecimal findTotalInputSubMaterialByMonthAndYear(@Param("month") int month, @Param("year") int year);
 
     //số tiền chênh lệch lúc cập nhật số lượng theo tháng của mõi sản phẩm , nếu bigdecimal mà duogw nghĩa là thêm sản phẩm vào kho, , phải sử dụng dấu +
-    @Query("SELECT SUM(a.quantity*a.unit_price) FROM InputSubMaterial a  WHERE MONTH(a.date_input) = :month AND YEAR(a.date_input) = :year AND a.actionType.action_type_id = 3 AND a.quantity >= 0 ")
+    @Query("SELECT SUM(a.quantity*a.unit_price) FROM InputSubMaterial a  WHERE MONTH(a.date_input) = :month AND YEAR(a.date_input) = :year AND a.actionType.action_type_id = 3" +
+            " AND a.quantity >= 0 ")
     BigDecimal findTotalEditQuantitySubMaterialByMonthAndYear(@Param("month") int month, @Param("year") int year);
 
-    @Query("SELECT SUM(a.quantity*a.unit_price) FROM InputSubMaterial a  WHERE MONTH(a.date_input) = :month AND YEAR(a.date_input) = :year AND a.actionType.action_type_id = 5 AND a.quantity >= 0 ")
+    @Query("SELECT SUM(a.quantity*a.unit_price) FROM InputSubMaterial a  WHERE MONTH(a.date_input) = :month AND YEAR(a.date_input) = :year AND a.actionType.action_type_id = 5" +
+            " AND a.quantity >= 0 ")
     BigDecimal findTotalEditQuantityAndPriceSubMaterialByMonthAndYear(@Param("month") int month, @Param("year") int year);
 
 

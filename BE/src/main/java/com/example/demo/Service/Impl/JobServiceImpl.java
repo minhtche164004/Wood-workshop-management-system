@@ -177,6 +177,7 @@ public class JobServiceImpl implements JobService {
         advancesalary.setAdvanceSuccess(false);
         advancesalary.setCode(code);
         advancesalary.setUser(user);
+        advancesalary.setJobs(job_Employee_Sick);
         advancesalaryRepository.save(advancesalary);
         return job_Employee_Sick;
     }
@@ -434,6 +435,7 @@ public class JobServiceImpl implements JobService {
             advancesalary.setAdvanceSuccess(false);
             advancesalary.setCode(code);
             advancesalary.setUser(jobs_history.getUser());
+            advancesalary.setJobs(jobs_log);
             advancesalaryRepository.save(advancesalary);
 
 
@@ -456,6 +458,7 @@ public class JobServiceImpl implements JobService {
             advancesalary.setAdvanceSuccess(false);
             advancesalary.setCode(code);
             advancesalary.setUser(jobs_history.getUser());
+            advancesalary.setJobs(jobs_log);
             advancesalaryRepository.save(advancesalary);
             ///------------------------------------------------------------------------------------------
             waitNextJob.setStatus(statusJobRepository.findById(15)); // khi da nghiem thu thi se chuyen sang trang thai chờ cong viec tiep theo
@@ -707,7 +710,12 @@ public class JobServiceImpl implements JobService {
     @Transactional
     @Override
     public Advancesalary ChangeStatus(int id, boolean check) {
-        advancesalaryRepository.update_banking(id, check);
+       // LocalDate today = LocalDate.now();
+      //  advancesalaryRepository.update_banking(id, check, new Date()); //set ngày thanh toán là ngày đổi trạng thái
+        Advancesalary advancesalary = advancesalaryRepository.findById(id);
+        advancesalary.setPaymentdate(new Date());
+        advancesalary.setAdvanceSuccess(check);
+        advancesalaryRepository.save(advancesalary);
         return advancesalaryRepository.findById(id);
     }
 

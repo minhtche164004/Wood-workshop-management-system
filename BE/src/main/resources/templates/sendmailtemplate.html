@@ -46,7 +46,7 @@
 <!--            <td th:text="${detail.request_product_id != 0 ? detail.request_product_id : detail.product_id}"></td>-->
             <td th:text="${detail.request_product_name != '' ? detail.request_product_name : detail.product_name}"></td>
             <td th:text="${detail.quantity}"></td>
-            <td th:text="${#numbers.formatDecimal(detail.price, 1, 'COMMA', 3, 'POINT')} + ' vnđ'"></td>
+            <td th:text="${#numbers.formatDecimal(detail.price, 1, 'COMMA', 0, 'POINT')} + ' vnđ'"></td>
             <td th:text="${detail.status_job_name}"></td>
         </tr>
         </tbody>

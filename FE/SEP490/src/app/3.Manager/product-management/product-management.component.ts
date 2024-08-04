@@ -815,8 +815,6 @@ export class ProductManagementComponent implements OnInit {
     );
   }
 
-
-
   filterProducts(): void {
     this.isLoadding = true;
     this.searchKey = this.searchKey.trim();
@@ -834,7 +832,7 @@ export class ProductManagementComponent implements OnInit {
           } else if (data.code === 1015) {
             this.products = [];
             console.error('Lọc sản phẩm không thành công:', data);
-            this.toastr.error('Không tìm thấy sản phẩm phù hợp!', 'Lọc thất bại');
+            this.toastr.warning('Không tìm thấy sản phẩm phù hợp!', 'Lọc thất bại');
           }
         }
       );
@@ -856,7 +854,7 @@ export class ProductManagementComponent implements OnInit {
           } else if (data.code === 1015) {
             this.products = [];
             //    console.error('Lọc sản phẩm không thành công:', data);
-            this.toastr.error('Không tìm thấy sản phẩm phù hợp!', 'Lọc thất bại');
+            this.toastr.warning('Không tìm thấy sản phẩm phù hợp!', 'Lọc thất bại');
           }
         }
       );
@@ -1462,9 +1460,7 @@ export class ProductManagementComponent implements OnInit {
 
     // console.log(transformedData);
     if (this.listRequestProductForm.valid) {
-      // this.isLoadding = true;
 
-      // this.isLoadding = true;
       const productRequestData = this.listRequestProductForm.value.itemsRProduct;
 
       productRequestData.forEach((item: any) => {
@@ -1548,6 +1544,7 @@ export class ProductManagementComponent implements OnInit {
     } else {
       this.isLoadding = false;
       this.toastr.error('Vui lòng điền đầy đủ thông tin!', 'Lỗi');
+      console.log(this.listRequestProductForm)
     }
   }
 

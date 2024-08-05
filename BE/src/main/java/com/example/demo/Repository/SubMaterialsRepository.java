@@ -30,6 +30,13 @@ public interface SubMaterialsRepository extends JpaRepository<SubMaterials,Integ
     @Query("SELECT u FROM InputSubMaterial u")
     List<InputSubMaterial> getAllInputSubMaterial();
 
+    @Query("SELECT new com.example.demo.Dto.SubMaterialDTO.SubMaterialViewDTO(" +
+            "s.subMaterialId, COALESCE(s.subMaterialName, ''), m.materialId, COALESCE(s.description, ''), COALESCE(m.materialName, ''), s.quantity, s.unitPrice,s.inputPrice,m.type) " + // Thêm dấu phẩy và loại bỏ COALESCE cho các ID
+            "FROM SubMaterials s LEFT JOIN s.material m WHERE (s.subMaterialName LIKE %:search% OR :search IS NULL) AND " +
+            "(s.material.materialId = :materialId OR :materialId IS NULL)")
+    List<SubMaterialViewDTO> MultiFilterSubmaterial(@Param("search") String search,
+                                                    @Param("materialId") Integer materialId);
+
     @Query("SELECT i FROM InputSubMaterial i" +
             " LEFT JOIN i.subMaterials s  " +
             " LEFT JOIN i.actionType a  WHERE " +

@@ -84,6 +84,7 @@
                     (click)="getOrDetailById(us, us?.orderId)" *ngIf="us?.status_id !== 9  &&
                   us?.status_id !== 1  &&
                   us?.status_id !== 6  &&
+                  us?.status_id !== 8  &&
                   us?.status_id !== 7  " class="info" title="Hoàn tiền" data-toggle="modal"
                     data-target="#refundProductModal">
                     <i style="cursor: pointer;" class="fa-solid fa-money-bill-transfer"></i>

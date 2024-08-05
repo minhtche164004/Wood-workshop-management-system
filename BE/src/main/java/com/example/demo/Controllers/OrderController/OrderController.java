@@ -196,9 +196,9 @@ public class OrderController {
     }
 
     @PostMapping("/ConfirmPayment")
-    public ApiResponse<?> ConfirmPayment(@RequestParam("order_id") int order_id) {
+    public ApiResponse<?> ConfirmPayment(@RequestParam("order_id") int order_id,@RequestParam("deposit") BigDecimal deposit) {
         ApiResponse<String> apiResponse = new ApiResponse<>();
-        apiResponse.setResult(orderService.ConfirmPayment(order_id));
+        apiResponse.setResult(orderService.ConfirmPayment(order_id,deposit));
         return apiResponse;
     }
     @PostMapping ("/MultiFilterOrder")

@@ -302,6 +302,22 @@ public class SubMaterialServiceImpl implements SubMaterialService {
     }
 
     @Override
+    public List<SubMaterialViewDTO> MultiFilterSubmaterial(String search, Integer materialId) {
+        List<SubMaterialViewDTO> inputSubMaterials = new ArrayList<>();
+
+        if (search != null || materialId != null ) {
+            inputSubMaterials = subMaterialsRepository.MultiFilterSubmaterial(search, materialId);
+        } else {
+           inputSubMaterials =subMaterialsRepository.getAllSubmaterial();
+        }
+
+        if (inputSubMaterials.isEmpty()) {
+            throw new AppException(ErrorCode.NOT_FOUND);
+        }
+        return inputSubMaterials;
+    }
+
+    @Override
     public List<Product_SubmaterialDTO> getProductSubMaterialByProductId(int id, int material_id) {
         List<Product_SubmaterialDTO> productSubMaterialsList = productSubMaterialsRepository.getProductSubMaterialByProductIdAndTypeMate(id, material_id);
         if (productSubMaterialsList == null) {

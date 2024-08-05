@@ -106,21 +106,26 @@ export class ProductComponent implements OnInit, OnDestroy {
   }
 
   addToWishlist(productId: number): void {
+    this.isLoadding = true;
     this.wishList.addWishlist(productId).subscribe(
       data => {
         console.log('data:', data);
         if (data.code === 1000) {
           this.toastr.success('Sản phẩm đã được thêm vào yêu thích!', 'Thành công');
+          this.isLoadding = false;
         } else if (data.code === 1034) {
           this.toastr.error('Sản phẩm đã được thêm vào yêu thích!', 'Thành công');
+          this.isLoadding = false;
         } else {
           console.log("data.code: ", data.code);
+          this.isLoadding = false;
           this.toastr.warning('Vui lòng đăng nhập để thêm sản phẩm yêu thích!', 'Lỗi');
         }
       },
       error => {
         // console.error('error:', error);
         this.toastr.success('Sản phẩm đã được thêm vào yêu thích!', 'Thành công');
+        this.isLoadding = false;
       }
     );
   }

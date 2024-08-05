@@ -108,7 +108,7 @@
                             <tr
                                 *ngFor="let product of totalSalary | paginate: { itemsPerPage: 10, currentPage: currentPage }; let i = index">
                                 <td>{{ i + 1 + (currentPage - 1) * 10 }}</td>
-                                <td>{{ product?.code }}</td>
+                                <td>{{ product?.jobs?.code }}</td>
                                 <td>
                                     <button class="btn"
                                         [ngClass]="{'btn-primary': !product?.advanceSuccess, 'btn-secondary': product?.advanceSuccess}"

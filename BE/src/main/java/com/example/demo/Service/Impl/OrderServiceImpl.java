@@ -375,30 +375,36 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public String ConfirmPayment(int order_id) {
+    public String ConfirmPayment(int order_id,BigDecimal deposit) {
         Orders orders = orderRepository.findById(order_id);
-        if (orders.getStatus().getStatus_id() == 1) {//đang trong trạng thái là chờ đặt cọc
-            Status_Order statusOrder = new Status_Order();
-            if (orders.getSpecialOrder() == false) {//nếu là hàng có sẵn thì set status order cho nó là đã thi công xong luôn(vì nó ko cần sản xuất nữa)
-                statusOrder = statusOrderRepository.findById(4);
-                orders.setStatus(statusOrder);
-                orderRepository.save(orders);
-                return "Cập nhật đơn hàng sang tình trạng " + statusOrder.getStatus_name() + " thành công";
-            }
-            if (orders.getSpecialOrder() == true) {//nếu là hàng đặt làm theo yêu cầu thì set status order cho nó là đã đặt cọc thành công
-                statusOrder = statusOrderRepository.findById(3);//đã đặt cọc, đang thi công
-                orders.setStatus(statusOrder);
-                Status_Job statusJob = statusJobRepository.findById(3); // 3 la status job sau khi dat coc thi set status la chua giao viec
-                List<Jobs> jobsList = jobRepository.getJobByOrderDetailByOrderCode(orders.getCode());
-                for (Jobs jobs : jobsList) {
-                    jobs.setStatus(statusJob);
-                    jobRepository.save(jobs);
+        BigDecimal deposit_order = orders.getDeposite();
+        if(deposit_order.equals(deposit)){
+            if (orders.getStatus().getStatus_id() == 1) {//đang trong trạng thái là chờ đặt cọc
+                Status_Order statusOrder = new Status_Order();
+                if (orders.getSpecialOrder() == false) {//nếu là hàng có sẵn thì set status order cho nó là đã thi công xong luôn(vì nó ko cần sản xuất nữa)
+                    statusOrder = statusOrderRepository.findById(4);
+                    orders.setStatus(statusOrder);
+                    orderRepository.save(orders);
+                    return "Cập nhật đơn hàng sang tình trạng " + statusOrder.getStatus_name() + " thành công";
                 }
+                if (orders.getSpecialOrder() == true) {//nếu là hàng đặt làm theo yêu cầu thì set status order cho nó là đã đặt cọc thành công
+                    statusOrder = statusOrderRepository.findById(3);//đã đặt cọc, đang thi công
+                    orders.setStatus(statusOrder);
+                    Status_Job statusJob = statusJobRepository.findById(3); // 3 la status job sau khi dat coc thi set status la chua giao viec
+                    List<Jobs> jobsList = jobRepository.getJobByOrderDetailByOrderCode(orders.getCode());
+                    for (Jobs jobs : jobsList) {
+                        jobs.setStatus(statusJob);
+                        jobRepository.save(jobs);
+                    }
 
-                orderRepository.save(orders);
-                return "Cập nhật đơn hàng sang tình trạng " + statusOrder.getStatus_name() + " thành công";
+                    orderRepository.save(orders);
+                    return "Cập nhật đơn hàng sang tình trạng " + statusOrder.getStatus_name() + " thành công";
+                }
             }
+        }else{
+            throw new AppException(ErrorCode.COST_DEPOSIT);
         }
+
         return "";
     }
 

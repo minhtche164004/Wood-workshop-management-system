@@ -31,6 +31,9 @@ public interface SubMaterialService {
     SubMaterialViewDTO getSubMaterialById(int sub_material_id);
 
 
+    List<SubMaterialViewDTO> MultiFilterSubmaterial( String search, Integer materialId);
+
+
     List<ProductSubMaterials> createExportMaterialProduct(int product_id, Map<Integer, Double> subMaterialQuantities);
     ResponseEntity<ApiResponse<List<String>>> createExportMaterialProductTotalJob(int product_id,int mate_id, QuantityTotalDTO quantityTotalDTO,int emp_id);
     ResponseEntity<ApiResponse<List<String>>> createExportMaterialRequestTotalJob(int product_id,int mate_id,QuantityTotalDTO quantityTotalDTO,int emp_id);

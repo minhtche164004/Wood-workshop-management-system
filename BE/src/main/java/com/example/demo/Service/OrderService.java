@@ -93,7 +93,7 @@ public interface OrderService {
     ResponseEntity<String> Refund_Order(int order_id, boolean special_order_id, int percent_deposite_price,int percent_order_price,String response);
 
 
-    String ConfirmPayment(int order_id);
+    String ConfirmPayment(int order_id,BigDecimal deposit);
 
     List<OderDTO> MultiFilterOrder(String search, Integer status_id, Integer paymentMethod, Integer specialOrder,Date startDate, Date endDate);
     List<Orders> MultiFilterOrderForEmployee(String search, Integer status_id, Integer paymentMethod, Integer specialOrder,Date startDate, Date endDate);

@@ -164,22 +164,33 @@ export class OrderRequiredComponent implements OnInit {
     // console.log('Selected File:', selectedFile);
   }
   onImagesSelected(event: any): void {
+    // Lấy danh sách các file đã chọn
     this.selectedImages = Array.from(event.target.files);
-
+  
+    // Tạo một mảng các file
     const files: File[] = Array.from(event.target.files as FileList);
-    if (event.target.files && event.target.files.length) {
-      // xoa list preview cu    
-      this.imagesPreview = [];
-
-      // Create and store URLs for preview
-      files.forEach((file: File) => {
-        const url = URL.createObjectURL(file);
-        this.imagesPreview.push(url);
-      });
-
+  
+    // Kiểm tra định dạng file
+    const allowedExtensions = ['.jpg', '.jpeg', '.png'];
+    const invalidFiles = files.filter(file => !allowedExtensions.some(ext => file.name.toLowerCase().endsWith(ext)));
+  
+    if (invalidFiles.length > 0) {
+      // Hiển thị thông báo lỗi
+      this.toastr.warning(`Chỉ được phép chọn file ảnh với định dạng ${allowedExtensions.join(', ')}.`);
+  
+      // Lọc bỏ các file không hợp lệ
+      this.selectedImages = this.selectedImages.filter(file => !invalidFiles.includes(file));
     }
+  
+    // Xóa list preview cũ
+    this.imagesPreview = [];
+  
+    // Tạo và lưu URL cho preview
+    this.selectedImages.forEach((file: File) => {
+      const url = URL.createObjectURL(file);
+      this.imagesPreview.push(url);
+    });
   }
-
   onFilesSelected(event: any): void {
     if (event.target.files.length > 0) {
       this.productImages = [];

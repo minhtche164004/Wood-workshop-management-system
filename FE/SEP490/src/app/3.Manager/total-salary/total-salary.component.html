@@ -91,10 +91,10 @@
                         <thead>
                             <tr>
                                 <th>STT</th>
-                                <!-- <th>Mã việc</th> -->
+                                <th>Mã sản xuất</th>
                                 <th style="width: 10%;">Thanh toán</th>
-                                <th>Ngày hoàn thành</th>
-
+                                <!-- <th>Ngày hoàn thành</th> -->
+                                <th>Ngày thanh toán lương</th>
                                 <th>Tên nhân viên</th>
                                 <th>Vị trí</th>
                                 <th>Tình trạng</th>
@@ -108,6 +108,7 @@
                             <tr
                                 *ngFor="let product of totalSalary | paginate: { itemsPerPage: 10, currentPage: currentPage }; let i = index">
                                 <td>{{ i + 1 + (currentPage - 1) * 10 }}</td>
+                                <td>{{ product?.jobs?.code }}</td>
                                 <td>
                                     <button class="btn"
                                         [ngClass]="{'btn-primary': !product?.advanceSuccess, 'btn-secondary': product?.advanceSuccess}"
@@ -117,13 +118,14 @@
                                     </button>
                                 </td>
                                 <!-- <td>{{ product?.code }}</td> -->
-                                <td style="text-align: center;">{{ product?.date | date:'dd/MM/yyyy' }}</td>
+                                <!-- <td style="text-align: center;">{{ product?.date | date:'dd/MM/yyyy' }}</td> -->
+                                <td style="text-align: center;">{{ product?.paymentdate | date:'dd/MM/yyyy' }}</td>
 
                                 <td>{{ product?.user?.userInfor?.fullname }}</td>
                                 <td>{{ product?.user?.position?.position_name }}</td>
                                 <td>
                                     <select class="custom-select" [(ngModel)]="product.advanceSuccess"
-                                        style="width: 120%;" (change)="modalThanhToan(product, $event)"
+                                        style="width: 120%;" (change)="modalThanhToan(product.advanceSalaryId, $event)"
                                         name="advanceSuccess">
                                         <option [ngValue]="false" disabled>Chưa thanh toán</option>
                                         <option [value]="true">Đã thanh toán</option>
@@ -205,11 +207,12 @@
                 </div>
                 <div class="modal-body">
                     Bạn có chắc chắn muốn cập nhật trạng thái từ "Chưa thanh toán" thành "Đã thanh toán"?
+                    {{selectedBankingID}}
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" (click)="closeModal()"
                         data-dismiss="modal">Đóng</button>
-                    <button type="button" class="btn btn-primary" (click)="updateBankingModal(selectedBanking)">Chắc
+                    <button type="button" class="btn btn-primary" (click)="updateBankingModal(selectedBankingID)">Chắc
                         chắn</button>
                 </div>
             </div>

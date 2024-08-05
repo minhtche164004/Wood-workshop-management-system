@@ -63,6 +63,7 @@ export class JobManagementComponent implements OnInit {
   isProduct: boolean = true; // check product or product request
   isLoadding: boolean = false;
   jobList: any[] = [];
+  isChooseProduct: boolean = false; // dung de kiem tra quantity
   showPrimaryModal: boolean | undefined;
   showWarningModal: boolean | undefined;
   @ViewChild('errorProduct') errorProduct: any;
@@ -515,7 +516,7 @@ export class JobManagementComponent implements OnInit {
     console.log('Sản phẩm autoSearch: ', this.productAutoSearch)
     console.log('Selected product for job:', this.productIdCoSan);
     console.log('Selected product for job:', this.selectedProduct);
-    console.log('searchKeyword:', this.keyword);
+    console.log('searchKeyword:', this.selectedAddProduct);
    // console.log('Selected AddProduct:', this.selectedAddProduct);
     this.createJobs.reset();
     const quantity = this.productForm.get('quantity')?.value;
@@ -529,7 +530,7 @@ export class JobManagementComponent implements OnInit {
       this.toastr.error('Số lượng phải lớn hơn 0');
       return;
     }
-
+    
     this.selectedProduct = '';
     this.jobService.addProductForJob(this.productIdCoSan, quantity).subscribe(
       (data) => {
@@ -571,7 +572,9 @@ export class JobManagementComponent implements OnInit {
     this.getPositionNameById(this.empId2 + 1);
   }
   huyTaoSanPhamCoSan(): void {
-    this.createJobs.reset();
+    this.productForm.reset();
+    this.isChooseProduct = false
+
   }
   onChangeSearch(search: string) {
     this.searchKey = search;
@@ -586,7 +589,7 @@ export class JobManagementComponent implements OnInit {
     this.selectedProduct = product;
     console.log('Sản phẩm được chọn:', this.selectedProduct.productId);
     this.productIdCoSan = this.selectedProduct.productId;
-   
+    this.isChooseProduct = true;
   }
 
 
@@ -773,7 +776,7 @@ export class JobManagementComponent implements OnInit {
       (data) => {
         if (data.code === 1000) {
           this.selectedJob = data.result;
-          console.log('Form detailJob value:', this.selectedJob);
+          console.log('selectedJob:', this.selectedJob);
           this.isLoadding = false;
         } else {
           console.error('Failed to fetch products:', data);
@@ -830,14 +833,13 @@ export class JobManagementComponent implements OnInit {
 
   cancelAssign(): void {
     this.employeeSelect.nativeElement.value = '';
-    if (this.isCancel) {
-      console.log('Cancel Assign Called');
+    console.log('Cancel Assign Called: ', this.selectedCategory);
       if (this.selectedCategory === 0) {
         this.loadProductRQForJob();
       } else if (this.selectedCategory === 1) {
         this.loadProduct();
       }
-    }
+    
   }
 
   getSubMTRProductRQ(id: number, mate_id: number) {

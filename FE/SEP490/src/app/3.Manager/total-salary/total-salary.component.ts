@@ -55,7 +55,7 @@ export class TotalSalaryComponent implements OnInit {
     this.getAllEmployee();
     this.getAllPostionEmp();
     this.getBankList();
-    this.searchSalary();
+    //this.searchSalary();
   }
   getBankList(): void {
     // this.isLoadding = true;
@@ -271,9 +271,9 @@ export class TotalSalaryComponent implements OnInit {
   }
   updateBankingModal(jobId: any): void {
     this.isLoadding = true;
-
+    console.log("Selected Banking: ", jobId)
     const newValue = true;
-    // console.log('Job ID:', jobId, 'newValue:', newValue);
+    console.log('Job ID:', jobId, 'newValue:', newValue);
     this.salaryService.updateBanking(jobId, newValue).subscribe(
       (data) => {
         if (data.code === 1000) {
@@ -296,35 +296,39 @@ export class TotalSalaryComponent implements OnInit {
 
   }
   modalThanhToan(job: any, event: Event): void {
-    //  console.log('Job salary modal:', job);
+    console.log('Job salary modal:', job);
+    this.selectedBankingID = job;
     const newValue2 = (event.target as HTMLSelectElement).value;
     //  console.log('Giá trị được chọn:', newValue2);
     this.launchModalButton.nativeElement.click();
 
   }
+  selectedBankingID: any;
   thanhToan(product: any): void {
     this.isLoadding = true;
     this.qrImageUrl = '';
 
      console.log('Thanh toan:', product);
-     console.log('Amount: ', product.amount);
-     console.log('accountId: ', product.user?.userInfor?.bank_number)
-     console.log('username: ', product?.user?.userInfor?.fullname)
-     console.log('code: ', product.code)
-    this.selectedBanking = product.advanceSalaryId;
+    
+    //  console.log('Amount: ', product.amount);
+    //  console.log('accountId: ', product.user?.userInfor?.bank_number)
+    //  console.log('username: ', product?.user?.userInfor?.fullname)
+    //  console.log('code: ', product.code)
+    this.selectedBankingID = product.advanceSalaryId;
+    console.log('selectedBankingId: ', this.selectedBankingID);
     const bankName = product.user?.userInfor?.bank_name;
     const formattedNdChuyenKhoan = this.ndChuyenKhoan.replace('{{code}}', product.code.toString());
 
-      console.log('orderInfo:  ', formattedNdChuyenKhoan);
+    //  console.log('orderInfo:  ', formattedNdChuyenKhoan);
 
     const bin = this.getBinByBankNameOrShortName(product.user?.userInfor?.bank_name);
-        console.log('BIN:', bin);
+    //    console.log('BIN:', bin);
     this.salaryService.getQRBanking(product.amount, bankName, product?.user?.userInfor?.fullname, bin, formattedNdChuyenKhoan)
       .subscribe(
         (response) => {
           if (response) {
             this.qrImageUrl = response;
-            console.log('QR Image URL:', this.qrImageUrl);
+        //    console.log('QR Image URL:', this.qrImageUrl);
             $('[data-dismiss="modal"]');
             this.isLoadding = false;
            

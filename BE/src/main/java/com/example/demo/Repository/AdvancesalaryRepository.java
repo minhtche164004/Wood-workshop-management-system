@@ -19,7 +19,7 @@ import java.util.List;
 @Repository
 public interface AdvancesalaryRepository extends JpaRepository<Advancesalary,Integer> {
 //    where u.isAdvanceSuccess = false
-    @Query("SELECT u FROM Advancesalary u ")
+    @Query("SELECT u FROM Advancesalary u where u.isAdvanceSuccess = false")
     List<Advancesalary> getAllByFalseAdvanceSuccess();
     @Query(value = "SELECT p.* FROM advancesalary p WHERE p.code LIKE :prefix% ORDER BY p.code DESC LIMIT 1", nativeQuery = true)
     Advancesalary findAdvancesalaryTop(@Param("prefix") String prefix);

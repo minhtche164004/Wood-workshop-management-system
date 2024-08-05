@@ -38,6 +38,7 @@ export class VerifyOtpMailComponent implements OnInit {
     this.route.params.subscribe(params => {
       this.email = params['email'];
     });
+    console.log('Email',this.email);
   }
 
   verifyOtpEmail() {
@@ -54,6 +55,7 @@ export class VerifyOtpMailComponent implements OnInit {
           console.log('Response:', response);
           if (response.includes('OTP verified')) {
             console.log('OTP verified successfully');
+            console.log('Email',this.email);
             this.toastr.success('Xác nhận mã OTP thành công! Bạn có thể thay đổi mật khẩu', 'Thành công');
             this.router.navigate(['/forgot_pass',  this.email]);
 

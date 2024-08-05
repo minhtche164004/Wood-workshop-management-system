@@ -48,7 +48,7 @@
     }
 
     input[type="email"],
-    input[type="text"] {
+    input[type="number"] {
       width: calc(100% - 40px);
       padding: 12px 20px;
       margin-bottom: 20px;
@@ -115,7 +115,7 @@
     <h1>Xác minh mã OTP</h1>
     <form (ngSubmit)="verifyOtpEmail()" #emailForm="ngForm">
       <label for="otp">Xác nhận mã OTP đã được gửi đến email</label>
-      <input type="text" id="otp" name="otp" [(ngModel)]="otp" required>
+      <input type="number" id="otp" name="otp" [(ngModel)]="otp" required>
       <!-- Hidden input to store email -->
       <input type="hidden" id="email" name="email" [(ngModel)]="email" required>
       <button type="submit" [disabled]="isLoading">

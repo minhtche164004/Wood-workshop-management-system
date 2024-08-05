@@ -1460,9 +1460,7 @@ export class ProductManagementComponent implements OnInit {
 
     // console.log(transformedData);
     if (this.listRequestProductForm.valid) {
-      // this.isLoadding = true;
 
-      // this.isLoadding = true;
       const productRequestData = this.listRequestProductForm.value.itemsRProduct;
 
       productRequestData.forEach((item: any) => {
@@ -1546,6 +1544,7 @@ export class ProductManagementComponent implements OnInit {
     } else {
       this.isLoadding = false;
       this.toastr.error('Vui lòng điền đầy đủ thông tin!', 'Lỗi');
+      console.log(this.listRequestProductForm)
     }
   }
 

@@ -113,11 +113,11 @@
         </div>
     </nav>
     
-    <div class="container-fluid search-bar-container" style="margin-top: -5%; padding-top: 4%;">
+    <div class="container-fluid search-bar-container" style="margin-top: -5%; padding-top: 4%">
         <div class="row">
             <div class="col-12 d-flex justify-content-center">
                 <div class="d-flex search-bar">
-                    <ng-autocomplete class="autocomplete-custom" *ngIf="products" [data]="products"
+                    <ng-autocomplete class="autocomplete-custom" *ngIf="products" [data]="products" style="width: 75%;"
                         [searchKeyword]="keyword" placeholder="Nhập tên sản phẩm để tìm kiếm"
                         historyIdentifier="products" [(ngModel)]="searchKey" [itemTemplate]="itemTemplate"
                         [notFoundTemplate]="notFoundTemplate" (selected)="selectProduct($event)"

@@ -18,7 +18,7 @@ import java.util.Date;
 import java.util.List;
 
 @Repository
-public interface JobRepository extends JpaRepository<Jobs,Integer> {
+public interface    JobRepository extends JpaRepository<Jobs,Integer> {
 
 //    @Query("SELECT j.user FROM Jobs j GROUP BY j.user HAVING COUNT(j) < 3")
 //    List<User> findUsersWithLessThenThreeJobs();

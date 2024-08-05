@@ -546,35 +546,33 @@
                                     [searchKeyword]="keyword" placeholder="Nhập tên sản phẩm có sẵn ..."
                                     historyIdentifier="productAutoSearch" [itemTemplate]="itemTemplate"
                                     [(ngModel)]="selectedAddProduct" name="selectedAddProduct"
-                                    [notFoundTemplate]="notFoundTemplate" (selected)="selectProduct($event)">
+                                    [notFoundTemplate]="notFoundTemplate" (selected)="selectProduct($event)"
+                                    [disabled]="isChooseProduct">
                                 </ng-autocomplete>
                                 <ng-template #itemTemplate let-item>
                                     <a [innerHTML]="sanitize(item.productName)"></a>
                                 </ng-template>
-
+                        
                                 <ng-template #notFoundTemplate let-notFound>
                                     <div>Không tìm thấy sản phẩm!</div>
                                 </ng-template>
-
-
                             </div>
                         </div>
+                        
                     </div>
-                    <div class="row" style="margin-top: 2%;">
+                    <div *ngIf="isChooseProduct" class="row" style="margin-top: 2%;">
                         <div class="col-md-4">
-                            <label style="font-size: 16px;" for="productPrice">Số sản phẩm sản xuất:<span
-                                    class="required-asterisk">*</span> </label>
+                            <label style="font-size: 16px;" for="productPrice">Số sản phẩm sản xuất:<span class="required-asterisk">*</span> </label>
                         </div>
                         <div class="col-md-2">
                             <input type="number" class="form-control" id="productPrice" formControlName="quantity">
                         </div>
                     </div>
-                    <div class="modal-footer d-flex justify-content-end">
-
-                        <button type="button" class="btn btn-secondary" (onClick)="huyTaoSanPhamCoSan()"
-                            data-dismiss="modal">Hủy</button>
+                    <div *ngIf="isChooseProduct" class="modal-footer d-flex justify-content-end">
+                        <button type="button" class="btn btn-secondary" (click)="huyTaoSanPhamCoSan()" data-dismiss="modal">Hủy</button>
                         <button type="submit" class="btn btn-primary">Thêm mới</button>
                     </div>
+                    
                 </form>
 
             </div>

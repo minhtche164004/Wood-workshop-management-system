@@ -36,7 +36,7 @@
                 <!-- Chọn product thường hay product request -->
                 <select [(ngModel)]="isProduct" (ngModelChange)="onIsProductChange($event)">
                   <option disabled selected>Chọn loại sản phẩm</option>
-                  <option [ngValue]="true">Sản phẩm thường</option>
+                  <option [ngValue]="true">Sản phẩm có sẵn</option>
                   <option [ngValue]="false">Sản phẩm theo yêu cầu</option>
                 </select>
                 <!-- Sắp xếp giá tiền -->
@@ -81,7 +81,7 @@
               <th>Mã sản phẩm</th>
               <th>Thao tác</th>
               <th>Ảnh đại diện</th>
-              <th>Ngày hoàn thành</th>
+              <th>Ngày dự kiến hoàn thành</th>
               <th>Tên sản phẩm</th>
               <th style="width: 20%;">Mô tả</th>
               <th>Kiểu sản phẩm</th>
@@ -132,7 +132,7 @@
               <th>Mã yêu cầu</th>
               <th>Thao tác</th>
               <th>Ảnh đại diện</th>
-              <th>Ngày hoàn thành</th>
+              <th>Ngày dự kiến hoàn thành</th>
               <th>Tên sản phẩm</th>
               <th>Mô tả</th>
               <!-- <th>Kiểu sản phẩm</th> -->
@@ -212,19 +212,19 @@
         <!-- <label style="font-size: 32px;" for="productName">Thêm sản phẩm</label> -->
         <form [formGroup]="uploadForm" (ngSubmit)="onSubmit()">
           <div class="form-group">
-            <label style="font-size: 16px;" for="productName">Tên sản phẩm<span
+            <label style="font-size: 13px;" for="productName">Tên sản phẩm<span
                 class="required-asterisk">*</span></label>
             <input type="text" class="form-control" id="productName" formControlName="product_name">
           </div>
           <div class="form-group">
-            <label style="font-size: 16px;" for="productDescription">Mô tả<span
+            <label style="font-size: 13px;" for="productDescription">Mô tả<span
                 class="required-asterisk">*</span></label>
             <textarea class="form-control" id="productDescription" rows="3" formControlName="description"></textarea>
           </div>
 
           <div class="form-row">
             <div class="form-group col-md-6">
-              <label style="font-size: 16px;" for="productCategory">Kiểu sản phẩm<span
+              <label style="font-size: 13px;" for="productCategory">Kiểu sản phẩm<span
                   class="required-asterisk">*</span></label>
               <select class="form-control" id="productCategory" formControlName="category_id">
                 <option [ngValue]="null" disabled selected>Loại sản phẩm</option>
@@ -234,7 +234,7 @@
             </div>
 
             <div class="form-group col-md-6">
-              <label style="font-size: 16px;" for="selectedStatus">Tình trạng<span
+              <label style="font-size: 13px;" for="selectedStatus">Tình trạng<span
                   class="required-asterisk">*</span></label>
               <select class="form-control" id="selectedStatus">
                 <option disabled selected>Chọn trạng thái</option>
@@ -244,7 +244,7 @@
           </div>
           <div class="form-row">
             <div class="form-group col-md-4">
-              <label style="font-size: 16px;" for="productImages">Ảnh sản phẩm (Chọn nhiều)<span
+              <label style="font-size: 13px;" for="productImages">Ảnh sản phẩm (Chọn nhiều)<span
                   class="required-asterisk">*</span></label>
               <input type="file" class="form-control-file" id="productImages" multiple
                 (change)="onImagesSelected($event)">
@@ -255,7 +255,7 @@
                 Xóa ảnh</button>
             </div>
             <div class="form-group col-md-4">
-              <label style="font-size: 16px;" for="thumbnailImage">Ảnh đại diện sản phẩm<span
+              <label style="font-size: 13px;" for="thumbnailImage">Ảnh đại diện sản phẩm<span
                   class="required-asterisk">*</span></label>
               <input type="file" class="form-control-file" id="thumbnailImage" (change)="onThumbnailSelected($event)">
             </div>
@@ -276,7 +276,7 @@
           </div>
           <!-- Mảng các vật liệu cần có trong product -->
           <hr>
-          <label style="font-size: 16px;">Bảng ước tính nguyên vật liệu<span class="required-asterisk">*</span></label>
+          <label style="font-size: 13px;">Bảng ước tính nguyên vật liệu<span class="required-asterisk">*</span></label>
           <form [formGroup]="materialForm">
             <div formArrayName="items">
               <div *ngFor="let item of items.controls; let i = index" [formGroupName]="i" class="row mb-3">
@@ -308,7 +308,7 @@
                   <div class="form-group">
                     <label for="price-{{i}}">Giá<span class="required-asterisk">*</span></label>
                     <input id="price-{{i}}" class="form-control" formControlName="price" type="text"
-                      [value]="unitPriceSubMaterial[i]" readonly="">
+                      [value]="unitPriceSubMaterial[i] | number: '1.0-3'" readonly="">
                   </div>
                 </div>
                 <!-- Đơn vị vật liệu -->
@@ -325,7 +325,7 @@
                     <label for="quantity-{{i}}">Số lượng<span class="required-asterisk">*</span></label>
                     <input id="quantity-{{i}}" class="form-control" formControlName="quantity" type="number" min="1"
                       [(ngModel)]="quantityPerSubMaterial[i]" (change)="onQuantityChange($event, i)"
-                      placeholder="Nhập số lượng">
+                      placeholder="Nhập số lượng" style="text-align: end;">
                   </div>
                 </div>
                 <!-- Nút xóa -->
@@ -346,7 +346,7 @@
           <!-- Nhap gia tien -->
           <div class="form-row">
             <div class="col-md-12">
-              <label style="font-size: 16px;" for="productPrice">Đơn giá 1 đơn vị của sản phẩm (VNĐ)<span
+              <label style="font-size: 13px;" for="productPrice">Đơn giá 1 đơn vị của sản phẩm (VNĐ)<span
                   class="required-asterisk">*</span></label>
               <input type="text" min="0" class="form-control" id="productPrice" formControlName="price"
                 (input)="formatInputValue($event)">
@@ -384,7 +384,7 @@
                     readonly>
                 </div>
                 <div class="form-group col-md-4">
-                  <label for="orderDate">Ngày hoàn thành</label>
+                  <label for="orderDate">Ngày dự kiến hoàn thành</label>
                   <input type="datetime" class="form-control" formControlName="orderFinish" placeholder="DD-MM-YYY"
                     readonly>
                 </div>
@@ -438,7 +438,7 @@
                   <button class="btn btn-link" type="button" data-toggle="collapse"
                     [attr.data-target]="'#formCollapse' + i" aria-expanded="true"
                     [attr.aria-controls]="'formCollapse' + i" (click)="toggleCollapse(i)">
-                    Chi tiết&nbsp;<i [ngClass]="isCollapsed[i] ? 'fas fa-chevron-down' : 'fas fa-chevron-right'"></i> 
+                    Chi tiết&nbsp;<i [ngClass]="isCollapsed[i] ? 'fas fa-chevron-down' : 'fas fa-chevron-right'"></i>
                   </button>
                 </div>
                 <br>
@@ -446,39 +446,47 @@
                   [ngClass]="{'odd-row': i % 2 === 0, 'even-row': i % 2 === 1}">
                   <div class="form-row" hidden>
                     <div class="form-group col-md-12">
-                      <label style="font-size: 16px;" for="request_id">Chọn yêu cầu</label>
+                      <label style="font-size: 13px;" for="request_id">Chọn yêu cầu</label>
                       <input type="number" class="form-control" id="request_id" formControlName="request_id">
                     </div>
                   </div>
 
                   <div class="form-row">
                     <div class="form-group col-md-12">
-                      <label style="font-size: 16px;" for="">Sản phẩm {{i+1}}</label>
+                      <label style="font-size: 13px;" for="">Sản phẩm {{i+1}}</label>
                     </div>
                   </div>
                   <div class="form-row">
-                    <div class="form-group col-md-7">
-                      <label style="font-size: 16px;" for="requestProductName">Tên sản phẩm theo yêu cầu<span
+                    <div class="form-group col-md-4">
+                      <label style="font-size: 13px;" for="requestProductName">Tên sản phẩm theo yêu cầu<span
                           class="required-asterisk">*</span></label>
                       <input type="text" class="form-control" id="requestProductName"
                         formControlName="requestProductName">
                     </div>
-                    <div class="form-group col-md-2">
-                      <label style="font-size: 16px;" for="quantity">Số lượng<span
+                    <div class="form-group col-md-1">
+                      <label style="font-size: 13px;" for="quantity">Số lượng<span
                           class="required-asterisk">*</span></label>
                       <input (input)="updateQuantityRProduct($event, i)" type="number" min="1" class="form-control"
                         id="quantity" formControlName="quantity">
                     </div>
                     <div class="form-group col-md-3">
-                      <label style="font-size: 16px;" for="completionTime">Thời gian hoàn thành<span
+                      <label style="font-size: 13px;" for="completionTime">Ngày dự kiến hoàn thành<span
                           class="required-asterisk">*</span></label>
-                      <input type="date" class="form-control" id="completionTime" name="completionTime"
-                        formControlName="completionTime">
+                      <input type="date" class="form-control" id="completionTime" name="completionTime" formControlName="completionTime">
+                    </div>
+                    <div class="form-group col-md-2">
+                      <label style="font-size: 13px;" for="productPrice">Đơn giá(VNĐ)</label>
+                      <input type="text" class="form-control" id="productPrice" name="productPrice" [value]="pricePerProduct[i] | number: '1.0-3'" readonly>
+                    </div>
+                    <div class="form-group col-md-2">
+                      <label style="font-size: 13px;" for="productPriceTotal">Thành tiền(VNĐ)</label>
+                      <input type="text" class="form-control" id="productPriceTotal" name="productPriceTotal"
+                      [value]="pricePerProduct[i] * quantityRProductValue[i] | number: '1.0-3'"   readonly>
                     </div>
                   </div>
 
                   <div class="form-group">
-                    <label style="font-size: 16px;" for="productDescription">Mô tả<span
+                    <label style="font-size: 13px;" for="productDescription">Mô tả<span
                         class="required-asterisk">*</span></label>
                     <textarea class="form-control" id="productDescription" rows="3"
                       formControlName="description"></textarea>
@@ -486,7 +494,7 @@
 
                   <div class="form-row">
                     <div class="form-group col-md-10">
-                      <label style="font-size: 16px;" for="productImages">Ảnh sản phẩm (Chọn nhiều)<span
+                      <label style="font-size: 13px;" for="productImages">Ảnh sản phẩm (Chọn nhiều)<span
                           class="required-asterisk">*</span></label>
                       <input type="file" class="form-control-file" id="productImages" multiple
                         (change)="onImagesRProductSelected($event, i)">
@@ -505,7 +513,7 @@
                   </div>
                   <!-- Mảng các vật liệu cần có trong product request add -->
                   <hr>
-                  <label style="font-size: 16px;">Bảng ước tính nguyên vật liệu/sản phẩm</label>
+                  <label style="font-size: 13px;">Bảng ước tính nguyên vật liệu/sản phẩm</label>
                   <form [formArrayName]="'materialFormRequests'">
 
                     <div *ngFor="let item of getMaterialFormRequests(i).controls; let j = index" [formGroupName]="j"
@@ -514,7 +522,7 @@
                       <div class="col-md-2 mb-3">
                         <div class="form-group">
                           <label for="materialId-{{i}}">Loại vật liệu<span class="required-asterisk">*</span></label>
-                          <select id="materialId-{{i}}" class="form-control"  formControlName="materialId"
+                          <select id="materialId-{{i}}" class="form-control" formControlName="materialId"
                             (change)="onMaterialChange($event, i*10+j)">
                             <option *ngFor="let material of materials" [value]="material.materialId">{{
                               material.materialName
@@ -527,8 +535,8 @@
                         <div class="form-group">
                           <label for="subMaterialId-{{i}}">Tên nguyên vật liệu<span
                               class="required-asterisk">*</span></label>
-                          <select id="subMaterialId-{{i}}" class="form-control" *ngIf="subMaterials[i*10+j]" formControlName="submateId"
-                            (change)="onSubMaterialChangeRProduct($event, i*10+j, i,j)">
+                          <select id="subMaterialId-{{i}}" class="form-control" *ngIf="subMaterials[i*10+j]"
+                            formControlName="submateId" (change)="onSubMaterialChangeRProduct($event, i*10+j, i,j)">
                             <option disabled value="" selected>Chọn vật liệu</option>
                             <option *ngFor="let subMaterial of subMaterials[i*10+j]"
                               [value]="subMaterial?.subMaterialId">{{
@@ -550,15 +558,15 @@
                         <div class="form-group">
                           <label for="price-{{i}}">Đơn giá/sản phẩm (VNĐ)</label>
                           <input id="price-{{i}}" class="form-control" type="text"
-                            [value]="unitPriceSubMaterial[i*10+j]" readonly="">
+                            [value]="unitPriceSubMaterial[i*10+j] | number: '1.0-3'" readonly="">
                         </div>
                       </div>
                       <!-- Input cho số lượng -->
                       <div class="col-md-1 mb-3">
                         <div class="form-group">
                           <label for="quantity-{{i}}">Số lượng</label>
-                          <input id="quantity-{{i}}" class="form-control" type="number" min="1" formControlName="quantity"
-                            (input)="onQuantityChangeSubMaterialRProduct($event, i*10+j,i,j)"
+                          <input id="quantity-{{i}}" class="form-control" type="number" min="1"
+                            formControlName="quantity" (input)="onQuantityChangeSubMaterialRProduct($event, i*10+j,i,j)"
                             placeholder="Nhập số lượng">
                         </div>
                       </div>
@@ -569,27 +577,36 @@
                       </div>
 
                     </div>
-
-                    <button type="button" class="btn btn-secondary" (click)="addMaterialFormRequest(i)">Thêm nguyên vật
-                      liệu
-                      ước
-                      tính</button>
-
-                    <div class="total-price">
-                      Tổng giá vật liệu ước tính của sản phẩm {{i+1}}(giá ước tính vật liệu/đơn vị sản phẩm * số lượng
-                      sản phẩm): {{totalPriceSubmatePerProducRequest[i] | number: '1.0-3'}} * {{quantityRProductValue[i]
-                      | number: '1.0-3'}} = {{totalPriceSubmatePerProducRequest[i]*quantityRProductValue[i] | number:
-                      '1.0-3'}} VNĐ
+                    <div class="form-group">
+                      <div class="col-md-4">
+                        <button type="button" class="btn btn-secondary" (click)="addMaterialFormRequest(i)">Thêm nguyên
+                          vật
+                          liệu
+                          ước
+                          tính</button>
+                      </div>
+                      <div class="total-price" class="col-md-8">
+                        <div class="form-group col-md-8" style="text-align: end;">
+                          Tổng giá vật liệu ước tính của sản phẩm {{i+1}}(VNĐ):
+                        </div>
+                        <div class="form-group col-md-4" style="text-align: end;">
+                          <input type="text" class="form-control"
+                            [value]="totalPriceSubmatePerProducRequest[i] | number: '1.0-3'" readonly>
+                        </div>
+                      </div>
                     </div>
+
                   </form>
-                  <hr>
+                  <!-- <hr> -->
 
-
+                  <br><br>
                   <!-- Nhap gia tien cho san phan-->
                   <div class="form-row">
-                    <div class="form-group col-md-12">
-                      <label style="font-size: 16px;" for="productPrice">Đơn giá 1 đơn vị của sản phẩm (VNĐ)<span
+                    <div class="form-group col-md-10" style="text-align: end;">
+                      <label style="font-size: 13px;" for="productPrice">Đơn giá 1 đơn vị của sản phẩm (VNĐ)<span
                           class="required-asterisk">*</span></label>
+                    </div>
+                    <div class="form-group col-md-2">
                       <input (input)="formatInputValueRProduct($event, i)" type="text" min="0" class="form-control"
                         id="productPrice" formControlName="price">
                     </div>
@@ -631,7 +648,7 @@
         <form enctype="multipart/form-data" [formGroup]="editForm" (ngSubmit)="onEditSubmit()">
 
           <div class="form-group">
-            <label style="font-size: 16px;" for="editProductName">Tên sản phẩm<span
+            <label style="font-size: 13px;" for="editProductName">Tên sản phẩm<span
                 class="required-asterisk">*</span></label>
             <input type="text" class="form-control" id="editProductName" name="editProductName"
               formControlName="product_name">
@@ -639,7 +656,7 @@
           </div>
 
           <div class="form-group">
-            <label style="font-size: 16px;" for="editProductDescription">Mô tả<span
+            <label style="font-size: 13px;" for="editProductDescription">Mô tả<span
                 class="required-asterisk">*</span></label>
             <textarea class="form-control" id="editProductDescription" rows="3" name="editProductDescription"
               formControlName="description"></textarea>
@@ -649,13 +666,13 @@
 
           <div class="form-row">
             <div class="form-group col-md-6">
-              <label style="font-size: 16px;" for="editProductCompletionTime">Thời gian hoàn thành<span
+              <label style="font-size: 13px;" for="editProductCompletionTime">Ngày dự kiến hoàn thành<span
                   class="required-asterisk">*</span></label>
               <input type="date" class="form-control" id="editProductCompletionTime" name="editProductCompletionTime"
                 formControlName="completionTime">
             </div>
             <div class="form-group col-md-6">
-              <label style="font-size: 16px;" for="editProductEndDate">Ngày kết thúc bảo hành<span
+              <label style="font-size: 13px;" for="editProductEndDate">Ngày kết thúc bảo hành<span
                   class="required-asterisk">*</span></label>
               <input type="date" class="form-control" id="editProductEndDate" name="editProductEndDate"
                 formControlName="enddateWarranty">
@@ -664,7 +681,7 @@
 
           <div class="form-row">
             <div class="form-group col-md-6">
-              <label style="font-size: 16px;" for="editProductCategory">Kiểu sản phẩm<span
+              <label style="font-size: 13px;" for="editProductCategory">Kiểu sản phẩm<span
                   class="required-asterisk">*</span></label>
               <select class="form-control" id="editProductCategory" name="editProductCategory"
                 formControlName="category_id">
@@ -676,7 +693,7 @@
             </div>
 
             <div class="form-group col-md-6">
-              <label style="font-size: 16px;" for="editSelectedStatus">Tình trạng<span
+              <label style="font-size: 13px;" for="editSelectedStatus">Tình trạng<span
                   class="required-asterisk">*</span></label>
               <select class="form-control" formControlName="status_id">
                 <option [ngValue]="0" disabled selected>Chọn trạng thái</option>
@@ -685,14 +702,14 @@
             </div>
           </div>
           <div class="form-group">
-            <label style="font-size: 16px;" for="editSelectedStatus">Số lượng<span
+            <label style="font-size: 13px;" for="editSelectedStatus">Số lượng<span
                 class="required-asterisk">*</span></label>
             <input type="number" min="1" class="form-control" id="editProductQuantity" name="editProductQuantity"
               formControlName="quantity">
           </div>
           <div class="form-row">
             <div class="form-group col-md-4">
-              <label style="font-size: 16px;" for="editProductImages">Ảnh sản phẩm (Chọn nhiều)<span
+              <label style="font-size: 13px;" for="editProductImages">Ảnh sản phẩm (Chọn nhiều)<span
                   class="required-asterisk">*</span></label>
               <input type="file" class="form-control-file" id="editProductImages" name="editProductImages" multiple
                 (change)="onImagesSelected($event)">
@@ -703,7 +720,7 @@
                 Xóa ảnh</button>
             </div>
             <div class="form-group col-md-4">
-              <label style="font-size: 16px;" for="editThumbnailImage">Ảnh đại diện sản phẩm<span
+              <label style="font-size: 13px;" for="editThumbnailImage">Ảnh đại diện sản phẩm<span
                   class="required-asterisk">*</span></label>
               <input type="file" class="form-control-file" id="editThumbnailImage" name="editThumbnailImage"
                 (change)="onThumbnailSelected($event)">
@@ -729,7 +746,7 @@
           </div>
           <!-- Mảng các vật liệu cần có trong Edit product -->
           <hr>
-          <label style="font-size: 16px;">Bảng ước tính nguyên vật liệu</label>
+          <label style="font-size: 13px;">Bảng ước tính nguyên vật liệu</label>
           <form [formGroup]="formSubMaterialPerProduct">
             <div formArrayName="itemsEdit">
               <div *ngFor="let item of itemsEditArray.controls; let i = index" [formGroupName]="i" class="row mb-3">
@@ -748,8 +765,8 @@
                 <div class="col-md-4 mb-3">
                   <div class="form-group">
                     <label for="subMaterialId-{{i}}">Tên nguyên vật liệu<span class="required-asterisk">*</span></label>
-                    <select id="subMaterialId-{{i}}" class="form-control" 
-                      (change)="onSubMaterialChange($event, i)" formControlName="subMaterialId">
+                    <select id="subMaterialId-{{i}}" class="form-control" (change)="onSubMaterialChange($event, i)"
+                      formControlName="subMaterialId">
                       <option *ngFor="let subMaterial of subMaterials[i]" [value]="subMaterial?.subMaterialId">{{
                         subMaterial?.subMaterialName
                         }}</option>
@@ -761,7 +778,7 @@
                   <div class="form-group">
                     <label for="price-{{i}}">Giá (VNĐ)</label>
                     <input id="price-{{i}}" class="form-control" formControlName="unitPrice" type="text"
-                      [value]="unitPriceSubMaterial[i]" readonly="">
+                      [value]="unitPriceSubMaterial[i] | number: '1.0-3' " readonly="">
                   </div>
                 </div>
                 <!-- Đơn vị vật liệu -->
@@ -797,7 +814,7 @@
 
           <div class="form-row">
             <div class="form-group col-md-12">
-              <label style="font-size: 16px;" for="editProductPrice">Đơn giá 1 đơn vị của sản phẩm (VNĐ)<span
+              <label style="font-size: 13px;" for="editProductPrice">Đơn giá 1 đơn vị của sản phẩm (VNĐ)<span
                   class="required-asterisk">*</span></label>
               <input type="text" min="0" class="form-control" id="editProductPrice" name="editProductPrice"
                 formControlName="price" (input)="formatInputValue($event)">
@@ -841,7 +858,7 @@
                   <input type="text" class="form-control" formControlName="orderDate" placeholder="DD-MM-YYY" readonly>
                 </div>
                 <div class="form-group col-md-4">
-                  <label for="orderDate">Ngày hoàn thành</label>
+                  <label for="orderDate">Ngày dự kiến hoàn thành</label>
                   <input type="text" class="form-control" formControlName="orderFinish" placeholder="DD-MM-YYY"
                     readonly>
                 </div>
@@ -865,19 +882,19 @@
           <hr>
           <div class="form-row">
             <div class="form-group col-md-7">
-              <label style="font-size: 16px;" for="editProductName">Tên sản phẩm<span
+              <label style="font-size: 13px;" for="editProductName">Tên sản phẩm<span
                   class="required-asterisk">*</span></label>
               <input type="text" class="form-control" id="editProductName" name="editProductName"
                 formControlName="requestProductName">
             </div>
             <div class="form-group col-md-2">
-              <label style="font-size: 16px;" for="editSelectedStatus">Số lượng<span
+              <label style="font-size: 13px;" for="editSelectedStatus">Số lượng<span
                   class="required-asterisk">*</span></label>
               <input type="number" min="0" class="form-control" id="editProductQuantity" name="editProductQuantity"
                 formControlName="quantity">
             </div>
             <div class="form-group col-md-3">
-              <label style="font-size: 16px;" for="editProductCompletionTime">Thời gian hoàn thành<span
+              <label style="font-size: 13px;" for="editProductCompletionTime">Thời gian hoàn thành<span
                   class="required-asterisk">*</span></label>
               <input type="date" class="form-control" id="editProductCompletionTime" name="editProductCompletionTime"
                 formControlName="completionTime">
@@ -886,14 +903,14 @@
 
 
           <div class="form-group">
-            <label style="font-size: 16px;" for="editProductDescription">Mô tả<span
+            <label style="font-size: 13px;" for="editProductDescription">Mô tả<span
                 class="required-asterisk">*</span></label>
             <textarea class="form-control" id="editProductDescription" rows="3" name="editProductDescription"
               formControlName="description"></textarea>
           </div>
 
           <!-- <div class="form-group">
-            <label style="font-size: 16px;" for="editProductCategory">Kiểu sản phẩm</label>
+            <label style="font-size: 13px;" for="editProductCategory">Kiểu sản phẩm</label>
             <select class="form-control" id="editProductCategory" name="editProductCategory"
               formControlName="category_id">
               <option [ngValue]="null" disabled selected>Loại sản phẩm</option>
@@ -903,7 +920,7 @@
           </div> -->
           <div class="form-row">
             <div class="form-group col-md-12">
-              <label style="font-size: 16px;" for="editSelectedStatus">Tình trạng<span
+              <label style="font-size: 13px;" for="editSelectedStatus">Tình trạng<span
                   class="required-asterisk">*</span></label>
               <select class="form-control" formControlName="status_id">
                 <option [ngValue]="0" disabled selected>Chọn trạng thái</option>
@@ -914,7 +931,7 @@
 
           <div class="form-row">
             <div class="form-group col-md-4">
-              <label style="font-size: 16px;" for="editProductImages">Ảnh sản phẩm (Chọn nhiều)<span
+              <label style="font-size: 13px;" for="editProductImages">Ảnh sản phẩm (Chọn nhiều)<span
                   class="required-asterisk">*</span></label>
               <input type="file" class="form-control-file" id="editProductImages" name="editProductImages" multiple
                 (change)="onImagesSelected($event)">
@@ -925,7 +942,7 @@
                 Xóa ảnh</button>
             </div>
             <!-- <div class="form-group col-md-4">
-              <label style="font-size: 16px;" for="editThumbnailImage">Ảnh đại diện sản phẩm</label>
+              <label style="font-size: 13px;" for="editThumbnailImage">Ảnh đại diện sản phẩm</label>
               <input type="file" class="form-control-file" id="editThumbnailImage" name="editThumbnailImage"
                 (change)="onThumbnailSelected($event)">
             </div>
@@ -948,7 +965,7 @@
           </div>
           <!-- Mảng các vật liệu cần có trong Edit product -->
           <hr>
-          <label style="font-size: 16px;">Bảng ước tính nguyên vật liệu</label>
+          <label style="font-size: 13px;">Bảng ước tính nguyên vật liệu</label>
           <form [formGroup]="formSubMaterialPerProduct">
             <div formArrayName="itemsEdit">
               <div *ngFor="let item of itemsEditArray.controls; let i = index" [formGroupName]="i" class="row mb-3">
@@ -981,7 +998,7 @@
                   <div class="form-group">
                     <label for="price-{{i}}">Giá (VNĐ)</label>
                     <input id="price-{{i}}" class="form-control" formControlName="unitPrice" type="text"
-                      [value]="unitPriceSubMaterial[i]" readonly="">
+                      [value]="unitPriceSubMaterial[i] " readonly="">
                   </div>
                 </div>
                 <!-- Đơn vị vật liệu -->
@@ -1017,7 +1034,7 @@
 
           <div class="form-row">
             <div class="form-group col-md-12">
-              <label style="font-size: 16px;" for="editProductPrice">Đơn giá 1 đơn vị của sản phẩm (VNĐ)</label>
+              <label style="font-size: 13px;" for="editProductPrice">Đơn giá 1 đơn vị của sản phẩm (VNĐ)</label>
               <input type="text" min="0" class="form-control" id="editProductPrice" name="editProductPrice"
                 formControlName="price" (input)="formatInputValue($event)">
             </div>
@@ -1047,7 +1064,8 @@
         </button>
       </div>
       <div class="modal-body" id="confirmDeleteModal">
-    <h4>    Bạn có chắc muốn xóa sản phẩm "{{ selectedProductNameCurrentDelele }}" (thao tác này không thể hoàn tác)? </h4>
+        <h4> Bạn có chắc muốn xóa sản phẩm "{{ selectedProductNameCurrentDelele }}" (thao tác này không thể hoàn tác)?
+        </h4>
 
       </div>
       <div class="modal-footer" id="confirmDeleteModal">

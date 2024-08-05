@@ -71,9 +71,9 @@
             <td>
               <!-- {{ product.fix }} -->
               <ng-container *ngIf="product.fix; else notFixed" >
-                Đã khắc phục
+              <span style="color: green;"> <b>Đã khắc phục</b> </span>
               </ng-container>
-              <ng-template #notFixed>Chưa khắc phục</ng-template>
+              <ng-template #notFixed><span style="color: red;"><b>Chưa khắc phục</b></span></ng-template>
             </td>
             <td style="text-align: end;">{{ product?.quantity }}</td>
             <td>{{ product.solution }}</td>

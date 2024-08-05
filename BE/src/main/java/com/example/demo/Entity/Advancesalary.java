@@ -41,4 +41,11 @@ public class Advancesalary {
     @JoinColumn(name = "user_id")
     private User user;
 
+    @ManyToOne
+    @JoinColumn(name = "job_id")
+    private Jobs jobs;
+
+    @Column(name = "payment_date")
+    private Date paymentdate;
+
 }

@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder } from '@angular/forms';
 import { DomSanitizer } from '@angular/platform-browser';
-import { Chart } from 'chart.js';
+import { Chart, registerables } from 'chart.js';
 import { ToastrService } from 'ngx-toastr';
 import { DataService } from 'src/app/service/data.service';
 import { EmployeeService } from 'src/app/service/employee.service';
@@ -11,7 +11,9 @@ import { ProductService } from 'src/app/service/product.service';
 import { ProductListService } from 'src/app/service/product/product-list.service';
 import { SalaryService } from 'src/app/service/salary.service';
 import { StatisticService } from 'src/app/service/statistic.service';
+import ChartDataLabels from 'chartjs-plugin-datalabels';
 
+Chart.register(ChartDataLabels);
 interface UserInfo {
   inforId: number;
   phoneNumber: string;
@@ -170,7 +172,7 @@ export class ChartComponent implements OnInit {
     }
   }
   initializeCharts() {
-    
+  
     this.emmpChart = new Chart("canvas1", {
       type: 'pie',
       data: {
@@ -185,9 +187,23 @@ export class ChartComponent implements OnInit {
               'rgb(255, 205, 86)',
             ],
             hoverOffset: 3
-          }
+          },
         ]
       },
+      options: { //cau hin`h hien? thi chart
+        plugins: {
+          datalabels: {
+            color: '#fff',
+            font: {
+              weight: 'bold',
+              size: 10
+            },
+            formatter: (value) => {
+              return value + '%';
+            }
+          }
+        }
+      }
     });
   
     this.chart2 = new Chart('canvas2', {
@@ -274,7 +290,7 @@ export class ChartComponent implements OnInit {
       data: {
         labels: this.months,
         datasets: [{
-          label: 'Tổng giá vật liệu đã bán',
+          label: 'Tổng tiền mua nguyên vật liệu',
           data: this.totalInput,
           fill: false,
           borderColor: 'rgb(75, 192, 192)',

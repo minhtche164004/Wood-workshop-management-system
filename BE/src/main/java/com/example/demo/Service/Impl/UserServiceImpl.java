@@ -119,6 +119,21 @@ public class UserServiceImpl implements UserService {
     public User CreateAccountForAdmin(User_Admin_DTO userDTO) {
         //admin có thể set đc position , role,
         // Lấy thời gian hiện tại
+        if (!checkConditionService.checkUserbyUsername(userDTO.getUsername())) {
+            throw new AppException(ErrorCode.USERNAME_EXISTED);
+        }
+        if (!checkConditionService.checkEmail(userDTO.getEmail())) {
+            throw new AppException(ErrorCode.WRONG_FORMAT_EMAIL);
+        }
+        if (!checkConditionService.checkUserbyEmail(userDTO.getEmail())) {
+            throw new AppException(ErrorCode.GMAIL_EXISTED);
+        }
+        if (!checkConditionService.checkPhone(userDTO.getPhoneNumber())) {
+            throw new AppException(ErrorCode.PHONE_EXISTED);
+        }
+        if (!checkConditionService.checkPhoneNumber(userDTO.getPhoneNumber())) {
+            throw new AppException(ErrorCode.INVALID_FORMAT_PHONE_NUMBER);
+        }
         LocalDateTime currentDateTime = LocalDateTime.now();
         // Chuyển đổi từ LocalDateTime sang java.util.Date
         Date hireDate = Date.from(currentDateTime.atZone(ZoneId.systemDefault()).toInstant());
@@ -138,21 +153,7 @@ public class UserServiceImpl implements UserService {
                 1 //register thì cho has_Account là 1 , nghĩa là đã có account
 
         );
-        if (!checkConditionService.checkUserbyUsername(userDTO.getUsername())) {
-            throw new AppException(ErrorCode.USERNAME_EXISTED);
-        }
-        if (!checkConditionService.checkEmail(userDTO.getEmail())) {
-            throw new AppException(ErrorCode.WRONG_FORMAT_EMAIL);
-        }
-        if (!checkConditionService.checkUserbyEmail(userDTO.getEmail())) {
-            throw new AppException(ErrorCode.GMAIL_EXISTED);
-        }
-        if (!checkConditionService.checkPhone(userDTO.getPhoneNumber())) {
-            throw new AppException(ErrorCode.PHONE_EXISTED);
-        }
-        if (!checkConditionService.checkPhoneNumber(userDTO.getPhoneNumber())) {
-            throw new AppException(ErrorCode.INVALID_FORMAT_PHONE_NUMBER);
-        }
+
 //        if (!checkConditionService.checkEmail(userDTO.getFullname())) {
 //            throw new AppException(ErrorCode.INVALID_FULL_NAME);
 //        }
@@ -369,6 +370,29 @@ userRepository.save(user);
     public UserDTO EditUser(int id, EditUserDTO userDTO) {
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new AppException(ErrorCode.NOT_FOUND));
+        if (!checkConditionService.checkPhoneNumber(userDTO.getPhoneNumber())) {
+            throw new AppException(ErrorCode.INVALID_FORMAT_PHONE_NUMBER);
+        }
+        if (!checkConditionService.checkFullName(userDTO.getFullname())) {
+            throw new AppException(ErrorCode.INVALID_FORMAT_NAME);
+        }
+
+        if (!userDTO.getEmail().equals(user.getEmail()) &&
+                userRepository.findByEmail(userDTO.getEmail()).isPresent()) {
+            throw new AppException(ErrorCode.GMAIL_EXISTED);
+        }
+        if (!userDTO.getPhoneNumber().equals(user.getUserInfor().getPhoneNumber()) &&
+                userRepository.findByPhone(userDTO.getPhoneNumber()).isPresent()) {
+            throw new AppException(ErrorCode.PHONE_EXISTED);
+        }
+
+        if (!userDTO.getUsername().equals(user.getUsername()) &&
+                userRepository.findByUsername(userDTO.getUsername()).isPresent()) {
+            throw new AppException(ErrorCode.USERNAME_EXISTED);
+        }
+        if (!checkConditionService.checkEmail(userDTO.getEmail())) {
+            throw new AppException(ErrorCode.WRONG_FORMAT_EMAIL);
+        }
 //        if(user.getRole().getRoleId()==4 && jobRepository.countJobsByUserId(id) >= 1) { //nếu sửa thằng employee thì nó phải chưa nhận job nào thì mới có quyền sửa role cho nó
 //            throw new AppException(ErrorCode.NOT_EDIT_EMPLOYEE);
 //        }
@@ -400,23 +424,7 @@ userRepository.save(user);
 
         user.setRole(role);
 
-        if (!checkConditionService.checkPhoneNumber(userDTO.getPhoneNumber())) {
-            throw new AppException(ErrorCode.INVALID_FORMAT_PHONE_NUMBER);
-        }
-        if (!checkConditionService.checkFullName(userDTO.getFullname())) {
-            throw new AppException(ErrorCode.INVALID_FORMAT_NAME);
-        }
-        if (!userDTO.getEmail().equals(user.getEmail()) &&
-                userRepository.findByEmail(userDTO.getEmail()).isPresent()) {
-            throw new AppException(ErrorCode.GMAIL_EXISTED);
-        }
-        if (!userDTO.getUsername().equals(user.getUsername()) &&
-                userRepository.findByUsername(userDTO.getUsername()).isPresent()) {
-            throw new AppException(ErrorCode.USERNAME_EXISTED);
-        }
-        if (!checkConditionService.checkEmail(userDTO.getEmail())) {
-            throw new AppException(ErrorCode.WRONG_FORMAT_EMAIL);
-        }
+
 //        if (!checkConditionService.checkEmail(userDTO.getFullname())) {
 //            throw new AppException(ErrorCode.INVALID_FULL_NAME);
 //        }

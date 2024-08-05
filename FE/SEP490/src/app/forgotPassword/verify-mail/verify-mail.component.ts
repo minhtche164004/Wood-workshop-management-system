@@ -64,15 +64,18 @@ export class VerifyMailComponent implements OnInit {
         if (typeof response === 'string' && response.includes('Check OTP đã được gửi đến gmail!')) {
           console.log('Email verified successfully');
           this.toastr.success('Kiểm tra mã OTP đã được gửi đến email!', 'Thành công');
-          this.router.navigate(['/verifyOtp'], { state: { email: this.email } });
+          this.router.navigate(['/verifyOtp',  this.email]);
+          this.isLoading = false;
 
         } else {
           console.error('Email verification failed: Unexpected response', response);
           this.errorMessage = 'Unexpected response from server.';
+          this.isLoading = false;
         }
       },
       (error: HttpErrorResponse) => {
         console.error('Email verification failed', error);
+        this.isLoading = false;
 
         // Parse the error response to access its properties
         let errorResponse;
@@ -85,8 +88,10 @@ export class VerifyMailComponent implements OnInit {
         // Handle specific error codes from backend
         if (errorResponse.code === 1020) {
           this.toastr.error('Email không tồn tại! Vui lòng kiểm tra lại.', 'Lỗi khi thực hiện xác nhận');
+          this.isLoading = false;
         } else {
           this.toastr.error('Đã xảy ra lỗi trong quá trình xác nhận email.', 'Lỗi khi thực hiện xác nhận');
+          this.isLoading = false;
         }
       },
       () => {

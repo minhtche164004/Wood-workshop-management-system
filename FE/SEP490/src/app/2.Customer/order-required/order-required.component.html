@@ -108,8 +108,7 @@
                         <div class="col-md-5 form-group">
                           <label for="thumbnailImage">Ảnh minh họa</label>
                           <span style="font-size: 16px;" class="required-asterisk">*</span>
-                          <input type="file" class="form-control" id="thumbnailImage" multiple
-                            (change)="onImagesSelected($event)">
+                          <input type="file" accept=".jpg,.jpeg,.png" class="form-control" id="thumbnailImage" multiple (change)="onImagesSelected($event)">  
                         </div>
 
                         <div class="col-md-1 form-group d-flex align-items-end">

@@ -402,7 +402,7 @@ public class OrderServiceImpl implements OrderService {
                 }
             }
         }else{
-            return "Tiền đặt cọc không đúng với giá trị cần trả , vui lòng nhập lại!";
+            throw new AppException(ErrorCode.COST_DEPOSIT);
         }
 
         return "";

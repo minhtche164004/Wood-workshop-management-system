@@ -666,10 +666,7 @@ export class UserManagementComponent implements OnInit {
       this.toastr.error('Không được bỏ trống trường Số điện thoại');
       return false;
     }
-
-    // Update the form control with the trimmed value
     PhoneControl.setValue(trimPhoneName);
-
 
     if (!this.validateUsername(username)) {
       this.toastr.error('Tên đăng nhập không hợp lệ.', 'Lỗi');
@@ -725,28 +722,38 @@ export class UserManagementComponent implements OnInit {
       this.isLoadding = false;
       return;
     }
+  
     const editUserRequest: EditUserRequest = this.editUserForm.value;
     const userId = this.userData.userId; // Lấy userId từ userData
-    console.log("Data: ", editUserRequest)
-    // console.log("Data: ", userId)
+    console.log("Data: ", editUserRequest);
+  
     this.authenListService.editUserById(userId, editUserRequest).subscribe(
-      () => {
-        this.loadAllAcountByAdmin();
-        this.isLoadding = false;
-        $('[data-dismiss="modal"]').click();
-        this.toastr.success('Thay đổi thông tin người dùng thành công.');
-
+      (response) => {
+        if (response.code === 1000) {
+          this.loadAllAcountByAdmin();
+          this.isLoadding = false;
+          $('[data-dismiss="modal"]').click();
+          this.toastr.success('Thay đổi thông tin người dùng thành công.');
+        } else {
+          // Handle errors based on the response code
+          this.isLoadding = false;
+          this.toastr.error(response.message || 'An unknown error occurred');
+        }
       },
       (error: any) => {
         this.isLoadding = false;
-
-        if (error.error.code === 1035) {
-
+        console.log(error);
+        // Handle HTTP error response
+        if (error && error.error && error.error.code) {
+          const errorMessage = error.error.message || 'An unknown error occurred';
+          this.toastr.error(errorMessage);
+        } else {
+          this.toastr.error('An unexpected error occurred');
         }
-
       }
     );
   }
+  
 
   MultifiterUser(): void {
 

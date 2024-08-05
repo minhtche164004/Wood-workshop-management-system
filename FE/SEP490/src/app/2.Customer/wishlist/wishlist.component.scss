@@ -10,9 +10,123 @@
   }
   .name-product {
     display: block;
-    width: 100%; /* Adjust as necessary */
+   
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
   }
-  
+  body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+}
+
+/* Header Styles */
+header {
+    background-color: #C89551;
+    color: #fff;
+    padding: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+header h1 {
+    margin: 0;
+    font-size: 32px;
+}
+
+header .fa-heart {
+    color: red;
+    margin-left: 10px;
+    font-size: 24px;
+}
+
+/* Product Styles */
+.product-card {
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    margin: 10px 0;
+    overflow: hidden;
+    transition: transform 0.3s;
+}
+
+.product-card:hover {
+    transform: scale(1.05);
+}
+
+.product-img {
+    width: 100%;
+    height: 370px;
+    object-fit: cover;
+}
+
+.product-info {
+    padding: 1rem;
+    text-align: center;
+}
+
+.product-info h3 {
+    margin-top: 0;
+    font-size: 1.2rem;
+}
+
+.product-info .price {
+    color: #007bff;
+    font-weight: bold;
+}
+
+.product-info .actions {
+    display: flex;
+    justify-content: center;
+    margin-top: 1rem;
+}
+
+.product-info .delete-btn {
+    background-color: #dc3545;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    padding: 0.5rem 1rem;
+    cursor: pointer;
+}
+
+.product-info .delete-btn:hover {
+    background-color: #c82333;
+}
+
+/* Pagination Styles */
+.pagination {
+    display: flex;
+    justify-content: center;
+    margin-top: 40px;
+}
+
+.pagination a {
+    color: #333;
+    padding: 10px 20px;
+    text-decoration: none;
+    margin: 0 5px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    transition: background-color 0.3s ease;
+}
+
+.pagination a.active {
+    background-color: #ff6b6b;
+    color: #fff;
+    border-color: #ff6b6b;
+}
+
+.pagination a:hover {
+    background-color: #f2f2f2;
+}
+
+/* Footer Styles */
+footer {
+    background-color: #333;
+    color: #fff;
+    padding: 20px;
+    text-align: center;
+    font-size: 14px;
+}

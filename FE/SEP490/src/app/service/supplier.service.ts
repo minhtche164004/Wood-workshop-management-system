@@ -11,6 +11,7 @@ export class SupplierService {
   private apiUrl_findProduct = `${environment.apiUrl}api/auth/supplier`
   private apiUrl_addSupplier = `${environment.apiUrl}api/auth/supplier/AddNewSupplier`
   private apiUrl_deleteSupplier = `${environment.apiUrl}api/auth/supplier/DeleteSupplier`;
+  private apiUrl_multiFilterSubmaterial = `${environment.apiUrl}api/auth/submaterial/MultiFilterSubmaterial`;
 
   constructor(private http: HttpClient) { }
   getAllSuppliers(): Observable<any> {
@@ -37,4 +38,12 @@ export class SupplierService {
       catchError(this.handleError)
     );
   }
+  multiFilterSubmaterial(search: string, materialId: number): Observable<any> {
+    const url = `${this.apiUrl_multiFilterSubmaterial}?search=${encodeURIComponent(search)}&materialId=${materialId}`;
+    return this.http.get<any>(url).pipe(
+      catchError(this.handleError)
+    );
+  }
+
+ 
 }

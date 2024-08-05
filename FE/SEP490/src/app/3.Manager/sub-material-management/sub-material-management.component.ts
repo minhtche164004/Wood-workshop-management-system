@@ -354,33 +354,10 @@ export class SubMaterialManagementComponent implements OnInit {
 
   searchSubMaterial(): void {
     this.checkNotFound = false;
-    this.isLoadding = true;
+    
     this.searchKey.trim();
-    this.materialService.searchSubMaterial(this.searchKey).subscribe(
-      (data) => {
-        if (data.code === 1000) {
-          this.currentPage = 1;
-          this.subMaterials = data.result;
-     //     console.log('Kết quả tìm kiếm Sub-Materials:', this.products);
-          this.isLoadding = false;
-          if(this.subMaterials.length == 0){
-            this.checkNotFound = true;
-          }
-        } else {
-          console.log('Failed to search sub-materials:', data);
-        //  this.toastr.error('Không thể tìm kiếm sub-materials!', 'Lỗi');
-          this.isLoadding = false;
-          this.checkNotFound = true;
-        }
-        
-      },
-      (error) => {
-        console.log('Error searching sub-materials:', error);
-        this.toastr.error('Có lỗi xảy ra!', 'Lỗi');
-        this.isLoadding = true;
-        this.checkNotFound = false;
-      }
-    );
+   
+    this.multiFilterSubmaterial(this.searchKey,this.selectedMaterial);
     
 
   }
@@ -465,29 +442,11 @@ resetFileInput(inputElement: HTMLInputElement) {
   this.selectedFile = undefined; // Optionally reset the selected file in the component
 }
   selectProduct(product: any): void {
-    this.isLoadding = true;
+   
     this.selectedSubMtr = product; // Adjust based on your product object structure
-     console.log('Selected mtr seacu:', this.selectedSubMtr.subMaterialName);
+     console.log('Selected mtr seacu:', this.selectedSubMtr);
 
-    this.materialService.searchSubMaterial(this.selectedSubMtr.subMaterialName).subscribe(
-      (data) => {
-        if (data.code === 1000) {
-          this.subMaterials = data.result;
-          console.log('Kết quả tìm kiếm Sub-Materials:', this.subMaterials);
-          this.isLoadding = false;
-        } else {
-          console.error('Failed to search sub-materials:', data);
-          this.toastr.error('Không thể tìm kiếm sub-materials!', 'Lỗi');
-
-          this.isLoadding = false;
-        }
-      },
-      (error) => {
-        console.error('Error searching sub-materials:', error);
-        this.toastr.error('Có lỗi xảy ra!', 'Lỗi');
-        this.isLoadding = false;
-      }
-    );
+   this.multiFilterSubmaterial(this.selectedSubMtr.subMaterialName,this.selectedSubMtr.materialId);
 
   }
   onChangeSearch(event: any) {
@@ -496,19 +455,30 @@ resetFileInput(inputElement: HTMLInputElement) {
   }
 
   filterByMaterialId(): void {
+   // this.isLoadding = true;
+    console.log("selected mater id: ", this.selectedMaterial);
+    this.multiFilterSubmaterial(this.searchKey,this.selectedMaterial);
+  }
+
+  
+  multiFilterSubmaterial(search: string, materialId: any): void {
     this.isLoadding = true;
-    console.log("Thực hiện chức năng lọc theo nguyên vật liệu: ", this.selectedMaterial);
-    this.subMaterialService.filterByMaterial(this.selectedMaterial).subscribe(
+    console.log("Thực hiện chức năng lọc sub-materials theo nguyên vật liệu: ", materialId);
+    if(materialId === null){
+      materialId = ''
+    }
+    this.subMaterialService.multiFilterSubmaterial(search,materialId).subscribe(
       (data) => {
         if (data.code === 1000) {
           this.subMaterials = data.result;
           this.currentPage = 1;
           //    this.toastr.success('Vật liệu ' + this.selectedMaterial.materialName + ' thành công!', 'Thành công');
           console.log('Kết quả lọc Sub-Materials:', this.subMaterials);
+          this.isLoadding = false;
         } else {
           console.error('Failed to filter sub-materials:', data);
-          this.toastr.error('Không thể lọc sub-materials!', 'Lỗi');
-
+          //this.toastr.error('Không thể lọc sub-materials!', 'Lỗi');
+          this.checkNotFound = true;
           this.isLoadding = false;
         }
       },

@@ -377,17 +377,18 @@
           <div class="row" style="margin-bottom: 20px;">
             <div class="col md-6">
               <label for="cancelReason">Nhập số tiền cọc cần thanh toán</label>
-              <input min="0" type="number" class="form-control" id="percentDepositPrice" 
-              [(ngModel)]="depositeOrder" (ngModelChange)="formatInputValue($event)">
+              <input min="0" type="number" class="form-control" id="percentDepositPrice" [(ngModel)]="depositeOrder"
+                (ngModelChange)="formatInputValue($event)">
             </div>
             <div class="col md-6">
               <label>Số tiền cọc cần thanh toán </label>
-             
-              <input readonly type="number" class="form-control" id="percentDepositPrice" [(ngModel)]="OrderdetailById.deposite" >
+
+              <input readonly type="number" class="form-control" id="percentDepositPrice"
+                [(ngModel)]="OrderdetailById.deposite">
             </div>
           </div>
-         
-      
+
+
 
 
           <p>Số tiền cần thanh toán còn lại: {{ OrderdetailById.totalAmount - OrderdetailById.deposite | number :

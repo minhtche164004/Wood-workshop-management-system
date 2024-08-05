@@ -287,7 +287,7 @@
                                                     <strong>Mã đơn hàng:</strong>
                                                 </div>
                                                 <div class="col-md-6">
-                                                    {{ selectedProduct.code }}
+                                                    {{ selectedJob.code }}
                                                 </div>
                                             </div>
                                             <div class="row">
@@ -1008,7 +1008,7 @@
                         [(ngModel)]="costEmplopyee"> vnđ </p>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" (click)="cancelChangeEmployee()"
+                <button type="button" class="btn btn-secondary" (click)="cancelAssign()"
                     data-dismiss="modal">Đóng</button>
                 <button type="button" class="btn btn-primary" (click)="changeEmployeeAbsent()">Thay đổi
                 </button>
@@ -1016,6 +1016,7 @@
         </div>
     </div>
 </div>
+
 <div class="modal fade" id="assignJobModalEmployeeAbsent" role="dialog"
     aria-labelledby="assignJobModalEmployeeAbsentLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered modal-lg">

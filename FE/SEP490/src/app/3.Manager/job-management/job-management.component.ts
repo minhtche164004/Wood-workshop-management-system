@@ -776,7 +776,7 @@ export class JobManagementComponent implements OnInit {
       (data) => {
         if (data.code === 1000) {
           this.selectedJob = data.result;
-          console.log('Form detailJob value:', this.selectedJob);
+          console.log('selectedJob:', this.selectedJob);
           this.isLoadding = false;
         } else {
           console.error('Failed to fetch products:', data);
@@ -833,14 +833,13 @@ export class JobManagementComponent implements OnInit {
 
   cancelAssign(): void {
     this.employeeSelect.nativeElement.value = '';
-    if (this.isCancel) {
-      console.log('Cancel Assign Called');
+    console.log('Cancel Assign Called: ', this.selectedCategory);
       if (this.selectedCategory === 0) {
         this.loadProductRQForJob();
       } else if (this.selectedCategory === 1) {
         this.loadProduct();
       }
-    }
+    
   }
 
   getSubMTRProductRQ(id: number, mate_id: number) {

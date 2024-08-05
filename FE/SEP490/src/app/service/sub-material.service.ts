@@ -14,8 +14,16 @@ export class SubMaterialService {
   private api_getSubMtrById =`${environment.apiUrl}api/auth/submaterial/getSubmaterialById`;
   private apiNhapExcel = `${environment.apiUrl}api/auth/submaterial/upload-submaterial-data`
   private api_editSubMaterial = `${environment.apiUrl}api/auth/submaterial/editSubMaterial`;
-   constructor(private http: HttpClient) { }
+  private apiUrl_multiFilterSubmaterial = `${environment.apiUrl}api/auth/submaterial/MultiFilterSubmaterial`;
 
+   constructor(private http: HttpClient) { }
+   multiFilterSubmaterial(search: string, materialId: number): Observable<any> {
+    
+    const url = `${this.apiUrl_multiFilterSubmaterial}?search=${encodeURIComponent(search)}&materialId=${materialId}`;
+    return this.http.get<any>(url).pipe(
+      catchError(this.handleError)
+    );
+  }
    uploadExcel(file: File): Observable<any> {
     const formData = new FormData();
     formData.append('file', file, file.name);

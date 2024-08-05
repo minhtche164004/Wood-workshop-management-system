@@ -281,7 +281,7 @@ export class OrderManagementComponent implements OnInit {
       (data) => {
         this.OrderdetailById = data.result;
         this.isLoadding = false;
-        // console.log('OrderdetailById:', data.result);
+         console.log('OrderdetailById:', data.result);
         // console.log('OrderdetailById:', this.OrderdetailById);
       },
       (error) => {

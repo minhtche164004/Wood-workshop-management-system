@@ -12,12 +12,17 @@ import com.example.demo.Exception.ErrorCode;
 import com.example.demo.Repository.*;
 import com.example.demo.Service.CheckConditionService;
 import com.example.demo.Service.Impl.JobServiceImpl;
+import com.example.demo.Service.Impl.ShareDataRequest;
+import com.example.demo.Service.Impl.SharedData;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.springframework.beans.factory.annotation.Autowired;
 
+import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.*;
 
 class JobServiceImplTest {
@@ -48,6 +53,10 @@ class JobServiceImplTest {
     private CheckConditionService checkConditionService;
     @Mock
     private Employee_Material_Repository employeeMaterialRepository;
+    @Mock
+    private SharedData sharedData;
+    @Mock
+    private ShareDataRequest sharedDataRequest;
     @InjectMocks
     private JobServiceImpl jobServiceImpl;
 
@@ -120,11 +129,17 @@ class JobServiceImplTest {
         int statusId = 1;
         int jobId = 1;
         int typeJob = 1;
+        int originalQuantityProduct = 10;
+
+        User user = new User();
+        user.setPosition(new Position(1,"Thợ Mộc")); // Set position_id to 1
+
         Jobs job = new Jobs();
         Jobs existingJob = new Jobs();
         existingJob.setOrderdetails(new Orderdetails());
+        existingJob.setOriginalQuantityProduct(originalQuantityProduct);
 
-        when(userRepository.findByIdJob(userId)).thenReturn(new User());
+        when(userRepository.findByIdJob(userId)).thenReturn(user);
         when(requestProductRepository.findById(productId)).thenReturn(new RequestProducts());
         when(productRepository.findById(productId)).thenReturn(new Products());
         when(jobRepository.getJobById(jobId)).thenReturn(existingJob);
@@ -215,8 +230,9 @@ class JobServiceImplTest {
         });
 
         // Verify the exception type and message
-        assertEquals("Job not found", thrown.getMessage()); // Ensure the message matches the one used in the exception
+        assertEquals(1015, thrown.getErrorCode().getCode()); // So sánh với thông báo lỗi mong đợi
     }
+
     @Test
     void testGetJobById() {
         int jobId = 1;
@@ -303,16 +319,19 @@ class JobServiceImplTest {
 //    }
 @Test
 void testCreateJob_Log_StatusNotFound() {
+    LocalDate today = LocalDate.now();
+    Date a = Date.from(today.atStartOfDay(ZoneId.systemDefault()).toInstant());
     int jobId = 1;
     int statusId = 999; // Non-existent status ID
     Jobs jobHistory = new Jobs();
+    jobHistory.setTimeFinish(a);
     when(jobRepository.getJobById(jobId)).thenReturn(jobHistory);
     when(statusJobRepository.findById(statusId)).thenReturn(null);
 
-    // Catch RuntimeException temporarily if AppException is not being thrown correctly
+
     RuntimeException thrownException = assertThrows(RuntimeException.class, () -> jobServiceImpl.CreateJob_Log(jobId, statusId));
 
-    // Optionally, you can inspect the message to confirm the error type if needed
+
     assertEquals("Job not found", thrownException.getMessage()); // Adjust as necessary
 }
 

@@ -203,7 +203,7 @@ public class JobServiceImpl implements JobService {
             if(jobDTO.getFinish().after(contract_finish)){
                 throw new AppException(ErrorCode.TIME_FINISH_INVALID);
             }
-            if(jobDTO.getStart().after(start_order)){
+            if(jobDTO.getStart().before(start_order)){
                 throw new AppException(ErrorCode.TIME_START_INVALID);
             }
             Date job_finish = current.getTimeFinish();

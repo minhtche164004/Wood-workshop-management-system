@@ -110,12 +110,12 @@
                             </td>
                             <td>
                                 <!-- Button to open the "errorProduct" modal -->
-                                <button *ngIf="!listErrorJob.includes(product.job_id)" class="btn btn-primary"
+                                <button *ngIf="!listErrorJob.includes(product.job_id) " class="btn btn-primary"
                                     data-toggle="modal" data-target="#errorProduct" (click)="errorJob(product)"
                                     [class.btn-primary]="!isErrorDisabled(product) && !listErrorJob.includes(product.job_id)"
-                                    [class.btn-secondary]="isErrorDisabled(product) && !listErrorJob.includes(product.job_id)"
+                                    [class.btn-secondary]="isErrorDisabled(product) && !listErrorJob.includes(product.job_id) || product?.user_name === ''"
                                     [class.btn-danger]="listErrorJob.includes(product.job_id)"
-                                    [disabled]="isErrorDisabled(product)">
+                                    [disabled]="isErrorDisabled(product) || product?.user_name === ''">
                                     <i class="fa-solid fa-triangle-exclamation"></i>
                                 </button>
                                 <button *ngIf="listErrorJob.includes(product.job_id)" class="btn btn-primary"
@@ -231,7 +231,7 @@
                                             
                                             <div class="row">
                                                 <div class="col-md-6">
-                                                    <strong>Mã đơn hàng:</strong>
+                                                    <strong>Mã sản xuất:</strong>
                                                 </div>
                                                 <div class="col-md-6">
                                                     {{ selectedJob.code }}
@@ -372,7 +372,7 @@
 
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-dismiss="modal"
-                            (click)="cancelAssign()">Hủy</button>
+                            (click)="cancelAssign(true)">Hủy</button>
                         <button type="submit" class="btn btn-primary">Tạo việc</button>
                     </div>
                 </form>
@@ -442,7 +442,7 @@
                                             <h5 style="text-align: center; color: black;">Mô tả việc làm</h5>
                                             <div class="row">
                                                 <div class="col-md-6">
-                                                    <strong>Mã đơn hàng:</strong>
+                                                    <strong>Mã sản xuất:</strong>
                                                 </div>
                                                 <div class="col-md-6">
                                                     {{ selectedJob.code }}
@@ -1029,7 +1029,7 @@
                         [(ngModel)]="costEmplopyee"> vnđ </p>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" (click)="cancelAssign()"
+                <button type="button" class="btn btn-secondary" (click)="cancelAssign(true)"
                     data-dismiss="modal">Đóng</button>
                 <button type="button" class="btn btn-primary" (click)="changeEmployeeAbsent()">Thay đổi
                 </button>
@@ -1070,15 +1070,14 @@
 
 
                                                     <select #employeeSelect2 class="form-select"
-                                                        (change)="onChangeSelectedEmployee2($event)">
-                                                        <option value="" selected disabled>Chọn 1 nhân viên</option>
-                                                        <option *ngFor="let employee of positionEmployees"
-                                                            [value]="employee.userId">
-                                                            {{ employee.userInfor.fullname }} ({{
-                                                            employee.position?.position_name }})
-                                                        </option>
-                                                    </select>
-
+                                                    (change)="onChangeSelectedEmployee2($event)">
+                                                    <option value="" selected disabled>Chọn 1 nhân viên</option>
+                                                    <option *ngFor="let employee of positionEmployees"
+                                                        [value]="employee.userId">
+                                                        {{ employee.userInfor.fullname }} ({{
+                                                        employee.position?.position_name }})
+                                                    </option>
+                                                </select>
                                                 </div>
                                             </div>
                                             <div class="row">
@@ -1195,7 +1194,7 @@
 
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-dismiss="modal"
-                            (click)="cancelAssign()">Hủy</button>
+                            (click)="cancelAssign(true)">Hủy</button>
                         <button type="submit" class="btn btn-primary">Tạo việc</button>
                     </div>
                 </form>

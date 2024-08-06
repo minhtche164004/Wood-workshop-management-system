@@ -203,11 +203,16 @@ public class JobServiceImpl implements JobService {
             if(jobDTO.getFinish().after(contract_finish)){
                 throw new AppException(ErrorCode.TIME_FINISH_INVALID);
             }
-            if(jobDTO.getStart().after(start_order)){
+            if(jobDTO.getStart().before(start_order)){
                 throw new AppException(ErrorCode.TIME_START_INVALID);
             }
-            Date job_finish = current.getTimeFinish();
-            if(jobDTO.getStart().after(job_finish)){
+            Date job_finish;
+            if (current.getTimeFinish() != null) {
+                job_finish = current.getTimeFinish();
+            } else {
+                job_finish = new Date();
+            }
+            if(jobDTO.getStart().before(job_finish)){
                 throw new AppException(ErrorCode.TIME_START_JOB_INVALID);
             }
         } else {////tức là đang phân job cho  product có sẵn

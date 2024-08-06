@@ -224,7 +224,7 @@ export class ChartComponent implements OnInit {
         datasets: [
           {
             label: 'Đơn hàng',
-            data: [this.percentSpecialOrder, this.percentOrder],
+            data: [this.totalOrder, this.totalSpecialOrder],
             backgroundColor: [
               'rgb(255, 99, 132)',
               'rgb(54, 162, 235)',
@@ -266,7 +266,7 @@ export class ChartComponent implements OnInit {
         datasets: [
           {
             label: 'Sản phẩm',
-            data: [this.normalProductPercentage, this.rqProductPercentage],
+            data: [this.totalNormalProduct, this.totalRQProduct],
             backgroundColor: [
               'rgb(255, 99, 132)',
               'rgb(54, 162, 235)',
@@ -283,8 +283,17 @@ export class ChartComponent implements OnInit {
               weight: 'bold',
               size: 10
             },
-            formatter: (value) => {
-              return value + '%';
+            formatter: (value, context) => {
+              const data = context.chart.data.datasets[0].data.filter(item => typeof item === 'number') as number[];
+              
+              let total: number = data.reduce((a, b) => a + b, 0);
+              
+              if (total !== 0) {
+                let percentage = (value / total * 100).toFixed(2);
+                return percentage + '%';
+              } else {
+                return '0%';
+              }
             }
           }
         }
@@ -311,47 +320,47 @@ export class ChartComponent implements OnInit {
     });
 
     this.chart5 = new Chart('canvas5', {
-      type: 'line',
+      type: 'bar',
       data: {
         labels: this.months,
         datasets: [{
           label: 'Đơn hàng sản phẩm có sẵn',
           data: this.totalOrderMY,
-          fill: false,
+          
           borderColor: 'rgb(75, 192, 192)',
           backgroundColor: 'rgb(75, 192, 192)',
-          tension: 0.1
+         
         },
         {
           label: 'Đơn đặt hàng sản phẩm theo yêu cầu',
           data: this.totalOrderSpecMY,
-          fill: false,
+         
           borderColor: 'rgb(255, 99, 132)',
           backgroundColor: 'rgb(255, 99, 132)',
-          tension: 0.1
+         
         }] 
       }
     });
 
     this.chart6 = new Chart('canvas6', {
-      type: 'line',
+      type: 'bar',
       data: {
         labels: this.months,
         datasets: [{
           label: 'Tổng tiền mua nguyên vật liệu',
           data: this.totalInput,
-          fill: false,
+          
           borderColor: 'rgb(75, 192, 192)',
           backgroundColor: 'rgb(75, 192, 192)',
-          tension: 0.1
+         
         },
         {
           label: 'Tổng lương',
           data: this.totalSalary,
-          fill: false,
+         
           borderColor: 'rgb(255, 99, 132)',
           backgroundColor: 'rgb(255, 99, 132)',
-          tension: 0.1
+         
         }] 
       }
     });
@@ -396,7 +405,7 @@ export class ChartComponent implements OnInit {
     try {
       const data = await this.statistic.getCountProduct().toPromise();
       this.totalNormalProduct = data.result;
-     // console.log('Tổng sản phẩm thường:', this.totalNormalProduct);
+      console.log('Tổng sản phẩm thường:', this.totalNormalProduct);
       await this.getTotalRQProduct(); // Wait for getTotalRQProduct() to complete
       await this.getTotalProductNormal(); // Wait for getTotalProductNormal() to complete
     } catch (err) {

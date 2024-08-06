@@ -291,7 +291,7 @@ export class JobManagementComponent implements OnInit {
     if (id === 2) {
       this.positionName = 'Phun sơn'
     }
-    console.log('Position Name:', this.positionName);
+   // console.log('Position Name:', this.positionName);
     return this.positionName;
   }
   positionCreateJob: any;
@@ -312,7 +312,7 @@ export class JobManagementComponent implements OnInit {
     this.positionCreateJob = this.selectedProduct.position_id + 1;
     let modifiedPositionName = '';
 
-    console.log('Position Name creaetNewJob:', this.positionCreateJob);
+  //  console.log('Position Name creaetNewJob:', this.positionCreateJob);
     // if (!user_id || !p_id || !status_id || !job_id || !type_id || !position_id) {
     //   // Nếu bất kỳ trường nào là null hoặc không được cung cấp
     //   this.toastr.error('Vui lòng nhập đầy đủ thông tin trước khi tiếp tục.', 'Lỗi');
@@ -375,24 +375,24 @@ export class JobManagementComponent implements OnInit {
     // console.log('emp_id:', user_id);
     // console.log('mate_id:', position_id);
 
-    console.log('Modified Position Name:', modifiedPositionName);
+  //  console.log('Modified Position Name:', modifiedPositionName);
     const createJobs = {
       quantity_product: quantity,
       job_name: modifiedPositionName,
 
     };
-    console.log('createJobs before API call:', this.createJobs.value);
+  //  console.log('createJobs before API call:', this.createJobs.value);
 
-    console.log('cost :', this.createJobs.value.cost);
+  //  console.log('cost :', this.createJobs.value.cost);
     if (this.selectedProduct.code == null) {
       //    this.isLoadding = true
       //  console.log("consolo lod: ", this.isLoadding)
-      console.log("create form:", createJobs);
-      console.log('API parameters:', user_id, p_id, status_id, job_id, type_id, createJobs);
+     // console.log("create form:", createJobs);
+    //  console.log('API parameters:', user_id, p_id, status_id, job_id, type_id, createJobs);
       this.jobService.createExportMaterialProductTotalJob(p_id, position_id, user_id, createJobs).subscribe(
         (data) => {
           if (data.code === 1000) {
-            console.log('Xuất nguyên liệu thành công');
+            console.log('Xuất nguyên liệu thành công 1');
             this.jobService.addJob(user_id, p_id, status_id, job_id, type_id, this.createJobs.value).subscribe(
               (data) => {
                 if (data.code === 1000) {
@@ -406,12 +406,16 @@ export class JobManagementComponent implements OnInit {
                   this.loadProduct();
                   $('[data-dismiss="modal"]').click();
                 }
+               
                 this.isLoadding = false;
               },
               (error) => {
-                console.error('Error fetching products:', error);
-                this.toastr.error('Có lỗi xảy ra!', 'Lỗi'); this.isLoadding = false;
+                this.toastr.warning(error.error.message, error.error.code);
+                this.isLoadding = false;
                 $('[data-dismiss="modal"]').click();
+                console.log('error: ', error)
+                console.log('Error Code:',error.error.code);
+                console.log('Error Message:', error.error.message);
 
               }
             );
@@ -447,7 +451,7 @@ export class JobManagementComponent implements OnInit {
       this.jobService.createExportMaterialRequestTotalJob(p_id, position_id, user_id, createJobs).subscribe(
         (data) => {
           if (data.code === 1000) {
-            console.log('Xuất nguyên liệu thành công');
+           // console.log('Xuất nguyên liệu thành công');
             this.jobService.addJob(user_id, p_id, status_id, job_id, type_id, jobData).subscribe(
               (data) => {
                 if (data.code === 1000) {
@@ -456,16 +460,16 @@ export class JobManagementComponent implements OnInit {
                   $('[data-dismiss="modal"]').click(); this.isLoadding = false;
 
                   this.loadProductRQForJob();
-                } else {
-                  console.error('Failed to fetch products:', data);
-                  this.toastr.error('Thêm sản phẩm sản xuất thất bại!', 'Lỗi');
-                  $('[data-dismiss="modal"]').click(); this.isLoadding = false;
-                  this.loadProductRQForJob();
-                }
+                } 
               },
               (error) => {
                 // console.error('Error fetching products:', error);
-                this.toastr.error('Có lỗi xảy ra!', 'Lỗi'); this.isLoadding = false;
+                this.toastr.warning(error.error.message, error.error.code);
+                this.isLoadding = false;
+                $('[data-dismiss="modal"]').click();
+                console.log('error: ', error)
+                console.log('Error Code:',error.error.code);
+                console.log('Error Message:', error.error.message);
 
               }
             );
@@ -559,7 +563,7 @@ export class JobManagementComponent implements OnInit {
   empId: number = 0;
   onChangeSelectedEmployee(event: any) {
     this.selectedEmployee = event.target.value;
-    console.log('Selected employee ID:', this.selectedEmployee);
+   // console.log('Selected employee ID:', this.selectedEmployee);
     this.empId = event.target.value;
     this.getPositionNameById(this.empId + 1);
   }
@@ -567,7 +571,7 @@ export class JobManagementComponent implements OnInit {
   empId2: number = 0;
   onChangeSelectedEmployee2(event: any) {
     this.selectedEmployee2 = event.target.value;
-    console.log('Selected employee joy 2:', this.selectedEmployee2);
+  //  console.log('Selected employee joy 2:', this.selectedEmployee2);
     this.empId2 = event.target.value;
     this.getPositionNameById(this.empId2 + 1);
   }
@@ -688,17 +692,17 @@ export class JobManagementComponent implements OnInit {
 
   checkJobsForErrors() {
     this.listErrorJob = [];
-    console.log('Checking jobs for errors...');
+
     const errorCheckPromises = this.productRQs.map((product) => {
       return this.jobService.checkErrorOfJob(product.job_id).toPromise().then(
         (data) => {
           if (data.result === false) {
-            console.log(`Job ${product.job_id} has errors`);
+          //  console.log(`Job ${product.job_id} has errors`);
             this.listErrorJob.push(product.job_id);
           }
         },
         (error) => {
-          console.error(`Error checking job ${product.job_id}:`, error);
+          //console.error(`Error checking job ${product.job_id}:`, error);
         }
       );
     });
@@ -834,7 +838,7 @@ export class JobManagementComponent implements OnInit {
 
   cancelAssign(): void {
     this.employeeSelect.nativeElement.value = '';
-    console.log('Cancel Assign Called: ', this.selectedCategory);
+ //   console.log('Cancel Assign Called: ', this.selectedCategory);
       if (this.selectedCategory === 0) {
         this.loadProductRQForJob();
       } else if (this.selectedCategory === 1) {

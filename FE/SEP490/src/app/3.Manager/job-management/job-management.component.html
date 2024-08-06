@@ -228,9 +228,51 @@
 
                                         <section class="customer-info mb-4">
 
-                                            <h5 style="text-align: center; color: black;">Thông tin việc làm</h5>
+                                            
+                                            <div class="row">
+                                                <div class="col-md-6">
+                                                    <strong>Mã đơn hàng:</strong>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    {{ selectedJob.code }}
+                                                </div>
+                                            </div>
+                                           
+                                           
+                                            <div class="row">
+                                                <div class="col-md-6">
+                                                    <p>
+                                                        <strong>Số lượng sản phẩm:</strong>
+                                                    </p>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <!-- {{ selectedProduct.quantity }}  -->
+                                                    {{ this.selectedProduct.quantity }}
 
+                                                </div>
+                                            </div>
+                                          
+                                            <div class="row">
+                                                <div class="col-md-6">
+                                                    <strong>Ngày dự tính hoàn thành đơn hàng:</strong>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    {{  selectedProduct.order_contract_time | date:'dd / MM / yyyy' }}
+                                                </div>
+                                            </div>
+                                        </section>
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <strong>Ngày nhận đơn:</strong>
+                                            </div>
+                                            <div class="col-md-6">
+                                                {{  selectedProduct.order_date | date:'dd / MM / yyyy' }}
+                                            </div>
+                                        </div>
+                                    </div>
 
+                                    <div class="col-md-6">
+                                        <section class="order-summary mb-4">
                                             <div class="row">
                                                 <div class="col-md-6">
                                                     <p>
@@ -254,18 +296,8 @@
 
                                                 </div>
                                             </div>
-                                            <div class="row">
-                                                <div class="col-md-6">
-                                                    <p>
-                                                        <strong>Số lượng sản phẩm:</strong>
-                                                    </p>
-                                                </div>
-                                                <div class="col-md-6">
-                                                    <!-- {{ selectedProduct.quantity }}  -->
-                                                    {{ this.selectedProduct.quantity }}
-
-                                                </div>
-                                            </div>
+                                           
+                                           
                                             <div class="row">
                                                 <div class="col-md-6">
                                                     <strong>Giá công khoán (VNĐ)<span class="required-asterisk">
@@ -274,20 +306,6 @@
                                                 <div class="col-md-6">
                                                     <input type="number" name="costJob" formControlName="cost"
                                                         [(ngModel)]="costJob">
-                                                </div>
-                                            </div>
-                                        </section>
-                                    </div>
-
-                                    <div class="col-md-6">
-                                        <section class="order-summary mb-4">
-                                            <h5 style="text-align: center; color: black;">Mô tả việc làm</h5>
-                                            <div class="row">
-                                                <div class="col-md-6">
-                                                    <strong>Mã đơn hàng:</strong>
-                                                </div>
-                                                <div class="col-md-6">
-                                                    {{ selectedJob.code }}
                                                 </div>
                                             </div>
                                             <div class="row">
@@ -301,16 +319,19 @@
                                                             formControlName="start">
                                                     </div>
                                                 </div>
-                                                <div class="col-md-6">
-                                                    <strong>Hoàn thành trước ngày<span class="required-asterisk">
-                                                            *</span></strong>
+                                                <div class="row">
+                                                    <div class="col-md-6">
+                                                        <strong>Hoàn thành trước ngày<span class="required-asterisk">
+                                                                *</span></strong>
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        <input type="date" formControlName="finish"
+                                                            placeholder="Nhập ngày hoàn thành công việc ">
+                                                    </div>
                                                 </div>
-                                                <div class="col-md-6">
-                                                    <input type="date" formControlName="finish"
-                                                        placeholder="Nhập ngày hoàn thành công việc ">
-                                                </div>
+                                                
                                             </div>
-
+                                          
                                         </section>
                                     </div>
                                 </div>
@@ -1037,9 +1058,7 @@
 
                                         <section class="customer-info mb-4">
 
-                                            <h5 style="text-align: center; color: black;">Thông tin việc làm</h5>
-
-
+                                    
                                             <div class="row">
                                                 <div class="col-md-6">
                                                     <p>
@@ -1084,11 +1103,19 @@
                                                 </div>
                                             </div>
                                         </section>
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <strong>Ngày nhận đơn:</strong>
+                                            </div>
+                                            <div class="col-md-6">
+                                                {{  selectedProduct.order_date | date:'dd / MM / yyyy' }}
+                                            </div>
+                                        </div>
                                     </div>
 
                                     <div class="col-md-6">
                                         <section class="order-summary mb-4">
-                                            <h5 style="text-align: center; color: black;">Mô tả việc làm</h5>
+                                           
                                             <div class="row">
                                                 <div class="col-md-6">
                                                     <strong>Mã đơn hàng:</strong>
@@ -1097,6 +1124,16 @@
                                                     {{ selectedProduct.code }}
                                                 </div>
                                             </div>
+                                           
+                                            <div class="row">
+                                                <div class="col-md-6">
+                                                    <strong>Ngày dự tính hoàn thành đơn hàng:</strong>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    {{  selectedProduct.order_contract_time | date:'dd / MM / yyyy' }}
+                                                </div>
+                                            </div>
+                                         
                                             <div class="row">
                                                 <div class="row">
                                                     <div class="col-md-6">

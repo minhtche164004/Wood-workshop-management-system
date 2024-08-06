@@ -145,10 +145,10 @@ const routes: Routes = [
   { path: 'report-cost', component: ReportCostManagementComponent },
   { path: 'im_history', component: ImpactHistoryManagerComponent, canActivate: [AuthGuard], data: { roles: ['MANAGER'] } },
 
-  // { path: '', redirectTo: '/homepage', pathMatch: 'full' },
-  // { path: '**', redirectTo: '/homepage', pathMatch: 'full' },
+  { path: '', redirectTo: '/homepage', pathMatch: 'full' },
+  { path: '**', redirectTo: '/homepage', pathMatch: 'full' },
 
-];
+  ];
 
 @NgModule({
   imports: [RouterModule.forRoot(routes)],

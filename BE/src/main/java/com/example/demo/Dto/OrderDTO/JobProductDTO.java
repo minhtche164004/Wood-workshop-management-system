@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
+import java.util.Date;
 
 @Data
 //@AllArgsConstructor
@@ -28,10 +29,12 @@ public class JobProductDTO {
     private String position_name;
     private int product_error_id;
     private boolean reassigned;
+    private Date order_contract_time;//ngày dự kiến hoàn thành
+    private Date order_date;//ngày tạo đơn hàng
 
 
     public JobProductDTO(int job_id,String job_code,String code, int product_id, String product_name, String description,
-                         BigDecimal price, Status_Job statusJob, int quantity, int user_id, String user_name, int position_id, String position_name,int product_error_id,boolean reassigned) {
+                         BigDecimal price, Status_Job statusJob, int quantity, int user_id, String user_name, int position_id, String position_name,int product_error_id,boolean reassigned,Date order_contract_time,Date order_date) {
         this.job_id=job_id;
         this.job_code = job_code;
         this.code = code;
@@ -47,5 +50,7 @@ public class JobProductDTO {
         this.position_name = position_name;
         this.product_error_id = product_error_id;
         this.reassigned= reassigned;
+        this.order_contract_time=order_contract_time;
+        this.order_date=order_date;
     }
 }

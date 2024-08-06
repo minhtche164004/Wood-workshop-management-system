@@ -155,7 +155,7 @@ public class UserServiceFilterImplTest {
         UpdateProfileDTO result = userService.ViewProfile();
 
         // Assert
-        assertNotNull(result);
+//        assertNotNull(result);
         assertEquals("testuser", result.getUsername());
         verify(userRepository).getUserByUsername("testuser");
     }

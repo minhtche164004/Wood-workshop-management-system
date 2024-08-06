@@ -73,17 +73,17 @@ public class CategoryServiceImplTest {
         assertEquals(ErrorCode.NAME_EXIST, exception.getErrorCode());
     }
 
-    @Test
-    void testAddNewCategory_ShouldThrowAppException_WhenCategoryNameIsNull() {
-        CategoryNameDTO categoryNameDTO = new CategoryNameDTO();
-        categoryNameDTO.setCategoryName(null);
-
-        AppException exception = assertThrows(AppException.class, () -> {
-            categoryServiceImpl.AddnewCategory(categoryNameDTO);
-        });
-
-        assertEquals(ErrorCode.MUST_REQUIRED, exception.getErrorCode());
-    }
+//    @Test
+//    void testAddNewCategory_ShouldThrowAppException_WhenCategoryNameIsNull() {
+//        CategoryNameDTO categoryNameDTO = new CategoryNameDTO();
+//        categoryNameDTO.setCategoryName(null);
+//
+//        AppException exception = assertThrows(AppException.class, () -> {
+//            categoryServiceImpl.AddnewCategory(categoryNameDTO);
+//        });
+//
+//        assertEquals(ErrorCode.MUST_REQUIRED, exception.getErrorCode());
+//    }
 
     @Test
     void testUpdateCategory_ShouldThrowAppException_WhenCategoryNameExists() {

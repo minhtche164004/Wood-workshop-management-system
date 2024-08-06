@@ -13,6 +13,7 @@ declare var $: any; // Declare jQuery globally
 export class HomepageComponent implements AfterViewInit, OnInit {
   products: any[] = [];
   currentPage: number = 1;
+  isLoadding = false; // loading data
   constructor(private router: Router, private wishList: WishlistService, private productListService: ProductListService, private toastr: ToastrService) { }
   viewProductDetails(productId: number) {
     this.router.navigate(['/product_details', productId]);
@@ -36,7 +37,7 @@ export class HomepageComponent implements AfterViewInit, OnInit {
     ); 
   }
   addToWishlist(productId: number) {  
-   
+    this.isLoadding = true;
     console.log('Product ID:', productId);
     this.wishList.addWishlist(productId)
       .subscribe(
@@ -44,14 +45,17 @@ export class HomepageComponent implements AfterViewInit, OnInit {
           if (data.code === 1000) {
             console.log('Product added to wishlist:');
             this.toastr.success('Sản phẩm đã được thêm vào yêu thích!', 'Thành công'); // Success message
+            this.isLoadding = false;
 
           }else if(data.code === 1005){
             this.toastr.warning('Vui lòng đăng nhập để thêm sản phẩm yêu thích!', 'Lỗi'); // Error message
+            this.isLoadding = false;
           }
         },
         (error) => {
           console.error('Error adding product to wishlist:', error);
           this.toastr.warning('Vui lòng đăng nhập để thêm sản phẩm yêu thích!', 'Lỗi'); // Error message
+          this.isLoadding = false;
         }
       );
   }

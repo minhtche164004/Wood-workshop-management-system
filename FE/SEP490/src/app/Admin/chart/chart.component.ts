@@ -172,7 +172,9 @@ export class ChartComponent implements OnInit {
     }
   }
   initializeCharts() {
-  
+    const value1= 20;
+    const value2= 10;
+    const value3= 10;
     this.emmpChart = new Chart("canvas1", {
       type: 'pie',
       data: {
@@ -180,7 +182,7 @@ export class ChartComponent implements OnInit {
         datasets: [
           {
             label: 'Nhân viên',
-            data: [this.percentEmpPos1, this.percentEmpPos2, this.percentEmpPos3],
+            data: [value1, value2, value3],
             backgroundColor: [
               'rgb(255, 99, 132)',
               'rgb(54, 162, 235)',
@@ -198,8 +200,17 @@ export class ChartComponent implements OnInit {
               weight: 'bold',
               size: 10
             },
-            formatter: (value) => {
-              return value + '%';
+            formatter: (value, context) => {
+              const data = context.chart.data.datasets[0].data.filter(item => typeof item === 'number') as number[];
+              
+              let total: number = data.reduce((a, b) => a + b, 0);
+              
+              if (total !== 0) {
+                let percentage = (value / total * 100).toFixed(2);
+                return percentage + '%';
+              } else {
+                return '0%';
+              }
             }
           }
         }
@@ -222,6 +233,20 @@ export class ChartComponent implements OnInit {
           }
         ]
       },
+      options: { //cau hin`h hien? thi chart
+        plugins: {
+          datalabels: {
+            color: '#fff',
+            font: {
+              weight: 'bold',
+              size: 10
+            },
+            formatter: (value) => {
+              return value + '%';
+            }
+          }
+        }
+      }
     });
     
  
@@ -241,6 +266,20 @@ export class ChartComponent implements OnInit {
           }
         ]
       },
+      options: { //cau hin`h hien? thi chart
+        plugins: {
+          datalabels: {
+            color: '#fff',
+            font: {
+              weight: 'bold',
+              size: 10
+            },
+            formatter: (value) => {
+              return value + '%';
+            }
+          }
+        }
+      }
     });
   
     this.chart4 = new Chart('canvas4', {

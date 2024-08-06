@@ -156,8 +156,8 @@ export class AuthenListService {
       catchError(this.handleError)
     );
   }
-  Paymentmoney(orderId: number): Observable<string> {
-    const url = `${this.apiUrl_Paymentmoney}?order_id=${orderId}`;
+  Paymentmoney(orderId: number,deposit: string): Observable<string> {
+    const url = `${this.apiUrl_Paymentmoney}?order_id=${orderId}&deposit=${deposit}`;
     const headers = new HttpHeaders({ 'Content-Type': 'text/plain' });
 
     return this.http.post<string>(url, { headers }).pipe(

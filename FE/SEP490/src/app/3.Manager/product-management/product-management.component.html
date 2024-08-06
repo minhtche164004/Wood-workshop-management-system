@@ -81,7 +81,7 @@
               <th>Mã sản phẩm</th>
               <th>Thao tác</th>
               <th>Ảnh đại diện</th>
-              <th>Ngày dự kiến hoàn thành</th>
+              <!-- <th>Ngày dự kiến hoàn thành</th> -->
               <th>Tên sản phẩm</th>
               <th style="width: 20%;">Mô tả</th>
               <th>Kiểu sản phẩm</th>
@@ -114,7 +114,7 @@
               <td> <a [href]="product.image" target="_blank">
                   <img class="img_product" [src]="product.image" alt="Ảnh đại diện">
                 </a></td>
-              <td>{{ product.completionTime | date:'dd / MM / yyyy'}}</td>
+              <!-- <td>{{ product.completionTime | date:'dd / MM / yyyy'}}</td> -->
               <td>{{ product.productName }}</td>
               <td>{{ product.description }}</td>
               <td>{{ product.categories.categoryName }}</td>
@@ -129,15 +129,15 @@
           <thead>
             <tr>
               <th>STT</th>
-              <th>Mã yêu cầu</th>
+              <th style="width: 11%;">Mã yêu cầu</th>
               <th>Thao tác</th>
               <th>Ảnh đại diện</th>
-              <th>Ngày dự kiến hoàn thành</th>
+              <th style="width: 12%">Ngày dự kiến hoàn thành</th>
               <th>Tên sản phẩm</th>
-              <th>Mô tả</th>
+              <th style="width: 15%;">Mô tả</th>
               <!-- <th>Kiểu sản phẩm</th> -->
-              <th>Số lượng</th>
-              <th>Đơn giá (vnđ)</th>
+              <th style="width: 5%">Số lượng</th>
+              <th style="width: 10%;">Đơn giá (vnđ)</th>
             </tr>
           </thead>
 
@@ -246,7 +246,7 @@
             <div class="form-group col-md-4">
               <label style="font-size: 13px;" for="productImages">Ảnh sản phẩm (Chọn nhiều)<span
                   class="required-asterisk">*</span></label>
-              <input type="file" class="form-control-file" id="productImages" multiple
+              <input type="file" accept=".png, .jpg, .jpeg" class="form-control-file" id="productImages" multiple
                 (change)="onImagesSelected($event)">
             </div>
             <div class="form-group col-md-2 d-flex align-items-end">
@@ -257,7 +257,7 @@
             <div class="form-group col-md-4">
               <label style="font-size: 13px;" for="thumbnailImage">Ảnh đại diện sản phẩm<span
                   class="required-asterisk">*</span></label>
-              <input type="file" class="form-control-file" id="thumbnailImage" (change)="onThumbnailSelected($event)">
+              <input type="file" class="form-control-file" id="thumbnailImage" (change)="onThumbnailSelected($event)" accept=".png, .jpg, .jpeg">
             </div>
             <div class="form-group col-md-2 d-flex align-items-end">
               <button (click)="onResetThumbnail()" class="btn"
@@ -348,7 +348,7 @@
             <div class="col-md-12">
               <label style="font-size: 13px;" for="productPrice">Đơn giá 1 đơn vị của sản phẩm (VNĐ)<span
                   class="required-asterisk">*</span></label>
-              <input type="text" min="0" class="form-control" id="productPrice" formControlName="price"
+              <input type="text" min="1" class="form-control text-right" id="productPrice" formControlName="price"
                 (input)="formatInputValue($event)">
             </div>
           </div>
@@ -406,13 +406,12 @@
               </div>
 
               <div class="form-group" style="font-size: 14px;">
-                <div *ngFor="let item of pricePerProductAndQuantity | keyvalue">
-                  <!-- hien thi neu co gia tri -->
+                <!-- <div *ngFor="let item of pricePerProductAndQuantity | keyvalue">
                   <div *ngIf="item.value[0] || item.value[1]">
                     Sản phẩm {{+item.key + 1}}: Đơn giá {{item.value[0] | number: '1.0-3'}} VNĐ - Số lượng:
                     {{item.value[1] | number: '1.0-3'}}
                   </div>
-                </div>
+                </div> -->
                 <br>
                 <label>Tổng giá tiền đơn hàng: <span style="color: red;">{{ totalPriceOfOrder | number: '1.0-3'}}</span>
                   VNĐ</label>
@@ -466,7 +465,7 @@
                     <div class="form-group col-md-1">
                       <label style="font-size: 13px;" for="quantity">Số lượng<span
                           class="required-asterisk">*</span></label>
-                      <input (input)="updateQuantityRProduct($event, i)" type="number" min="1" class="form-control"
+                      <input (input)="updateQuantityRProduct($event, i)" type="number" min="1" class="form-control text-right"
                         id="quantity" formControlName="quantity">
                     </div>
                     <div class="form-group col-md-3">
@@ -476,11 +475,11 @@
                     </div>
                     <div class="form-group col-md-2">
                       <label style="font-size: 13px;" for="productPrice">Đơn giá(VNĐ)</label>
-                      <input type="text" class="form-control" id="productPrice" name="productPrice" [value]="pricePerProduct[i] | number: '1.0-3'" readonly>
+                      <input type="text" class="form-control text-right" id="productPrice" name="productPrice" [value]="pricePerProduct[i] | number: '1.0-3'" readonly>
                     </div>
                     <div class="form-group col-md-2">
                       <label style="font-size: 13px;" for="productPriceTotal">Thành tiền(VNĐ)</label>
-                      <input type="text" class="form-control" id="productPriceTotal" name="productPriceTotal"
+                      <input type="text" class="form-control text-right" id="productPriceTotal" name="productPriceTotal"
                       [value]="pricePerProduct[i] * quantityRProductValue[i] | number: '1.0-3'"   readonly>
                     </div>
                   </div>
@@ -497,7 +496,7 @@
                       <label style="font-size: 13px;" for="productImages">Ảnh sản phẩm (Chọn nhiều)<span
                           class="required-asterisk">*</span></label>
                       <input type="file" class="form-control-file" id="productImages" multiple
-                        (change)="onImagesRProductSelected($event, i)">
+                        (change)="onImagesRProductSelected($event, i)" accept=".png, .jpg, .jpeg">
                     </div>
                     <div class="form-group col-md-2 d-flex align-items-end">
                       <button (click)="onResetImage()" class="btn"
@@ -565,7 +564,7 @@
                       <div class="col-md-1 mb-3">
                         <div class="form-group">
                           <label for="quantity-{{i}}">Số lượng</label>
-                          <input id="quantity-{{i}}" class="form-control" type="number" min="1"
+                          <input id="quantity-{{i}}" class="form-control text-right" type="number" min="1"
                             formControlName="quantity" (input)="onQuantityChangeSubMaterialRProduct($event, i*10+j,i,j)"
                             placeholder="Nhập số lượng">
                         </div>
@@ -586,10 +585,10 @@
                           tính</button>
                       </div>
                       <div class="total-price" class="col-md-8">
-                        <div class="form-group col-md-8" style="text-align: end;">
+                        <div class="form-group col-md-9" style="text-align: end;">
                           Tổng giá vật liệu ước tính của sản phẩm {{i+1}}(VNĐ):
                         </div>
-                        <div class="form-group col-md-4" style="text-align: end;">
+                        <div class="form-group col-md-3" style="text-align: end;">
                           <input type="text" class="form-control"
                             [value]="totalPriceSubmatePerProducRequest[i] | number: '1.0-3'" readonly>
                         </div>
@@ -601,13 +600,13 @@
 
                   <br><br>
                   <!-- Nhap gia tien cho san phan-->
-                  <div class="form-row">
+                  <div class="form-row" style=" padding-right: 3.5%;">
                     <div class="form-group col-md-10" style="text-align: end;">
                       <label style="font-size: 13px;" for="productPrice">Đơn giá 1 đơn vị của sản phẩm (VNĐ)<span
                           class="required-asterisk">*</span></label>
                     </div>
                     <div class="form-group col-md-2">
-                      <input (input)="formatInputValueRProduct($event, i)" type="text" min="0" class="form-control"
+                      <input (input)="formatInputValueRProduct($event, i)" type="text" min="1" class="form-control text-right"
                         id="productPrice" formControlName="price">
                     </div>
                   </div>
@@ -664,7 +663,7 @@
 
 
 
-          <div class="form-row">
+          <!-- <div class="form-row">
             <div class="form-group col-md-6">
               <label style="font-size: 13px;" for="editProductCompletionTime">Ngày dự kiến hoàn thành<span
                   class="required-asterisk">*</span></label>
@@ -677,7 +676,7 @@
               <input type="date" class="form-control" id="editProductEndDate" name="editProductEndDate"
                 formControlName="enddateWarranty">
             </div>
-          </div>
+          </div> -->
 
           <div class="form-row">
             <div class="form-group col-md-6">
@@ -704,14 +703,14 @@
           <div class="form-group">
             <label style="font-size: 13px;" for="editSelectedStatus">Số lượng<span
                 class="required-asterisk">*</span></label>
-            <input type="number" min="1" class="form-control" id="editProductQuantity" name="editProductQuantity"
+            <input type="number" min="1" class="form-control text-right" id="editProductQuantity" name="editProductQuantity"
               formControlName="quantity">
           </div>
           <div class="form-row">
             <div class="form-group col-md-4">
               <label style="font-size: 13px;" for="editProductImages">Ảnh sản phẩm (Chọn nhiều)<span
                   class="required-asterisk">*</span></label>
-              <input type="file" class="form-control-file" id="editProductImages" name="editProductImages" multiple
+              <input type="file" accept=".png, .jpg, .jpeg" class="form-control-file" id="editProductImages" name="editProductImages" multiple
                 (change)="onImagesSelected($event)">
             </div>
             <div class="form-group col-md-2 d-flex align-items-end">
@@ -722,7 +721,7 @@
             <div class="form-group col-md-4">
               <label style="font-size: 13px;" for="editThumbnailImage">Ảnh đại diện sản phẩm<span
                   class="required-asterisk">*</span></label>
-              <input type="file" class="form-control-file" id="editThumbnailImage" name="editThumbnailImage"
+              <input type="file" accept=".png, .jpg, .jpeg" class="form-control-file" id="editThumbnailImage" name="editThumbnailImage"
                 (change)="onThumbnailSelected($event)">
             </div>
             <div class="form-group col-md-2 d-flex align-items-end">
@@ -793,7 +792,7 @@
                 <div class="col-md-1 mb-3">
                   <div class="form-group">
                     <label for="quantity-{{i}}">Số lượng</label>
-                    <input id="quantity-{{i}}" class="form-control" formControlName="quantity" type="number" min="1"
+                    <input id="quantity-{{i}}" class="form-control text-right" formControlName="quantity" type="number" min="1"
                       (change)="onQuantityChangeEditForm($event, i)" placeholder="Nhập số lượng">
                   </div>
                 </div>
@@ -816,7 +815,7 @@
             <div class="form-group col-md-12">
               <label style="font-size: 13px;" for="editProductPrice">Đơn giá 1 đơn vị của sản phẩm (VNĐ)<span
                   class="required-asterisk">*</span></label>
-              <input type="text" min="0" class="form-control" id="editProductPrice" name="editProductPrice"
+              <input type="text" min="1" class="form-control text-right" id="editProductPrice" name="editProductPrice"
                 formControlName="price" (input)="formatInputValue($event)">
             </div>
           </div>
@@ -890,7 +889,7 @@
             <div class="form-group col-md-2">
               <label style="font-size: 13px;" for="editSelectedStatus">Số lượng<span
                   class="required-asterisk">*</span></label>
-              <input type="number" min="0" class="form-control" id="editProductQuantity" name="editProductQuantity"
+              <input type="number" min="1" class="form-control text-right" id="editProductQuantity" name="editProductQuantity"
                 formControlName="quantity">
             </div>
             <div class="form-group col-md-3">
@@ -933,7 +932,7 @@
             <div class="form-group col-md-4">
               <label style="font-size: 13px;" for="editProductImages">Ảnh sản phẩm (Chọn nhiều)<span
                   class="required-asterisk">*</span></label>
-              <input type="file" class="form-control-file" id="editProductImages" name="editProductImages" multiple
+              <input type="file" accept=".png, .jpg, .jpeg" class="form-control-file" id="editProductImages" name="editProductImages" multiple
                 (change)="onImagesSelected($event)">
             </div>
             <div class="form-group col-md-2 d-flex align-items-end">
@@ -943,7 +942,7 @@
             </div>
             <!-- <div class="form-group col-md-4">
               <label style="font-size: 13px;" for="editThumbnailImage">Ảnh đại diện sản phẩm</label>
-              <input type="file" class="form-control-file" id="editThumbnailImage" name="editThumbnailImage"
+              <input type="file" accept=".png, .jpg, .jpeg" class="form-control-file" id="editThumbnailImage" name="editThumbnailImage"
                 (change)="onThumbnailSelected($event)">
             </div>
             <div class="form-group col-md-2 d-flex align-items-end">
@@ -1013,7 +1012,7 @@
                 <div class="col-md-1 mb-3">
                   <div class="form-group">
                     <label for="quantity-{{i}}">Số lượng</label>
-                    <input id="quantity-{{i}}" class="form-control" formControlName="quantity" type="number" min="0"
+                    <input id="quantity-{{i}}" class="form-control text-right" formControlName="quantity" type="number" min="1"
                       (change)="onQuantityChangeEditForm($event, i)" placeholder="Nhập số lượng">
                   </div>
                 </div>
@@ -1035,7 +1034,7 @@
           <div class="form-row">
             <div class="form-group col-md-12">
               <label style="font-size: 13px;" for="editProductPrice">Đơn giá 1 đơn vị của sản phẩm (VNĐ)</label>
-              <input type="text" min="0" class="form-control" id="editProductPrice" name="editProductPrice"
+              <input type="text" min="1" class="form-control text-right" id="editProductPrice" name="editProductPrice"
                 formControlName="price" (input)="formatInputValue($event)">
             </div>
           </div>

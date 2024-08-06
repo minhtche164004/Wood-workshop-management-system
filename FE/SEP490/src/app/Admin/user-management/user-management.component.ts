@@ -232,24 +232,24 @@ export class UserManagementComponent implements OnInit {
       this.editUserForm.get('district')?.reset();
       this.editUserForm.get('wards')?.reset();
     });
-  
+
     this.editUserForm.get('district')?.valueChanges.subscribe(districtName => {
       const selectedDistrict = this.districts.find(district => district.name === districtName);
       this.wards = selectedDistrict ? selectedDistrict.wards : [];
       this.editUserForm.get('wards')?.reset();
     });
-  
+
     this.editUserForm.get('role_id')?.valueChanges.subscribe(roleId => {
       this.selectedRole = roleId;
       this.onRoleChangeUpdate();
     });
-  
+
     this.editUserForm.get('position_id')?.valueChanges.subscribe(positionId => {
       this.selectedPosition_Update = positionId;
       this.onRoleChangeUpdate();
     });
   }
-  
+
   loadAllAcountByAdmin(): void {
     if (this.loginToken) {
 
@@ -410,7 +410,7 @@ export class UserManagementComponent implements OnInit {
           wards: this.userData.wards,
           // other form controls
         });
-      
+
       },
       (error) => {
         console.error('Error fetching user data:', error);
@@ -516,6 +516,20 @@ export class UserManagementComponent implements OnInit {
       return false;
     }
 
+    // Kiểm tra độ dài tối đa của họ và tên
+    const maxNameLength = 50;
+    if (this.addAccountForm.controls['fullname'].value.trim().length > maxNameLength) {
+      this.toastr.error(`Họ và tên không được vượt quá ${maxNameLength} ký tự`);
+      return false;
+    }
+
+    // Kiểm tra định dạng họ và tên
+    const vietnameseNameRegex = /^[a-zA-ZÀÁÂÃÈÉÊÌÍÒÓÔÕÙÚĂĐĨŨƠàáâãèéêìíòóôõùúăđĩũơƯĂẠẢẤẦẨẪẬẮẲẴẶẸẺẼỀỀỂẾưăạảấầẩẫậắằẳẵặẹẻẽềếểễệỉịọỏốồổỗộớớỡợụủỨỪễệỉịọỏốồổỗộớớỡợụủứừỬỮỰỲỴÝỶỸửữựỳỵỷỹ\s]+$/;
+    if (!vietnameseNameRegex.test(this.addAccountForm.controls['fullname'].value.trim())) {
+      this.toastr.error('Họ và tên chỉ được chứa các ký tự chữ cái, dấu và khoảng trắng');
+      return false;
+    }
+
     // const positionValue = this.addAccountForm.controls['position'].value;
     // if (!positionValue || positionValue.toString().trim() === "") {
     //   this.toastr.error('Không được bỏ trống trường Vai Trò');
@@ -595,15 +609,15 @@ export class UserManagementComponent implements OnInit {
     }
     const fullNameControl = this.editUserForm.controls['fullname'];
     const trimmedFullName = fullNameControl.value.trim();
-    
+
     if (trimmedFullName === "") {
       this.toastr.error('Không được bỏ trống trường Họ Và Tên');
       return false;
     }
-    
+
     // Update the form control with the trimmed value
     fullNameControl.setValue(trimmedFullName);
-    
+
 
     // const positionValue = this.editUserForm.controls['position_id'].value;
     // if (!positionValue || positionValue.toString().trim() === "") {
@@ -643,6 +657,16 @@ export class UserManagementComponent implements OnInit {
     const email = this.editUserForm.controls['email'].value;
     const phoneNumber = this.editUserForm.controls['phoneNumber'].value;
     const username = this.editUserForm.controls['username'].value;
+
+
+    const PhoneControl = this.editUserForm.controls['phoneNumber'];
+    const trimPhoneName = PhoneControl.value.trim();
+
+    if (trimPhoneName === "") {
+      this.toastr.error('Không được bỏ trống trường Số điện thoại');
+      return false;
+    }
+    PhoneControl.setValue(trimPhoneName);
 
     if (!this.validateUsername(username)) {
       this.toastr.error('Tên đăng nhập không hợp lệ.', 'Lỗi');
@@ -698,28 +722,38 @@ export class UserManagementComponent implements OnInit {
       this.isLoadding = false;
       return;
     }
+  
     const editUserRequest: EditUserRequest = this.editUserForm.value;
     const userId = this.userData.userId; // Lấy userId từ userData
-    console.log("Data: ", editUserRequest)
-    // console.log("Data: ", userId)
+    console.log("Data: ", editUserRequest);
+  
     this.authenListService.editUserById(userId, editUserRequest).subscribe(
-      () => {
-        this.loadAllAcountByAdmin();
-        this.isLoadding = false;
-        $('[data-dismiss="modal"]').click();
-        this.toastr.success('Thay đổi thông tin người dùng thành công.');
-
+      (response) => {
+        if (response.code === 1000) {
+          this.loadAllAcountByAdmin();
+          this.isLoadding = false;
+          $('[data-dismiss="modal"]').click();
+          this.toastr.success('Thay đổi thông tin người dùng thành công.');
+        } else {
+          // Handle errors based on the response code
+          this.isLoadding = false;
+          this.toastr.error(response.message || 'An unknown error occurred');
+        }
       },
       (error: any) => {
         this.isLoadding = false;
-
-        if (error.error.code === 1035) {
-
+        console.log(error);
+        // Handle HTTP error response
+        if (error && error.error && error.error.code) {
+          const errorMessage = error.error.message || 'An unknown error occurred';
+          this.toastr.error(errorMessage);
+        } else {
+          this.toastr.error('An unexpected error occurred');
         }
-
       }
     );
   }
+  
 
   MultifiterUser(): void {
 

@@ -127,15 +127,15 @@
           <div class="tab-content">
             <!-- Tab 1: Mô Tả -->
             <div class="tab-pane fade in show active" id="description-content" role="tabpanel"
-              aria-labelledby="description-tab">
-              <table class="table table-custom">
-                <tr>
-                  <td>
-                    <textarea readonly class="form-control" rows="8">{{ productDetails.description }}</textarea>
-                  </td>
-                </tr>
-              </table>
-            </div>
+            aria-labelledby="description-tab">
+         <table class="table table-custom">
+           <tr>
+             <td>
+               <textarea readonly class="form-control" rows="8" style="resize: none;">{{ productDetails.description }}</textarea>
+             </td>
+           </tr>
+         </table>
+       </div>
 
           </div>
           <!-- Pills content -->
@@ -144,10 +144,10 @@
       <div class="col-lg-6">
         <div class="px-0 border rounded-2 shadow-0">
           <div class="card-body">
-            <h5 style="font-size: 20px; margin-bottom: 40px;" class="card-title"><b>Sản phẩm tương tự</b></h5>
+            <h5 style="font-size: 20px; margin-bottom: 35px; padding-left: 10px; padding-top: 5px;" class="card-title"><b>Sản phẩm tương tự</b></h5>
             <div class="product-list d-flex flex-row flex-nowrap overflow-auto" style="margin-bottom: 10px;">
               <ng-container *ngFor="let cate of categoryProduct; let i = index">
-                <div class="d-flex me-3">
+                <div class="d-flex me-3"> 
                   <a [routerLink]="['/product-details', cate.productId]" class="me-3">
                     <div class="product-image-wrapper">
                       <img [src]="cate.image" class="product-image img-md img-thumbnail" />

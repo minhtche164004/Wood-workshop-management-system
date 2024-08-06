@@ -10,6 +10,7 @@ import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { OrderRequestService } from 'src/app/service/order-request.service';
 import { data } from 'jquery';
 import { formatDate } from '@angular/common';
+import { Binary } from '@angular/compiler';
 interface ApiResponse {
   code: number;
   result: any[];
@@ -52,7 +53,7 @@ export class OrderManagementComponent implements OnInit {
   totalRefundAmount: number = 0;
   totalAmount102: number = 0;
 
-
+ 
 
   priceDiscount: number = 0;
   datepriceDiscount: string = '';
@@ -281,7 +282,7 @@ export class OrderManagementComponent implements OnInit {
       (data) => {
         this.OrderdetailById = data.result;
         this.isLoadding = false;
-        // console.log('OrderdetailById:', data.result);
+         console.log('OrderdetailById:', data.result);
         // console.log('OrderdetailById:', this.OrderdetailById);
       },
       (error) => {
@@ -555,33 +556,53 @@ export class OrderManagementComponent implements OnInit {
       this.isLoadding = false;
     }
   }
+  depositeOrder: number = 0;
+  formattedValue: string = '0';
 
+  // Called when the user types in the input field
+  onInputChange(value: string) {
+    // Remove commas and convert to a number
+    const numericValue = parseFloat(value.replace(/,/g, ''));
+    this.depositeOrder = isNaN(numericValue) ? 0 : numericValue;
+
+    // Update formatted value
+    this.formattedValue = this.formatInputValue(this.depositeOrder);
+  }
+
+  formatInputValue(value: number): string {
+    if (isNaN(value)) return '0';
+    // Format the number with commas
+    return value.toLocaleString();
+  }
   confirmPayment() {
     this.isLoadding = true;
+    const formattedDepositOrder = this.depositeOrder.toFixed(2); // Ví dụ: '4000000.00'
     if (this.selectedOrderId !== null) {
-      this.authenListService.Paymentmoney(this.selectedOrderId).subscribe({
+      this.authenListService.Paymentmoney(this.selectedOrderId, formattedDepositOrder).subscribe({
         next: (response: any) => {
           if (response.code == 1000) {
             this.toastr.success(response.result);
             this.realoadgetAllUser();
-
             this.isLoadding = false;
             const closeModalButton = document.querySelector('.close') as HTMLElement;
             if (closeModalButton) {
               closeModalButton.click();
             }
             $('[data-dismiss="modal"]').click();
+          } else if (response.code === 1043) {
+            this.toastr.error(response.message);
+            this.isLoadding = false;
+       
           }
         },
         error: (error: HttpErrorResponse) => {
           this.isLoadding = false;
-          this.toastr.error('Thanh toán thất bại');
-          this.realoadgetAllUser();
-          $('[data-dismiss="modal"]').click();
+          this.toastr.error(error.error.message);
         }
       });
     }
   }
+
   sendMail(orderId: number) {
     console.log(orderId);
     this.isLoadding = true;

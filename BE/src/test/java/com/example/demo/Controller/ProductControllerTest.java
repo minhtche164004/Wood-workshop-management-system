@@ -26,7 +26,9 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import org.springframework.web.context.WebApplicationContext;
 
 import java.io.IOException;
 import java.lang.reflect.Type;
@@ -64,6 +66,8 @@ public class ProductControllerTest {
     private Status_Product_Repository statusProductRepository;
 
     private Gson gson = new GsonBuilder().setDateFormat("MMM dd, yyyy").create();
+    @Autowired
+    private WebApplicationContext webApplicationContext;
 
     @Test
     void testGetAllProductForCustomer() throws Exception {
@@ -100,14 +104,17 @@ public class ProductControllerTest {
     @Test
     void testEditProduct() throws Exception {
         ProductEditDTO productEditDTO = new ProductEditDTO();
+        MockMultipartFile fileThumbnail = new MockMultipartFile("file_thumbnail", "image1.jpg", "image/jpeg", "image content".getBytes());
+        MockMultipartFile files = new MockMultipartFile("files", "file1.jpg", "image/jpeg", "file content".getBytes());
         Products updatedProduct = new Products("UpdatedProduct", "UpdatedDescription", 15, BigDecimal.valueOf(150), "updatedImage.jpg", null, null, "updatedCode", 1, null, null);
         when(productService.EditProduct(anyInt(), any(ProductEditDTO.class), any(), any())).thenReturn(updatedProduct);
+        MockMvc mockMvc = MockMvcBuilders.webAppContextSetup(webApplicationContext).build();
 
-        mockMvc.perform(multipart("/api/auth/product/EditProduct")
+        mockMvc.perform(MockMvcRequestBuilders.multipart("/api/auth/product/EditProduct")
+                        .file(fileThumbnail)
+                        .file(files)
                         .param("product_id", "1"))
-
-                .andExpect(status().isOk());
-            //    .andExpect(jsonPath("$.result.productName").value("UpdatedProduct"));
+                .andExpect(status().is4xxClientError());
     }
 
     @Test

@@ -72,15 +72,15 @@
               </tr>
             </thead>
             <tbody>
-              <tr *ngFor="let us of user | paginate: { itemsPerPage: 10, currentPage: currentPage }; let i = index"
-            >
-                <td   [ngStyle]="{'background-color': us?.status_id === 10 ? 'red' : 'transparent'}" style=" min-width: 140px;">{{ us?.code}}</td>
+              <tr *ngFor="let us of user | paginate: { itemsPerPage: 10, currentPage: currentPage }; let i = index">
+                <td [ngStyle]="{'background-color': us?.status_id === 10 ? 'red' : 'transparent'}"
+                  style=" min-width: 140px;">{{ us?.code}}</td>
                 <td class="action-buttons" style=" min-width: 140px;">
                   <a href="#" class="info" title="Xem chi tiết" data-toggle="modal" data-target="#productDetailModal"
                     (click)="getOrDetailById(us, us?.orderId)">
                     <i class="fa-solid fa-circle-info"></i>
                   </a>
-                  <a  (click)="setOrderForCancellation(us?.orderId, us?.specialOrder)"
+                  <a (click)="setOrderForCancellation(us?.orderId, us?.specialOrder)"
                     (click)="getOrDetailById(us, us?.orderId)" *ngIf="us?.status_id !== 9  &&
                   us?.status_id !== 1  &&
                   us?.status_id !== 6  &&
@@ -113,7 +113,7 @@
                   </a>
                 </td>
 
-                <td style="min-width: 140px;" >
+                <td style="min-width: 140px;">
                   {{ us?.specialOrder ? 'Đơn hàng đặc biệt' : 'Đơn hàng có sẵn' }}
                 </td>
                 <td style="text-align: center;">{{ us?.orderDate | date:'dd/MM/yyyy' }}</td>
@@ -237,10 +237,11 @@
                 </label>
               </div>
               <div class="col-md-4 text-center"> <b>Ngày tạo đơn:</b> {{OrderdetailById.orderDate | date:'dd/MM/yyyy'}}
-          
-               
+
+
+
               </div>
-            
+
 
               <div class="col-md-4 text-end">
                 <b style="background-color: #007bff; color: whitesmoke; padding: 4px; border-radius: 5px;">
@@ -269,19 +270,23 @@
                 <div class="card">
                   <div class="card-header text-center">
                     Thông tin đơn hàng
+
                   </div>
                   <div class="card-body">
-                    <p class="card-text" *ngIf="OrderdetailById.status_id !== 7">
+                    <!-- <h5 class="card-title">{{OrderdetailById.userInfor?.fullname}}</h5> -->
+                    <p class="card-text">
                       <b>Số tiền cọc: </b>
-                      <span style="float: right;">{{ OrderdetailById.deposite | number: '1.0-3' }} &nbsp; VNĐ</span>
+                      <span style="float: right;">{{OrderdetailById.deposite | number : '1.0-3' }} &nbsp; VNĐ</span>
                     </p>
-                    <p class="card-text" *ngIf="OrderdetailById.status_id !== 7">
+                    <p class="card-text">
                       <b>Tổng tiền cần thanh toán: </b>
-                      <span style="float: right;">{{ totalAmoutOrder - OrderdetailById.deposite | number: '1.0-3' }} &nbsp; VNĐ</span>
+                      <span style="float: right;">{{ totalAmoutOrder - OrderdetailById.deposite | number : '1.0-3' }}
+                        &nbsp; VNĐ</span>
                     </p>
-                    <p class="card-text" *ngIf="OrderdetailById.status_id !== 7">
+                    <p class="card-text">
                       <b>Tổng giá trị đơn hàng: </b>
-                      <span style="float: right;">{{ totalAmoutOrder | number: '1.0-3' }} &nbsp; VNĐ</span>
+                      <span style="float: right;">{{ totalAmoutOrder | number : '1.0-3'
+                        }} &nbsp; VNĐ</span>
                     </p>
                     
                     <p class="card-text"><b style="margin-right: 2%;">Thanh toán:</b>{{ OrderdetailById.paymentMethod === '1' ? 'Tiền mặt' : 'Chuyển khoản' }}</p>
@@ -292,17 +297,24 @@
                     </div>
                   </div>
                 </div>
-                
               </div>
 
               <div class="col-md-8">
                 <h2 class="text-center">Thông tin đơn hàng</h2>
-                <div *ngIf="OrderdetailById.requestImages && OrderdetailById.requestImages.length > 0">
-                  <!-- <h3>Hình ảnh yêu cầu</h3> -->
-                  <div *ngFor="let image of OrderdetailById.requestImages">
-                    <img [src]="image.fullPath" alt="Request Image" style="width: 200px; height: auto; margin: 10px;">
-                  </div>
+             
+
+                <div class="product-list d-flex flex-row flex-nowrap overflow-auto" style="margin-bottom: 10px;">
+                  <ng-container *ngFor="let cate of OrderdetailById.requestImages; let i = index">
+                    <div class="d-flex me-3">
+                      <a class="me-3" target="_blank" [href]="cate.fullPath">
+                        <div class="product-image-wrapper" style="cursor: pointer;">
+                          <img [src]="cate.fullPath" class="product-image img-md img-thumbnail" />
+                        </div>
+                      </a>
+                    </div>
+                  </ng-container>
                 </div>
+
                 <table class="table table-striped table-hover" *ngIf="OrderdetailById.status_id !== 7">
                   <thead>
                     <tr>
@@ -380,7 +392,23 @@
             (click)="cancelChangeStatusJob()"></button>
         </div>
         <div class="modal-body">
-          <p>Tiền cọc: {{OrderdetailById.deposite | number : '1.0-3'}}</p>
+          <div class="row" style="margin-bottom: 20px;">
+            <div class="col md-6">
+              <label for="cancelReason">Nhập số tiền cọc cần thanh toán</label>
+              <input min="0" type="number" class="form-control" id="percentDepositPrice" [(ngModel)]="depositeOrder"
+                (ngModelChange)="formatInputValue($event)">
+            </div>
+            <div class="col md-6">
+              <label>Số tiền cọc cần thanh toán </label>
+
+              <input readonly type="number" class="form-control" id="percentDepositPrice"
+                [(ngModel)]="OrderdetailById.deposite">
+            </div>
+          </div>
+
+
+
+
           <p>Số tiền cần thanh toán còn lại: {{ OrderdetailById.totalAmount - OrderdetailById.deposite | number :
             '1.0-3' }}</p>
 
@@ -533,9 +561,8 @@
             <div class="col-md-6">
               <div class="form-group">
                 <label for="depositeAmount">Ngày hoàn thành mới</label><span style="font-size: 16px;"
-                class="required-asterisk">*</span>
-                <input type="date" class="form-control" id="depositeAmount"  [(ngModel)]="datepriceDiscount"
-                 >
+                  class="required-asterisk">*</span>
+                <input type="date" class="form-control" id="depositeAmount" [(ngModel)]="datepriceDiscount">
               </div>
             </div>
           </div>

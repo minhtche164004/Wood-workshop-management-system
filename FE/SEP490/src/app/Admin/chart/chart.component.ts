@@ -172,7 +172,9 @@ export class ChartComponent implements OnInit {
     }
   }
   initializeCharts() {
-  
+    const value1= this.totalEmpPos1;
+    const value2= this.totalEmpPos2;
+    const value3= this.totalEmpPos3;
     this.emmpChart = new Chart("canvas1", {
       type: 'pie',
       data: {
@@ -180,7 +182,7 @@ export class ChartComponent implements OnInit {
         datasets: [
           {
             label: 'Nhân viên',
-            data: [this.percentEmpPos1, this.percentEmpPos2, this.percentEmpPos3],
+            data: [value1, value2, value3],
             backgroundColor: [
               'rgb(255, 99, 132)',
               'rgb(54, 162, 235)',
@@ -198,8 +200,17 @@ export class ChartComponent implements OnInit {
               weight: 'bold',
               size: 10
             },
-            formatter: (value) => {
-              return value + '%';
+            formatter: (value, context) => {
+              const data = context.chart.data.datasets[0].data.filter(item => typeof item === 'number') as number[];
+              
+              let total: number = data.reduce((a, b) => a + b, 0);
+              
+              if (total !== 0) {
+                let percentage = (value / total * 100).toFixed(2);
+                return percentage + '%';
+              } else {
+                return '0%';
+              }
             }
           }
         }
@@ -222,6 +233,29 @@ export class ChartComponent implements OnInit {
           }
         ]
       },
+      options: { //cau hin`h hien? thi chart
+        plugins: {
+          datalabels: {
+            color: '#fff',
+            font: {
+              weight: 'bold',
+              size: 10
+            },
+            formatter: (value, context) => {
+              const data = context.chart.data.datasets[0].data.filter(item => typeof item === 'number') as number[];
+              
+              let total: number = data.reduce((a, b) => a + b, 0);
+              
+              if (total !== 0) {
+                let percentage = (value / total * 100).toFixed(2);
+                return percentage + '%';
+              } else {
+                return '0%';
+              }
+            }
+          }
+        }
+      }
     });
     
  
@@ -241,6 +275,20 @@ export class ChartComponent implements OnInit {
           }
         ]
       },
+      options: { //cau hin`h hien? thi chart
+        plugins: {
+          datalabels: {
+            color: '#fff',
+            font: {
+              weight: 'bold',
+              size: 10
+            },
+            formatter: (value) => {
+              return value + '%';
+            }
+          }
+        }
+      }
     });
   
     this.chart4 = new Chart('canvas4', {
@@ -331,6 +379,7 @@ export class ChartComponent implements OnInit {
     try {
       const data = await this.statistic.getCountSpecialOrder().toPromise();
       this.totalSpecialOrder = data.result;
+      this.totalNormalOrder = this.totalOrder - this.totalSpecialOrder;
       if (this.totalOrder > 0) {
         this.percentSpecialOrder = Math.round((this.totalSpecialOrder / this.totalOrder) * 100);
         this.percentOrder = Math.round(100 - this.percentSpecialOrder);

@@ -54,15 +54,17 @@ export class WishlistComponent {
     console.log('Set deleteId:', wishlistId);
     this.deleteId = wishlistId;
   }
-
   deleteSupplier() {
     this.isLoadding = true;
     this.authenListService.deleteWishList(this.deleteId).subscribe(
       response => {
         this.isLoadding = false;
-        this.ReloadWishlist();
         this.toastr.success('Xóa sản phẩm yêu thích thành công!', 'Thành công');
         $('[data-dismiss="modal"]').click();
+        // Refresh the page using window.location after a 1 second delay
+        setTimeout(() => {
+          window.location.reload();
+        }, 1000);
       },
       error => {
         this.isLoadding = false;

@@ -210,7 +210,7 @@ public class JobServiceImpl implements JobService {
             if (current.getTimeFinish() != null) {
                 job_finish = current.getTimeFinish();
             } else {
-                job_finish = new Date();
+                job_finish = current.getOrderdetails().getOrder().getOrderDate();
             }
             if(jobDTO.getStart().before(job_finish)){
                 throw new AppException(ErrorCode.TIME_START_JOB_INVALID);
@@ -219,6 +219,15 @@ public class JobServiceImpl implements JobService {
             Products products = productRepository.findById(p_id);
             jobs.setProduct(products);
             jobs.setRequestProducts(null);
+            Date job_finish;
+            if (current.getTimeFinish() != null) {
+                job_finish = current.getTimeFinish();
+            } else {
+                job_finish = new Date();
+            }
+            if(jobDTO.getStart().before(job_finish)){
+                throw new AppException(ErrorCode.TIME_START_JOB_INVALID);
+            }
         }
         jobs.setDescription(jobDTO.getDescription());
 

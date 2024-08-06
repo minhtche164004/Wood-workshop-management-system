@@ -1532,7 +1532,7 @@ this.selectedEmployee = ''
     const description = this.createJobs.get('description')?.value;
     const today = new Date();
     if (!user_id) {
-      this.toastr.info('Vui lòng chọn nhân viên', 'Thông báo');
+      this.toastr.info('Vui lòng chọn nhân viên', 'Thông báo'); this.isLoadding = false;
       return;
     }
     if (!quantity || quantity <= 0) {
@@ -1705,7 +1705,7 @@ this.selectedEmployee = ''
 
   }
   manageJob2(product: any): void {
-    this.selectedEmployee = ''
+    this.selectedEmployee2 = ''
     this.employeeSelect2.nativeElement.value = '';
     this.isLoadding = true;
 

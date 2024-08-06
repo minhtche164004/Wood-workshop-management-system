@@ -506,6 +506,9 @@ public class JobServiceImpl implements JobService {
     @Override
     public Jobs EditJobs(JobDTO jobDTO, int job_id) {
         Jobs jobs = jobRepository.getJobById(job_id);
+        if(jobs == null){
+            throw new AppException(ErrorCode.NOT_FOUND);
+        }
         jobs.setJob_name(jobDTO.getJob_name());
         jobs.setCost(jobDTO.getCost());
         jobs.setDescription(jobDTO.getDescription());

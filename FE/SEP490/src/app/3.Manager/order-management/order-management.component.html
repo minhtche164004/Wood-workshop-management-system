@@ -297,7 +297,21 @@
 
               <div class="col-md-8">
                 <h2 class="text-center">Thông tin đơn hàng</h2>
-                <table class="table table-striped table-hover">
+             
+
+                <div class="product-list d-flex flex-row flex-nowrap overflow-auto" style="margin-bottom: 10px;">
+                  <ng-container *ngFor="let cate of OrderdetailById.requestImages; let i = index">
+                    <div class="d-flex me-3">
+                      <a class="me-3" target="_blank" [href]="cate.fullPath">
+                        <div class="product-image-wrapper" style="cursor: pointer;">
+                          <img [src]="cate.fullPath" class="product-image img-md img-thumbnail" />
+                        </div>
+                      </a>
+                    </div>
+                  </ng-container>
+                </div>
+
+                <table class="table table-striped table-hover" *ngIf="OrderdetailById.status_id !== 7">
                   <thead>
                     <tr>
                       <th style="width: 40%;">Tên sản phẩm</th>

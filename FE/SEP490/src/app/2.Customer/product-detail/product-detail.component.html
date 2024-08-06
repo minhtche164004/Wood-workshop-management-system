@@ -147,7 +147,7 @@
             <h5 style="font-size: 20px; margin-bottom: 35px; padding-left: 10px; padding-top: 5px;" class="card-title"><b>Sản phẩm tương tự</b></h5>
             <div class="product-list d-flex flex-row flex-nowrap overflow-auto" style="margin-bottom: 10px;">
               <ng-container *ngFor="let cate of categoryProduct; let i = index">
-                <div class="d-flex me-3">
+                <div class="d-flex me-3"> 
                   <a [routerLink]="['/product-details', cate.productId]" class="me-3">
                     <div class="product-image-wrapper">
                       <img [src]="cate.image" class="product-image img-md img-thumbnail" />

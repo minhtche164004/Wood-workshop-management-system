@@ -5,37 +5,27 @@ import static org.mockito.Mockito.*;
 
 import com.example.demo.Dto.ProductDTO.ProductAddDTO;
 import com.example.demo.Dto.ProductDTO.ProductDetailDTO;
-import com.example.demo.Dto.ProductDTO.ProductEditDTO;
 import com.example.demo.Dto.ProductDTO.Product_Thumbnail;
-import com.example.demo.Dto.RequestDTO.RequestProductEditDTO;
-import com.example.demo.Dto.SubMaterialDTO.SubMateProductDTO;
-import com.example.demo.Dto.SubMaterialDTO.SubMateProductRequestDTO;
 import com.example.demo.Dto.SubMaterialDTO.SubMaterialViewDTO;
 import com.example.demo.Entity.*;
 import com.example.demo.Exception.AppException;
 import com.example.demo.Exception.ErrorCode;
 import com.example.demo.Repository.*;
-import com.example.demo.Response.ApiResponse;
 import com.example.demo.Service.CheckConditionService;
 import com.example.demo.Service.CloudinaryService;
 import com.example.demo.Service.Impl.ProductServiceImpl;
-import com.example.demo.Service.ProductService;
 import com.example.demo.Service.UploadImageService;
 import jakarta.persistence.EntityManager;
-import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.math.BigDecimal;
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.util.*;
 @ExtendWith(MockitoExtension.class)
 public class ProductServiceImplTest {

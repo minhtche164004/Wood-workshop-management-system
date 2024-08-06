@@ -124,7 +124,7 @@ public interface    JobRepository extends JpaRepository<Jobs,Integer> {
 
     @Query("SELECT new com.example.demo.Dto.OrderDTO.JobProductDTO(" +
             "j.jobId,j.code,o.code, p.requestProductId, p.requestProductName, p.description, p.price, j.status, od.quantity, " +
-            "COALESCE(u.userId, 0), COALESCE(u.username, ''), COALESCE(pos.position_id, 0), COALESCE(pos.position_name, ''),COALESCE(MIN(e.processProductErrorId),0L),COALESCE(j.reassigned, false)) " + // Sử dụng COALESCE
+            "COALESCE(u.userId, 0), COALESCE(u.username, ''), COALESCE(pos.position_id, 0), COALESCE(pos.position_name, ''),COALESCE(MIN(e.processProductErrorId),0L),COALESCE(j.reassigned, false),o.contractDate,o.orderDate) " + // Sử dụng COALESCE
             "FROM Jobs j " +
             "LEFT JOIN j.orderdetails od " +
             "LEFT JOIN od.order o " +
@@ -139,7 +139,7 @@ public interface    JobRepository extends JpaRepository<Jobs,Integer> {
 
     @Query("SELECT new com.example.demo.Dto.OrderDTO.JobProductDTO(" +
             "j.jobId,j.code,o.code, p.requestProductId, p.requestProductName, p.description, p.price, j.status, od.quantity, " +
-            "COALESCE(u.userId, 0), COALESCE(u.username, ''), COALESCE(pos.position_id, 0), COALESCE(pos.position_name, ''),COALESCE(MIN(e.processProductErrorId),0L),COALESCE(j.reassigned, false)) " + // Sử dụng COALESCE
+            "COALESCE(u.userId, 0), COALESCE(u.username, ''), COALESCE(pos.position_id, 0), COALESCE(pos.position_name, ''),COALESCE(MIN(e.processProductErrorId),0L),COALESCE(j.reassigned, false),o.contractDate,o.orderDate) " + // Sử dụng COALESCE
             "FROM Jobs j " +
             "LEFT JOIN j.orderdetails od " +
             "LEFT JOIN od.order o " +
@@ -203,7 +203,7 @@ public interface    JobRepository extends JpaRepository<Jobs,Integer> {
 
     @Query("SELECT new com.example.demo.Dto.OrderDTO.JobProductDTO(" +
             "j.jobId,j.code,o.code, p.requestProductId, p.requestProductName, p.description, p.price, j.status, od.quantity, " +
-            "COALESCE(u.userId, 0), COALESCE(u.username, ''), COALESCE(pos.position_id, 0), COALESCE(pos.position_name, ''),COALESCE(MIN(e.processProductErrorId),0L),COALESCE(j.reassigned, false)) " + // Sử dụng COALESCE
+            "COALESCE(u.userId, 0), COALESCE(u.username, ''), COALESCE(pos.position_id, 0), COALESCE(pos.position_name, ''),COALESCE(MIN(e.processProductErrorId),0L),COALESCE(j.reassigned, false),o.contractDate,o.orderDate) " + // Sử dụng COALESCE
             "FROM Jobs j " +
             "LEFT JOIN j.orderdetails od " +
             "LEFT JOIN od.order o " +

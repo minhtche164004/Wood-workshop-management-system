@@ -111,12 +111,13 @@ public class JobControllerTest {
     @Test
     void testEmployeeSick() throws Exception {
         Jobs job = new Jobs();
-        when(jobService.EmployeeSick(anyInt(), anyInt(), any(BigDecimal.class))).thenReturn(job);
+        when(jobService.EmployeeSick(anyInt(), anyInt(), any(BigDecimal.class),anyInt())).thenReturn(job);
 
         mockMvc.perform(post("/api/auth/job/EmployeeSick")
                         .param("user_id", "1")
                         .param("job_id", "1")
-                        .param("cost_employee", "100.0"))
+                        .param("cost_employee", "100.0")
+                        .param("quantity_product_done", "2"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.result").exists());
     }

@@ -8,7 +8,6 @@ import com.example.demo.Exception.AppException;
 import com.example.demo.Exception.ErrorCode;
 import com.example.demo.Repository.UserRepository;
 import com.example.demo.Service.Impl.UserServiceImpl;
-import com.example.demo.Service.UserService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -38,7 +37,7 @@ public class ChangePassServiceImplTest {
     private SecurityContext securityContext;
     private Authentication authentication;
 
-    @BeforeEach
+    @BeforeEach //phương thức này sẽ được gọi trước mỗi testcase trong lớp
     public void setUp() {
         // Initialize ChangePassDTO with test data
         changePassDTO = new ChangePassDTO(null,null,null);
@@ -89,11 +88,11 @@ public class ChangePassServiceImplTest {
 
     @Test
     public void testChangePassNewPasswordsDoNotMatch() {
-        // Arrange
+        // Thay đổi giá trị của check_pass trong changePassDTO thành "differentPass" để không khớp với new_pass.
         changePassDTO.setCheck_pass("differentPass");
         when(passwordEncoder.matches("oldPass", "encodedOldPass")).thenReturn(true);
 
-        // Act & Assert
+
         AppException exception = assertThrows(AppException.class, () -> userService.changePass(changePassDTO));
         assertEquals(ErrorCode.NOT_MATCH_PASS, exception.getErrorCode());
     }

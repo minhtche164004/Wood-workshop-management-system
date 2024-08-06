@@ -9,7 +9,6 @@ import com.example.demo.Repository.ProductRepository;
 import com.example.demo.Repository.UserRepository;
 import com.example.demo.Repository.WishListRepository;
 import com.example.demo.Service.Impl.WishListServiceImpl;
-import com.example.demo.Service.WhiteListService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;

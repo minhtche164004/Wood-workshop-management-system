@@ -8,11 +8,9 @@ import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.junit.jupiter.api.Test;
 import org.springframework.mock.web.MockMultipartFile;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
-import java.io.IOException;
 import java.io.InputStream;
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -21,11 +19,11 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
 
 public class ExcelUploadServiceTest {
 
     // Helper method to create a valid Excel file in memory
+    //chứa dữ liệu Excel giả ,withData ở đây để thể hiện nó chưa data mẫu hay không
     private MockMultipartFile createMockExcelFile(String sheetName, boolean withData) throws Exception {
         XSSFWorkbook workbook = new XSSFWorkbook();
         Sheet sheet = workbook.createSheet(sheetName);
@@ -49,7 +47,7 @@ public class ExcelUploadServiceTest {
             row1.createCell(4).setCellValue(100.0);
             row1.createCell(5).setCellValue(50.0);
         }
-
+        //Tạo một đối tượng ByteArrayOutputStream để lưu trữ nội dung file Excel dưới dạng byte array.
         ByteArrayOutputStream bos = new ByteArrayOutputStream();
         workbook.write(bos);
         workbook.close();
@@ -58,9 +56,10 @@ public class ExcelUploadServiceTest {
         return new MockMultipartFile("file", "test.xlsx", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", is);
     }
 
+    //kiểm tra chức năng đọc dữ liệu từ file Excel và chuyển đổi thành danh sách SubMaterialDTO của lớp ExcelUploadService
     @Test
     void testGetSubMaterialDataFromExcel_ShouldReturnCorrectData() throws Exception {
-        // Arrange
+        // Tạo 1 file excel giả
         MockMultipartFile file = createMockExcelFile("SubMaterial", true);
         List<ExcelError> errors = new ArrayList<>();
 
@@ -68,10 +67,10 @@ public class ExcelUploadServiceTest {
         List<SubMaterialDTO> result = ExcelUploadService.getSubMaterialDataFromExcel(file.getInputStream(), errors);
 
         // Assert
-        assertNotNull(result);
-        assertEquals(1, result.size());
-        assertTrue(errors.isEmpty());
-        SubMaterialDTO dto = result.get(0);
+        assertNotNull(result); //kiểm tra danh sách kết quả ko null
+        assertEquals(1, result.size()); //Kiểm tra danh sách có một phần tử.
+        assertTrue(errors.isEmpty()); // Kiểm tra danh sách lỗi rỗng (không có lỗi)
+        SubMaterialDTO dto = result.get(0);//lấy phần tử đầu tiên và so sánh kêt quả với dữ liệu mẫu trong file excel
         assertEquals("Sub1", dto.getSub_material_name());
         assertEquals("Material1", dto.getMaterial_name());
         assertEquals("Desc1", dto.getDescription());
@@ -139,7 +138,7 @@ public class ExcelUploadServiceTest {
     @Test
     void testIsValidExcelFile_ShouldReturnFalseForIncorrectContentType() {
         // Arrange
-        MockMultipartFile file = new MockMultipartFile("file", "test.txt", "text/plain", new byte[0]);
+        MockMultipartFile file = new MockMultipartFile("file", "test.txt", "text/plain", new byte[0]); //tạo 1 file với dạng là text/plain
 
         // Act
         boolean result = ExcelUploadService.isValidExcelFile(file);

@@ -1,5 +1,4 @@
 package com.example.demo;
-import static org.junit.Assert.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
@@ -8,7 +7,6 @@ import static org.mockito.Mockito.*;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.Date;
-import java.util.Optional;
 
 import com.example.demo.Dto.UserDTO.ChangePassDTO;
 import com.example.demo.Dto.UserDTO.RegisterDTO;
@@ -22,7 +20,6 @@ import com.example.demo.Repository.*;
 import com.example.demo.Service.CheckConditionService;
 import com.example.demo.Service.Impl.UserServiceImpl;
 import com.example.demo.Service.JWTService;
-import com.example.demo.Service.UserService;
 import jakarta.persistence.EntityManager;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -32,8 +29,6 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.modelmapper.ModelMapper;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 

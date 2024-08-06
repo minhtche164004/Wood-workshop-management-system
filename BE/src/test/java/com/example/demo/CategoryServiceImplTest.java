@@ -17,9 +17,6 @@ import org.mockito.MockitoAnnotations;
 
 import jakarta.persistence.EntityManager;
 
-import java.util.List;
-import java.util.Optional;
-
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
@@ -45,16 +42,34 @@ public class CategoryServiceImplTest {
         MockitoAnnotations.openMocks(this);
     }
 
+//    @Test
+//    public void testAddNewCategory_Success() {
+//        // Tạo dữ liệu mẫu
+//        String newCategoryName = "Test Category";
+//        CategoryNameDTO categoryNameDTO = new CategoryNameDTO(newCategoryName);
+//
+//        // Mock behavior của categoryRepository (tùy thuộc vào cách bạn mock)
+//        when(categoryRepository.findByCategoryName(newCategoryName)).thenReturn(null); // Không tìm thấy category trùng tên
+//
+//        // Gọi phương thức cần test
+//        categoryServiceImpl.AddnewCategory(categoryNameDTO);
+//
+//        // Kiểm tra kết quả (sử dụng Mockito verify)
+//        verify(categoryRepository).save(any(Categories.class)); // Kiểm tra xem categoryRepository.save được gọi
+//    }
+
     @Test
     void testAddNewCategory_ShouldThrowAppException_WhenCategoryNameExists() {
+        //tạo dữ liệu mẫu
         CategoryNameDTO categoryNameDTO = new CategoryNameDTO();
         categoryNameDTO.setCategoryName("Ghế");
+        //thiết lập 1 cuộc gọi giả đến phương thức findByCategoryName
         when(categoryRepository.findByCategoryName("Ghế")).thenReturn(new Categories());
 
         AppException exception = assertThrows(AppException.class, () -> {
             categoryServiceImpl.AddnewCategory(categoryNameDTO);
         });
-
+        //nếu ko ném ra ngoại lệ thì test sai
         assertEquals(ErrorCode.NAME_EXIST, exception.getErrorCode());
     }
 
@@ -89,14 +104,12 @@ public class CategoryServiceImplTest {
 
     @Test
     void testFindById_WhenIdDoesNotExist() {
-        // Arrange
+        //tạo 1 id không tồn tại
         int nonExistentId = 100;
-        when(categoryRepository.findById(nonExistentId)).thenReturn(null);
-
-        // Act
+        when(categoryRepository.findById(nonExistentId)).thenReturn(null); //để mô phỏng trường hợp không tìm thấy category có id là nonExistentId trong cơ sở dữ liệu.
+        //Gọi phương thức findById của categoryRepository với id không tồn tại.
         Categories result = categoryRepository.findById(nonExistentId);
 
-        // Assert
         assertNull(result, "Expected findById to return null for a non-existent ID");
     }
 

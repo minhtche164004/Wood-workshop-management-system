@@ -288,9 +288,13 @@
                       <span style="float: right;">{{ totalAmoutOrder | number : '1.0-3'
                         }} &nbsp; VNĐ</span>
                     </p>
-                    <p class="card-text"><b style="margin-right: 2%;">Thanh toán:</b>{{ OrderdetailById.paymentMethod
-                      === '1' ? 'Tiền mặt' : 'Chuyển khoản' }}</p>
-                    <p class="card-text"><b>Mô tả đơn hàng:</b> {{OrderdetailById.description}}</p>
+                    
+                    <p class="card-text"><b style="margin-right: 2%;">Thanh toán:</b>{{ OrderdetailById.paymentMethod === '1' ? 'Tiền mặt' : 'Chuyển khoản' }}</p>
+                    <div *ngIf="OrderdetailById.description">
+                      <p><strong>Mô tả đơn hàng:</strong></p>
+                      <textarea [(ngModel)]="OrderdetailById.description" rows="5" style="width: 100%; resize: none;border: none; overflow: hidden;" readonly></textarea>
+
+                    </div>
                   </div>
                 </div>
               </div>

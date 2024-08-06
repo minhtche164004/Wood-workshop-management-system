@@ -67,6 +67,7 @@ import { EmployeeSubmaterialManagementComponent } from './employee-submaterial-m
 import { ImpactHistoryManagerComponent } from './3.Manager/impact-history-manager/impact-history-manager.component';
 
 import { ListProductErrorEmployeeComponent } from './4.Employee/list-product-error-employee/list-product-error-employee.component';
+import { ProductCateManagementComponent } from './product-cate-management/product-cate-management.component';
 
 
 
@@ -144,7 +145,7 @@ const routes: Routes = [
   // { path: '', redirectTo: '/homepage', pathMatch: 'full' },
   { path: 'report-cost', component: ReportCostManagementComponent },
   { path: 'im_history', component: ImpactHistoryManagerComponent, canActivate: [AuthGuard], data: { roles: ['MANAGER'] } },
-
+  { path: 'product_cate_management', component: ProductCateManagementComponent, canActivate: [AuthGuard], data: { roles: ['MANAGER'] } },
   { path: '', redirectTo: '/homepage', pathMatch: 'full' },
   { path: '**', redirectTo: '/homepage', pathMatch: 'full' },
 

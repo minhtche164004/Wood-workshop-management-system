@@ -705,7 +705,7 @@ export class JobManagementComponent implements OnInit {
 
     Promise.all(errorCheckPromises).then(() => {
       this.isLoadding = false;
-      console.log('Jobs with errors:', this.listErrorJob);
+   //   console.log('Jobs with errors:', this.listErrorJob);
     });
   }
   loadProduct() {
@@ -777,6 +777,7 @@ export class JobManagementComponent implements OnInit {
         if (data.code === 1000) {
           this.selectedJob = data.result;
           console.log('selectedJob:', this.selectedJob);
+          console.log('selectedProduct:', this.selectedProduct);
           this.isLoadding = false;
         } else {
           console.error('Failed to fetch products:', data);
@@ -913,7 +914,7 @@ export class JobManagementComponent implements OnInit {
       (data) => {
         if (data.code === 1000) {
           this.selectedJob = data.result;
-          console.log('Form detailJob value:', this.selectedJob);
+          console.log('Form Assign value:', this.selectedJob);
 
           this.isLoadding = false;
         } else {

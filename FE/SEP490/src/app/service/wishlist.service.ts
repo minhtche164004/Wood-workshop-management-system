@@ -16,30 +16,21 @@ export class WishlistService {
       catchError(this.handleError) 
     );
   }
-  private handleError(error: HttpErrorResponse) {
-    let errorMessage = '';
-    if (error.error instanceof ErrorEvent) {
-      // Xảy ra lỗi ở phía client hoặc mạng. Xử lý tương ứng.
-      errorMessage = `An error occurred: ${error.error.message}`;
-    } else {
-       errorMessage = `Backend returned code ${error.status}: ${error.error}`;
-    }
-    console.error(errorMessage); // Ghi log lỗi để debug
-    return throwError(errorMessage); // Ném lỗi lại như một observable
+  private handleError(error: HttpErrorResponse): Observable<never> {
+    console.error('An error occurred:', error.message);
+    return throwError(error);
   }
+
   addWishlist(productId: number): Observable<any> {
     const token = localStorage.getItem('loginToken');
-  //   console.log("token: ", token)
     if (!token) {
       return throwError(new Error('Login token not found in localStorage.'));
     }
+  
     const headers = new HttpHeaders({
       'Authorization': `Bearer ${token}`
     });
-
-   // console.log("Authorization header:", headers.get('Authorization'));
-
-
+  
     return this.http.post<any>(`${this.apiAddWishlist}?product_id=${productId}`, {}, { headers: headers, withCredentials: true }).pipe(
       catchError(this.handleError)
     );

@@ -1059,28 +1059,15 @@
 
                                         <section class="customer-info mb-4">
 
-                                    
                                             <div class="row">
                                                 <div class="col-md-6">
-                                                    <p>
-                                                        <strong>Tên nhân viên<span class="required-asterisk">
-                                                                *</span></strong>
-                                                    </p>
+                                                    <strong>Mã đơn hàng:</strong>
                                                 </div>
                                                 <div class="col-md-6">
-
-
-                                                    <select #employeeSelect2 class="form-select"
-                                                    (change)="onChangeSelectedEmployee2($event)">
-                                                    <option value="" selected disabled>Chọn 1 nhân viên</option>
-                                                    <option *ngFor="let employee of positionEmployees"
-                                                        [value]="employee.userId">
-                                                        {{ employee.userInfor.fullname }} ({{
-                                                        employee.position?.position_name }})
-                                                    </option>
-                                                </select>
+                                                    {{ selectedProduct.code }}
                                                 </div>
                                             </div>
+                                           
                                             <div class="row">
                                                 <div class="col-md-6">
                                                     <p>
@@ -1093,15 +1080,7 @@
 
                                                 </div>
                                             </div>
-                                            <div class="row">
-                                                <div class="col-md-6">
-                                                    <strong>Giá công khoán (VNĐ)<span class="required-asterisk">
-                                                            *</span></strong>
-                                                </div>
-                                                <div class="col-md-6">
-                                                    {{selectedJob.cost | number: '1.0-3'}}
-                                                </div>
-                                            </div>
+                                            
                                         </section>
                                         <div class="row">
                                             <div class="col-md-6">
@@ -1111,28 +1090,50 @@
                                                 {{  selectedProduct.order_date | date:'dd / MM / yyyy' }}
                                             </div>
                                         </div>
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <strong>Ngày dự tính hoàn thành đơn hàng:</strong>
+                                            </div>
+                                            <div class="col-md-6">
+                                                {{  selectedProduct.order_contract_time | date:'dd / MM / yyyy' }}
+                                            </div>
+                                        </div>
                                     </div>
-
+                                   
                                     <div class="col-md-6">
                                         <section class="order-summary mb-4">
-                                           
                                             <div class="row">
                                                 <div class="col-md-6">
-                                                    <strong>Mã đơn hàng:</strong>
+                                                    <p>
+                                                        <strong>Tên nhân viên<span class="required-asterisk">
+                                                                *</span></strong>
+                                                    </p>
                                                 </div>
                                                 <div class="col-md-6">
-                                                    {{ selectedProduct.code }}
+        
+        
+                                                    <select #employeeSelect2 class="form-select"
+                                                    (change)="onChangeSelectedEmployee2($event)">
+                                                    <option value="" selected disabled>Chọn 1 nhân viên</option>
+                                                    <option *ngFor="let employee of positionEmployees"
+                                                        [value]="employee.userId">
+                                                        {{ employee.userInfor.fullname }} ({{
+                                                        employee.position?.position_name }})
+                                                    </option>
+                                                </select>
                                                 </div>
                                             </div>
                                            
                                             <div class="row">
                                                 <div class="col-md-6">
-                                                    <strong>Ngày dự tính hoàn thành đơn hàng:</strong>
+                                                    <strong>Giá công khoán (VNĐ)<span class="required-asterisk">
+                                                            *</span></strong>
                                                 </div>
                                                 <div class="col-md-6">
-                                                    {{  selectedProduct.order_contract_time | date:'dd / MM / yyyy' }}
+                                                    {{selectedJob.cost | number: '1.0-3'}}
                                                 </div>
                                             </div>
+                                            
                                          
                                             <div class="row">
                                                 <div class="row">

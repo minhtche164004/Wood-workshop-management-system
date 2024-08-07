@@ -78,13 +78,13 @@ export class ReportManagementComponent implements OnInit {
           console.log('Danh sách lỗi sản phẩm ngOninit:', this.errorProducts);
           this.isLoadding = false;
         } else {
-          this.toastr.error(data.message, 'Lỗi');
+          this.toastr.warning(data.message, 'Lỗi');
           this.isLoadding = false;
         }
       },
       (error) => {
         console.error('Error fetching products:', error);
-        this.toastr.error('Có lỗi xảy ra!', 'Lỗi');
+        this.toastr.warning('Có lỗi xảy ra!', 'Lỗi');
         this.isLoadding = false;
       }
     );
@@ -101,7 +101,7 @@ export class ReportManagementComponent implements OnInit {
       },
       (error) => {
         console.error('Error fetching products:', error);
-        this.toastr.error('Có lỗi xảy ra!', 'Lỗi');
+        this.toastr.warning('Có lỗi xảy ra!', 'Lỗi');
         this.isLoadding = false;
       }
     );
@@ -119,7 +119,7 @@ export class ReportManagementComponent implements OnInit {
       },
       (error) => {
         console.error('Error fetching products:', error);
-        this.toastr.error('Có lỗi xảy ra!', 'Lỗi');
+        this.toastr.warning('Có lỗi xảy ra!', 'Lỗi');
         this.isLoadding = false;
       }
     );
@@ -235,20 +235,20 @@ export class ReportManagementComponent implements OnInit {
     console.log('error edit form saveChanges:', errorFormData);
     if (!errorFormData.description || !errorFormData.solution) {
       this.isLoadding = false;
-      this.toastr.error('Description và Solution không được bỏ trống!', 'Lỗi');
+      this.toastr.info('Description và Solution không được bỏ trống!', 'Thông báo');
       return;
   }
 
   // Kiểm tra nếu description hoặc solution ngắn hơn 3 ký tự
   if (errorFormData.description.length < 3) {
       this.isLoadding = false;
-      this.toastr.error('Description phải có ít nhất 3 ký tự!', 'Lỗi');
+      this.toastr.info('Description phải có ít nhất 3 ký tự!', 'Thông báo');
       return;
   }
 
   if (errorFormData.solution.length < 3) {
       this.isLoadding = false;
-      this.toastr.error('Solution phải có ít nhất 3 ký tự!', 'Lỗi');
+      this.toastr.info('Solution phải có ít nhất 3 ký tự!', 'Thông báo');
       return;
   }
 
@@ -260,13 +260,13 @@ export class ReportManagementComponent implements OnInit {
           this.ngOnInit();
         } else {
           console.error('Failed to edit product:', response);
-          this.toastr.error('Không thể sửa sản phẩm!', 'Lỗi'); this.isLoadding = false;
+          this.toastr.warning('Không thể sửa sản phẩm!', 'Thông báo'); this.isLoadding = false;
           $('[data-dismiss="modal"]').click();
         }
       },
       (error) => {
         console.error('Error editing product:', error);
-        this.toastr.error('Có lỗi xảy ra!', 'Lỗi'); this.isLoadding = false;
+        this.toastr.warning('Có lỗi xảy ra!', 'Thông báo'); this.isLoadding = false;
       }
     );
 

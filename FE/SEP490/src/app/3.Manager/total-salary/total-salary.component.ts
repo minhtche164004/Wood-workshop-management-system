@@ -212,7 +212,7 @@ export class TotalSalaryComponent implements OnInit {
 
         } else {
           //     console.error('Failed to fetch products:', data);
-          this.toastr.error('Có lỗi xảy ra khi cập nhật trạng thái thanh toán. Vui lòng thử lại sau.', 'Lỗi');
+          this.toastr.warning('Có lỗi xảy ra khi cập nhật trạng thái thanh toán. Vui lòng thử lại sau.', 'Thông báo');
           this.isLoadding = false;
         }
       }
@@ -284,7 +284,7 @@ export class TotalSalaryComponent implements OnInit {
           $('[data-dismiss="modal"]').click();
         } else {
           //    console.error('Failed to fetch products:', data);
-          this.toastr.error('Có lỗi xảy ra khi cập nhật trạng thái thanh toán. Vui lòng thử lại sau.', 'Lỗi');
+          this.toastr.warning('Có lỗi xảy ra khi cập nhật trạng thái thanh toán. Vui lòng thử lại sau.', 'Thông báo');
           $('[data-dismiss="modal"]').click();
           this.isLoadding = false;
         }
@@ -335,7 +335,7 @@ export class TotalSalaryComponent implements OnInit {
           } else {
             // Nếu phản hồi không có dữ liệu hợp lệ
             console.error('Invalid response:', response);
-            this.toastr.error('Có lỗi xảy ra khi tạo mã QR thanh toán. Vui lòng thử lại sau.', 'Lỗi');
+            this.toastr.warning('Có lỗi xảy ra khi tạo mã QR thanh toán. Vui lòng thử lại sau.', 'Thông báo');
             $('[data-dismiss="modal"]');
           this.isLoadding = false;
          
@@ -344,7 +344,7 @@ export class TotalSalaryComponent implements OnInit {
         },
         (error) => {
           console.error('API Error:', error);
-          this.toastr.error('Có lỗi xảy ra khi tạo mã QR thanh toán. Vui lòng thử lại sau.', 'Lỗi');
+          this.toastr.error('Có lỗi xảy ra khi tạo mã QR thanh toán. Vui lòng thử lại sau.', 'Thông báo');
           // Xử lý lỗi nếu có
           $('[data-dismiss="modal"]');
           this.isLoadding = false;

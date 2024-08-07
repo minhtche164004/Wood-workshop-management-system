@@ -81,9 +81,10 @@
                     <i class="fa-solid fa-circle-info"></i>
                   </a>
                   <a (click)="setOrderForCancellation(us?.orderId, us?.specialOrder)"
-                    (click)="getOrDetailById(us, us?.orderId)" *ngIf="us?.status_id === 10 
-                   " class="info" title="Hoàn tiền" data-toggle="modal"
-                    data-target="#refundProductModal">
+                    (click)="getOrDetailById(us, us?.orderId)" *ngIf="us?.status_id === 3  ||
+      
+                  us?.status_id === 10 
+                    " class="info" title="Hoàn tiền" data-toggle="modal" data-target="#refundProductModal">
                     <i style="cursor: pointer;" class="fa-solid fa-money-bill-transfer"></i>
                   </a>
 

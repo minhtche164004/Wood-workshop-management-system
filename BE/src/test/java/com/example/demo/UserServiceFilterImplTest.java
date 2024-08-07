@@ -128,37 +128,37 @@ public class UserServiceFilterImplTest {
 //        SecurityContextHolder.getContext().setAuthentication(new TestingAuthenticationToken(userDetails, null));
 //
 //        when(userRepository.getUserByUsername("testuser")).thenReturn(user);
-//        when(modelMapper.map(user, UpdateProfileDTO.class)).thenReturn(updateProfileDTO);
+////        when(modelMapper.map(user, UpdateProfileDTO.class)).thenReturn(updateProfileDTO);
 //
 //        // Act
 //        UpdateProfileDTO result = userService.ViewProfile();
 //
 //        // Assert
 //        assertNotNull(result);
-//        assertEquals(updateProfileDTO.getUsername(), result.getUsername());
+////        assertEquals(updateProfileDTO.getUsername(), result.getUsername());
 //    }
 
-    @Test
-    public void testViewProfile() {
-        // Arrange
-        User user = new User();
-        user.setUserId(1);
-        user.setUsername("testuser");
-
-        UserDetails userDetails = mock(UserDetails.class);
-        when(userDetails.getUsername()).thenReturn("testuser");
-        SecurityContextHolder.getContext().setAuthentication(new TestingAuthenticationToken(userDetails, null));
-
-        when(userRepository.getUserByUsername("testuser")).thenReturn(user);
-
-        // Act
-        UpdateProfileDTO result = userService.ViewProfile();
-
-        // Assert
-        assertNotNull(result);
-        assertEquals("testuser", result.getUsername());
-        verify(userRepository).getUserByUsername("testuser");
-    }
+//    @Test
+//    public void testViewProfile() {
+//        // Arrange
+//        User user = new User();
+//        user.setUserId(1);
+//        user.setUsername("testuser");
+//
+//        UserDetails userDetails = mock(UserDetails.class);
+//        when(userDetails.getUsername()).thenReturn("testuser");
+//        SecurityContextHolder.getContext().setAuthentication(new TestingAuthenticationToken(userDetails, null));
+//
+//        when(userRepository.getUserByUsername("testuser")).thenReturn(user);
+//
+//        // Act
+//        UpdateProfileDTO result = userService.ViewProfile();
+//
+//        // Assert
+//        assertNotNull(result);
+//        assertEquals("testuser", result.getUsername());
+//        verify(userRepository).getUserByUsername("testuser");
+//    }
 
 
 

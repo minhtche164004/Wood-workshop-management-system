@@ -82,7 +82,9 @@ public enum ErrorCode {
     COST_DEPOSIT(1043,"Tiền đặt cọc không đúng với giá trị cần trả , vui lòng nhập lại!",HttpStatus.BAD_REQUEST),
     TIME_FINISH_INVALID(1044,"Thời gian hoàn thành công việc vượt quá thời gian dự kiến hoàn thành đã thống nhất trong đơn hàng, vui lòng nhập lại!",HttpStatus.BAD_REQUEST),
     TIME_START_INVALID(1045,"Thời gian bắt đầu công việc đang có trước thời gian mà đơn hàng được tạo, vui lòng nhập lại!",HttpStatus.BAD_REQUEST),
-    TIME_START_JOB_INVALID(1046,"Thời gian bắt đầu giai đoạn công việc hiện tại đang có trước thời gian hoàn thành giai đoạn trước đó của cùng công việc này , vui lòng nhập lại!",HttpStatus.BAD_REQUEST)
+    TIME_START_JOB_INVALID(1046,"Thời gian bắt đầu giai đoạn công việc hiện tại đang có trước thời gian hoàn thành giai đoạn trước đó của cùng công việc này , vui lòng nhập lại!",HttpStatus.BAD_REQUEST),
+    CATEGORY_HAS_RELATIONSHIPS(1047,"Không thể xoá loại sản phẩm do các sản phẩm liên quan đến loại này đang tồn tại trong các đơn hàng",HttpStatus.BAD_REQUEST),
+
 
 
 

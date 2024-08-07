@@ -63,8 +63,39 @@ export class OrderManagementComponent implements OnInit {
   constructor(private http: HttpClient, private productListService: ProductListService, private orderService: OrderService,
     private authenListService: AuthenListService, private toastr: ToastrService, private orderRequestService: OrderRequestService
   ) {
-
+    this.updateFormattedDepositeOrder();
   }
+  onInput(event: Event) {
+    const input = event.target as HTMLInputElement;
+    let value = input.value;
+
+    // Xóa dấu phân cách hàng nghìn để tính toán số
+    value = value.replace(/,/g, '');
+
+    // Cập nhật giá trị kiểu số
+    const numericValue = parseFloat(value);
+    if (!isNaN(numericValue)) {
+      this.depositeOrder = numericValue;
+    }
+
+    // Cập nhật giá trị định dạng để hiển thị
+    this.updateFormattedDepositeOrder();
+  }
+
+  onBlur(event: Event) {
+    // Định dạng giá trị khi mất focus
+    this.updateFormattedDepositeOrder();
+  }
+
+  private updateFormattedDepositeOrder() {
+    // Đảm bảo giá trị là kiểu số trước khi gọi toFixed
+    const numericValue = Number(this.depositeOrder);
+    this.formattedDepositeOrder = numericValue.toLocaleString('en-US', {
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2
+    });
+  }
+
   calculateTotalAmount() {
     this.totalAmount = this.depositeAmount + this.totalAmountA;
   }
@@ -146,6 +177,9 @@ export class OrderManagementComponent implements OnInit {
 
   cancelChangeStatusJob() {
     this.selectedModalId = '';
+  }
+  cancelChangeStatusJob1() {
+    this.depositeOrder = 0;
   }
   openModal(orderId: number, event: Event, index: number): void {
     const statusId = (event.target as HTMLSelectElement).value;
@@ -557,23 +591,23 @@ export class OrderManagementComponent implements OnInit {
     }
   }
   depositeOrder: number = 0;
-  formattedValue: string = '0';
+  depositeOrderDisplay: string = "";
+  formattedDepositeOrder: string = '';
 
-  // Called when the user types in the input field
-  onInputChange(value: string) {
-    // Remove commas and convert to a number
-    const numericValue = parseFloat(value.replace(/,/g, ''));
-    this.depositeOrder = isNaN(numericValue) ? 0 : numericValue;
 
-    // Update formatted value
-    this.formattedValue = this.formatInputValue(this.depositeOrder);
+  formatInputValue(value: string) {
+    const numericValue = parseFloat(value);
+    if (!isNaN(numericValue)) {
+      this.depositeOrder = numericValue;
+      // Định dạng giá trị và cập nhật formattedDepositeOrder
+      this.formattedDepositeOrder = this.depositeOrder.toLocaleString('en-US');
+    } else {
+      this.depositeOrder = 0;
+      this.formattedDepositeOrder = '';
+    }
+  
   }
-
-  formatInputValue(value: number): string {
-    if (isNaN(value)) return '0';
-    // Format the number with commas
-    return value.toLocaleString();
-  }
+  
   confirmPayment() {
     this.isLoadding = true;
     const formattedDepositOrder = this.depositeOrder.toFixed(2); // Ví dụ: '4000000.00'
@@ -589,6 +623,7 @@ export class OrderManagementComponent implements OnInit {
               closeModalButton.click();
             }
             $('[data-dismiss="modal"]').click();
+            this.cancelChangeStatusJob1();
           } else if (response.code === 1043) {
             this.toastr.error(response.message);
             this.isLoadding = false;

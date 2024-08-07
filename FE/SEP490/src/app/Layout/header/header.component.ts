@@ -105,6 +105,9 @@ export class HeaderComponent implements OnInit {
   showLoginMessage(): void {
     this.toastr.warning('Vui lòng đăng nhập để đặt hàng');
   }
+  showLoginWishList(): void {
+    this.toastr.warning('Vui lòng đăng nhập để xem chi tiết sản phẩm yêu thích');
+  }
   isLogout(): boolean {
     return !this.isLoggedInForm();
   }

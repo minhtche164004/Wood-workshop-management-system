@@ -77,6 +77,7 @@ import { EmployeeSubmaterialManagementComponent } from './employee-submaterial-m
 import { ImpactHistoryManagerComponent } from './3.Manager/impact-history-manager/impact-history-manager.component';
 
 import { ListProductErrorEmployeeComponent } from './4.Employee/list-product-error-employee/list-product-error-employee.component';
+import { ProductCateManagementComponent } from './product-cate-management/product-cate-management.component';
 
 
 // import { AuthInterceptor } from './service/auth.interceptor';
@@ -149,6 +150,7 @@ import { ListProductErrorEmployeeComponent } from './4.Employee/list-product-err
 
 
     ListProductErrorEmployeeComponent,
+        ProductCateManagementComponent,
 
 
   ],

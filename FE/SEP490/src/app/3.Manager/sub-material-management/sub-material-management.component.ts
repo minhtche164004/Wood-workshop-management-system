@@ -112,13 +112,13 @@ export class SubMaterialManagementComponent implements OnInit {
           this.isLoadding = false;
         } else {
           console.error('Failed to fetch sub-materials:', data);
-          this.toastr.error('Không thể lấy danh sách sub-materials!', 'Lỗi');
+          this.toastr.warning('Không thể lấy danh sách sub-materials!', 'Lỗi');
           this.isLoadding = false;// Hiển thị thông báo lỗi
         }
       },
       (error) => {
         console.error('Error fetching sub-materials:', error);
-        this.toastr.error('Có lỗi xảy ra!', 'Lỗi'); // Hiển thị thông báo lỗi chung
+        this.toastr.warning('Có lỗi xảy ra!', 'Lỗi'); // Hiển thị thông báo lỗi chung
         this.isLoadding = false;
       }
     );
@@ -133,13 +133,13 @@ export class SubMaterialManagementComponent implements OnInit {
           this.isLoadding = false;
         } else {
           console.error('Failed to fetch sub-materials:', data);
-          this.toastr.error('Không thể lấy danh sách sub-materials!', 'Lỗi');
+          this.toastr.warning('Không thể lấy danh sách sub-materials!', 'Lỗi');
           this.isLoadding = false;// Hiển thị thông báo lỗi
         }
       },
       (error) => {
         console.error('Error fetching sub-materials:', error);
-        this.toastr.error('Có lỗi xảy ra!', 'Lỗi'); // Hiển thị thông báo lỗi chung
+        this.toastr.warning('Có lỗi xảy ra!', 'Lỗi'); // Hiển thị thông báo lỗi chung
         this.isLoadding = false;
       }
     );
@@ -185,13 +185,13 @@ export class SubMaterialManagementComponent implements OnInit {
           this.isLoadding = false;
         } else {
           console.error('Failed to fetch materials:', data);
-          this.toastr.error('Không thể lấy danh sách materials!', 'Lỗi');
+          this.toastr.warning('Không thể lấy danh sách materials!', 'Lỗi');
           this.isLoadding = false;
         }
       },
       (error) => {
         console.error('Error fetching materials:', error);
-        this.toastr.error('Có lỗi xảy ra!', 'Lỗi');
+        this.toastr.warning('Có lỗi xảy ra!', 'Lỗi');
         this.isLoadding = false;
       }
     );
@@ -210,38 +210,38 @@ export class SubMaterialManagementComponent implements OnInit {
     };
     if (Object.values(subMaterial).includes(null)) {
       this.isLoadding = false;
-      this.toastr.error('Vui lòng điền đầy đủ thông tin, không được để trống!', 'Lỗi');
+      this.toastr.info('Vui lòng điền đầy đủ thông tin, không được để trống!', 'Thông báo');
       return;
     }if (!subMaterial.sub_material_name || subMaterial.sub_material_name.length < 3) {
       this.isLoadding = false;
-      this.toastr.error('Tên vật liệu phụ phải lớn hơn 3 ký tự!', 'Lỗi');
+      this.toastr.info('Tên vật liệu phụ phải lớn hơn 3 ký tự!', 'Thông báo');
       return;
   }
   if (subMaterial.description === null || subMaterial.description === '') {
     this.isLoadding = false;
-    this.toastr.error('Không được để trống mô tả sản phẩm', 'Lỗi');
+    this.toastr.info('Không được để trống mô tả sản phẩm', 'Thông báo');
     return;
 }
   if (subMaterial.quantity <= 0) {
       this.isLoadding = false;
-      this.toastr.error('Số lượng phải lớn hơn 0!', 'Lỗi');
+      this.toastr.info('Số lượng phải lớn hơn 0!', 'Thông báo');
       return;
   }
   
   if (subMaterial.unit_price <= 0) {
       this.isLoadding = false;
-      this.toastr.error('Giá bán phải lớn hơn 0!', 'Lỗi');
+      this.toastr.info('Giá bán phải lớn hơn 0!', 'Thông báo');
       return;
   }
   
   if (subMaterial.input_price <= 0) {
       this.isLoadding = false;
-      this.toastr.error('Giá nhập phải lớn hơn 0!', 'Lỗi');
+      this.toastr.info('Giá nhập phải lớn hơn 0!', 'Thông báo');
       return;
   }
   if(subMaterial.input_price > subMaterial.unit_price){
     this.isLoadding = false;
-    this.toastr.error('Giá nhập phải nhỏ hơn giá bán!', 'Lỗi');
+    this.toastr.info('Giá nhập phải nhỏ hơn giá bán!', 'Lỗi');
     return;
   }
     console.log('SubMaterial request:', subMaterial);
@@ -253,13 +253,13 @@ export class SubMaterialManagementComponent implements OnInit {
           $('[data-dismiss="modal"]').click();
           this.isLoadding = false;
         } else {
-          this.toastr.error('Failed to add sub-material!', 'Error');
+          this.toastr.warning('Failed to add sub-material!', 'Error');
           this.isLoadding = false;
         }
       },
       (error) => {
         console.error('Error adding sub-material:', error);
-        this.toastr.error('Có lỗi xảy ra!', 'Lỗi');
+        this.toastr.warning('Có lỗi xảy ra!', 'Lỗi');
         this.isLoadding = false;
       }
     );
@@ -274,19 +274,19 @@ export class SubMaterialManagementComponent implements OnInit {
     // Kiểm tra các điều kiện
     if (!formData.subMaterialName || formData.subMaterialName.length < 3) {
         this.isLoadding = false;
-        this.toastr.error('Tên vật liệu phụ phải lớn hơn 3 ký tự!', 'Lỗi');
+        this.toastr.warning('Tên vật liệu phụ phải lớn hơn 3 ký tự!', 'Thông báo');
         return;
     }
 
     if (formData.quantity <= 0) {
         this.isLoadding = false;
-        this.toastr.error('Số lượng phải lớn hơn 0!', 'Lỗi');
+        this.toastr.warning('Số lượng phải lớn hơn 0!', 'Thông báo');
         return;
     }
 
     if (formData.unitPrice <= 0) {
         this.isLoadding = false;
-        this.toastr.error('Giá bán phải lớn hơn 0!', 'Lỗi');
+        this.toastr.warning('Giá bán phải lớn hơn 0!', 'Thông báo');
         return;
     }
 
@@ -300,13 +300,13 @@ export class SubMaterialManagementComponent implements OnInit {
                 this.isLoadding = false;
             } else {
                 console.error('Failed to search sub-materials:', data);
-                this.toastr.error('Không thể cập nhật nguyên vật liệu!', 'Lỗi');
+                this.toastr.warning('Không thể cập nhật nguyên vật liệu!', 'Thông báo');
                 this.isLoadding = false;
             }
         },
         (error) => {
             console.error('Error updating sub-materials:', error);
-            this.toastr.error('Có lỗi xảy ra!', 'Lỗi');
+            this.toastr.warning('Có lỗi xảy ra!', 'Lỗi');
             this.isLoadding = false;
         }
     );
@@ -415,7 +415,7 @@ export class SubMaterialManagementComponent implements OnInit {
             const errors = event.body.result.map((error: any) => 
               `Hàng: ${error.row} - Cột: ${error.column}, Lỗi: ${error.errorMessage}`
             ).join('<br>');
-            this.toastr.error(
+            this.toastr.warning(
               `<div">${errors}</div>`, 
               'Lỗi', 
               { enableHtml: true }
@@ -429,7 +429,7 @@ export class SubMaterialManagementComponent implements OnInit {
       },
       (error) => {
         console.error('Upload error:', error);
-        this.toastr.error('Tải lên thất bại!', 'Lỗi');
+        this.toastr.warning('Tải lên thất bại!', 'Thông báo');
         this.isLoadding = false;
         this.getAllMaterials();
         this.resetFileInput(inputElement); // Reset file input
@@ -484,7 +484,7 @@ resetFileInput(inputElement: HTMLInputElement) {
       },
       (error) => {
         console.error('Error filtering sub-materials:', error);
-        this.toastr.error('Có lỗi xảy ra!', 'Lỗi');
+        this.toastr.warning('Có lỗi xảy ra!', 'Lỗi');
 
         this.isLoadding = false;
       }

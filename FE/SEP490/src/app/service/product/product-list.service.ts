@@ -62,8 +62,37 @@ export class ProductListService {
   private api_UrlcreateExportMaterialListProductRequest = `${environment.apiUrl}api/auth/submaterial/createExportMaterialListProductRequest`; 
   private apiUrl_getAllStatusJob = `${environment.apiUrl}api/auth/job/getAllStatusJob`;
   
-  //
 
+  //api cho danh mục sản phẩm
+  private apiAddNewCategory = `${environment.apiUrl}api/auth/product/AddNewCategory`;
+
+  private apiFindCategoriesByName = `${environment.apiUrl}api/auth/product/findCategoriesByName`;
+
+  private apiEditCategory = `${environment.apiUrl}api/auth/product/EditCategory`;
+
+  private apiDeleteCategory = `${environment.apiUrl}api/auth/product/DeleteCategory`;
+
+  addNewCategory(categoryName: string): Observable<any> {
+   
+    const body = { categoryName };
+    
+    return this.http.post<any>(this.apiAddNewCategory, body);
+  }
+  findCategoriesByName(key: string): Observable<any> {
+    const params = new HttpParams().set('key', key);
+    return this.http.get<any>(this.apiFindCategoriesByName, { params });
+  }
+
+  editCategory(cate_id: number, categoryName: string): Observable<any> {
+    const params = new HttpParams().set('cate_id', cate_id.toString());
+    const body = { categoryName };
+    return this.http.put<any>(this.apiEditCategory, body, { params });
+  }
+
+  deleteCategory(category_id: number): Observable<any> {
+    const params = new HttpParams().set('category_id', category_id.toString());
+    return this.http.delete<any>(this.apiDeleteCategory, { params });
+  }
   //api danh` cho order dac biet
   private apiUrlGetOrderById = `${environment.apiUrl}api/auth/order/GetOrderById`;
 

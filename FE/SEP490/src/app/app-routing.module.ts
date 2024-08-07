@@ -145,7 +145,7 @@ const routes: Routes = [
   // { path: '', redirectTo: '/homepage', pathMatch: 'full' },
   { path: 'report-cost', component: ReportCostManagementComponent },
   { path: 'im_history', component: ImpactHistoryManagerComponent, canActivate: [AuthGuard], data: { roles: ['MANAGER'] } },
-  { path: 'product_cate_management', component: ProductCateManagementComponent, canActivate: [AuthGuard], data: { roles: ['MANAGER'] } },
+  { path: 'product_cate_management', component: ProductCateManagementComponent },
   { path: '', redirectTo: '/homepage', pathMatch: 'full' },
   { path: '**', redirectTo: '/homepage', pathMatch: 'full' },
 

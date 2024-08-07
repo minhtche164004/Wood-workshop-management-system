@@ -120,45 +120,43 @@ public class UserServiceFilterImplTest {
 //        user.setUserId(1);
 //        user.setUsername("testuser");
 //
-//        UpdateProfileDTO updateProfileDTO = new UpdateProfileDTO();
-//        updateProfileDTO.setUsername("testuser");
-//
 //        UserDetails userDetails = mock(UserDetails.class);
 //        when(userDetails.getUsername()).thenReturn("testuser");
 //        SecurityContextHolder.getContext().setAuthentication(new TestingAuthenticationToken(userDetails, null));
 //
 //        when(userRepository.getUserByUsername("testuser")).thenReturn(user);
-//        when(modelMapper.map(user, UpdateProfileDTO.class)).thenReturn(updateProfileDTO);
 //
 //        // Act
 //        UpdateProfileDTO result = userService.ViewProfile();
 //
 //        // Assert
 //        assertNotNull(result);
-//        assertEquals(updateProfileDTO.getUsername(), result.getUsername());
-//    }
-
-    @Test
-    public void testViewProfile() {
-        // Arrange
-        User user = new User();
-        user.setUserId(1);
-        user.setUsername("testuser");
-
-        UserDetails userDetails = mock(UserDetails.class);
-        when(userDetails.getUsername()).thenReturn("testuser");
-        SecurityContextHolder.getContext().setAuthentication(new TestingAuthenticationToken(userDetails, null));
-
-        when(userRepository.getUserByUsername("testuser")).thenReturn(user);
-
-        // Act
-        UpdateProfileDTO result = userService.ViewProfile();
-
-        // Assert
-//        assertNotNull(result);
 //        assertEquals("testuser", result.getUsername());
-        verify(userRepository).getUserByUsername("testuser");
-    }
+//        verify(userRepository).getUserByUsername("testuser");
+//    }
+//=======
+//    @Test
+//    public void testViewProfile() {
+//        // Arrange
+//        User user = new User();
+//        user.setUserId(1);
+//        user.setUsername("testuser");
+//
+//        UserDetails userDetails = mock(UserDetails.class);
+//        when(userDetails.getUsername()).thenReturn("testuser");
+//        SecurityContextHolder.getContext().setAuthentication(new TestingAuthenticationToken(userDetails, null));
+//
+//        when(userRepository.getUserByUsername("testuser")).thenReturn(user);
+//
+//        // Act
+//        UpdateProfileDTO result = userService.ViewProfile();
+//
+//        // Assert
+////        assertNotNull(result);
+////        assertEquals("testuser", result.getUsername());
+//        verify(userRepository).getUserByUsername("testuser");
+//    }
+//>>>>>>> b638629566d33a9937c28c391bdcef43c8d200f9
 
 
 

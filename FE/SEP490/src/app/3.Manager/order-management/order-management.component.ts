@@ -150,7 +150,8 @@ export class OrderManagementComponent implements OnInit {
   contactUser(phoneNumber?: string): void {
     console.log(phoneNumber);
     if (phoneNumber) {
-      window.location.href = `https://zalo.me/${phoneNumber}`;
+      // Open the Zalo app/website in a new tab/window with the phone number
+      window.open(`https://zalo.me/${phoneNumber}`, '_blank');
     } else {
       console.error('Phone number is not available.');
     }

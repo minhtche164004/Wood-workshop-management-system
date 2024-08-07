@@ -81,11 +81,8 @@
                     <i class="fa-solid fa-circle-info"></i>
                   </a>
                   <a (click)="setOrderForCancellation(us?.orderId, us?.specialOrder)"
-                    (click)="getOrDetailById(us, us?.orderId)" *ngIf="us?.status_id !== 9  &&
-                  us?.status_id !== 1  &&
-                  us?.status_id !== 6  &&
-                  us?.status_id !== 8  &&us?.status_id !== 5  &&
-                  us?.status_id !== 7  " class="info" title="Hoàn tiền" data-toggle="modal"
+                    (click)="getOrDetailById(us, us?.orderId)" *ngIf="us?.status_id === 10 
+                   " class="info" title="Hoàn tiền" data-toggle="modal"
                     data-target="#refundProductModal">
                     <i style="cursor: pointer;" class="fa-solid fa-money-bill-transfer"></i>
                   </a>
@@ -288,11 +285,13 @@
                       <span style="float: right;">{{ totalAmoutOrder | number : '1.0-3'
                         }} &nbsp; VNĐ</span>
                     </p>
-                    
-                    <p class="card-text"><b style="margin-right: 2%;">Thanh toán:</b>{{ OrderdetailById.paymentMethod === '1' ? 'Tiền mặt' : 'Chuyển khoản' }}</p>
+
+                    <p class="card-text"><b style="margin-right: 2%;">Thanh toán:</b>{{ OrderdetailById.paymentMethod
+                      === '1' ? 'Tiền mặt' : 'Chuyển khoản' }}</p>
                     <div *ngIf="OrderdetailById.description">
                       <p><strong>Mô tả đơn hàng:</strong></p>
-                      <textarea [(ngModel)]="OrderdetailById.description" rows="5" style="width: 100%; resize: none;border: none; overflow: hidden;" readonly></textarea>
+                      <textarea [(ngModel)]="OrderdetailById.description" rows="5"
+                        style="width: 100%; resize: none;border: none; overflow: hidden;" readonly></textarea>
 
                     </div>
                   </div>
@@ -301,7 +300,7 @@
 
               <div class="col-md-8">
                 <h2 class="text-center">Thông tin đơn hàng</h2>
-             
+
 
                 <div class="product-list d-flex flex-row flex-nowrap overflow-auto" style="margin-bottom: 10px;">
                   <ng-container *ngFor="let cate of OrderdetailById.requestImages; let i = index">
@@ -395,9 +394,8 @@
           <div class="row" style="margin-bottom: 20px;">
             <div class="col md-6">
               <label for="cancelReason">Nhập số tiền cọc cần thanh toán</label>
-              <input min="0" type="number" class="form-control" id="percentDepositPrice" 
-                    [(ngModel)]="depositeOrder" 
-                    (ngModelChange)="formatInputValue($event)">
+              <input min="0" type="number" class="form-control" id="percentDepositPrice" [(ngModel)]="depositeOrder"
+                (ngModelChange)="formatInputValue($event)">
             </div>
             <div class="col md-6">
               <label>Số tiền cọc cần thanh toán </label>

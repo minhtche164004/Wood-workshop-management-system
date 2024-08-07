@@ -28,6 +28,7 @@
     "bootstrap": "^5.3.3",
     "chart.js": "^4.4.3",
     "chartjs-plugin-datalabels": "^2.2.0",
+    "cleave.js": "^1.6.0",
     "cors": "^2.8.5",
     "feather-icons": "^4.29.2",
     "jquery": "^3.7.1",

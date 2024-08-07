@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { environment } from 'src/app/environments/environment';
 import { WishlistService } from 'src/app/service/wishlist.service';
 import { ToastrService } from 'ngx-toastr';
@@ -34,29 +34,30 @@ export class ProductDetailComponent implements OnInit {
     });
     this.shuffleArray(this.categoryProduct);
   }
-  addToWishlist(productId: number): void {
+  addToWishlist(productId: number) {  
     this.isLoadding = true;
-    this.wishList.addWishlist(productId).subscribe(
-      data => {
-        console.log('data:', data);
-        if (data.code === 1000) {
-          this.toastr.success('Sản phẩm đã được thêm vào yêu thích!', 'Thành công');
-       
+    console.log('Product ID:', productId);
+    this.wishList.addWishlist(productId)
+      .subscribe(
+        (response) => {
+          if (response && response.code === 1000) {
+            console.log('Product added to wishlist:');
+            this.toastr.success('Sản phẩm đã được thêm vào yêu thích!', 'Thành công'); // Success message
+          }
           this.isLoadding = false;
-
-        }  else {
-        
-          this.toastr.warning('Vui lòng đăng nhập để thêm sản phẩm yêu thích!', 'Lỗi');
+        },
+        (error: any) => {
+          if (error && error.error && error.error.code === 1034) {
+            this.toastr.warning(error.error.message);
+          } else {
+            this.toastr.warning('Vui lòng đăng nhập để thêm sản phẩm yêu thích');
+            console.error(error);
+          }
           this.isLoadding = false;
         }
-      },
-      error => {
-        // console.error('error:', error);
-        this.toastr.success('Sản phẩm đã được thêm vào yêu thích!', 'Thành công');
-        this.isLoadding = false;
-      }
-    );
+      );
   }
+
   wishlistcount(): void {
     this.authenListService.GetByIdWishList().subscribe(
       (data) => {

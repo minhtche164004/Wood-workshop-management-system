@@ -290,25 +290,10 @@ public class ProductController {
         return apiResponse;
     }
 
-    @PostMapping("/AddNewCategory")
-    public ApiResponse<?> AddNewCategory(@RequestBody CategoryNameDTO categoryNameDTO) {
-        ApiResponse<String> apiResponse = new ApiResponse<>();
-        categorySevice.AddnewCategory(categoryNameDTO);
-        jedis.del("all_categories");
-        jedis.del("all_categories_name");
-        apiResponse.setResult("Thêm mới Loại Sản Phẩm Thành công");
-        return apiResponse;
-    }
 
 
-    @PutMapping("/EditCategory")
-    public ApiResponse<?> EditCategory(@RequestParam("cate_id") int cate_id, @RequestBody CategoryNameDTO categoryNameDTO) {
-        ApiResponse<Categories> apiResponse = new ApiResponse<>();
-        apiResponse.setResult(categorySevice.UpdateCategoty(cate_id, categoryNameDTO));
-        jedis.del("all_categories");
-        jedis.del("all_categories_name");
-        return apiResponse;
-    }
+
+
 
     //    @PostMapping(value = "/AddNewProduct", consumes = MediaType.MULTIPART_FORM_DATA_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 //    public ApiResponse<?> AddNewProduct(
@@ -546,5 +531,43 @@ public class ProductController {
         apiResponse.setResult(products);
         return apiResponse;
     }
+
+
+    @PostMapping("/AddNewCategory")
+    public ApiResponse<?> AddNewCategory(@RequestBody CategoryNameDTO categoryNameDTO) {
+        ApiResponse<String> apiResponse = new ApiResponse<>();
+        categorySevice.AddnewCategory(categoryNameDTO);
+        jedis.del("all_categories");
+        jedis.del("all_categories_name");
+        apiResponse.setResult("Thêm mới Loại Sản Phẩm Thành công");
+        return apiResponse;
+    }
+
+    @PutMapping("/EditCategory")
+    public ApiResponse<?> EditCategory(@RequestParam("cate_id") int cate_id, @RequestBody CategoryNameDTO categoryNameDTO) {
+        ApiResponse<Categories> apiResponse = new ApiResponse<>();
+        apiResponse.setResult(categorySevice.UpdateCategoty(cate_id, categoryNameDTO));
+        jedis.del("all_categories");
+        jedis.del("all_categories_name");
+        return apiResponse;
+    }
+    @DeleteMapping("/DeleteCategory")
+    public ApiResponse<?> DeleteCategory(@RequestParam("category_id")int category_id) {
+        ApiResponse<String> apiResponse = new ApiResponse<>();
+        categorySevice.DeleteCategory(category_id);
+        jedis.del("all_categories");
+        jedis.del("all_categories_name");
+        apiResponse.setResult("Xoá Loại Sản Phẩm Thành công");
+        return apiResponse;
+    }
+    @GetMapping("/findCategoriesByName")
+    public ApiResponse<?> findCategoriesByName(@RequestParam("key") String key) {
+        ApiResponse<List> apiResponse = new ApiResponse<>();
+        apiResponse.setResult(categorySevice.findCategoriesByName(key));
+        jedis.del("all_categories");
+        jedis.del("all_categories_name");
+        return apiResponse;
+    }
+
 
 }

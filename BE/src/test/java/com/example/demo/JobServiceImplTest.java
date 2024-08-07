@@ -124,6 +124,11 @@ class JobServiceImplTest {
     @Test
     void testCreateJob() {
         JobDTO jobDTO = new JobDTO();
+        Date start = new Date(2024 - 1900, 8 - 1, 2);
+        Date job_finish = new Date();
+        jobDTO.setStart(job_finish);
+
+
         int userId = 1;
         int productId = 1;
         int statusId = 1;
@@ -138,6 +143,7 @@ class JobServiceImplTest {
         Jobs existingJob = new Jobs();
         existingJob.setOrderdetails(new Orderdetails());
         existingJob.setOriginalQuantityProduct(originalQuantityProduct);
+        existingJob.setTimeFinish(start);
 
         when(userRepository.findByIdJob(userId)).thenReturn(user);
         when(requestProductRepository.findById(productId)).thenReturn(new RequestProducts());

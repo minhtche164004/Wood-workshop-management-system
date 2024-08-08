@@ -1,6 +1,8 @@
 import { HttpErrorResponse } from '@angular/common/http';
 import { Component } from '@angular/core';
+import { FormBuilder, FormGroup } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
+import { timer } from 'rxjs';
 import { AuthenListService } from 'src/app/service/authen.service';
 import { OrderRequestService } from 'src/app/service/order-request.service';
 import { OrderService } from 'src/app/service/order.service';
@@ -14,17 +16,36 @@ interface ApiResponse {
   styleUrls: ['./history-order.component.scss']
 })
 export class HistoryOrderComponent {
+  selectedImages: File[] = [];
   history_order: any[] = [];
   loginToken: string | null = null;
   currentPage: number = 1;
+  initialFormValue: any;
   userStatus: any[] = [];
   orderData: any = {};
   isLoadding: boolean = false;
+  imagesPreview: string[] = [];
   selectedCategory: string = '';
   searchKey: string = '';
   selectedSDate: string = '';
   selectedEDate: string = '';
-  constructor(private orderRequestService: OrderRequestService,private toastr: ToastrService,private authenListService: AuthenListService,private orderService: OrderService) { }
+  requestForm: FormGroup;
+  constructor(private orderRequestService: OrderRequestService,private toastr: ToastrService,private authenListService: AuthenListService,private orderService: OrderService,private fb: FormBuilder) { 
+    this.requestForm = this.fb.group({
+      request_Id: [0],
+      description: [''], 
+      status_id:[''],
+      requestImages: ['']
+    });
+   }
+   initializeForm(): void {
+    this.requestForm = this.fb.group({
+      request_Id: [null],
+      description: [''],
+      status_id: [null],
+      requestImages: [null]
+    });
+  }
   ngOnInit(): void {
     this.orderData = {
       order_detail_id: '',
@@ -127,8 +148,26 @@ export class HistoryOrderComponent {
       this.isLoadding = false;
     }
   }
+  onResetImage() {
+    this.selectedImages = [];
+    this.imagesPreview = [];
+  }
+  onImagesSelected(event: any): void {
+    this.selectedImages = Array.from(event.target.files);
 
+    const files: File[] = Array.from(event.target.files as FileList);
+    if (event.target.files && event.target.files.length) {
+      // xoa list preview cu    
+      this.imagesPreview = [];
 
+      // Create and store URLs for preview
+      files.forEach((file: File) => {
+        const url = URL.createObjectURL(file);
+        this.imagesPreview.push(url);
+      });
+
+    }
+  }
   historyOrderDetail(orderId: string): void {
     this.isLoadding = true;
     this.authenListService.getOrderDetailById(orderId).subscribe(
@@ -148,6 +187,7 @@ export class HistoryOrderComponent {
   selectedOrderDetail: any = {};
   OrderdetailById: any = {};
   productOfOrder: any = [];
+  selectedOrderId: number = 0;
   getOrDetailById(us: any, order_detail_id: string): void {
     this.isLoadding = true;
     console.log('Order_detail_id:', order_detail_id);
@@ -192,5 +232,77 @@ export class HistoryOrderComponent {
       );
     }
   }
+  resetForm(): void {
+    this.requestForm.reset(this.initialFormValue);
+    this.imagesPreview = this.initialFormValue.requestImages ? this.initialFormValue.requestImages.map((image: any) => image.fullPath) : [];
+  }
+  setOrderForPayment(orderId: number) {
+    this.selectedOrderId = orderId;
 
+  }
+  getDataRequest(orderId: number) {
+    console.log(orderId);
+    this.requestForm.patchValue({
+      orderId: orderId,
+      description: null,
+      status_id: null,
+      requestImages: null
+    });
+    this.imagesPreview = [];
+    
+    this.authenListService.getRequestByIdCustomer(orderId)
+      .subscribe(async product => {
+        if (product && product.result) {
+
+          this.requestForm.patchValue({
+            description: product.result.description,
+            status_id: product.result.status_id,
+            requestImages: product.result.requestImages
+          });
+          if (product.result.requestImages) {
+            this.imagesPreview = product.result.requestImages.map((image: any) => {
+              return image.fullPath;
+            });
+          }
+        }
+        console.log(product);
+      });
+  }
+  onEditSubmit(): void {
+    this.isLoadding = true;
+      const requestData = this.requestForm.value;
+      // console.log('Form Data for Edit:', requestData.product_id);
+      const updatedRequestProduct = {
+        ...requestData,
+        images: this.selectedImages
+      };
+      // console.log('Form Data for updatedProduct:', updatedRequestProduct);
+      this.authenListService.editRequestProductForCustomer(updatedRequestProduct, this.selectedImages, this.selectedOrderId)
+        .subscribe(
+          response => {
+            this.isLoadding = false;
+
+            this.toastr.success('Cập nhật sản phẩm yêu cầu thành công!', 'Thành công');
+            timer(1000).subscribe(() => {
+              window.location.reload();
+            });
+            const closeButton = document.querySelector('.btn-mau-do[data-dismiss="modal"]') as HTMLElement;
+            if (closeButton) { // Check if the button exists
+              closeButton.click(); // If it exists, click it to close the modal
+              console.log("close button success")
+            }
+          },
+          error => {
+            this.isLoadding = false;
+            // console.error('Update error', error);
+            this.toastr.error('Cập nhật sản phẩm bị lỗi!', 'Lỗi');
+            const closeButton = document.querySelector('.btn-mau-do[data-dismiss="modal"]') as HTMLElement;
+            if (closeButton) { // Check if the button exists
+              closeButton.click(); // If it exists, click it to close the modal
+              console.log("close button success")
+            }
+          }
+        );
+    
+  }
 }

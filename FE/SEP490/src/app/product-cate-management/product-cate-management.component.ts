@@ -66,7 +66,7 @@ export class ProductCateManagementComponent implements OnInit{
       },
       (error) => {
         console.error('Error deleting category:', error);
-        this.toastr.warning(error.error.message, error.error.code);
+        this.toastr.warning(error.error.message, 'Thông báo');
         this.isLoadding = false;
       }
     );
@@ -86,14 +86,17 @@ export class ProductCateManagementComponent implements OnInit{
         if (data.code === 1000) {
           this.toastr.success('Sửa danh mục sản phẩm thành công');
           this.getAllCategory();  // Load lại danh sách sau khi chỉnh sửa
-          this.closeModal(); this.isLoadding = false;
+          this.closeModal();
+           this.isLoadding = false;
         } else {
-          console.error('Invalid data returned:', data); this.isLoadding = false;
+          console.error('Invalid data returned:', data); 
+          this.isLoadding = false;
         }
       },
       error => {
         console.error('Error editing category:', error);
-        this.toastr.warning(error.error.message, error.error.code); this.isLoadding = false;
+        this.toastr.warning(error.error.message, 'Thông báo'); 
+        this.isLoadding = false;
       }
     );
   }
@@ -137,7 +140,7 @@ export class ProductCateManagementComponent implements OnInit{
         },
         error => {
           console.error('Error adding category:', error);
-          this.toastr.warning(error.error.message, error.error.code);
+          this.toastr.warning(error.error.message, 'Thông báo');
         }
       );
     } else {

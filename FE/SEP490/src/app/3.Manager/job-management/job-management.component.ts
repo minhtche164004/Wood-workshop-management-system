@@ -410,7 +410,7 @@ export class JobManagementComponent implements OnInit {
               (error) => {
                 this.toastr.warning(error.error.message, error.error.code);
                 this.isLoadding = false;
-                $('[data-dismiss="modal"]').click();
+              //  $('[data-dismiss="modal"]').click();
                 console.log('error: ', error)
                 console.log('Error Code:',error.error.code);
                 console.log('Error Message:', error.error.message);
@@ -420,7 +420,8 @@ export class JobManagementComponent implements OnInit {
           } else if (data.code === 1015) {
             console.error('Failed to fetch products:', data);
             this.toastr.warning('Số lượng nguyên vật liệu trong kho không đủ', 'Thông báo');
-            $('[data-dismiss="modal"]').click(); this.isLoadding = false;
+          //  $('[data-dismiss="modal"]').click(); 
+          this.isLoadding = false;
 
           }
         },
@@ -482,15 +483,16 @@ export class JobManagementComponent implements OnInit {
           if (error && error.error && error.error.errors) {
             Object.entries(error.error.errors).forEach(([key, value]) => {
               this.toastr.warning(`${key}: ${value}`, 'Thông báo');
-              $('[data-dismiss="modal"]').click(); this.isLoadding = false;
+             // $('[data-dismiss="modal"]').click(); 
+              this.isLoadding = false;
             });
 
           } else if (error && error.message) {
             this.toastr.info(`Có lỗi xảy ra: ${error.message}`, 'Thông báo'); this.isLoadding = false;
-            $('[data-dismiss="modal"]').click();
+          //  $('[data-dismiss="modal"]').click();
           } else {
             this.toastr.info(`Có lỗi xảy ra, vui lòng thử lại.`, 'Thông báo'); this.isLoadding = false;
-            $('[data-dismiss="modal"]').click();
+         //   $('[data-dismiss="modal"]').click();
           }
         }
       );

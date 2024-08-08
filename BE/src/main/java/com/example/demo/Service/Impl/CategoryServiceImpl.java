@@ -67,7 +67,6 @@ public class CategoryServiceImpl implements CategorySevice {
         }
         categories.setCategoryName(categoryNameDTO.getCategoryName());
         categoryRepository.save(categories);
-//        entityManager.refresh(categories);
         return categories;
     }
     @Transactional

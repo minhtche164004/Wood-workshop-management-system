@@ -462,7 +462,8 @@ public class JobServiceImpl implements JobService {
             advancesalary.setAdvanceSuccess(false);
             advancesalary.setCode(code);
             advancesalary.setUser(jobs_history.getUser());
-            advancesalary.setJobs(jobs_log);
+           // advancesalary.setJobs(jobs_log);
+            advancesalary.setJobs(jobs_history);
             advancesalaryRepository.save(advancesalary);
 
 
@@ -485,7 +486,8 @@ public class JobServiceImpl implements JobService {
             advancesalary.setAdvanceSuccess(false);
             advancesalary.setCode(code);
             advancesalary.setUser(jobs_history.getUser());
-            advancesalary.setJobs(jobs_log);
+            //advancesalary.setJobs(jobs_log);
+            advancesalary.setJobs(jobs_history);
             advancesalaryRepository.save(advancesalary);
             ///------------------------------------------------------------------------------------------
             waitNextJob.setStatus(statusJobRepository.findById(15)); // khi da nghiem thu thi se chuyen sang trang thai chờ cong viec tiep theo

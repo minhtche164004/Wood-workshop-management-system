@@ -164,10 +164,10 @@ export class JobManagementComponent implements OnInit {
   selectedModalJob: string = '';
   selectedModalId: string = '';
   errorCheckResults: { [key: number]: boolean } = {};
-  indexStatus: number = 0;
+  indexStatus:any;
 
   openModal(event: Event, jobId: number, index: number): void {
-
+    this.indexStatus = 0;
     console.log('event:', event);
     const statusId = (event.target as HTMLSelectElement).value;
     this.selectedModalJob = jobId.toString();
@@ -531,7 +531,7 @@ export class JobManagementComponent implements OnInit {
       return;
     }
     if (quantity <= 0) {
-      this.toastr.info('Số lượng phải lớn hơn 0');
+      this.toastr.info('Số lượng sản phẩm sản xuất phải lớn hơn 0');
       return;
     }
     
@@ -769,9 +769,9 @@ export class JobManagementComponent implements OnInit {
 
   manageJob(product: any): void {
     this.employeeSelect.nativeElement.value = '';
-    this.employeeSelect2.nativeElement.value = '';
+
     this.isLoadding = true;
-this.selectedEmployee = ''
+    this.selectedEmployee = ''
     this.selectedProduct = { ...product };
 
     //  console.log('Product:', this.selectedProduct);
@@ -838,7 +838,7 @@ this.selectedEmployee = ''
 
   cancelAssign(cancel: boolean): void {
     this.employeeSelect.nativeElement.value = '';
-    
+  
     if(this.isCancel == true){
       if (this.selectedCategory === 0) {
         this.loadProductRQForJob();
@@ -1621,7 +1621,7 @@ this.selectedEmployee = ''
               },
               (error) => {
                 console.error('Error fetching products:', error);
-                this.toastr.info('Có lỗi xảy ra!', 'Thông báo'); this.isLoadding = false;
+                this.toastr.warning(error.error.message, 'Thông báo'); this.isLoadding = false;
                 $('[data-dismiss="modal"]').click();
 
               }

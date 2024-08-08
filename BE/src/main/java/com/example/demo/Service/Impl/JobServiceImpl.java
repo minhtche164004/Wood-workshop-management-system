@@ -194,17 +194,22 @@ public class JobServiceImpl implements JobService {
         User user = userRepository.findByIdJob(user_id);
         jobs.setUser(user);
         Jobs current = jobRepository.getJobById(job_id);
+        Date now = new Date();
         if (type_job == 0) { //tức là đang phân job cho requets product
             RequestProducts requestProducts = requestProductRepository.findById(p_id);
             jobs.setRequestProducts(requestProducts);
             jobs.setProduct(null);
             Date contract_finish = current.getOrderdetails().getOrder().getContractDate();
             Date start_order=current.getOrderdetails().getOrder().getOrderDate();
+
             if(jobDTO.getFinish().after(contract_finish)){
                 throw new AppException(ErrorCode.TIME_FINISH_INVALID);
             }
             if(jobDTO.getStart().before(start_order)){
                 throw new AppException(ErrorCode.TIME_START_INVALID);
+            }
+            if(jobDTO.getStart().before(now)){
+                throw new AppException(ErrorCode.TIME_START_JOB_INVALID);
             }
 //            Date job_finish;
 //            if (current.getTimeFinish() != null) {
@@ -219,6 +224,9 @@ public class JobServiceImpl implements JobService {
             Products products = productRepository.findById(p_id);
             jobs.setProduct(products);
             jobs.setRequestProducts(null);
+            if(jobDTO.getStart().before(now)){
+                throw new AppException(ErrorCode.TIME_START_JOB_INVALID);
+            }
 //            Date job_finish;
 //            if (current.getTimeFinish() != null) {
 //                job_finish = current.getTimeFinish();

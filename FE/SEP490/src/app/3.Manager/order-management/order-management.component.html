@@ -272,18 +272,32 @@
                   </div>
                   <div class="card-body">
                     <!-- <h5 class="card-title">{{OrderdetailById.userInfor?.fullname}}</h5> -->
-                    <p class="card-text" *ngIf="OrderdetailById.status?.status_id !== 7">
-                      <b>Số tiền cọc: </b>
-                      <span style="float: right;">{{ OrderdetailById.deposite | number: '1.0-3' }} &nbsp; VNĐ</span>
-                    </p>
-                    <p class="card-text" *ngIf="OrderdetailById.status?.status_id !== 7">
-                      <b>Tổng tiền cần thanh toán: </b>
-                      <span style="float: right;">{{ totalAmoutOrder - OrderdetailById.deposite | number: '1.0-3' }} &nbsp; VNĐ</span>
-                    </p>
-                    <p class="card-text" *ngIf="OrderdetailById.status?.status_id !== 7">
-                      <b>Tổng giá trị đơn hàng: </b>
-                      <span style="float: right;">{{ totalAmoutOrder | number: '1.0-3' }} &nbsp; VNĐ</span>
-                    </p>
+                    <div class="row" *ngIf="OrderdetailById.status?.status_id !== 7">
+                      <div class="col-6">
+                        <b>Số tiền cọc: </b>
+                      </div>
+                      <div class="col-6 text-right">
+                        {{ OrderdetailById.deposite | number: '1.0-3' }} &nbsp; VNĐ
+                      </div>
+                    </div>
+                    
+                    <div class="row" *ngIf="OrderdetailById.status?.status_id !== 7">
+                      <div class="col-6">
+                        <b>Tổng tiền cần thanh toán: </b>
+                      </div>
+                      <div class="col-6 text-right">
+                        {{ totalAmoutOrder - OrderdetailById.deposite | number: '1.0-3' }} &nbsp; VNĐ
+                      </div>
+                    </div>
+                    
+                    <div class="row" *ngIf="OrderdetailById.status?.status_id !== 7">
+                      <div class="col-6">
+                        <b>Tổng giá trị đơn hàng: </b>
+                      </div>
+                      <div class="col-6 text-right">
+                        {{ totalAmoutOrder | number: '1.0-3' }} &nbsp; VNĐ
+                      </div>
+                    </div>
                     
 
                     <p class="card-text"><b style="margin-right: 2%;">Thanh toán:</b>{{ OrderdetailById.paymentMethod
@@ -291,7 +305,7 @@
                     <div *ngIf="OrderdetailById.description">
                       <p><strong>Mô tả đơn hàng:</strong></p>
                       <textarea [(ngModel)]="OrderdetailById.description" rows="5"
-                        style="width: 100%; resize: none;border: none; overflow: hidden;" readonly></textarea>
+                        style="width: 100%; resize: none;overflow: hidden;" readonly></textarea>
 
                     </div>
                   </div>

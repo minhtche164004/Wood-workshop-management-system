@@ -27,6 +27,9 @@ public interface AdvancesalaryRepository extends JpaRepository<Advancesalary,Int
     @Query("SELECT u FROM Advancesalary u WHERE u.user.userId = :query")
     List<Advancesalary> findByUserId(int query);
 
+    @Query("SELECT u FROM Advancesalary u WHERE u.jobs.jobId = :query")
+    Advancesalary findByJobId(int query);
+
 
 
     @Query("SELECT u FROM Advancesalary u " +

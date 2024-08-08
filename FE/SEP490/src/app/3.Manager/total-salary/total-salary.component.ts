@@ -52,95 +52,128 @@ export class TotalSalaryComponent implements OnInit {
   constructor(private dataService: DataService, private http: HttpClient, private toastr: ToastrService, private employeeService: EmployeeService, private jobService: JobService, private fb: FormBuilder, private productListService: ProductListService, private sanitizer: DomSanitizer, private productService: ProductService, private salaryService: SalaryService) { }
 
   ngOnInit(): void {
-    this.getAllEmployee();
-    this.getAllPostionEmp();
-    this.getBankList();
-    //this.searchSalary();
+    this.loadData();
   }
-  getBankList(): void {
-    // this.isLoadding = true;
-    this.salaryService.getBanks().subscribe(
-      (data) => {
-        this.bankList = data.data;
-        //  console.log('Response from getBanks:', this.bankList);
-        //  this.isLoadding = false;
-      },
-      (error) => {
-        //  console.error('Error from getBanks:', error);
-        //  this.isLoadding = false;
-      }
-    );
+  
+  loadData(): void {
+    this.isLoadding = true;
+  
+    const employeePromise = this.getAllEmployee();
+    const positionEmpPromise = this.getAllPostionEmp();
+    const bankListPromise = this.getBankList();
+    const totalSalaryPromise = this.getTotalSalary();
+  
+    Promise.all([employeePromise, positionEmpPromise, bankListPromise, totalSalaryPromise])
+      .then(() => {
+        this.isLoadding = false;
+        console.log('All data loaded successfully');
+      })
+      .catch((error) => {
+        console.error('Error loading data:', error);
+        this.isLoadding = false;
+      });
+  }
+  
+  
+  getBankList(): Promise<void> {
+    console.log('Get bank list');
+    return new Promise((resolve, reject) => {
+      this.salaryService.getBanks().subscribe(
+        (data) => {
+          this.bankList = data.data;
+          resolve();
+        },
+        (error) => {
+          console.error('Error from getBanks:', error);
+          reject(error);
+        }
+      );
+    });
+  }
+  
+  getAllEmployee(): Promise<void> {
+    console.log('Get all employee');
+    return new Promise((resolve, reject) => {
+      this.employeeService.getAllEmployee().subscribe(
+        (data) => {
+          if (data.code === 1000) {
+            this.employeeList = data.result;
+            this.employeeInfoList = this.employeeList.map(employee => ({
+              fullname: employee.userInfor?.fullname,
+            }));
+            resolve();
+          } else {
+            console.error('Failed to fetch employees:', data);
+            reject(data);
+          }
+        },
+        (error) => {
+          console.error('Error from getAllEmployee:', error);
+          reject(error);
+        }
+      );
+    });
+  }
+  
+  getAllPostionEmp(): Promise<void> {
+    console.log('Get all position emp');
+    return new Promise((resolve, reject) => {
+      this.employeeService.getAllPostionEmp().subscribe(
+        (data) => {
+          if (data.code === 1000) {
+            this.positionEmpList = data.result;
+            resolve();
+          } else {
+            console.error('Failed to fetch positions:', data);
+            reject(data);
+          }
+        },
+        (error) => {
+          console.error('Error from getAllPostionEmp:', error);
+          reject(error);
+        }
+      );
+    });
   }
   search() {
     this.isLoadding = true;
-    //  console.log('From Date:', this.fromDate);
-    //  console.log('To Date:', this.toDate);
-    // console.log('Selected Position:', this.selectedPosition);
-    // console.log('Keyword:', this.searchKey);
-
     this.searchSalary();
 
   }
-  getTotalSalary() {
-    this.isLoadding = true;
-    this.salaryService.getSalary().subscribe(
-      (data) => {
-        if (data.code === 1000) {
-          this.totalSalary = data.result;
-          console.log('Total salary: ', this.totalSalary);
-          this.isLoadding = false;
-        }
+  
+  getTotalSalaryCalled: boolean = false;
 
-      },
-      (error) => {
-        console.log(error);
-      }
-    );
-  }
-  getAllPostionEmp(): void {
-    //  this.isLoadding = true;
-    this.employeeService.getAllPostionEmp().subscribe(
-      (data) => {
-        if (data.code === 1000) {
-          this.positionEmpList = data.result;
-          //   console.log('Danh sách chuc vu nhan vien: ', this.positionEmpList); this.isLoadding = false;
-        } else {
-          //   console.error('Failed to fetch products:', data);
-          //this.isLoadding = false;
+  getTotalSalary(): Promise<void> {
+    if (this.getTotalSalaryCalled) {
+      return Promise.resolve();  // Trả về promise ngay lập tức nếu hàm đã được gọi trước đó
+    }
+    
+    this.getTotalSalaryCalled = true;  // Đặt cờ để chỉ thị hàm đã được gọi
+  
+    return new Promise((resolve, reject) => {
+      this.salaryService.getSalary().subscribe(
+        (data) => {
+          if (data.code === 1000) {
+            this.totalSalary = data.result;
+            console.log('Total salary: ', this.totalSalary);
+            resolve();
+          } else {
+            console.error('Failed to fetch salary:', data);
+            reject(data);
+          }
+        },
+        (error) => {
+          console.error('Error from getTotalSalary:', error);
+          reject(error);
         }
-
-      },
-    )
+      );
+    });
   }
+  
+ 
   employeeFullnames: any[] = [];
   employeeInfoList: { fullname: any }[] = [];
-  getAllEmployee(): void {
-    this.isLoadding = true;
-    this.employeeService.getAllEmployee().subscribe(
-      (data) => {
-        if (data.code === 1000) {
-          this.employeeList = data.result;
-
-          this.employeeInfoList = this.employeeList.map(employee => {
-            return {
-              fullname: employee.userInfor?.fullname,
-            };
-          });
-
-          //  console.log('fullname: ', this.employeeInfoList);
-          this.isLoadding = false;
-        } else {
-          console.error('Failed to fetch products:', data);
-          // this.isLoadding = false;
-        }
-
-      },
-      (error) => {
-        console.log(error);
-        //this.isLoadding = false;
-      }
-    );
-  }
+  
   sanitize(name: string): SafeHtml {
     return this.sanitizer.bypassSecurityTrustHtml(name);
   }
@@ -295,11 +328,13 @@ export class TotalSalaryComponent implements OnInit {
     //   console.log('Confirm thanh toan: ', this.selectedBanking);
 
   }
+  changeSalaryStatus: boolean = false;
   modalThanhToan(job: any, event: Event): void {
     console.log('Job salary modal:', job);
     this.selectedBankingID = job;
     const newValue2 = (event.target as HTMLSelectElement).value;
-    //  console.log('Giá trị được chọn:', newValue2);
+   
+    console.log('Giá trị được chọn:', newValue2);
     this.launchModalButton.nativeElement.click();
 
   }
@@ -354,8 +389,10 @@ export class TotalSalaryComponent implements OnInit {
       );
 
   }
-  closeModal() {
-    this.getTotalSalary();
+  closeModal():void {
+    console.log('Close modal');
+    this.getTotalSalaryCalled = false;
+    this.searchSalary();
   }
 
 }

@@ -32,6 +32,8 @@ public interface JobService {
     Jobs EditJobs(JobDTO jobDTO,int job_id);
     Jobs GetJobById(int job_id);
 
+    Integer checkOderDoneOrNotTest(int order_id);
+
 //    List<Jobs> GetAllJob();
 
     Jobs AddProductForJob(int p_id, int quantity_product);

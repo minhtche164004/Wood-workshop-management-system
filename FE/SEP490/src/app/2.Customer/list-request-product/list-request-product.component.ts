@@ -14,7 +14,7 @@ interface ApiResponse {
   styleUrls: ['./list-request-product.component.scss']
 })
 export class ListRequestProductComponent {
-  
+  selectedOrderId: number = 0;
   loginToken: string | null = null; 
   list_request_product: any[] = [];
   currentPage: number = 1;
@@ -30,7 +30,7 @@ export class ListRequestProductComponent {
       request_Id: [0],
       description: [''], 
       status_id:[''],
-      imageList: ['']
+      requestImages: ['']
     });
    }
    initializeForm(): void {
@@ -38,7 +38,7 @@ export class ListRequestProductComponent {
       request_Id: [null],
       description: [''],
       status_id: [null],
-      imagesList: [null]
+      requestImages: [null]
     });
   }
 
@@ -48,7 +48,10 @@ export class ListRequestProductComponent {
     this.getHistoryOrder();
     
   }
- 
+  setOrderForPayment(orderId: number) {
+    this.selectedOrderId = orderId;
+
+  }
   getHistoryOrder(): void {
     this.loginToken = localStorage.getItem('loginToken');
     if (this.loginToken) {
@@ -129,34 +132,37 @@ export class ListRequestProductComponent {
 
     }
   }
-    getDataRequest(requestId: number) {
+    getDataRequest(orderId: number) {
+      console.log(orderId);
       this.requestForm.patchValue({
-        request_Id: requestId,
+        orderId: orderId,
         description: null,
         status_id: null,
-        imagesList: null
+        requestImages: null
       });
       this.imagesPreview = [];
       
-      this.authenListService.getRequestByIdCustomer(requestId)
+      this.authenListService.getRequestByIdCustomer(orderId)
         .subscribe(async product => {
           if (product && product.result) {
+
             this.requestForm.patchValue({
               description: product.result.description,
               status_id: product.result.status_id,
-              imagesList: product.result.imagesList
+              requestImages: product.result.requestImages
             });
-            if (product.result.imagesList) {
-              this.imagesPreview = product.result.imagesList.map((image: any) => {
+            if (product.result.requestImages) {
+              this.imagesPreview = product.result.requestImages.map((image: any) => {
                 return image.fullPath;
               });
             }
           }
+          console.log(product);
         });
     }
     resetForm(): void {
       this.requestForm.reset(this.initialFormValue);
-      this.imagesPreview = this.initialFormValue.imagesList ? this.initialFormValue.imagesList.map((image: any) => image.fullPath) : [];
+      this.imagesPreview = this.initialFormValue.requestImages ? this.initialFormValue.requestImages.map((image: any) => image.fullPath) : [];
     }
 
   onEditSubmit(): void {
@@ -168,7 +174,7 @@ export class ListRequestProductComponent {
         images: this.selectedImages
       };
       // console.log('Form Data for updatedProduct:', updatedRequestProduct);
-      this.authenListService.editRequestProductForCustomer(updatedRequestProduct, this.selectedImages, requestData.request_Id)
+      this.authenListService.editRequestProductForCustomer(updatedRequestProduct, this.selectedImages, this.selectedOrderId)
         .subscribe(
           response => {
             this.isLoadding = false;

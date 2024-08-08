@@ -280,6 +280,13 @@ public class JobController {
         return apiResponse;
     }
 
+    @GetMapping("/checkOderDoneOrNotTest")
+    public ApiResponse<?> checkOderDoneOrNotTest(@RequestParam("order_id")int order_id) {
+        ApiResponse<Integer> apiResponse = new ApiResponse<>();
+        apiResponse.setResult(jobService.checkOderDoneOrNotTest(order_id));
+        return apiResponse;
+    }
+
 
 
     @GetMapping("/findAllJobForDoneByEmployeeIDWithJobCode")

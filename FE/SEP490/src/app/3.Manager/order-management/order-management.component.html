@@ -272,27 +272,40 @@
                   </div>
                   <div class="card-body">
                     <!-- <h5 class="card-title">{{OrderdetailById.userInfor?.fullname}}</h5> -->
-                    <p class="card-text">
-                      <b>Số tiền cọc: </b>
-                      <span style="float: right;">{{OrderdetailById.deposite | number : '1.0-3' }} &nbsp; VNĐ</span>
-                    </p>
-                    <p class="card-text">
-                      <b>Tổng tiền cần thanh toán: </b>
-                      <span style="float: right;">{{ totalAmoutOrder - OrderdetailById.deposite | number : '1.0-3' }}
-                        &nbsp; VNĐ</span>
-                    </p>
-                    <p class="card-text">
-                      <b>Tổng giá trị đơn hàng: </b>
-                      <span style="float: right;">{{ totalAmoutOrder | number : '1.0-3'
-                        }} &nbsp; VNĐ</span>
-                    </p>
+                    <div class="row" *ngIf="OrderdetailById.status?.status_id !== 7">
+                      <div class="col-6">
+                        <b>Số tiền cọc: </b>
+                      </div>
+                      <div class="col-6 text-right">
+                        {{ OrderdetailById.deposite | number: '1.0-3' }} &nbsp; VNĐ
+                      </div>
+                    </div>
+                    
+                    <div class="row" *ngIf="OrderdetailById.status?.status_id !== 7">
+                      <div class="col-6">
+                        <b>Tổng tiền cần thanh toán: </b>
+                      </div>
+                      <div class="col-6 text-right">
+                        {{ totalAmoutOrder - OrderdetailById.deposite | number: '1.0-3' }} &nbsp; VNĐ
+                      </div>
+                    </div>
+                    
+                    <div class="row" *ngIf="OrderdetailById.status?.status_id !== 7">
+                      <div class="col-6">
+                        <b>Tổng giá trị đơn hàng: </b>
+                      </div>
+                      <div class="col-6 text-right">
+                        {{ totalAmoutOrder | number: '1.0-3' }} &nbsp; VNĐ
+                      </div>
+                    </div>
+                    
 
                     <p class="card-text"><b style="margin-right: 2%;">Thanh toán:</b>{{ OrderdetailById.paymentMethod
                       === '1' ? 'Tiền mặt' : 'Chuyển khoản' }}</p>
                     <div *ngIf="OrderdetailById.description">
                       <p><strong>Mô tả đơn hàng:</strong></p>
                       <textarea [(ngModel)]="OrderdetailById.description" rows="5"
-                        style="width: 100%; resize: none;border: none; overflow: hidden;" readonly></textarea>
+                        style="width: 100%; resize: none;overflow: hidden;" readonly></textarea>
 
                     </div>
                   </div>
@@ -300,10 +313,10 @@
               </div>
 
               <div class="col-md-8">
-                <h2 class="text-center">Thông tin đơn hàng</h2>
+                <h2 class="text-center">Thông tin đơn hàng</h2> 
 
 
-                <div class="product-list d-flex flex-row flex-nowrap overflow-auto" style="margin-bottom: 10px;">
+                <div class="product-list d-flex flex-row flex-nowrap overflow-auto"  *ngIf="OrderdetailById.status?.status_id === 7" style="margin-bottom: 10px;">
                   <ng-container *ngFor="let cate of OrderdetailById.requestImages; let i = index">
                     <div class="d-flex me-3">
                       <a class="me-3" target="_blank" [href]="cate.fullPath">
@@ -315,7 +328,7 @@
                   </ng-container>
                 </div>
 
-                <table class="table table-striped table-hover" *ngIf="OrderdetailById.status_id !== 7">
+                <table class="table table-striped table-hover">
                   <thead>
                     <tr>
                       <th style="width: 40%;">Tên sản phẩm</th>

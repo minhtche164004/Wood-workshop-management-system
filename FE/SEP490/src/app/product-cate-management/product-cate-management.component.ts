@@ -32,13 +32,14 @@ export class ProductCateManagementComponent implements OnInit{
   errorProducts: any[] = [];
   newProductCate: string = '';
   searchKey: string = ''; 
+  checkNotFound: boolean = false;
   getAllCategory(): void{
     this.productListService.getAllCategories().subscribe(
       (data: any) => {
         if (data.code === 1000) {
           this.errorProducts = data.result;
            console.log('Categories:', this.errorProducts);
-          
+           this.checkNotFound = true;
         } else {
           console.error('Invalid data returned:', data);
         }
@@ -111,16 +112,21 @@ export class ProductCateManagementComponent implements OnInit{
             this.errorProducts = data.result;
              console.log('Categories search:', this.errorProducts);
             this.isLoadding = false;
+            this.checkNotFound = true;
           } else {
-            console.error('Invalid data returned:', data);this.isLoadding = false;
+            console.error('Invalid data returned:', data);
+            this.isLoadding = false;
+            this.checkNotFound = false;
           }
         },
         (error) => {
           console.error('Error fetching categories:', error);
+          this.checkNotFound = false;this.isLoadding = false;
         }
       );
     } else {
       console.error('Search key is required');
+      this.isLoadding = false;
     }
   }
   addCategory(): void {

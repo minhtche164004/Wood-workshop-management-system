@@ -64,6 +64,8 @@ export class ReportManagementComponent implements OnInit {
   errorProducts: any[] = [];
   currentPage: number = 1;
   isLoadding: boolean = false;
+  checkNotFound: boolean = false;
+  
   ngOnInit(): void {
     this.getAllProductError();
 
@@ -80,12 +82,14 @@ export class ReportManagementComponent implements OnInit {
         } else {
           this.toastr.warning(data.message, 'Lỗi');
           this.isLoadding = false;
+          this.checkNotFound = true;
         }
       },
       (error) => {
         console.error('Error fetching products:', error);
         this.toastr.warning('Có lỗi xảy ra!', 'Lỗi');
         this.isLoadding = false;
+        this.checkNotFound = true;
       }
     );
   }
@@ -97,6 +101,7 @@ export class ReportManagementComponent implements OnInit {
           this.errorProducts = data.result;
           console.log('Danh sách lỗi sản phẩm ngOninit:', this.errorProducts);
           this.isLoadding = false;
+          this.checkNotFound = true;
         }
       },
       (error) => {

@@ -408,12 +408,12 @@ export class JobManagementComponent implements OnInit {
                 this.isLoadding = false;
               },
               (error) => {
-                this.toastr.warning(error.error.message, error.error.code);
+                this.toastr.warning(error.error.message, 'Thông báo');
                 this.isLoadding = false;
               //  $('[data-dismiss="modal"]').click();
-                console.log('error: ', error)
-                console.log('Error Code:',error.error.code);
-                console.log('Error Message:', error.error.message);
+                // console.log('error: ', error)
+                // console.log('Error Code:',error.error.code);
+                // console.log('Error Message:', error.error.message);
 
               }
             );
@@ -463,12 +463,12 @@ export class JobManagementComponent implements OnInit {
               },
               (error) => {
                 // console.error('Error fetching products:', error);
-                this.toastr.warning(error.error.message, error.error.code);
+                this.toastr.warning(error.error.message, 'Thông báo');
                 this.isLoadding = false;
                 $('[data-dismiss="modal"]').click();
-                console.log('error: ', error)
-                console.log('Error Code:',error.error.code);
-                console.log('Error Message:', error.error.message);
+                // console.log('error: ', error)
+                // console.log('Error Code:',error.error.code);
+                // console.log('Error Message:', error.error.message);
 
               }
             );
@@ -1199,7 +1199,7 @@ export class JobManagementComponent implements OnInit {
           if (error.error) {
             //  console.error('Error code:', error.error.code);
             //  console.error('Error message:', error.error.message);
-            this.toastr.info(error.error.message, error.error.code); this.isLoadding = false;
+            this.toastr.info(error.error.message, 'Thông báo'); this.isLoadding = false;
           }
 
           this.isLoadding = false;

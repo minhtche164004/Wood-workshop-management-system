@@ -206,28 +206,28 @@ public class JobServiceImpl implements JobService {
             if(jobDTO.getStart().before(start_order)){
                 throw new AppException(ErrorCode.TIME_START_INVALID);
             }
-            Date job_finish;
-            if (current.getTimeFinish() != null) {
-                job_finish = current.getTimeFinish();
-            } else {
-                job_finish = current.getOrderdetails().getOrder().getOrderDate();
-            }
-            if(jobDTO.getStart().before(job_finish)){
-                throw new AppException(ErrorCode.TIME_START_JOB_INVALID);
-            }
+//            Date job_finish;
+//            if (current.getTimeFinish() != null) {
+//                job_finish = current.getTimeFinish();
+//            } else {
+//                job_finish = current.getOrderdetails().getOrder().getOrderDate();
+//            }
+//            if(jobDTO.getStart().before(job_finish)){
+//                throw new AppException(ErrorCode.TIME_START_JOB_INVALID);
+//            }
         } else {////tức là đang phân job cho  product có sẵn
             Products products = productRepository.findById(p_id);
             jobs.setProduct(products);
             jobs.setRequestProducts(null);
-            Date job_finish;
-            if (current.getTimeFinish() != null) {
-                job_finish = current.getTimeFinish();
-            } else {
-                job_finish = new Date();
-            }
-            if(jobDTO.getStart().before(job_finish)){
-                throw new AppException(ErrorCode.TIME_START_JOB_INVALID);
-            }
+//            Date job_finish;
+//            if (current.getTimeFinish() != null) {
+//                job_finish = current.getTimeFinish();
+//            } else {
+//                job_finish = new Date();
+//            }
+//            if(jobDTO.getStart().before(job_finish)){
+//                throw new AppException(ErrorCode.TIME_START_JOB_INVALID);
+//            }
         }
         jobs.setDescription(jobDTO.getDescription());
 
@@ -288,6 +288,9 @@ public class JobServiceImpl implements JobService {
             p.setJobs(jobs);
             employeeMaterialRepository.save(p);
         }
+//        Advancesalary advan = advancesalaryRepository.findByJobId(job_id);
+//        advan.setJobs(jobs);
+//        advancesalaryRepository.save(advan);
         jobRepository.delete(jobs_order_detail);
 //        if(jobs_order_detail.getUser() == null){
 //            jobRepository.delete(jobs_order_detail);
@@ -429,7 +432,7 @@ public class JobServiceImpl implements JobService {
                 jobs_log.setProduct(null);
                 //------ đoạn này chỉ dành cho request product , vì nó là đơn hàng , còn product có sẵn thì lúc cọc xong thì chuyển sang status là đã thi công xong luôn
                 Orders orders = orderRepository.findByCode(jobs_history.getOrderdetails().getOrder().getCode());
-                if (checkOderDoneOrNot(orders.getOrderId()) == true) {
+                if (checkOderDoneOrNot(orders.getOrderId()) == false) {
                     orders.setStatus(statusOrderRepository.findById(4)); //nghĩa là đơn hàng đã thi công xong
                     orderRepository.save(orders);
                 }
@@ -510,10 +513,21 @@ public class JobServiceImpl implements JobService {
         List<OrderDetailWithJobStatusDTO> results = orderDetailRepository.getAllOrderDetailByOrderIdCheck(order_id);
      //   for(OrderDetailWithJobStatusDTO p :results){
             if(results.size() >= 1){
-                return false;
+                return true;
             }
        // }
-        return true;
+        return false;
+    }
+    @Override
+    public Integer  checkOderDoneOrNotTest(int order_id){
+        List<OrderDetailWithJobStatusDTO> results = orderDetailRepository.getAllOrderDetailByOrderIdCheck(order_id);
+        return results.size();
+        //   for(OrderDetailWithJobStatusDTO p :results){
+//        if(results.size() >= 1){
+//            return true;
+//        }
+//        // }
+//        return false;
     }
 
 

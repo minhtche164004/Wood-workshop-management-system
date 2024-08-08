@@ -330,7 +330,7 @@ export class OrderManagementComponent implements OnInit {
       this.orderRequestService.getAllOrderDetailByOrderId(order_detail_id).subscribe(
         (data) => {
           this.productOfOrder = data.result;
-          //  console.log('Product Orders:', this.productOfOrder);
+           console.log('Product Orders:', this.productOfOrder);
         },
         (error) => {
           console.error('Error fetching user data:', error);

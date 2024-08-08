@@ -25,7 +25,7 @@ export class AuthenListService {
   private apiUrl_SearchUserByNameorAddress = `${environment.apiUrl}api/auth/admin/SearchUserByNameorAddress`;
 
   private apiUrl_deleteRequest = `${environment.apiUrl}api/auth/order/deleteRequest`;
-  private apiUrl_GetRequestByIdCustomer = `${environment.apiUrl}api/auth/order/GetRequestById`;
+  private apiUrl_GetRequestByIdCustomer = `${environment.apiUrl}api/auth/order/GetOrderById`;
   private apiUrl_EditRequestProduct = `${environment.apiUrl}api/auth/order/CustomerEditRequest`;
   private apiUrl_getSupplierById = `${environment.apiUrl}api/auth/supplier/GetSupplierById`;
   private apiUrl_GetMaterialById = `${environment.apiUrl}api/auth/GetMaterialById`;

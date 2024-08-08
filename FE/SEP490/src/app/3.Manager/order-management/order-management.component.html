@@ -81,12 +81,10 @@
                     <i class="fa-solid fa-circle-info"></i>
                   </a>
                   <a (click)="setOrderForCancellation(us?.orderId, us?.specialOrder)"
-                    (click)="getOrDetailById(us, us?.orderId)" *ngIf="us?.status_id !== 9  &&
-                  us?.status_id !== 1  &&
-                  us?.status_id !== 6  &&
-                  us?.status_id !== 8  &&
-                  us?.status_id !== 7  " class="info" title="Hoàn tiền" data-toggle="modal"
-                    data-target="#refundProductModal">
+                    (click)="getOrDetailById(us, us?.orderId)" *ngIf="us?.status_id === 3  ||
+      
+                  us?.status_id === 10 
+                    " class="info" title="Hoàn tiền" data-toggle="modal" data-target="#refundProductModal">
                     <i style="cursor: pointer;" class="fa-solid fa-money-bill-transfer"></i>
                   </a>
 
@@ -288,11 +286,13 @@
                       <span style="float: right;">{{ totalAmoutOrder | number : '1.0-3'
                         }} &nbsp; VNĐ</span>
                     </p>
-                    
-                    <p class="card-text"><b style="margin-right: 2%;">Thanh toán:</b>{{ OrderdetailById.paymentMethod === '1' ? 'Tiền mặt' : 'Chuyển khoản' }}</p>
+
+                    <p class="card-text"><b style="margin-right: 2%;">Thanh toán:</b>{{ OrderdetailById.paymentMethod
+                      === '1' ? 'Tiền mặt' : 'Chuyển khoản' }}</p>
                     <div *ngIf="OrderdetailById.description">
                       <p><strong>Mô tả đơn hàng:</strong></p>
-                      <textarea [(ngModel)]="OrderdetailById.description" rows="5" style="width: 100%; resize: none;border: none; overflow: hidden;" readonly></textarea>
+                      <textarea [(ngModel)]="OrderdetailById.description" rows="5"
+                        style="width: 100%; resize: none;border: none; overflow: hidden;" readonly></textarea>
 
                     </div>
                   </div>
@@ -301,7 +301,7 @@
 
               <div class="col-md-8">
                 <h2 class="text-center">Thông tin đơn hàng</h2>
-             
+
 
                 <div class="product-list d-flex flex-row flex-nowrap overflow-auto" style="margin-bottom: 10px;">
                   <ng-container *ngFor="let cate of OrderdetailById.requestImages; let i = index">
@@ -389,7 +389,7 @@
         <div class="modal-header">
           <h2 class="modal-title" id="myModalconfirm">Xác nhận thanh toán cọc</h2>
           <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close" (click)="closeModal($event) "
-            (click)="cancelChangeStatusJob()"></button>
+            (click)="cancelChangeStatusJob1()"></button>
         </div>
         <div class="modal-body">
           <div class="row" style="margin-bottom: 20px;">
@@ -401,8 +401,8 @@
             <div class="col md-6">
               <label>Số tiền cọc cần thanh toán </label>
 
-              <input readonly type="number" class="form-control" id="percentDepositPrice"
-                [(ngModel)]="OrderdetailById.deposite">
+              <p style="color: red; text-align: center;">{{ OrderdetailById.deposite | number :
+                '1.0-3' }} VNĐ</p>
             </div>
           </div>
 
@@ -415,7 +415,7 @@
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" data-dismiss="modal" (click)="closeModal($event)"
-            (click)="cancelChangeStatusJob()">Đóng</button>
+            (click)="cancelChangeStatusJob1()">Đóng</button>
           <button type="button" class="btn btn-primary" (click)="confirmPayment()">Chắc
             chắn
           </button>

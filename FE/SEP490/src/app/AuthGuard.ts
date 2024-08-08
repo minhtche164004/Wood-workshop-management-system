@@ -23,8 +23,8 @@ export class AuthGuard implements CanActivate {
     this.loadingService.setLoading(true);
 
     if (!this.authenListService.isLoggedIn()) {
-      this.toastr.error('Vui lòng đăng nhập');
-      this.router.navigate(['/login']);
+      this.toastr.warning('Vui lòng đăng nhập');
+      this.router.navigate(['/homepage']);
       this.loadingService.setLoading(false);
       return false;
     }

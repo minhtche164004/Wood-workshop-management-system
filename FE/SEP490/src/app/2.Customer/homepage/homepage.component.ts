@@ -41,25 +41,24 @@ export class HomepageComponent implements AfterViewInit, OnInit {
     console.log('Product ID:', productId);
     this.wishList.addWishlist(productId)
       .subscribe(
-        (data) => {
-          if (data.code === 1000) {
+        (response) => {
+          if (response && response.code === 1000) {
             console.log('Product added to wishlist:');
             this.toastr.success('Sản phẩm đã được thêm vào yêu thích!', 'Thành công'); // Success message
-            this.isLoadding = false;
-
-          }else if(data.code === 1005){
-            this.toastr.warning('Vui lòng đăng nhập để thêm sản phẩm yêu thích!', 'Lỗi'); // Error message
-            this.isLoadding = false;
           }
+          this.isLoadding = false;
         },
-        (error) => {
-          console.error('Error adding product to wishlist:', error);
-          this.toastr.warning('Vui lòng đăng nhập để thêm sản phẩm yêu thích!', 'Lỗi'); // Error message
+        (error: any) => {
+          if (error && error.error && error.error.code === 1034) {
+            this.toastr.warning(error.error.message);
+          } else {
+            this.toastr.warning('Vui lòng đăng nhập để thêm sản phẩm yêu thích');
+            console.error(error);
+          }
           this.isLoadding = false;
         }
       );
   }
-
 
 
   ngAfterViewInit(): void {

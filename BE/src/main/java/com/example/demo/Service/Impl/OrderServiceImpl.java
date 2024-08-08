@@ -524,7 +524,7 @@ public class OrderServiceImpl implements OrderService {
         orderRepository.updateRequest(request_id,
                 requestEditDTO.getDescription()
         );
-        entityManager.refresh(requests); // Làm mới đối tượng products
+      //  entityManager.refresh(requests); // Làm mới đối tượng products
         return requests;
     }
 

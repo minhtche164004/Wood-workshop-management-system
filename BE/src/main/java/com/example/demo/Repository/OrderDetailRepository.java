@@ -113,6 +113,28 @@ public interface OrderDetailRepository extends JpaRepository<Orderdetails, Integ
     List<OrderDetailWithJobStatusDTO> getAllOrderDetailOfProductByOrderId(int query);
 
 
+//    @Query("SELECT new com.example.demo.Dto.OrderDTO.OrderDetailWithJobStatusDTO(" +
+//            "od.orderDetailId, " +
+//            "COALESCE(p.productId, 0), " +
+//            "COALESCE(p.productName, ''), " +
+//            "COALESCE(rp.requestProductId, 0), " +
+//            "COALESCE(rp.requestProductName, ''), " +
+//            "od.unitPrice, " +
+//            "COALESCE(j.status.status_id, 0), " +
+//            "COALESCE(s.status_name, ''), " +
+//            "od.quantity ," +
+//            " COALESCE(u.email, '') " +
+//            ") " +
+//            "FROM Orderdetails od " +
+//            "JOIN od.product p " + // Sử dụng INNER JOIN
+//            "JOIN od.requestProduct rp " +  // Sử dụng INNER JOIN
+//            "LEFT JOIN od.order o " +
+//            "LEFT JOIN o.userInfor.user u " +
+//            "JOIN od.jobs j " + // Sử dụng INNER JOIN
+//            "JOIN j.status s " +  // Sử dụng INNER JOIN
+//            "WHERE od.order.orderId = :query AND s.status_id NOT IN (13, 16, 15,10) AND j.job_log = false")
+//    List<OrderDetailWithJobStatusDTO> getAllOrderDetailByOrderIdCheck(int query);
+
     @Query("SELECT new com.example.demo.Dto.OrderDTO.OrderDetailWithJobStatusDTO(" +
             "od.orderDetailId, " +
             "COALESCE(p.productId, 0), " +
@@ -122,18 +144,21 @@ public interface OrderDetailRepository extends JpaRepository<Orderdetails, Integ
             "od.unitPrice, " +
             "COALESCE(j.status.status_id, 0), " +
             "COALESCE(s.status_name, ''), " +
-            "od.quantity ," +
+            "od.quantity," +
             " COALESCE(u.email, '') " +
             ") " +
             "FROM Orderdetails od " +
-            "JOIN od.product p " + // Sử dụng INNER JOIN
-            "JOIN od.requestProduct rp " +  // Sử dụng INNER JOIN
-            "LEFT JOIN od.order o " +
-            "LEFT JOIN o.userInfor.user u " +
-            "JOIN od.jobs j " + // Sử dụng INNER JOIN
-            "JOIN j.status s " +  // Sử dụng INNER JOIN
-            "WHERE od.order.orderId = :query AND s.status_id = 13 OR s.status_id = 16")
+            "LEFT JOIN od.product p " +  // Giữ LEFT JOIN
+            "LEFT JOIN od.requestProduct rp " + // Giữ LEFT JOIN
+            "LEFT JOIN od.order o " +  // Giữ LEFT JOIN
+            "LEFT JOIN o.userInfor.user u " +  // Giữ LEFT JOIN
+            "INNER JOIN od.jobs j " +  // Thay đổi thành INNER JOIN
+            "LEFT JOIN j.status s " +  // Giữ LEFT JOIN
+            "WHERE od.order.orderId = :query AND s.status_id NOT IN (13, 16, 15,10) AND j.job_log = false")
     List<OrderDetailWithJobStatusDTO> getAllOrderDetailByOrderIdCheck(int query);
+
+
+
 
 
 

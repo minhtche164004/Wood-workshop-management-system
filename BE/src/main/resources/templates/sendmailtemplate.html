@@ -26,7 +26,7 @@
         <p><strong>Tổng tiền đơn hàng:</strong> <span th:text="${#numbers.formatDecimal(order.totalAmount, 1, 'COMMA', 0, 'POINT')} + ' vnđ'"></span></p>
         <p><strong>Tổng tiền đặt cọc:</strong> <span th:text="${#numbers.formatDecimal(order.deposite, 1, 'COMMA', 0, 'POINT')} + ' vnđ'"></span></p>
         <p><strong>Ngày tạo đơn:</strong> <span th:text="${#dates.format(order.orderDate, 'dd/MM/yyyy')}"></span></p> <div class="order-details">
-        <p><strong>Ngày dự kiến hoàn thành:</strong> <span th:text="${#dates.format(order.orderFinish, 'dd/MM/yyyy')}"></span></p> <div class="order-details">
+        <p><strong>Ngày dự kiến hoàn thành:</strong> <span th:text="${#dates.format(order.contractDate, 'dd/MM/yyyy')}"></span></p> <div class="order-details">
         <p><strong>Địa chỉ giao hàng:</strong> <span th:text="${order.address + ', ' + order.wards + ', ' + order.district + ', ' + order.city_province}"></span></p>
         <p><strong>Mô tả đơn hàng:</strong> <span th:text="${order.description}"></span></p>
 

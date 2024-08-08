@@ -17,8 +17,8 @@ public interface CategoryRepository extends JpaRepository<Categories, Integer> {
     @Query("SELECT p FROM Products p LEFT JOIN p.categories c  WHERE c.categoryId = :categoryId ")
     List<Products> findProductByCategoryId(int categoryId);
 
-    @Query("SELECT u FROM Categories u  WHERE u.categoryName LIKE CONCAT('%', :keyword, '%')")
-    List<Categories> findCategoriesByName(@Param("keyword") String keyword);
+    @Query("SELECT u FROM Categories u  WHERE u.categoryName LIKE %:search% OR :search IS NULL")
+    List<Categories> findCategoriesByName(@Param("search") String search);
 
 
 //    @Query("SELECT u FROM Orderdetails u WHERE u.product.productId = :query")

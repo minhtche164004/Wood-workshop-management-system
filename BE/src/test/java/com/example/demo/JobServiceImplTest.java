@@ -124,8 +124,10 @@ class JobServiceImplTest {
     @Test
     void testCreateJob() {
         JobDTO jobDTO = new JobDTO();
-        Date start = new Date(2024 - 1900, 8 - 1, 2);
-        Date job_finish = new Date();
+        Date start = new Date(2024, 8, 12); // Set start to August 12, 2024 (after now)
+        Date job_finish =  new Date(2024, 8, 5);
+        Date now = new Date(2024 - 1900, 8 - 1, 5);
+      //  Date job_finish = new Date();
         jobDTO.setStart(job_finish);
 
 

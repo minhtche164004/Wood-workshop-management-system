@@ -2,15 +2,15 @@ import { Component, OnInit, ViewChild, ElementRef, ChangeDetectorRef } from '@an
 import { ProductListService } from 'src/app/service/product/product-list.service';
 import { ToastrService } from 'ngx-toastr';
 import { FormArray, FormBuilder, FormGroup, Validators, FormsModule, FormControl } from '@angular/forms';
-import { concatMap } from 'rxjs/operators';
+import { catchError, concatMap } from 'rxjs/operators';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { map, switchMap, tap } from 'rxjs/operators';
-import { Observable } from 'rxjs';
+import { EMPTY, Observable ,of, throwError} from 'rxjs';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Location } from '@angular/common';
 
 import 'jquery';
-import { get } from 'jquery';
+import { error, get } from 'jquery';
 import * as e from 'cors';
 
 interface Category {
@@ -1108,6 +1108,14 @@ export class ProductManagementComponent implements OnInit {
             subMaterialQuantities: transformedObject
           };
           return this.productListService.createExportMaterialProduct(transformedData);
+        }),
+        catchError(error => {
+          this.isLoadding = false;
+          if (error.status === 400 && error.error.code === 1018) {
+            this.toastr.error(error.error.message, 'Lỗi');
+          }
+          // Return an observable to continue the stream
+          return EMPTY;
         })
       ).subscribe(
         response => {
@@ -1219,6 +1227,13 @@ export class ProductManagementComponent implements OnInit {
             };
             console.log("data cua submaterial: ", transformedData);
             return this.productListService.EditSubMaterialProduct(transformedData);
+          }),
+          catchError(error => {
+            this.isLoadding = false;
+            if (error.status === 400 && error.error.code === 1018) {
+              this.toastr.error(error.error.message, 'Lỗi');
+            }
+            return EMPTY;
           })
         )
         .subscribe(
@@ -1234,9 +1249,9 @@ export class ProductManagementComponent implements OnInit {
             if (error.status === 400 && error.error.code === 1038) {
               this.toastr.warning(error.error.message, 'Lỗi');
             }
-            // else {
-            //   this.toastr.error('Cập nhật sản phẩm bị lỗi!', 'Lỗi');
-            // }
+            else {
+              this.toastr.error('Cập nhật ước tính nguyên vật liệu sản phẩm bị lỗi!', 'Lỗi');
+            }
             console.error('Update error', error);
             this.isLoadding = false;
             $('[data-dismiss="modal"]').click(); // Đóng modal
@@ -1522,6 +1537,13 @@ export class ProductManagementComponent implements OnInit {
             console.log("transformedDataSubMate: ", transformedDataSubMate);
 
             return this.productListService.createExportMaterialListProductRequest(transformedDataSubMate);
+          }),
+          catchError(error => {
+            this.isLoadding = false;
+            if (error.status === 400 && error.error.code === 1018) {
+              this.toastr.error(error.error.message, 'Lỗi');
+            }
+            return EMPTY;
           }))
           .subscribe(
             response => {
@@ -1700,6 +1722,13 @@ export class ProductManagementComponent implements OnInit {
           };
           console.log("data cua submaterial: 0", transformedData);
           return this.productListService.EditSubMaterialRequestProduct(transformedData);
+        }),
+        catchError(error => {
+          this.isLoadding = false;
+          if (error.status === 400 && error.error.code === 1018) {
+            this.toastr.error(error.error.message, 'Lỗi');
+          }
+          return EMPTY;
         })
       )
       .subscribe(

@@ -35,6 +35,12 @@ public interface Employee_Material_Repository extends JpaRepository<Employeemate
     List<Employeematerials> findEmployeematerialsByProductId(int query);
 
     @Query("SELECT e FROM Employeematerials e" +
+            " LEFT JOIN e.requestProductsSubmaterials p" +
+            " LEFT JOIN p.requestProduct pr" +
+            " WHERE pr.requestProductId = :query")
+    List<Employeematerials> findEmployeematerialsByRequestProductId(int query);
+
+    @Query("SELECT e FROM Employeematerials e" +
             " LEFT JOIN e.employee ep" +
             " LEFT JOIN e.jobs j" +
             " WHERE j.jobId = :jobId AND ep.userId = :userId")
@@ -66,11 +72,7 @@ public interface Employee_Material_Repository extends JpaRepository<Employeemate
 //    List<Employeematerials> findEmployeematerialsByJobId(int jobId, int userId);
 
 
-    @Query("SELECT e FROM Employeematerials e" +
-            " LEFT JOIN e.requestProductsSubmaterials p" +
-            " LEFT JOIN p.requestProduct pr" +
-            " WHERE pr.requestProductId = :query")
-    List<Employeematerials> findEmployeematerialsByRequestProductId(int query);
+
 
     @Query("SELECT DISTINCT new com.example.demo.Dto.JobDTO.Employee_MaterialDTO(" +
             "e.empMaterialId, u.userId, u.userInfor.fullname, pos.position_name, ep.subMaterial.subMaterialId, ep.subMaterial.subMaterialName, ep.quantity, CAST(j.timeStart AS date), j.code) " +

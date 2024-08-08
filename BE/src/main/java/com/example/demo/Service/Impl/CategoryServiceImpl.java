@@ -18,6 +18,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -86,9 +87,16 @@ public class CategoryServiceImpl implements CategorySevice {
 
     @Override
     public List<Categories> findCategoriesByName(String key) {
-        List<Categories> list= categoryRepository.findCategoriesByName(key);
-        if(list == null ){
+
+        List<Categories> list = new ArrayList<>();
+        if(key != null){
+             list= categoryRepository.findCategoriesByName(key);
+        }else{
+            list= categoryRepository.findAll();
+        }
+        if(list == null){
             throw new AppException(ErrorCode.NOT_FOUND);
+
         }
         return list;
     }

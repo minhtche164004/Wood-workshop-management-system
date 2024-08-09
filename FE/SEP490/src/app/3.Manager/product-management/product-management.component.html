@@ -17,7 +17,7 @@
                 <span class="align-middle">Thêm sản phẩm</span>
               </a>
               <!-- Them san pham trong bang request product theo yeu cau -->
-              <a id="addRequestProductButton" *ngIf="!isProduct && idOrder" href="#" class="btn btn-secondary btn-sm"
+              <a id="addRequestProductButton" *ngIf="!isProduct" href="#" class="btn btn-secondary btn-sm"
                 data-toggle="modal" data-target="#addRequestProductModal" style="font-size: 14px;"
                 (click)="resetFormAdd()">
                 <i class="material-icons align-middle" style="font-size: 18px;">&#xE147;</i>
@@ -375,8 +375,25 @@
           <div class="form-row">
             <div class="form-group col-md-12" [formGroup]="orderForm">
               <div class="form-row">
-                
-                <div class="form-group col-md-4">
+                <div class="ng-autocomplete" class="col-md-4" *ngIf="!idOrder">
+                  <label>Số điện thoại</label>
+                  <ng-autocomplete  [data]="specialOrders"
+                      [searchKeyword]="keyword"
+                      placeholder="Chọn mã đơn hàng theo yêu cầu"
+                      [itemTemplate]="itemTemplate"
+                      [notFoundTemplate]="notFoundTemplate"
+                      (selected)="onSelectSpecialOrder($event)">
+                  </ng-autocomplete>
+
+                  <ng-template #itemTemplate let-item>
+                      <a [innerHTML]="item.code"></a>
+                  </ng-template>
+
+                  <ng-template #notFoundTemplate let-notFound>
+                      <div [innerHTML]="notFound"></div>
+                  </ng-template>
+              </div>
+                <div class="form-group col-md-4" *ngIf="idOrder">
                   <label for="orderId">Mã yêu cầu</label>
                   <input type="text" class="form-control" formControlName="code" placeholder="Mã đặt hàng" readonly>
                 </div>

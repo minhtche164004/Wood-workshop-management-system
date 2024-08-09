@@ -600,6 +600,7 @@ export class ProductManagementComponent implements OnInit {
     this.loadCategories();
     this.loadStatus();
     this.loadMaterials();
+    this.getSpecialOrder();
 
     //khi truyen param co id order 
     this.activatedRoute.params.subscribe(params => {
@@ -874,7 +875,7 @@ export class ProductManagementComponent implements OnInit {
 
 
   onMaterialChange(event: Event, index: number) {
-   const materialId = Number((event.target as HTMLSelectElement).value);    // Gọi hàm để tải sub-materials dựa trên giá trị được chọn
+    const materialId = Number((event.target as HTMLSelectElement).value);    // Gọi hàm để tải sub-materials dựa trên giá trị được chọn
     const selectedMaterial = this.materials.find(material => material.materialId === materialId);
     this.materialType[index] = selectedMaterial ? selectedMaterial.type : '';
 
@@ -1855,5 +1856,58 @@ export class ProductManagementComponent implements OnInit {
 
   toggleCollapse(index: number): void {
     this.isCollapsed[index] = !this.isCollapsed[index];
+  }
+
+  //lay danh sach cac order dac biet
+  specialOrders: any[] = [];
+  //autocomplete for request order
+  keywordRequest = 'code';
+  getSpecialOrder(): void {
+    this.productListService.getAllOrderSpecial()
+      .subscribe(
+        (data) => {
+          if (data.code === 1000) {
+            this.specialOrders = data.result;
+            // console.log('Danh sách order đặc biệt:', this.specialOrders);
+          } else {
+            console.error('Failed to fetch special orders:', data);
+            this.toastr.error('Không thể lấy danh sách order đặc biệt!', 'Lỗi');
+          }
+        },
+        (error) => {
+          console.error('Error fetching special orders:', error);
+          this.toastr.error('Có lỗi xảy ra!', 'Lỗi');
+        }
+      );
+  }
+
+  onSelectSpecialOrder(item: any): void {
+    if(!this.idOrder){
+      this.orderForm.reset();
+    }
+    const orderId = item.orderId;
+    this.productListService.getOrderById(orderId).subscribe(
+      (response) => {
+        this.orderForm.patchValue({
+          orderId: this.idOrder,
+          orderDate: response.result.orderDate,
+          code: response.result.code,
+          description: response.result.description,
+          price: response.result?.price,
+          completionTime: response.result?.completionTime,
+          status_id: response.result.status?.status_id,
+          orderFinish: response.result.orderFinish,
+
+        });
+
+        this.imagesPreviewRequest = response.result.requestImages.map((image: any) => {
+          return image.fullPath;
+        });
+      },
+      (error) => {
+        // Xử lý lỗi ở đây
+        console.error(error);
+      }
+    );
   }
 }

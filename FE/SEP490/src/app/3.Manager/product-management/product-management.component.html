@@ -558,7 +558,7 @@
                       <!-- Giá (VNĐ) -->
                       <div class="col-md-2 mb-2">
                         <div class="form-group">
-                          <label for="price-{{i}}">Đơn giá/sản phẩm (VNĐ)</label>
+                          <label for="price-{{i}}">Đơn giá/nguyên vật liệu (VNĐ)</label>
                           <input id="price-{{i}}" class="form-control" type="text"
                             [value]="unitPriceSubMaterial[i*10+j] | number: '1.0-3'" readonly="">
                         </div>
@@ -626,7 +626,7 @@
 
           <div class="modal-footer d-flex justify-content-end">
             <button type="button" class="btn btn-secondary" data-dismiss="modal">Hủy</button>
-            <button type="submit" class="btn btn-primary">Lưu thay đổi</button>
+            <button type="submit" class="btn btn-primary">Lưu</button>
           </div>
         </form>
       </div>

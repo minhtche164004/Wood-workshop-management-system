@@ -228,7 +228,7 @@
 
                                         <section class="customer-info mb-4">
 
-                                            
+
                                             <div class="row">
                                                 <div class="col-md-6">
                                                     <strong>Mã sản xuất:</strong>
@@ -237,8 +237,8 @@
                                                     {{ selectedJob.code }}
                                                 </div>
                                             </div>
-                                           
-                                           
+
+
                                             <div class="row">
                                                 <div class="col-md-6">
                                                     <p>
@@ -251,15 +251,15 @@
 
                                                 </div>
                                             </div>
-                                          
-                                            
+
+
                                         </section>
                                         <div class="row">
                                             <div class="col-md-6">
                                                 <strong>Ngày nhận đơn:</strong>
                                             </div>
                                             <div class="col-md-6">
-                                                {{  selectedProduct.order_date | date:'dd / MM / yyyy' }}
+                                                {{ selectedProduct.order_date | date:'dd / MM / yyyy' }}
                                             </div>
                                         </div>
                                         <div class="row">
@@ -267,73 +267,67 @@
                                                 <strong>Ngày dự tính hoàn thành đơn hàng:</strong>
                                             </div>
                                             <div class="col-md-6">
-                                                {{  selectedProduct.order_contract_time | date:'dd / MM / yyyy' }}
+                                                {{ selectedProduct.order_contract_time | date:'dd / MM / yyyy' }}
                                             </div>
                                         </div>
                                     </div>
 
                                     <div class="col-md-6">
-                                        <section class="order-summary mb-4">
-                                            <div class="row">
-                                                <div class="col-md-6">
-                                                    <p>
-                                                        <strong>Tên nhân viên<span class="required-asterisk">
-                                                                *</span></strong>
-                                                    </p>
-                                                </div>
-                                                <div class="col-md-6">
 
-                                                    <select #employeeSelect class="form-select"
-                                                        (change)="onChangeSelectedEmployee($event)">
-                                                        <option value="" selected disabled>Chọn 1 nhân viên</option>
-                                                        <option *ngFor="let employee of positionEmployees"
-                                                            [value]="employee.userId">
-                                                            {{ employee.userInfor.fullname }} ({{
-                                                            employee.position?.position_name }})
-                                                        </option>
-                                                    </select>
-
-
-
-                                                </div>
-                                            </div>
-                                           
-                                           
-                                            <div class="row">
-                                                <div class="col-md-6">
-                                                    <strong>Giá công khoán (VNĐ)<span class="required-asterisk">
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <p>
+                                                    <strong>Tên nhân viên<span class="required-asterisk">
                                                             *</span></strong>
-                                                </div>
-                                                <div class="col-md-6">
-                                                    <input type="number" name="costJob" formControlName="cost"
-                                                        [(ngModel)]="costJob">
-                                                </div>
+                                                </p>
                                             </div>
-                                            <div class="row">
-                                                <div class="row">
-                                                    <div class="col-md-6">
-                                                        <strong>Nhận việc trước ngày<span class="required-asterisk">
-                                                                *</span> </strong>
-                                                    </div>
-                                                    <div class="col-md-6">
-                                                        <input type="date" placeholder="dd / mm / YYYY" name="start"
-                                                            formControlName="start">
-                                                    </div>
-                                                </div>
-                                                <div class="row">
-                                                    <div class="col-md-6">
-                                                        <strong>Hoàn thành trước ngày<span class="required-asterisk">
-                                                                *</span></strong>
-                                                    </div>
-                                                    <div class="col-md-6">
-                                                        <input type="date" formControlName="finish"
-                                                            placeholder="Nhập ngày hoàn thành công việc ">
-                                                    </div>
-                                                </div>
-                                                
+                                            <div class="col-md-6">
+                                                <select #employeeSelect class="form-select"
+                                                    (change)="onChangeSelectedEmployee($event)">
+                                                    <option value="" selected disabled>Chọn 1 nhân viên</option>
+                                                    <option *ngFor="let employee of positionEmployees"
+                                                        [value]="employee.userId">
+                                                        {{ employee.userInfor.fullname }} ({{
+                                                        employee.position?.position_name }})
+                                                    </option>
+                                                </select>
                                             </div>
-                                          
-                                        </section>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <strong>Giá công khoán (VNĐ)<span class="required-asterisk">
+                                                        *</span></strong>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <input type="number" name="costJob" formControlName="cost"
+                                                    [(ngModel)]="costJob">
+                                            </div>
+                                        </div>
+
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <strong>Nhận việc trước ngày<span class="required-asterisk">
+                                                        *</span> </strong>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <input type="date" placeholder="dd/mm/YYYY" name="start"
+                                                    formControlName="start">
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <strong>Hoàn thành trước ngày<span class="required-asterisk">
+                                                        *</span></strong>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <input type="date" formControlName="finish"
+                                                    placeholder="Nhập ngày hoàn thành công việc ">
+                                            </div>
+                                        </div>
+
+
+
+
                                     </div>
                                 </div>
                                 <table style="text-align: center;" class="table table-striped table-hover">
@@ -452,7 +446,7 @@
 
                                             <div class="row">
                                                 <div class="col-md-6">
-                                                    <strong>Tên việc làm:</strong>
+                                                    <strong>Tên sản xuất:</strong>
                                                 </div>
                                                 <div class="col-md-6">
                                                     {{ selectedJob.job_name }}
@@ -574,27 +568,29 @@
                                 <ng-template #itemTemplate let-item>
                                     <a [innerHTML]="sanitize(item.productName)"></a>
                                 </ng-template>
-                        
+
                                 <ng-template #notFoundTemplate let-notFound>
                                     <div>Không tìm thấy sản phẩm!</div>
                                 </ng-template>
                             </div>
                         </div>
-                        
+
                     </div>
                     <div *ngIf="isChooseProduct" class="row" style="margin-top: 2%;">
                         <div class="col-md-4">
-                            <label style="font-size: 16px;" for="productPrice">Số sản phẩm sản xuất:<span class="required-asterisk">*</span> </label>
+                            <label style="font-size: 16px;" for="productPrice">Số sản phẩm sản xuất:<span
+                                    class="required-asterisk">*</span> </label>
                         </div>
                         <div class="col-md-2">
                             <input type="number" class="form-control" id="productPrice" formControlName="quantity">
                         </div>
                     </div>
                     <div *ngIf="isChooseProduct" class="modal-footer d-flex justify-content-end">
-                        <button type="button" class="btn btn-secondary" (click)="huyTaoSanPhamCoSan()" data-dismiss="modal">Hủy</button>
+                        <button type="button" class="btn btn-secondary" (click)="huyTaoSanPhamCoSan()"
+                            data-dismiss="modal">Hủy</button>
                         <button type="submit" class="btn btn-primary">Thêm mới</button>
                     </div>
-                    
+
                 </form>
 
             </div>
@@ -623,7 +619,7 @@
                                 <div class="col-md-6">
                                     <h3 style="color: black;">Tên sản phẩm:</h3>
                                 </div>
-                                <div class="col-md-6">
+                                <div>
                                     <h3 style="color: grey;;">{{ selectedProduct?.product_name }}</h3>
                                 </div>
                             </div>
@@ -632,7 +628,7 @@
                                 <div class="col-md-6">
                                     <h3 style="color: black;">Tên nhân viên:</h3>
                                 </div>
-                                <div class="col-md-6">
+                                <div>
                                     <h3 style="color: grey;;">{{ selectedProduct?.user_name }}</h3>
                                 </div>
 
@@ -641,10 +637,10 @@
                         <div class="row" style="margin-left: 7px; margin-top: 18px;">
                             <div class="col-md-6">
                                 <div class="col-md-6">
-                                    <h3 style="color: black;">Mã đơn hàng:</h3>
+                                    <h3 style="color: black;">Mã sản xuất:</h3>
                                 </div>
-                                <div class="col-md-6">
-                                    <h3 style="color: grey;">{{ selectedProduct?.code }}</h3>
+                                <div>
+                                    <h3 style="color: grey;">{{ selectedProduct?.job_code }}</h3>
                                 </div>
 
                             </div>
@@ -685,7 +681,7 @@
     </div>
 </div>
 
-<div class="modal fade" #otherModal id="otherModal" tabindex="-1" role="dialog" aria-labelledby="otherModalLabel"
+<div class="modal fade" #otherModal id="otherModal" tabindex="-1" style="margin-left: -7%;" role="dialog" aria-labelledby="otherModalLabel"
     aria-hidden="true">
     <div class="modal-dialog modal-dialog-wide" role="document">
         <div class="modal-content">
@@ -696,26 +692,71 @@
                 </button>
             </div>
             <div class="modal-body">
-                <h3 style="text-align: center;">Lịch sử lỗi sản xuất của sản phẩm</h3>
-                <table class="table table-striped table-bordered">
+                <!-- <h3 style="text-align: center;">Thông tin sản xuất</h3> -->
+                <div class="row">
+                    <div class="col-md-5">
+                        <div class="row">
+                            <div class="col-md-5 text-right">
+                                <label style="font-size: 16px;" for="code">Mã sản xuất:</label>
+                            </div>
+                            <div class="col-md-6">
+                                <p style="font-size: 16px;" for="code">{{ editForm.get('code')?.value }}</p>
+                            </div>
+                        </div>
+                        <div class="row">         
+                            <div class="col-md-5 text-right">
+                                <label style="font-size: 16px;"  for="code">Tên sản xuất:</label>
+                            </div>
+                            <div class="col-md-6">
+                                <p style="font-size: 16px;" for="code">{{ editForm.get('job_name')?.value }}</p>
+                            </div>
+                        </div>
+                       
+                        
+                    </div>
+                    
+                    <div class="col-md-7">
+                        <div class="row">
+                            <div class="col-md-4 text-right">
+                                <label style="font-size: 16px;" for="code">Tên sản phẩm:</label>
+                            </div>
+                            <div class="col-md-7">
+                                <p style="font-size: 16px;" for="code">{{ errorDetailModal?.product_name}}</p>
+                            </div>
+                        </div>
+                    </div>
+    
+                </div>
+                
+
+                <h3 style="text-align: center;"> Bản ghi lỗi sản xuất của sản phẩm</h3>
+                <table class="table table-striped table-bordered" style="font-size: 16px;">
                     <thead>
                         <tr>
-                            <th>Mã việc làm</th>
-                            <th>Tên việc làm</th>
-                            <th>Tên nhân viên</th>
-                            <th>Tên sản phẩm</th>
-                            <th>Số lượng lỗi</th>
+                            <th>STT</th>
+                            <th>Nhân viên</th>
+                            <th style="width: 13%;">Sửa</th>
+                            <th style="width: 10%;">Số SP lỗi</th>
                             <th>Mô tả lỗi</th>
                             <th>Giải pháp</th>
-                            <th>Tình trạng</th>
+                            <th style="width: 14%;">Tình trạng</th>
                         </tr>
                     </thead>
                     <tbody>
-                        <tr *ngFor="let error of jobErrors">
-                            <td>{{ error.code }}</td>
-                            <td>{{ error.job_name }}</td>
+                        <tr *ngFor="let error of jobErrors; let i = index">
+                            <td>{{ i + 1 }}</td> <!-- In số thứ tự, bắt đầu từ 1 -->
                             <td>{{ error.employee_name }}</td>
-                            <td>{{ error.product_name }}</td>
+                            <td style="text-align: center;">
+                                <a href="#" 
+                                    class="settings" 
+                                    title="Chỉnh sửa" 
+                                    data-toggle="modal" 
+                                    data-target="#editProductModal"
+                                    *ngIf="!error.fix"  
+                                    (click)="editProduct2(error.id)">
+                                    <i class="fa-solid fa-pen-to-square"></i>
+                                </a>
+                            </td>
                             <td>{{ error.quantity }}</td>
                             <td>{{ error.des }}</td>
                             <td>{{ error.solution }}</td>
@@ -724,15 +765,16 @@
                                 <span *ngIf="error.fix">Đã khắc phục</span>
                             </td>
                         </tr>
+                        
                     </tbody>
                 </table>
-                <hr style="margin: 2%;">
+                <!-- <hr style="margin: 2%;">
                 <form [formGroup]="editForm">
                     <div class="form-group">
                         <div class="row">
                             <div class="col-md-6">
                                 <div class="col-md-6">
-                                    <label style="font-size: 16px;" for="code">Mã việc làm:</label>
+                                    <label style="font-size: 16px;" for="code">Mã sản xuất:</label>
                                 </div>
                                 <div class="col-md-6">
                                     <input type="text" class="form-control" id="code" formControlName="code" name="code"
@@ -741,7 +783,7 @@
                             </div>
                             <div class="col-md-6">
                                 <div class="col-md-6">
-                                    <label style="font-size: 16px;" for="job_name">Tên việc làm:</label>
+                                    <label style="font-size: 16px;" for="job_name">Tên sản xuất:</label>
                                 </div>
                                 <div class="col-md-6">
 
@@ -850,10 +892,10 @@
                         </div>
                     </div>
 
-                </form>
+                </form> -->
             </div>
             <div class="modal-footer">
-                <div class="row">
+                <!-- <div class="row">
                     <div class="col-sm-9"></div>
                     <div class="col-sm-3 text-right text-secondary">
                         <button class="btn btn-primary px-4 float-right " *ngIf="!isEditing"
@@ -868,10 +910,10 @@
 
                         </div>
                     </div>
-                </div>
-                <!-- <button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
-        <button type="button" class="btn btn-primary" (click)="saveChanges()">Lưu thay đổi</button> -->
-            </div>
+                </div>  -->
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
+        <!-- <button type="button" class="btn btn-primary" (click)="saveChanges()">Lưu thay đổi</button> -->
+           </div>
         </div>
     </div>
 </div>
@@ -895,7 +937,7 @@
                                 <div class="row">
                                     <div class="col-md-6">
 
-                                        <section class="customer-info mb-4">                                  
+                                        <section class="customer-info mb-4">
                                             <div class="row">
                                                 <div class="col-md-6">
                                                     <strong>Mã sản xuất:</strong>
@@ -943,7 +985,7 @@
                                             </div>
 
 
-                                           
+
 
 
                                         </section>
@@ -951,8 +993,8 @@
 
                                     <div class="col-md-6">
                                         <section class="order-summary mb-4">
-                                          
-                                           
+
+
                                             <div class="row">
                                                 <div class="col-md-6">
                                                     <strong>Giá công khoán (VNĐ) <span class="required-asterisk">
@@ -962,7 +1004,7 @@
                                                     <input type="number" name="costJob" formControlName="cost">
                                                 </div>
                                             </div>
-                                          
+
                                             <div class="row">
                                                 <div class="col-md-6">
                                                     <strong>Hoàn thành trước ngày: <span class="required-asterisk">
@@ -974,7 +1016,7 @@
                                                         placeholder="Nhập ngày hoàn thành công việc ">
                                                 </div>
                                             </div>
-                                           
+
                                             <div class="row">
                                                 <div class="col-md-6">
                                                     <strong>Ngày nhận việc<span class="required-asterisk"> *</span>
@@ -1028,7 +1070,7 @@
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Hủy</button>
                         <button *ngIf="user_name" type="button" class="btn btn-success" data-toggle="modal"
-                            data-target="#confirmChangeEmployee">Thay đổi nhân viên</button>                  
+                            data-target="#confirmChangeEmployee">Thay đổi nhân viên</button>
                         <button type="submit" class="btn btn-primary">Lưu thay đổi</button>
 
                     </div>
@@ -1097,7 +1139,7 @@
                                                     </div>
                                                 </div>
                                             </div>
-                                           
+
                                             <div class="row">
                                                 <div class="col-md-6">
                                                     <p>
@@ -1110,14 +1152,14 @@
 
                                                 </div>
                                             </div>
-                                            
+
                                         </section>
                                         <div class="row">
                                             <div class="col-md-6">
                                                 <strong>Ngày nhận đơn:</strong>
                                             </div>
                                             <div class="col-md-6">
-                                                {{  selectedProduct.order_date | date:'dd / MM / yyyy' }}
+                                                {{ selectedProduct.order_date | date:'dd / MM / yyyy' }}
                                             </div>
                                         </div>
                                         <div class="row">
@@ -1125,11 +1167,11 @@
                                                 <strong>Ngày dự tính hoàn thành đơn hàng:</strong>
                                             </div>
                                             <div class="col-md-6">
-                                                {{  selectedProduct.order_contract_time | date:'dd / MM / yyyy' }}
+                                                {{ selectedProduct.order_contract_time | date:'dd / MM / yyyy' }}
                                             </div>
                                         </div>
                                     </div>
-                                   
+
                                     <div class="col-md-6">
                                         <section class="order-summary mb-4">
                                             <div class="row">
@@ -1140,20 +1182,20 @@
                                                     </p>
                                                 </div>
                                                 <div class="col-md-6">
-        
-        
+
+
                                                     <select #employeeSelect2 class="form-select"
-                                                    (change)="onChangeSelectedEmployee2($event)">
-                                                    <option value="" selected disabled>Chọn 1 nhân viên</option>
-                                                    <option *ngFor="let employee of positionEmployees"
-                                                        [value]="employee.userId">
-                                                        {{ employee.userInfor.fullname }} ({{
-                                                        employee.position?.position_name }})
-                                                    </option>
-                                                </select>
+                                                        (change)="onChangeSelectedEmployee2($event)">
+                                                        <option value="" selected disabled>Chọn 1 nhân viên</option>
+                                                        <option *ngFor="let employee of positionEmployees"
+                                                            [value]="employee.userId">
+                                                            {{ employee.userInfor.fullname }} ({{
+                                                            employee.position?.position_name }})
+                                                        </option>
+                                                    </select>
                                                 </div>
                                             </div>
-                                           
+
                                             <div class="row">
                                                 <div class="col-md-6">
                                                     <strong>Giá công khoán (VNĐ)<span class="required-asterisk">
@@ -1163,19 +1205,20 @@
                                                     {{selectedJob.cost | number: '1.0-3'}}
                                                 </div>
                                             </div>
-                                            
-                                         
+
+
+
                                             <div class="row">
-                                                <div class="row">
-                                                    <div class="col-md-6">
-                                                        <strong>Nhận việc trước ngày<span class="required-asterisk">
-                                                                *</span> </strong>
-                                                    </div>
-                                                    <div class="col-md-6">
-                                                        <input type="date" placeholder="dd / mm / YYYY" name="start"
-                                                            formControlName="start">
-                                                    </div>
+                                                <div class="col-md-6">
+                                                    <strong>Nhận việc trước ngày<span class="required-asterisk">
+                                                            *</span> </strong>
                                                 </div>
+                                                <div class="col-md-6">
+                                                    <input type="date" placeholder="dd / mm / YYYY" name="start"
+                                                        formControlName="start">
+                                                </div>
+                                            </div>
+                                            <div class="row">
                                                 <div class="col-md-6">
                                                     <strong>Hoàn thành trước ngày<span class="required-asterisk">
                                                             *</span></strong>
@@ -1185,6 +1228,8 @@
                                                         placeholder="Nhập ngày hoàn thành công việc ">
                                                 </div>
                                             </div>
+
+
 
                                         </section>
                                     </div>
@@ -1233,6 +1278,131 @@
             </div>
         </div>
     </div>
+</div>
+
+<div class="modal fade" id="editProductModal" tabindex="-1" role="dialog" style="margin-left: -7%; margin-top: 2%;"  aria-labelledby="editProductModalLabel"
+  aria-hidden="true">
+  <div class="modal-dialog modal-dialog-wide" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2 class="modal-title" id="editProductModalLabel">Chỉnh sửa lỗi sản phẩm</h2>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form [formGroup]="errorForm">
+          <div class="form-group">
+            <div class="row">
+              <div class="col-md-6">
+                <div class="col-md-4">
+                  <label style="font-size: 16px;" for="code">Mã việc làm:</label>
+                </div>
+                <div class="col-md-8">         
+                  <input type="text" class="form-control" id="code" formControlName="code" name="code" readonly>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="col-md-4">
+                  <label style="font-size: 16px;" for="job_name">Tên việc làm:</label>
+                </div>
+                <div class="col-md-8">
+                 
+                  <input type="text" class="form-control" id="job_name" formControlName="job_name" readonly>
+                </div>
+              </div>
+              <div class="col-md-1">
+              </div>
+              <div class="col-md-10">
+                <hr style="justify-content: space-between;">
+              </div>
+
+              <div class="col-md-6">
+                <div class="col-md-4">
+                  <label style="font-size: 16px;" for="code_order">Mã đơn hàng: </label>
+                </div>
+                <div class="col-md-8">           
+                  <input type="text" class="form-control" id="code_order" formControlName="code_order" name="code_order" readonly>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="col-md-4">
+                  <label style="font-size: 16px;" for="product_name">Tên sản phẩm:</label>
+                </div>
+                <div class="col-md-8">
+                  <h3>{{ errorDetail?.product_name }} {{errorDetail?.request_product_name}}</h3>
+                  <div *ngIf="errorForm.get('product_name')?.value">
+                    <input type="text" class="form-control" id="product_name" formControlName="product_name" name="product_name" readonly>
+                  </div>
+                  <div *ngIf="errorForm.get('request_product_name')?.value">
+                    <input type="text" class="form-control" id="request_product_name" formControlName="request_product_name" name="request_product_name" readonly>
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-1">
+              </div>
+              <div class="col-md-10">
+                <hr style="justify-content: space-between;">
+              </div>
+              <div class="col-md-6">
+                <div class="col-md-4">
+                  <label style="font-size: 16px;" for="employee_name">Tên nhân viên:</label>
+                </div>
+                <div class="col-md-8">
+                  <h3>{{ errorDetail?.employee_name}}</h3>
+                  <input type="text" class="form-control" id="employee_name" formControlName="employee_name" name="employee_name" readonly>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="col-md-4">
+                  <label style="font-size: 16px;" for="productName">Tình trạng lỗi:</label>
+                </div>
+                <div class="col-md-8">         
+                  
+                    <select formControlName="isFixed" [ngModel]="errorDetail?.isFixed"  class="custom-select">
+                      <option [ngValue]="true" [selected]="errorDetail?.isFixed">Đã khắc phục</option>
+                      <option [ngValue]="false" [selected]="!errorDetail?.isFixed">Chưa khắc phục</option>
+                    </select>
+                 
+                  
+                </div>
+              </div>
+              <div class="col-md-1">
+              </div>
+              <div class="col-md-10">
+                <hr style="justify-content: space-between;">
+              </div>
+              <div class="row">
+                <div class="col-md-2">
+                  <label style="font-size: 16px;margin-top: 3%;" for="productName">Mô tả lỗi:<span class="required-asterisk">*</span></label>
+                </div>
+                <div class="col-md-8" style="margin-top:1%">
+                  <textarea style="width: 100%; padding: 2%; font-size: 16px;" id="description" formControlName="description" name="des" >        
+                  </textarea>
+                </div>
+            </div>
+              <div class="col-md-1">
+              </div>        
+              <div class="row">
+                <div class="col-md-2">
+                  <label style="font-size: 16px;margin-top: 3%;" for="productName">Giải pháp:<span class="required-asterisk">*</span></label>
+                </div>
+                <div class="col-md-8" style="margin-top:1% ;">
+                  <textarea style="width: 100%; font-size: 16px; padding: 2%; "id="solution" formControlName="solution" name="solution">
+               
+                 </textarea>
+                </div>               
+              </div>
+            </div>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
+        <button type="button" class="btn btn-primary" (click)="saveChanges2()">Lưu thay đổi</button>
+      </div>
+    </div>
+  </div>
 </div>
 <div *ngIf="isLoadding" class="loading-overlay">
     <div class="spinner"></div>

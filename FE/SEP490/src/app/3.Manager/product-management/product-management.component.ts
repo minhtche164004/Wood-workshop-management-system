@@ -874,12 +874,12 @@ export class ProductManagementComponent implements OnInit {
 
 
   onMaterialChange(event: Event, index: number) {
-    this.selectedSubMaterialId[index] = Number((event.target as HTMLSelectElement).value);    // Gọi hàm để tải sub-materials dựa trên giá trị được chọn
-    const selectedMaterial = this.materials.find(material => material.materialId === this.selectedSubMaterialId[index]);
+   const materialId = Number((event.target as HTMLSelectElement).value);    // Gọi hàm để tải sub-materials dựa trên giá trị được chọn
+    const selectedMaterial = this.materials.find(material => material.materialId === materialId);
     this.materialType[index] = selectedMaterial ? selectedMaterial.type : '';
 
-    this.loadSubMaterials(this.selectedSubMaterialId[index], index);
-    console.log('Selected MaterialId:', this.selectedSubMaterialId[index], " selected index:" + index);
+    this.loadSubMaterials(materialId, index);
+    console.log('Selected MaterialId:', materialId, " selected index:" + index);
     this.selectedMaterialId[index] = (event.target as HTMLSelectElement).value; // bo sung cho add list productrequest
   }
 
@@ -897,6 +897,13 @@ export class ProductManagementComponent implements OnInit {
 
 
   onSubMaterialChange(event: Event, index: number) {
+    const selectedValue = Number((event.target as HTMLSelectElement).value);
+    // Check for duplicates
+    if (Object.values(this.selectedSubMaterialId).includes(selectedValue)) {
+      this.toastr.warning('Nguyên vật liệu đã được chọn. Vui lòng chọn nguyên vật liệu khác', 'Lỗi');
+      this.selectedSubMaterialId[index] = null;
+      return;
+    }
     this.totalUnitPrice = 0;
     this.selectedSubMaterialId[index] = Number((event.target as HTMLSelectElement).value);
     const selectedSubMaterial = this.subMaterials[index].find(subMaterial => subMaterial.subMaterialId === this.selectedSubMaterialId[index]);
@@ -939,6 +946,14 @@ export class ProductManagementComponent implements OnInit {
   }
 
   onSubMaterialChangeRProduct(event: Event, index: number, indexOfItemRProduct: number, indexOfMaterial: number) {
+    const selectedValue = Number((event.target as HTMLSelectElement).value);
+    // Check for duplicates
+    if (Object.values(this.selectedSubMaterialId).includes(selectedValue)) {
+      this.toastr.warning('Nguyên vật liệu đã được chọn. Vui lòng chọn nguyên vật liệu khác', 'Lỗi');
+      this.selectedSubMaterialId[index] = null;
+      return;
+    }
+
     this.totalUnitPrice = 0;
     this.selectedSubMaterialId[index] = Number((event.target as HTMLSelectElement).value);
     const selectedSubMaterial = this.subMaterials[index].find(subMaterial => subMaterial.subMaterialId === this.selectedSubMaterialId[index]);
@@ -1244,20 +1259,20 @@ export class ProductManagementComponent implements OnInit {
             console.log('Sub material update successful', finalResponse);
             this.toastr.success('Cập nhật sản phẩm và vật liệu phụ thành công!', 'Thành công');
             $('[data-dismiss="modal"]').click(); // Đóng modal
-          },     
-        error => {
-          this.reloadProduct();
-          console.error('Error during EditSubMaterialProduct:', error);
-          if (error.status === 400 && error.error.code === 1038) {
-            this.toastr.warning(error.error.message, 'Lỗi');
-          } else if (error.status === 400 && error.error.code === 1048) {
-            this.toastr.warning(error.error.message, 'Lỗi');
-          } else {
-            this.toastr.error('Cập nhật ước tính nguyên vật liệu sản phẩm bị lỗi!', 'Lỗi');
-          }
-          this.isLoadding = false;
-          $('[data-dismiss="modal"]').click(); // Đóng modal
-        });
+          },
+          error => {
+            this.reloadProduct();
+            console.error('Error during EditSubMaterialProduct:', error);
+            if (error.status === 400 && error.error.code === 1038) {
+              this.toastr.warning(error.error.message, 'Lỗi');
+            } else if (error.status === 400 && error.error.code === 1048) {
+              this.toastr.warning(error.error.message, 'Lỗi');
+            } else {
+              this.toastr.error('Cập nhật ước tính nguyên vật liệu sản phẩm bị lỗi!', 'Lỗi');
+            }
+            this.isLoadding = false;
+            $('[data-dismiss="modal"]').click(); // Đóng modal
+          });
     } else {
       this.toastr.warning('Có lỗi xảy ra vui lòng thử lại', 'Lỗi');
     }

@@ -80,14 +80,16 @@ export class ReportManagementComponent implements OnInit {
           console.log('Danh sách lỗi sản phẩm ngOninit:', this.errorProducts);
           this.isLoadding = false;
         } else {
-          this.toastr.warning(data.message, 'Lỗi');
+      //    this.toastr.warning(data.message, 'Lỗi');
           this.isLoadding = false;
           this.checkNotFound = true;
+          this.errorProducts = [];
+          console.log('errorProduct lengtj:', this.errorProducts.length);
         }
       },
       (error) => {
         console.error('Error fetching products:', error);
-        this.toastr.warning('Có lỗi xảy ra!', 'Lỗi');
+      
         this.isLoadding = false;
         this.checkNotFound = true;
       }

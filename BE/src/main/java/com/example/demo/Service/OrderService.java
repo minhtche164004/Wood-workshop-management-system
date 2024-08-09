@@ -43,6 +43,7 @@ public interface OrderService {
    // RequestAllDTO GetRequestById(int id);
 
     List<OderDTO> GetAllOrder();
+    List<OderDTO> GetAllOrderSpecial();
 
     List<OderDTO> FindByNameOrCode(String key);
 

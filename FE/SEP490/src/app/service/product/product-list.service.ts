@@ -61,7 +61,9 @@ export class ProductListService {
   private api_UrlEditSubMateialRequestProduct = `${environment.apiUrl}api/auth/submaterial/EditSubMaterialRequestProduct`;
   private api_UrlcreateExportMaterialListProductRequest = `${environment.apiUrl}api/auth/submaterial/createExportMaterialListProductRequest`; 
   private apiUrl_getAllStatusJob = `${environment.apiUrl}api/auth/job/getAllStatusJob`;
-  
+
+  private apiUrl_getAllOrderSpecial = `${environment.apiUrl}api/auth/order/GetAllOrderSpecial`; // lay tat ca order dac biet
+
 
   //api cho danh mục sản phẩm
   private apiAddNewCategory = `${environment.apiUrl}api/auth/product/AddNewCategory`;
@@ -453,6 +455,12 @@ export class ProductListService {
   getOrderById(orderId: number): Observable<any> {
     const url = `${this.apiUrlGetOrderById}?id=${orderId}`;
     return this.http.get<any>(url).pipe(
+      catchError(this.handleError)
+    );
+  }
+
+  getAllOrderSpecial(): Observable<any> {
+    return this.http.get<any>(this.apiUrl_getAllOrderSpecial).pipe(
       catchError(this.handleError)
     );
   }

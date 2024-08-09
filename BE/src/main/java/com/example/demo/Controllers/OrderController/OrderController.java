@@ -256,6 +256,13 @@ public class OrderController {
         return apiResponse;
     }
 
+    @GetMapping("GetAllOrderSpecial")
+    public ApiResponse<?> GetAllOrderSpecial(){
+        ApiResponse<List> apiResponse = new ApiResponse<>();
+        apiResponse.setResult(orderService.GetAllOrderSpecial());
+        return apiResponse;
+    }
+
     @GetMapping("getAllOrderWithStatus3")
     public ApiResponse<?> getAllOrderWithStatus3(){
         ApiResponse<List> apiResponse = new ApiResponse<>();

@@ -17,7 +17,7 @@
                 <span class="align-middle">Thêm sản phẩm</span>
               </a>
               <!-- Them san pham trong bang request product theo yeu cau -->
-              <a id="addRequestProductButton" *ngIf="!isProduct && idOrder" href="#" class="btn btn-secondary btn-sm"
+              <a id="addRequestProductButton" *ngIf="!isProduct" href="#" class="btn btn-secondary btn-sm"
                 data-toggle="modal" data-target="#addRequestProductModal" style="font-size: 14px;"
                 (click)="resetFormAdd()">
                 <i class="material-icons align-middle" style="font-size: 18px;">&#xE147;</i>
@@ -355,7 +355,7 @@
           </div>
           <div class="modal-footer d-flex justify-content-end">
             <button type="button" class="btn btn-secondary" data-dismiss="modal">Hủy</button>
-            <button type="submit" class="btn btn-primary">Lưu thay đổi</button>
+            <button type="submit" class="btn btn-primary">Xác nhận</button>
           </div>
         </form>
       </div>
@@ -375,7 +375,25 @@
           <div class="form-row">
             <div class="form-group col-md-12" [formGroup]="orderForm">
               <div class="form-row">
-                <div class="form-group col-md-4">
+                <div class="ng-autocomplete" class="col-md-4" *ngIf="!idOrder">
+                  <label>Số điện thoại</label>
+                  <ng-autocomplete  [data]="specialOrders"
+                      [searchKeyword]="keyword"
+                      placeholder="Chọn mã đơn hàng theo yêu cầu"
+                      [itemTemplate]="itemTemplate"
+                      [notFoundTemplate]="notFoundTemplate"
+                      (selected)="onSelectSpecialOrder($event)">
+                  </ng-autocomplete>
+
+                  <ng-template #itemTemplate let-item>
+                      <a [innerHTML]="item.code"></a>
+                  </ng-template>
+
+                  <ng-template #notFoundTemplate let-notFound>
+                      <div [innerHTML]="notFound"></div>
+                  </ng-template>
+              </div>
+                <div class="form-group col-md-4" *ngIf="idOrder">
                   <label for="orderId">Mã yêu cầu</label>
                   <input type="text" class="form-control" formControlName="code" placeholder="Mã đặt hàng" readonly>
                 </div>
@@ -558,7 +576,7 @@
                       <!-- Giá (VNĐ) -->
                       <div class="col-md-2 mb-2">
                         <div class="form-group">
-                          <label for="price-{{i}}">Đơn giá/sản phẩm (VNĐ)</label>
+                          <label for="price-{{i}}">Đơn giá/nguyên vật liệu (VNĐ)</label>
                           <input id="price-{{i}}" class="form-control" type="text"
                             [value]="unitPriceSubMaterial[i*10+j] | number: '1.0-3'" readonly="">
                         </div>
@@ -626,7 +644,7 @@
 
           <div class="modal-footer d-flex justify-content-end">
             <button type="button" class="btn btn-secondary" data-dismiss="modal">Hủy</button>
-            <button type="submit" class="btn btn-primary">Lưu thay đổi</button>
+            <button type="submit" class="btn btn-primary">Xác nhận</button>
           </div>
         </form>
       </div>

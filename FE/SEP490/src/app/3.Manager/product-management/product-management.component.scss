@@ -436,3 +436,38 @@ option[value="option3"] {
 .text-right {
   text-align: right;
 }
+
+//css auto complete
+.ng-autocomplete {
+  width: 100%;
+}
+
+.ng-autocomplete ::ng-deep .autocomplete-container {
+  box-shadow: none;
+}
+
+.ng-autocomplete ::ng-deep .autocomplete-container ::ng-deep .input-container ::ng-deep input {
+  font-size: 0.875rem;
+  display: block;
+  height: 2.5rem;
+  padding: 0.5rem 1rem;
+  font-weight: 400;
+  line-height: 1.52857143;
+  color: #495057;
+  border: 1px solid #dde6e9;
+  border-radius: 0.25rem;
+}
+
+.ng-autocomplete ::ng-deep .autocomplete-container ::ng-deep .suggestions-container ::ng-deep .item ::ng-deep .row {
+  padding: 0.5rem 1rem;
+}
+
+.ng-autocomplete ::ng-deep .autocomplete-container ::ng-deep .not-found {
+  border: 0;
+}
+
+.btn-danger {
+  margin-bottom: 30%;
+  height: 25%;
+  padding: 10%;
+}

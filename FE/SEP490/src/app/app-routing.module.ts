@@ -137,6 +137,7 @@ const routes: Routes = [
   { path: 'list_request_customer', component: ListRequestCustomerComponent, canActivate: [AuthGuard], data: { roles: ['MANAGER'] } },
   { path: 'list_salary_employee', component: ListSalaryEmployeeComponent, canActivate: [AuthGuard], data: { roles: ['EMPLOYEE'] } },
   { path: 'temperlate', component: TemplateComponent },
+  { path: 'a', component: ListRequestProductComponent },
 
   //danh` cho order-vnpay
   { path: 'order-vnpay-success', component: OrderSuccessComponent },

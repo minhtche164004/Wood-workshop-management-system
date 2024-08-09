@@ -58,6 +58,12 @@ public interface OrderRepository extends JpaRepository<Orders,Integer> {
     List<OderDTO> getAllOrder();
 
     @Query("SELECT new com.example.demo.Dto.OrderDTO.OderDTO(" +
+            "COALESCE(o.code, ''), o.orderId, COALESCE(o.orderDate, '') , o.totalAmount,COALESCE(s.status_id, 0) ,COALESCE(s.status_name, '') , COALESCE(o.paymentMethod, ''),COALESCE(o.deposite, 0) ,COALESCE(o.specialOrder, false), o.contractDate)" + // Sử dụng COALESCE
+            " FROM Orders o" +
+            " LEFT JOIN o.status s WHERE o.specialOrder = TRUE")
+    List<OderDTO> getAllOrderSpecial();
+
+    @Query("SELECT new com.example.demo.Dto.OrderDTO.OderDTO(" +
             "COALESCE(o.code, ''), o.orderId, COALESCE(o.orderDate, '') , o.totalAmount, COALESCE(s.status_id, 0) , COALESCE(s.status_name, ''), COALESCE(o.paymentMethod, ''), COALESCE(o.deposite, 0) , COALESCE(o.specialOrder, false), o.contractDate)" +
             " FROM Orders o" +
             " LEFT JOIN o.status s" +

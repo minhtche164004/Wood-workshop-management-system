@@ -2,15 +2,15 @@ import { Component, OnInit, ViewChild, ElementRef, ChangeDetectorRef } from '@an
 import { ProductListService } from 'src/app/service/product/product-list.service';
 import { ToastrService } from 'ngx-toastr';
 import { FormArray, FormBuilder, FormGroup, Validators, FormsModule, FormControl } from '@angular/forms';
-import { concatMap } from 'rxjs/operators';
+import { catchError, concatMap } from 'rxjs/operators';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { map, switchMap, tap } from 'rxjs/operators';
-import { Observable } from 'rxjs';
+import { EMPTY, Observable, of, throwError } from 'rxjs';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Location } from '@angular/common';
 
 import 'jquery';
-import { get } from 'jquery';
+import { error, get } from 'jquery';
 import * as e from 'cors';
 
 interface Category {
@@ -938,12 +938,12 @@ export class ProductManagementComponent implements OnInit {
     // console.log("goiham`calculateTotalPriceOfOrder", index);
   }
 
-  onSubMaterialChangeRProduct(event: Event, index: number,indexOfItemRProduct: number, indexOfMaterial: number) {
+  onSubMaterialChangeRProduct(event: Event, index: number, indexOfItemRProduct: number, indexOfMaterial: number) {
     this.totalUnitPrice = 0;
     this.selectedSubMaterialId[index] = Number((event.target as HTMLSelectElement).value);
     const selectedSubMaterial = this.subMaterials[index].find(subMaterial => subMaterial.subMaterialId === this.selectedSubMaterialId[index]);
     this.unitPriceSubMaterial[index] = selectedSubMaterial ? selectedSubMaterial.unitPrice : '';
-  
+
     this.totalPriceSubmatePerProducRequest[indexOfItemRProduct] = 0;
     if (this.unitPriceSubMaterial && this.quantityPerSubMaterial) {
       // Calculate the start and end index based on indexOfItemRProduct and indexOfMaterial
@@ -961,7 +961,8 @@ export class ProductManagementComponent implements OnInit {
         this.totalPriceSubmatePerProducRequest[indexOfItemRProduct] += totalForThisItem;
         // console.log('totalPriceSubmatePerProducRequest123:'+index, this.totalPriceSubmatePerProducRequest[indexOfItemRProduct]);
       }
-    }  }
+    }
+  }
 
   totalPriceSubmatePerProducRequest: { [key: number]: number | number } = {}; // tinh tong gia cua tung san pham (chua nhan voi quantity)
   onQuantityChangeSubMaterialRProduct(event: Event, index: number, indexOfItemRProduct: number, indexOfMaterial: number) {
@@ -1108,6 +1109,14 @@ export class ProductManagementComponent implements OnInit {
             subMaterialQuantities: transformedObject
           };
           return this.productListService.createExportMaterialProduct(transformedData);
+        }),
+        catchError(error => {
+          this.isLoadding = false;
+          if (error.status === 400 && error.error.code === 1018) {
+            this.toastr.error(error.error.message, 'Lỗi');
+          }
+          // Return an observable to continue the stream
+          return EMPTY;
         })
       ).subscribe(
         response => {
@@ -1219,7 +1228,14 @@ export class ProductManagementComponent implements OnInit {
             };
             console.log("data cua submaterial: ", transformedData);
             return this.productListService.EditSubMaterialProduct(transformedData);
-          })
+          }),
+          // catchError(error => {
+          //   this.isLoadding = false;
+          //   if (error.status === 400 && error.error.code === 1018) {
+          //     this.toastr.error(error.error.message, 'Lỗi');
+          //   }
+          //   return EMPTY;
+          // })
         )
         .subscribe(
           finalResponse => {
@@ -1228,20 +1244,20 @@ export class ProductManagementComponent implements OnInit {
             console.log('Sub material update successful', finalResponse);
             this.toastr.success('Cập nhật sản phẩm và vật liệu phụ thành công!', 'Thành công');
             $('[data-dismiss="modal"]').click(); // Đóng modal
-          },
-          error => {
-            this.reloadProduct();
-            if (error.status === 400 && error.error.code === 1038) {
-              this.toastr.warning(error.error.message, 'Lỗi');
-            }
-            // else {
-            //   this.toastr.error('Cập nhật sản phẩm bị lỗi!', 'Lỗi');
-            // }
-            console.error('Update error', error);
-            this.isLoadding = false;
-            $('[data-dismiss="modal"]').click(); // Đóng modal
+          },     
+        error => {
+          this.reloadProduct();
+          console.error('Error during EditSubMaterialProduct:', error);
+          if (error.status === 400 && error.error.code === 1038) {
+            this.toastr.warning(error.error.message, 'Lỗi');
+          } else if (error.status === 400 && error.error.code === 1048) {
+            this.toastr.warning(error.error.message, 'Lỗi');
+          } else {
+            this.toastr.error('Cập nhật ước tính nguyên vật liệu sản phẩm bị lỗi!', 'Lỗi');
           }
-        );
+          this.isLoadding = false;
+          $('[data-dismiss="modal"]').click(); // Đóng modal
+        });
     } else {
       this.toastr.warning('Có lỗi xảy ra vui lòng thử lại', 'Lỗi');
     }
@@ -1406,7 +1422,7 @@ export class ProductManagementComponent implements OnInit {
   totalAmountOfOrder: number = 0;
   onSubmitProductRequest() {
     const currentDate = new Date();
-    
+
 
 
     this.pricePerProductAndQuantity = []; //reset lai gia tri
@@ -1415,7 +1431,7 @@ export class ProductManagementComponent implements OnInit {
 
       const completionTime = this.listRequestProductForm.value.itemsRProduct[i].completionTime;
       const completionTimeDate = new Date(completionTime);
-    
+
       if (completionTimeDate < currentDate) {
         this.toastr.error('Ngày hoàn thành không được nhỏ hơn ngày hiện tại!', 'Lỗi');
         return;
@@ -1522,7 +1538,14 @@ export class ProductManagementComponent implements OnInit {
             console.log("transformedDataSubMate: ", transformedDataSubMate);
 
             return this.productListService.createExportMaterialListProductRequest(transformedDataSubMate);
-          }))
+          }),
+            catchError(error => {
+              this.isLoadding = false;
+              if (error.status === 400 && error.error.code === 1018) {
+                this.toastr.error(error.error.message, 'Lỗi');
+              }
+              return EMPTY;
+            }))
           .subscribe(
             response => {
               this.location.replaceState('/product_management');
@@ -1700,6 +1723,13 @@ export class ProductManagementComponent implements OnInit {
           };
           console.log("data cua submaterial: 0", transformedData);
           return this.productListService.EditSubMaterialRequestProduct(transformedData);
+        }),
+        catchError(error => {
+          this.isLoadding = false;
+          if (error.status === 400 && error.error.code === 1018) {
+            this.toastr.error(error.error.message, 'Lỗi');
+          }
+          return EMPTY;
         })
       )
       .subscribe(

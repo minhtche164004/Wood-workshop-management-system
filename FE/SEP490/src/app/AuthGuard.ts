@@ -43,7 +43,7 @@ export class AuthGuard implements CanActivate {
         if (expectedRoles.includes(userRole)) {
           return true;
         } 
-        else if (this.authenListService.isLoggedIn() && !expectedRoles.includes(userRole)) { 
+        else if (userRole == null && !expectedRoles.includes(userRole)) { 
           this.router.navigate(['/login']); // co token nhung token het han
           return false;
         }

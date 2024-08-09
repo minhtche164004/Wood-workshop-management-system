@@ -29,14 +29,14 @@
                                                     đặt</label>
 
                                                 <div class="row">
-                                                    <div class="col-md-6 mb-5">
+                                                    <div class="col-md-6 ">
                                                         <div class="form-group">
                                                             <label>Họ Và Tên Khách Hàng</label>
                                                             <input class="form-control" type="text" name="fullname"
                                                                 formControlName="fullname">
                                                         </div>
                                                     </div>
-                                                    <div class="ng-autocomplete" class="col-md-6 mb-5">
+                                                    <div class="ng-autocomplete" class="col-md-6">
                                                         <label>Số điện thoại</label>
                                                         <ng-autocomplete *ngIf="phoneList" [data]="phoneList"
                                                             [searchKeyword]="keyword" placeholder="Nhập số điện thoại"
@@ -55,14 +55,14 @@
                                                     </div>
                                                 </div>
                                                 <div class="row">
-                                                    <div class="col-md-6 mb-5">
+                                                    <div class="col-md-6">
                                                         <div class="form-group">
                                                             <label>Email</label>
                                                             <input class="form-control" type="text" name="email"
                                                                 formControlName="email">
                                                         </div>
                                                     </div>
-                                                    <div class="col-md-6 mb-5">
+                                                    <div class="col-md-6">
                                                         <div class="form-group">
                                                             <label>Địa chỉ cụ thể</label>
                                                             <input class="form-control" type="text" name="address"
@@ -70,7 +70,7 @@
                                                         </div>
                                                     </div>
                                                 </div>
-                                                <div class="row mb-5">
+                                                <div class="row">
                                                     <div class="row">
                                                         <div class="col-md-12">
                                                             <label class="text-left"
@@ -80,7 +80,7 @@
                                                     </div>
 
                                                     <div class="row">
-                                                        <div class="col-md-4 mb-5">
+                                                        <div class="col-md-4">
                                                             <div class="form-group">
                                                                 <select class="form-control" name="city"
                                                                     [(ngModel)]="city_change"
@@ -97,7 +97,7 @@
                                                                 </select>
                                                             </div>
                                                         </div>
-                                                        <div class="col-md-4 mb-5">
+                                                        <div class="col-md-4">
                                                             <div class="form-group">
                                                                 <select class="form-control" name="district_change"
                                                                     [(ngModel)]="district_change"
@@ -114,7 +114,7 @@
                                                                 </select>
                                                             </div>
                                                         </div>
-                                                        <div class="col-md-4 mb-5">
+                                                        <div class="col-md-4">
                                                             <div class="form-group">
                                                                 <select class="form-control" name="wards_change"
                                                                     [(ngModel)]="wards_change"
@@ -141,14 +141,14 @@
                                                     nhận</label>
 
                                                 <div class="row">
-                                                    <div class="col-md-6 mb-5">
+                                                    <div class="col-md-6">
                                                         <div class="form-group">
                                                             <label>Họ Và Tên Khách Hàng</label>
                                                             <input class="form-control" type="text" name="fullname"
                                                                 formControlName="fullname">
                                                         </div>
                                                     </div>
-                                                    <div class="col-md-6 mb-5">
+                                                    <div class="col-md-6">
                                                         <div class="form-group">
                                                             <label>Số điện thoại</label>
                                                             <input class="form-control" type="text"
@@ -157,14 +157,14 @@
                                                     </div>
                                                 </div>
                                                 <div class="row">
-                                                    <div class="col-md-6 mb-5">
+                                                    <div class="col-md-6">
                                                         <div class="form-group">
                                                             <label>Email</label>
                                                             <input class="form-control" type="text" name="email"
                                                                 formControlName="email">
                                                         </div>
                                                     </div>
-                                                    <div class="col-md-6 mb-5">
+                                                    <div class="col-md-6">
                                                         <div class="form-group">
                                                             <label>Địa chỉ cụ thể</label>
                                                             <input class="form-control" type="text" name="address"
@@ -172,7 +172,7 @@
                                                         </div>
                                                     </div>
                                                 </div>
-                                                <div class="row mb-5">
+                                                <div class="row">
                                                     <div class="row">
                                                         <div class="col-md-12">
                                                             <label class="text-left"
@@ -182,7 +182,7 @@
                                                     </div>
 
                                                     <div class="row">
-                                                        <div class="col-md-4 mb-5">
+                                                        <div class="col-md-4">
                                                             <div class="form-group">
                                                                 <select class="form-control" name="city_change"
                                                                     [formControl]="provinceControlCopy" required
@@ -199,7 +199,7 @@
                                                                 </select>
                                                             </div>
                                                         </div>
-                                                        <div class="col-md-4 mb-5">
+                                                        <div class="col-md-4">
                                                             <div class="form-group">
                                                                 <select class="form-control" name="district_change"
                                                                     [(ngModel)]="district_changeCopy"
@@ -217,7 +217,7 @@
                                                                 </select>
                                                             </div>
                                                         </div>
-                                                        <div class="col-md-4 mb-5">
+                                                        <div class="col-md-4">
                                                             <div class="form-group">
                                                                 <select class="form-control" name="wards_change"
                                                                     [(ngModel)]="wards_changeCopy"
@@ -289,10 +289,10 @@
                                         <form [formGroup]="productForm">
                                             <div formArrayName="productItems" class="form-group">
                                                 <div *ngFor="let productItem of productItems.controls; let i = index"
-                                                    [formGroupName]="i" class="row mb-3">
+                                                    [formGroupName]="i" class="row">
 
                                                     <div *ngIf="!isForRequestProduct" class="ng-autocomplete"
-                                                        class="col-md-8 mb-5">
+                                                        class="col-md-8">
                                                         <label>Tên sản phẩm</label>
                                                         <ng-autocomplete *ngIf="productList" [data]="productList"
                                                             [searchKeyword]="keywordProduct"
@@ -330,7 +330,7 @@
                                                                 <div [innerHTML]="notFound"></div>
                                                             </ng-template>
                                                         </div> -->
-                                                    <div class="col-md-2 mb-3">
+                                                    <div class="col-md-2">
                                                         <div class="form-group">
                                                             <label for="price">Giá</label>
                                                             <input id="price" class="form-control"

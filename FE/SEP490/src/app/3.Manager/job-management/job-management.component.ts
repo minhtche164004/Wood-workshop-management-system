@@ -1381,10 +1381,10 @@ export class JobManagementComponent implements OnInit {
 
 
   isEditing: boolean = false;
-  editProfile() {
+  editProfile(): void {
     this.isEditing = true;
   }
-  cancelChanges() {
+  cancelChanges(): void {
     this.isEditing = false;
     // Reload the user profile to discard changes
     this.jobService.getAllProductErrorsByJobId(this.errorId).subscribe(
@@ -1394,6 +1394,7 @@ export class JobManagementComponent implements OnInit {
         if (this.jobErrors.length > 0) {
           this.editForm.patchValue(this.jobErrors[0]);
         }
+      
         console.log("error history: ", this.editForm.value);
       },
       (error) => {
@@ -1405,6 +1406,7 @@ export class JobManagementComponent implements OnInit {
   errorHistory: any = [];
   error_job_id: any;
   errorId: any;
+  error_job_id2: any;
   editProduct(errorid: number, product: any) {
     this.errorId = errorid;
     console.log('report product function:', errorid);
@@ -1413,9 +1415,10 @@ export class JobManagementComponent implements OnInit {
     this.jobService.getAllProductErrorsByJobId(errorid).subscribe(
       (response) => {
         this.jobErrors = response.result;
-        console.log('error report detail: ', this.editForm.value);
+       console.log('error report list: ', this.jobErrors);
+     //   console.log('error report detail: ', this.editForm.value);
         if (this.jobErrors.length > 0) {
-          this.editForm.patchValue(this.jobErrors[0]);
+          this.editForm.patchValue(this.jobErrors[this.jobErrors.length - 1]);
         }
         //console.log("error history: ", this.editForm.value);
       },
@@ -1428,7 +1431,7 @@ export class JobManagementComponent implements OnInit {
     this.jobService.getAllProductErrorsByJobId(jobId).subscribe(
       (response) => {
         this.errorHistory = response.result;
-        console.log('error history: ', this.errorHistory);
+      //  console.log('error history: ', this.errorHistory);
       },
       (error) => {
         console.error('Error fetching product errors:', error);
@@ -1436,14 +1439,17 @@ export class JobManagementComponent implements OnInit {
     );
   }
   saveChangesError() {
-    this.isLoadding = true;
+    this.isLoadding = true; 
+    console.log("error current: ", this.editForm.value);
+    const current_error_id = this.editForm.get('id')?.value;
+    console.log("Current Error ID:", current_error_id);
     const errorFormData = {
       description: this.editForm.value.des,
       solution: this.editForm.value.solution,
       isFixed: this.editForm.value.fix,
       quantity: this.editForm.value.quantity
     };
-    console.log('error edit form saveChanges:', errorFormData);
+    // console.log('error edit form saveChanges:', errorFormData);
     if (!errorFormData.description || !errorFormData.solution || errorFormData.quantity == null) {
       this.isLoadding = false;
       this.toastr.info('Vui lòng điền đầy đủ thông tin, không được để trống!', 'Thông báo');
@@ -1471,18 +1477,19 @@ export class JobManagementComponent implements OnInit {
 
     console.log('form api EditProductError', errorFormData);
     console.log('error_job_id: ', this.error_job_id)
-    this.errorProductService.editProductError(this.error_job_id, errorFormData).subscribe(
+    this.errorProductService.editProductError(current_error_id, errorFormData).subscribe(
       (response) => {
         if (response.code === 1000) {
           this.toastr.success('Sửa lỗi sản phẩm thành công!', 'Thành công');
           $('[data-dismiss="modal"]').click(); this.isLoadding = false;
-          console.log("after edit error, selectedCategory: ", this.selectedCategory);
+       //   console.log("after edit error, selectedCategory: ", this.selectedCategory);
           if (this.selectedCategory === 1) {
+            
             this.loadProduct();
           } else if (this.selectedCategory === 0) {
             this.loadProductRQForJob();
           }
-          this.editForm.reset();
+          
         } else {
           console.error('Failed to edit product:', response);
           this.toastr.info('Không thể sửa sản phẩm!', 'Thông báo'); this.isLoadding = false;
@@ -1494,6 +1501,7 @@ export class JobManagementComponent implements OnInit {
         this.toastr.error('Có lỗi xảy ra!', 'Thông báo'); this.isLoadding = false;
       }
     );
+    this.editForm.reset();
   }
   cancelChangeEmployee(): void {
     this.quantityProductDone = '';

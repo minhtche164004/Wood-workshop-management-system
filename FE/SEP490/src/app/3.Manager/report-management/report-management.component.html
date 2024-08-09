@@ -34,7 +34,7 @@
           
         </div>
       </div>
-      <div *ngIf="!checkNotFound">
+      <div *ngIf="errorProducts.length !== 0">
         <table class="table table-striped table-hover">
           <thead>
             <tr>
@@ -94,7 +94,7 @@
   
       </div>
      
-        <div *ngIf="!errorProducts || errorProducts.length === 0">
+        <div *ngIf="errorProducts.length === 0">
 
           <div style="background-color: white;">
               <div class=""

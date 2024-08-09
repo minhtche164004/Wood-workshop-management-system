@@ -715,6 +715,12 @@ public class OrderServiceImpl implements OrderService {
         return orderRepository.getAllOrder();
     }
 
+    @Override
+    public List<OderDTO> GetAllOrderSpecial() {
+        CheckOrderAfterDeadline();
+        return orderRepository.getAllOrderSpecial();
+    }
+
     private void CheckOrderAfterDeadline() {
         LocalDate today = LocalDate.now();
         List<OderDTO> list = orderRepository.getAllOrderWithStatus3();

@@ -681,12 +681,12 @@
     </div>
 </div>
 
-<div class="modal fade" #otherModal id="otherModal" tabindex="-1" style="margin-left: -7%;" role="dialog" aria-labelledby="otherModalLabel"
-    aria-hidden="true">
+<div class="modal fade" #otherModal id="otherModal" tabindex="-1" style="margin-left: -7%;" role="dialog"
+    aria-labelledby="otherModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-wide" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h2 class="modal-title" id="editProductModalLabel">Chỉnh sửa lỗi sản phẩm</h2>
+                <h2 class="modal-title" id="editProductModalLabel"> Bản ghi lỗi sản xuất của sản phẩm</h2>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
@@ -694,42 +694,42 @@
             <div class="modal-body">
                 <!-- <h3 style="text-align: center;">Thông tin sản xuất</h3> -->
                 <div class="row">
-                    <div class="col-md-5">
-                        <div class="row">
+                    <div class="col-md-4">
+                       
                             <div class="col-md-5 text-right">
                                 <label style="font-size: 16px;" for="code">Mã sản xuất:</label>
                             </div>
-                            <div class="col-md-6">
+                            <div class="col-md-7">
                                 <p style="font-size: 16px;" for="code">{{ editForm.get('code')?.value }}</p>
                             </div>
                         </div>
-                        <div class="row">         
+                        <div class="col-md-4">
                             <div class="col-md-5 text-right">
-                                <label style="font-size: 16px;"  for="code">Tên sản xuất:</label>
+                                <label style="font-size: 16px;" for="code">Tên sản xuất:</label>
                             </div>
-                            <div class="col-md-6">
+                            <div class="col-md-7">
                                 <p style="font-size: 16px;" for="code">{{ editForm.get('job_name')?.value }}</p>
                             </div>
                         </div>
+
+
+                   
+
+                    <div class="col-md-4">
                        
-                        
-                    </div>
-                    
-                    <div class="col-md-7">
-                        <div class="row">
-                            <div class="col-md-4 text-right">
+                            <div class="col-md-5 text-right">
                                 <label style="font-size: 16px;" for="code">Tên sản phẩm:</label>
                             </div>
                             <div class="col-md-7">
                                 <p style="font-size: 16px;" for="code">{{ errorDetailModal?.product_name}}</p>
                             </div>
-                        </div>
+                        
                     </div>
-    
-                </div>
-                
 
-                <h3 style="text-align: center;"> Bản ghi lỗi sản xuất của sản phẩm</h3>
+                </div>
+
+
+                <h3 style="text-align: center;"></h3>
                 <table class="table table-striped table-bordered" style="font-size: 16px;">
                     <thead>
                         <tr>
@@ -747,13 +747,8 @@
                             <td>{{ i + 1 }}</td> <!-- In số thứ tự, bắt đầu từ 1 -->
                             <td>{{ error.employee_name }}</td>
                             <td style="text-align: center;">
-                                <a href="#" 
-                                    class="settings" 
-                                    title="Chỉnh sửa" 
-                                    data-toggle="modal" 
-                                    data-target="#editProductModal"
-                                    *ngIf="!error.fix"  
-                                    (click)="editProduct2(error.id)">
+                                <a href="#" class="settings" title="Chỉnh sửa" data-toggle="modal"
+                                    data-target="#editProductModal" *ngIf="!error.fix" (click)="editProduct2(error.id)">
                                     <i class="fa-solid fa-pen-to-square"></i>
                                 </a>
                             </td>
@@ -765,7 +760,7 @@
                                 <span *ngIf="error.fix">Đã khắc phục</span>
                             </td>
                         </tr>
-                        
+
                     </tbody>
                 </table>
                 <!-- <hr style="margin: 2%;">
@@ -912,8 +907,8 @@
                     </div>
                 </div>  -->
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
-        <!-- <button type="button" class="btn btn-primary" (click)="saveChanges()">Lưu thay đổi</button> -->
-           </div>
+                <!-- <button type="button" class="btn btn-primary" (click)="saveChanges()">Lưu thay đổi</button> -->
+            </div>
         </div>
     </div>
 </div>
@@ -1280,129 +1275,146 @@
     </div>
 </div>
 
-<div class="modal fade" id="editProductModal" tabindex="-1" role="dialog" style="margin-left: -7%; margin-top: 2%;"  aria-labelledby="editProductModalLabel"
-  aria-hidden="true">
-  <div class="modal-dialog modal-dialog-wide" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h2 class="modal-title" id="editProductModalLabel">Chỉnh sửa lỗi sản phẩm</h2>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-      <div class="modal-body">
-        <form [formGroup]="errorForm">
-          <div class="form-group">
-            <div class="row">
-              <div class="col-md-6">
-                <div class="col-md-4">
-                  <label style="font-size: 16px;" for="code">Mã việc làm:</label>
-                </div>
-                <div class="col-md-8">         
-                  <input type="text" class="form-control" id="code" formControlName="code" name="code" readonly>
-                </div>
-              </div>
-              <div class="col-md-6">
-                <div class="col-md-4">
-                  <label style="font-size: 16px;" for="job_name">Tên việc làm:</label>
-                </div>
-                <div class="col-md-8">
-                 
-                  <input type="text" class="form-control" id="job_name" formControlName="job_name" readonly>
-                </div>
-              </div>
-              <div class="col-md-1">
-              </div>
-              <div class="col-md-10">
-                <hr style="justify-content: space-between;">
-              </div>
+<div class="modal fade" id="editProductModal" tabindex="-1" role="dialog" style="margin-left: 5%;max-width: 80%;" aria-labelledby="editProductModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-wide" role="document">r
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title" id="editProductModalLabel">Chỉnh sửa lỗi sản phẩm</h2>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form [formGroup]="errorForm">
+                    <div class="form-group">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="col-md-5">
+                                    <label style="font-size: 16px;" for="code">Mã việc làm:</label>
+                                </div>
+                                <div class="col-md-7">
+                                    <input type="text" class="form-control" id="code" formControlName="code" name="code"
+                                        readonly>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="col-md-5">
+                                    <label style="font-size: 16px;" for="job_name">Tên việc làm:</label>
+                                </div>
+                                <div class="col-md-7">
 
-              <div class="col-md-6">
-                <div class="col-md-4">
-                  <label style="font-size: 16px;" for="code_order">Mã đơn hàng: </label>
-                </div>
-                <div class="col-md-8">           
-                  <input type="text" class="form-control" id="code_order" formControlName="code_order" name="code_order" readonly>
-                </div>
-              </div>
-              <div class="col-md-6">
-                <div class="col-md-4">
-                  <label style="font-size: 16px;" for="product_name">Tên sản phẩm:</label>
-                </div>
-                <div class="col-md-8">
-                  <h3>{{ errorDetail?.product_name }} {{errorDetail?.request_product_name}}</h3>
-                  <div *ngIf="errorForm.get('product_name')?.value">
-                    <input type="text" class="form-control" id="product_name" formControlName="product_name" name="product_name" readonly>
-                  </div>
-                  <div *ngIf="errorForm.get('request_product_name')?.value">
-                    <input type="text" class="form-control" id="request_product_name" formControlName="request_product_name" name="request_product_name" readonly>
-                  </div>
-                </div>
-              </div>
-              <div class="col-md-1">
-              </div>
-              <div class="col-md-10">
-                <hr style="justify-content: space-between;">
-              </div>
-              <div class="col-md-6">
-                <div class="col-md-4">
-                  <label style="font-size: 16px;" for="employee_name">Tên nhân viên:</label>
-                </div>
-                <div class="col-md-8">
-                  <h3>{{ errorDetail?.employee_name}}</h3>
-                  <input type="text" class="form-control" id="employee_name" formControlName="employee_name" name="employee_name" readonly>
-                </div>
-              </div>
-              <div class="col-md-6">
-                <div class="col-md-4">
-                  <label style="font-size: 16px;" for="productName">Tình trạng lỗi:</label>
-                </div>
-                <div class="col-md-8">         
-                  
-                    <select formControlName="isFixed" [ngModel]="errorDetail?.isFixed"  class="custom-select">
-                      <option [ngValue]="true" [selected]="errorDetail?.isFixed">Đã khắc phục</option>
-                      <option [ngValue]="false" [selected]="!errorDetail?.isFixed">Chưa khắc phục</option>
-                    </select>
-                 
-                  
-                </div>
-              </div>
-              <div class="col-md-1">
-              </div>
-              <div class="col-md-10">
-                <hr style="justify-content: space-between;">
-              </div>
-              <div class="row">
-                <div class="col-md-2">
-                  <label style="font-size: 16px;margin-top: 3%;" for="productName">Mô tả lỗi:<span class="required-asterisk">*</span></label>
-                </div>
-                <div class="col-md-8" style="margin-top:1%">
-                  <textarea style="width: 100%; padding: 2%; font-size: 16px;" id="description" formControlName="description" name="des" >        
-                  </textarea>
-                </div>
+                                    <input type="text" class="form-control" id="job_name" formControlName="job_name"
+                                        readonly>
+                                </div>
+                            </div>
+                            <div class="col-md-1">
+                            </div>
+                            <div class="col-md-10">
+                               
+                            </div>
+
+                            <div class="col-md-6">
+                                <div class="col-md-5">
+                                    <label style="font-size: 16px;" for="code_order">Mã đơn hàng: </label>
+                                </div>
+                                <div class="col-md-7">
+                                    <input type="text" class="form-control" id="code_order" formControlName="code_order"
+                                        name="code_order" readonly>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="col-md-5">
+                                    <label style="font-size: 16px;" for="product_name">Tên sản phẩm:</label>
+                                </div>
+                                <div class="col-md-7">
+                                    <h3>{{ errorDetail?.product_name }} {{errorDetail?.request_product_name}}</h3>
+                                    <div *ngIf="errorForm.get('product_name')?.value">
+                                        <input type="text" class="form-control" id="product_name"
+                                            formControlName="product_name" name="product_name" readonly>
+                                    </div>
+                                    <div *ngIf="errorForm.get('request_product_name')?.value">
+                                        <input type="text" class="form-control" id="request_product_name"
+                                            formControlName="request_product_name" name="request_product_name" readonly>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-1">
+                            </div>
+                            <div class="col-md-10">
+                              
+                            </div>
+                            <div class="col-md-6">
+                                <div class="col-md-5">
+                                    <label style="font-size: 16px;" for="employee_name">Tên nhân viên:</label>
+                                </div>
+                                <div class="col-md-7">
+                                    <h3>{{ errorDetail?.employee_name}}</h3>
+                                    <input type="text" class="form-control" id="employee_name"
+                                        formControlName="employee_name" name="employee_name" readonly>
+                                </div>
+                            </div>
+                            <div class="col-md-6"  style="margin-top: 5px;">
+                                <div class="col-md-5">
+                                    <label style="font-size: 16px; " for="productName">Tình trạng lỗi:</label>
+                                </div>
+                                <div class="col-md-7">
+
+                                    <select formControlName="isFixed" [ngModel]="errorDetail?.isFixed"
+                                        class="custom-select">
+                                        <option [ngValue]="true" [selected]="errorDetail?.isFixed">Đã khắc phục</option>
+                                        <option [ngValue]="false" [selected]="!errorDetail?.isFixed">Chưa khắc phục
+                                        </option>
+                                    </select>
+
+
+                                </div>
+                            </div>
+                            <div class="col-md-1">
+                            </div>
+                            <div class="col-md-10">
+                               
+                            </div>
+                            <div class="row">
+                                <div class="col-md-1">
+                
+                                </div>
+                                <div class="col-md-2 text-right">
+                                  <label style="font-size: 16px;margin-top: 10% ;" for="productName">Mô tả lỗi:<span
+                                      class="required-asterisk">*</span></label>
+                                </div>
+                                <div class="col-md-8" style="margin-top:1%">
+                                  <textarea style="width: 100%; padding: 2%; font-size: 16px;" id="description"
+                                    formControlName="description" name="des">
+                                    </textarea>
+                                </div>
+                              </div>
+                              <div class="col-md-1">
+                              </div>
+                              <div class="row">
+                                <div class="col-md-1">
+                
+                                </div>
+                                <div class="col-md-2 text-right">
+                                  <label style="font-size: 16px;margin-top: 3% ;" for="productName">Giải pháp:<span
+                                      class="required-asterisk">*</span></label>
+                                </div>
+                                <div class="col-md-8" style="margin-top:1% ;">
+                                  <textarea style="width: 100%; font-size: 16px; padding: 2%; " id="solution" formControlName="solution"
+                                    name="solution">
+                
+                                  </textarea>
+                                </div>
+                              </div>
+                        </div>
+                    </div>
+                </form>
             </div>
-              <div class="col-md-1">
-              </div>        
-              <div class="row">
-                <div class="col-md-2">
-                  <label style="font-size: 16px;margin-top: 3%;" for="productName">Giải pháp:<span class="required-asterisk">*</span></label>
-                </div>
-                <div class="col-md-8" style="margin-top:1% ;">
-                  <textarea style="width: 100%; font-size: 16px; padding: 2%; "id="solution" formControlName="solution" name="solution">
-               
-                 </textarea>
-                </div>               
-              </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
+                <button type="button" class="btn btn-primary" (click)="saveChanges2()">Lưu thay đổi</button>
             </div>
-          </div>
-        </form>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
-        <button type="button" class="btn btn-primary" (click)="saveChanges2()">Lưu thay đổi</button>
-      </div>
+        </div>
     </div>
-  </div>
 </div>
 <div *ngIf="isLoadding" class="loading-overlay">
     <div class="spinner"></div>

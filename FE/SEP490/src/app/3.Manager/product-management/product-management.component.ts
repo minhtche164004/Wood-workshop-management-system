@@ -1191,10 +1191,6 @@ export class ProductManagementComponent implements OnInit {
   }
 
   onEditSubmit(): void {
-    if (this.editForm.get('quantity')?.value < 1) {
-      this.toastr.warning('Số lượng sản phẩm phải lớn hơn 0!', 'Lỗi');
-      return;
-    }
 
     if (parseFloat(this.editForm.get('price')?.value.replace(/,/g, '')) < this.totalUnitPrice) {
       this.toastr.error('Giá sản phẩm phải lớn hơn giá vật liệu !', 'Lỗi');

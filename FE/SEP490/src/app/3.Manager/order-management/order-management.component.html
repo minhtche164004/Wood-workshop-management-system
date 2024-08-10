@@ -380,7 +380,8 @@
         </div>
         <div class="modal-body">
           <div class="form-group">
-            <label for="cancelReason">Lý do từ chối đơn hàng:</label>
+            <label for="cancelReason">Lý do từ chối đơn hàng  </label>
+            <span style="font-size: 16px;" class="required-asterisk">*</span>
             <textarea class="form-control" id="cancelReason" [(ngModel)]="cancelReason" rows="4" required></textarea>
           </div>
         </div>
@@ -408,6 +409,7 @@
           <div class="row" style="margin-bottom: 20px;">
             <div class="col md-6">
               <label for="cancelReason">Nhập số tiền cọc cần thanh toán</label>
+              <span class="required-asterisk">*</span>
               <input min="0" type="number" class="form-control" id="percentDepositPrice" [(ngModel)]="depositeOrder"
                 (ngModelChange)="formatInputValue($event)">
             </div>

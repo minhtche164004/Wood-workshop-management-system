@@ -113,16 +113,14 @@ public interface OrderService {
     String SendMailToNotifyCationAboutOrder(int order_id, String link) throws MessagingException, IOException;
 
     String RefundDeposite(int order_id);
-<<<<<<< HEAD
-    String TimeContract(int order_id, double percentage_discount,Date NewDate) throws MessagingException;
+
 
 
     List<RefundStatus> getAllRefundStatus();
     RefundStatus getRefundStatusById(int refundId);
 
 
-=======
->>>>>>> fb8a4870e64e0bd6d658e72fe6e2b14a7b3f59e5
+
 
     String TimeContract(int order_id, double percentage_discount, Date NewDate) throws MessagingException;
 

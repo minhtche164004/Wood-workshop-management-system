@@ -145,6 +145,14 @@ public class OrderController {
         apiResponse.setResult(whiteListService.AddWhiteList(product_id));
         return apiResponse;
     }
+
+    @PostMapping("/Set_Deposite_Order")
+    public ResponseEntity<String> Set_Deposite_Order(@RequestParam("order_id") int order_id,@RequestParam("deposite_price") int deposite_price) {
+        //  ApiResponse<ResponseEntity<?>> apiResponse = new ApiResponse<>();
+        //  apiResponse.setResult(orderService.Cancel_Order(order_id,special_order_id));
+        return orderService.Set_Deposite_Order(order_id,deposite_price);
+    }
+
     @PostMapping("/Cancel_Order")
     public ResponseEntity<String> Cancel_Order(@RequestParam("order_id") int order_id,@RequestParam("special_order_id") boolean special_order_id,
                                                @RequestBody String response) {
@@ -155,12 +163,11 @@ public class OrderController {
 
     @PostMapping("/Refund_Order")
     public ResponseEntity<String> Refund_Order(@RequestParam("order_id") int order_id,@RequestParam("special_order_id") boolean special_order_id,
-                                               @RequestParam("percent_deposite_price") int percent_deposite_price,
-                                               @RequestParam("percent_order_price") int percent_order_price,
+                                               @RequestParam("refund_price") int refund_price,
                                                @RequestBody String response) {
         //  ApiResponse<ResponseEntity<?>> apiResponse = new ApiResponse<>();
         //  apiResponse.setResult(orderService.Cancel_Order(order_id,special_order_id));
-        return orderService.Refund_Order(order_id,special_order_id, percent_deposite_price,percent_order_price,response);
+        return orderService.Refund_Order(order_id,special_order_id, refund_price, response);
     }
 
     @GetMapping("/GetWhiteListByUser")
@@ -253,6 +260,13 @@ public class OrderController {
     public ApiResponse<?> GetAllOrder(){
         ApiResponse<List> apiResponse = new ApiResponse<>();
         apiResponse.setResult(orderService.GetAllOrder());
+        return apiResponse;
+    }
+
+    @GetMapping("GetAllOrderSpecial")
+    public ApiResponse<?> GetAllOrderSpecial(){
+        ApiResponse<List> apiResponse = new ApiResponse<>();
+        apiResponse.setResult(orderService.GetAllOrderSpecial());
         return apiResponse;
     }
 

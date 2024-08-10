@@ -233,6 +233,19 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
+    public ResponseEntity<String> Set_Deposite_Order(int order_id, int deposite_price) { // set tiền đặt cọc cho đơn hàng
+        BigDecimal deposite = BigDecimal.valueOf(deposite_price);
+        Orders orders = orderRepository.findById(order_id);
+        if(deposite.compareTo(orders.getDeposite())<0){
+            throw new AppException(ErrorCode.COST_DEPOSIT_NOTVALID);
+        }
+        orders.setDeposite(deposite);
+
+        orderRepository.save(orders);
+        return ResponseEntity.ok("Cập nhật tiền đặt cọc đơn hàng thành công");
+    }
+
+    @Override
     public ResponseEntity<String> Cancel_Order(int order_id, boolean special_order_id, String response) {
 
         Orders orders = orderRepository.findById(order_id);
@@ -284,7 +297,7 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public ResponseEntity<String> Refund_Order(int order_id, boolean special_order_id, int percent_deposite_price,int percent_order_price ,String response) {
+    public ResponseEntity<String> Refund_Order(int order_id, boolean special_order_id, int refund_price, String response) {
 
         Orders orders = orderRepository.findById(order_id);
         if (special_order_id == false) {//là hàng có sẵn
@@ -339,22 +352,22 @@ public class OrderServiceImpl implements OrderService {
 //            String time_finish = dateFormatter.format(orders.getOrderFinish());
         //   String time_finish = (orders.getOrderFinish() == null) ? "" : dateFormatter.format(orders.getOrderFinish());
         String time_start = dateFormatter.format(orders.getOrderDate());
-        BigDecimal percentOfOrder = orders.getTotalAmount().multiply(new BigDecimal(percent_order_price).divide(new BigDecimal(100)));
-        BigDecimal percentOfDeposite = orders.getDeposite().multiply(new BigDecimal(percent_deposite_price).divide(new BigDecimal(100)));
-        BigDecimal totalRefund = percentOfDeposite.add(percentOfOrder);
-
-        //bo di so thap phan
-        BigDecimal percentDeposite =percentOfDeposite.setScale(0, RoundingMode.HALF_UP);
-        BigDecimal percentOrder = percentOfOrder.setScale(0, RoundingMode.HALF_UP);
-        BigDecimal total = totalRefund.setScale(0, RoundingMode.HALF_UP);
-
+//        BigDecimal percentOfOrder = orders.getTotalAmount().multiply(new BigDecimal(order_price).divide(new BigDecimal(100)));
+//        BigDecimal percentOfDeposite = orders.getDeposite().multiply(new BigDecimal(deposite_price).divide(new BigDecimal(100)));
+//        BigDecimal totalRefund = percentOfDeposite.add(percentOfOrder);
+//
+//        //bo di so thap phan
+//        BigDecimal percentDeposite =percentOfDeposite.setScale(0, RoundingMode.HALF_UP);
+//        BigDecimal percentOrder = percentOfOrder.setScale(0, RoundingMode.HALF_UP);
+//        BigDecimal total = totalRefund.setScale(0, RoundingMode.HALF_UP);
+        BigDecimal total = BigDecimal.valueOf(refund_price);
         orders.setRefund(total); // them truong refund vao order de lay ra so tien hoan
         orderRepository.save(orders);
         //format gia tien` them dau '.' sau moi 3 so vd: 1.000.000
         NumberFormat nf = NumberFormat.getInstance(new Locale("de", "DE"));
 
-        String depositeStr = nf.format(percentDeposite);
-        String percentOrderStr = nf.format(percentOrder);
+//        String refund_priceStr = nf.format(refund_price);
+//        String percentOrderStr = nf.format(percentOrder);
         String totalStr = nf.format(total);
 //            String status_name=statusOrder.getStatus_name();
         MailBody mailBody = MailBody.builder()
@@ -362,9 +375,9 @@ public class OrderServiceImpl implements OrderService {
                 .text("Đơn hàng có mã đơn hàng là : " + code + "\n" +
                         "Có trạng thái: " + "Đơn hàng hoàn tiền\n" + "\n" +
                         "Với thời gian tạo đơn là: " + time_start + "\n" +
-                        "Số tiền hoàn("+percent_deposite_price+"% số tiền đặt cọc + " + percent_order_price + "% tổng giá trị đơn hàng): " + depositeStr + " + " + percentOrderStr + " = " + totalStr + " VNĐ" + "\n" +
+                        "Số tiền hoàn: " + totalStr + " VNĐ" + "\n" +
                         "Lý do hoàn tiền: " + response + "\n" +
-                        "Xin lỗi vì trải nghiệm không tốt của bạn, chúng tôi sẽ cố gắng cải thiện dịch vụ của mình. Hân hạnh được phục vụ quý khách lần tới!\n"
+                        "Hân hạnh được phục vụ quý khách lần tới!\n"
                 )
                 .subject("[Thông tin hoàn tiền của đơn hàng]")
                 .build();
@@ -713,6 +726,12 @@ public class OrderServiceImpl implements OrderService {
     public List<OderDTO> GetAllOrder() {
         CheckOrderAfterDeadline();
         return orderRepository.getAllOrder();
+    }
+
+    @Override
+    public List<OderDTO> GetAllOrderSpecial() {
+        CheckOrderAfterDeadline();
+        return orderRepository.getAllOrderSpecial();
     }
 
     private void CheckOrderAfterDeadline() {

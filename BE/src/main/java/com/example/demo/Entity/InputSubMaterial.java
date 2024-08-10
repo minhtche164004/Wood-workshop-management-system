@@ -1,6 +1,5 @@
 package com.example.demo.Entity;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -22,16 +21,22 @@ public class InputSubMaterial {
     private SubMaterials subMaterials; // Đổi tên thuộc tính thành "material"
 
     @Column(name = "quantity")
-    private double quantity;
+    private double change_quantity;
+
+    @Column(name = "total_quantity")
+    private double total_quantity;
 
     @Column(name = "unit_price") //giá nhập
-    private BigDecimal unit_price;
+    private BigDecimal input_price;
 
     @Column(name = "out_price") //giá bán
     private BigDecimal out_price;
 
-    @Column(name = "date_input")
+    @Column(name = "date_input") //ngày nhập vào hệ thống
     private Date date_input;
+
+    @Column(name = "create_date") //ngày nhập kho
+    private Date create_date;
 
     @ManyToOne
     @JoinColumn(name = "action_type_id")

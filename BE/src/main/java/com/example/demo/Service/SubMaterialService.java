@@ -27,7 +27,7 @@ public interface SubMaterialService {
     List<SubMaterialNameDTO> GetListName();
     List<ExcelError> saveSubMaterialToDatabase(MultipartFile file);
     List<SubMaterialViewDTO> SearchByNameorCode(String key);
-    UpdateSubDTO UpdateSub(int id, UpdateSubDTO updateSubDTO);
+    //UpdateSubDTO UpdateSub(int id, UpdateSubDTO updateSubDTO);
     SubMaterialViewDTO getSubMaterialById(int sub_material_id);
 
 

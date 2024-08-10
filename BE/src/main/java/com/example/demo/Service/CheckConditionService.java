@@ -4,6 +4,7 @@ import com.example.demo.Entity.User;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.util.Date;
 import java.util.regex.Pattern;
 
 @Service
@@ -33,5 +34,6 @@ public interface CheckConditionService {
 
    boolean checkInputPrice(BigDecimal number);
     boolean checkInputQuantityIntForProductError(int number,int current);
+    boolean checkDateInput(String dateString);
 
 }

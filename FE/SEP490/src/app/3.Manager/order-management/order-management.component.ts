@@ -306,6 +306,7 @@ export class OrderManagementComponent implements OnInit {
   productOfOrder: any = [];
   totalAmoutOrder: number = 0;
   selectedOrderDetail: any = {};
+  emailCustomer: string = '';
   getOrDetailById(us: any, order_detail_id: string): void {
     this.isLoadding = true;
     console.log('Order_detail_id:', order_detail_id);
@@ -331,10 +332,13 @@ export class OrderManagementComponent implements OnInit {
         (data) => {
           this.productOfOrder = data.result;
            console.log('Product Orders:', this.productOfOrder);
+           console.log('email:', this.productOfOrder[0].email);
+           this.emailCustomer = this.productOfOrder[0].email;
+           this.isLoadding = false;
         },
         (error) => {
           console.error('Error fetching user data:', error);
-
+          this.isLoadding = false;
 
         }
       );
@@ -342,10 +346,12 @@ export class OrderManagementComponent implements OnInit {
       this.orderRequestService.getAllOrderDetailOfProductByOrderId(order_detail_id).subscribe(
         (data) => {
           this.productOfOrder = data.result;
-          console.log('Product Flase:', this.productOfOrder);
+          console.log('Product Flase:', this.productOfOrder);this.isLoadding = false;
+          console.log('email:', this.productOfOrder[0].email);
+          this.emailCustomer = this.productOfOrder[0].email;
         },
         (error) => {
-          console.error('Error fetching user data:', error);
+          console.error('Error fetching user data:', error);this.isLoadding = false;
         }
       );
     }

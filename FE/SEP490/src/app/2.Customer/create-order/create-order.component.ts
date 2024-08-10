@@ -355,8 +355,19 @@ export class CreateOrderComponent implements OnInit {
     );
   }
 
+  selectedProduct: any[] = [];
   onProductChange(item: any, index: number): void {
     const productId = item.productId;
+
+    this.selectedProduct[index] = productId;
+    const occurrences = Object.values(this.selectedProduct).filter(id => id === productId).length;
+
+    if (occurrences > 1) {
+      this.toastr.warning('Sản phẩm đã được chọn. Vui lòng chọn sản phẩm khác', 'Lỗi');
+      this.selectedProduct[index] = null;
+      return;
+    }
+
     this.createOrderService.getProductById(productId).subscribe(
       (data: any) => {
         if (data.code === 1000) {

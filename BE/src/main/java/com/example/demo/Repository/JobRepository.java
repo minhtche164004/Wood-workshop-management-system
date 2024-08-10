@@ -123,7 +123,7 @@ public interface    JobRepository extends JpaRepository<Jobs,Integer> {
 
 
     @Query("SELECT new com.example.demo.Dto.OrderDTO.JobProductDTO(" +
-            "j.jobId,j.code,o.code, p.requestProductId, p.requestProductName, p.description, p.price, j.status, od.quantity, " +
+            "j.jobId,j.code,o.code, p.requestProductId, p.requestProductName, p.description, j.cost, j.status, j.quantityProduct, " +
             "COALESCE(u.userId, 0), COALESCE(u.username, ''), COALESCE(pos.position_id, 0), COALESCE(pos.position_name, ''),COALESCE(MIN(e.processProductErrorId),0L),COALESCE(j.reassigned, false),o.contractDate,o.orderDate) " + // Sử dụng COALESCE
             "FROM Jobs j " +
             "LEFT JOIN j.orderdetails od " +
@@ -134,11 +134,11 @@ public interface    JobRepository extends JpaRepository<Jobs,Integer> {
             "LEFT JOIN u.position pos " +
             "LEFT JOIN j.processProductErrors e " +
             "WHERE j.job_log = false AND p.requestProductId IS NOT NULL AND s.status_id != 14 " +
-            "GROUP BY j.jobId, j.code, o.code, p.requestProductId, p.requestProductName, p.description, p.price, j.status, od.quantity, u.userId, u.username, pos.position_id, pos.position_name")
+            "GROUP BY j.jobId, j.code, o.code, p.requestProductId, p.requestProductName, p.description,j.cost, j.status, od.quantity, u.userId, u.username, pos.position_id, pos.position_name")
     List<JobProductDTO> getRequestProductInJob();
 
     @Query("SELECT new com.example.demo.Dto.OrderDTO.JobProductDTO(" +
-            "j.jobId,j.code,o.code, p.requestProductId, p.requestProductName, p.description, p.price, j.status, od.quantity, " +
+            "j.jobId,j.code,o.code, p.requestProductId, p.requestProductName, p.description, j.cost, j.status, j.quantityProduct, " +
             "COALESCE(u.userId, 0), COALESCE(u.username, ''), COALESCE(pos.position_id, 0), COALESCE(pos.position_name, ''),COALESCE(MIN(e.processProductErrorId),0L),COALESCE(j.reassigned, false),o.contractDate,o.orderDate) " + // Sử dụng COALESCE
             "FROM Jobs j " +
             "LEFT JOIN j.orderdetails od " +
@@ -151,7 +151,7 @@ public interface    JobRepository extends JpaRepository<Jobs,Integer> {
             "WHERE (p.requestProductName LIKE %:search% OR :search IS NULL) AND " +
             "(s.status_id = :status_id OR :status_id IS NULL) AND " +
             "(pos.position_id = :position_id OR :position_id IS NULL) AND j.job_log = false AND p.requestProductId IS NOT NULL AND s.status_id != 14 "+
-            "GROUP BY j.jobId, j.code, o.code, p.requestProductId, p.requestProductName, p.description, p.price, j.status, od.quantity, u.userId, u.username, pos.position_id, pos.position_name")
+            "GROUP BY j.jobId, j.code, o.code, p.requestProductId, p.requestProductName, p.description, j.cost, j.status, od.quantity, u.userId, u.username, pos.position_id, pos.position_name")
 
     List<JobProductDTO> MultiFilterRequestProductInJob(@Param("search") String search,
                                                        @Param("status_id") Integer status_id,
@@ -208,7 +208,7 @@ public interface    JobRepository extends JpaRepository<Jobs,Integer> {
     List<JobProductDTO> getListProductJobByNameOrCodeProduct(@Param("keyword") String keyword);
 
     @Query("SELECT new com.example.demo.Dto.OrderDTO.JobProductDTO(" +
-            "j.jobId,j.code,o.code, p.requestProductId, p.requestProductName, p.description, p.price, j.status, od.quantity, " +
+            "j.jobId,j.code,o.code, p.requestProductId, p.requestProductName, p.description, j.cost, j.status, j.quantityProduct, " +
             "COALESCE(u.userId, 0), COALESCE(u.username, ''), COALESCE(pos.position_id, 0), COALESCE(pos.position_name, ''),COALESCE(MIN(e.processProductErrorId),0L),COALESCE(j.reassigned, false),o.contractDate,o.orderDate) " + // Sử dụng COALESCE
             "FROM Jobs j " +
             "LEFT JOIN j.orderdetails od " +

@@ -88,10 +88,11 @@ public interface OrderService {
     RequestProductDTO_Show GetRequestProductByIdWithImage(int id);
     List<RequestProductDTO_Show> GetAllRequestProductWithImage();
 
+    ResponseEntity<String> Set_Deposite_Order(int order_id, int deposite_price);
 
    ResponseEntity<String> Cancel_Order(int order_id, boolean special_order_id,String response);
 
-    ResponseEntity<String> Refund_Order(int order_id, boolean special_order_id, int percent_deposite_price,int percent_order_price,String response);
+    ResponseEntity<String> Refund_Order(int order_id, boolean special_order_id,int refund_price, String response);
 
 
     String ConfirmPayment(int order_id,BigDecimal deposit);

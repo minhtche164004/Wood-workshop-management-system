@@ -13,9 +13,10 @@ interface SubMaterial {
   sub_material_name: string,
   material_name: string,
   description: string,
-  quantity: number ,
+  quantity: number,
   unit_price: number,
-  input_price: number
+  input_price: number,
+  date_ware_house: Date
 }
 declare var $: any; // khai bao jquery
 
@@ -96,12 +97,12 @@ export class SubMaterialManagementComponent implements OnInit {
   }
 
   ngOnInit(): void {
-   // console.log("Bắt đầu chạy sub-material-management.component.ts")
+    // console.log("Bắt đầu chạy sub-material-management.component.ts")
     this.getAllMaterials();
     this.getAllSubMaterials();
     this.getAllSubMaterialsForAutoCom();
   }
-
+  dateInput: any;
   getAllSubMaterialsForAutoCom(): void {
     this.isLoadding = true;
     this.materialService.getAllSubMaterials().subscribe(
@@ -146,11 +147,11 @@ export class SubMaterialManagementComponent implements OnInit {
   }
 
   linkDowloadExcel(): void {
-    
+
   }
   dowloadExcelLink(event: Event): void {
     this.isLoadding = true;
-    event.preventDefault(); 
+    event.preventDefault();
     this.subMaterialService.downloadExcel().subscribe(
       (response) => {
         // Assuming the response is the file data
@@ -181,7 +182,7 @@ export class SubMaterialManagementComponent implements OnInit {
       (data) => {
         if (data.code === 1000) {
           this.categories = data.result;
-   //       console.log('Danh sách Materials:', this.categories);
+          //       console.log('Danh sách Materials:', this.categories);
           this.isLoadding = false;
         } else {
           console.error('Failed to fetch materials:', data);
@@ -198,8 +199,8 @@ export class SubMaterialManagementComponent implements OnInit {
   }
   addSubMaterial(): void {
     this.isLoadding = true;
-    //  console.log("Bắt đầu chạy thêm vật liệu")
-   
+    console.log("Bắt đầu chạy thêm vật liệu")
+
     const subMaterial: SubMaterial = {
       sub_material_name: this.sub_material_name,
       material_name: this.selectedMaterial,
@@ -207,44 +208,54 @@ export class SubMaterialManagementComponent implements OnInit {
       quantity: this.quantity,
       unit_price: this.unit_price,
       input_price: this.input_price,
+      date_ware_house: this.dateInput
     };
+    console.log('SubMaterial request:', subMaterial);
     if (Object.values(subMaterial).includes(null)) {
       this.isLoadding = false;
       this.toastr.info('Vui lòng điền đầy đủ thông tin, không được để trống!', 'Thông báo');
       return;
-    }if (!subMaterial.sub_material_name || subMaterial.sub_material_name.length < 3) {
+    } if (!subMaterial.sub_material_name || subMaterial.sub_material_name.length < 3) {
       this.isLoadding = false;
       this.toastr.info('Tên vật liệu phụ phải lớn hơn 3 ký tự!', 'Thông báo');
       return;
-  }
-  if (subMaterial.description === null || subMaterial.description === '') {
-    this.isLoadding = false;
-    this.toastr.info('Không được để trống mô tả sản phẩm', 'Thông báo');
-    return;
-}
-  if (subMaterial.quantity <= 0) {
+    }
+
+    const today = new Date(); // Get the current date
+
+    if (subMaterial.date_ware_house > today) {
+      this.isLoadding = false;
+      this.toastr.info('Ngày nhập phải nhỏ hơn hoặc bằng ngày hiện tại!', 'Lỗi');
+      return;
+    }
+    if (subMaterial.description === null || subMaterial.description === '') {
+      this.isLoadding = false;
+      this.toastr.info('Không được để trống mô tả sản phẩm', 'Thông báo');
+      return;
+    }
+    if (subMaterial.quantity <= 0) {
       this.isLoadding = false;
       this.toastr.info('Số lượng phải lớn hơn 0!', 'Thông báo');
       return;
-  }
-  
-  if (subMaterial.unit_price <= 0) {
+    }
+
+    if (subMaterial.unit_price <= 0) {
       this.isLoadding = false;
       this.toastr.info('Giá bán phải lớn hơn 0!', 'Thông báo');
       return;
-  }
-  
-  if (subMaterial.input_price <= 0) {
+    }
+
+    if (subMaterial.input_price <= 0) {
       this.isLoadding = false;
       this.toastr.info('Giá nhập phải lớn hơn 0!', 'Thông báo');
       return;
-  }
-  if(subMaterial.input_price > subMaterial.unit_price){
-    this.isLoadding = false;
-    this.toastr.info('Giá nhập phải nhỏ hơn giá bán!', 'Lỗi');
-    return;
-  }
-    console.log('SubMaterial request:', subMaterial);
+    }
+    if (subMaterial.input_price > subMaterial.unit_price) {
+      this.isLoadding = false;
+      this.toastr.info('Giá nhập phải nhỏ hơn giá bán!', 'Lỗi');
+      return;
+    }
+
     this.materialService.addNewSubMaterial(subMaterial).subscribe(
       (response) => {
         if (response.code === 1000) {
@@ -258,7 +269,7 @@ export class SubMaterialManagementComponent implements OnInit {
         }
       },
       (error) => {
-        console.error('Error adding sub-material:', error);
+        console.error(error.error.message, error);
         this.toastr.warning('Có lỗi xảy ra!', 'Lỗi');
         this.isLoadding = false;
       }
@@ -273,44 +284,44 @@ export class SubMaterialManagementComponent implements OnInit {
 
     // Kiểm tra các điều kiện
     if (!formData.subMaterialName || formData.subMaterialName.length < 3) {
-        this.isLoadding = false;
-        this.toastr.warning('Tên vật liệu phụ phải lớn hơn 3 ký tự!', 'Thông báo');
-        return;
+      this.isLoadding = false;
+      this.toastr.warning('Tên vật liệu phụ phải lớn hơn 3 ký tự!', 'Thông báo');
+      return;
     }
 
     if (formData.quantity <= 0) {
-        this.isLoadding = false;
-        this.toastr.warning('Số lượng phải lớn hơn 0!', 'Thông báo');
-        return;
+      this.isLoadding = false;
+      this.toastr.warning('Số lượng phải lớn hơn 0!', 'Thông báo');
+      return;
     }
 
     if (formData.unitPrice <= 0) {
-        this.isLoadding = false;
-        this.toastr.warning('Giá bán phải lớn hơn 0!', 'Thông báo');
-        return;
+      this.isLoadding = false;
+      this.toastr.warning('Giá bán phải lớn hơn 0!', 'Thông báo');
+      return;
     }
 
     // Gửi dữ liệu đến API
     this.subMaterialService.editSubMaterial(formData.subMaterialId, formData).subscribe(
-        (data) => {
-            if (data.code === 1000) {
-                this.toastr.success('Cập nhật nguyên vật liệu thành công!', 'Thành công');
-                this.getAllSubMaterials();
-                $('[data-dismiss="modal"]').click();
-                this.isLoadding = false;
-            } else {
-                console.error('Failed to search sub-materials:', data);
-                this.toastr.warning('Không thể cập nhật nguyên vật liệu!', 'Thông báo');
-                this.isLoadding = false;
-            }
-        },
-        (error) => {
-            console.error('Error updating sub-materials:', error);
-            this.toastr.warning('Có lỗi xảy ra!', 'Lỗi');
-            this.isLoadding = false;
+      (data) => {
+        if (data.code === 1000) {
+          this.toastr.success('Cập nhật nguyên vật liệu thành công!', 'Thành công');
+          this.getAllSubMaterials();
+          $('[data-dismiss="modal"]').click();
+          this.isLoadding = false;
+        } else {
+          console.error('Failed to search sub-materials:', data);
+          this.toastr.warning('Không thể cập nhật nguyên vật liệu!', 'Thông báo');
+          this.isLoadding = false;
         }
+      },
+      (error) => {
+        console.error('Error updating sub-materials:', error);
+        this.toastr.warning('Có lỗi xảy ra!', 'Lỗi');
+        this.isLoadding = false;
+      }
     );
-}
+  }
 
   loadSubMaterialDetails(subMaterialId: number) {
     this.isLoadding = true;
@@ -354,14 +365,14 @@ export class SubMaterialManagementComponent implements OnInit {
 
   searchSubMaterial(): void {
     this.checkNotFound = false;
-    
+
     this.searchKey.trim();
-   
-    this.multiFilterSubmaterial(this.searchKey,this.selectedMaterial);
-    
+
+    this.multiFilterSubmaterial(this.searchKey, this.selectedMaterial);
+
 
   }
- 
+
   sanitize(name: string): SafeHtml {
     return this.sanitizer.bypassSecurityTrustHtml(name);
   }
@@ -371,7 +382,7 @@ export class SubMaterialManagementComponent implements OnInit {
     const inputElement = event.target as HTMLInputElement;
     if (inputElement.files && inputElement.files.length > 0) {
       this.selectedFile = inputElement.files[0];
-      
+
       // Kiểm tra loại file
       const fileExtension = this.selectedFile.name.split('.').pop()?.toLowerCase();
       const allowedExtensions = ['xls', 'xlsx'];
@@ -382,7 +393,7 @@ export class SubMaterialManagementComponent implements OnInit {
         this.isLoadding = false;
         return;
       }
-  
+
       // Kiểm tra kiểu MIME (optional)
       const allowedMimeTypes = ['application/vnd.ms-excel', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'];
       if (!allowedMimeTypes.includes(this.selectedFile.type)) {
@@ -392,7 +403,7 @@ export class SubMaterialManagementComponent implements OnInit {
         this.isLoadding = false;
         return;
       }
-  
+
       this.uploadFile(this.selectedFile, inputElement);
     } else {
       this.selectedFile = undefined;
@@ -400,28 +411,28 @@ export class SubMaterialManagementComponent implements OnInit {
       this.isLoadding = false;
     }
   }
-  
+
   uploadFile(file: File, inputElement: HTMLInputElement) {
     this.isLoadding = true;
     this.subMaterialService.uploadExcel(file).subscribe(
       (event: any) => {
         if (event.type === HttpEventType.UploadProgress) {
           const progress = Math.round((100 * event.loaded) / event.total);
-      //    console.log(`File is ${progress}% uploaded.`);
+          //    console.log(`File is ${progress}% uploaded.`);
         } else if (event instanceof HttpResponse) {
           if (event.body.result == null || event.body.result.length === 0) {
             this.toastr.success('Cập nhật nguyên vật liệu thành công!', 'Thành công');
           } else {
-            const errors = event.body.result.map((error: any) => 
+            const errors = event.body.result.map((error: any) =>
               `Hàng: ${error.row} - Cột: ${error.column}, Lỗi: ${error.errorMessage}`
             ).join('<br>');
             this.toastr.warning(
-              `<div">${errors}</div>`, 
-              'Lỗi', 
+              `<div">${errors}</div>`,
+              'Lỗi',
               { enableHtml: true }
             );
           }
-        
+
           this.getAllSubMaterials();
           this.resetFileInput(inputElement); // Reset file input
           this.isLoadding = false;
@@ -436,17 +447,17 @@ export class SubMaterialManagementComponent implements OnInit {
       }
     );
   }
-  
-resetFileInput(inputElement: HTMLInputElement) {
-  inputElement.value = ''; // Reset the file input
-  this.selectedFile = undefined; // Optionally reset the selected file in the component
-}
-  selectProduct(product: any): void {
-   
-    this.selectedSubMtr = product; // Adjust based on your product object structure
-     console.log('Selected mtr seacu:', this.selectedSubMtr);
 
-   this.multiFilterSubmaterial(this.selectedSubMtr.subMaterialName,this.selectedSubMtr.materialId);
+  resetFileInput(inputElement: HTMLInputElement) {
+    inputElement.value = ''; // Reset the file input
+    this.selectedFile = undefined; // Optionally reset the selected file in the component
+  }
+  selectProduct(product: any): void {
+
+    this.selectedSubMtr = product; // Adjust based on your product object structure
+    console.log('Selected mtr seacu:', this.selectedSubMtr);
+
+    this.multiFilterSubmaterial(this.selectedSubMtr.subMaterialName, this.selectedSubMtr.materialId);
 
   }
   onChangeSearch(event: any) {
@@ -455,19 +466,19 @@ resetFileInput(inputElement: HTMLInputElement) {
   }
 
   filterByMaterialId(): void {
-   // this.isLoadding = true;
+    // this.isLoadding = true;
     console.log("selected mater id: ", this.selectedMaterial);
-    this.multiFilterSubmaterial(this.searchKey,this.selectedMaterial);
+    this.multiFilterSubmaterial(this.searchKey, this.selectedMaterial);
   }
 
-  
+
   multiFilterSubmaterial(search: string, materialId: any): void {
     this.isLoadding = true;
     console.log("Thực hiện chức năng lọc sub-materials theo nguyên vật liệu: ", materialId);
-    if(materialId === null){
+    if (materialId === null) {
       materialId = ''
     }
-    this.subMaterialService.multiFilterSubmaterial(search,materialId).subscribe(
+    this.subMaterialService.multiFilterSubmaterial(search, materialId).subscribe(
       (data) => {
         if (data.code === 1000) {
           this.subMaterials = data.result;

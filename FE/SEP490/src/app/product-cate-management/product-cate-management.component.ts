@@ -132,7 +132,7 @@ export class ProductCateManagementComponent implements OnInit{
   addCategory(): void {
     console.log('Add category:', this.newProductCate);
     if(this.newProductCate == ''){
-      this.toastr.info('Tên danh mục không được để trống', 'Thông báo');
+      this.toastr.warning('Tên danh mục không được để trống', 'Thông báo');
       return;
     }
     if (this.newProductCate) {

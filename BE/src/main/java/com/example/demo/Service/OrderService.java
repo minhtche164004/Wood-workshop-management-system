@@ -114,6 +114,14 @@ public interface OrderService {
 
     String RefundDeposite(int order_id);
 
+
+
+    List<RefundStatus> getAllRefundStatus();
+    RefundStatus getRefundStatusById(int refundId);
+
+
+
+
     String TimeContract(int order_id, double percentage_discount, Date NewDate) throws MessagingException;
 
 

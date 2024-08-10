@@ -163,6 +163,7 @@ public class JobServiceImpl implements JobService {
         job_Employee_Sick.setDescription("Nhân Viên có tên "+fullname+ " nghỉ trước công việc này !");
         job_Employee_Sick.setReassigned(true);
         job_Employee_Sick.setOriginalQuantityProduct(jobs.getOriginalQuantityProduct());
+        job_Employee_Sick.setJob_name(jobs.getJob_name());
 
         jobRepository.save(job_Employee_Sick);
         jobRepository.save(jobs);

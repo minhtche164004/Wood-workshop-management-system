@@ -133,7 +133,7 @@ const routes: Routes = [
   { path: 'employee', component: ListJobDoneEmployeeComponent, canActivate: [AuthGuard], data: { roles: ['EMPLOYEE'] } },
   { path: 'product_error_employee', component: ListProductErrorEmployeeComponent, canActivate: [AuthGuard], data: { roles: ['EMPLOYEE'] } },
   
-  { path: 'list_job_done', component: ListJobDoneComponent, canActivate: [AuthGuard], data: { roles: ['ADMIN'] } },
+  { path: 'list_job_done', component: ListJobDoneComponent, canActivate: [AuthGuard], data: { roles: ['ADMIN', 'MANAGER']} },
   { path: 'list_request_customer', component: ListRequestCustomerComponent, canActivate: [AuthGuard], data: { roles: ['MANAGER'] } },
   { path: 'list_salary_employee', component: ListSalaryEmployeeComponent, canActivate: [AuthGuard], data: { roles: ['EMPLOYEE'] } },
   { path: 'temperlate', component: TemplateComponent },

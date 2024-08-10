@@ -1,251 +1,250 @@
-<div *ngIf="currentRole === 'MANAGER' ">
+<div>
     <app-dashboard></app-dashboard>
 </div>
 
-<div *ngIf="currentRole === 'ADMIN' ">
+<!-- <div *ngIf="currentRole === 'ADMIN' ">
     <app-dashboard-admin></app-dashboard-admin>
-</div>
+</div> -->
 
 
-<div *ngIf="currentRole === 'MANAGER' ">
-    <div class="container" style="margin: 50px 0px 250px 250px;">
-        <div class="row justify-content-center">
-            <div class="col-lg-10">
-                <div class="card">
-                    <div class="card-body">
-                        <div class="e-profile">
-                            <ul class="nav nav-tabs">
-                                <li class="nav-item">
-                                    <a class="active nav-link">Tạo đơn hàng</a>
-                                </li>
-                            </ul>
-                            <div class="tab-content pt-5">
-                                <div class="tab-pane active">
-                                    <form [formGroup]="orderForm" class="form" novalidate="" (ngSubmit)="onSubmit()">
-                                        <div class="row">
-                                            <div style="border: 2cm;" class="col-md-6 mb-5 border-right">
-                                                <div class="form-group_1" formGroupName="cusInfo">
-                                                    <label style="color: red; font-size: 20px;">Người
-                                                        đặt</label>
 
-                                                    <div class="row">
-                                                        <div class="col-md-6 mb-5">
-                                                            <div class="form-group">
-                                                                <label>Họ Và Tên Khách Hàng</label>
-                                                                <input class="form-control" type="text" name="fullname"
-                                                                    formControlName="fullname">
-                                                            </div>
-                                                        </div>
-                                                        <div class="ng-autocomplete" class="col-md-6 mb-5">
-                                                            <label>Số điện thoại</label>
-                                                            <ng-autocomplete *ngIf="phoneList" [data]="phoneList"
-                                                                [searchKeyword]="keyword"
-                                                                placeholder="Nhập số điện thoại"
-                                                                [itemTemplate]="itemTemplate"
-                                                                [notFoundTemplate]="notFoundTemplate"
-                                                                (selected)="onPhoneNumberChange($event)">
-                                                            </ng-autocomplete>
+<div class="container" style="margin: 50px 0px 250px 250px;">
+    <div class="row justify-content-center">
+        <div class="col-lg-10">
+            <div class="card">
+                <div class="card-body">
+                    <div class="e-profile">
+                        <ul class="nav nav-tabs">
+                            <li class="nav-item">
+                                <a class="active nav-link">Tạo đơn hàng</a>
+                            </li>
+                        </ul>
+                        <div class="tab-content pt-5">
+                            <div class="tab-pane active">
+                                <form [formGroup]="orderForm" class="form" novalidate="" (ngSubmit)="onSubmit()">
+                                    <div class="row">
+                                        <div style="border: 2cm;" class="col-md-6 mb-5 border-right">
+                                            <div class="form-group_1" formGroupName="cusInfo">
+                                                <label style="color: red; font-size: 20px;">Người
+                                                    đặt</label>
 
-                                                            <ng-template #itemTemplate let-item>
-                                                                <a [innerHTML]="item"></a>
-                                                            </ng-template>
-
-                                                            <ng-template #notFoundTemplate let-notFound>
-                                                                <div [innerHTML]="notFound"></div>
-                                                            </ng-template>
+                                                <div class="row">
+                                                    <div class="col-md-6 ">
+                                                        <div class="form-group">
+                                                            <label>Họ Và Tên Khách Hàng</label>
+                                                            <input class="form-control" type="text" name="fullname"
+                                                                formControlName="fullname">
                                                         </div>
                                                     </div>
-                                                    <div class="row">
-                                                        <div class="col-md-6 mb-5">
-                                                            <div class="form-group">
-                                                                <label>Email</label>
-                                                                <input class="form-control" type="text" name="email"
-                                                                    formControlName="email">
-                                                            </div>
-                                                        </div>
-                                                        <div class="col-md-6 mb-5">
-                                                            <div class="form-group">
-                                                                <label>Địa chỉ cụ thể</label>
-                                                                <input class="form-control" type="text" name="address"
-                                                                    formControlName="address">
-                                                            </div>
+                                                    <div class="ng-autocomplete" class="col-md-6">
+                                                        <label>Số điện thoại</label>
+                                                        <ng-autocomplete *ngIf="phoneList" [data]="phoneList"
+                                                            [searchKeyword]="keyword" placeholder="Nhập số điện thoại"
+                                                            [itemTemplate]="itemTemplate"
+                                                            [notFoundTemplate]="notFoundTemplate"
+                                                            (selected)="onPhoneNumberChange($event)">
+                                                        </ng-autocomplete>
+
+                                                        <ng-template #itemTemplate let-item>
+                                                            <a [innerHTML]="item"></a>
+                                                        </ng-template>
+
+                                                        <ng-template #notFoundTemplate let-notFound>
+                                                            <div [innerHTML]="notFound"></div>
+                                                        </ng-template>
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-md-6">
+                                                        <div class="form-group">
+                                                            <label>Email</label>
+                                                            <input class="form-control" type="text" name="email"
+                                                                formControlName="email">
                                                         </div>
                                                     </div>
-                                                    <div class="row mb-5">
-                                                        <div class="row">
-                                                            <div class="col-md-12">
-                                                                <label class="text-left"
-                                                                    style="font-size: 16px; padding-left: 0;"
-                                                                    for="address">Địa chỉ</label>
-                                                            </div>
-                                                        </div>
-
-                                                        <div class="row">
-                                                            <div class="col-md-4 mb-5">
-                                                                <div class="form-group">
-                                                                    <select class="form-control" name="city"
-                                                                        [(ngModel)]="city_change"
-                                                                        [formControl]="provinceControl" required>
-                                                                        <option [ngValue]="null" disabled selected>
-                                                                            Tỉnh /
-                                                                            Thành Phố</option>
-
-                                                                        <option *ngFor="let province of provinces"
-                                                                            [ngValue]="province.name">{{
-                                                                            province.name }}
-                                                                        </option>
-
-                                                                    </select>
-                                                                </div>
-                                                            </div>
-                                                            <div class="col-md-4 mb-5">
-                                                                <div class="form-group">
-                                                                    <select class="form-control" name="district_change"
-                                                                        [(ngModel)]="district_change"
-                                                                        [formControl]="districtControl" required>
-                                                                        <option [ngValue]="null" disabled selected>
-                                                                            Quận /
-                                                                            Huyện</option>
-
-                                                                        <option *ngFor="let district of districts"
-                                                                            [ngValue]="district.name">{{
-                                                                            district.name }}
-                                                                        </option>
-
-                                                                    </select>
-                                                                </div>
-                                                            </div>
-                                                            <div class="col-md-4 mb-5">
-                                                                <div class="form-group">
-                                                                    <select class="form-control" name="wards_change"
-                                                                        [(ngModel)]="wards_change"
-                                                                        [formControl]="wardControl" required>
-                                                                        <option [ngValue]="null" disabled selected>
-                                                                            Phường /
-                                                                            Xã</option>
-
-                                                                        <option *ngFor="let ward of wards"
-                                                                            [ngValue]="ward.name">{{
-                                                                            ward.name
-                                                                            }}</option>
-                                                                    </select>
-                                                                </div>
-                                                            </div>
+                                                    <div class="col-md-6">
+                                                        <div class="form-group">
+                                                            <label>Địa chỉ cụ thể</label>
+                                                            <input class="form-control" type="text" name="address"
+                                                                formControlName="address">
                                                         </div>
                                                     </div>
                                                 </div>
-                                            </div>
-
-                                            <div style="border: 2cm;" class="col-md-6 mb-5 border-right">
-                                                <div class="form-group_1" formGroupName="receiveInfo">
-                                                    <label style="color: red; font-size: 20px;">Người
-                                                        nhận</label>
+                                                <div class="row">
+                                                    <div class="row">
+                                                        <div class="col-md-12">
+                                                            <label class="text-left"
+                                                                style="font-size: 16px; padding-left: 0;"
+                                                                for="address">Địa chỉ</label>
+                                                        </div>
+                                                    </div>
 
                                                     <div class="row">
-                                                        <div class="col-md-6 mb-5">
+                                                        <div class="col-md-4">
                                                             <div class="form-group">
-                                                                <label>Họ Và Tên Khách Hàng</label>
-                                                                <input class="form-control" type="text" name="fullname"
-                                                                    formControlName="fullname">
+                                                                <select class="form-control" name="city"
+                                                                    [(ngModel)]="city_change"
+                                                                    [formControl]="provinceControl" required>
+                                                                    <option [ngValue]="null" disabled selected>
+                                                                        Tỉnh /
+                                                                        Thành Phố</option>
+
+                                                                    <option *ngFor="let province of provinces"
+                                                                        [ngValue]="province.name">{{
+                                                                        province.name }}
+                                                                    </option>
+
+                                                                </select>
                                                             </div>
                                                         </div>
-                                                        <div class="col-md-6 mb-5">
+                                                        <div class="col-md-4">
                                                             <div class="form-group">
-                                                                <label>Số điện thoại</label>
-                                                                <input class="form-control" type="text"
-                                                                    name="phonenumberCopy" formControlName="phone">
+                                                                <select class="form-control" name="district_change"
+                                                                    [(ngModel)]="district_change"
+                                                                    [formControl]="districtControl" required>
+                                                                    <option [ngValue]="null" disabled selected>
+                                                                        Quận /
+                                                                        Huyện</option>
+
+                                                                    <option *ngFor="let district of districts"
+                                                                        [ngValue]="district.name">{{
+                                                                        district.name }}
+                                                                    </option>
+
+                                                                </select>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-md-4">
+                                                            <div class="form-group">
+                                                                <select class="form-control" name="wards_change"
+                                                                    [(ngModel)]="wards_change"
+                                                                    [formControl]="wardControl" required>
+                                                                    <option [ngValue]="null" disabled selected>
+                                                                        Phường /
+                                                                        Xã</option>
+
+                                                                    <option *ngFor="let ward of wards"
+                                                                        [ngValue]="ward.name">{{
+                                                                        ward.name
+                                                                        }}</option>
+                                                                </select>
                                                             </div>
                                                         </div>
                                                     </div>
-                                                    <div class="row">
-                                                        <div class="col-md-6 mb-5">
-                                                            <div class="form-group">
-                                                                <label>Email</label>
-                                                                <input class="form-control" type="text" name="email"
-                                                                    formControlName="email">
-                                                            </div>
-                                                        </div>
-                                                        <div class="col-md-6 mb-5">
-                                                            <div class="form-group">
-                                                                <label>Địa chỉ cụ thể</label>
-                                                                <input class="form-control" type="text" name="address"
-                                                                    formControlName="address">
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    <div class="row mb-5">
-                                                        <div class="row">
-                                                            <div class="col-md-12">
-                                                                <label class="text-left"
-                                                                    style="font-size: 16px; padding-left: 0;"
-                                                                    for="address">Địa chỉ</label>
-                                                            </div>
-                                                        </div>
-
-                                                        <div class="row">
-                                                            <div class="col-md-4 mb-5">
-                                                                <div class="form-group">
-                                                                    <select class="form-control" name="city_change"
-                                                                        [formControl]="provinceControlCopy" required
-                                                                        formControlName="city_province">
-                                                                        <option [ngValue]="null" disabled selected>
-                                                                            Tỉnh /
-                                                                            Thành Phố</option>
-
-                                                                        <option *ngFor="let province of provinces"
-                                                                            [ngValue]="province.name">{{
-                                                                            province.name }}
-                                                                        </option>
-
-                                                                    </select>
-                                                                </div>
-                                                            </div>
-                                                            <div class="col-md-4 mb-5">
-                                                                <div class="form-group">
-                                                                    <select class="form-control" name="district_change"
-                                                                        [(ngModel)]="district_changeCopy"
-                                                                        [formControl]="districtControlCopy" required
-                                                                        formControlName="district">
-                                                                        <option [ngValue]="null" disabled selected>
-                                                                            Quận /
-                                                                            Huyện</option>
-
-                                                                        <option *ngFor="let district of districts"
-                                                                            [ngValue]="district.name">{{
-                                                                            district.name }}
-                                                                        </option>
-
-                                                                    </select>
-                                                                </div>
-                                                            </div>
-                                                            <div class="col-md-4 mb-5">
-                                                                <div class="form-group">
-                                                                    <select class="form-control" name="wards_change"
-                                                                        [(ngModel)]="wards_changeCopy"
-                                                                        [formControl]="wardControlCopy" required
-                                                                        formControlName="wards">
-                                                                        <option [ngValue]="null" disabled selected>
-                                                                            Phường /
-                                                                            Xã</option>
-
-                                                                        <option *ngFor="let ward of wards"
-                                                                            [ngValue]="ward.name">{{
-                                                                            ward.name
-                                                                            }}</option>
-                                                                    </select>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-
-
-
-                                                    </div>
-
-
                                                 </div>
                                             </div>
                                         </div>
-                                        <hr>
+
+                                        <div style="border: 2cm;" class="col-md-6 mb-5 border-right">
+                                            <div class="form-group_1" formGroupName="receiveInfo">
+                                                <label style="color: red; font-size: 20px;">Người
+                                                    nhận</label>
+
+                                                <div class="row">
+                                                    <div class="col-md-6">
+                                                        <div class="form-group">
+                                                            <label>Họ Và Tên Khách Hàng</label>
+                                                            <input class="form-control" type="text" name="fullname"
+                                                                formControlName="fullname">
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        <div class="form-group">
+                                                            <label>Số điện thoại</label>
+                                                            <input class="form-control" type="text"
+                                                                name="phonenumberCopy" formControlName="phone">
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-md-6">
+                                                        <div class="form-group">
+                                                            <label>Email</label>
+                                                            <input class="form-control" type="text" name="email"
+                                                                formControlName="email">
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        <div class="form-group">
+                                                            <label>Địa chỉ cụ thể</label>
+                                                            <input class="form-control" type="text" name="address"
+                                                                formControlName="address">
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="row">
+                                                        <div class="col-md-12">
+                                                            <label class="text-left"
+                                                                style="font-size: 16px; padding-left: 0;"
+                                                                for="address">Địa chỉ</label>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="row">
+                                                        <div class="col-md-4">
+                                                            <div class="form-group">
+                                                                <select class="form-control" name="city_change"
+                                                                    [formControl]="provinceControlCopy" required
+                                                                    formControlName="city_province">
+                                                                    <option [ngValue]="null" disabled selected>
+                                                                        Tỉnh /
+                                                                        Thành Phố</option>
+
+                                                                    <option *ngFor="let province of provinces"
+                                                                        [ngValue]="province.name">{{
+                                                                        province.name }}
+                                                                    </option>
+
+                                                                </select>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-md-4">
+                                                            <div class="form-group">
+                                                                <select class="form-control" name="district_change"
+                                                                    [(ngModel)]="district_changeCopy"
+                                                                    [formControl]="districtControlCopy" required
+                                                                    formControlName="district">
+                                                                    <option [ngValue]="null" disabled selected>
+                                                                        Quận /
+                                                                        Huyện</option>
+
+                                                                    <option *ngFor="let district of districts"
+                                                                        [ngValue]="district.name">{{
+                                                                        district.name }}
+                                                                    </option>
+
+                                                                </select>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-md-4">
+                                                            <div class="form-group">
+                                                                <select class="form-control" name="wards_change"
+                                                                    [(ngModel)]="wards_changeCopy"
+                                                                    [formControl]="wardControlCopy" required
+                                                                    formControlName="wards">
+                                                                    <option [ngValue]="null" disabled selected>
+                                                                        Phường /
+                                                                        Xã</option>
+
+                                                                    <option *ngFor="let ward of wards"
+                                                                        [ngValue]="ward.name">{{
+                                                                        ward.name
+                                                                        }}</option>
+                                                                </select>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+
+
+                                                </div>
+
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <hr>
                                     <!--    <div class="form-group"  class="row" *ngIf="inforId != 0">
                                             
                                             <div class="col-md-6">
@@ -286,33 +285,33 @@
                                         </div> 
                                         <br>
                                         <hr> -->
-                                        <div class="col-md-12">
-                                            <form [formGroup]="productForm">
-                                                <div formArrayName="productItems" class="form-group">
-                                                    <div *ngFor="let productItem of productItems.controls; let i = index"
-                                                        [formGroupName]="i" class="row mb-3">
+                                    <div class="col-md-12">
+                                        <form [formGroup]="productForm">
+                                            <div formArrayName="productItems" class="form-group">
+                                                <div *ngFor="let productItem of productItems.controls; let i = index"
+                                                    [formGroupName]="i" class="row">
 
-                                                        <div *ngIf="!isForRequestProduct" class="ng-autocomplete"
-                                                            class="col-md-8 mb-5">
-                                                            <label>Tên sản phẩm</label>
-                                                            <ng-autocomplete *ngIf="productList" [data]="productList"
-                                                                [searchKeyword]="keywordProduct"
-                                                                placeholder="Nhập tên sản phẩm"
-                                                                [itemTemplate]="itemTemplate"
-                                                                [notFoundTemplate]="notFoundTemplate"
-                                                                (selected)="onProductChange($event, i)">
-                                                            </ng-autocomplete>
+                                                    <div *ngIf="!isForRequestProduct" class="ng-autocomplete"
+                                                        class="col-md-8">
+                                                        <label>Tên sản phẩm</label>
+                                                        <ng-autocomplete *ngIf="productList" [data]="productList"
+                                                            [searchKeyword]="keywordProduct"
+                                                            placeholder="Nhập tên sản phẩm"
+                                                            [itemTemplate]="itemTemplate"
+                                                            [notFoundTemplate]="notFoundTemplate"
+                                                            (selected)="onProductChange($event, i)">
+                                                        </ng-autocomplete>
 
-                                                            <ng-template #itemTemplate let-item>
-                                                                <a [innerHTML]="item.productName"></a>
-                                                            </ng-template>
+                                                        <ng-template #itemTemplate let-item>
+                                                            <a [innerHTML]="item.productName"></a>
+                                                        </ng-template>
 
-                                                            <ng-template #notFoundTemplate let-notFound>
-                                                                <div [innerHTML]="notFound"></div>
-                                                            </ng-template>
-                                                        </div>
+                                                        <ng-template #notFoundTemplate let-notFound>
+                                                            <div [innerHTML]="notFound"></div>
+                                                        </ng-template>
+                                                    </div>
 
-                                                        <!-- <div *ngIf="isForRequestProduct" class="ng-autocomplete"
+                                                    <!-- <div *ngIf="isForRequestProduct" class="ng-autocomplete"
                                                             class="col-md-8 mb-5">
                                                             <label>Tên sản phẩm</label>
                                                             <ng-autocomplete *ngIf="productList" [data]="productList"
@@ -331,452 +330,62 @@
                                                                 <div [innerHTML]="notFound"></div>
                                                             </ng-template>
                                                         </div> -->
-                                                        <div class="col-md-2 mb-3">
-                                                            <div class="form-group">
-                                                                <label for="price">Giá</label>
-                                                                <input id="price" class="form-control"
-                                                                    formControlName="price" type="text" readonly>
-                                                            </div>
+                                                    <div class="col-md-2">
+                                                        <div class="form-group">
+                                                            <label for="price">Giá</label>
+                                                            <input id="price" class="form-control"
+                                                                formControlName="price" type="text" readonly>
                                                         </div>
-                                                        <div class="col-md-1 ">
-                                                            <div class="form-group">
-                                                                <label for="quantity">Số
-                                                                    lượng</label>
-                                                                <input id="quantity" class="form-control"
-                                                                    formControlName="quantity" type="number"
-                                                                    placeholder="Nhập số lượng"
-                                                                    (change)="onQuantityChange($event, i)">
-                                                            </div>
+                                                    </div>
+                                                    <div class="col-md-1 ">
+                                                        <div class="form-group">
+                                                            <label for="quantity">Số
+                                                                lượng</label>
+                                                            <input id="quantity" class="form-control"
+                                                                formControlName="quantity" type="number"
+                                                                placeholder="Nhập số lượng"
+                                                                (change)="onQuantityChange($event, i)">
                                                         </div>
-                                                        <!-- Nút xóa -->
-                                                        <div class="col-md-1 d-flex align-items-center">
-                                                            <button type="button" class="btn btn-danger"
-                                                                (click)="removeItem(i)"><i
+                                                    </div>
+                                                    <!-- Nút xóa -->
+                                                    <div class="col-md-1 d-flex align-items-center">
+                                                        <button type="button" class="btn btn-danger"
+                                                            (click)="removeItem(i)"><i
                                                                 class="fa-regular fa-trash-can"></i></button>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <button type="button" class="btn btn-secondary" (click)="addItem()">Thêm
-                                                    mặt hàng sản
-                                                    phẩm</button>
-                                            </form>
-
-                                            <hr>
-                                            <div class="total-price">
-                                                Tổng giá: {{totalUnitPrice | number: '1.0-3'}} VNĐ
-                                            </div>
-                                        </div>
-
-                                        <div class="form-group">
-                                            <label style="font-size: 16px;" for="payment_method">Phương thức thanh
-                                                toán</label>
-                                            <select class="form-control" id="payment_method"
-                                                formControlName="payment_method">
-                                                <option [ngValue]="null" disabled selected>Phương thức thanh toán
-                                                </option>
-                                                <option [ngValue]="1">Thanh toán bằng tiền mặt</option>
-                                                <option [ngValue]="2">Thanh toán qua thẻ</option>
-                                            </select>
-                                        </div>
-
-                                        <div class="row">
-                                            <div class="col d-flex justify-content-end">
-                                                <button class="btn btn-primary btn-lg mx-5" type="submit">XÁC
-                                                    NHẬN</button>
-                                                <!-- <button class="btn btn-mau-do btn-lg mx-5" type="button">Hủy Bỏ</button> -->
-                                            </div>
-                                        </div>
-                                    </form>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-
-<div *ngIf="currentRole === 'ADMIN' ">
-    <div class="container" style="margin: 50px 0px 250px 250px;">
-        <div class="row justify-content-center">
-            <div class="col-lg-10">
-                <div class="card">
-                    <div class="card-body">
-                        <div class="e-profile">
-                            <ul class="nav nav-tabs">
-                                <li class="nav-item">
-                                    <a class="active nav-link">Tạo đơn hàng</a>
-                                </li>
-                            </ul>
-                            <div class="tab-content pt-5">
-                                <div class="tab-pane active">
-                                    <form [formGroup]="orderForm" class="form" novalidate="" (ngSubmit)="onSubmit()">
-                                        <div class="row">
-                                            <div style="border: 2cm;" class="col-md-6 mb-5 border-right">
-                                                <div class="form-group_1" formGroupName="cusInfo">
-                                                    <label style="color: red; font-size: 20px;">Người
-                                                        đặt</label>
-
-                                                    <div class="row">
-                                                        <div class="col-md-6 mb-5">
-                                                            <div class="form-group">
-                                                                <label>Họ Và Tên Khách Hàng</label>
-                                                                <input class="form-control" type="text" name="fullname"
-                                                                    formControlName="fullname">
-                                                            </div>
-                                                        </div>
-                                                        <div class="ng-autocomplete" class="col-md-6 mb-5">
-                                                            <label>Số điện thoại</label>
-                                                            <ng-autocomplete *ngIf="phoneList" [data]="phoneList"
-                                                                [searchKeyword]="keyword"
-                                                                placeholder="Nhập số điện thoại"
-                                                                [itemTemplate]="itemTemplate"
-                                                                [notFoundTemplate]="notFoundTemplate"
-                                                                (selected)="onPhoneNumberChange($event)">
-                                                            </ng-autocomplete>
-
-                                                            <ng-template #itemTemplate let-item>
-                                                                <a [innerHTML]="item"></a>
-                                                            </ng-template>
-
-                                                            <ng-template #notFoundTemplate let-notFound>
-                                                                <div [innerHTML]="notFound"></div>
-                                                            </ng-template>
-                                                        </div>
-                                                    </div>
-                                                    <div class="row">
-                                                        <div class="col-md-6 mb-5">
-                                                            <div class="form-group">
-                                                                <label>Email</label>
-                                                                <input class="form-control" type="text" name="email"
-                                                                    formControlName="email">
-                                                            </div>
-                                                        </div>
-                                                        <div class="col-md-6 mb-5">
-                                                            <div class="form-group">
-                                                                <label>Địa chỉ cụ thể</label>
-                                                                <input class="form-control" type="text" name="address"
-                                                                    formControlName="address">
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    <div class="row mb-5">
-                                                        <div class="row">
-                                                            <div class="col-md-12">
-                                                                <label class="text-left"
-                                                                    style="font-size: 16px; padding-left: 0;"
-                                                                    for="address">Địa chỉ</label>
-                                                            </div>
-                                                        </div>
-
-                                                        <div class="row">
-                                                            <div class="col-md-4 mb-5">
-                                                                <div class="form-group">
-                                                                    <select class="form-control" name="city"
-                                                                        [(ngModel)]="city_change"
-                                                                        [formControl]="provinceControl" required>
-                                                                        <option [ngValue]="null" disabled selected>
-                                                                            Tỉnh /
-                                                                            Thành Phố</option>
-
-                                                                        <option *ngFor="let province of provinces"
-                                                                            [ngValue]="province.name">{{
-                                                                            province.name }}
-                                                                        </option>
-
-                                                                    </select>
-                                                                </div>
-                                                            </div>
-                                                            <div class="col-md-4 mb-5">
-                                                                <div class="form-group">
-                                                                    <select class="form-control" name="district_change"
-                                                                        [(ngModel)]="district_change"
-                                                                        [formControl]="districtControl" required>
-                                                                        <option [ngValue]="null" disabled selected>
-                                                                            Quận /
-                                                                            Huyện</option>
-
-                                                                        <option *ngFor="let district of districts"
-                                                                            [ngValue]="district.name">{{
-                                                                            district.name }}
-                                                                        </option>
-
-                                                                    </select>
-                                                                </div>
-                                                            </div>
-                                                            <div class="col-md-4 mb-5">
-                                                                <div class="form-group">
-                                                                    <select class="form-control" name="wards_change"
-                                                                        [(ngModel)]="wards_change"
-                                                                        [formControl]="wardControl" required>
-                                                                        <option [ngValue]="null" disabled selected>
-                                                                            Phường /
-                                                                            Xã</option>
-
-                                                                        <option *ngFor="let ward of wards"
-                                                                            [ngValue]="ward.name">{{
-                                                                            ward.name
-                                                                            }}</option>
-                                                                    </select>
-                                                                </div>
-                                                            </div>
-                                                        </div>
                                                     </div>
                                                 </div>
                                             </div>
+                                            <button type="button" class="btn btn-secondary" (click)="addItem()">Thêm
+                                                mặt hàng sản
+                                                phẩm</button>
+                                        </form>
 
-                                            <div style="border: 2cm;" class="col-md-6 mb-5 border-right">
-                                                <div class="form-group_1" formGroupName="receiveInfo">
-                                                    <label style="color: red; font-size: 20px;">Người
-                                                        nhận</label>
-
-                                                    <div class="row">
-                                                        <div class="col-md-6 mb-5">
-                                                            <div class="form-group">
-                                                                <label>Họ Và Tên Khách Hàng</label>
-                                                                <input class="form-control" type="text" name="fullname"
-                                                                    formControlName="fullname">
-                                                            </div>
-                                                        </div>
-                                                        <div class="col-md-6 mb-5">
-                                                            <div class="form-group">
-                                                                <label>Số điện thoại</label>
-                                                                <input class="form-control" type="text"
-                                                                    name="phonenumberCopy" formControlName="phone">
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    <div class="row">
-                                                        <div class="col-md-6 mb-5">
-                                                            <div class="form-group">
-                                                                <label>Email</label>
-                                                                <input class="form-control" type="text" name="email"
-                                                                    formControlName="email">
-                                                            </div>
-                                                        </div>
-                                                        <div class="col-md-6 mb-5">
-                                                            <div class="form-group">
-                                                                <label>Địa chỉ cụ thể</label>
-                                                                <input class="form-control" type="text" name="address"
-                                                                    formControlName="address">
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    <div class="row mb-5">
-                                                        <div class="row">
-                                                            <div class="col-md-12">
-                                                                <label class="text-left"
-                                                                    style="font-size: 16px; padding-left: 0;"
-                                                                    for="address">Địa chỉ</label>
-                                                            </div>
-                                                        </div>
-
-                                                        <div class="row">
-                                                            <div class="col-md-4 mb-5">
-                                                                <div class="form-group">
-                                                                    <select class="form-control" name="city_change"
-                                                                        [formControl]="provinceControlCopy" required
-                                                                        formControlName="city_province">
-                                                                        <option [ngValue]="null" disabled selected>
-                                                                            Tỉnh /
-                                                                            Thành Phố</option>
-
-                                                                        <option *ngFor="let province of provinces"
-                                                                            [ngValue]="province.name">{{
-                                                                            province.name }}
-                                                                        </option>
-
-                                                                    </select>
-                                                                </div>
-                                                            </div>
-                                                            <div class="col-md-4 mb-5">
-                                                                <div class="form-group">
-                                                                    <select class="form-control" name="district_change"
-                                                                        [(ngModel)]="district_changeCopy"
-                                                                        [formControl]="districtControlCopy" required
-                                                                        formControlName="district">
-                                                                        <option [ngValue]="null" disabled selected>
-                                                                            Quận /
-                                                                            Huyện</option>
-
-                                                                        <option *ngFor="let district of districts"
-                                                                            [ngValue]="district.name">{{
-                                                                            district.name }}
-                                                                        </option>
-
-                                                                    </select>
-                                                                </div>
-                                                            </div>
-                                                            <div class="col-md-4 mb-5">
-                                                                <div class="form-group">
-                                                                    <select class="form-control" name="wards_change"
-                                                                        [(ngModel)]="wards_changeCopy"
-                                                                        [formControl]="wardControlCopy" required
-                                                                        formControlName="wards">
-                                                                        <option [ngValue]="null" disabled selected>
-                                                                            Phường /
-                                                                            Xã</option>
-
-                                                                        <option *ngFor="let ward of wards"
-                                                                            [ngValue]="ward.name">{{
-                                                                            ward.name
-                                                                            }}</option>
-                                                                    </select>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-
-
-
-                                                    </div>
-
-
-                                                </div>
-                                            </div>
-                                        </div>
                                         <hr>
-                                        <!-- <div class="form-group"  class="row" *ngIf="inforId != 0">
-                                            
-                                            <div class="col-md-6">
-                                                <label style="font-size: 16px;" for="special_order">Loại đơn hàng</label>
-                                                <select class="form-control" id="special_order"
-                                                    formControlName="special_order" (change)="onIsProductChange($event)">
-                                                    <option [ngValue]="null" disabled selected>Loại đơn hàng</option>
-                                                    <option [ngValue]="0">Đơn hàng dành cho sản phẩm có sẵn</option>
-                                                    <option [ngValue]="1">Đơn hàng dành cho sản phẩm theo yêu cầu</option>
-                                                </select>
-                                            </div>
-
-                                            <div class="col-md-6">
-                                                <label style="font-size: 16px;" for="special_order">Ngày hoàn thành</label>
-                                                <input class="form-control" type="date" placeholder="Nhập ngày hoàn thành" formControlName="orderFinish">
-                                            </div>
-
+                                        <div class="total-price">
+                                            Tổng giá: {{totalUnitPrice | number: '1.0-3'}} VNĐ
                                         </div>
+                                    </div>
 
-                                        <div class="form-group" *ngIf="isForRequestProduct">
-                                            <label style="font-size: 16px;" for="request_id">Chọn yêu cầu</label>
-                                            <div class="ng-autocomplete">
-                                                <ng-autocomplete *ngIf="requests" [data]="requests"
-                                                    [searchKeyword]="keywordRequest"
-                                                    placeholder="Enter the request's code" [itemTemplate]="itemTemplate"
-                                                    [notFoundTemplate]="notFoundTemplate"
-                                                    (selected)="onRequestIdSelected($event)">
-                                                </ng-autocomplete>
+                                    <div class="form-group">
+                                        <label style="font-size: 16px;" for="payment_method">Phương thức thanh
+                                            toán</label>
+                                        <select class="form-control" id="payment_method"
+                                            formControlName="payment_method">
+                                            <option [ngValue]="null" disabled selected>Phương thức thanh toán
+                                            </option>
+                                            <option [ngValue]="1">Thanh toán bằng tiền mặt</option>
+                                            <option [ngValue]="2">Thanh toán qua thẻ</option>
+                                        </select>
+                                    </div>
 
-                                                <ng-template #itemTemplate let-item>
-                                                    <a [innerHTML]="item.code"></a>
-                                                </ng-template>
-
-                                                <ng-template #notFoundTemplate let-notFound>
-                                                    <div [innerHTML]="notFound"></div>
-                                                </ng-template>
-                                            </div>
+                                    <div class="row">
+                                        <div class="col d-flex justify-content-end">
+                                            <button class="btn btn-primary btn-lg mx-5" type="submit">XÁC
+                                                NHẬN</button>
+                                            <!-- <button class="btn btn-mau-do btn-lg mx-5" type="button">Hủy Bỏ</button> -->
                                         </div>
-                                        <br>
-                                        <hr> -->
-                                        <div class="col-md-12">
-                                            <form [formGroup]="productForm">
-                                                <div formArrayName="productItems" class="form-group">
-                                                    <div *ngFor="let productItem of productItems.controls; let i = index"
-                                                        [formGroupName]="i" class="row mb-3">
-
-                                                        <div *ngIf="!isForRequestProduct" class="ng-autocomplete"
-                                                            class="col-md-8 mb-5">
-                                                            <label>Tên sản phẩm</label>
-                                                            <ng-autocomplete *ngIf="productList" [data]="productList"
-                                                                [searchKeyword]="keywordProduct"
-                                                                placeholder="Nhập tên sản phẩm"
-                                                                [itemTemplate]="itemTemplate"
-                                                                [notFoundTemplate]="notFoundTemplate"
-                                                                (selected)="onProductChange($event, i)">
-                                                            </ng-autocomplete>
-
-                                                            <ng-template #itemTemplate let-item>
-                                                                <a [innerHTML]="item.productName"></a>
-                                                            </ng-template>
-
-                                                            <ng-template #notFoundTemplate let-notFound>
-                                                                <div [innerHTML]="notFound"></div>
-                                                            </ng-template>
-                                                        </div>
-
-                                                        <div *ngIf="isForRequestProduct" class="ng-autocomplete"
-                                                            class="col-md-8 mb-5">
-                                                            <label>Tên sản phẩm</label>
-                                                            <ng-autocomplete *ngIf="productList" [data]="productList"
-                                                                [searchKeyword]="keywordProductRequest"
-                                                                placeholder="Nhập tên sản phẩm"
-                                                                [itemTemplate]="itemTemplate"
-                                                                [notFoundTemplate]="notFoundTemplate"
-                                                                (selected)="onProductRequestChange($event, i)">
-                                                            </ng-autocomplete>
-
-                                                            <ng-template #itemTemplate let-item>
-                                                                <a [innerHTML]="item.requestProductName"></a>
-                                                            </ng-template>
-
-                                                            <ng-template #notFoundTemplate let-notFound>
-                                                                <div [innerHTML]="notFound"></div>
-                                                            </ng-template>
-                                                        </div>
-                                                        <div class="col-md-2 mb-3">
-                                                            <div class="form-group">
-                                                                <label for="price">Giá</label>
-                                                                <input id="price" class="form-control"
-                                                                    formControlName="price" type="text" readonly>
-                                                            </div>
-                                                        </div>
-                                                        <div class="col-md-1 ">
-                                                            <div class="form-group">
-                                                                <label for="quantity">Số
-                                                                    lượng</label>
-                                                                <input id="quantity" class="form-control"
-                                                                    formControlName="quantity" type="number"
-                                                                    placeholder="Nhập số lượng"
-                                                                    (change)="onQuantityChange($event, i)">
-                                                            </div>
-                                                        </div>
-                                                        <!-- Nút xóa -->
-                                                        <div class="col-md-1 d-flex align-items-center">
-                                                            <button type="button" class="btn btn-danger"
-                                                                (click)="removeItem(i)">Xóa</button>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <button type="button" class="btn btn-primary" (click)="addItem()">Thêm
-                                                    mặt hàng sản
-                                                    phẩm</button>
-                                            </form>
-
-                                            <hr>
-                                            <div class="total-price">
-                                                Tổng giá: {{totalUnitPrice | number: '1.0-3'}} VNĐ
-                                            </div>
-                                        </div>
-
-                                        <div class="form-group">
-                                            <label style="font-size: 16px;" for="payment_method">Phương thức thanh
-                                                toán</label>
-                                            <select class="form-control" id="payment_method"
-                                                formControlName="payment_method">
-                                                <option [ngValue]="null" disabled selected>Phương thức thanh toán
-                                                </option>
-                                                <option [ngValue]="1">Thanh toán bằng tiền mặt</option>
-                                                <option [ngValue]="2">Thanh toán qua thẻ</option>
-                                            </select>
-                                        </div>
-
-                                        <div class="row">
-                                            <div class="col d-flex justify-content-center">
-                                                <button class="btn btn-primary btn-lg mx-5" type="submit">XÁC
-                                                    NHẬN</button>
-                                                <!-- <button class="btn btn-mau-do btn-lg mx-5" type="button">Hủy Bỏ</button> -->
-                                            </div>
-                                        </div>
-                                    </form>
-                                </div>
+                                    </div>
+                                </form>
                             </div>
                         </div>
                     </div>
@@ -785,7 +394,6 @@
         </div>
     </div>
 </div>
-
 
 
 <!-- loadding man` hinh` -->

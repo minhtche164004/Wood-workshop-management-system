@@ -44,14 +44,29 @@ public interface RequestProductsSubmaterialsRepository extends JpaRepository<Req
     List<String> GetSubNameByProductId(int query);
 
     @Query("SELECT new com.example.demo.Dto.SubMaterialDTO.SubMateProductRequestDTO( " +
-            "m.materialId ,sub.subMaterialId ,sub.subMaterialName, m.type, sub.unitPrice, j.quantity) " +
+            "m.materialId ,sub.subMaterialId ,sub.subMaterialName, m.type, li.out_price, j.quantity) " +
             "FROM RequestProductsSubmaterials j " +
             "LEFT JOIN j.subMaterial sub " +
             "LEFT JOIN sub.material m " +
+            "LEFT JOIN (" +
+            "   SELECT ism.subMaterials.subMaterialId AS subMaterialId, " +
+            "          MAX(ism.total_quantity) AS total_quantity, " +
+            "          MAX(ism.out_price) AS out_price, " +
+            "          MAX(ism.input_price) AS unit_price, " +  // Thêm unit_price vào subquery
+            "          MAX(ism.date_input) AS max_date_input, " +
+            "          MAX(ism.input_id) AS max_input_id " +
+            "   FROM InputSubMaterial ism " +
+            "   GROUP BY ism.subMaterials.subMaterialId " +
+            ") li ON sub.subMaterialId = li.subMaterialId " +
             "WHERE j.requestProduct.requestProductId = :requestProductId")
     List<SubMateProductRequestDTO> getRequestProductSubMaterialByRequestProductIdDTO(int requestProductId);
 
-    @Query("SELECT SUM(s.quantity*sub.unitPrice) FROM RequestProductsSubmaterials s " +
-            " LEFT JOIN s.subMaterial sub WHERE s.requestProduct.requestProductId = :requestProductId")
-    BigDecimal ToTalRequestProductSubMaterialByRequestProductId(int requestProductId);
+//    @Query("SELECT SUM(latestInput.total_quantity * latestInput.out_price) AS total FROM (" +
+//            "SELECT ism.subMaterials.subMaterialId, ism.total_quantity, ism.out_price, ism.input_price " +
+//            "FROM InputSubMaterial ism " +
+//            "ORDER BY ism.date_input DESC " +
+//            "LIMIT 1 " +
+//            ") latestInput")
+//    BigDecimal totalAmountSubMaterial();
+
 }

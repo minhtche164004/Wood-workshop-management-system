@@ -124,12 +124,12 @@ public class SubMaterialController {
         return apiResponse;
     }
 
-    @GetMapping("/UpdateSubMaterial")
-    public ApiResponse<?> UpdateSubMaterial(@RequestParam("id") int id, @RequestBody @Valid UpdateSubDTO updateSubDTO) {
-        ApiResponse<UpdateSubDTO> apiResponse = new ApiResponse<>();
-        apiResponse.setResult(subMaterialService.UpdateSub(id,updateSubDTO));
-        return apiResponse;
-    }
+//    @GetMapping("/UpdateSubMaterial")
+//    public ApiResponse<?> UpdateSubMaterial(@RequestParam("id") int id, @RequestBody @Valid UpdateSubDTO updateSubDTO) {
+//        ApiResponse<UpdateSubDTO> apiResponse = new ApiResponse<>();
+//        apiResponse.setResult(subMaterialService.UpdateSub(id,updateSubDTO));
+//        return apiResponse;
+//    }
     @GetMapping("/GetAllMaterialForEmployee")
     public ApiResponse<?> GetAllMaterialForEmployee() {
         ApiResponse<List> apiResponse = new ApiResponse<>();

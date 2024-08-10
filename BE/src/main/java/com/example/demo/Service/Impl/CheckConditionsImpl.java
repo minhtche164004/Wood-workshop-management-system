@@ -8,6 +8,9 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.regex.Pattern;
 @Service
 public class CheckConditionsImpl implements CheckConditionService {
@@ -66,6 +69,20 @@ public class CheckConditionsImpl implements CheckConditionService {
         }
         return true; // Kiểm tra trực tiếp xem số có lớn hơn 0 hay không
     }
+
+    @Override
+    public boolean checkDateInput(String dateString) {
+        SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
+        formatter.setLenient(false); // Ngăn chặn các ngày không hợp lệ (ví dụ: 31/02)
+
+        try {
+            Date date = formatter.parse(dateString);
+            return true;
+        } catch (ParseException e) {
+            return false;
+        }
+    }
+
     public boolean checkInputPrice(BigDecimal number) {
         return number.compareTo(BigDecimal.ZERO) > 0;
     }

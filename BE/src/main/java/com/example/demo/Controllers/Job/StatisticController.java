@@ -126,12 +126,12 @@ public class StatisticController {
         apiResponse.setResult(statisticService.totalAmountOrderHaveDone());
         return apiResponse;
     }
-    @GetMapping("/totalAmountSubMaterial")
-    public ApiResponse<?> totalAmountSubMaterial() {
-        ApiResponse<BigDecimal> apiResponse = new ApiResponse<>();
-        apiResponse.setResult(statisticService.totalAmountSubMaterial());
-        return apiResponse;
-    }
+//    @GetMapping("/totalAmountSubMaterial")
+//    public ApiResponse<?> totalAmountSubMaterial() {
+//        ApiResponse<BigDecimal> apiResponse = new ApiResponse<>();
+//        apiResponse.setResult(statisticService.totalAmountSubMaterial());
+//        return apiResponse;
+//    }
     @GetMapping("/findTotalCostSubMaterialByMonthAndYear")
     public ApiResponse<?> findTotalCostSubMaterialByMonthAndYear(@RequestParam("month") int month,@RequestParam("year") int year) {
         ApiResponse<BigDecimal> apiResponse = new ApiResponse<>();

@@ -50,6 +50,7 @@ public class ExcelUploadService {
                             case 3 -> subMaterialDTO.setQuantity(cell.getNumericCellValue());
                             case 4 -> subMaterialDTO.setUnit_price(BigDecimal.valueOf(cell.getNumericCellValue()));
                             case 5 -> subMaterialDTO.setInput_price(BigDecimal.valueOf(cell.getNumericCellValue()));
+                            case 6 -> subMaterialDTO.setDate_ware_house(cell.getDateCellValue());
                             default -> {
                             }
                         }

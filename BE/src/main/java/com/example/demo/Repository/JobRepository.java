@@ -123,7 +123,7 @@ public interface    JobRepository extends JpaRepository<Jobs,Integer> {
 
 
     @Query("SELECT new com.example.demo.Dto.OrderDTO.JobProductDTO(" +
-            "j.jobId,j.code,o.code, p.requestProductId, p.requestProductName, p.description, j.cost, j.status, od.quantity, " +
+            "j.jobId,j.code,o.code, p.requestProductId, p.requestProductName, p.description, j.cost, j.status, j.quantityProduct, " +
             "COALESCE(u.userId, 0), COALESCE(u.username, ''), COALESCE(pos.position_id, 0), COALESCE(pos.position_name, ''),COALESCE(MIN(e.processProductErrorId),0L),COALESCE(j.reassigned, false),o.contractDate,o.orderDate) " + // Sử dụng COALESCE
             "FROM Jobs j " +
             "LEFT JOIN j.orderdetails od " +
@@ -138,7 +138,7 @@ public interface    JobRepository extends JpaRepository<Jobs,Integer> {
     List<JobProductDTO> getRequestProductInJob();
 
     @Query("SELECT new com.example.demo.Dto.OrderDTO.JobProductDTO(" +
-            "j.jobId,j.code,o.code, p.requestProductId, p.requestProductName, p.description, j.cost, j.status, od.quantity, " +
+            "j.jobId,j.code,o.code, p.requestProductId, p.requestProductName, p.description, j.cost, j.status, j.quantityProduct, " +
             "COALESCE(u.userId, 0), COALESCE(u.username, ''), COALESCE(pos.position_id, 0), COALESCE(pos.position_name, ''),COALESCE(MIN(e.processProductErrorId),0L),COALESCE(j.reassigned, false),o.contractDate,o.orderDate) " + // Sử dụng COALESCE
             "FROM Jobs j " +
             "LEFT JOIN j.orderdetails od " +
@@ -208,7 +208,7 @@ public interface    JobRepository extends JpaRepository<Jobs,Integer> {
     List<JobProductDTO> getListProductJobByNameOrCodeProduct(@Param("keyword") String keyword);
 
     @Query("SELECT new com.example.demo.Dto.OrderDTO.JobProductDTO(" +
-            "j.jobId,j.code,o.code, p.requestProductId, p.requestProductName, p.description, j.cost, j.status, od.quantity, " +
+            "j.jobId,j.code,o.code, p.requestProductId, p.requestProductName, p.description, j.cost, j.status, j.quantityProduct, " +
             "COALESCE(u.userId, 0), COALESCE(u.username, ''), COALESCE(pos.position_id, 0), COALESCE(pos.position_name, ''),COALESCE(MIN(e.processProductErrorId),0L),COALESCE(j.reassigned, false),o.contractDate,o.orderDate) " + // Sử dụng COALESCE
             "FROM Jobs j " +
             "LEFT JOIN j.orderdetails od " +

@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.util.Date;
 
 @Data
 @AllArgsConstructor
@@ -26,7 +27,8 @@ public class SubMaterialDTO implements Serializable {
     private Double quantity;
     @NotNull(message = "MUST_REQUIRED") // Không được để trống
   //  @DecimalMin(value = "0.0", inclusive = false, message = "PRICE_INVALID") // Giá trị tối thiểu lớn hơn 0
-    private BigDecimal unit_price;
-    private BigDecimal input_price;
+    private BigDecimal unit_price; //giá bán
+    private BigDecimal input_price;//giá nhập
+    private Date date_ware_house;
 
 }

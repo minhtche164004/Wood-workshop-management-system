@@ -301,8 +301,12 @@ public class OrderServiceImpl implements OrderService {
     public ResponseEntity<String> Refund_Order(int order_id, boolean special_order_id, int refund_price, String response,  int status_Id_Refund) {
 
         Orders orders = orderRepository.findById(order_id);
+        if(refund_price>orders.getTotalAmount().intValue()){
+            throw new AppException(ErrorCode.COST_REFUND_INVALID);
+        }
 
-//        orders.setStatus(statusOrderRepository.findById(9));//set cho nó là đơn hàng hoàn tiền do phía khách hoặc do cửa hàng
+        RefundStatus refundStatus = statusOrderRepository.findByRefundStatusId(status_Id_Refund);
+        orders.setRefundStatus(refundStatus);//set cho nó là đơn hàng hoàn tiền do phía khách hoặc do cửa hàng
         if (special_order_id == false) {//là hàng có sẵn
             List<Orderdetails> list = orderDetailRepository.getOrderDetailByOrderId(order_id);
             for (Orderdetails orderdetails : list) {
@@ -742,16 +746,16 @@ public class OrderServiceImpl implements OrderService {
 
     private void CheckOrderAfterDeadline() {
         LocalDate today = LocalDate.now();
-        List<OderDTO> list = orderRepository.getAllOrderWithStatus3();
-        for(OderDTO o : list){
-            if(o.getContractDate() != null){
-                LocalDate timeFinishLocalDate = o.getContractDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
-                if(timeFinishLocalDate.isBefore(today)){
-                    orderRepository.UpdateStatusOrder(o.getOrderId(),10);
+            List<OderDTO> list = orderRepository.getAllOrderWithStatus3();
+            for(OderDTO o : list){
+                if(o.getContractDate() != null){
+                    LocalDate timeFinishLocalDate = o.getContractDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+                    if(timeFinishLocalDate.isBefore(today)){
+                        orderRepository.UpdateStatusOrder(o.getOrderId(),10);
+                    }
                 }
             }
         }
-    }
 
 
 

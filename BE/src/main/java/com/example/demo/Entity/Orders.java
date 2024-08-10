@@ -90,5 +90,9 @@ public class Orders {
     @OneToMany(mappedBy = "orders", cascade = CascadeType.ALL)
     private List<Requestimages> requestImages;
 
+    @ManyToOne // Relationship with Status entity
+    @JoinColumn(name = "refund_id", referencedColumnName = "refund_id")
+    private RefundStatus refundStatus;  // Assuming you have a Status entity
+
 
 }

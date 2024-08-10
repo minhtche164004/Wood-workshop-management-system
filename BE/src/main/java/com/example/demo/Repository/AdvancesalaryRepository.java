@@ -210,13 +210,38 @@ public interface AdvancesalaryRepository extends JpaRepository<Advancesalary,Int
     BigDecimal totalAmountOrderHaveDone();
 
 
-    //tổng số tiền nhập nguyên vật liệu
-    @Query("SELECT SUM(s.quantity*s.unitPrice) FROM SubMaterials s")
-    BigDecimal totalAmountSubMaterial();
+//    //tổng số tiền nhập nguyên vật liệu
+//    @Query("SELECT SUM(latestInput.total_quantity * latestInput.out_price) AS total FROM SubMaterials s" +
+//            " LEFT JOIN (" +
+//            "SELECT ism.subMaterials.subMaterialId, ism.total_quantity, ism.out_price, ism.input_price " +
+//            "FROM InputSubMaterial ism " +
+//            "ORDER BY ism.date_input DESC " +
+//            "LIMIT 1 " +
+//            ") latestInput ON s.subMaterialId = latestInput.subMaterialId ")
+//    BigDecimal totalAmountSubMaterial();
+
+
+
+    @Query("SELECT SUM(ism.total_quantity * ism.out_price) AS total " +
+            "FROM InputSubMaterial ism " +
+            "WHERE MONTH(ism.date_input) = :month " +
+            "AND YEAR(ism.date_input) = :year")
+    BigDecimal findTotalSubMaterialByMonthAndYear(@Param("month") int month, @Param("year") int year);
 
     //tính số lượng tiền nhập nguyên liệu theo tháng và năm
-    @Query("SELECT SUM(s.quantity*s.unitPrice) FROM SubMaterials s WHERE MONTH(s.create_date) = :month AND YEAR(s.create_date) = :year")
-    BigDecimal findTotalSubMaterialByMonthAndYear(@Param("month") int month, @Param("year") int year);
+//    @Query("SELECT SUM(latestInput.total_quantity*latestInput.out_price) FROM SubMaterials s " +
+//            " LEFT JOIN (" +
+//            "SELECT ism.subMaterials.subMaterialId, ism.total_quantity, ism.out_price, ism.input_price,ism.date_input " +
+//            "FROM InputSubMaterial ism " +
+//            "ORDER BY ism.date_input DESC " +
+//            "LIMIT 1 " +
+//            ") latestInput ON s.subMaterialId = latestInput.subMaterialId "+
+//            "WHERE MONTH(latestInput.date_input) = :month AND YEAR(latestInput.date_input) = :year")
+//    BigDecimal findTotalSubMaterialByMonthAndYear(@Param("month") int month, @Param("year") int year);
+
+
+
+
 
 
 

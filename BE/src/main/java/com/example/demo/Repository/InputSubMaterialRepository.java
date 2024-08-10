@@ -18,22 +18,29 @@ public interface InputSubMaterialRepository extends JpaRepository<InputSubMateri
     @Query("SELECT ism FROM InputSubMaterial ism WHERE ism.subMaterials.subMaterialId = :subMaterialId AND ism.actionType.action_type_id = 4  ORDER BY ism.date_input DESC LIMIT 1   ")
     InputSubMaterial findLatestInputSubMaterialBySubMaterialId(@Param("subMaterialId") int subMaterialId);
 
+    @Query("SELECT ism FROM InputSubMaterial ism WHERE ism.subMaterials.subMaterialId = :subMaterialId  ORDER BY ism.date_input DESC LIMIT 1   ")
+    InputSubMaterial findLatestSubMaterialInputSubMaterialBySubMaterialId(@Param("subMaterialId") int subMaterialId);
+
+    //lấy quantiy submaterial đã cập nhật lần cuối(bản ghi mới nhất) (loại action là cạp nhật giá)
+    @Query("SELECT ism FROM InputSubMaterial ism WHERE ism.subMaterials.subMaterialId = :subMaterialId AND ism.actionType.action_type_id = 3  ORDER BY ism.date_input DESC LIMIT 1   ")
+    InputSubMaterial findLatestQuantityInputSubMaterialBySubMaterialId(@Param("subMaterialId") int subMaterialId);
+
 
     //lấy giá submaterial đã cập nhật lần cuối(bản ghi mới nhất) (loại action là cạp nhật giá)(giá bán)
     @Query("SELECT ism FROM InputSubMaterial ism WHERE ism.subMaterials.subMaterialId = :subMaterialId AND ism.actionType.action_type_id = 4  ORDER BY ism.date_input DESC LIMIT 1   ")
     InputSubMaterial findLatestOutputSubMaterialBySubMaterialId(@Param("subMaterialId") int subMaterialId);
 
     //số tiền nhập kho theo tháng của mõi sản phẩm
-    @Query("SELECT SUM(a.quantity*a.unit_price) FROM InputSubMaterial a  WHERE MONTH(a.date_input) = :month AND YEAR(a.date_input) = :year AND a.actionType.action_type_id = 2 ")
+    @Query("SELECT SUM(a.total_quantity*a.out_price) FROM InputSubMaterial a  WHERE MONTH(a.date_input) = :month AND YEAR(a.date_input) = :year AND a.actionType.action_type_id = 2 ")
     BigDecimal findTotalInputSubMaterialByMonthAndYear(@Param("month") int month, @Param("year") int year);
 
     //số tiền chênh lệch lúc cập nhật số lượng theo tháng của mõi sản phẩm , nếu bigdecimal mà duogw nghĩa là thêm sản phẩm vào kho, , phải sử dụng dấu +
-    @Query("SELECT SUM(a.quantity*a.unit_price) FROM InputSubMaterial a  WHERE MONTH(a.date_input) = :month AND YEAR(a.date_input) = :year AND a.actionType.action_type_id = 3" +
-            " AND a.quantity >= 0 ")
+    @Query("SELECT SUM(a.total_quantity*a.out_price) FROM InputSubMaterial a  WHERE MONTH(a.date_input) = :month AND YEAR(a.date_input) = :year AND a.actionType.action_type_id = 3" +
+            " AND a.total_quantity >= 0 ")
     BigDecimal findTotalEditQuantitySubMaterialByMonthAndYear(@Param("month") int month, @Param("year") int year);
 
-    @Query("SELECT SUM(a.quantity*a.unit_price) FROM InputSubMaterial a  WHERE MONTH(a.date_input) = :month AND YEAR(a.date_input) = :year AND a.actionType.action_type_id = 5" +
-            " AND a.quantity >= 0 ")
+    @Query("SELECT SUM(a.total_quantity*a.out_price) FROM InputSubMaterial a  WHERE MONTH(a.date_input) = :month AND YEAR(a.date_input) = :year AND a.actionType.action_type_id = 5" +
+            " AND a.total_quantity >= 0 ")
     BigDecimal findTotalEditQuantityAndPriceSubMaterialByMonthAndYear(@Param("month") int month, @Param("year") int year);
 
 

@@ -440,7 +440,7 @@ public class JobServiceImpl implements JobService {
                 jobs_log.setProduct(null);
                 //------ đoạn này chỉ dành cho request product , vì nó là đơn hàng , còn product có sẵn thì lúc cọc xong thì chuyển sang status là đã thi công xong luôn
                 Orders orders = orderRepository.findByCode(jobs_history.getOrderdetails().getOrder().getCode());
-                if (checkOderDoneOrNot(orders.getOrderId()) == false) {
+                if (checkOderDoneOrNotTest(orders.getOrderId()) == 0) {
                     orders.setStatus(statusOrderRepository.findById(4)); //nghĩa là đơn hàng đã thi công xong
                     orderRepository.save(orders);
                 }

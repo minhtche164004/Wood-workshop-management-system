@@ -114,10 +114,10 @@ public class StatisticServiceImpl implements StatisticService {
         return advancesalaryRepository.totalAmountOrderHaveDone();
     }
 
-    @Override
-    public BigDecimal totalAmountSubMaterial() {
-        return advancesalaryRepository.totalAmountSubMaterial();
-    }
+//    @Override
+//    public BigDecimal totalAmountSubMaterial() {
+//        return advancesalaryRepository.totalAmountSubMaterial();
+//    }
     @Override
     public BigDecimal findTotalSubMaterialByMonthAndYear(int year, int month) {
           return advancesalaryRepository.findTotalSubMaterialByMonthAndYear(year, month);

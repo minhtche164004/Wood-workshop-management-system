@@ -52,11 +52,11 @@ public class ModelMapperConfig {
                 .addMapping(src -> src.getUserInfor().getWards(), UpdateProfileDTO::setWards);
 
 
-        modelMapper.typeMap(SubMaterials.class, UpdateSubDTO.class)
-                .addMapping(SubMaterials::getSubMaterialName, UpdateSubDTO::setSub_material_name)
-                .addMapping(SubMaterials::getDescription, UpdateSubDTO::setDescription)
-                .addMapping(SubMaterials::getQuantity, UpdateSubDTO::setQuantity)
-                .addMapping(SubMaterials::getUnitPrice, UpdateSubDTO::setUnit_price);
+//        modelMapper.typeMap(SubMaterials.class, UpdateSubDTO.class)
+//                .addMapping(SubMaterials::getSubMaterialName, UpdateSubDTO::setSub_material_name)
+//                .addMapping(SubMaterials::getDescription, UpdateSubDTO::setDescription)
+//                .addMapping(SubMaterials::getQuantity, UpdateSubDTO::setQuantity)
+//                .addMapping(SubMaterials::getUnitPrice, UpdateSubDTO::setUnit_price);
 
         modelMapper.typeMap(Processproducterror.class, ProductErrorAllDTO.class)
                 .addMapping(Processproducterror::getProcessProductErrorId, ProductErrorAllDTO::setId)

@@ -132,6 +132,18 @@ public class OrderController {
         apiResponse.setResult(orderService.getOrderById(id));
         return apiResponse;
     }
+    @GetMapping("/getAllRefundStatus")
+    public ApiResponse<?> getAllRefundStatus() {
+        ApiResponse<List> apiResponse = new ApiResponse<>();
+        apiResponse.setResult(orderService.getAllRefundStatus());
+        return apiResponse;
+    }
+    @GetMapping("/getRefundStatusById")
+    public ApiResponse<?> getRefundStatusById(@RequestParam("refundId") int refundId) {
+        ApiResponse<RefundStatus> apiResponse = new ApiResponse<>();
+        apiResponse.setResult(orderService.getRefundStatusById(refundId));
+        return apiResponse;
+    }
     @GetMapping("/getRequestProductById")
     public ApiResponse<?> GetRequestProductByIdWithImage(@RequestParam("id") int id) {
         ApiResponse<RequestProductDTO_Show> apiResponse = new ApiResponse<>();

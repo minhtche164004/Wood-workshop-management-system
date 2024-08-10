@@ -107,6 +107,10 @@ public interface OrderService {
     String TimeContract(int order_id, double percentage_discount,Date NewDate) throws MessagingException;
 
 
+    List<RefundStatus> getAllRefundStatus();
+    RefundStatus getRefundStatusById(int refundId);
+
+
 
 
 

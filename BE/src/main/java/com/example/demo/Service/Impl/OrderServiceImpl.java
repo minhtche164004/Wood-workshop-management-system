@@ -41,6 +41,7 @@ import java.util.*;
 
 @Service
 public class OrderServiceImpl implements OrderService {
+
     @Autowired
     private Status_Order_Repository statusOrderRepository;
     @Autowired
@@ -764,6 +765,24 @@ public class OrderServiceImpl implements OrderService {
         String email = orders.getUserInfor().getUser().getEmail();
         emailService.sendEmailFromTemplate2(name, email, list, orders);
         return "Giảm giá cho đơn hàng thành công";
+    }
+
+    @Override
+    public List<RefundStatus> getAllRefundStatus() {
+        List<RefundStatus> list = statusOrderRepository.getAllRefundStatus();
+        if(list == null){
+            throw new AppException(ErrorCode.NOT_FOUND);
+        }
+        return list;
+    }
+
+    @Override
+    public RefundStatus getRefundStatusById(int refundId) {
+        RefundStatus re = statusOrderRepository.findByRefundStatusId(refundId);
+        if(re == null){
+            throw new AppException(ErrorCode.NOT_FOUND);
+        }
+        return re;
     }
 
     @Override

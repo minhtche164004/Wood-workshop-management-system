@@ -69,8 +69,18 @@
                                     <!-- <p>Giá tiền:</p>
                                         <input type="range">
                                         <button type="submit"  class="button-filter">Lọc</button> -->
-
+                                       
+            
                                 </div>
+                                <div style="justify-content: space-between; margin-left: 15%;">
+                                    <button class="giacao" [class.selected]="selectedSortByPrice === 'desc'"
+                                        style="margin: 5px; padding: 5px; border: none; background: none; font-size: 14px;"
+                                        (click)="sortProducts('desc')">Giá cao <i class="fa-solid fa-arrow-down-wide-short"></i></button>
+                                    <button class="giathap" [class.selected]="selectedSortByPrice === 'asc'"
+                                        style="margin: 5px; padding: 5px; border: none; background: none; font-size: 14px;"
+                                        (click)="sortProducts('asc')">Giá thấp <i class="fa-solid fa-arrow-up-wide-short"></i></button>
+                                </div>
+                                
                             </div>
                         </div>
 
@@ -80,20 +90,7 @@
                 </div>
                 <div class="col-lg-9 col-12">
                     <div class="boloc d-flex">
-                        <div class="boloc d-flex">
-                            <!-- Ví dụ với input button -->
-                            <div style="margin-top: -6%;">
-                                <button class="giacao" [class.selected]="selectedSortByPrice === 'desc'"
-                                    style="margin: 5px; padding: 5px;  border: none; background: none;"
-                                    (click)="sortProducts('desc')">Giá cao <i
-                                        class="fa-solid fa-arrow-down-wide-short"></i></button>
-                                <button class="giathap" [class.selected]="selectedSortByPrice === 'asc'"
-                                    style="margin: 5px; padding: 5px;  border: none; background: none;"
-                                    (click)="sortProducts('asc')">Giá thấp <i
-                                        class="fa-solid fa-arrow-up-wide-short"></i></button>
-                            </div>
-
-                        </div>
+                       
                     </div>
                     <div>
                         <div>

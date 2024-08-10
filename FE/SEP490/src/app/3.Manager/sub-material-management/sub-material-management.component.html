@@ -156,15 +156,26 @@
               <input type="text" class="form-control" id="productName" placeholder="Nhập tên nguyên vật liệu"
                 [(ngModel)]="sub_material_name" name="sub_material_name">
             </div>
-
-            <div class="form-group">
-              <label for="productCategory">Kiểu vật liệu</label>
-              <select class="form-control" name="selectedMaterial" [(ngModel)]="selectedMaterial" id="productCategory">
-                <option [ngValue]="null" disabled selected>Chọn kiểu vật liệu</option>
-                <option *ngFor="let category of categories" [ngValue]="category?.materialName">{{ category?.materialName
-                  }}</option>
-              </select>
+            <div class="row">
+              <div class="col-md-6">
+                <div class="form-group">
+                  <label for="productCategory">Kiểu vật liệu</label>
+                  <select class="form-control" name="selectedMaterial" [(ngModel)]="selectedMaterial" id="productCategory">
+                    <option [ngValue]="null" disabled selected>Chọn kiểu vật liệu</option>
+                    <option *ngFor="let category of categories" [ngValue]="category?.materialName">{{ category?.materialName
+                      }}</option>
+                  </select>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="form-group">
+                  <label for="productName">Ngày nhập kho</label>
+                  <input type="date" class="form-control" id="dateInput" placeholder="Nhập tên nguyên vật liệu"
+                    [(ngModel)]="dateInput" name="dateInput">
+                </div>
+              </div>
             </div>
+           
             <div class="form-group">
               <label for="productQuantity">Mô tả</label>
               <input type="text" class="form-control" id="productQuantity" placeholder="Nhập mô tả nguyên vật liệu"

@@ -52,6 +52,7 @@ export class ImpactHistoryManagerComponent implements OnInit {
         (data: ApiResponse) => {
           if (data.code === 1000) {
             this.list_submaterinput_manage = data.result;
+            console.log('Fetched products:', this.list_submaterinput_manage);
             this.isLoadding = false;
 
           } else {

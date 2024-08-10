@@ -86,6 +86,7 @@ public enum ErrorCode {
     CATEGORY_HAS_RELATIONSHIPS(1047,"Không thể xoá loại sản phẩm do các sản phẩm liên quan đến loại này đang tồn tại trong các đơn hàng",HttpStatus.BAD_REQUEST),
     MATERIAL_EMPLOYEE_HAS_RELATIONSHIPS(1048,"Không thể sửa vật liệu ước tính của sản phẩm này do lượng vật liệu ước tính trước đó đang được sử dụng cho các công việc !",HttpStatus.BAD_REQUEST),
     COST_REMAIN(1043,"Số tiền còn lại cần thanh toán không đúng với giá trị , vui lòng nhập lại!",HttpStatus.BAD_REQUEST),
+    COST_REFUND_INVLID(1044,"Số tiền hoàn phải nhỏ hơn tổng giá trị đơn hàng , vui lòng nhập lại!",HttpStatus.BAD_REQUEST),
 
 
 

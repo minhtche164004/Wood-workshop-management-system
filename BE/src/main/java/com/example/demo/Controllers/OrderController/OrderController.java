@@ -176,10 +176,11 @@ public class OrderController {
     @PostMapping("/Refund_Order")
     public ResponseEntity<String> Refund_Order(@RequestParam("order_id") int order_id,@RequestParam("special_order_id") boolean special_order_id,
                                                @RequestParam("refund_price") int refund_price,
-                                               @RequestBody String response) {
+                                               @RequestBody String response,
+                                               @RequestParam("status_Id_Refund") int status_Id_Refund) {
         //  ApiResponse<ResponseEntity<?>> apiResponse = new ApiResponse<>();
         //  apiResponse.setResult(orderService.Cancel_Order(order_id,special_order_id));
-        return orderService.Refund_Order(order_id,special_order_id, refund_price, response);
+        return orderService.Refund_Order(order_id,special_order_id, refund_price, response, status_Id_Refund);
     }
 
     @GetMapping("/GetWhiteListByUser")
@@ -402,6 +403,16 @@ public class OrderController {
         orderService.ChangeStatusOrder(orderId,status_id);
       //  apiResponse.setResult("Sửa status của đơn hàng thành công");
         apiResponse.setResult(orderService.ChangeStatusOrder(orderId,status_id));
+        return apiResponse;
+    }
+
+    @PutMapping("ChangeStatusOrderFinish")
+    public ApiResponse<?> ChangeStatusOrderFinish(@RequestParam("orderId") int orderId,@RequestParam("status_id") int status_id, @RequestParam("remain_price")int remain_price){
+        ApiResponse<String> apiResponse = new ApiResponse<>();
+        orderService.ChangeStatusOrder(orderId,status_id);
+        //  apiResponse.setResult("Sửa status của đơn hàng thành công");
+        BigDecimal remain_priceBigDecimal = new BigDecimal(remain_price);
+        apiResponse.setResult(orderService.ChangeStatusOrderFinish(orderId,status_id, remain_priceBigDecimal));
         return apiResponse;
     }
 }

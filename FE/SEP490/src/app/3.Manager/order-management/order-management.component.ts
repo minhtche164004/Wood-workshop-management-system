@@ -650,7 +650,10 @@ export class OrderManagementComponent implements OnInit {
         error: (error: any) => {
           if (error.error && error.error.code === 1044) {
             this.toastr.error(error.error.message);
+          }else{
+            this.toastr.error(error.error);
           }
+         
           this.isLoadding = false;
           console.log(error);
         },

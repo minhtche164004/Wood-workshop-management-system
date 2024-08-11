@@ -63,7 +63,7 @@
                   <th>Ngày nhập</th>
                   <th style="width: 120px;">Ngày thay đổi</th>
                  
-                  <th style="width: 100px;">Số lượng</th>
+                  <th style="width: 100px;">Tổng số lượng trong kho</th>
                   <th style="width: 150px;">Số lượng thay đổi</th>
                   <th>Giá nhập</th>
                   <th>Giá bán</th>
@@ -82,14 +82,14 @@
                   <td style="min-width: 150px;">{{ job.actionType.action_name }}</td>
                   <td style="min-width: 150px;">{{ job.subMaterials.subMaterialName }}</td>
                   <td style="min-width: 100px;">{{ job.subMaterials.description}}</td>
-                  <td>{{ job.subMaterials.create_date  | date:'dd/MM/yyyy' }}</td>
+                  <td>{{ job.create_date  | date:'dd/MM/yyyy' }}</td>
                   <td>{{ job.date_input  | date:'dd/MM/yyyy' }}</td>
                  
-                  <td style="text-align: right;min-width: 50px; ">{{ job.subMaterials.quantity }}</td>
-                  <td style="text-align: right;min-width: 50px; ">{{ job.quantity }}</td>
+                  <td style="text-align: right;min-width: 50px; ">{{ job.total_quantity }}</td>
+                  <td style="text-align: right;min-width: 50px; ">{{ job.change_quantity }}</td>
 
-                  <td style="text-align: right;">{{ job.subMaterials.unitPrice  | number: '1.0-3' }}</td>
-                  <td style="text-align: right;">{{ job.unit_price | number: '1.0-3' }}</td>
+                  <td style="text-align: right;">{{ job.input_price | number: '1.0-3' }}</td>
+                  <td style="text-align: right;">{{ job.out_price | number: '1.0-3' }}</td>
 
 
          

@@ -632,7 +632,7 @@ export class OrderManagementComponent implements OnInit {
         this.cancelReasonPrice
       ).subscribe({
         next: (response: any) => {
-          if (response.success) {
+
 
           console.log('Raw Response:', response); // Log the raw response
           this.toastr.success("Hoàn tiền đơn hàng thành công");
@@ -640,18 +640,23 @@ export class OrderManagementComponent implements OnInit {
           closeModal();
 
           this.isLoadding = false;
-          }
+          
         },
         error: (error: any) => {
-          if (error.status === 400 && error.error.code === 1044) {
-            this.toastr.error(error.error.message);
-            console.error('Error:', error);
-
-            this.isLoadding = false;
-          }
-          else if (error.status === 400) {
+          if (error.status === 400) {
+            try {
+              const errorResponse = JSON.parse(error.error);
+              if (errorResponse.code === 1044) {
+                this.toastr.error(errorResponse.message);
+                console.error('Error:', error);
+              } else {
+                this.toastr.error(error.error);
+              }
+            } catch (e) {
+              this.toastr.error(error.error);
+            }
+          } else {
             this.toastr.error(error.error);
-            this.isLoadding = false;
           }
           this.isLoadding = false;
         },

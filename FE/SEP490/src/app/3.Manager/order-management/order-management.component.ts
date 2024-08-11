@@ -411,10 +411,26 @@ export class OrderManagementComponent implements OnInit {
   }
 
   changeStatusFinish(orderId: string, statusId: string): void {
-    if (!this.remain_price) {
+
+    // Convert remain_price to a string and trim any whitespace
+    const trimmedRemainPrice = this.remain_price.toString().trim();
+    
+    // Check if the trimmed string is empty
+    if (trimmedRemainPrice === '') {
       this.toastr.error('Số tiền còn lại cần thanh toán không được để trống.');
       return;
     }
+    
+    // Convert the trimmed string to a number
+    const numericRemainPrice = parseFloat(trimmedRemainPrice);
+    
+    // Check if the trimmed string is a valid number
+    if (isNaN(numericRemainPrice)) {
+      this.toastr.error('Vui lòng chỉ được nhập số.');
+      return;
+    }
+    
+    // The remain_price is valid, you can proceed with the rest of the logic
 
     this.isLoadding = true;
 
@@ -605,12 +621,22 @@ export class OrderManagementComponent implements OnInit {
       cancelReasonPrice: this.cancelReasonPrice,
     });
 
-    if (!this.percentDepositPrice) {
-      this.toastr.error('Vui lòng nhập Số tiền hoàn đơn hàng.');
+  
+    const numericValue = Number(this.percentDepositPrice);
+
+    // Check if the conversion resulted in NaN or if the value is empty
+    if (this.percentDepositPrice.trim() === '' ) {
+      this.toastr.error('Vui lòng số tiền hoàn không được để trống.');
       this.isLoadding = false;
       return;
     }
-
+    if ( isNaN(numericValue)) {
+      this.toastr.error('Vui lòng chỉ nhập số.');
+      this.isLoadding = false;
+      return;
+    }
+    
+  
     if (!this.selectedReason) {
       this.toastr.error('Vui lòng chọn lý do.');
       this.isLoadding = false;
@@ -688,13 +714,26 @@ export class OrderManagementComponent implements OnInit {
     this.isLoadding = true;
     
     // Convert depositeOrder to a number
-    const numericDepositOrder = parseFloat(this.depositeOrder as any);
+   
     
-    if (isNaN(numericDepositOrder)) {
-      this.toastr.error('Invalid deposit amount');
+    // Convert number to string and trim any whitespace
+    const trimmedDepositOrder = this.depositeOrder.toString().trim();
+    if (trimmedDepositOrder === '' ) {
+      this.toastr.error('Vui lòng không được để trống.');
       this.isLoadding = false;
       return;
     }
+  
+    // Convert the trimmed string to a number
+    const numericDepositOrder = parseFloat(trimmedDepositOrder);
+    
+    // Check if the trimmed string is empty or not a valid number
+    if ( isNaN(numericDepositOrder)) {
+      this.toastr.error('Vui lòng chỉ nhập số.');
+      this.isLoadding = false;
+      return;
+    }
+   
   
     // Format the number to two decimal places
     const formattedDepositOrder = numericDepositOrder.toFixed(2); // e.g., '4000000.00'

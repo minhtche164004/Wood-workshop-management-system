@@ -303,7 +303,7 @@ public class OrderServiceImpl implements OrderService {
     public ResponseEntity<String> Refund_Order(int order_id, boolean special_order_id, int refund_price, String response,  int status_Id_Refund) {
 
         Orders orders = orderRepository.findById(order_id);
-        if(refund_price>orders.getTotalAmount().intValue()){
+        if(refund_price>orders.getTotalAmount().intValue() || refund_price<0){
             throw new AppException(ErrorCode.COST_REFUND_INVALID);
         }
 
@@ -402,7 +402,8 @@ public class OrderServiceImpl implements OrderService {
     public String ConfirmPayment(int order_id,BigDecimal deposit) {
         Orders orders = orderRepository.findById(order_id);
         BigDecimal deposit_order = orders.getDeposite();
-        if(deposit.compareTo(deposit_order)>=0){ // nếu số tiền đặt cọc lớn hơn hoặc bằng số tiền đặt cọc của đơn hàng thì mới cho phép xác nhận thanh toán
+        BigDecimal total = orders.getTotalAmount();
+        if(deposit.compareTo(deposit_order)>=0 && deposit.compareTo(total)<= 0){ // nếu số tiền đặt cọc lớn hơn hoặc bằng số tiền đặt cọc của đơn hàng thì mới cho phép xác nhận thanh toán
 
             orders.setDeposite(deposit); // luu so tien da thanh dat coc
 

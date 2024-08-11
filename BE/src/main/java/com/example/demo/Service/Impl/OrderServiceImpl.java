@@ -274,6 +274,10 @@ public class OrderServiceImpl implements OrderService {
                 List<Jobs> jobsList = jobRepository.getJobByOrderDetailByOrderCode(orders.getCode());
 
                 for (Jobs jobs : jobsList) {
+                    if (jobs.isJob_log() == false && jobs.getUser() != null && (jobs.getStatus() == statusJobRepository.findById(4) || jobs.getStatus() == statusJobRepository.findById(7) || jobs.getStatus() == statusJobRepository.findById(10))) {
+                        return ResponseEntity.badRequest().body("Hãy hoàn thành công việc của " + jobs.getUser().getPosition().getPosition_name() + " có tên là " + jobs.getUser().getUsername() + " trước khi huỷ đơn hàng");
+                    }
+                    
                     if (jobs.isJob_log() == false && jobs.getUser() == null) {
                         List<Processproducterror> processproducterrorList = processproducterrorRepository.getProcessproducterrorByJobId(jobs.getJobId());
                         for (Processproducterror processproducterror : processproducterrorList) {
@@ -282,9 +286,7 @@ public class OrderServiceImpl implements OrderService {
                         jobRepository.delete(jobs);
                         return ResponseEntity.ok("Huỷ đơn hàng thành công");
                     }
-                    if (jobs.isJob_log() == false && jobs.getUser() != null) {
-                        return ResponseEntity.badRequest().body("Hãy hoàn thành công việc của " + jobs.getUser().getPosition().getPosition_name() + " có tên là " + jobs.getUser().getUsername() + " trước khi huỷ đơn hàng");
-                    }
+
                 }
 //                requestProducts.setQuantity(requestProducts.getQuantity()+orderdetails.getRequestProduct().getQuantity());
 //                requestProductRepository.save(requestProducts);
@@ -331,6 +333,10 @@ public class OrderServiceImpl implements OrderService {
                 List<Jobs> jobsList = jobRepository.getJobByOrderDetailByOrderCode(orders.getCode());
 
                 for (Jobs jobs : jobsList) {
+                    if (jobs.isJob_log() == false && jobs.getUser() != null && (jobs.getStatus() == statusJobRepository.findById(4) || jobs.getStatus() == statusJobRepository.findById(7) || jobs.getStatus() == statusJobRepository.findById(10))) {
+                        return ResponseEntity.badRequest().body("Hãy hoàn thành công việc của " + jobs.getUser().getPosition().getPosition_name() + " có tên là " + jobs.getUser().getUsername() + " trước khi hoàn tiền");
+                    }
+
                     if (jobs.isJob_log() == false && jobs.getUser() == null) {
                         List<Processproducterror> processproducterrorList = processproducterrorRepository.getProcessproducterrorByJobId(jobs.getJobId());
                         for (Processproducterror processproducterror : processproducterrorList) {
@@ -339,9 +345,7 @@ public class OrderServiceImpl implements OrderService {
                         jobRepository.delete(jobs);
                         return ResponseEntity.ok("Hoàn tiền đơn hàng thành công");
                     }
-                    if (jobs.isJob_log() == false && jobs.getUser() != null) {
-                        return ResponseEntity.badRequest().body("Hãy hoàn thành công việc của " + jobs.getUser().getPosition().getPosition_name() + " có tên là " + jobs.getUser().getUsername() + " trước khi huỷ đơn hàng");
-                    }
+
                 }
 //                requestProducts.setQuantity(requestProducts.getQuantity()+orderdetails.getRequestProduct().getQuantity());
 //                requestProductRepository.save(requestProducts);

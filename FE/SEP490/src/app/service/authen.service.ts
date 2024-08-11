@@ -146,9 +146,10 @@ export class AuthenListService {
   }
   RefundcancelOrder(orderId: number, specialOrderId: boolean, refund_price: string, status_Id_Refund: string, cancelReason: string): Observable<string> {
     const url = `${this.apiUrl_RefundcancelOrder}?order_id=${orderId}&special_order_id=${specialOrderId}&refund_price=${refund_price}&status_Id_Refund=${status_Id_Refund}`;
-    const headers = new HttpHeaders({ 'Content-Type': 'text/plain' });
+    const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
 
-    return this.http.post<string>(url, cancelReason, { headers }).pipe(
+   
+    return this.http.post<string>(url, cancelReason, { headers}).pipe(
       catchError(this.handleError)
     );
   }

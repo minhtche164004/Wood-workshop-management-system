@@ -415,9 +415,9 @@ export class OrderManagementComponent implements OnInit {
       this.toastr.error('Số tiền còn lại cần thanh toán không được để trống.');
       return;
     }
-  
+
     this.isLoadding = true;
-  
+
     this.authenListService.changeStatusOrderFinish(orderId, statusId, this.remain_price).subscribe(
       response => {
         if (response.code === 1000) {
@@ -595,7 +595,7 @@ export class OrderManagementComponent implements OnInit {
       }
       $('[data-dismiss="modal"]').click();
     };
-  
+
     this.isLoadding = true;
     console.log({
       selectedOrderId: this.selectedOrderId,
@@ -604,25 +604,25 @@ export class OrderManagementComponent implements OnInit {
       percentDepositPrice: this.percentDepositPrice,
       cancelReasonPrice: this.cancelReasonPrice,
     });
-  
+
     if (!this.percentDepositPrice) {
       this.toastr.error('Vui lòng nhập Số tiền hoàn đơn hàng.');
-      
+      this.isLoadding = false;
       return;
     }
-  
+
     if (!this.selectedReason) {
       this.toastr.error('Vui lòng chọn lý do.');
-      
+      this.isLoadding = false;
       return;
     }
-  
+
     if (!this.cancelReasonPrice.trim()) {
       this.toastr.error('Nội dung hoàn tiền không được để trống.');
-      
+      this.isLoadding = false;
       return;
     }
-  
+
     if (this.selectedOrderId !== null && this.selectedSpecialOrder !== null) {
       this.authenListService.RefundcancelOrder(
         this.selectedOrderId,
@@ -632,22 +632,33 @@ export class OrderManagementComponent implements OnInit {
         this.cancelReasonPrice
       ).subscribe({
         next: (response: any) => {
-          if (response.code === 1000) {
-            this.toastr.success('Hoàn tiền đơn hàng thành công');
-            this.cancelRefundModal();
-            closeModal();
-            this.isLoadding = false;
+          if (response.success) {
+
+          console.log('Raw Response:', response); // Log the raw response
+          this.toastr.success("Hoàn tiền đơn hàng thành công");
+          this.cancelRefundModal();
+          closeModal();
+
+          this.isLoadding = false;
           }
         },
         error: (error: any) => {
-          this.toastr.error(error.error?.message || 'Đã có lỗi xảy ra, vui lòng thử lại.');
+          if (error.status === 400 && error.error.code === 1044) {
+            this.toastr.error(error.error.message);
+            console.error('Error:', error);
+
+            this.isLoadding = false;
+          }
+          else if (error.status === 400) {
+            this.toastr.error(error.error);
+            this.isLoadding = false;
+          }
           this.isLoadding = false;
-        
         },
       });
     } else {
       this.toastr.error('Thông tin đơn hàng không hợp lệ');
-    
+      this.isLoadding = false;
     }
   }
   depositeOrder: number = 0;

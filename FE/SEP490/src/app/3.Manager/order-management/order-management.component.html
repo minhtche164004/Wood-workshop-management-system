@@ -432,11 +432,11 @@
         <div class="row" style="margin-bottom: 20px;">
           <div class="col md-6">
             <label for="cancelReason">Nhập số tiền cọc cần thanh toán</label>
-            <input min="0" type="number" class="form-control" id="percentDepositPrice" [(ngModel)]="depositeOrder"
-              (ngModelChange)="formatInputValue($event)">
+            <input min="0" type="text" class="form-control" id="percentDepositPrice" [(ngModel)]="depositeOrder"
+             >
           </div>
           <div class="col md-6">
-            <label>Số tiền cọc cần thanh toán </label>
+            <label> Số tiền cọc tối thiểu cần thanh toán</label>
 
             <p style="color: red; text-align: center;">{{ OrderdetailById.deposite | number :
               '1.0-3' }} VNĐ</p>
@@ -446,8 +446,8 @@
 
 
 
-        <p>Số tiền cần thanh toán còn lại: {{ OrderdetailById.totalAmount  | number :
-          '1.0-3' }}</p>
+        <p>Tổng giá trị đơn hàng: {{ OrderdetailById.totalAmount  | number :
+          '1.0-3' }} VNĐ</p>
 
       </div>
       <div class="modal-footer">
@@ -496,13 +496,13 @@
         <div class="row">
           <div class="col md-6">
             <label for="cancelReason">Nhập số tiền còn lại cần thanh toán</label>
-            <input min="0" type="number" class="form-control" id="moneyFisinish" [(ngModel)]="remain_price">
+            <input min="0" type="text"    class="form-control" id="moneyFisinish" [(ngModel)]="remain_price" >
           </div>
           <div class="col md-6">
             <label for="cancelReason">Số tiền cần thanh toán còn lại:</label>
 
             <p> {{ OrderdetailById.totalAmount - OrderdetailById.deposite | number :
-              '1.0-3' }}</p>
+              '1.0-3' }} VNĐ</p>
           </div>
         </div>
 
@@ -541,13 +541,14 @@
             <div class="form-group">
               <label for="percentDepositPrice">Nhập số tiền hoàn đơn hàng</label>
               <span class="required-asterisk">*</span>
-              <input type="number" class="form-control" id="percentDepositPrice" [(ngModel)]="percentDepositPrice" required>
+              <input type="text"  class="form-control" id="percentDepositPrice" [(ngModel)]="percentDepositPrice"   required>
             </div>
           </div>
           <div class="col-md-6">
             <div class="form-group">
               <label for="depositeAmount">Tổng số tiền đơn hàng (VNĐ)</label>
-              <input class="form-control" id="depositeAmount" [(ngModel)]="OrderdetailById.totalAmount" [value]="depositeAmount | number : '1.0-3'" readonly>
+              <p class="mb-0"> {{ OrderdetailById.totalAmount | number :
+                '1.0-3'  }}</p>
             </div>
           </div>
         </div>
@@ -563,8 +564,9 @@
           </div>
           <div class="col-md-6">
             <div class="form-group">
-              <label for="depositeAmount">Tổng số tiền cọc hoàn lại (VNĐ)</label>
-              <input class="form-control" id="depositeAmount" [(ngModel)]="OrderdetailById.deposite" [value]="depositeAmount | number : '1.0-3'" readonly>
+              <label for="depositeAmount">Tổng số tiền cọc  (VNĐ)</label>
+              <p class="mb-0"> {{ OrderdetailById.deposite | number :
+                '1.0-3'  }}</p>
             </div>
           </div>
         </div>

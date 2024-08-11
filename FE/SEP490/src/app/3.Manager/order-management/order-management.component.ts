@@ -632,7 +632,7 @@ export class OrderManagementComponent implements OnInit {
         this.cancelReasonPrice
       ).subscribe({
         next: (response: any) => {
-          if (response.success) {
+
 
           console.log('Raw Response:', response); // Log the raw response
           this.toastr.success("Hoàn tiền đơn hàng thành công");
@@ -640,18 +640,23 @@ export class OrderManagementComponent implements OnInit {
           closeModal();
 
           this.isLoadding = false;
-          }
+          
         },
         error: (error: any) => {
-          if (error.status === 400 && error.error.code === 1044) {
-            this.toastr.error(error.error.message);
-            console.error('Error:', error);
-
-            this.isLoadding = false;
-          }
-          else if (error.status === 400) {
+          if (error.status === 400) {
+            try {
+              const errorResponse = JSON.parse(error.error);
+              if (errorResponse.code === 1044) {
+                this.toastr.error(errorResponse.message);
+                console.error('Error:', error);
+              } else {
+                this.toastr.error(error.error);
+              }
+            } catch (e) {
+              this.toastr.error(error.error);
+            }
+          } else {
             this.toastr.error(error.error);
-            this.isLoadding = false;
           }
           this.isLoadding = false;
         },
@@ -681,11 +686,24 @@ export class OrderManagementComponent implements OnInit {
 
   confirmPayment() {
     this.isLoadding = true;
-    const formattedDepositOrder = this.depositeOrder.toFixed(2); // Ví dụ: '4000000.00'
+    
+    // Convert depositeOrder to a number
+    const numericDepositOrder = parseFloat(this.depositeOrder as any);
+    
+    if (isNaN(numericDepositOrder)) {
+      this.toastr.error('Invalid deposit amount');
+      this.isLoadding = false;
+      return;
+    }
+  
+    // Format the number to two decimal places
+    const formattedDepositOrder = numericDepositOrder.toFixed(2); // e.g., '4000000.00'
+  
     if (this.selectedOrderId !== null) {
+      console.log(this.selectedOrderId, formattedDepositOrder);
       this.authenListService.Paymentmoney(this.selectedOrderId, formattedDepositOrder).subscribe({
         next: (response: any) => {
-          if (response.code == 1000) {
+          if (response.code === 1000) {
             this.toastr.success(response.result);
             this.realoadgetAllUser();
             this.isLoadding = false;
@@ -695,19 +713,24 @@ export class OrderManagementComponent implements OnInit {
             }
             $('[data-dismiss="modal"]').click();
             this.cancelChangeStatusJob1();
-          } else if (response.code === 1043) {
-            this.toastr.error(response.message);
-            this.isLoadding = false;
-
-          }
+          } 
         },
         error: (error: HttpErrorResponse) => {
+          console.log(error);
+          if (error.error.code === 1043) {
+            this.toastr.error(error.error.message);
+          } else {
+            this.toastr.error('An error occurred.');
+          }
           this.isLoadding = false;
-          this.toastr.error(error.error.message);
         }
       });
+    } else {
+      this.isLoadding = false;
+      this.toastr.error('Order ID is not selected.');
     }
   }
+  
 
   sendMail(orderId: number) {
     console.log(orderId);

@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpErrorResponse } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
-import { catchError } from 'rxjs/operators';
+import { catchError, map } from 'rxjs/operators';
 import { environment } from 'src/app/environments/environment'; // Đường dẫn đúng tới file môi trường
 import { AddNewAccount } from '../Admin/user-management/user-management.component';
 @Injectable({
@@ -147,9 +147,8 @@ export class AuthenListService {
   RefundcancelOrder(orderId: number, specialOrderId: boolean, refund_price: string, status_Id_Refund: string, cancelReason: string): Observable<string> {
     const url = `${this.apiUrl_RefundcancelOrder}?order_id=${orderId}&special_order_id=${specialOrderId}&refund_price=${refund_price}&status_Id_Refund=${status_Id_Refund}`;
     const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
-
    
-    return this.http.post<string>(url, cancelReason, { headers}).pipe(
+    return this.http.post<any>(url, cancelReason,  { headers, responseType: 'text' as 'json' }).pipe(
       catchError(this.handleError)
     );
   }

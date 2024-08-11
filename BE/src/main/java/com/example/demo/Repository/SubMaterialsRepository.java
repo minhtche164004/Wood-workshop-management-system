@@ -31,7 +31,7 @@ public interface SubMaterialsRepository extends JpaRepository<SubMaterials,Integ
     List<InputSubMaterial> getAllInputSubMaterial();
 
     @Query("SELECT new com.example.demo.Dto.SubMaterialDTO.SubMaterialViewDTO(" +
-            "s.subMaterialId, COALESCE(s.subMaterialName, ''), m.materialId, COALESCE(s.description, ''), COALESCE(m.materialName, ''), latestInput.total_quantity, latestInput.out_price,latestInput.input_price,m.type) " + // Thêm dấu phẩy và loại bỏ COALESCE cho các ID
+            "s.subMaterialId, COALESCE(s.subMaterialName, ''), m.materialId, COALESCE(s.description, ''), COALESCE(m.materialName, ''), latestInput.total_quantity, latestInput.out_price,latestInput.input_price,m.type,s.code) " + // Thêm dấu phẩy và loại bỏ COALESCE cho các ID
             "FROM SubMaterials s " +
             "LEFT JOIN (" +
             "SELECT ism.subMaterials.subMaterialId as subMaterialId, ism.total_quantity as total_quantity, ism.out_price as out_price, ism.input_price as input_price" +
@@ -78,7 +78,7 @@ public interface SubMaterialsRepository extends JpaRepository<SubMaterials,Integ
         @Query("SELECT new com.example.demo.Dto.SubMaterialDTO.SubMaterialViewDTO(" +
                 "s.subMaterialId, COALESCE(s.subMaterialName, ''), m.materialId, COALESCE(s.description, '')," +
                 " COALESCE(m.materialName, '')," +
-                "li.total_quantity, li.out_price, li.unit_price, m.type) " +
+                "li.total_quantity, li.out_price, li.unit_price, m.type,s.code) " +
                 "FROM SubMaterials s " +
                 "LEFT JOIN (" +
                 "   SELECT ism.subMaterials.subMaterialId AS subMaterialId, " +
@@ -96,7 +96,7 @@ public interface SubMaterialsRepository extends JpaRepository<SubMaterials,Integ
 
     @Query("SELECT new com.example.demo.Dto.SubMaterialDTO.SubMaterialViewDTO(" +
             "s.subMaterialId, COALESCE(s.subMaterialName, ''), m.materialId, COALESCE(s.description, ''), COALESCE(m.materialName, '')," +
-            "li.total_quantity, li.out_price, li.unit_price,m.type) " + // Thêm dấu phẩy và loại bỏ COALESCE cho các ID
+            "li.total_quantity, li.out_price, li.unit_price,m.type,s.code) " + // Thêm dấu phẩy và loại bỏ COALESCE cho các ID
             "FROM SubMaterials s " +
             "LEFT JOIN (" +
             "   SELECT ism.subMaterials.subMaterialId AS subMaterialId, " +
@@ -113,7 +113,7 @@ public interface SubMaterialsRepository extends JpaRepository<SubMaterials,Integ
 
     @Query("SELECT new com.example.demo.Dto.SubMaterialDTO.SubMaterialViewDTO(" +
             "s.subMaterialId, COALESCE(s.subMaterialName, ''), m.materialId, COALESCE(s.description, ''), " +
-            "COALESCE(m.materialName, ''), li.total_quantity, li.out_price, li.unit_price,m.type) " + // Thêm dấu phẩy và loại bỏ COALESCE cho các ID
+            "COALESCE(m.materialName, ''), li.total_quantity, li.out_price, li.unit_price,m.type,s.code) " + // Thêm dấu phẩy và loại bỏ COALESCE cho các ID
             "FROM SubMaterials s " +
             "LEFT JOIN (" +
             "   SELECT ism.subMaterials.subMaterialId AS subMaterialId, " +
@@ -131,7 +131,7 @@ public interface SubMaterialsRepository extends JpaRepository<SubMaterials,Integ
 
     @Query("SELECT new com.example.demo.Dto.SubMaterialDTO.SubMaterialViewDTO(" +
             "s.subMaterialId, COALESCE(s.subMaterialName, ''), m.materialId, COALESCE(s.description, ''), " +
-            "COALESCE(m.materialName, ''), li.total_quantity, li.out_price, li.unit_price,m.type) " + // Thêm dấu phẩy và loại bỏ COALESCE cho các ID
+            "COALESCE(m.materialName, ''), li.total_quantity, li.out_price, li.unit_price,m.type,s.code) " + // Thêm dấu phẩy và loại bỏ COALESCE cho các ID
             "FROM SubMaterials s " +
             "LEFT JOIN (" +
             "   SELECT ism.subMaterials.subMaterialId AS subMaterialId, " +

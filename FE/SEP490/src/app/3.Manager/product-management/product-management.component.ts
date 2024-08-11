@@ -33,6 +33,7 @@ interface SubMaterial {
   subMaterialId: number;
   subMaterialName: string;
   unitPrice: number;
+  code: string
 }
 interface MaterialItem {
   subMaterialId: string;
@@ -629,15 +630,19 @@ export class ProductManagementComponent implements OnInit {
 
         this.productListService.getOrderById(this.idOrder).subscribe(
           (response) => {
+
+            const orderDate = new Date(response.result.orderDate).toISOString().split('T')[0]; // Lấy ngày tháng năm
+            const orderFinish = response.result.contractDate ? new Date(response.result.orderFinish).toISOString().split('T')[0] : null; // Lấy ngày tháng năm  của contractDate
+
             this.orderForm.patchValue({
               orderId: this.idOrder,
-              orderDate: response.result.orderDate,
+              orderDate: orderDate,
               code: response.result.code,
               description: response.result.description,
               price: response.result?.price,
               completionTime: response.result?.completionTime,
               status_id: response.result.status?.status_id,
-              orderFinish: response.result.orderFinish,
+              orderFinish: orderFinish,
 
             });
 
@@ -1650,16 +1655,19 @@ export class ProductManagementComponent implements OnInit {
       concatMap(product => this.productListService.getOrderById(product.result.request_id))
     ).subscribe(
       response => {
+
+        const orderDate = new Date(response.result.orderDate).toISOString().split('T')[0]; // Lấy ngày tháng năm
+        const orderFinish = response.result.contractDate ? new Date(response.result.orderFinish).toISOString().split('T')[0] : null; // Lấy ngày tháng năm  của contractDate
         // Cập nhật form đơn hàng ở đây
         this.orderForm.patchValue({
           orderId: this.idOrder,
-          orderDate: response.result.orderDate,
+          orderDate: orderDate,
           code: response.result.code,
           description: response.result.description,
           price: response.result?.price,
           completionTime: response.result?.completionTime,
           status_id: response.result.status?.status_id,
-          orderFinish: response.result.orderFinish,
+          orderFinish: orderFinish,
 
         });
         // Cập nhật imagesPreviewRequest ở đây
@@ -1878,21 +1886,25 @@ export class ProductManagementComponent implements OnInit {
   }
 
   onSelectSpecialOrder(item: any): void {
-    if(!this.idOrder){
+    if (!this.idOrder) {
       this.orderForm.reset();
     }
     const orderId = item.orderId;
     this.productListService.getOrderById(orderId).subscribe(
       (response) => {
+
+        const orderDate = new Date(response.result.orderDate).toISOString().split('T')[0]; // Lấy ngày tháng năm
+        const orderFinish = response.result.contractDate ? new Date(response.result.orderFinish).toISOString().split('T')[0] : null; // Lấy ngày tháng năm  của contractDate
+
         this.orderForm.patchValue({
           orderId: this.idOrder,
-          orderDate: response.result.orderDate,
+          orderDate: orderDate,
           code: response.result.code,
           description: response.result.description,
           price: response.result?.price,
           completionTime: response.result?.completionTime,
           status_id: response.result.status?.status_id,
-          orderFinish: response.result.orderFinish,
+          orderFinish: orderFinish,
 
         });
 

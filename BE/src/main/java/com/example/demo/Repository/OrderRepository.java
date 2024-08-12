@@ -21,6 +21,15 @@ import java.util.List;
 @Repository
 public interface OrderRepository extends JpaRepository<Orders,Integer> {
 
+    @Query("SELECT new com.example.demo.Dto.OrderDTO.OderDTO(" +
+            "COALESCE(o.code, ''), o.orderId, COALESCE(o.orderDate, '') , o.totalAmount,COALESCE(s.status_id, 0) " +
+            ",COALESCE(s.status_name, '') , COALESCE(o.paymentMethod, ''),COALESCE(o.deposite, 0) ,COALESCE(o.specialOrder, false), o.contractDate)" + // Sử dụng COALESCE
+            " FROM Jobs j" +
+            " LEFT JOIN j.orderdetails od" +
+            " LEFT JOIN od.order o"+
+            " LEFT JOIN o.status s WHERE j.jobId = :query")
+    OderDTO getOrderByJobId(int query);
+
     @Query("SELECT rp.completionTime " +
             "FROM RequestProducts rp " +
             "WHERE rp.orders.orderId = :orderId " +

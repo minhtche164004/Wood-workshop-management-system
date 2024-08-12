@@ -70,6 +70,11 @@ public class JobServiceImpl implements JobService {
 
 
     @Override
+    public OderDTO getTest(int job_id) {
+        return orderRepository.getOrderByJobId(job_id);
+    }
+
+    @Override
     public List<JobProductDTO> getListRequestProductJob() {
         List<JobProductDTO> orderdetailsList = jobRepository.getRequestProductInJob();
         if (orderdetailsList == null) {
@@ -440,7 +445,9 @@ public class JobServiceImpl implements JobService {
                 requestProductRepository.save(requestProducts);
                 jobs_log.setProduct(null);
                 //------ đoạn này chỉ dành cho request product , vì nó là đơn hàng , còn product có sẵn thì lúc cọc xong thì chuyển sang status là đã thi công xong luôn
-                Orders orders = orderRepository.findByCode(jobs_history.getOrderdetails().getOrder().getCode());
+                //Orders orders = orderRepository.findByCode(jobs_history.getOrderdetails().getOrder().getCode());
+                OderDTO oderDTO = orderRepository.getOrderByJobId(jobs_history.getJobId());
+                Orders orders = orderRepository.findById(oderDTO.getOrderId());
                 if (checkOderDoneOrNot(orders.getOrderId()) == 0) {
                     orders.setStatus(statusOrderRepository.findById(4)); //nghĩa là đơn hàng đã thi công xong
                     orderRepository.save(orders);

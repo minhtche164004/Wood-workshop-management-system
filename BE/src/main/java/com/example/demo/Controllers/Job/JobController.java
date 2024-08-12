@@ -73,6 +73,13 @@ public class JobController {
         return apiResponse;
     }
 
+    @GetMapping("/getTest")
+    public ApiResponse<?> getTest(@RequestParam("job_id") int job_id) {
+        ApiResponse<OderDTO> apiResponse = new ApiResponse<>();
+        apiResponse.setResult(jobService.getTest(job_id));
+        return apiResponse;
+    }
+
     @GetMapping("/checkErrorOfJobHaveFixDoneOrNot")
     public ApiResponse<?> checkErrorOfJobHaveFixDoneOrNot(@RequestParam("job_id") int job_id) {
         ApiResponse<Boolean> apiResponse = new ApiResponse<>();

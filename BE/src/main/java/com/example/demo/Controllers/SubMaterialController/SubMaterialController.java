@@ -10,10 +10,7 @@ import com.example.demo.Dto.ProductDTO.QuantityTotalDTO;
 import com.example.demo.Dto.SubMaterialDTO.SubMaterialDTO;
 import com.example.demo.Dto.SubMaterialDTO.SubMaterialViewDTO;
 import com.example.demo.Dto.SubMaterialDTO.UpdateSubDTO;
-import com.example.demo.Entity.ProductSubMaterials;
-import com.example.demo.Entity.Products;
-import com.example.demo.Entity.RequestProductsSubmaterials;
-import com.example.demo.Entity.SubMaterials;
+import com.example.demo.Entity.*;
 import com.example.demo.Response.ApiResponse;
 import com.example.demo.Service.JobService;
 import com.example.demo.Service.ProductService;
@@ -53,6 +50,13 @@ public class SubMaterialController {
     @Autowired
     private JobService jobService;
     private static final JedisPooled jedis = RedisConfig.getRedisInstance();
+
+    @GetMapping("/getLastBySubMaterialId")
+    public ApiResponse<?> getLastBySubMaterialId(@RequestParam("sub_id") int sub_id) {
+        ApiResponse<InputSubMaterial> apiResponse = new ApiResponse<>();
+        apiResponse.setResult(subMaterialService.getLastBySubMaterialId(sub_id));
+        return apiResponse;
+    }
 
     @GetMapping("/getall")
     public ApiResponse<?> getAllSubMaterials() {
@@ -101,6 +105,7 @@ public class SubMaterialController {
     @PutMapping("/editSubMaterial")
     public ApiResponse<?> editSubMaterial(@RequestParam("id") int id,@RequestBody SubMaterialViewDTO subMaterialViewDTO) {
         ApiResponse<SubMaterialViewDTO> apiResponse = new ApiResponse<>();
+        jedis.del("all_sub_mate_product");
         apiResponse.setResult(subMaterialService.EditSubMaterial(id,subMaterialViewDTO));
         return apiResponse;
     }
@@ -120,6 +125,7 @@ public class SubMaterialController {
     @GetMapping("/FilterByMaterial")
     public ApiResponse<?> FilterByMaterial(@RequestParam("id") int material_id) {
         ApiResponse<List> apiResponse = new ApiResponse<>();
+        jedis.del("all_sub_mate_product");
         apiResponse.setResult(subMaterialService.FilterByMaterial(material_id));
         return apiResponse;
     }

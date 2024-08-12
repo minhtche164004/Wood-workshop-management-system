@@ -70,6 +70,11 @@ public class SubMaterialServiceImpl implements SubMaterialService {
     Date create = Date.from(today.atStartOfDay(ZoneId.systemDefault()).toInstant());
 
     @Override
+    public InputSubMaterial getLastBySubMaterialId(int sub_id) {
+        return inputSubMaterialRepository.findLatestSubMaterialInputSubMaterialBySubMaterialId(sub_id);
+    }
+
+    @Override
     public List<SubMaterialViewDTO> getAll() {
         return subMaterialsRepository.getAllSubmaterial();
     }
@@ -425,7 +430,9 @@ public class SubMaterialServiceImpl implements SubMaterialService {
             BigDecimal change = (new_unit_price == null ? BigDecimal.ZERO : new_unit_price)
                     .subtract(current_unit_price == null ? BigDecimal.ZERO : current_unit_price)
                     .multiply(BigDecimal.valueOf(quantity));
-            p.setPrice(p.getPrice().add(change));
+            if (change.compareTo(BigDecimal.ZERO) >= 0) {
+                p.setPrice(p.getPrice().add(change));
+            }
             productRepository.save(p);
         }
     }

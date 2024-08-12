@@ -52,19 +52,22 @@ public interface OrderRepository extends JpaRepository<Orders,Integer> {
     Orders findOrderTop(@Param("prefix") String prefix);
 
     @Query("SELECT new com.example.demo.Dto.OrderDTO.OderDTO(" +
-            "COALESCE(o.code, ''), o.orderId, COALESCE(o.orderDate, '') , o.totalAmount,COALESCE(s.status_id, 0) ,COALESCE(s.status_name, '') , COALESCE(o.paymentMethod, ''),COALESCE(o.deposite, 0) ,COALESCE(o.specialOrder, false), o.contractDate)" + // Sử dụng COALESCE
+            "COALESCE(o.code, ''), o.orderId, COALESCE(o.orderDate, '') , o.totalAmount,COALESCE(s.status_id, 0) " +
+            ",COALESCE(s.status_name, '') , COALESCE(o.paymentMethod, ''),COALESCE(o.deposite, 0) ,COALESCE(o.specialOrder, false), o.contractDate)" + // Sử dụng COALESCE
             " FROM Orders o" +
-            " LEFT JOIN o.status s")
+            " LEFT JOIN o.status s ORDER BY o.orderDate DESC")
     List<OderDTO> getAllOrder();
 
     @Query("SELECT new com.example.demo.Dto.OrderDTO.OderDTO(" +
-            "COALESCE(o.code, ''), o.orderId, COALESCE(o.orderDate, '') , o.totalAmount,COALESCE(s.status_id, 0) ,COALESCE(s.status_name, '') , COALESCE(o.paymentMethod, ''),COALESCE(o.deposite, 0) ,COALESCE(o.specialOrder, false), o.contractDate)" + // Sử dụng COALESCE
+            "COALESCE(o.code, ''), o.orderId, COALESCE(o.orderDate, '') , o.totalAmount,COALESCE(s.status_id, 0) " +
+            ",COALESCE(s.status_name, '') , COALESCE(o.paymentMethod, ''),COALESCE(o.deposite, 0) ,COALESCE(o.specialOrder, false), o.contractDate)" + // Sử dụng COALESCE
             " FROM Orders o" +
             " LEFT JOIN o.status s WHERE o.specialOrder = TRUE")
     List<OderDTO> getAllOrderSpecial();
 
     @Query("SELECT new com.example.demo.Dto.OrderDTO.OderDTO(" +
-            "COALESCE(o.code, ''), o.orderId, COALESCE(o.orderDate, '') , o.totalAmount, COALESCE(s.status_id, 0) , COALESCE(s.status_name, ''), COALESCE(o.paymentMethod, ''), COALESCE(o.deposite, 0) , COALESCE(o.specialOrder, false), o.contractDate)" +
+            "COALESCE(o.code, ''), o.orderId, COALESCE(o.orderDate, '') , o.totalAmount, COALESCE(s.status_id, 0) " +
+            ", COALESCE(s.status_name, ''), COALESCE(o.paymentMethod, ''), COALESCE(o.deposite, 0) , COALESCE(o.specialOrder, false), o.contractDate)" +
             " FROM Orders o" +
             " LEFT JOIN o.status s" +
             " WHERE ( o.code LIKE %:search% OR :search IS NULL) AND" +
@@ -72,7 +75,8 @@ public interface OrderRepository extends JpaRepository<Orders,Integer> {
             "(o.paymentMethod = :paymentMethod OR :paymentMethod IS NULL) AND " +
             //     " (:specialOrder IS NULL OR o.specialOrder = :specialOrder) AND " + // Sửa đổi tại đây
             "(o.orderDate >= :startDate OR :startDate IS NULL) AND " +
-            "(o.orderDate <= :endDate OR :endDate IS NULL)")
+            "(o.orderDate <= :endDate OR :endDate IS NULL) "+
+           " ORDER BY o.orderDate DESC")
     List<OderDTO> MultiFilterOrder(@Param("search") String search,
                                    @Param("status_id") Integer status_id,
                                    @Param("paymentMethod") Integer paymentMethod,
@@ -138,7 +142,7 @@ public interface OrderRepository extends JpaRepository<Orders,Integer> {
             "(o.paymentMethod = :paymentMethod OR :paymentMethod IS NULL) AND " +
             " (o.specialOrder = :specialOrder OR :specialOrder IS NULL) AND " + // Sửa đổi tại đây
             "(o.orderDate >= :startDate OR :startDate IS NULL) AND " +
-            "(o.orderDate <= :endDate OR :endDate IS NULL)")
+            "(o.orderDate <= :endDate OR :endDate IS NULL) ORDER BY o.orderDate DESC")
     List<OderDTO> MultiFilterOrderSpecialOrder(@Param("search") String search,
                                                @Param("status_id") Integer status_id,
                                                @Param("paymentMethod") Integer paymentMethod,
@@ -154,7 +158,7 @@ public interface OrderRepository extends JpaRepository<Orders,Integer> {
             "(s.status_id = :status_id OR :status_id IS NULL) AND " +
             "(o.paymentMethod = :paymentMethod OR :paymentMethod IS NULL) AND " +
             "(o.orderDate >= :startDate OR :startDate IS NULL) AND " +
-            "(o.orderDate <= :endDate OR :endDate IS NULL)")
+            "(o.orderDate <= :endDate OR :endDate IS NULL) ORDER BY o.orderDate DESC")
     List<OderDTO> MultiFilterOrderWithoutOrderType(@Param("search") String search,
                                                @Param("status_id") Integer status_id,
                                                @Param("paymentMethod") Integer paymentMethod,

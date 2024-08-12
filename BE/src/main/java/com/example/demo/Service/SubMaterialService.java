@@ -21,6 +21,7 @@ import java.util.Map;
 
 @Service
 public interface SubMaterialService {
+    InputSubMaterial getLastBySubMaterialId(int sub_id);
     List<SubMaterialViewDTO> getAll();
     List<SubMaterialViewDTO> FilterByMaterial(int material_id);
     SubMaterials addNew(SubMaterialDTO subMaterialDTO);

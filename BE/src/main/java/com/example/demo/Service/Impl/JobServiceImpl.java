@@ -446,12 +446,9 @@ public class JobServiceImpl implements JobService {
                 jobs_log.setProduct(null);
                 //------ đoạn này chỉ dành cho request product , vì nó là đơn hàng , còn product có sẵn thì lúc cọc xong thì chuyển sang status là đã thi công xong luôn
                 //Orders orders = orderRepository.findByCode(jobs_history.getOrderdetails().getOrder().getCode());
-                OderDTO oderDTO = orderRepository.getOrderByJobId(jobs_history.getJobId());
-                Orders orders = orderRepository.findById(oderDTO.getOrderId());
-                if (checkOderDoneOrNot(orders.getOrderId()) == 0) {
-                    orders.setStatus(statusOrderRepository.findById(4)); //nghĩa là đơn hàng đã thi công xong
-                    orderRepository.save(orders);
-                }
+
+               // Orders orders = orderRepository.findById(oderDTO.getOrderId());
+
             }
             if (jobs_log.getRequestProducts() == null) {
                 Products products = productRepository.findById(jobs_history.getProduct().getProductId());
@@ -515,6 +512,13 @@ public class JobServiceImpl implements JobService {
         // thằng đảm nhận -> bắt dc position thằng đảm nhận là thợ mộc ,thợ sơn ,thợ nhám luôn rồi , không cần phải hiện status mới đc
         jobRepository.save(waitNextJob);
         //  jobRepository.delete(jobs_history);
+        OderDTO oderDTO = orderRepository.getOrderByJobId(jobs_history.getJobId());
+        if (checkOderDoneOrNot(oderDTO.getOrderId()) == 0) {
+//                    Status_Order statusOrder = statusOrderRepository.findById(4);
+//                    orders.setStatus(statusOrder); //nghĩa là đơn hàng đã thi công xong
+//                    orderRepository.save(orders);
+            orderRepository.updateOrderFinish(oderDTO.getOrderId());
+        }
         return jobs_log;
     }
 //    private boolean checkOderDoneOrNot(int order_id) {

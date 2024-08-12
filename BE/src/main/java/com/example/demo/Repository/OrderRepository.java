@@ -53,6 +53,13 @@ public interface OrderRepository extends JpaRepository<Orders,Integer> {
     @Transactional
     @Modifying
     @Query("UPDATE Orders o " +
+            "SET o.status.status_id = 4 " +
+            "WHERE o.orderId = ?1")
+    void updateOrderFinish(int orderId);
+
+    @Transactional
+    @Modifying
+    @Query("UPDATE Orders o " +
             "SET o.discount = ?2 ,o.totalAmount = ?3,o.status.status_id = 3,o.contractDate = ?4 " +
             "WHERE o.orderId = ?1")
     void updateOrderDiscountById(int orderId, BigDecimal discount,BigDecimal totalAmount,Date contractDate);

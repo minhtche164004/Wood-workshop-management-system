@@ -75,6 +75,7 @@ public class UserServiceTest {
 
     private RegisterDTO registerDTO;
 
+    //sử dụng để đánh dấu một phương thức sẽ được gọi trước khi mỗi phương thức test được thực thi
     @BeforeEach
     public void setUp() {
         registerDTO = new RegisterDTO();
@@ -121,6 +122,7 @@ public class UserServiceTest {
     @Test
     public void testSignup() {
         // Arrange
+        //Tạo các đối tượng mock cho các repository
         String encodedPassword = "encodedPassword";
         when(passwordEncoder.encode(registerDTO.getPassword())).thenReturn(encodedPassword);
         when(roleRepository.findById(2)).thenReturn(new Role(2, "CUSTOMER", null));
@@ -157,6 +159,7 @@ public class UserServiceTest {
         User result = userService.signup(registerDTO);
 
         // Assert
+        //Kiểm tra xem tên người dùng trong đối tượng được trả về có khớp với tên người dùng ban đầu không
         assertEquals(registerDTO.getUsername(), result.getUsername());
         assertEquals(encodedPassword, result.getPassword());
         assertEquals(registerDTO.getEmail(), result.getEmail());

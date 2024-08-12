@@ -13,7 +13,9 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
 import java.math.BigDecimal;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -47,7 +49,10 @@ public class ExcelUploadServiceTest {
             row1.createCell(3).setCellValue(10);
             row1.createCell(4).setCellValue(100.0);
             row1.createCell(5).setCellValue(50.0);
-            row1.createCell(6).setCellValue("12/01/2004");
+            // Chuyển đổi chuỗi thành đối tượng Date
+            SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+            Date warehouseDate = dateFormat.parse("12/01/2004");
+            row1.createCell(6).setCellValue(warehouseDate);
         }
         //Tạo một đối tượng ByteArrayOutputStream để lưu trữ nội dung file Excel dưới dạng byte array.
         ByteArrayOutputStream bos = new ByteArrayOutputStream();
@@ -71,7 +76,7 @@ public class ExcelUploadServiceTest {
         // Assert
         assertNotNull(result); //kiểm tra danh sách kết quả ko null
         assertEquals(1, result.size()); //Kiểm tra danh sách có một phần tử.
-        assertTrue(errors.isEmpty()==false); // Kiểm tra danh sách lỗi rỗng (không có lỗi)
+        assertTrue(errors.isEmpty()); // Kiểm tra danh sách lỗi rỗng (không có lỗi)
         SubMaterialDTO dto = result.get(0);//lấy phần tử đầu tiên và so sánh kêt quả với dữ liệu mẫu trong file excel
         assertEquals("Sub1", dto.getSub_material_name());
         assertEquals("Material1", dto.getMaterial_name());
@@ -79,7 +84,10 @@ public class ExcelUploadServiceTest {
         assertEquals(10, dto.getQuantity());
         assertEquals(BigDecimal.valueOf(50.0), dto.getUnit_price());
         assertEquals(BigDecimal.valueOf(100.0), dto.getInput_price());
-        assertEquals(null,dto.getDate_ware_house());
+        SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+        String expectedDateString = "12/01/2004";
+        String actualDateString = dateFormat.format(dto.getDate_ware_house());
+        assertEquals(expectedDateString,actualDateString);
     }
 
     @Test

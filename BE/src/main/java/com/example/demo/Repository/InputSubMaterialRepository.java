@@ -18,8 +18,25 @@ public interface InputSubMaterialRepository extends JpaRepository<InputSubMateri
     @Query("SELECT ism FROM InputSubMaterial ism WHERE ism.subMaterials.subMaterialId = :subMaterialId AND ism.actionType.action_type_id = 4  ORDER BY ism.date_input DESC LIMIT 1   ")
     InputSubMaterial findLatestInputSubMaterialBySubMaterialId(@Param("subMaterialId") int subMaterialId);
 
-    @Query("SELECT ism FROM InputSubMaterial ism WHERE ism.subMaterials.subMaterialId = :subMaterialId  ORDER BY ism.date_input DESC LIMIT 1   ")
+    @Query("SELECT ism FROM InputSubMaterial ism " +
+            "WHERE ism.subMaterials.subMaterialId = :subMaterialId " +
+            "AND ism.date_input = ( " +
+            "   SELECT MAX(ism2.date_input) " +
+            "   FROM InputSubMaterial ism2 " +
+            "   WHERE ism2.subMaterials.subMaterialId = ism.subMaterials.subMaterialId " +
+            ") " +
+            "AND ism.input_id = ( " +
+            "   SELECT MAX(ism3.input_id) " +
+            "   FROM InputSubMaterial ism3 " +
+            "   WHERE ism3.subMaterials.subMaterialId = ism.subMaterials.subMaterialId " +
+            "   AND ism3.date_input = ism.date_input " +
+            ")")
     InputSubMaterial findLatestSubMaterialInputSubMaterialBySubMaterialId(@Param("subMaterialId") int subMaterialId);
+
+
+//
+//    @Query("SELECT ism FROM InputSubMaterial ism WHERE ism.subMaterials.subMaterialId = :subMaterialId  ORDER BY ism.date_input DESC LIMIT 1   ")
+//    InputSubMaterial findLatestSubMaterialInputSubMaterialBySubMaterialId(@Param("subMaterialId") int subMaterialId);
 
     //lấy quantiy submaterial đã cập nhật lần cuối(bản ghi mới nhất) (loại action là cạp nhật giá)
     @Query("SELECT ism FROM InputSubMaterial ism WHERE ism.subMaterials.subMaterialId = :subMaterialId AND ism.actionType.action_type_id = 3  ORDER BY ism.date_input DESC LIMIT 1   ")

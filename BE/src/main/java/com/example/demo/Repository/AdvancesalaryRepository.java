@@ -210,15 +210,19 @@ public interface AdvancesalaryRepository extends JpaRepository<Advancesalary,Int
     BigDecimal totalAmountOrderHaveDone();
 
 
-//    //tổng số tiền nhập nguyên vật liệu
-//    @Query("SELECT SUM(latestInput.total_quantity * latestInput.out_price) AS total FROM SubMaterials s" +
-//            " LEFT JOIN (" +
-//            "SELECT ism.subMaterials.subMaterialId, ism.total_quantity, ism.out_price, ism.input_price " +
-//            "FROM InputSubMaterial ism " +
-//            "ORDER BY ism.date_input DESC " +
-//            "LIMIT 1 " +
-//            ") latestInput ON s.subMaterialId = latestInput.subMaterialId ")
-//    BigDecimal totalAmountSubMaterial();
+    //tổng số tiền nhập nguyên vật liệu
+    @Query("SELECT SUM(li.total_quantity * li.out_price) AS total FROM SubMaterials s" +
+            " LEFT JOIN (" +
+            "   SELECT ism.subMaterials.subMaterialId AS subMaterialId, " +
+            "          ism.total_quantity AS total_quantity, " +
+            "          ism.out_price AS out_price, " +
+            "          ism.input_price AS unit_price, " +  // Thêm unit_price vào subquery
+            "          MAX(ism.date_input) AS max_date_input, " +
+            "          MAX(ism.input_id) AS max_input_id " +
+            "   FROM InputSubMaterial ism " +
+            "   GROUP BY ism.subMaterials.subMaterialId " +
+            ") li ON s.subMaterialId = li.subMaterialId ")
+    BigDecimal totalAmountSubMaterial();
 
 
 

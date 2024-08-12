@@ -4,6 +4,7 @@ import com.example.demo.Dto.JobDTO.JobDoneDTO;
 import com.example.demo.Dto.OrderDTO.OderDTO;
 import com.example.demo.Entity.Orders;
 import com.example.demo.Entity.Products;
+import com.example.demo.Entity.Status_Order;
 import jakarta.persistence.TemporalType;
 import jakarta.transaction.Transactional;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -52,10 +53,8 @@ public interface OrderRepository extends JpaRepository<Orders,Integer> {
 
     @Transactional
     @Modifying
-    @Query("UPDATE Orders o " +
-            "SET o.status.status_id = 4 " +
-            "WHERE o.orderId = ?1")
-    void updateOrderFinish(int orderId);
+    @Query("UPDATE Orders o SET o.status.status_id = 4 WHERE o.orderId = ?1")
+    void updateOrderStatusFinish(int orderId);
 
     @Transactional
     @Modifying

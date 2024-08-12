@@ -440,14 +440,14 @@ public class JobServiceImpl implements JobService {
         if (status_id == 12) {
             //nếu công việc hoàn thành thì + số lượng của sản phẩm vào số lượng đã có trước đấy
             if (jobs_log.getProduct() == null) {
+
                 RequestProducts requestProducts = requestProductRepository.findById(jobs_history.getRequestProducts().getRequestProductId());
                 requestProducts.setQuantity(requestProducts.getQuantity() + jobs_history.getOriginalQuantityProduct());
                 requestProductRepository.save(requestProducts);
                 jobs_log.setProduct(null);
-                //------ đoạn này chỉ dành cho request product , vì nó là đơn hàng , còn product có sẵn thì lúc cọc xong thì chuyển sang status là đã thi công xong luôn
-                //Orders orders = orderRepository.findByCode(jobs_history.getOrderdetails().getOrder().getCode());
 
-               // Orders orders = orderRepository.findById(oderDTO.getOrderId());
+                //------ đoạn này chỉ dành cho request product , vì nó là đơn hàng , còn product có sẵn thì lúc cọc xong thì chuyển sang status là đã thi công xong luôn
+
 
             }
             if (jobs_log.getRequestProducts() == null) {
@@ -512,13 +512,15 @@ public class JobServiceImpl implements JobService {
         // thằng đảm nhận -> bắt dc position thằng đảm nhận là thợ mộc ,thợ sơn ,thợ nhám luôn rồi , không cần phải hiện status mới đc
         jobRepository.save(waitNextJob);
         //  jobRepository.delete(jobs_history);
-        OderDTO oderDTO = orderRepository.getOrderByJobId(jobs_history.getJobId());
-        if (checkOderDoneOrNot(oderDTO.getOrderId()) == 0) {
-//                    Status_Order statusOrder = statusOrderRepository.findById(4);
-//                    orders.setStatus(statusOrder); //nghĩa là đơn hàng đã thi công xong
-//                    orderRepository.save(orders);
-            orderRepository.updateOrderFinish(oderDTO.getOrderId());
+        if(jobs_log.getProduct() == null){
+            OderDTO oderDTO = orderRepository.getOrderByJobId(jobs_history.getJobId());
+            Orders orders = orderRepository.findById(oderDTO.getOrderId());
+            if (checkOderDoneOrNot(oderDTO.getOrderId()) == 0) {
+                orders.setStatus(statusOrderRepository.findById(4));
+                orderRepository.save(orders);
+            }
         }
+
         return jobs_log;
     }
 //    private boolean checkOderDoneOrNot(int order_id) {

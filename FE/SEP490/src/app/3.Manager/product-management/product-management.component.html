@@ -298,7 +298,8 @@
                     <label for="subMaterialId-{{i}}">Tên nguyên vật liệu<span class="required-asterisk">*</span></label>
                     <select id="subMaterialId-{{i}}" class="form-control" formControlName="subMaterialId"
                       *ngIf="subMaterials[i]" (change)="onSubMaterialChange($event, i)">
-                      <option *ngFor="let subMaterial of subMaterials[i]" [value]="subMaterial?.subMaterialId">{{ subMaterial?.subMaterialName }} - {{subMaterial?.code}}</option>
+                      <option *ngFor="let subMaterial of subMaterials[i]" [value]="subMaterial?.subMaterialId">{{
+                        subMaterial?.subMaterialName }} - {{subMaterial?.code}}</option>
                     </select>
                   </div>
                 </div>
@@ -375,30 +376,26 @@
               <div class="form-row">
                 <div class="ng-autocomplete" class="col-md-4" *ngIf="!idOrder">
                   <label>Số điện thoại</label>
-                  <ng-autocomplete  [data]="specialOrders"
-                      [searchKeyword]="keyword"
-                      placeholder="Chọn mã đơn hàng theo yêu cầu"
-                      [itemTemplate]="itemTemplate"
-                      [notFoundTemplate]="notFoundTemplate"
-                      (selected)="onSelectSpecialOrder($event)">
+                  <ng-autocomplete [data]="specialOrders" [searchKeyword]="keyword"
+                    placeholder="Chọn mã đơn hàng theo yêu cầu" [itemTemplate]="itemTemplate"
+                    [notFoundTemplate]="notFoundTemplate" (selected)="onSelectSpecialOrder($event)">
                   </ng-autocomplete>
 
                   <ng-template #itemTemplate let-item>
-                      <a [innerHTML]="item.code"></a>
+                    <a [innerHTML]="item.code"></a>
                   </ng-template>
 
                   <ng-template #notFoundTemplate let-notFound>
-                      <div [innerHTML]="notFound"></div>
+                    <div [innerHTML]="notFound"></div>
                   </ng-template>
-              </div>
+                </div>
                 <div class="form-group col-md-4" *ngIf="idOrder">
                   <label for="orderId">Mã yêu cầu</label>
                   <input type="text" class="form-control" formControlName="code" placeholder="Mã đặt hàng" readonly>
                 </div>
                 <div class="form-group col-md-4">
                   <label for="orderDate">Ngày đặt hàng</label>
-                  <input type="date" class="form-control" formControlName="orderDate" placeholder="DD-MM-YYY"
-                    readonly>
+                  <input type="date" class="form-control" formControlName="orderDate" placeholder="DD-MM-YYY" readonly>
                 </div>
                 <div class="form-group col-md-4">
                   <label for="orderDate">Ngày dự kiến hoàn thành</label>
@@ -559,7 +556,7 @@
                             <option *ngFor="let subMaterial of subMaterials[i*10+j]"
                               [value]="subMaterial?.subMaterialId">{{
                               subMaterial?.subMaterialName
-                              }}</option>
+                              }} - {{ subMaterial?.code }}</option>
                           </select>
                         </div>
                       </div>
@@ -674,8 +671,8 @@
             </div>
             <div class="form-group col-md-2">
               <label style="font-size: 13px;" for="editSelectedStatus">Số lượng</label>
-              <input type="number"  class="form-control text-right" id="editProductQuantity"
-                name="editProductQuantity" formControlName="quantity" readonly>
+              <input type="number" class="form-control text-right" id="editProductQuantity" name="editProductQuantity"
+                formControlName="quantity" readonly>
             </div>
           </div>
 
@@ -791,7 +788,8 @@
                     <label for="subMaterialId-{{i}}">Tên nguyên vật liệu<span class="required-asterisk">*</span></label>
                     <select id="subMaterialId-{{i}}" class="form-control" (change)="onSubMaterialChange($event, i)"
                       formControlName="subMaterialId">
-                      <option *ngFor="let subMaterial of subMaterials[i]" [value]="subMaterial?.subMaterialId">{{ subMaterial?.subMaterialName }} - {{subMaterial?.code}}</option>
+                      <option *ngFor="let subMaterial of subMaterials[i]" [value]="subMaterial?.subMaterialId">{{
+                        subMaterial?.subMaterialName }} - {{subMaterial?.code}}</option>
                     </select>
                   </div>
                 </div>
@@ -1009,7 +1007,8 @@
                     <select id="subMaterialId-{{i}}" class="form-control" *ngIf="subMaterials[i]"
                       (change)="onSubMaterialChange($event, i)" formControlName="subMaterialId">
                       <option disabled value="" selected>Chọn vật liệu</option>
-                      <option *ngFor="let subMaterial of subMaterials[i]" [value]="subMaterial?.subMaterialId">{{ subMaterial?.subMaterialName }} - {{subMaterial?.code}}</option>
+                      <option *ngFor="let subMaterial of subMaterials[i]" [value]="subMaterial?.subMaterialId">{{
+                        subMaterial?.subMaterialName }} - {{subMaterial?.code}}</option>
                     </select>
                   </div>
                 </div>

@@ -441,7 +441,7 @@ public class JobServiceImpl implements JobService {
                 jobs_log.setProduct(null);
                 //------ đoạn này chỉ dành cho request product , vì nó là đơn hàng , còn product có sẵn thì lúc cọc xong thì chuyển sang status là đã thi công xong luôn
                 Orders orders = orderRepository.findByCode(jobs_history.getOrderdetails().getOrder().getCode());
-                if (checkOderDoneOrNotTest(orders.getOrderId()) == 0) {
+                if (checkOderDoneOrNot(orders.getOrderId()) == 0) {
                     orders.setStatus(statusOrderRepository.findById(4)); //nghĩa là đơn hàng đã thi công xong
                     orderRepository.save(orders);
                 }
@@ -518,25 +518,15 @@ public class JobServiceImpl implements JobService {
 //        return true; // Chỉ trả về true nếu tất cả các job đều đã hoàn thành (status_id = 13)
 //    }
 
-    private boolean checkOderDoneOrNot(int order_id) {
+    private Integer checkOderDoneOrNot(int order_id) {
         List<OrderDetailWithJobStatusDTO> results = orderDetailRepository.getAllOrderDetailByOrderIdCheck(order_id);
      //   for(OrderDetailWithJobStatusDTO p :results){
-            if(results.size() >= 1){
-                return true;
-            }
-       // }
-        return false;
+        return results.size();
     }
     @Override
     public Integer  checkOderDoneOrNotTest(int order_id){
         List<OrderDetailWithJobStatusDTO> results = orderDetailRepository.getAllOrderDetailByOrderIdCheck(order_id);
         return results.size();
-        //   for(OrderDetailWithJobStatusDTO p :results){
-//        if(results.size() >= 1){
-//            return true;
-//        }
-//        // }
-//        return false;
     }
 
 

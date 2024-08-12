@@ -97,8 +97,8 @@ public interface SubMaterialsRepository extends JpaRepository<SubMaterials,Integ
             "ism.total_quantity, ism.out_price, ism.input_price,m.type,s.code) " + // Thêm dấu phẩy và loại bỏ COALESCE cho các ID
             "FROM SubMaterials s " +
             "LEFT JOIN InputSubMaterial ism ON s.subMaterialId = ism.subMaterials.subMaterialId" +
-            " LEFT JOIN s.material m ON m.materialId = :query " + // Di chuyển điều kiện WHERE vào đây
-            "WHERE (ism.date_input, ism.input_id) IN ( " +
+            " LEFT JOIN s.material m " + // Di chuyển điều kiện WHERE vào đây
+            "WHERE m.materialId = :query AND (ism.date_input, ism.input_id) IN ( " +
             "   SELECT MAX(ism2.date_input), MAX(ism2.input_id) " +
             "   FROM InputSubMaterial ism2 " +
             "   WHERE ism2.subMaterials.subMaterialId = s.subMaterialId " +

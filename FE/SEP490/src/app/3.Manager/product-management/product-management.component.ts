@@ -954,10 +954,16 @@ export class ProductManagementComponent implements OnInit {
   onSubMaterialChangeRProduct(event: Event, index: number, indexOfItemRProduct: number, indexOfMaterial: number) {
     const selectedValue = Number((event.target as HTMLSelectElement).value);
     // Check for duplicates
-    if (Object.values(this.selectedSubMaterialId).includes(selectedValue)) {
-      this.toastr.warning('Nguyên vật liệu đã được chọn. Vui lòng chọn nguyên vật liệu khác', 'Lỗi');
-      this.selectedSubMaterialId[index] = null;
-      return;
+    const startIndex1 = indexOfItemRProduct * 10;
+    const endIndex1 = startIndex1 + 9;
+
+    // Check for duplicates within the specified range
+    for (let i = startIndex1; i <= endIndex1; i++) {
+      if (this.selectedSubMaterialId[i] && Object.values(this.selectedSubMaterialId[i]).includes(selectedValue)) {
+        this.toastr.warning('Nguyên vật liệu đã được chọn. Vui lòng chọn nguyên vật liệu khác', 'Lỗi');
+        this.selectedSubMaterialId[index] = null;
+        return;
+      }
     }
 
     this.totalUnitPrice = 0;

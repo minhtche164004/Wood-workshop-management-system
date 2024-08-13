@@ -180,6 +180,10 @@ public interface AdvancesalaryRepository extends JpaRepository<Advancesalary,Int
 
 
 
+    //tổng lương chưa thanh toán
+    @Query("SELECT SUM(a.amount) FROM Advancesalary a WHERE a.isAdvanceSuccess = false")
+    BigDecimal TotalSalaryNotPayment();
+
 
     //số lượng sản phẩm có sẵn
     @Query("SELECT SUM(p.quantity) FROM Products p")
@@ -211,9 +215,9 @@ public interface AdvancesalaryRepository extends JpaRepository<Advancesalary,Int
 
 
     //tổng số tiền nhập nguyên vật liệu
-    @Query("SELECT SUM(ism.total_quantity * ism.out_price) AS total FROM SubMaterials s" +
+    @Query("SELECT SUM(ism.quantity * ism.out_price) AS total FROM SubMaterials s" +
             " LEFT JOIN InputSubMaterial ism ON s.subMaterialId = ism.subMaterials.subMaterialId" +
-            " LEFT JOIN s.material m " + // Di chuyển LEFT JOIN s.material m đến đây
+            " LEFT JOIN s.material m " +
             "WHERE (ism.date_input, ism.input_id) IN ( " +
             "   SELECT MAX(ism2.date_input), MAX(ism2.input_id) " +
             "   FROM InputSubMaterial ism2 " +
@@ -224,7 +228,7 @@ public interface AdvancesalaryRepository extends JpaRepository<Advancesalary,Int
 
 
 
-    @Query("SELECT SUM(ism.total_quantity * ism.out_price) AS total " +
+    @Query("SELECT SUM(ism.quantity * ism.out_price) AS total " +
             "FROM InputSubMaterial ism " +
             "WHERE MONTH(ism.date_input) = :month " +
             "AND YEAR(ism.date_input) = :year")

@@ -205,7 +205,7 @@
       </div>
     </div>
   </div>
-  <div class="modal fade" style="margin-left: 7%;" id="productDetailModal" tabindex="-1" role="dialog"
+  <div class="modal fade" style="margin-left: 10%; margin-bottom: 2%;" id="productDetailModal" tabindex="-1" role="dialog"
     aria-labelledby="productDetailModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-xl" role="document">
       <div class="modal-content">
@@ -295,8 +295,7 @@
                     <p class="card-text"><b>Kiểu thanh toán:</b></p>
                   </div>
                   <div class="col-md-6">
-                    {{ OrderdetailById.paymentMethod
-                    === '1' ? 'Tiền mặt' : 'Chuyển khoản' }}
+                    {{ OrderdetailById?.paymentMethod === 2 ? 'Chuyển khoản' : (OrderdetailById?.paymentMethod === 1 ? 'Tiền mặt' : '') }}
                   </div>
 
                 </div>
@@ -339,7 +338,7 @@
                 <th style="width: 35%;">Tên sản phẩm</th>
                 <th>Số lượng</th>
                 <th>Đơn giá</th>
-                <th>Trạng thái</th>
+                <th>Tình trạng</th>
 
               </tr>
             </thead>
@@ -413,7 +412,7 @@
         <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close" (click)="closeModal($event) "
           (click)="cancelChangeStatusJob1()"></button>
       </div>
-      <div class="modal-body">
+      <div class="modal-body" style="font-size: 13px;">
         <div class="row" style="margin-bottom: 20px;">
           <div class="col md-6">
             <label for="cancelReason">Nhập số tiền cọc cần thanh toán</label>
@@ -422,16 +421,15 @@
           <div class="col md-6">
             <label> Số tiền cọc tối thiểu cần thanh toán</label>
 
-            <p style="color: red; text-align: center;">{{ OrderdetailById.deposite | number :
-              '1.0-3' }} VNĐ</p>
+
+            <p class="font-weight-bold"><span class="text-danger">
+                {{ OrderdetailById.deposite | number : '1.0-3' }}</span> <span class="text-danger"> VNĐ</span></p>
           </div>
         </div>
 
 
-
-
-        <p>Tổng giá trị đơn hàng: {{ OrderdetailById.totalAmount | number :
-          '1.0-3' }} VNĐ</p>
+        <p class="font-weight-bold">Tổng giá trị đơn hàng: <span class="text-danger">{{ OrderdetailById.totalAmount |
+            number : '1.0-3' }}</span> <span class="text-danger"> VNĐ</span></p>
 
       </div>
       <div class="modal-footer">
@@ -508,23 +506,24 @@
 <div class="modal fade" id="refundProductModal" tabindex="-1" aria-labelledby="refundProductModalLabel"
   aria-hidden="true" data-backdrop="static" data-keyboard="false">
   <div class="modal-dialog modal-dialog-centered">
-    <div class="modal-content">
+    <div class="modal-content" style="margin-bottom: 170px;">
       <div class="modal-header">
         <h2 class="modal-title" id="refundProductModalLabel">Xác nhận hoàn tiền cho khách hàng</h2>
         <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close"
           (click)="closeModal($event); cancelRefundModal()"></button>
       </div>
       <div class="modal-body">
-        <div class="row mb-3">
+        <div class="row mb-3" style="font-size: 13px;">
           <div class="col-md-6">
-            <p class="mb-0">Mã đơn hàng: {{ OrderdetailById.code }}</p>
+            <p class="mb-0 font-weight-bold">Mã đơn hàng: {{ OrderdetailById.code }}</p>
           </div>
           <div class="col-md-6">
-            <p class="mb-0">Loại đơn hàng: {{ OrderdetailById.specialOrder ? 'Đơn hàng theo yêu cầu' : 'Đơn hàng có sẵn'
+            <p class="mb-0 font-weight-bold">Loại đơn hàng: {{ OrderdetailById.specialOrder ? 'Đơn hàng theo yêu cầu' :
+              'Đơn hàng có sẵn'
               }}</p>
           </div>
         </div>
-        <div class="row mb-3">
+        <div class="row mb-3" style="font-size: 13px;">
           <div class="col-md-6">
             <div class="form-group">
               <label for="percentDepositPrice">Nhập số tiền hoàn đơn hàng</label>
@@ -533,33 +532,34 @@
                 required>
             </div>
           </div>
+
           <div class="col-md-6">
             <div class="form-group">
-              <label for="depositeAmount">Tổng số tiền đơn hàng (VNĐ)</label>
-              <p class="mb-0"> {{ OrderdetailById.totalAmount | number :
-                '1.0-3' }}</p>
+              <label for="depositeAmount">Tổng số đã tiền cọc (VNĐ)</label>
+              <p class="mb-0 text-danger"> {{ OrderdetailById.deposite | number :
+                '1.0-3' }} VNĐ</p>
             </div>
           </div>
         </div>
-        <div class="row mb-3">
+        <div class="row mb-3" style="font-size: 13px;">
           <div class="col-md-6">
             <div class="form-group">
-              <label for="selectedReason">Chọn lý do <span class="required-asterisk">*</span></label>
+              <label for="selectedReason">Chọn lý do hoàn tiền <span class="required-asterisk">*</span></label>
               <select class="form-control" id="selectedReason" [(ngModel)]="selectedReason">
-                <option value="" selected>Chọn lý do</option>
+                <option value="" selected disabled>Chọn lý do</option>
                 <option *ngFor="let ps of getStatusRefund" [value]="ps.refundId">{{ ps.refundName }}</option>
               </select>
             </div>
           </div>
           <div class="col-md-6">
             <div class="form-group">
-              <label for="depositeAmount">Tổng số tiền cọc (VNĐ)</label>
-              <p class="mb-0"> {{ OrderdetailById.deposite | number :
-                '1.0-3' }}</p>
+              <label for="depositeAmount">Tổng số tiền đơn hàng (VNĐ)</label>
+              <p class="mb-0 text-danger"> {{ OrderdetailById.totalAmount | number :
+                '1.0-3' }} VNĐ</p>
             </div>
           </div>
         </div>
-        <div class="form-group">
+        <div class="form-group" style="font-size: 13px;">
           <label for="cancelReason">Nội dung hoàn tiền</label>
           <span class="required-asterisk">*</span>
           <textarea class="form-control" id="cancelReason" [(ngModel)]="cancelReasonPrice" rows="4" required></textarea>
@@ -620,7 +620,7 @@
 
 
 <div style="margin-left: 130px;" class="modal fade" id="myModal1234" tabindex="-1" role="dialog"
-  aria-labelledby="productDetailModalLabel" aria-hidden="true">
+  aria-labelledby="productDetailModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
   <div class="modal-dialog modal-xl" role="document">
     <div class="modal-content">
       <div class="modal-header">
@@ -632,35 +632,46 @@
       <div class="modal-body">
         <div class="row mb-3">
           <div class="col-md-6">
-            <h4>Thông tin khách hàng: <b>{{OrderdetailById.userInfor?.fullname}} - {{OrderdetailById.userInfor?.phoneNumber}} -
+            <h4>Thông tin khách hàng: <b>{{OrderdetailById.userInfor?.fullname}} -
+                {{OrderdetailById.userInfor?.phoneNumber}} -
                 {{emailCustomer}}</b></h4>
           </div>
           <div class="col-md-3">
             <h4>
-              <b>Ngày tạo đơn:</b> {{OrderdetailById.orderDate | date:'dd/MM/yyyy'}}
+             Ngày tạo đơn:<b>{{OrderdetailById.orderDate | date:'dd/MM/yyyy'}}</b>
             </h4>
 
           </div>
 
           <div class="col-md-3">
             <h4>
-              Mã đơn hàng: {{ OrderdetailById.code }}
+           
+                Mã đơn hàng:    <b>{{ OrderdetailById.code }}</b>
+   
+             
             </h4>
 
           </div>
         </div>
         <div class="row mb-3">
           <div class="col-md-6">
-            <h4>Địa chỉ khách hàng: <b>{{OrderdetailById.userInfor?.address}}</b></h4>
-
+            <h4>Địa chỉ giao hàng: <b>{{OrderdetailById.userInfor?.address}}</b></h4>
           </div>
          
+          <div class="col-md-3">
+            <h4 style="color: green;">
+              <b> {{OrderdetailById.status?.status_name}}</b>
+            </h4>
 
+          </div>
           <div class="col-md-3">
             <label>
               <h4>
                 <div *ngIf="selectedOrderDetail.specialOrder; else regularOrder">
-                  Đơn hàng theo yêu cầu
+                  <b>
+                    Đơn hàng theo yêu cầu
+                  </b>
+
                 </div>
                 <ng-template #regularOrder>
                   Đơn hàng có sẵn
@@ -668,12 +679,6 @@
               </h4>
 
             </label>
-          </div>
-          <div class="col-md-3">
-            <h4>
-              <b> {{OrderdetailById.status?.status_name}}</b>
-            </h4>
-
           </div>
 
         </div>
@@ -689,9 +694,9 @@
               <tr>
                 <th style="width: 3%;">STT</th>
                 <th style="width: 35%;">Tên sản phẩm</th>
-                <th>Số lượng</th>
-                <th>Đơn giá</th>
-                <th style="width: 20%;">Trạng thái</th>
+                <th>Số lượng sản phẩm</th>
+                <th>Đơn giá sản phẩm</th>
+                <th style="width: 20%;">Tình trạng sản phẩm</th>
 
               </tr>
             </thead>
@@ -716,11 +721,10 @@
                   class="form-control" readonly></textarea>
               </div>
               <div class="col-md-6" style="font-size: 15px;">
-                <div tyle="padding-bottom: 10px;" class="d-flex justify-content-between mb-2">
+                <div style="padding-bottom: 7px;" class="d-flex justify-content-between mb-2">
                   <b>Phương thức thanh toán:</b>
-                  <span
-                    [ngClass]="{'text-danger': OrderdetailById.paymentMethod === '1', 'text-success': OrderdetailById.paymentMethod !== '1'}">
-                    {{ OrderdetailById.paymentMethod === '1' ? 'Tiền mặt' : 'Chuyển khoản' }}
+               <span>
+                    {{ OrderdetailById?.paymentMethod === 2 ? 'Chuyển khoản' : (OrderdetailById?.paymentMethod === 1 ? 'Tiền mặt' : '') }}
                   </span>
                 </div>
                 <div style="padding-bottom: 7px;" class="d-flex justify-content-between mb-2">
@@ -760,8 +764,7 @@
         <button type="button" class="btn btn-secondary" data-dismiss="modal" (click)="closeModal($event)"
           (click)="cancelChangeStatusJob()">Đóng</button>
         <button type="button" class="btn btn-primary"
-          (click)="changeStatusFinish(selectedModalJob,selectedModalId)">Chắc
-          chắn</button>
+          (click)="changeStatusFinish(selectedModalJob,selectedModalId)">Thanh toán</button>
 
       </div>
     </div>

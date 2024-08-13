@@ -56,6 +56,13 @@ public class StatisticController {
         apiResponse.setResult(statisticService.countProduct());
         return apiResponse;
     }
+
+    @GetMapping("/TotalSalaryNotPayment")
+    public ApiResponse<?> TotalSalaryNotPayment() {
+        ApiResponse<BigDecimal> apiResponse = new ApiResponse<>();
+        apiResponse.setResult(statisticService.TotalSalaryNotPayment());
+        return apiResponse;
+    }
     @GetMapping("/countTotalOrder")
     public ApiResponse<?> countTotalOrder() {
         ApiResponse<Long> apiResponse = new ApiResponse<>();

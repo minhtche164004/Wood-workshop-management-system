@@ -75,7 +75,7 @@
                     <i class="fa-solid fa-pen-to-square"></i>
                   </a>
                   </td>
-                  <td>{{ hs?.specialOrder ? 'Đơn hàng đặc biệt' : 'Đơn hàng có sẵn' }}</td>
+                  <td>{{ hs?.specialOrder ? 'Đơn hàng theo yêu cầu' : 'Đơn hàng có sẵn' }}</td>
                   <td>{{ hs?.orderDate | date:'dd/MM/yyyy' }}</td>
                   <td>{{ hs?.orderFinish | date:'dd/MM/yyyy' }}</td>
                   <td>{{ hs?.status.status_name}}</td>
@@ -133,14 +133,14 @@
           <div class="row">
             <div class="col-md-4">
               <!-- <b>Đơn hàng:</b> -->
-              <label style="color: rgba(0, 102, 255, 0.945);">
+              <label >
                 <!-- Other parts of your form -->
 
                 <div *ngIf="selectedOrderDetail.specialOrder; else regularOrder">
-                  <p>Đơn hàng đặc biệt</p>
+                  <p>Loại đơn hàng: Đơn hàng theo yêu cầu</p>
                 </div>
                 <ng-template #regularOrder>
-                  <p>Đơn hàng có sẵn</p>
+                  <p>Loại đơn hàng: Đơn hàng có sẵn</p>
                 </ng-template>
 
                 <!-- Other parts of your form -->
@@ -154,7 +154,7 @@
 
 
             <div class="col-md-4 text-end">
-              <b style="background-color: #007bff; color: whitesmoke; padding: 4px; border-radius: 5px;">
+              <b style="color: black; padding: 4px; border-radius: 5px;">
                 {{OrderdetailById.status?.status_name}}</b>
             </div>
           </div>
@@ -225,7 +225,7 @@
                   <tr>
                     <th style="width: 40%;">Tên sản phẩm</th>
                     <th>Đơn giá</th>
-                    <th>Trạng thái</th>
+                 
                     <th>Số lượng</th>
                   </tr>
                 </thead>
@@ -233,7 +233,7 @@
                   <tr *ngFor="let product of productOfOrder">
                     <td>{{product?.product_name}} {{product?.request_product_name}}</td>
                     <td>{{product?.price | number:'1.0-3'}}</td>
-                    <td>{{product?.status_job_name}}</td>
+            
                     <td style="text-align: right;">{{product?.quantity}}</td>
                   </tr>
                 </tbody>

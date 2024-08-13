@@ -329,7 +329,7 @@ export class OrderManagementComponent implements OnInit {
   selectedOrderDetail: any = {};
   emailCustomer: string = '';
   getOrDetailById(us: any, order_detail_id: string): void {
-    this.isLoadding = true;
+    
     console.log('Order_detail_id:', order_detail_id);
     console.log("order detail: ", us)
     console.log("order detail type: ", us.specialOrder)
@@ -338,13 +338,13 @@ export class OrderManagementComponent implements OnInit {
     this.authenListService.getOrderDetailById(us.orderId).subscribe(
       (data) => {
         this.OrderdetailById = data.result;
-        this.isLoadding = false;
+       
         console.log('OrderdetailById:', data.result);
         // console.log('OrderdetailById:', this.OrderdetailById);
       },
       (error) => {
         console.error('Error fetching user data:', error);
-        this.isLoadding = false;
+       
 
       }
     );
@@ -440,7 +440,7 @@ export class OrderManagementComponent implements OnInit {
           this.realoadgetAllUser();
           this.isLoadding = false;
           console.log('Order status changed', response);
-          this.toastr.success('Thay đổi tình trạng  thành công.');
+          this.toastr.success('Thanh toán tiền đơn hàng thành công');
           $('[data-dismiss="modal"]').click();
         } else if (response.code === 1043) {
           this.isLoadding = false;
@@ -448,7 +448,7 @@ export class OrderManagementComponent implements OnInit {
         } else {
           this.isLoadding = false;
           console.error('Error changing order status', response);
-          this.toastr.error('Đã xảy ra lỗi khi thay đổi tình trạng đơn hàng.');
+          this.toastr.error('Số tiền còn lại cần thanh toán không đúng với giá trị , vui lòng nhập lại!');
         }
       },
       (error: HttpErrorResponse) => {
@@ -458,7 +458,7 @@ export class OrderManagementComponent implements OnInit {
         } else {
           this.isLoadding = false;
           console.error('Error changing order status', error);
-          this.toastr.error('Đã xảy ra lỗi khi thay đổi tình trạng đơn hàng.');
+          this.toastr.error('Số tiền còn lại cần thanh toán không đúng với giá trị , vui lòng nhập lại!');
         }
       }
     );

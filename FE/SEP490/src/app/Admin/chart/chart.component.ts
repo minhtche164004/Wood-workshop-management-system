@@ -220,7 +220,7 @@ export class ChartComponent implements OnInit {
     this.chart2 = new Chart('canvas2', {
       type: 'pie',
       data: {
-        labels: ['Đơn hàng có sẵn', 'Đơn hàng đặc biệt'],
+        labels: ['Đơn hàng có sẵn', 'Đơn hàng theo yêu cầu'],
         datasets: [
           {
             label: 'Đơn hàng',

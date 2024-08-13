@@ -22,6 +22,11 @@ a{
 img{
     width: 100%;
 }
+.custom-width {
+    margin-left: 250px;
+    max-width: 80%; /* Adjust as needed */
+}
+
 /* top header icon */
 .header-icon{
     margin: 3px;

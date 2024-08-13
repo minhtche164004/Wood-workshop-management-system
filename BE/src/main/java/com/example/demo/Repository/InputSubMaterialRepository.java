@@ -9,6 +9,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 @Repository
 @EnableJpaRepositories
@@ -17,6 +18,14 @@ public interface InputSubMaterialRepository extends JpaRepository<InputSubMateri
     //lấy giá submaterial đã cập nhật lần cuối(bản ghi mới nhất) (loại action là cạp nhật giá)
     @Query("SELECT ism FROM InputSubMaterial ism WHERE ism.subMaterials.subMaterialId = :subMaterialId AND ism.actionType.action_type_id = 4  ORDER BY ism.date_input DESC LIMIT 1   ")
     InputSubMaterial findLatestInputSubMaterialBySubMaterialId(@Param("subMaterialId") int subMaterialId);
+
+    @Query("SELECT u FROM InputSubMaterial u WHERE u.input_id = :query")
+    InputSubMaterial findById(int query);
+
+    @Query(value = "SELECT p.* FROM input_sub_material p WHERE p.code_input LIKE :prefix% ORDER BY p.code_input DESC LIMIT 1", nativeQuery = true)
+    InputSubMaterial findInputSubMaterialTop(@Param("prefix") String prefix);
+
+
 
     @Query("SELECT ism FROM InputSubMaterial ism " +
             "WHERE ism.subMaterials.subMaterialId = :subMaterialId " +
@@ -33,6 +42,34 @@ public interface InputSubMaterialRepository extends JpaRepository<InputSubMateri
             ")")
     InputSubMaterial findLatestSubMaterialInputSubMaterialBySubMaterialId(@Param("subMaterialId") int subMaterialId);
 
+    @Query("SELECT ism, MAX(ism.date_input) AS latestDate,MAX(ism.input_id) AS lastId " +
+            "FROM InputSubMaterial ism " +
+            "WHERE ism.code_input = :code_input AND ism.subMaterials.subMaterialId = :subMaterialId " +
+            "GROUP BY ism.code_input " +
+            "ORDER BY latestDate DESC")
+    InputSubMaterial findLatestSubMaterialInputSubMaterialBySubMaterialIdGroupByCode(@Param("code_input") String code_input,
+            @Param("subMaterialId") int subMaterialId);
+
+
+    @Query("SELECT ism, MAX(ism.date_input) AS latestDate,MAX(ism.input_id) AS lastId " +
+            "FROM InputSubMaterial ism " +
+            "WHERE  ism.subMaterials.subMaterialId = :subMaterialId " +
+            "GROUP BY ism.code_input " +
+            "ORDER BY latestDate DESC")
+    List<InputSubMaterial> findLatestSubMaterialInputSubMaterial(@Param("subMaterialId") int subMaterialId);
+
+    @Query("SELECT ism"+
+           " FROM InputSubMaterial ism " +
+          " WHERE ism.input_id = ("  +
+          " SELECT MAX(ism2.input_id)" +
+           "FROM InputSubMaterial ism2" +
+           " WHERE ism2.code_input = ism.code_input)")
+    List<InputSubMaterial> findAllInputSubMaterialsOrderByCodeAndDate();
+
+
+
+
+
 
 //
 //    @Query("SELECT ism FROM InputSubMaterial ism WHERE ism.subMaterials.subMaterialId = :subMaterialId  ORDER BY ism.date_input DESC LIMIT 1   ")
@@ -48,16 +85,16 @@ public interface InputSubMaterialRepository extends JpaRepository<InputSubMateri
     InputSubMaterial findLatestOutputSubMaterialBySubMaterialId(@Param("subMaterialId") int subMaterialId);
 
     //số tiền nhập kho theo tháng của mõi sản phẩm
-    @Query("SELECT SUM(a.total_quantity*a.out_price) FROM InputSubMaterial a  WHERE MONTH(a.date_input) = :month AND YEAR(a.date_input) = :year AND a.actionType.action_type_id = 2 ")
+    @Query("SELECT SUM(a.quantity*a.out_price) FROM InputSubMaterial a  WHERE MONTH(a.date_input) = :month AND YEAR(a.date_input) = :year AND a.actionType.action_type_id = 2 ")
     BigDecimal findTotalInputSubMaterialByMonthAndYear(@Param("month") int month, @Param("year") int year);
 
     //số tiền chênh lệch lúc cập nhật số lượng theo tháng của mõi sản phẩm , nếu bigdecimal mà duogw nghĩa là thêm sản phẩm vào kho, , phải sử dụng dấu +
-    @Query("SELECT SUM(a.total_quantity*a.out_price) FROM InputSubMaterial a  WHERE MONTH(a.date_input) = :month AND YEAR(a.date_input) = :year AND a.actionType.action_type_id = 3" +
-            " AND a.total_quantity >= 0 ")
+    @Query("SELECT SUM(a.quantity*a.out_price) FROM InputSubMaterial a  WHERE MONTH(a.date_input) = :month AND YEAR(a.date_input) = :year AND a.actionType.action_type_id = 3" +
+            " AND a.quantity >= 0 ")
     BigDecimal findTotalEditQuantitySubMaterialByMonthAndYear(@Param("month") int month, @Param("year") int year);
 
-    @Query("SELECT SUM(a.total_quantity*a.out_price) FROM InputSubMaterial a  WHERE MONTH(a.date_input) = :month AND YEAR(a.date_input) = :year AND a.actionType.action_type_id = 5" +
-            " AND a.total_quantity >= 0 ")
+    @Query("SELECT SUM(a.quantity*a.out_price) FROM InputSubMaterial a  WHERE MONTH(a.date_input) = :month AND YEAR(a.date_input) = :year AND a.actionType.action_type_id = 5" +
+            " AND a.quantity >= 0 ")
     BigDecimal findTotalEditQuantityAndPriceSubMaterialByMonthAndYear(@Param("month") int month, @Param("year") int year);
 
 

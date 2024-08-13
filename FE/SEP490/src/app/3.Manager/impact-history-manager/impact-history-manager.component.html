@@ -64,7 +64,7 @@
                   <th style="width: 120px;">Ngày hiệu lực</th>
                  
                   <th style="width: 100px;">Số lượng trong kho</th>
-                  <th style="width: 150px;">Biến động số lượng</th>
+                  <!-- <th style="width: 150px;">Biến động số lượng</th> -->
                   <th>Giá nhập</th>
                   <th>Giá bán</th>
  
@@ -85,8 +85,8 @@
                   <td>{{ job.create_date  | date:'dd/MM/yyyy' }}</td>
                   <td>{{ job.date_input  | date:'dd/MM/yyyy' }}</td>
                  
-                  <td style="text-align: right;min-width: 50px; ">{{ job.total_quantity }}</td>
-                  <td style="text-align: right;min-width: 50px; ">{{ job.change_quantity }}</td>
+                  <td style="text-align: right;min-width: 50px; ">{{ job.quantity }}</td>
+                  <!-- <td style="text-align: right;min-width: 50px; ">{{ job.change_quantity }}</td> -->
 
                   <td style="text-align: right;">{{ job.input_price | number: '1.0-3' }}</td>
                   <td style="text-align: right;">{{ job.out_price | number: '1.0-3' }}</td>

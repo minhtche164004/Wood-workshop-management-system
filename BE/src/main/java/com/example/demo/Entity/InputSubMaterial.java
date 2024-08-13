@@ -20,11 +20,11 @@ public class InputSubMaterial {
 //    @JsonIgnore // Không đưa vào JSON để tránh vòng lặp
     private SubMaterials subMaterials; // Đổi tên thuộc tính thành "material"
 
-    @Column(name = "quantity")
-    private double change_quantity;
+    @Column(name = "quantity") //số lượng trong kho
+    private double quantity;
 
-    @Column(name = "total_quantity")
-    private double total_quantity;
+//    @Column(name = "total_quantity")
+//    private double total_quantity;
 
     @Column(name = "unit_price") //giá nhập
     private BigDecimal input_price;
@@ -37,6 +37,10 @@ public class InputSubMaterial {
 
     @Column(name = "create_date") //ngày nhập kho
     private Date create_date;
+
+    //thêm trường code(mã xuất nhập kho)
+    @Column(name = "code_input")
+    private String code_input;
 
     @ManyToOne
     @JoinColumn(name = "action_type_id")

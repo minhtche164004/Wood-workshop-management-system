@@ -31,7 +31,7 @@ public interface ProductSubMaterialsRepository extends JpaRepository<ProductSubM
 
     @Query("SELECT new com.example.demo.Dto.SubMaterialDTO.SubMaterialViewDTO(" +
             "s.subMaterialId, COALESCE(s.subMaterialName, ''), m.materialId, COALESCE(s.description, ''), " +
-            "COALESCE(m.materialName, ''), ism.quantity, ism.out_price,ism.input_price,m.type,s.code) " + // Thêm dấu phẩy và loại bỏ COALESCE cho các ID
+            "COALESCE(m.materialName, ''), ism.quantity, ism.out_price,ism.input_price,m.type,s.code,ism.input_id) " + // Thêm dấu phẩy và loại bỏ COALESCE cho các ID
             "FROM ProductSubMaterials p " +
             "LEFT JOIN p.subMaterial s " +
             "LEFT JOIN InputSubMaterial ism ON s.subMaterialId = ism.subMaterials.subMaterialId" +

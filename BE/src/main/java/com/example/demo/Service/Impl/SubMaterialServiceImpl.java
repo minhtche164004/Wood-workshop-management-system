@@ -539,14 +539,16 @@ public class SubMaterialServiceImpl implements SubMaterialService {
 
     @Transactional
     @Override
-    public List<ProductSubMaterials> createExportMaterialProduct(int productId, Map<Integer, Double> subMaterialQuantities,int input_id) {
+    public List<ProductSubMaterials> createExportMaterialProduct(int productId, Map<Integer, Double> subMaterialQuantities) {
         Products product = productRepository.findById(productId);
         List<ProductSubMaterials> productSubMaterialsList = new ArrayList<>();
         for (Map.Entry<Integer, Double> entry : subMaterialQuantities.entrySet()) {
-            int subMaterialId = entry.getKey();
-            double quantity = entry.getValue();
-            SubMaterials subMaterial = subMaterialsRepository.findById1(subMaterialId);
+            int input_id = entry.getKey();
             InputSubMaterial input=inputSubMaterialRepository.findById(input_id);
+            SubMaterials subMaterial = input.getSubMaterials();
+            double quantity = entry.getValue();
+          //  SubMaterials subMaterial = subMaterialsRepository.findById1(subMaterialId);
+
         //    InputSubMaterial input = inputSubMaterialRepository.findLatestSubMaterialInputSubMaterialBySubMaterialId(subMaterialId);//lấy giá mới cập nhật
             ProductSubMaterials productSubMaterial = new ProductSubMaterials(subMaterial, product, quantity, input);
             productSubMaterialsList.add(productSubMaterial);
@@ -557,14 +559,15 @@ public class SubMaterialServiceImpl implements SubMaterialService {
 
     @Override
     @Transactional
-    public List<RequestProductsSubmaterials> createExportMaterialProductRequest(int productId, Map<Integer, Double> subMaterialQuantities,int input_id) {
+    public List<RequestProductsSubmaterials> createExportMaterialProductRequest(int productId, Map<Integer, Double> subMaterialQuantities) {
         RequestProducts requestProducts = requestProductRepository.findById(productId);
         List<RequestProductsSubmaterials> reproductSubMaterialsList = new ArrayList<>();
         for (Map.Entry<Integer, Double> entry : subMaterialQuantities.entrySet()) {
-            int subMaterialId = entry.getKey();
+        //    int subMaterialId = entry.getKey();
             double quantity = entry.getValue();
-            SubMaterials subMaterial = subMaterialsRepository.findById1(subMaterialId);
+            int input_id = entry.getKey();
             InputSubMaterial input=inputSubMaterialRepository.findById(input_id);
+            SubMaterials subMaterial = input.getSubMaterials();
         //    InputSubMaterial input = inputSubMaterialRepository.findLatestSubMaterialInputSubMaterialBySubMaterialId(subMaterialId);//lấy giá mới cập nhật
             RequestProductsSubmaterials productSubMaterial = new RequestProductsSubmaterials(subMaterial, requestProducts, quantity, input);
             reproductSubMaterialsList.add(productSubMaterial);
@@ -575,7 +578,7 @@ public class SubMaterialServiceImpl implements SubMaterialService {
 
     @Override
     @Transactional
-    public List<RequestProductsSubmaterials> createExportMaterialListProductRequest(List<CreateExportMaterialProductRequest> exportMaterialDTOs,int input_id) {
+    public List<RequestProductsSubmaterials> createExportMaterialListProductRequest(List<CreateExportMaterialProductRequest> exportMaterialDTOs) {
         List<RequestProductsSubmaterials> result = new ArrayList<>();
         for (CreateExportMaterialProductRequest dto : exportMaterialDTOs) {
             int id = dto.getProductId();
@@ -584,9 +587,11 @@ public class SubMaterialServiceImpl implements SubMaterialService {
             for (Map.Entry<Integer, Double> entry : dto.getSubMaterialQuantities().entrySet()) {
                 int subMaterialId = entry.getKey();
                 double quantity = entry.getValue();
-
-                SubMaterials subMaterial = subMaterialsRepository.findById1(subMaterialId);
+                int input_id = entry.getKey();
                 InputSubMaterial input=inputSubMaterialRepository.findById(input_id);
+                SubMaterials subMaterial = input.getSubMaterials();
+//                SubMaterials subMaterial = subMaterialsRepository.findById1(subMaterialId);
+//                InputSubMaterial input=inputSubMaterialRepository.findById(input_id);
             //    InputSubMaterial input = inputSubMaterialRepository.findLatestSubMaterialInputSubMaterialBySubMaterialId(subMaterialId);
                 RequestProductsSubmaterials requestProductsSubmaterials = new RequestProductsSubmaterials(subMaterial, requestProducts, quantity, input);
 

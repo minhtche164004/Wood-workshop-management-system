@@ -8,6 +8,7 @@ import java.math.BigDecimal;
 @Service
 public interface StatisticService {
     BigDecimal findTotalSalaryByMonthAndYear(int month, int year);
+    BigDecimal TotalSalaryNotPayment();
     Long countCompletedJobsByMonthAndYear(int status_id,int month, int year);
     Long countProduct();
     Long countRequestProduct();

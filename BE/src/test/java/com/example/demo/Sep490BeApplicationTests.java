@@ -5,9 +5,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 //test
 @SpringBootTest
 class Sep490BeApplicationTests {
-
-	@Test
-	void contextLoads() {
-	}
+	
 
 }

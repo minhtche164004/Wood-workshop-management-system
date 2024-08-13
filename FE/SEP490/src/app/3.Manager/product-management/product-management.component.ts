@@ -47,6 +47,8 @@ interface SubMaterialItemOfProduct {
   quantity: number;
   unitPrice: number;
   materialType: string;
+  input_id: number;
+  code: string;
 }
 declare var $: any; // khai bao jquery
 
@@ -512,7 +514,7 @@ export class ProductManagementComponent implements OnInit {
   fillMaterialItemEdit(material: SubMaterialItemOfProduct) {
     const itemFormGroup = this.fb.group({
       materialId: [material.materialId],
-      subMaterialId: [material.subMaterialId],
+      subMaterialId: [material.input_id],
       subMaterialName: [material.subMaterialName],
       materialType: [material.materialType],
       quantity: [material.quantity],

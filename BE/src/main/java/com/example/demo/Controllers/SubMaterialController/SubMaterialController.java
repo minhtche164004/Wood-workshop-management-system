@@ -240,19 +240,19 @@ public class SubMaterialController {
     //xuất đơn nguyên vật liệu cho product có sẵn
     // public ResponseEntity<ApiResponse<List<ProductSubMaterials>>> createExportMaterialProduct(@RequestBody CreateExportMaterialProductRequest request) {
     @PostMapping("/createExportMaterialProduct")
-    public List<ProductSubMaterials> createExportMaterialProduct(@RequestBody CreateExportMaterialProductRequest request,@RequestParam("input_id")int input_id) {
-        return subMaterialService.createExportMaterialProduct(request.getProductId(), request.getSubMaterialQuantities(),input_id);
+    public List<ProductSubMaterials> createExportMaterialProduct(@RequestBody CreateExportMaterialProductRequest request) {
+        return subMaterialService.createExportMaterialProduct(request.getProductId(), request.getSubMaterialQuantities());
     }
 
 //    //xuất đơn vật liệu cho đơn hàng đặt theo yêu cầu , request product
     @PostMapping("/createExportMaterialProductRequest")
-    public List<RequestProductsSubmaterials> createExportMaterialProductRequest(@RequestBody CreateExportMaterialProductRequest request,@RequestParam("input_id")int input_id) {
-        return subMaterialService.createExportMaterialProductRequest(request.getProductId(), request.getSubMaterialQuantities(),input_id);
+    public List<RequestProductsSubmaterials> createExportMaterialProductRequest(@RequestBody CreateExportMaterialProductRequest request) {
+        return subMaterialService.createExportMaterialProductRequest(request.getProductId(), request.getSubMaterialQuantities());
     }
 
     @PostMapping("/createExportMaterialListProductRequest")
-    public List<RequestProductsSubmaterials> createExportMaterialListProductRequest(@RequestBody List<CreateExportMaterialProductRequest> request,@RequestParam("input_id")int input_id) {
-        return subMaterialService.createExportMaterialListProductRequest(request,input_id);
+    public List<RequestProductsSubmaterials> createExportMaterialListProductRequest(@RequestBody List<CreateExportMaterialProductRequest> request) {
+        return subMaterialService.createExportMaterialListProductRequest(request);
     }
 
 

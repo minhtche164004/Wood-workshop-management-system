@@ -138,7 +138,8 @@ export class ChartComponent implements OnInit {
         this.getTotalProductNormal(),
         this.getAllPostionEmp(),
         this.getAllDataForYear(),
-        this.getTotalAmountHaveDone()
+        this.getTotalAmountHaveDone(),
+        this.getTotalSalaryNotPayment()
       ]);
       await this.updateEmployeePositions();
       this.initializeCharts();
@@ -408,6 +409,19 @@ export class ChartComponent implements OnInit {
       console.log('Tổng sản phẩm thường:', this.totalNormalProduct);
       await this.getTotalRQProduct(); // Wait for getTotalRQProduct() to complete
       await this.getTotalProductNormal(); // Wait for getTotalProductNormal() to complete
+    } catch (err) {
+      console.error(err);
+    }
+  }
+
+  totalSalaryNotPayment: number = 0;
+  async getTotalSalaryNotPayment(): Promise<void> {
+    try {
+      const data = await this.statistic.getTotalSalaryNotPayment().toPromise();
+      this.totalSalaryNotPayment = data.result;
+      console.log('Tổng lương chưa trả: ', this.totalSalaryNotPayment);
+      // await this.getTotalRQProduct(); // Wait for getTotalRQProduct() to complete
+      // await this.getTotalProductNormal(); // Wait for getTotalProductNormal() to complete
     } catch (err) {
       console.error(err);
     }

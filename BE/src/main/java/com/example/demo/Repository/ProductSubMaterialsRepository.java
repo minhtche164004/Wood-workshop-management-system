@@ -31,7 +31,7 @@ public interface ProductSubMaterialsRepository extends JpaRepository<ProductSubM
 
     @Query("SELECT new com.example.demo.Dto.SubMaterialDTO.SubMaterialViewDTO(" +
             "s.subMaterialId, COALESCE(s.subMaterialName, ''), m.materialId, COALESCE(s.description, ''), " +
-            "COALESCE(m.materialName, ''), ism.quantity, ism.out_price,ism.input_price,m.type,s.code) " + // Thêm dấu phẩy và loại bỏ COALESCE cho các ID
+            "COALESCE(m.materialName, ''), ism.quantity, ism.out_price,ism.input_price,m.type,s.code,ism.input_id) " + // Thêm dấu phẩy và loại bỏ COALESCE cho các ID
             "FROM ProductSubMaterials p " +
             "LEFT JOIN p.subMaterial s " +
             "LEFT JOIN InputSubMaterial ism ON s.subMaterialId = ism.subMaterials.subMaterialId" +
@@ -80,16 +80,12 @@ public interface ProductSubMaterialsRepository extends JpaRepository<ProductSubM
     List<Product_SubmaterialDTO> getProductSubMaterialByProductIdAndTypeMate(int productId,int materialId);
 
     @Query("SELECT new com.example.demo.Dto.SubMaterialDTO.SubMateProductDTO( " +
-            "m.materialId ,sub.subMaterialId ,sub.subMaterialName, m.type, ism.out_price, j.quantity) " +
+            "m.materialId ,sub.subMaterialId ,sub.subMaterialName, m.type, ism.out_price, j.quantity,ism.code_input,ism.input_id) " +
             "FROM ProductSubMaterials j " +
             "LEFT JOIN j.subMaterial sub " +
-            "LEFT JOIN InputSubMaterial ism ON sub.subMaterialId = ism.subMaterials.subMaterialId" +
+            "LEFT JOIN j.inputSubMaterial ism " +
             " LEFT JOIN sub.material m " + // Di chuyển điều kiện WHERE vào đây
-            "WHERE " +
-            "ism.input_id = ("  +
-            " SELECT MAX(ism2.input_id)" +
-            "FROM InputSubMaterial ism2" +
-            " WHERE ism2.code_input = ism.code_input) AND j.product.productId = :productId")
+            "WHERE j.product.productId = :productId")
     List<SubMateProductDTO> getProductSubMaterialByProductIdDTO(int productId);
 
 

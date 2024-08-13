@@ -79,7 +79,6 @@ public interface SubMaterialsRepository extends JpaRepository<SubMaterials,Integ
     @Query("SELECT new com.example.demo.Dto.SubMaterialDTO.SubMaterialViewDTO(" +
             "s.subMaterialId, COALESCE(s.subMaterialName, ''), m.materialId, COALESCE(s.description, '')," +
             " COALESCE(m.materialName, '')," +
-
             "ism.quantity, ism.out_price, ism.input_price, m.type,s.code,ism.input_id) " +
 
             "FROM SubMaterials s " +

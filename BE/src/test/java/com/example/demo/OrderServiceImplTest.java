@@ -547,7 +547,8 @@ public class OrderServiceImplTest {
         ordersList.add(new Orders());
 
         when(userDetails.getUsername()).thenReturn("username");
-        SecurityContextHolder.getContext().setAuthentication(new UsernamePasswordAuthenticationToken(userDetails, null));
+        SecurityContextHolder.getContext().setAuthentication
+                (new UsernamePasswordAuthenticationToken(userDetails, null));
 
         when(userRepository.getUserByUsername(anyString())).thenReturn(user);
         when(orderRepository.findByUserId(user.getUserId())).thenReturn(ordersList);

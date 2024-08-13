@@ -28,7 +28,7 @@
     </div>
     <div class="shop">
 
-        <div class="container" style="margin-top: -4%;">
+        <div class="container" style="margin-top: -7%;">
             <div class="row">
                 <div class="col-lg-3 col-12">
                     <div class="filter">
@@ -88,7 +88,7 @@
                     </div>
 
                 </div>
-                <div class="col-lg-9 col-12">
+                <div class="col-lg-9 col-12" style="margin-top: 65px;">
                     <div class="boloc d-flex">
                        
                     </div>
@@ -96,7 +96,7 @@
                         <div>
                           <!-- tim` thay san pham -->
                           <div class="row" *ngIf="!notFoundProduct">
-                            <div class="col-lg-4 col-md-6 col-12 nopadding"
+                            <div class="col-lg-4 col-md-6 col-12 nopadding " 
                                  *ngFor="let product of products | paginate: { itemsPerPage: 6, currentPage: currentPage }; let i = index">
                               <div class="product">
                                 <a style="text-decoration: none;">

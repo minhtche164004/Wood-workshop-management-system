@@ -44,7 +44,7 @@ public interface RequestProductsSubmaterialsRepository extends JpaRepository<Req
     List<String> GetSubNameByProductId(int query);
 
     @Query("SELECT new com.example.demo.Dto.SubMaterialDTO.SubMateProductRequestDTO( " +
-            "m.materialId ,sub.subMaterialId ,sub.subMaterialName, m.type, ism.out_price, j.quantity) " +
+            "m.materialId ,sub.subMaterialId ,sub.subMaterialName, m.type, ism.out_price, j.quantity,ism.code_input,ism.input_id) " +
             "FROM RequestProductsSubmaterials j " +
             "LEFT JOIN j.subMaterial sub " +
             "LEFT JOIN j.inputSubMaterial ism " +

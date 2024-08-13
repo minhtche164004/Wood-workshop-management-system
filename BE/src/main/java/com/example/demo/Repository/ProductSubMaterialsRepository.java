@@ -80,7 +80,7 @@ public interface ProductSubMaterialsRepository extends JpaRepository<ProductSubM
     List<Product_SubmaterialDTO> getProductSubMaterialByProductIdAndTypeMate(int productId,int materialId);
 
     @Query("SELECT new com.example.demo.Dto.SubMaterialDTO.SubMateProductDTO( " +
-            "m.materialId ,sub.subMaterialId ,sub.subMaterialName, m.type, ism.out_price, j.quantity) " +
+            "m.materialId ,sub.subMaterialId ,sub.subMaterialName, m.type, ism.out_price, j.quantity,ism.code_input,ism.input_id) " +
             "FROM ProductSubMaterials j " +
             "LEFT JOIN j.subMaterial sub " +
             "LEFT JOIN j.inputSubMaterial ism " +

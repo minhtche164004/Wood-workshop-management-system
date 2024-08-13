@@ -11,6 +11,7 @@ import com.example.demo.Dto.SubMaterialDTO.SubMaterialDTO;
 import com.example.demo.Dto.SubMaterialDTO.SubMaterialViewDTO;
 import com.example.demo.Dto.SubMaterialDTO.UpdateSubDTO;
 import com.example.demo.Entity.*;
+import com.example.demo.Repository.InputSubMaterialRepository;
 import com.example.demo.Response.ApiResponse;
 import com.example.demo.Service.JobService;
 import com.example.demo.Service.ProductService;
@@ -43,6 +44,8 @@ import java.util.stream.Collectors;
 @RequestMapping("/api/auth/submaterial/")
 @AllArgsConstructor
 public class SubMaterialController {
+    @Autowired
+    private InputSubMaterialRepository inputSubMaterialRepository;
     @Autowired
     private SubMaterialService subMaterialService;
     @Autowired
@@ -151,17 +154,17 @@ public class SubMaterialController {
         return apiResponse;
     }
     @PutMapping("/EditSubMaterialProduct")
-    public ApiResponse<?> EditSubMaterialProduct(@RequestBody CreateExportMaterialProductRequest request) {
+    public ApiResponse<?> EditSubMaterialProduct(@RequestBody CreateExportMaterialProductRequest request,@RequestParam("input_id")int input_id) {
         ApiResponse<List> apiResponse = new ApiResponse<>();
         jedis.del("all_sub_mate_product");
-        apiResponse.setResult(subMaterialService.EditSubMaterialProduct(request.getProductId(), request.getSubMaterialQuantities()));
+        apiResponse.setResult(subMaterialService.EditSubMaterialProduct(request.getProductId(), request.getSubMaterialQuantities(),input_id));
         return apiResponse;
     }
     @PutMapping("/EditSubMaterialRequestProduct")
-    public ApiResponse<?> EditSubMaterialRequestProduct(@RequestBody CreateExportMaterialProductRequest request) {
+    public ApiResponse<?> EditSubMaterialRequestProduct(@RequestBody CreateExportMaterialProductRequest request,@RequestParam("input_id")int input_id) {
         ApiResponse<List> apiResponse = new ApiResponse<>();
         jedis.del("all_sub_mate_re_product");
-        apiResponse.setResult(subMaterialService.EditSubMaterialRequestProduct(request.getProductId(), request.getSubMaterialQuantities()));
+        apiResponse.setResult(subMaterialService.EditSubMaterialRequestProduct(request.getProductId(), request.getSubMaterialQuantities(),input_id));
         return apiResponse;
     }
 
@@ -207,6 +210,27 @@ public class SubMaterialController {
         return apiResponse;
     }
 
+    @GetMapping("/findAllInputSubMaterialsOrderByCodeAndDate")
+    public ApiResponse<?> findAllInputSubMaterialsOrderByCodeAndDate() {
+        ApiResponse<List> apiResponse = new ApiResponse<>();
+        apiResponse.setResult(inputSubMaterialRepository.findAllInputSubMaterialsOrderByCodeAndDate());
+        return apiResponse;
+    }
+
+    @GetMapping("/findLatestSubMaterialInputSubMaterialBySubMaterialId")
+    public ApiResponse<?> findLatestSubMaterialInputSubMaterialBySubMaterialId(@RequestParam("subMaterialId") int subMaterialId) {
+        ApiResponse<InputSubMaterial> apiResponse = new ApiResponse<>();
+        apiResponse.setResult(inputSubMaterialRepository.findLatestSubMaterialInputSubMaterialBySubMaterialId(subMaterialId));
+        return apiResponse;
+    }
+
+    @GetMapping("/findLatestSubMaterialInputSubMaterialBySubMaterialIdGroupByCode")
+    public ApiResponse<?> findLatestSubMaterialInputSubMaterialBySubMaterialIdGroupByCode(@RequestParam("code_input") String code_input,@RequestParam("subMaterialId") int subMaterialId) {
+        ApiResponse<InputSubMaterial> apiResponse = new ApiResponse<>();
+        apiResponse.setResult(inputSubMaterialRepository.findLatestSubMaterialInputSubMaterialBySubMaterialIdGroupByCode(code_input,subMaterialId));
+        return apiResponse;
+    }
+
     @GetMapping("/getRequestProductSubMaterialByRequestProductId")
     public ApiResponse<?> getRequestProductSubMaterialByRequestProductId(@RequestParam("id") int id,@RequestParam("mate_id") int mate_id) {
         ApiResponse<List> apiResponse = new ApiResponse<>();
@@ -216,19 +240,19 @@ public class SubMaterialController {
     //xuất đơn nguyên vật liệu cho product có sẵn
     // public ResponseEntity<ApiResponse<List<ProductSubMaterials>>> createExportMaterialProduct(@RequestBody CreateExportMaterialProductRequest request) {
     @PostMapping("/createExportMaterialProduct")
-    public List<ProductSubMaterials> createExportMaterialProduct(@RequestBody CreateExportMaterialProductRequest request) {
-        return subMaterialService.createExportMaterialProduct(request.getProductId(), request.getSubMaterialQuantities());
+    public List<ProductSubMaterials> createExportMaterialProduct(@RequestBody CreateExportMaterialProductRequest request,@RequestParam("input_id")int input_id) {
+        return subMaterialService.createExportMaterialProduct(request.getProductId(), request.getSubMaterialQuantities(),input_id);
     }
 
 //    //xuất đơn vật liệu cho đơn hàng đặt theo yêu cầu , request product
     @PostMapping("/createExportMaterialProductRequest")
-    public List<RequestProductsSubmaterials> createExportMaterialProductRequest(@RequestBody CreateExportMaterialProductRequest request) {
-        return subMaterialService.createExportMaterialProductRequest(request.getProductId(), request.getSubMaterialQuantities());
+    public List<RequestProductsSubmaterials> createExportMaterialProductRequest(@RequestBody CreateExportMaterialProductRequest request,@RequestParam("input_id")int input_id) {
+        return subMaterialService.createExportMaterialProductRequest(request.getProductId(), request.getSubMaterialQuantities(),input_id);
     }
 
     @PostMapping("/createExportMaterialListProductRequest")
-    public List<RequestProductsSubmaterials> createExportMaterialListProductRequest(@RequestBody List<CreateExportMaterialProductRequest> request) {
-        return subMaterialService.createExportMaterialListProductRequest(request);
+    public List<RequestProductsSubmaterials> createExportMaterialListProductRequest(@RequestBody List<CreateExportMaterialProductRequest> request,@RequestParam("input_id")int input_id) {
+        return subMaterialService.createExportMaterialListProductRequest(request,input_id);
     }
 
 

@@ -43,12 +43,13 @@ public interface RequestProductsSubmaterialsRepository extends JpaRepository<Req
     @Query("SELECT u.subMaterial.subMaterialName FROM RequestProductsSubmaterials u WHERE u.requestProduct.requestProductId = :query AND u.subMaterial.material.materialId IN (1, 2)")
     List<String> GetSubNameByProductId(int query);
 
-    @Query("SELECT new com.example.demo.Dto.SubMaterialDTO.SubMateProductRequestDTO( " +
-            "m.materialId ,sub.subMaterialId ,sub.subMaterialName, m.type, ism.out_price, j.quantity) " +
+    @Query("SELECT new com.example.demo.Dto.SubMaterialDTO.SubMaterialViewDTO(" +
+            "s.subMaterialId, COALESCE(s.subMaterialName, ''), m.materialId, COALESCE(s.description, ''), " +
+            "COALESCE(m.materialName, ''), ism.quantity, ism.out_price,ism.input_price,m.type,s.code,ism.input_id) " + // Thêm dấu phẩy và loại bỏ COALESCE cho các ID
             "FROM RequestProductsSubmaterials j " +
-            "LEFT JOIN j.subMaterial sub " +
+            "LEFT JOIN j.subMaterial s " +
             "LEFT JOIN j.inputSubMaterial ism " +
-            " LEFT JOIN sub.material m " + // Di chuyển điều kiện WHERE vào đây
+            " LEFT JOIN s.material m " + // Di chuyển điều kiện WHERE vào đây
             "WHERE j.requestProduct.requestProductId = :requestProductId")
     List<SubMateProductRequestDTO> getRequestProductSubMaterialByRequestProductIdDTO(int requestProductId);
 

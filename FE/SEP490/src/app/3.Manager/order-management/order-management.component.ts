@@ -68,6 +68,7 @@ export class OrderManagementComponent implements OnInit {
   ) {
     this.updateFormattedDepositeOrder();
   }
+  
   onInput(event: Event) {
     const input = event.target as HTMLInputElement;
     let value = input.value;
@@ -183,6 +184,7 @@ export class OrderManagementComponent implements OnInit {
 
   cancelChangeStatusJob() {
     this.selectedModalId = '';
+    this.remain_price = '';
   }
   cancelChangeStatusJob1() {
     this.depositeOrder = 0;

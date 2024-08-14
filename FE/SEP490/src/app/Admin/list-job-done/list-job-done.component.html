@@ -42,33 +42,31 @@
               </div>
             </div>
           </div>
-        </div>
-        <div class="table-container">
-          <div class="table-responsive">
-            <table class="table table-striped table-hover">
-              <thead>
-                <tr>
-
-                  <th>Mã việc làm</th>
-
-
-                  <th>Tên nhân viên</th>
-                  <th>Vị trí đảm nhận</th>
-                  <th>Vị trí công việc</th>
-                  <th>Tiến độ sản xuất</th>
-
-                  <th>Sản phẩm</th>
-                  <th>Số lượng</th>
-                  <!-- <th>Lương(VNĐ)</th> -->
-                </tr>
-              </thead>
-              <tbody>
-                <tr
-                  *ngFor="let job of job_admin | paginate: { itemsPerPage: 10, currentPage: currentPage }; let i = index">
-
-                  <td>{{ job.code }}</td>
-
-                  <!--   
+          <div class="table-container">
+            <div class="table-responsive">
+              <table class="table table-striped table-hover">
+                <thead>
+                  <tr>
+                 
+                    <th>Mã sản xuất</th>
+                   
+                  
+                    <th>Tên nhân viên</th>
+                    <th>Vị trí đảm nhận</th>
+                    <th>Vị trí công việc</th>
+                    <th>Tiến độ công việc</th>
+                   
+                    <th>Sản phẩm</th>
+                    <th>Số lượng</th>
+                    <!-- <th>Lương(VNĐ)</th> -->
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let job of job_admin | paginate: { itemsPerPage: 10, currentPage: currentPage }; let i = index">
+                
+                    <td>{{ job.code }}</td>
+                    
+<!--   
                     <td class="action-buttons">
                       <a href="#" class="settings" title="Chỉnh sửa" data-toggle="modal" data-target="#editAccountModal"
                         >

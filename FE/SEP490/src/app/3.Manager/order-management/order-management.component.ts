@@ -329,54 +329,63 @@ export class OrderManagementComponent implements OnInit {
   selectedOrderDetail: any = {};
   emailCustomer: string = '';
   getOrDetailById(us: any, order_detail_id: string): void {
-    
+    this.isLoadding = true;
     console.log('Order_detail_id:', order_detail_id);
-    console.log("order detail: ", us)
-    console.log("order detail type: ", us.specialOrder)
-    this.totalAmoutOrder = us.totalAmount
+    console.log("order detail: ", us);
+    console.log("order detail type: ", us.specialOrder);
+    this.totalAmoutOrder = us.totalAmount;
     this.selectedOrderDetail = us;
-    this.authenListService.getOrderDetailById(us.orderId).subscribe(
-      (data) => {
-        this.OrderdetailById = data.result;
-       
-        console.log('OrderdetailById:', data.result);
-        // console.log('OrderdetailById:', this.OrderdetailById);
-      },
-      (error) => {
-        console.error('Error fetching user data:', error);
-       
 
-      }
+    // Create an array to store all promises
+    const apiCalls = [];
+
+    // First API call
+    const orderDetailPromise = this.authenListService.getOrderDetailById(us.orderId).toPromise().then(
+        (data) => {
+            this.OrderdetailById = data.result;
+            console.log('OrderdetailById:', data.result);
+        },
+        (error) => {
+            console.error('Error fetching order detail by ID:', error);
+        }
     );
-    if (us.specialOrder == true) {
-      this.orderRequestService.getAllOrderDetailByOrderId(order_detail_id).subscribe(
-        (data) => {
-          this.productOfOrder = data.result;
-          console.log('Product Orders:', this.productOfOrder);
-          console.log('email:', this.productOfOrder[0].email);
-          this.emailCustomer = this.productOfOrder[0].email;
-          this.isLoadding = false;
-        },
-        (error) => {
-          console.error('Error fetching user data:', error);
-          this.isLoadding = false;
+    apiCalls.push(orderDetailPromise);
 
-        }
-      );
-    } else if (us.specialOrder == false) {
-      this.orderRequestService.getAllOrderDetailOfProductByOrderId(order_detail_id).subscribe(
-        (data) => {
-          this.productOfOrder = data.result;
-          console.log('Product Flase:', this.productOfOrder); this.isLoadding = false;
-          console.log('email:', this.productOfOrder[0].email);
-          this.emailCustomer = this.productOfOrder[0].email;
-        },
-        (error) => {
-          console.error('Error fetching user data:', error); this.isLoadding = false;
-        }
-      );
+    // Second API call based on the condition
+    if (us.specialOrder) {
+        const specialOrderPromise = this.orderRequestService.getAllOrderDetailByOrderId(order_detail_id).toPromise().then(
+            (data) => {
+                this.productOfOrder = data.result;
+                console.log('Product Orders:', this.productOfOrder);
+                console.log('email:', this.productOfOrder[0].email);
+                this.emailCustomer = this.productOfOrder[0].email;
+            },
+            (error) => {
+                console.error('Error fetching special order details:', error);
+            }
+        );
+        apiCalls.push(specialOrderPromise);
+    } else {
+        const productOrderPromise = this.orderRequestService.getAllOrderDetailOfProductByOrderId(order_detail_id).toPromise().then(
+            (data) => {
+                this.productOfOrder = data.result;
+                console.log('Product False:', this.productOfOrder);
+                console.log('email:', this.productOfOrder[0].email);
+                this.emailCustomer = this.productOfOrder[0].email;
+            },
+            (error) => {
+                console.error('Error fetching product order details:', error);
+            }
+        );
+        apiCalls.push(productOrderPromise);
     }
-  }
+
+    // Wait for all promises to resolve
+    Promise.all(apiCalls).finally(() => {
+        this.isLoadding = false;
+    });
+}
+
 
   selectedOrder: any = {};
   getOrderDetail(orderId: number): void {

@@ -639,8 +639,7 @@ export class ProductManagementComponent implements OnInit {
           (response) => {
 
             const orderDate = new Date(response.result.orderDate).toISOString().split('T')[0]; // Lấy ngày tháng năm
-            const orderFinish = response.result.contractDate ? new Date(response.result.orderFinish).toISOString().split('T')[0] : null; // Lấy ngày tháng năm  của contractDate
-
+            const orderFinish = response.result.contractDate ? new Date(response.result.contractDate).toISOString().split('T')[0] : null; // Lấy ngày tháng năm của contractDate hoặc null nếu không có
             this.orderForm.patchValue({
               orderId: this.idOrder,
               orderDate: orderDate,
@@ -1229,7 +1228,7 @@ export class ProductManagementComponent implements OnInit {
       this.toastr.error('Giá sản phẩm phải lớn hơn giá vật liệu !', 'Lỗi');
       return;
     }
-    
+
     if (this.editForm.get('price')?.value && this.editForm.get('category_id')?.value) {
       const productData = this.editForm.value;
 
@@ -1702,7 +1701,7 @@ export class ProductManagementComponent implements OnInit {
       response => {
 
         const orderDate = new Date(response.result.orderDate).toISOString().split('T')[0]; // Lấy ngày tháng năm
-        const orderFinish = response.result.contractDate ? new Date(response.result.orderFinish).toISOString().split('T')[0] : null; // Lấy ngày tháng năm  của contractDate
+        const orderFinish = new Date(response.result.contractDate).toISOString().split('T')[0]; // Lấy ngày tháng năm  của contractDate
         // Cập nhật form đơn hàng ở đây
         this.orderForm.patchValue({
           orderId: this.idOrder,
@@ -1939,8 +1938,7 @@ export class ProductManagementComponent implements OnInit {
       (response) => {
 
         const orderDate = new Date(response.result.orderDate).toISOString().split('T')[0]; // Lấy ngày tháng năm
-        const orderFinish = response.result.contractDate ? new Date(response.result.orderFinish).toISOString().split('T')[0] : null; // Lấy ngày tháng năm  của contractDate
-
+        const orderFinish = response.result.contractDate ? new Date(response.result.contractDate).toISOString().split('T')[0] : null; // Lấy ngày tháng năm của contractDate hoặc null nếu không có
         this.orderForm.patchValue({
           orderId: this.idOrder,
           orderDate: orderDate,

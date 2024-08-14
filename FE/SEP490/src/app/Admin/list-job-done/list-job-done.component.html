@@ -1,45 +1,44 @@
-
 <app-dashboard></app-dashboard>
 
-<div class="dashboard-main" >
+<div class="dashboard-main">
 
-    <div class="container-fluid">
-      <div class="table-responsive"> 
-        <div class="table-wrapper">
-          <div class="table-title">
-            <div class="row " style="height: 60px;">
-              <div class="col-sm-5 ">
-                <h2 style="margin-bottom: 0;">Tra cứu công hoàn thành</h2>
-              </div>
-              <div class="col-sm-7 text-end d-flex align-items-center justify-content-end">
-                <!-- <a href="#" class="btn btn-secondary btn-sm" data-toggle="modal" data-target="#addAccountModal"
+  <div class="container-fluid">
+    <div class="table-responsive">
+      <div class="table-wrapper">
+        <div class="table-title">
+          <div class="row " style="height: 60px;">
+            <div class="col-sm-5 ">
+              <h2 style="margin-bottom: 0;">Tra cứu công hoàn thành</h2>
+            </div>
+            <div class="col-sm-7 text-end d-flex align-items-center justify-content-end">
+              <!-- <a href="#" class="btn btn-secondary btn-sm" data-toggle="modal" data-target="#addAccountModal"
                   style="font-size: 14px;">
                   <i class="material-icons align-middle" style="font-size: 18px;">&#xE147;</i>
                   <span class="align-middle">Thêm Người Dùng</span>
                 </a> -->
-              </div>
             </div>
-  
-            <div class="row">
-              <div class="col-md-3"></div> <!-- Dummy column to push the search box to the right -->
-              <div class="col-md-9 text-end">
-                <div class="input-group mb-3">
-                  <select [(ngModel)]="selectedRoleFilter" >
-                    <option value="" selected>Tất cả vị trí đảm nhận</option>
-                    <option *ngFor="let ps of position" [value]="ps.position_id">{{ ps.position_name }}</option>
-                  </select>
-                  <select [(ngModel)]="selectedJob" >
-                    <option value="" selected>Tất cả tiến độ công việc</option>
-                    <option *ngFor="let ps of job" [value]="ps.status_id">{{ ps.status_name }}</option>
-                  </select>
-  
-                  <input type="text" class="form-control" placeholder="Tìm kiếm theo tên nhân viên..." [(ngModel)]="searchKey">
-                  <button class="btn search-button" type="button" (click)="MultifiterJobAdmin()">
-                    <i class="fa fa-search"></i>
-                  </button>
-  
-  
-                </div>
+          </div>
+
+          <div class="row">
+            <div class="col-md-3"></div> <!-- Dummy column to push the search box to the right -->
+            <div class="col-md-9 text-end">
+              <div class="input-group mb-3">
+                <select [(ngModel)]="selectedRoleFilter">
+                  <option value="" selected>Tất cả vị trí đảm nhận</option>
+                  <option *ngFor="let ps of position" [value]="ps.position_id">{{ ps.position_name }}</option>
+                </select>
+                <select [(ngModel)]="selectedJob">
+                  <option value="" selected>Tất cả tiến độ sản xuất</option>
+                  <option *ngFor="let ps of job" [value]="ps.status_id" [hidden]="ps.status_id !== 13 && ps.status_id !== 16 && ps.status_id !== 15">{{ ps.status_name }}</option>
+                </select>
+
+                <input type="text" class="form-control" placeholder="Tìm kiếm theo tên nhân viên..."
+                  [(ngModel)]="searchKey">
+                <button class="btn search-button" type="button" (click)="MultifiterJobAdmin()">
+                  <i class="fa fa-search"></i>
+                </button>
+
+
               </div>
             </div>
           </div>
@@ -81,52 +80,52 @@
                         <i class="fa-solid fa-circle-info"></i>
                       </a>
                     </td> -->
-                   
-  
-                    <td>{{ job.full_name }}</td>
-                    <td style="min-width: 200px;">{{ job.position_name }}</td>
-                    <td>{{ job.job_name }}</td>
-                    <td style="min-width: 270px;">{{ job.status_job_name }}</td>
-                   
-                    
-            
-                    
-                    <td style="min-width: 100px;">{{ job.request_name }} {{job.product_name}}</td>
-                    <td  style="min-width: 20px; text-align: right;">{{ job.quantity }}</td>
 
-                  </tr>
-                </tbody>
-              </table>
-            </div>
+
+                  <td>{{ job.full_name }}</td>
+                  <td style="min-width: 200px;">{{ job.position_name }}</td>
+                  <td>{{ job.job_name }}</td>
+                  <td style="min-width: 270px;">{{ job.status_job_name }}</td>
+
+
+
+
+                  <td style="min-width: 100px;">{{ job.request_name }} {{job.product_name}}</td>
+                  <td style="min-width: 20px; text-align: right;">{{ job.quantity }}</td>
+
+                </tr>
+              </tbody>
+            </table>
           </div>
-  
-          <pagination-controls style="justify-content: right; display: flex;" (pageChange)="currentPage = $event"
+        </div>
+
+        <pagination-controls style="justify-content: right; display: flex;" (pageChange)="currentPage = $event"
           previousLabel="Trang trước" nextLabel="Trang sau" *ngIf="job_admin && job_admin.length > 0">
         </pagination-controls>
-    
-  
-          <div class="clearfix" style="justify-content: right; display: flex;" *ngIf="job_admin && job_admin.length > 0">
-            <div class="hint-text">Hiển thị <b>{{ (currentPage - 1) * 10 + 1 }}</b> tới <b>{{ currentPage * 10 >
-                job_admin.length ? job_admin.length : currentPage * 10 }}</b> trong tổng <b>{{
-                job_admin.length }}</b> dữ liệu</div>
-          </div>
-  
-          <div *ngIf="!job_admin || job_admin.length === 0">
-  
-            <div style="background-color: white;">
-              <div class="" style="display: flex; justify-content: center; align-items: center; height: 100%;">
-                <img
-                  src="https://encrypted-tbn2.gstatic.com/images?q=tbn:ANd9GcSG53pYn6cpXaiwT_q6IM45P-rXg5dUw67XqRmr9-vtsbMoHnCG"
-                  alt="" class="product-img" style="width: 150px; height: 150px; object-fit: cover;">
-                <p class="name-product text-center">Không tìm thấy thông tin nhân viên!</p>
-              </div>
+
+
+        <div class="clearfix" style="justify-content: right; display: flex;" *ngIf="job_admin && job_admin.length > 0">
+          <div class="hint-text">Hiển thị <b>{{ (currentPage - 1) * 10 + 1 }}</b> tới <b>{{ currentPage * 10 >
+              job_admin.length ? job_admin.length : currentPage * 10 }}</b> trong tổng <b>{{
+              job_admin.length }}</b> dữ liệu</div>
+        </div>
+
+        <div *ngIf="!job_admin || job_admin.length === 0">
+
+          <div style="background-color: white;">
+            <div class="" style="display: flex; justify-content: center; align-items: center; height: 100%;">
+              <img
+                src="https://encrypted-tbn2.gstatic.com/images?q=tbn:ANd9GcSG53pYn6cpXaiwT_q6IM45P-rXg5dUw67XqRmr9-vtsbMoHnCG"
+                alt="" class="product-img" style="width: 150px; height: 150px; object-fit: cover;">
+              <p class="name-product text-center">Không tìm thấy thông tin nhân viên!</p>
             </div>
           </div>
         </div>
       </div>
     </div>
   </div>
-  
+</div>
+
 <div *ngIf="isLoadding" class="loading-overlay">
   <div class="spinner"></div>
 </div>

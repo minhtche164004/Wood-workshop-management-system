@@ -154,7 +154,7 @@ public interface OrderDetailRepository extends JpaRepository<Orderdetails, Integ
             "LEFT JOIN o.userInfor.user u " +  // Giữ LEFT JOIN
             "INNER JOIN od.jobs j " +  // Thay đổi thành INNER JOIN
             "LEFT JOIN j.status s " +  // Giữ LEFT JOIN
-            "WHERE od.order.orderId = :query AND s.status_id NOT IN (13, 16, 15,10) AND j.job_log = false")
+            "WHERE od.order.orderId = :query AND s.status_id NOT IN (13, 16, 15) AND j.job_log = false")
     List<OrderDetailWithJobStatusDTO> getAllOrderDetailByOrderIdCheck(int query);
 
 

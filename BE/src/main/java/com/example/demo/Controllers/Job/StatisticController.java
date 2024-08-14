@@ -56,6 +56,13 @@ public class StatisticController {
         apiResponse.setResult(statisticService.countProduct());
         return apiResponse;
     }
+
+    @GetMapping("/TotalSalaryNotPayment")
+    public ApiResponse<?> TotalSalaryNotPayment() {
+        ApiResponse<BigDecimal> apiResponse = new ApiResponse<>();
+        apiResponse.setResult(statisticService.TotalSalaryNotPayment());
+        return apiResponse;
+    }
     @GetMapping("/countTotalOrder")
     public ApiResponse<?> countTotalOrder() {
         ApiResponse<Long> apiResponse = new ApiResponse<>();
@@ -126,12 +133,12 @@ public class StatisticController {
         apiResponse.setResult(statisticService.totalAmountOrderHaveDone());
         return apiResponse;
     }
-//    @GetMapping("/totalAmountSubMaterial")
-//    public ApiResponse<?> totalAmountSubMaterial() {
-//        ApiResponse<BigDecimal> apiResponse = new ApiResponse<>();
-//        apiResponse.setResult(statisticService.totalAmountSubMaterial());
-//        return apiResponse;
-//    }
+    @GetMapping("/totalAmountSubMaterial")
+    public ApiResponse<?> totalAmountSubMaterial() {
+        ApiResponse<BigDecimal> apiResponse = new ApiResponse<>();
+        apiResponse.setResult(statisticService.totalAmountSubMaterial());
+        return apiResponse;
+    }
     @GetMapping("/findTotalCostSubMaterialByMonthAndYear")
     public ApiResponse<?> findTotalCostSubMaterialByMonthAndYear(@RequestParam("month") int month,@RequestParam("year") int year) {
         ApiResponse<BigDecimal> apiResponse = new ApiResponse<>();

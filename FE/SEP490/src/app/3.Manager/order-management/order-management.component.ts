@@ -27,6 +27,7 @@ export class OrderManagementComponent implements OnInit {
   launchModalButton!: ElementRef;
   user: any[] = [];
   userStatus: any[] = [];
+  getStatusRefund: any[] = [];
   loginToken: string | null = null;
   currentPage: number = 1;
   position: any[] = [];
@@ -34,6 +35,7 @@ export class OrderManagementComponent implements OnInit {
   selectedCategory: string = '';
   selectedSDate: string = '';
   selectedEDate: string = '';
+  selectedReason: string = '';
   selectProduduct: number = -1;
 
   OrderdetailById: any = {};
@@ -45,15 +47,16 @@ export class OrderManagementComponent implements OnInit {
   activeModal: any;
   cancelReason: string = '';
   cancelReasonPrice: string = '';
-  percentDepositPrice: number = 0;
+  percentDepositPrice: string = '';
   percentOrderPrice: number = 0;
   depositeAmount: number = 0;
+  remain_price: string = '';
   totalAmountA: number = 0;
   totalAmount: number = 0;
   totalRefundAmount: number = 0;
   totalAmount102: number = 0;
 
- 
+
 
   priceDiscount: number = 0;
   datepriceDiscount: string = '';
@@ -99,45 +102,47 @@ export class OrderManagementComponent implements OnInit {
   calculateTotalAmount() {
     this.totalAmount = this.depositeAmount + this.totalAmountA;
   }
-  updateDepositeAmount() {
-    if (this.percentDepositPrice >= 0 && this.percentDepositPrice <= 100) {
-      this.depositeAmount = (this.OrderdetailById.deposite * this.percentDepositPrice) / 100;
-      this.updateTotalRefundAmount();
-    }
-  }
+  // updateDepositeAmount() {
+  //   if (this.percentDepositPrice >= 0 && this.percentDepositPrice <= 100) {
+  //     this.depositeAmount = (this.OrderdetailById.deposite * this.percentDepositPrice) / 100;
+  //     this.updateTotalRefundAmount();
+  //   }
+  // }
 
   // Update the total amount and calculate the total refund
-  updateTotalAmount() {
-    if (this.percentOrderPrice >= 0 && this.percentOrderPrice <= 100) {
-      this.totalAmountA = (this.OrderdetailById.totalAmount * this.percentOrderPrice) / 100;
-      this.updateTotalRefundAmount();
-    }
-  }
+  // updateTotalAmount() {
+  //   if (this.percentOrderPrice >= 0 && this.percentOrderPrice <= 100) {
+  //     this.totalAmountA = (this.OrderdetailById.totalAmount * this.percentOrderPrice) / 100;
+  //     this.updateTotalRefundAmount();
+  //   }
+  // }
 
   // Calculate the total refund amount
-  updateTotalRefundAmount() {
-    // Calculate deposit amount
-    if (this.percentDepositPrice >= 0 && this.percentDepositPrice <= 100) {
-      this.depositeAmount = (this.OrderdetailById.deposite * this.percentDepositPrice) / 100;
-    }
+  // updateTotalRefundAmount() {
+  //   // Calculate deposit amount
+  //   if (this.percentDepositPrice >= 0 && this.percentDepositPrice <= 100) {
+  //     this.depositeAmount = (this.OrderdetailById.deposite * this.percentDepositPrice) / 100;
+  //   }
 
-    // Calculate total amount
-    if (this.percentOrderPrice >= 0 && this.percentOrderPrice <= 100) {
-      this.totalAmountA = (this.OrderdetailById.totalAmount * this.percentOrderPrice) / 100;
-    }
+  //   // Calculate total amount
+  //   if (this.percentOrderPrice >= 0 && this.percentOrderPrice <= 100) {
+  //     this.totalAmountA = (this.OrderdetailById.totalAmount * this.percentOrderPrice) / 100;
+  //   }
 
-    // Update total refund amount
-    this.totalRefundAmount = this.depositeAmount + this.totalAmountA;
-  }
+  //   // Update total refund amount
+  //   this.totalRefundAmount = this.depositeAmount + this.totalAmountA;
+  // }
 
 
 
   ngOnInit(): void {
-    this.updateDepositeAmount();
-    this.updateTotalAmount();
+    // this.updateDepositeAmount();
+    // this.updateTotalAmount();
     this.calculateTotalAmount();
     this.loadPosition();
     this.loadStatus();
+    this.loadgetStatusRefund();
+
     this.getOrderStatus();
     this.getAllOrder();
 
@@ -160,14 +165,14 @@ export class OrderManagementComponent implements OnInit {
   tempTotalAmount: number = 0;
 
   cancelRefundModal() {
-    this.percentDepositPrice = 0;
-    this.percentOrderPrice = 0;
-    // Reset form fields
-    this.OrderdetailById.deposite = 0;
-    this.depositeAmount = 0;
-    this.OrderdetailById.totalAmount = 0;
-    this.totalAmountA = 0;
-    this.totalRefundAmount = 0;
+    this.percentDepositPrice = '';
+    // this.percentOrderPrice = 0;
+    // // Reset form fields
+    // this.OrderdetailById.deposite = 0;
+    // this.depositeAmount = 0;
+    // this.OrderdetailById.totalAmount = 0;
+    // this.totalAmountA = 0;
+    // this.totalRefundAmount = 0;
     this.cancelReasonPrice = '';
 
     // If you are using Angular Forms, you may need to reset the form
@@ -287,6 +292,22 @@ export class OrderManagementComponent implements OnInit {
       }
     );
   }
+  loadgetStatusRefund(): void {
+    this.authenListService.getAllStatusOrdeRefund().subscribe(
+      (data: any) => {
+        if (data.code === 1000) {
+          this.getStatusRefund = data.result;
+          //    console.log('Danh sách trạng thái:', this.status_order);
+        } else {
+          console.error('Dữ liệu trả về không hợp lệ:', data);
+        }
+      },
+      (error) => {
+        console.error('Lỗi khi lấy danh sách Loại:', error);
+      }
+    );
+
+  }
   loadStatus(): void {
     this.authenListService.getAllStatusOrder().subscribe(
       (data: any) => {
@@ -310,52 +331,61 @@ export class OrderManagementComponent implements OnInit {
   getOrDetailById(us: any, order_detail_id: string): void {
     this.isLoadding = true;
     console.log('Order_detail_id:', order_detail_id);
-    console.log("order detail: ", us)
-    console.log("order detail type: ", us.specialOrder)
-    this.totalAmoutOrder = us.totalAmount
+    console.log("order detail: ", us);
+    console.log("order detail type: ", us.specialOrder);
+    this.totalAmoutOrder = us.totalAmount;
     this.selectedOrderDetail = us;
-    this.authenListService.getOrderDetailById(us.orderId).subscribe(
-      (data) => {
-        this.OrderdetailById = data.result;
-        this.isLoadding = false;
-         console.log('OrderdetailById:', data.result);
-        // console.log('OrderdetailById:', this.OrderdetailById);
-      },
-      (error) => {
-        console.error('Error fetching user data:', error);
-        this.isLoadding = false;
 
-      }
+    // Create an array to store all promises
+    const apiCalls = [];
+
+    // First API call
+    const orderDetailPromise = this.authenListService.getOrderDetailById(us.orderId).toPromise().then(
+        (data) => {
+            this.OrderdetailById = data.result;
+            console.log('OrderdetailById:', data.result);
+        },
+        (error) => {
+            console.error('Error fetching order detail by ID:', error);
+        }
     );
-    if (us.specialOrder == true) {
-      this.orderRequestService.getAllOrderDetailByOrderId(order_detail_id).subscribe(
-        (data) => {
-          this.productOfOrder = data.result;
-           console.log('Product Orders:', this.productOfOrder);
-           console.log('email:', this.productOfOrder[0].email);
-           this.emailCustomer = this.productOfOrder[0].email;
-           this.isLoadding = false;
-        },
-        (error) => {
-          console.error('Error fetching user data:', error);
-          this.isLoadding = false;
+    apiCalls.push(orderDetailPromise);
 
-        }
-      );
-    } else if (us.specialOrder == false) {
-      this.orderRequestService.getAllOrderDetailOfProductByOrderId(order_detail_id).subscribe(
-        (data) => {
-          this.productOfOrder = data.result;
-          console.log('Product Flase:', this.productOfOrder);this.isLoadding = false;
-          console.log('email:', this.productOfOrder[0].email);
-          this.emailCustomer = this.productOfOrder[0].email;
-        },
-        (error) => {
-          console.error('Error fetching user data:', error);this.isLoadding = false;
-        }
-      );
+    // Second API call based on the condition
+    if (us.specialOrder) {
+        const specialOrderPromise = this.orderRequestService.getAllOrderDetailByOrderId(order_detail_id).toPromise().then(
+            (data) => {
+                this.productOfOrder = data.result;
+                console.log('Product Orders:', this.productOfOrder);
+                console.log('email:', this.productOfOrder[0].email);
+                this.emailCustomer = this.productOfOrder[0].email;
+            },
+            (error) => {
+                console.error('Error fetching special order details:', error);
+            }
+        );
+        apiCalls.push(specialOrderPromise);
+    } else {
+        const productOrderPromise = this.orderRequestService.getAllOrderDetailOfProductByOrderId(order_detail_id).toPromise().then(
+            (data) => {
+                this.productOfOrder = data.result;
+                console.log('Product False:', this.productOfOrder);
+                console.log('email:', this.productOfOrder[0].email);
+                this.emailCustomer = this.productOfOrder[0].email;
+            },
+            (error) => {
+                console.error('Error fetching product order details:', error);
+            }
+        );
+        apiCalls.push(productOrderPromise);
     }
-  }
+
+    // Wait for all promises to resolve
+    Promise.all(apiCalls).finally(() => {
+        this.isLoadding = false;
+    });
+}
+
 
   selectedOrder: any = {};
   getOrderDetail(orderId: number): void {
@@ -385,6 +415,60 @@ export class OrderManagementComponent implements OnInit {
 
         console.error('Error changing order status', error);
         $('[data-dismiss="modal"]').click();
+      }
+    );
+  }
+
+  changeStatusFinish(orderId: string, statusId: string): void {
+
+    // Convert remain_price to a string and trim any whitespace
+    const trimmedRemainPrice = this.remain_price.toString().trim();
+    
+    // Check if the trimmed string is empty
+    if (trimmedRemainPrice === '') {
+      this.toastr.error('Số tiền còn lại cần thanh toán không được để trống.');
+      return;
+    }
+    
+    // Convert the trimmed string to a number
+    const numericRemainPrice = parseFloat(trimmedRemainPrice);
+    
+    // Check if the trimmed string is a valid number
+    if (isNaN(numericRemainPrice)) {
+      this.toastr.error('Vui lòng chỉ được nhập số.');
+      return;
+    }
+    
+    // The remain_price is valid, you can proceed with the rest of the logic
+
+    this.isLoadding = true;
+
+    this.authenListService.changeStatusOrderFinish(orderId, statusId, this.remain_price).subscribe(
+      response => {
+        if (response.code === 1000) {
+          this.realoadgetAllUser();
+          this.isLoadding = false;
+          console.log('Order status changed', response);
+          this.toastr.success('Thanh toán tiền đơn hàng thành công');
+          $('[data-dismiss="modal"]').click();
+        } else if (response.code === 1043) {
+          this.isLoadding = false;
+          this.toastr.error(response.message);
+        } else {
+          this.isLoadding = false;
+          console.error('Error changing order status', response);
+          this.toastr.error('Số tiền còn lại cần thanh toán không đúng với giá trị , vui lòng nhập lại!');
+        }
+      },
+      (error: HttpErrorResponse) => {
+        if (error.error.code === 1043) {
+          this.isLoadding = false;
+          this.toastr.error(error.error.message);
+        } else {
+          this.isLoadding = false;
+          console.error('Error changing order status', error);
+          this.toastr.error('Số tiền còn lại cần thanh toán không đúng với giá trị , vui lòng nhập lại!');
+        }
       }
     );
   }
@@ -528,7 +612,6 @@ export class OrderManagementComponent implements OnInit {
     }
   }
   RefundcancelOrder() {
-    // Reset loading state and close modal in case of failure
     const closeModal = () => {
       this.isLoadding = false;
       const closeModalButton = document.querySelector('.close') as HTMLElement;
@@ -538,59 +621,80 @@ export class OrderManagementComponent implements OnInit {
       $('[data-dismiss="modal"]').click();
     };
 
-    // Validate percentage fields
-    const isValidPercentage = (value: number | null): boolean => {
-      if (value === null || value === undefined || isNaN(value)) {
-        return false;
-      }
-      const percentageString = value.toString().trim();
-      const percentageRegex = /^(100(\.0{1,2})?|(\d{1,2})(\.\d{1,2})?)$/;
-      return percentageRegex.test(percentageString) && parseFloat(percentageString) >= 0;
-    };
-
-    const percentDepositPriceTrimmed = this.percentDepositPrice !== null ? this.percentDepositPrice.toString().trim() : '';
-    const percentOrderPriceTrimmed = this.percentOrderPrice !== null ? this.percentOrderPrice.toString().trim() : '';
-    const cancelReasonPriceTrimmed = this.cancelReasonPrice ? this.cancelReasonPrice.trim() : '';
-
-    if (percentDepositPriceTrimmed === '' || percentOrderPriceTrimmed === '' || cancelReasonPriceTrimmed === '') {
-      this.toastr.error('Các trường không được để trống');
-      return;
-    }
-
-    if (!isValidPercentage(this.percentDepositPrice) || !isValidPercentage(this.percentOrderPrice)) {
-      this.toastr.error('Phần trăm phải nằm trong khoảng 0-100% và không được là số âm');
-      return;
-    }
-
     this.isLoadding = true;
     console.log({
       selectedOrderId: this.selectedOrderId,
       selectedSpecialOrder: this.selectedSpecialOrder,
-      cancelReasonPrice: this.cancelReasonPrice,
+      selectedReason: this.selectedReason,
       percentDepositPrice: this.percentDepositPrice,
-      percentOrderPrice: this.percentOrderPrice
+      cancelReasonPrice: this.cancelReasonPrice,
     });
+
+  
+    const numericValue = Number(this.percentDepositPrice);
+
+    // Check if the conversion resulted in NaN or if the value is empty
+    if (this.percentDepositPrice.trim() === '' ) {
+      this.toastr.error('Vui lòng số tiền hoàn không được để trống.');
+      this.isLoadding = false;
+      return;
+    }
+    if ( isNaN(numericValue)) {
+      this.toastr.error('Vui lòng chỉ nhập số.');
+      this.isLoadding = false;
+      return;
+    }
+    
+  
+    if (!this.selectedReason) {
+      this.toastr.error('Vui lòng chọn lý do.');
+      this.isLoadding = false;
+      return;
+    }
+
+    if (!this.cancelReasonPrice.trim()) {
+      this.toastr.error('Nội dung hoàn tiền không được để trống.');
+      this.isLoadding = false;
+      return;
+    }
 
     if (this.selectedOrderId !== null && this.selectedSpecialOrder !== null) {
       this.authenListService.RefundcancelOrder(
-        this.selectedOrderId, this.selectedSpecialOrder,
-        this.cancelReasonPrice, this.percentDepositPrice, this.percentOrderPrice
+        this.selectedOrderId,
+        this.selectedSpecialOrder,
+        this.percentDepositPrice,
+        this.selectedReason,
+        this.cancelReasonPrice
       ).subscribe({
         next: (response: any) => {
-          if (response.code == 1000) {
-          this.toastr.success('Hoàn tiền đơn hàng thành công');
-          this.isLoadding = false;
+
+
+          console.log('Raw Response:', response); // Log the raw response
+          this.toastr.success("Hoàn tiền đơn hàng thành công");
           this.cancelRefundModal();
           closeModal();
-        }},
-        error: (error: HttpErrorResponse) => {
+
           this.isLoadding = false;
-          this.toastr.success('Hoàn tiền đơn hàng thất bại');
-          console.log(error);
-          this.realoadgetAllUser();
-          this.cancelRefundModal();
-          closeModal();
-        }
+          
+        },
+        error: (error: any) => {
+          if (error.status === 400) {
+            try {
+              const errorResponse = JSON.parse(error.error);
+              if (errorResponse.code === 1044) {
+                this.toastr.error(errorResponse.message);
+                console.error('Error:', error);
+              } else {
+                this.toastr.error(error.error);
+              }
+            } catch (e) {
+              this.toastr.error(error.error);
+            }
+          } else {
+            this.toastr.error(error.error);
+          }
+          this.isLoadding = false;
+        },
       });
     } else {
       this.toastr.error('Thông tin đơn hàng không hợp lệ');
@@ -612,16 +716,42 @@ export class OrderManagementComponent implements OnInit {
       this.depositeOrder = 0;
       this.formattedDepositeOrder = '';
     }
-  
+
   }
-  
+
   confirmPayment() {
     this.isLoadding = true;
-    const formattedDepositOrder = this.depositeOrder.toFixed(2); // Ví dụ: '4000000.00'
+    
+    // Convert depositeOrder to a number
+   
+    
+    // Convert number to string and trim any whitespace
+    const trimmedDepositOrder = this.depositeOrder.toString().trim();
+    if (trimmedDepositOrder === '' ) {
+      this.toastr.error('Vui lòng không được để trống.');
+      this.isLoadding = false;
+      return;
+    }
+  
+    // Convert the trimmed string to a number
+    const numericDepositOrder = parseFloat(trimmedDepositOrder);
+    
+    // Check if the trimmed string is empty or not a valid number
+    if ( isNaN(numericDepositOrder)) {
+      this.toastr.error('Vui lòng chỉ nhập số.');
+      this.isLoadding = false;
+      return;
+    }
+   
+  
+    // Format the number to two decimal places
+    const formattedDepositOrder = numericDepositOrder.toFixed(2); // e.g., '4000000.00'
+  
     if (this.selectedOrderId !== null) {
+      console.log(this.selectedOrderId, formattedDepositOrder);
       this.authenListService.Paymentmoney(this.selectedOrderId, formattedDepositOrder).subscribe({
         next: (response: any) => {
-          if (response.code == 1000) {
+          if (response.code === 1000) {
             this.toastr.success(response.result);
             this.realoadgetAllUser();
             this.isLoadding = false;
@@ -631,19 +761,24 @@ export class OrderManagementComponent implements OnInit {
             }
             $('[data-dismiss="modal"]').click();
             this.cancelChangeStatusJob1();
-          } else if (response.code === 1043) {
-            this.toastr.error(response.message);
-            this.isLoadding = false;
-       
-          }
+          } 
         },
         error: (error: HttpErrorResponse) => {
+          console.log(error);
+          if (error.error.code === 1043) {
+            this.toastr.error(error.error.message);
+          } else {
+            this.toastr.error('An error occurred.');
+          }
           this.isLoadding = false;
-          this.toastr.error(error.error.message);
         }
       });
+    } else {
+      this.isLoadding = false;
+      this.toastr.error('Order ID is not selected.');
     }
   }
+  
 
   sendMail(orderId: number) {
     console.log(orderId);
@@ -683,7 +818,7 @@ export class OrderManagementComponent implements OnInit {
       }
       $('[data-dismiss="modal"]').click();
     };
-  
+
     // Validate percentage fields
     const isValidPercentage = (value: number | null): boolean => {
       if (value === null || value === undefined || isNaN(value)) {
@@ -693,26 +828,26 @@ export class OrderManagementComponent implements OnInit {
       const percentageRegex = /^(100(\.0{1,2})?|(\d{1,2})(\.\d{1,2})?)$/;
       return percentageRegex.test(priceDiscount) && parseFloat(priceDiscount) >= 0;
     };
-  
+
     const percentDepositPriceTrimmed = this.percentDepositPrice !== null ? this.percentDepositPrice.toString().trim() : '';
-  
+
     if (percentDepositPriceTrimmed === '') {
       this.toastr.error('Các trường không được để trống');
       return;
     }
-  
+
     if (!isValidPercentage(this.priceDiscount)) {
       this.toastr.error('Phần trăm phải nằm trong khoảng 0-100% và không được là số âm');
       return;
     }
-  
+
     // Validate date
     let datepriceDiscountString: string = '';
     if (this.datepriceDiscount) {
       datepriceDiscountString = this.datepriceDiscount.replace(/(\d{2})\/(\d{2})\/(\d{4})/, "$3/$2/$1");
       const discountDate = new Date(datepriceDiscountString);
       const currentDate = new Date();
-  
+
       if (discountDate <= currentDate) {
         this.toastr.error('Ngày hoàn thành đơn hàng phải lớn hơn ngày hiện tại');
         return;
@@ -721,14 +856,14 @@ export class OrderManagementComponent implements OnInit {
       this.toastr.error('Ngày hoàn thành đơn hàng không được để trống');
       return;
     }
-  
+
     this.isLoadding = true;
     console.log({
       selectedOrderId: this.selectedOrderId,
       priceDiscount: this.priceDiscount,
       datepriceDiscount: this.datepriceDiscount,
     });
-  
+
     if (this.selectedOrderId !== null) {
       this.authenListService.DateDiscountlOrder(
         this.selectedOrderId, this.priceDiscount, datepriceDiscountString
@@ -754,5 +889,5 @@ export class OrderManagementComponent implements OnInit {
       this.isLoadding = false;
     }
   }
-  
+
 }

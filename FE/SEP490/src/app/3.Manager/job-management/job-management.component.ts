@@ -1533,8 +1533,13 @@ loadProduct() {
     user_name_order: null,
     isFixed: null
   };
+  openEditJobError: boolean = false;
+  closeModalEditErrorJob(): void {
+    this.openEditJobError = false;
+  }
   editProduct2(errorid: number) {
     this.isLoadding = true;
+    this.openEditJobError = true;
     //console.log('other modal:', errorid);
     this.errorProductService.getRrrorDetailById(errorid)
       .subscribe((response: any) => {
@@ -1591,6 +1596,7 @@ loadProduct() {
   }
   editProduct(errorid: number, product: any) {
     this.errorId = errorid;
+    console.log('open modal: ', this.openEditJobError)
    // console.log('report product function:', errorid);
   //  console.log('error detail:', product);
     this.errorDetailModal = product;
@@ -1621,6 +1627,13 @@ loadProduct() {
       }
     );
   }
+  closeModalEditErrorJob2(): void {
+    console.log('close modal 2:', this.editForm.value);
+    this.errorForm.reset();
+    console.log('close modal 2:', this.errorForm.value);
+    this.openEditJobError = false;
+  }
+
   saveChangesError() {
     this.isLoadding = true; 
    // console.log("error current: ", this.editForm.value);

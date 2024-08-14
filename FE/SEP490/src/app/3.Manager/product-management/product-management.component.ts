@@ -33,6 +33,8 @@ interface SubMaterial {
   subMaterialId: number;
   subMaterialName: string;
   unitPrice: number;
+  code: string;
+  input_id: number;
 }
 interface MaterialItem {
   subMaterialId: string;
@@ -45,6 +47,8 @@ interface SubMaterialItemOfProduct {
   quantity: number;
   unitPrice: number;
   materialType: string;
+  input_id: number;
+  code: string;
 }
 declare var $: any; // khai bao jquery
 
@@ -269,6 +273,7 @@ export class ProductManagementComponent implements OnInit {
       // Remove the last element
       while (this.items.length > index && this.items.length > 0) {
         this.items.removeAt(this.items.length - 1);
+        this.selectedMaterialId[this.items.length] = '';
       }
 
       for (let i = 0; i < this.subMaterialDataArray.length; i++) {
@@ -338,6 +343,7 @@ export class ProductManagementComponent implements OnInit {
 
   subMaterialDataArrayRProduct: any[][] = [];
   removeMaterialFormRequest(sectionIndex: number, formIndex: number) {
+
     this.subMaterialDataArrayRProduct[sectionIndex] = [];
     const materialFormRequests = this.getMaterialFormRequests(sectionIndex);
     // if (materialFormRequests && formIndex >= 0 && formIndex < materialFormRequests.length) {
@@ -380,6 +386,7 @@ export class ProductManagementComponent implements OnInit {
     // Remove the last element
     while (materialFormRequests.length > formIndex && materialFormRequests.length > 0) {
       materialFormRequests.removeAt(materialFormRequests.length - 1);
+      this.selectedMaterialId[materialFormRequests.length] = '';
     }
 
     for (let i = 0; i < this.subMaterialDataArrayRProduct[sectionIndex].length; i++) {
@@ -507,7 +514,7 @@ export class ProductManagementComponent implements OnInit {
   fillMaterialItemEdit(material: SubMaterialItemOfProduct) {
     const itemFormGroup = this.fb.group({
       materialId: [material.materialId],
-      subMaterialId: [material.subMaterialId],
+      subMaterialId: [material.input_id],
       subMaterialName: [material.subMaterialName],
       materialType: [material.materialType],
       quantity: [material.quantity],
@@ -555,6 +562,7 @@ export class ProductManagementComponent implements OnInit {
       // Remove the last element
       while (this.itemsEditArray.length > index && this.itemsEditArray.length > 0) {
         this.itemsEditArray.removeAt(this.itemsEditArray.length - 1);
+        this.selectedMaterialId[this.itemsEditArray.length] = '';
       }
 
       for (let i = 0; i < this.subMaterialDataArray.length; i++) {
@@ -629,15 +637,19 @@ export class ProductManagementComponent implements OnInit {
 
         this.productListService.getOrderById(this.idOrder).subscribe(
           (response) => {
+
+            const orderDate = new Date(response.result.orderDate).toISOString().split('T')[0]; // Lấy ngày tháng năm
+            const orderFinish = response.result.contractDate ? new Date(response.result.orderFinish).toISOString().split('T')[0] : null; // Lấy ngày tháng năm  của contractDate
+
             this.orderForm.patchValue({
               orderId: this.idOrder,
-              orderDate: response.result.orderDate,
+              orderDate: orderDate,
               code: response.result.code,
               description: response.result.description,
               price: response.result?.price,
               completionTime: response.result?.completionTime,
               status_id: response.result.status?.status_id,
-              orderFinish: response.result.orderFinish,
+              orderFinish: orderFinish,
 
             });
 
@@ -900,14 +912,14 @@ export class ProductManagementComponent implements OnInit {
   onSubMaterialChange(event: Event, index: number) {
     const selectedValue = Number((event.target as HTMLSelectElement).value);
     // Check for duplicates
-    if (Object.values(this.selectedSubMaterialId).includes(selectedValue)) {
-      this.toastr.warning('Nguyên vật liệu đã được chọn. Vui lòng chọn nguyên vật liệu khác', 'Lỗi');
-      this.selectedSubMaterialId[index] = null;
-      return;
-    }
+    // if (Object.values(this.selectedSubMaterialId).includes(selectedValue)) {
+    //   this.toastr.warning('Nguyên vật liệu đã được chọn. Vui lòng chọn nguyên vật liệu khác', 'Lỗi');
+    //   this.selectedSubMaterialId[index] = null;
+    //   return;
+    console.log('selectedValue:', selectedValue);
     this.totalUnitPrice = 0;
     this.selectedSubMaterialId[index] = Number((event.target as HTMLSelectElement).value);
-    const selectedSubMaterial = this.subMaterials[index].find(subMaterial => subMaterial.subMaterialId === this.selectedSubMaterialId[index]);
+    const selectedSubMaterial = this.subMaterials[index].find(subMaterial => subMaterial.input_id === selectedValue);
     this.unitPriceSubMaterial[index] = selectedSubMaterial ? selectedSubMaterial.unitPrice : '';
 
     //tinh lai totalUnitPrice(tong gia uoc tinh nguyen vat lieu)
@@ -949,15 +961,21 @@ export class ProductManagementComponent implements OnInit {
   onSubMaterialChangeRProduct(event: Event, index: number, indexOfItemRProduct: number, indexOfMaterial: number) {
     const selectedValue = Number((event.target as HTMLSelectElement).value);
     // Check for duplicates
-    if (Object.values(this.selectedSubMaterialId).includes(selectedValue)) {
-      this.toastr.warning('Nguyên vật liệu đã được chọn. Vui lòng chọn nguyên vật liệu khác', 'Lỗi');
-      this.selectedSubMaterialId[index] = null;
-      return;
-    }
+    const startIndex1 = indexOfItemRProduct * 10;
+    const endIndex1 = startIndex1 + 9;
+
+    // Check for duplicates within the specified range
+    // for (let i = startIndex1; i <= endIndex1; i++) {
+    //   if (this.selectedSubMaterialId[i] && Object.values(this.selectedSubMaterialId[i]).includes(selectedValue)) {
+    //     this.toastr.warning('Nguyên vật liệu đã được chọn. Vui lòng chọn nguyên vật liệu khác', 'Lỗi');
+    //     this.selectedSubMaterialId[index] = null;
+    //     return;
+    //   }
+    // }
 
     this.totalUnitPrice = 0;
     this.selectedSubMaterialId[index] = Number((event.target as HTMLSelectElement).value);
-    const selectedSubMaterial = this.subMaterials[index].find(subMaterial => subMaterial.subMaterialId === this.selectedSubMaterialId[index]);
+    const selectedSubMaterial = this.subMaterials[index].find(subMaterial => subMaterial.input_id === selectedValue);
     this.unitPriceSubMaterial[index] = selectedSubMaterial ? selectedSubMaterial.unitPrice : '';
 
     this.totalPriceSubmatePerProducRequest[indexOfItemRProduct] = 0;
@@ -1090,6 +1108,21 @@ export class ProductManagementComponent implements OnInit {
 
   onSubmit() {
 
+    //validate san pham uoc tinh can du 3 loai nguyen vat lieu
+    var allMaterialIds: string[] = [];
+    for (let j = 0; j <= 9; j++) {
+      if (this.selectedMaterialId[j]) {
+        allMaterialIds.push(this.selectedMaterialId[j]);
+      }
+    }
+    const requiredIds = [1, 2, 3];
+    const hasAllRequiredIds = requiredIds.every(id => allMaterialIds.includes(id.toString()));
+    if (!hasAllRequiredIds) {
+      this.toastr.warning('Sản phẩm ước tính của sản phẩm cần đủ 3 nguyên vật liệu Gỗ, Giấy Nhám, Sơn', 'Lỗi');
+      return;
+    }
+    console.log('allMaterialIds:', allMaterialIds);
+
     if (parseFloat(this.uploadForm.get('price')?.value.replace(/,/g, '')) < this.uploadForm.get('quantity')?.value * this.totalUnitPrice) {
       this.toastr.error('Giá sản phẩm phải lớn hơn giá vật liệu !', 'Lỗi');
       return;
@@ -1102,7 +1135,7 @@ export class ProductManagementComponent implements OnInit {
       if (productData.price) {
         productData.price = Number(productData.price.replace(/,/g, ''));
       }
-      // console.log('data goc:', this.materialForm.value);
+      console.log('data goc:', this.materialForm.value);
       var temp = this.materialForm.value;
 
       // tach lay quantity va subMaterialId
@@ -1124,7 +1157,7 @@ export class ProductManagementComponent implements OnInit {
             productId: response.result.productId,
             subMaterialQuantities: transformedObject
           };
-          return this.productListService.createExportMaterialProduct(transformedData);
+          return this.productListService.createExportMaterialProduct(transformedData,);
         }),
         catchError(error => {
           this.isLoadding = false;
@@ -1196,6 +1229,7 @@ export class ProductManagementComponent implements OnInit {
       this.toastr.error('Giá sản phẩm phải lớn hơn giá vật liệu !', 'Lỗi');
       return;
     }
+    
     if (this.editForm.get('price')?.value && this.editForm.get('category_id')?.value) {
       const productData = this.editForm.value;
 
@@ -1435,12 +1469,28 @@ export class ProductManagementComponent implements OnInit {
   onSubmitProductRequest() {
     const currentDate = new Date();
 
-
-
+    // console.log('materialIds:', materialIds);
     this.pricePerProductAndQuantity = []; //reset lai gia tri
 
     for (let i = 0; i < this.itemsRProduct.length; i++) {
 
+      //validate san pham uoc tinh can du 3 loai nguyen vat lieu
+      var allMaterialIds: string[] = [];
+      for (let j = i * 10; j <= i * 10 + 9; j++) {
+        if (this.selectedMaterialId[j]) {
+          allMaterialIds.push(this.selectedMaterialId[j]);
+        }
+      }
+      const requiredIds = [1, 2, 3];
+      const hasAllRequiredIds = requiredIds.every(id => allMaterialIds.includes(id.toString()));
+      if (!hasAllRequiredIds) {
+        this.toastr.warning('Sản phẩm ước tính của sản phẩm ' + (i + 1) + ' cần đủ 3 nguyên vật liệu Gỗ, Giấy Nhám, Sơn', 'Lỗi');
+        return;
+      }
+      console.log('allMaterialIds:', allMaterialIds);
+
+
+      //validate ngay` uoc tinh hoan thanh`
       const completionTime = this.listRequestProductForm.value.itemsRProduct[i].completionTime;
       const completionTimeDate = new Date(completionTime);
 
@@ -1650,16 +1700,19 @@ export class ProductManagementComponent implements OnInit {
       concatMap(product => this.productListService.getOrderById(product.result.request_id))
     ).subscribe(
       response => {
+
+        const orderDate = new Date(response.result.orderDate).toISOString().split('T')[0]; // Lấy ngày tháng năm
+        const orderFinish = response.result.contractDate ? new Date(response.result.orderFinish).toISOString().split('T')[0] : null; // Lấy ngày tháng năm  của contractDate
         // Cập nhật form đơn hàng ở đây
         this.orderForm.patchValue({
           orderId: this.idOrder,
-          orderDate: response.result.orderDate,
+          orderDate: orderDate,
           code: response.result.code,
           description: response.result.description,
           price: response.result?.price,
           completionTime: response.result?.completionTime,
           status_id: response.result.status?.status_id,
-          orderFinish: response.result.orderFinish,
+          orderFinish: orderFinish,
 
         });
         // Cập nhật imagesPreviewRequest ở đây
@@ -1878,21 +1931,25 @@ export class ProductManagementComponent implements OnInit {
   }
 
   onSelectSpecialOrder(item: any): void {
-    if(!this.idOrder){
+    if (!this.idOrder) {
       this.orderForm.reset();
     }
     const orderId = item.orderId;
     this.productListService.getOrderById(orderId).subscribe(
       (response) => {
+
+        const orderDate = new Date(response.result.orderDate).toISOString().split('T')[0]; // Lấy ngày tháng năm
+        const orderFinish = response.result.contractDate ? new Date(response.result.orderFinish).toISOString().split('T')[0] : null; // Lấy ngày tháng năm  của contractDate
+
         this.orderForm.patchValue({
           orderId: this.idOrder,
-          orderDate: response.result.orderDate,
+          orderDate: orderDate,
           code: response.result.code,
           description: response.result.description,
           price: response.result?.price,
           completionTime: response.result?.completionTime,
           status_id: response.result.status?.status_id,
-          orderFinish: response.result.orderFinish,
+          orderFinish: orderFinish,
 
         });
 

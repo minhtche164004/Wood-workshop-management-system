@@ -16,6 +16,7 @@ import java.util.List;
 
 @Service
 public interface JobService {
+    OderDTO getTest(int job_id);
 
 //    Jobs CreateJobForEmployee(JobDTO jobDTO);
     List<JobProductDTO> getListRequestProductJob();

@@ -30,6 +30,12 @@ public class StatisticServiceImpl implements StatisticService {
     }
 
     @Override
+    public BigDecimal TotalSalaryNotPayment() {
+        BigDecimal result = advancesalaryRepository.TotalSalaryNotPayment();
+        return result;
+    }
+
+    @Override
     public BigDecimal findTotalInputSubMaterialByMonthAndYear(int month, int year) { // đây là số tiền nhập nguyên liệu + số tiền nhập kho lúc thay đổi số lượng + số tiền nhập kho lúc thay đổi số lượng và giá
         BigDecimal input = inputSubMaterialRepository.findTotalInputSubMaterialByMonthAndYear(month, year);
         BigDecimal editQuantity = inputSubMaterialRepository.findTotalEditQuantitySubMaterialByMonthAndYear(month, year);
@@ -114,10 +120,10 @@ public class StatisticServiceImpl implements StatisticService {
         return advancesalaryRepository.totalAmountOrderHaveDone();
     }
 
-//    @Override
-//    public BigDecimal totalAmountSubMaterial() {
-//        return advancesalaryRepository.totalAmountSubMaterial();
-//    }
+    @Override
+    public BigDecimal totalAmountSubMaterial() {
+        return advancesalaryRepository.totalAmountSubMaterial();
+    }
     @Override
     public BigDecimal findTotalSubMaterialByMonthAndYear(int year, int month) {
           return advancesalaryRepository.findTotalSubMaterialByMonthAndYear(year, month);

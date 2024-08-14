@@ -41,6 +41,7 @@ import java.util.*;
 
 @Service
 public class OrderServiceImpl implements OrderService {
+
     @Autowired
     private Status_Order_Repository statusOrderRepository;
     @Autowired
@@ -237,7 +238,7 @@ public class OrderServiceImpl implements OrderService {
         BigDecimal deposite = BigDecimal.valueOf(deposite_price);
         Orders orders = orderRepository.findById(order_id);
         if(deposite.compareTo(orders.getDeposite())<0){
-            throw new AppException(ErrorCode.COST_DEPOSIT_NOTVALID);
+            throw new AppException(ErrorCode.COST_DEPOSIT);
         }
         orders.setDeposite(deposite);
 
@@ -273,6 +274,10 @@ public class OrderServiceImpl implements OrderService {
                 List<Jobs> jobsList = jobRepository.getJobByOrderDetailByOrderCode(orders.getCode());
 
                 for (Jobs jobs : jobsList) {
+                    if (jobs.isJob_log() == false && jobs.getUser() != null && (jobs.getStatus() == statusJobRepository.findById(4) || jobs.getStatus() == statusJobRepository.findById(7) || jobs.getStatus() == statusJobRepository.findById(10))) {
+                        return ResponseEntity.badRequest().body("Hãy hoàn thành công việc của " + jobs.getUser().getPosition().getPosition_name() + " có tên là " + jobs.getUser().getUsername() + " trước khi huỷ đơn hàng");
+                    }
+                    
                     if (jobs.isJob_log() == false && jobs.getUser() == null) {
                         List<Processproducterror> processproducterrorList = processproducterrorRepository.getProcessproducterrorByJobId(jobs.getJobId());
                         for (Processproducterror processproducterror : processproducterrorList) {
@@ -281,9 +286,7 @@ public class OrderServiceImpl implements OrderService {
                         jobRepository.delete(jobs);
                         return ResponseEntity.ok("Huỷ đơn hàng thành công");
                     }
-                    if (jobs.isJob_log() == false && jobs.getUser() != null) {
-                        return ResponseEntity.badRequest().body("Hãy hoàn thành công việc của " + jobs.getUser().getPosition().getPosition_name() + " có tên là " + jobs.getUser().getUsername() + " trước khi huỷ đơn hàng");
-                    }
+
                 }
 //                requestProducts.setQuantity(requestProducts.getQuantity()+orderdetails.getRequestProduct().getQuantity());
 //                requestProductRepository.save(requestProducts);
@@ -297,9 +300,15 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public ResponseEntity<String> Refund_Order(int order_id, boolean special_order_id, int refund_price, String response) {
+    public ResponseEntity<String> Refund_Order(int order_id, boolean special_order_id, int refund_price, String response,  int status_Id_Refund) {
 
         Orders orders = orderRepository.findById(order_id);
+        if(refund_price>orders.getTotalAmount().intValue() || refund_price<0){
+            throw new AppException(ErrorCode.COST_REFUND_INVALID);
+        }
+
+        RefundStatus refundStatus = statusOrderRepository.findByRefundStatusId(status_Id_Refund);
+        orders.setRefundStatus(refundStatus);//set cho nó là đơn hàng hoàn tiền do phía khách hoặc do cửa hàng
         if (special_order_id == false) {//là hàng có sẵn
             List<Orderdetails> list = orderDetailRepository.getOrderDetailByOrderId(order_id);
             for (Orderdetails orderdetails : list) {
@@ -324,6 +333,10 @@ public class OrderServiceImpl implements OrderService {
                 List<Jobs> jobsList = jobRepository.getJobByOrderDetailByOrderCode(orders.getCode());
 
                 for (Jobs jobs : jobsList) {
+                    if (jobs.isJob_log() == false && jobs.getUser() != null && (jobs.getStatus() == statusJobRepository.findById(4) || jobs.getStatus() == statusJobRepository.findById(7) || jobs.getStatus() == statusJobRepository.findById(10))) {
+                        return ResponseEntity.badRequest().body("Hãy hoàn thành công việc của " + jobs.getUser().getPosition().getPosition_name() + " có tên là " + jobs.getUser().getUsername() + " trước khi hoàn tiền");
+                    }
+
                     if (jobs.isJob_log() == false && jobs.getUser() == null) {
                         List<Processproducterror> processproducterrorList = processproducterrorRepository.getProcessproducterrorByJobId(jobs.getJobId());
                         for (Processproducterror processproducterror : processproducterrorList) {
@@ -332,9 +345,7 @@ public class OrderServiceImpl implements OrderService {
                         jobRepository.delete(jobs);
                         return ResponseEntity.ok("Hoàn tiền đơn hàng thành công");
                     }
-                    if (jobs.isJob_log() == false && jobs.getUser() != null) {
-                        return ResponseEntity.badRequest().body("Hãy hoàn thành công việc của " + jobs.getUser().getPosition().getPosition_name() + " có tên là " + jobs.getUser().getUsername() + " trước khi huỷ đơn hàng");
-                    }
+
                 }
 //                requestProducts.setQuantity(requestProducts.getQuantity()+orderdetails.getRequestProduct().getQuantity());
 //                requestProductRepository.save(requestProducts);
@@ -391,7 +402,11 @@ public class OrderServiceImpl implements OrderService {
     public String ConfirmPayment(int order_id,BigDecimal deposit) {
         Orders orders = orderRepository.findById(order_id);
         BigDecimal deposit_order = orders.getDeposite();
-        if(deposit_order.equals(deposit)){
+        BigDecimal total = orders.getTotalAmount();
+        if(deposit.compareTo(deposit_order)>=0 && deposit.compareTo(total)<= 0){ // nếu số tiền đặt cọc lớn hơn hoặc bằng số tiền đặt cọc của đơn hàng thì mới cho phép xác nhận thanh toán
+
+            orders.setDeposite(deposit); // luu so tien da thanh dat coc
+
             if (orders.getStatus().getStatus_id() == 1) {//đang trong trạng thái là chờ đặt cọc
                 Status_Order statusOrder = new Status_Order();
                 if (orders.getSpecialOrder() == false) {//nếu là hàng có sẵn thì set status order cho nó là đã thi công xong luôn(vì nó ko cần sản xuất nữa)
@@ -736,16 +751,16 @@ public class OrderServiceImpl implements OrderService {
 
     private void CheckOrderAfterDeadline() {
         LocalDate today = LocalDate.now();
-        List<OderDTO> list = orderRepository.getAllOrderWithStatus3();
-        for(OderDTO o : list){
-            if(o.getContractDate() != null){
-                LocalDate timeFinishLocalDate = o.getContractDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
-                if(timeFinishLocalDate.isBefore(today)){
-                    orderRepository.UpdateStatusOrder(o.getOrderId(),10);
+            List<OderDTO> list = orderRepository.getAllOrderWithStatus3();
+            for(OderDTO o : list){
+                if(o.getContractDate() != null){
+                    LocalDate timeFinishLocalDate = o.getContractDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+                    if(timeFinishLocalDate.isBefore(today)){
+                        orderRepository.UpdateStatusOrder(o.getOrderId(),10);
+                    }
                 }
             }
         }
-    }
 
 
 
@@ -764,6 +779,24 @@ public class OrderServiceImpl implements OrderService {
         String email = orders.getUserInfor().getUser().getEmail();
         emailService.sendEmailFromTemplate2(name, email, list, orders);
         return "Giảm giá cho đơn hàng thành công";
+    }
+
+    @Override
+    public List<RefundStatus> getAllRefundStatus() {
+        List<RefundStatus> list = statusOrderRepository.getAllRefundStatus();
+        if(list == null){
+            throw new AppException(ErrorCode.NOT_FOUND);
+        }
+        return list;
+    }
+
+    @Override
+    public RefundStatus getRefundStatusById(int refundId) {
+        RefundStatus re = statusOrderRepository.findByRefundStatusId(refundId);
+        if(re == null){
+            throw new AppException(ErrorCode.NOT_FOUND);
+        }
+        return re;
     }
 
     @Override
@@ -926,6 +959,56 @@ public class OrderServiceImpl implements OrderService {
         Date requestDate = Date.from(today.atStartOfDay(ZoneId.systemDefault()).toInstant());
         Status_Order statusOrder = statusOrderRepository.findById(status_id);
         Orders orders = orderRepository.findById(orderId);
+
+        if (status_id == 5) {
+            orders.setOrderFinish(requestDate);
+            orderRepository.save(orders);
+        }
+        //send mail cho những đơn hàng đặt theo yêu cầu , vì đơn hàng mau có sẵn thì mua luôn rồi, trả tiền luôn r cần đéo gì nữa mà phải theo dõi tình trạng đơn hàng
+        orderRepository.UpdateStatusOrder(orderId, status_id);
+
+        List<Jobs> list_jobs = jobRepository.getJobByOrderDetailByOrderCode(orders.getCode());
+        for (Jobs job : list_jobs) {
+            if (job.getStatus().getStatus_id() != 13) { //tức là công việc đã hoàn thành
+                return "Đơn hàng chưa hoàn thành công việc, không thể sửa trạng thái đơn hàng !";
+            }
+        }
+        if (orders.getSpecialOrder() == true) {
+            String email = orderDetailRepository.getMailOrderForSendMail(orderId);
+            String code = orders.getCode();
+            SimpleDateFormat dateFormatter = new SimpleDateFormat("dd/MM/yyyy");
+//            String time_finish = dateFormatter.format(orders.getOrderFinish());
+            //   String time_finish = (orders.getOrderFinish() == null) ? "" : dateFormatter.format(orders.getOrderFinish());
+            String time_start = dateFormatter.format(orders.getOrderDate());
+            String status_name = statusOrder.getStatus_name();
+            MailBody mailBody = MailBody.builder()
+                    .to(email)
+                    .text("Đơn hàng có mã đơn hàng là : " + code + "\n" +
+                                    "Có trạng thái: " + status_name + "\n" +
+                                    "Với thời gian tạo đơn là: " + time_start + "\n"
+                            // "Và thời gian dự kiến hoàn thành là: " + time_finish
+                    )
+                    .subject("[Thông tin tiến độ của đơn hàng]")
+                    .build();
+            emailService.sendSimpleMessage(mailBody);
+        }
+        return "Thay đổi trạng thái đơn hàng thành công";
+    }
+
+    @Transactional
+    @Override
+    public String ChangeStatusOrderFinish(int orderId, int status_id, BigDecimal remain_price) {
+        LocalDate today = LocalDate.now();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("ddMMyy");
+        String dateString = today.format(formatter);
+        Date requestDate = Date.from(today.atStartOfDay(ZoneId.systemDefault()).toInstant());
+        Status_Order statusOrder = statusOrderRepository.findById(status_id);
+        Orders orders = orderRepository.findById(orderId);
+        BigDecimal remain_order_price = orders.getTotalAmount().subtract(orders.getDeposite());
+        //check xem so tien con` lai co chuan khong neu khong thi` bao loi
+        if (remain_price.compareTo(remain_order_price) != 0) {
+            throw new AppException(ErrorCode.COST_REMAIN);
+        }
 
         if (status_id == 5) {
             orders.setOrderFinish(requestDate);

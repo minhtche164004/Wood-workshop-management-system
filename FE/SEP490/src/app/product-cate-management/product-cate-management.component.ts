@@ -34,18 +34,20 @@ export class ProductCateManagementComponent implements OnInit{
   searchKey: string = ''; 
   checkNotFound: boolean = false;
   getAllCategory(): void{
+    this.isLoadding = true;
     this.productListService.getAllCategories().subscribe(
       (data: any) => {
         if (data.code === 1000) {
           this.errorProducts = data.result;
            console.log('Categories:', this.errorProducts);
            this.checkNotFound = true;
+           this.isLoadding = false;
         } else {
-          console.error('Invalid data returned:', data);
+          console.error('Invalid data returned:', data);this.isLoadding = false;
         }
       },
       (error) => {
-        console.error('Error fetching categories:', error);
+        console.error('Error fetching categories:', error);this.isLoadding = false;
       }
     );
   }
@@ -131,6 +133,7 @@ export class ProductCateManagementComponent implements OnInit{
   }
   addCategory(): void {
     console.log('Add category:', this.newProductCate);
+    this.isLoadding = true;
     if(this.newProductCate == ''){
       this.toastr.warning('Tên danh mục không được để trống', 'Thông báo');
       return;
@@ -143,14 +146,15 @@ export class ProductCateManagementComponent implements OnInit{
           this.toastr.success('Thêm danh mục sản phẩm thành công');
           this.getAllCategory();
           this.closeModal();
+          this.isLoadding = false;
         },
         error => {
           console.error('Error adding category:', error);
-          this.toastr.warning(error.error.message, 'Thông báo');
+          this.toastr.warning(error.error.message, 'Thông báo');this.isLoadding = false;
         }
       );
     } else {
-      console.error('Category name is required');
+      console.error('Category name is required');this.isLoadding = false;
     
     }
   }
@@ -161,6 +165,7 @@ export class ProductCateManagementComponent implements OnInit{
   }
   productCategoryId: number = 0;
   editProductCategory(category: any): void{
+   
     console.log('Edit category:', category);
     this.productCategoryId = category.categoryId;
     this.editProductCate.patchValue({

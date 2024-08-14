@@ -44,20 +44,11 @@ public interface RequestProductsSubmaterialsRepository extends JpaRepository<Req
     List<String> GetSubNameByProductId(int query);
 
     @Query("SELECT new com.example.demo.Dto.SubMaterialDTO.SubMateProductRequestDTO( " +
-            "m.materialId ,sub.subMaterialId ,sub.subMaterialName, m.type, li.out_price, j.quantity) " +
+            "m.materialId ,sub.subMaterialId ,sub.subMaterialName, m.type, ism.out_price, j.quantity,ism.code_input,ism.input_id) " +
             "FROM RequestProductsSubmaterials j " +
             "LEFT JOIN j.subMaterial sub " +
-            "LEFT JOIN sub.material m " +
-            "LEFT JOIN (" +
-            "   SELECT ism.subMaterials.subMaterialId AS subMaterialId, " +
-            "          MAX(ism.total_quantity) AS total_quantity, " +
-            "          MAX(ism.out_price) AS out_price, " +
-            "          MAX(ism.input_price) AS unit_price, " +  // Thêm unit_price vào subquery
-            "          MAX(ism.date_input) AS max_date_input, " +
-            "          MAX(ism.input_id) AS max_input_id " +
-            "   FROM InputSubMaterial ism " +
-            "   GROUP BY ism.subMaterials.subMaterialId " +
-            ") li ON sub.subMaterialId = li.subMaterialId " +
+            "LEFT JOIN j.inputSubMaterial ism " +
+            " LEFT JOIN sub.material m " + // Di chuyển điều kiện WHERE vào đây
             "WHERE j.requestProduct.requestProductId = :requestProductId")
     List<SubMateProductRequestDTO> getRequestProductSubMaterialByRequestProductIdDTO(int requestProductId);
 

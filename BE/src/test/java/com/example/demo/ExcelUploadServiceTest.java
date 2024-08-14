@@ -13,7 +13,9 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
 import java.math.BigDecimal;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -36,6 +38,7 @@ public class ExcelUploadServiceTest {
         header.createCell(3).setCellValue("Quantity");
         header.createCell(4).setCellValue("Unit_price");
         header.createCell(5).setCellValue("Input_price");
+        header.createCell(6).setCellValue("Date_ware_house");
 
         if (withData) {
             // Create data rows
@@ -46,6 +49,10 @@ public class ExcelUploadServiceTest {
             row1.createCell(3).setCellValue(10);
             row1.createCell(4).setCellValue(100.0);
             row1.createCell(5).setCellValue(50.0);
+            // Chuyển đổi chuỗi thành đối tượng Date
+            SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+            Date warehouseDate = dateFormat.parse("12/01/2004");
+            row1.createCell(6).setCellValue(warehouseDate);
         }
         //Tạo một đối tượng ByteArrayOutputStream để lưu trữ nội dung file Excel dưới dạng byte array.
         ByteArrayOutputStream bos = new ByteArrayOutputStream();
@@ -75,8 +82,12 @@ public class ExcelUploadServiceTest {
         assertEquals("Material1", dto.getMaterial_name());
         assertEquals("Desc1", dto.getDescription());
         assertEquals(10, dto.getQuantity());
-        assertEquals(BigDecimal.valueOf(100.0), dto.getUnit_price());
-        assertEquals(BigDecimal.valueOf(50.0), dto.getInput_price());
+        assertEquals(BigDecimal.valueOf(50.0), dto.getUnit_price());
+        assertEquals(BigDecimal.valueOf(100.0), dto.getInput_price());
+        SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+        String expectedDateString = "12/01/2004";
+        String actualDateString = dateFormat.format(dto.getDate_ware_house());
+        assertEquals(expectedDateString,actualDateString);
     }
 
     @Test

@@ -10,10 +10,8 @@ import com.example.demo.Dto.ProductDTO.QuantityTotalDTO;
 import com.example.demo.Dto.SubMaterialDTO.SubMaterialDTO;
 import com.example.demo.Dto.SubMaterialDTO.SubMaterialViewDTO;
 import com.example.demo.Dto.SubMaterialDTO.UpdateSubDTO;
-import com.example.demo.Entity.ProductSubMaterials;
-import com.example.demo.Entity.Products;
-import com.example.demo.Entity.RequestProductsSubmaterials;
-import com.example.demo.Entity.SubMaterials;
+import com.example.demo.Entity.*;
+import com.example.demo.Repository.InputSubMaterialRepository;
 import com.example.demo.Response.ApiResponse;
 import com.example.demo.Service.JobService;
 import com.example.demo.Service.ProductService;
@@ -47,12 +45,21 @@ import java.util.stream.Collectors;
 @AllArgsConstructor
 public class SubMaterialController {
     @Autowired
+    private InputSubMaterialRepository inputSubMaterialRepository;
+    @Autowired
     private SubMaterialService subMaterialService;
     @Autowired
     private ResourceLoader resourceLoader;
     @Autowired
     private JobService jobService;
     private static final JedisPooled jedis = RedisConfig.getRedisInstance();
+
+    @GetMapping("/getLastBySubMaterialId")
+    public ApiResponse<?> getLastBySubMaterialId(@RequestParam("sub_id") int sub_id) {
+        ApiResponse<InputSubMaterial> apiResponse = new ApiResponse<>();
+        apiResponse.setResult(subMaterialService.getLastBySubMaterialId(sub_id));
+        return apiResponse;
+    }
 
     @GetMapping("/getall")
     public ApiResponse<?> getAllSubMaterials() {
@@ -101,6 +108,7 @@ public class SubMaterialController {
     @PutMapping("/editSubMaterial")
     public ApiResponse<?> editSubMaterial(@RequestParam("id") int id,@RequestBody SubMaterialViewDTO subMaterialViewDTO) {
         ApiResponse<SubMaterialViewDTO> apiResponse = new ApiResponse<>();
+        jedis.del("all_sub_mate_product");
         apiResponse.setResult(subMaterialService.EditSubMaterial(id,subMaterialViewDTO));
         return apiResponse;
     }
@@ -120,6 +128,7 @@ public class SubMaterialController {
     @GetMapping("/FilterByMaterial")
     public ApiResponse<?> FilterByMaterial(@RequestParam("id") int material_id) {
         ApiResponse<List> apiResponse = new ApiResponse<>();
+        jedis.del("all_sub_mate_product");
         apiResponse.setResult(subMaterialService.FilterByMaterial(material_id));
         return apiResponse;
     }
@@ -198,6 +207,27 @@ public class SubMaterialController {
     public ApiResponse<?> getProductSubMaterialByProductId(@RequestParam("id") int id,@RequestParam("mate_id") int mate_id) {
         ApiResponse<List> apiResponse = new ApiResponse<>();
         apiResponse.setResult(subMaterialService.getProductSubMaterialByProductId(id,mate_id));
+        return apiResponse;
+    }
+
+    @GetMapping("/findAllInputSubMaterialsOrderByCodeAndDate")
+    public ApiResponse<?> findAllInputSubMaterialsOrderByCodeAndDate() {
+        ApiResponse<List> apiResponse = new ApiResponse<>();
+        apiResponse.setResult(inputSubMaterialRepository.findAllInputSubMaterialsOrderByCodeAndDate());
+        return apiResponse;
+    }
+
+    @GetMapping("/findLatestSubMaterialInputSubMaterialBySubMaterialId")
+    public ApiResponse<?> findLatestSubMaterialInputSubMaterialBySubMaterialId(@RequestParam("subMaterialId") int subMaterialId) {
+        ApiResponse<InputSubMaterial> apiResponse = new ApiResponse<>();
+        apiResponse.setResult(inputSubMaterialRepository.findLatestSubMaterialInputSubMaterialBySubMaterialId(subMaterialId));
+        return apiResponse;
+    }
+
+    @GetMapping("/findLatestSubMaterialInputSubMaterialBySubMaterialIdGroupByCode")
+    public ApiResponse<?> findLatestSubMaterialInputSubMaterialBySubMaterialIdGroupByCode(@RequestParam("code_input") String code_input,@RequestParam("subMaterialId") int subMaterialId) {
+        ApiResponse<InputSubMaterial> apiResponse = new ApiResponse<>();
+        apiResponse.setResult(inputSubMaterialRepository.findLatestSubMaterialInputSubMaterialBySubMaterialIdGroupByCode(code_input,subMaterialId));
         return apiResponse;
     }
 

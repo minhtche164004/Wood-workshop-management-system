@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpErrorResponse } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
-import { catchError } from 'rxjs/operators';
+import { catchError, map } from 'rxjs/operators';
 import { environment } from 'src/app/environments/environment'; // Đường dẫn đúng tới file môi trường
 import { AddNewAccount } from '../Admin/user-management/user-management.component';
 @Injectable({
@@ -43,7 +43,11 @@ export class AuthenListService {
   private apiUrl_getRequestById = `${environment.apiUrl}api/auth/order/GetRequestById`;
   private apiUrl_EditRequest = `${environment.apiUrl}api/auth/order/ManagerEditRequest`;
   private apiUrl_getAllStatusOrder = `${environment.apiUrl}api/auth/order/getStatusOrder`;
+  private apiUrl_getAllStatusOrdeRefund = `${environment.apiUrl}api/auth/order/getAllRefundStatus`;
+  
   private apiUrl_chanegStatusOrder = `${environment.apiUrl}api/auth/order/ChangeStatusOrder`;
+  private apiUrl_changeStatusOrderFinish = `${environment.apiUrl}api/auth/order/ChangeStatusOrderFinish`;
+  
   private apiUrl_getFilterStatus = `${environment.apiUrl}api/auth/order/MultiFilterOrder`;
   private apiUrl_getSalaryByEmployeeID = `${environment.apiUrl}api/auth/salary/getSalaryByEmployeeID`;
   private apiUrl_changeStatusOrderRequest = `${environment.apiUrl}api/auth/order/Cancel_Order`;
@@ -140,11 +144,11 @@ export class AuthenListService {
       catchError(this.handleError)
     );
   }
-  RefundcancelOrder(orderId: number, specialOrderId: boolean, cancelReason: string, percentDepositPrice: number, percentOrderPrice: number): Observable<string> {
-    const url = `${this.apiUrl_RefundcancelOrder}?order_id=${orderId}&special_order_id=${specialOrderId}&percent_deposite_price=${percentDepositPrice}&percent_order_price=${percentOrderPrice}`;
-    const headers = new HttpHeaders({ 'Content-Type': 'text/plain' });
-
-    return this.http.post<string>(url, cancelReason, { headers }).pipe(
+  RefundcancelOrder(orderId: number, specialOrderId: boolean, refund_price: string, status_Id_Refund: string, cancelReason: string): Observable<string> {
+    const url = `${this.apiUrl_RefundcancelOrder}?order_id=${orderId}&special_order_id=${specialOrderId}&refund_price=${refund_price}&status_Id_Refund=${status_Id_Refund}`;
+    const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
+   
+    return this.http.post<any>(url, cancelReason,  { headers, responseType: 'text' as 'json' }).pipe(
       catchError(this.handleError)
     );
   }
@@ -512,6 +516,9 @@ export class AuthenListService {
   getAllStatusOrder(): Observable<any[]> {
     return this.http.get<any[]>(this.apiUrl_getAllStatusOrder);
   }
+  getAllStatusOrdeRefund(): Observable<any[]> {
+    return this.http.get<any[]>(this.apiUrl_getAllStatusOrdeRefund);
+  }
   getAllStatusOrderRequest(): Observable<any[]> {
     return this.http.get<any[]>(this.apiUrl_getAllStatusOrderRequest);
   }
@@ -527,6 +534,22 @@ export class AuthenListService {
     });
 
     const url = `${this.apiUrl_chanegStatusOrder}?orderId=${orderId}&status_id=${status_id}`;
+    return this.http.put<any>(url, null, { headers }).pipe(
+      catchError(this.handleError)
+    );
+  }
+  changeStatusOrderFinish(orderId: string, status_id: string,remain_price:string): Observable<any> {
+    const token = localStorage.getItem('loginToken');
+    if (!token) {
+      return throwError(new Error('Login token not found in localStorage.'));
+    }
+
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${token}`,
+      'Content-Type': 'application/json'
+    });
+
+    const url = `${this.apiUrl_changeStatusOrderFinish}?orderId=${orderId}&status_id=${status_id}&remain_price=${remain_price}`;
     return this.http.put<any>(url, null, { headers }).pipe(
       catchError(this.handleError)
     );

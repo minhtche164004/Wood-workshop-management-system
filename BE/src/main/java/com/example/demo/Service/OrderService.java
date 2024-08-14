@@ -29,20 +29,21 @@ public interface OrderService {
 
     List<RequestProductAllDTO> GetAllProductRequest();
 
-  //  List<Orders> GetAllRequests();
-   // List<Orders> GetAllRequestsAccept();
+    //  List<Orders> GetAllRequests();
+    // List<Orders> GetAllRequestsAccept();
 
-  //  Orders getRequestById(int id);
+    //  Orders getRequestById(int id);
 
     RequestProducts getRequestProductsById(int id);
 
-   void Approve_Reject_Request(int id, int status_id);
+    void Approve_Reject_Request(int id, int status_id);
 
-  //  RequestProductAllDTO GetProductRequestById(int id);
+    //  RequestProductAllDTO GetProductRequestById(int id);
 
-   // RequestAllDTO GetRequestById(int id);
+    // RequestAllDTO GetRequestById(int id);
 
     List<OderDTO> GetAllOrder();
+
     List<OderDTO> GetAllOrderSpecial();
 
     List<OderDTO> FindByNameOrCode(String key);
@@ -52,6 +53,7 @@ public interface OrderService {
     List<OderDTO> FilterByStatus(int status_id);
 
     List<Orders> HistoryOrder();
+
     Orders getOrderById(int order_id);
 
     List<Orderdetails> getAllOrderDetail();
@@ -67,6 +69,7 @@ public interface OrderService {
     List<OrderDetailWithJobStatusDTO> getAllOrderDetailOfProductByOrderId(int order_id);
 
     Orders EditRequest(int request_id, RequestEditCusDTO requestEditDTO, MultipartFile[] multipartFiles) throws IOException;
+
     Orders ManagerEditRequest(int request_id, RequestEditDTO requestEditDTO);
 //    Requests CustomerEditRequest(int request_id , Requests requests);
 
@@ -75,39 +78,51 @@ public interface OrderService {
 
     void deleteRequestById(int requestId);
 
- String ChangeStatusOrder(int orderId, int status_id);
+    String ChangeStatusOrder(int orderId, int status_id);
 
+    String ChangeStatusOrderFinish(int orderId, int status_id, BigDecimal remain_price);
 
-    List<RequestProductAllDTO> filterRequestProductsForAdmin(String search,Integer statusId, BigDecimal minPrice, BigDecimal maxPrice, String sortDirection);
+    List<RequestProductAllDTO> filterRequestProductsForAdmin(String search, Integer statusId, BigDecimal minPrice, BigDecimal maxPrice, String sortDirection);
 
     List<RequestProducts> findByPriceRange(BigDecimal min, BigDecimal max);
+
     List<RequestProducts> GetAllProductRequestByUserId();
+
     List<Orders> GetAllRequestByUserId();
-   // List<Orders> GetAllRequestByAccountId(int acc_id);
+    // List<Orders> GetAllRequestByAccountId(int acc_id);
 
     RequestProductDTO_Show GetRequestProductByIdWithImage(int id);
+
     List<RequestProductDTO_Show> GetAllRequestProductWithImage();
 
     ResponseEntity<String> Set_Deposite_Order(int order_id, int deposite_price);
 
-   ResponseEntity<String> Cancel_Order(int order_id, boolean special_order_id,String response);
+    ResponseEntity<String> Cancel_Order(int order_id, boolean special_order_id, String response);
 
-    ResponseEntity<String> Refund_Order(int order_id, boolean special_order_id,int refund_price, String response);
-
-
-    String ConfirmPayment(int order_id,BigDecimal deposit);
-
-    List<OderDTO> MultiFilterOrder(String search, Integer status_id, Integer paymentMethod, Integer specialOrder,Date startDate, Date endDate);
-    List<Orders> MultiFilterOrderForEmployee(String search, Integer status_id, Integer paymentMethod, Integer specialOrder,Date startDate, Date endDate);
+    ResponseEntity<String> Refund_Order(int order_id, boolean special_order_id, int refund_price, String response, int status_Id_Refund);
 
 
-    String SendMailToNotifyCationAboutOrder(int order_id,String link) throws MessagingException, IOException;
+    String ConfirmPayment(int order_id, BigDecimal deposit);
+
+
+    List<OderDTO> MultiFilterOrder(String search, Integer status_id, Integer paymentMethod, Integer specialOrder, Date startDate, Date endDate);
+
+    List<Orders> MultiFilterOrderForEmployee(String search, Integer status_id, Integer paymentMethod, Integer specialOrder, Date startDate, Date endDate);
+
+
+    String SendMailToNotifyCationAboutOrder(int order_id, String link) throws MessagingException, IOException;
 
     String RefundDeposite(int order_id);
-    String TimeContract(int order_id, double percentage_discount,Date NewDate) throws MessagingException;
 
 
 
+    List<RefundStatus> getAllRefundStatus();
+    RefundStatus getRefundStatusById(int refundId);
+
+
+
+
+    String TimeContract(int order_id, double percentage_discount, Date NewDate) throws MessagingException;
 
 
 }

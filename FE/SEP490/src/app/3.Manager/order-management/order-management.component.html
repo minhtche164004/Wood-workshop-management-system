@@ -140,7 +140,8 @@
 
                 <td style="min-width: 200px;" *ngIf="us?.totalAmount !== null">
                   <div class="select-wrapper">
-                    <select id="mySelect{{i}}" [disabled]="us?.status_id !== 4" class="custom-select"
+                    <select (click)="getOrDetailById(us, us?.orderId)" id="mySelect{{i}}"
+                      [disabled]="us?.status_id !== 4" class="custom-select"
                       (change)="openModal(us.orderId, $event, i)">
                       <option *ngFor="let status of status_order" [value]="status.status_id"
                         [selected]="status.status_id === us?.status_id" [disabled]="status.status_id !== 5"
@@ -149,7 +150,7 @@
                       </option>
                     </select>
                     <button #launchModalButton type="button" class="btn btn-primary d-none" data-toggle="modal"
-                      data-target="#myModal">
+                      data-target="#myModal1234">
                       Launch modal
                     </button>
                   </div>
@@ -204,7 +205,7 @@
       </div>
     </div>
   </div>
-  <div class="modal fade" style="margin-left: 7%;" id="productDetailModal" tabindex="-1" role="dialog"
+  <div class="modal fade" style="margin-left: 10%; margin-bottom: 2%;" id="productDetailModal" tabindex="-1" role="dialog"
     aria-labelledby="productDetailModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-xl" role="document">
       <div class="modal-content">
@@ -215,44 +216,33 @@
           </button>
         </div>
         <div class="modal-body" style="font-size: 16px;">
-
           <div class="row">
             <div class="col-md-6">
               <h4><b>Khách hàng: </b>{{OrderdetailById.userInfor?.fullname}} -
                   {{OrderdetailById.userInfor?.phoneNumber}} - {{emailCustomer}}</h4>
             </div>
-
             <div class="col-md-3">
               <b>Ngày tạo đơn:</b> {{OrderdetailById.orderDate | date:'dd/MM/yyyy'}}
             </div>
             <div class="col-md-3">
               <!-- <b>Đơn hàng:</b> -->
-
               <label style="color: rgba(0, 102, 255, 0.945);">
                 <!-- Other parts of your form -->
-
                 <div *ngIf="selectedOrderDetail.specialOrder; else regularOrder">
                   <p>Đơn hàng theo yêu cầu</p>
                 </div>
                 <ng-template #regularOrder>
                   <p>Đơn hàng có sẵn</p>
                 </ng-template>
-
                 <!-- Other parts of your form -->
-
               </label>
             </div>
-
-
-
           </div>
-
           <div class="row">
             <div class="col-md-6">
 
               <b>Địa chỉ: </b> {{OrderdetailById.userInfor?.address}}
             </div>
-
             <div class="col-md-3">
               <b>
                 {{OrderdetailById.status?.status_name}}</b>
@@ -262,13 +252,8 @@
              <b>Mã đơn: </b> {{ OrderdetailById.code}}
             </div>
           </div>
-
-
-
-          <hr>
-
-
-          <div class="card">
+    
+          <div class="card" style="margin-top: 2%;">
             <div class="card-header text-center">
               Thông tin đơn hàng
 
@@ -276,98 +261,100 @@
             <div class="card-body">
               <!-- <h5 class="card-title">{{OrderdetailById.userInfor?.fullname}}</h5> -->
               <div class="row">
-                <div class="col-md-6"> 
-                  
-                    <div class="col-md-6 text-right" style="margin-bottom: 2%;" *ngIf="OrderdetailById.status?.status_id !== 7">
-                      <b>Tổng giá trị đơn hàng: </b>
-                    </div>
-                    <div class="col-md-6" style="margin-bottom: 2%;">
-                      {{ totalAmoutOrder | number: '1.0-3' }} &nbsp; VNĐ
-  
-                    </div>
-               
-                 
-                    <div class="col-md-6 text-right" style="margin-bottom: 2%;" *ngIf="OrderdetailById.status?.status_id !== 7">
-                      <b>Số tiền cọc: </b>
-                    </div>
-                      <div class="col-md-6" style="margin-bottom: 2%;">
-                        {{ OrderdetailById.deposite | number: '1.0-3' }} &nbsp; VNĐ
-                      </div>
-                  
-                 
-                 
-                    <div class="col-md-6 text-right" style="margin-bottom: 2%;">
-                      <b>Tổng tiền cần thanh toán: </b>
-                    </div>
-                    <div class="col-md-6" style="margin-bottom: 2%;">
-                      {{ totalAmoutOrder - OrderdetailById.deposite | number: '1.0-3' }} &nbsp; VNĐ
-                    </div>
-                 
-                 
-                    <div class="col-md-6 text-right" >
-                      <p class="card-text"><b>Kiểu thanh toán:</b></p>
-                    </div>
-                    <div class="col-md-6">
-                      {{ OrderdetailById.paymentMethod
-                        === '1' ? 'Tiền mặt' : 'Chuyển khoản' }}
-                    </div>
-               
+                <div class="col-md-6">
+                  <div>
+
+                  </div>
+                  <div class="col-md-6 text-right" style="margin-bottom: 2%;">
+                    <b>Tổng giá trị đơn hàng: </b>
+                </div>
+                <div class="col-md-6" style="margin-bottom: 2%;">
+                    {{ OrderdetailById.status?.status_id !== 7 ? (totalAmoutOrder | number: '1.0-3') + ' VNĐ' : 'Chưa thanh toán' }}
                 </div>
                 
+                <div class="col-md-6 text-right" style="margin-bottom: 2%;">
+                    <b>Số tiền cọc: </b>
+                </div>
+                <div class="col-md-6" style="margin-bottom: 2%;">
+                    {{ OrderdetailById.status?.status_id !== 7 ? (OrderdetailById.deposite | number: '1.0-3') + ' VNĐ' : 'Chưa thanh toán' }}
+                </div>
+                
+                <div class="col-md-6 text-right" style="margin-bottom: 2%;">
+                    <b>Tổng tiền cần thanh toán: </b>
+                </div>  
+                <div class="col-md-6" style="margin-bottom: 2%;">
+                    {{ OrderdetailById.status?.status_id !== 7 ? ((totalAmoutOrder - OrderdetailById.deposite) | number: '1.0-3') + ' VNĐ' : 'Chưa thanh toán' }}
+                </div>
+                
+
+                  <div class="col-md-6 text-right">
+                    <p class="card-text"><b>Kiểu thanh toán:</b></p>
+                  </div>
+                  <div class="col-md-6">
+                    {{ OrderdetailById?.paymentMethod === 2 ? 'Chuyển khoản' : (OrderdetailById?.paymentMethod === 1 ? 'Tiền mặt' : '') }}
+                  </div>
+
+                </div>
+
                 <div class="col-md-6" *ngIf="OrderdetailById.description">
                   <p><strong>Mô tả đơn hàng:</strong></p>
-                  <textarea [(ngModel)]="OrderdetailById.description" rows="4" 
-                    style="width: 90%; resize: none;overflow: hidden; padding: 5px; " readonly></textarea>
-  
+                  <textarea [(ngModel)]="OrderdetailById.description" rows="4"
+                    style="width: 100%; resize: none;overflow: hidden;" readonly></textarea>
+
                 </div>
               </div>
-             
+
               <!-- <div class="col-md-6" *ngIf="OrderdetailById.status?.status_id !== 7">
                 
               </div> -->
-             
-              
+
+
             </div>
+            <div *ngIf="OrderdetailById.status?.status_id === 7">
+              <h3 style="margin-left: 3%;"><b>Hình ảnh khách hàng yêu cầu</b></h3>
+            </div>
+            <div class="product-list d-flex flex-row flex-nowrap overflow-auto"
+             style="margin-bottom: 10px;">
+            <ng-container *ngFor="let cate of OrderdetailById.requestImages; let i = index">
+              <div class="d-flex me-3">
+               
+                <a class="me-3" target="_blank" [href]="cate.fullPath">
+                  <div class="product-image-wrapper" style="cursor: pointer;">
+                    <img [src]="cate.fullPath" class="product-image img-md img-thumbnail" />
+                  </div>
+                </a>
+              </div>
+            </ng-container>
+          </div>
+        
+          <table class="table table-striped table-hover" *ngIf="OrderdetailById.status?.status_id !== 7"  >
+            <thead>
+              <tr>
+                <th style="width: 3%;">STT</th>
+                <th style="width: 35%;">Tên sản phẩm</th>
+                <th style="width: 10%;">Số lượng</th>
+                <th>Đơn giá(VND)</th>
+                <th style="width: 20%;">Trạng thái</th>
+                
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let product of productOfOrder; let i = index">
+                <td style="text-align: end;">{{ i + 1 }}</td> <!-- In số thứ tự, bắt đầu từ 1 -->
+                <td>{{product?.product_name}} {{product?.request_product_name}}</td>
+                <td style="text-align: right;">{{product?.quantity}}</td>
+                <td>{{product?.price | number:'1.0-3'}}</td>
+                <td>{{product?.status_job_name}}</td>
+                
+              </tr>
+            </tbody>
+            
+          </table>
           </div>
 
 
 
-            <div class="product-list d-flex flex-row flex-nowrap overflow-auto"
-              *ngIf="OrderdetailById.status?.status_id === 7" style="margin-bottom: 10px;">
-              <ng-container *ngFor="let cate of OrderdetailById.requestImages; let i = index">
-                <div class="d-flex me-3">
-                  <a class="me-3" target="_blank" [href]="cate.fullPath">
-                    <div class="product-image-wrapper" style="cursor: pointer;">
-                      <img [src]="cate.fullPath" class="product-image img-md img-thumbnail" />
-                    </div>
-                  </a>
-                </div>
-              </ng-container>
-            </div>
-          
-            <table class="table table-striped table-hover" *ngIf="OrderdetailById.status?.status_id !== 7" >
-              <thead>
-                <tr>
-                  <th style="width: 3%;">STT</th>
-                  <th style="width: 35%;">Tên sản phẩm</th>
-                  <th>Số lượng</th>
-                  <th>Đơn giá</th>
-                  <th style="width: 10%;">Trạng thái</th>
-                  
-                </tr>
-              </thead>
-              <tbody>
-                <tr *ngFor="let product of productOfOrder; let i = index">
-                  <td style="text-align: end;">{{ i + 1 }}</td> <!-- In số thứ tự, bắt đầu từ 1 -->
-                  <td>{{product?.product_name}} {{product?.request_product_name}}</td>
-                  <td style="text-align: right;">{{product?.quantity}}</td>
-                  <td>{{product?.price | number:'1.0-3'}}</td>
-                  <td>{{product?.status_job_name}}</td>
-                  
-                </tr>
-              </tbody>
-              
-            </table>
+         
           
         </div>
 
@@ -426,26 +413,24 @@
         <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close" (click)="closeModal($event) "
           (click)="cancelChangeStatusJob1()"></button>
       </div>
-      <div class="modal-body">
+      <div class="modal-body" style="font-size: 13px;">
         <div class="row" style="margin-bottom: 20px;">
           <div class="col md-6">
             <label for="cancelReason">Nhập số tiền cọc cần thanh toán</label>
-            <input min="0" type="number" class="form-control" id="percentDepositPrice" [(ngModel)]="depositeOrder"
-              (ngModelChange)="formatInputValue($event)">
+            <input min="0" type="text" class="form-control" id="percentDepositPrice" [(ngModel)]="depositeOrder">
           </div>
           <div class="col md-6">
-            <label>Số tiền cọc cần thanh toán </label>
+            <label> Số tiền cọc tối thiểu cần thanh toán</label>
 
-            <p style="color: red; text-align: center;">{{ OrderdetailById.deposite | number :
-              '1.0-3' }} VNĐ</p>
+
+            <p class="font-weight-bold"><span class="text-danger">
+                {{ OrderdetailById.deposite | number : '1.0-3' }}</span> <span class="text-danger"> VNĐ</span></p>
           </div>
         </div>
 
 
-
-
-        <p>Số tiền cần thanh toán còn lại: {{ OrderdetailById.totalAmount - OrderdetailById.deposite | number :
-          '1.0-3' }}</p>
+        <p class="font-weight-bold">Tổng giá trị đơn hàng: <span class="text-danger">{{ OrderdetailById.totalAmount |
+            number : '1.0-3' }}</span> <span class="text-danger"> VNĐ</span></p>
 
       </div>
       <div class="modal-footer">
@@ -481,91 +466,110 @@
     </div>
   </div>
 </div>
-
-
-<div class="modal fade" id="refundProductModal" tabindex="-1" aria-labelledby="myModalLabel1" aria-hidden="true"
+<!-- Thanh toán hoàn thành đơn hàng -->
+<div class="modal fade" id="myModal123" tabindex="-1" aria-labelledby="myModalLabel" aria-hidden="true"
   data-backdrop="static" data-keyboard="false">
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
-        <h2 class="modal-title" id="refundProductModal">Xác nhận hoàn tiền cho khách hàng</h2>
-        <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close" (click)="closeModal($event)"
-          (click)="cancelRefundModal()"></button>
+        <h2 class="modal-title" id="myModal">Thanh toán số tiền còn lại để hoàn thành đơn hàng</h2>
+        <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close"
+          (click)="closeModal($event)"></button>
       </div>
-
       <div class="modal-body">
         <div class="row">
-          <div class="col-md-6">
-            <p style="font-size: 14px;" class="blue-text">Mã đơn hàng: {{ OrderdetailById.code }}</p>
+          <div class="col md-6">
+            <label for="cancelReason">Nhập số tiền còn lại cần thanh toán</label>
+            <input min="0" type="text" class="form-control" id="moneyFisinish" [(ngModel)]="remain_price">
           </div>
-          <div class="col-md-6">
-            <p style="font-size: 14px;" class="blue-text"> Loại đơn hàng:
-              {{ OrderdetailById.specialOrder ? ' Đơn hàng theo yêu cầu' :' Đơn hàng có sẵn' }}</p>
-          </div>
-        </div>
-        <div class="row">
-          <div class="col-md-6">
-            <div class="form-group">
-              <label for="percentDepositPrice">Phần trăm tiền đặt cọc (%)</label> <span style="font-size: 16px;"
-                class="required-asterisk">*</span>
-              <input type="number" class="form-control" id="percentDepositPrice" [(ngModel)]="percentDepositPrice"
-                (ngModelChange)="updateDepositeAmount()" required min="0" max="100">
+          <div class="col md-6">
+            <label for="cancelReason">Số tiền cần thanh toán còn lại:</label>
 
-            </div>
+            <p> {{ OrderdetailById.totalAmount - OrderdetailById.deposite | number :
+              '1.0-3' }} VNĐ</p>
           </div>
-          <div class="col-md-6">
-            <div class="form-group">
-              <label for="depositeAmount">Tổng số tiền cọc hoàn lại (VNĐ)</label>
-              <input class="form-control" id="depositeAmount" [(ngModel)]="OrderdetailById.deposite"
-                [value]="depositeAmount | number : '1.0-3'" readonly>
-            </div>
-          </div>
-        </div>
-        <div class="row">
-          <div class="col-md-6">
-            <div class="form-group">
-              <label for="percentOrderPrice">Phần trăm giá đơn hàng (%)</label> <span style="font-size: 16px;"
-                class="required-asterisk">*</span>
-              <input type="number" class="form-control" id="percentOrderPrice" [(ngModel)]="percentOrderPrice" required
-                (ngModelChange)="updateTotalAmount()" max="100">
-            </div>
-          </div>
-          <div class="col-md-6">
-            <div class="form-group">
-              <label for="totalAmountA">Tổng số tiền đơn hàng hoàn lại (VNĐ)</label>
-              <input class="form-control" id="totalAmountA" [(ngModel)]="OrderdetailById.totalAmount"
-                [value]="totalAmountA | number : '1.0-3'" readonly>
-            </div>
-          </div>
-        </div>
-        <div class="row">
-          <div class="col-md-6">
-            <div class="form-group">
-              <label for="totalRefundAmount">Tổng số tiền hoàn lại (VNĐ)</label>
-
-            </div>
-          </div>
-          <div class="col-md-6">
-            <div class="form-group">
-              <input class="form-control" (ngModelChange)="updateTotalAmount()" placeholder="0" id="totalRefundAmount"
-                [(ngModel)]="tempTotalAmount" [value]="totalRefundAmount | number : '1.0-3'" readonly>
-            </div>
-          </div>
-        </div>
-
-        <div class="form-group">
-          <label for="cancelReason">Nội dung hoàn tiền</label> <span style="font-size: 16px;"
-            class="required-asterisk">*</span>
-          <textarea class="form-control" id="cancelReason" [(ngModel)]="cancelReasonPrice" rows="4" required></textarea>
         </div>
 
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-dismiss="modal" (click)="closeModal($event)"
-          (click)="cancelRefundModal()">Đóng</button>
-        <button type="button" class="btn btn-primary" (click)="RefundcancelOrder()">Chắc
-          chắn
-        </button>
+          (click)="cancelChangeStatusJob()">Đóng</button>
+        <button type="button" class="btn btn-primary"
+          (click)="changeStatusFinish(selectedModalJob,selectedModalId)">Chắc
+          chắn</button>
+
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<div class="modal fade" id="refundProductModal" tabindex="-1" aria-labelledby="refundProductModalLabel"
+  aria-hidden="true" data-backdrop="static" data-keyboard="false">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content" style="margin-bottom: 170px;">
+      <div class="modal-header">
+        <h2 class="modal-title" id="refundProductModalLabel">Xác nhận hoàn tiền cho khách hàng</h2>
+        <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close"
+          (click)="closeModal($event); cancelRefundModal()"></button>
+      </div>
+      <div class="modal-body">
+        <div class="row mb-3" style="font-size: 13px;">
+          <div class="col-md-6">
+            <p class="mb-0 font-weight-bold">Mã đơn hàng: {{ OrderdetailById.code }}</p>
+          </div>
+          <div class="col-md-6">
+            <p class="mb-0 font-weight-bold">Loại đơn hàng: {{ OrderdetailById.specialOrder ? 'Đơn hàng theo yêu cầu' :
+              'Đơn hàng có sẵn'
+              }}</p>
+          </div>
+        </div>
+        <div class="row mb-3" style="font-size: 13px;">
+          <div class="col-md-6">
+            <div class="form-group">
+              <label for="percentDepositPrice">Nhập số tiền hoàn đơn hàng</label>
+              <span class="required-asterisk">*</span>
+              <input type="text" class="form-control" id="percentDepositPrice" [(ngModel)]="percentDepositPrice"
+                required>
+            </div>
+          </div>
+
+          <div class="col-md-6">
+            <div class="form-group">
+              <label for="depositeAmount">Tổng số đã tiền cọc (VNĐ)</label>
+              <p class="mb-0 text-danger"> {{ OrderdetailById.deposite | number :
+                '1.0-3' }} VNĐ</p>
+            </div>
+          </div>
+        </div>
+        <div class="row mb-3" style="font-size: 13px;">
+          <div class="col-md-6">
+            <div class="form-group">
+              <label for="selectedReason">Chọn lý do hoàn tiền <span class="required-asterisk">*</span></label>
+              <select class="form-control" id="selectedReason" [(ngModel)]="selectedReason">
+                <option value="" selected disabled>Chọn lý do</option>
+                <option *ngFor="let ps of getStatusRefund" [value]="ps.refundId">{{ ps.refundName }}</option>
+              </select>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="form-group">
+              <label for="depositeAmount">Tổng số tiền đơn hàng (VNĐ)</label>
+              <p class="mb-0 text-danger"> {{ OrderdetailById.totalAmount | number :
+                '1.0-3' }} VNĐ</p>
+            </div>
+          </div>
+        </div>
+        <div class="form-group" style="font-size: 13px;">
+          <label for="cancelReason">Nội dung hoàn tiền</label>
+          <span class="required-asterisk">*</span>
+          <textarea class="form-control" id="cancelReason" [(ngModel)]="cancelReasonPrice" rows="4" required></textarea>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal"
+          (click)="closeModal($event); cancelRefundModal()">Đóng</button>
+        <button type="button" class="btn btn-primary" (click)="RefundcancelOrder()">Chắc chắn</button>
       </div>
     </div>
   </div>
@@ -588,8 +592,8 @@
             <div class="form-group">
               <label for="percentDepositPrice">Phần trăm giảm giá đơn hàng (%)</label> <span style="font-size: 16px;"
                 class="required-asterisk">*</span>
-              <input type="number" class="form-control" id="percentDepositPrice" [(ngModel)]="priceDiscount"
-                (ngModelChange)="updateDepositeAmount()" required min="0" max="100">
+              <input type="number" class="form-control" id="percentDepositPrice" [(ngModel)]="priceDiscount" required
+                min="0" max="100">
             </div>
           </div>
           <div class="col-md-6">
@@ -613,6 +617,162 @@
     </div>
   </div>
 </div>
+
+
+
+<div style="margin-left: 130px;" class="modal fade" id="myModal1234" tabindex="-1" role="dialog"
+  aria-labelledby="productDetailModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
+  <div class="modal-dialog modal-xl" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="productDetailModalLabel">Xác nhận thanh toán tiền đơn hàng</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close" (click)="closeModal($event)">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="row mb-3">
+          <div class="col-md-6">
+            <h4>Thông tin khách hàng: <b>{{OrderdetailById.userInfor?.fullname}} -
+                {{OrderdetailById.userInfor?.phoneNumber}} -
+                {{emailCustomer}}</b></h4>
+          </div>
+          <div class="col-md-3">
+            <h4>
+             Ngày tạo đơn:<b>{{OrderdetailById.orderDate | date:'dd/MM/yyyy'}}</b>
+            </h4>
+
+          </div>
+
+          <div class="col-md-3">
+            <h4>
+           
+                Mã đơn hàng:    <b>{{ OrderdetailById.code }}</b>
+   
+             
+            </h4>
+
+          </div>
+        </div>
+        <div class="row mb-3">
+          <div class="col-md-6">
+            <h4>Địa chỉ giao hàng: <b>{{OrderdetailById.userInfor?.address}}</b></h4>
+          </div>
+         
+          <div class="col-md-3">
+            <h4 style="color: green;">
+              <b> {{OrderdetailById.status?.status_name}}</b>
+            </h4>
+
+          </div>
+          <div class="col-md-3">
+            <label>
+              <h4>
+                <div *ngIf="selectedOrderDetail.specialOrder; else regularOrder">
+                  <b>
+                    Đơn hàng theo yêu cầu
+                  </b>
+
+                </div>
+                <ng-template #regularOrder>
+                  Đơn hàng có sẵn
+                </ng-template>
+              </h4>
+
+            </label>
+          </div>
+
+        </div>
+   
+        <div class="card">
+          <div class="card-header text-center bg-primary text-white" style="font-size: 15px;">
+            Thông tin đơn hàng
+          </div>
+
+          <table class="table table-striped table-hover" *ngIf="OrderdetailById.status?.status_id !== 7"
+            style="font-size: 13px;">
+            <thead>
+              <tr>
+                <th style="width: 3%;">STT</th>
+                <th style="width: 35%;">Tên sản phẩm</th>
+                <th>Số lượng sản phẩm</th>
+                <th>Đơn giá sản phẩm</th>
+                <th style="width: 20%;">Tình trạng sản phẩm</th>
+
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let product of productOfOrder; let i = index">
+                <td style="text-align: end;">{{ i + 1 }}</td> <!-- In số thứ tự, bắt đầu từ 1 -->
+                <td>{{product?.product_name}} {{product?.request_product_name}}</td>
+                <td style="text-align: right;">{{product?.quantity}}</td>
+                <td style="text-align: right;">{{product?.price | number:'1.0-3'}}</td>
+                <td>{{product?.status_job_name}}</td>
+
+              </tr>
+            </tbody>
+
+          </table>
+          <div class="card-body" style="font-size: 15px;">
+            <div class="row">
+
+              <div class="col-md-6" *ngIf="OrderdetailById.description">
+                <p><strong>Mô tả đơn hàng:</strong></p>
+                <textarea style="font-size: 15px;" [(ngModel)]="OrderdetailById.description" rows="4"
+                  class="form-control" readonly></textarea>
+              </div>
+              <div class="col-md-6" style="font-size: 15px;">
+                <div style="padding-bottom: 7px;" class="d-flex justify-content-between mb-2">
+                  <b>Phương thức thanh toán:</b>
+               <span>
+                    {{ OrderdetailById?.paymentMethod === 2 ? 'Chuyển khoản' : (OrderdetailById?.paymentMethod === 1 ? 'Tiền mặt' : '') }}
+                  </span>
+                </div>
+                <div style="padding-bottom: 7px;" class="d-flex justify-content-between mb-2">
+                  <b>Tổng số tiền đã cọc:</b>
+                  <span>{{ OrderdetailById.deposite | number: '1.0-3' }} VNĐ</span>
+                </div>
+                <div style="padding-bottom: 7px;" class="d-flex justify-content-between mb-2"
+                  *ngIf="OrderdetailById.status?.status_id !== 7">
+                  <b>Tổng giá trị đơn hàng:</b>
+                  <span>{{ totalAmoutOrder | number: '1.0-3' }} VNĐ</span>
+                </div>
+
+                <div style="padding-bottom: 7px;" class="d-flex justify-content-between mb-2" style="font-size: 20px;">
+                  <b style="color: red;">Tổng số tiền còn lại cần thanh toán:</b>
+                  <span style="color: red;">{{ totalAmoutOrder - OrderdetailById.deposite | number: '1.0-3' }}
+                    VNĐ</span>
+                </div>
+
+              </div>
+            </div>
+          </div>
+        </div>
+
+
+      </div>
+      <div class="row">
+        <div class="col-md-6" style="font-size: 15px">
+
+        </div>
+        <div class="col-md-6" style=" font-size: 20px;">
+          <label for="">Nhập số tiền còn lại để thanh toán đơn hàng</label>
+          <input style="margin-bottom: 5px; margin-right: 5px;" min="0" type="text" class="form-control"
+            id="moneyFisinish" [(ngModel)]="remain_price">
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal" (click)="closeModal($event)"
+          (click)="cancelChangeStatusJob()">Đóng</button>
+        <button type="button" class="btn btn-primary"
+          (click)="changeStatusFinish(selectedModalJob,selectedModalId)">Thanh toán</button>
+
+      </div>
+    </div>
+  </div>
+</div>
+
+
 
 
 <div *ngIf="isLoadding" class="loading-overlay">

@@ -163,6 +163,7 @@ public class ProductController {
     @GetMapping("/ViewDetailProductById")
     public ApiResponse<?> GetProductByIdWithImage(@RequestParam("id") int id) {
         ApiResponse<ProductDetailDTO> apiResponse = new ApiResponse<>();
+        jedis.del("all_sub_mate_product");
         apiResponse.setResult(productService.GetProductByIdWithImage(id));
         return apiResponse;
     }
@@ -491,7 +492,8 @@ public class ProductController {
     public ApiResponse<?> getProductSubMaterialAndMaterialByProductId(@RequestParam("id") int id) {
         ApiResponse<List> apiResponse = new ApiResponse<>();
         String cacheKey = "all_sub_mate_product";
-       // jedis.del("all_products_customer");
+
+        jedis.del("all_sub_mate_product");
         List<SubMateProductDTO> products;
         String cachedData = jedis.hget(cacheKey, id + "");
         Gson gson = new GsonBuilder().setDateFormat("MMM dd, yyyy").create();

@@ -239,9 +239,8 @@ export class OrderRequiredComponent implements OnInit {
           response => {
             this.isLoadding = false;
             this.toastr.success('Đặt hàng thành công!', 'Thành công');
-            timer(2000).subscribe(() => {
-              window.location.reload();
-            });
+           this.onCancel();
+           this.onResetImage();
           },
           error => {
             this.isLoadding = false;

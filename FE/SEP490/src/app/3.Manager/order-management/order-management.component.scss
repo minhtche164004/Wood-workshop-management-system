@@ -11,6 +11,11 @@
   max-width: 100%;
   padding: 0 15px; // khoảng cách cho các thiết bị nhỏ hơn
 }
+.custom-textarea {
+  width: 100%; /* Hoặc giá trị cụ thể như '500px' */
+  height: 750px; /* Hoặc giá trị cụ thể như '300px' */
+  box-sizing: border-box; /* Đảm bảo padding và border được tính vào kích thước tổng */
+}
 
 .table-responsive {
   margin: 30px 0;

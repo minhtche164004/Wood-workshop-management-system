@@ -57,6 +57,7 @@
               <thead>
                 <tr>
                   <th>Mã nguyên vật liệu</th>
+                  <th style="width: 150px;">Mã xuất nhập kho</th>
                   <th style="width: 100px;">Thao tác với kho</th>
                   <th>Tên nguyên vật liệu</th>
                   <th>Mô tả</th>
@@ -64,7 +65,7 @@
                   <th style="width: 120px;">Ngày hiệu lực</th>
                  
                   <th style="width: 100px;">Số lượng trong kho</th>
-                  <th style="width: 150px;">Biến động số lượng</th>
+                  <!-- <th style="width: 150px;">Biến động số lượng</th> -->
                   <th>Giá nhập</th>
                   <th>Giá bán</th>
  
@@ -79,14 +80,15 @@
                 <tr
                   *ngFor="let job of list_submaterinput_manage | paginate: { itemsPerPage: 10, currentPage: currentPage }; let i = index">
                   <td style="min-width: 150px;">{{ job.subMaterials.code }}</td>
+                   <td style="text-align: right;min-width: 50px; ">{{ job.code_input }}</td>
                   <td style="min-width: 150px;">{{ job.actionType.action_name }}</td>
                   <td style="min-width: 150px;">{{ job.subMaterials.subMaterialName }}</td>
                   <td style="min-width: 100px;">{{ job.subMaterials.description}}</td>
                   <td>{{ job.create_date  | date:'dd/MM/yyyy' }}</td>
                   <td>{{ job.date_input  | date:'dd/MM/yyyy' }}</td>
                  
-                  <td style="text-align: right;min-width: 50px; ">{{ job.total_quantity }}</td>
-                  <td style="text-align: right;min-width: 50px; ">{{ job.change_quantity }}</td>
+                  <td style="text-align: right;min-width: 50px; ">{{ job.quantity }}</td>
+                  <!-- <td style="text-align: right;min-width: 50px; ">{{ job.change_quantity }}</td> -->
 
                   <td style="text-align: right;">{{ job.input_price | number: '1.0-3' }}</td>
                   <td style="text-align: right;">{{ job.out_price | number: '1.0-3' }}</td>

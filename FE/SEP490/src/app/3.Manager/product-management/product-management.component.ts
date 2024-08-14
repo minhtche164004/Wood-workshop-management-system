@@ -33,7 +33,8 @@ interface SubMaterial {
   subMaterialId: number;
   subMaterialName: string;
   unitPrice: number;
-  code: string
+  code: string;
+  input_id: number;
 }
 interface MaterialItem {
   subMaterialId: string;
@@ -46,6 +47,8 @@ interface SubMaterialItemOfProduct {
   quantity: number;
   unitPrice: number;
   materialType: string;
+  input_id: number;
+  code: string;
 }
 declare var $: any; // khai bao jquery
 
@@ -511,7 +514,7 @@ export class ProductManagementComponent implements OnInit {
   fillMaterialItemEdit(material: SubMaterialItemOfProduct) {
     const itemFormGroup = this.fb.group({
       materialId: [material.materialId],
-      subMaterialId: [material.subMaterialId],
+      subMaterialId: [material.input_id],
       subMaterialName: [material.subMaterialName],
       materialType: [material.materialType],
       quantity: [material.quantity],
@@ -909,14 +912,14 @@ export class ProductManagementComponent implements OnInit {
   onSubMaterialChange(event: Event, index: number) {
     const selectedValue = Number((event.target as HTMLSelectElement).value);
     // Check for duplicates
-    if (Object.values(this.selectedSubMaterialId).includes(selectedValue)) {
-      this.toastr.warning('Nguyên vật liệu đã được chọn. Vui lòng chọn nguyên vật liệu khác', 'Lỗi');
-      this.selectedSubMaterialId[index] = null;
-      return;
-    }
+    // if (Object.values(this.selectedSubMaterialId).includes(selectedValue)) {
+    //   this.toastr.warning('Nguyên vật liệu đã được chọn. Vui lòng chọn nguyên vật liệu khác', 'Lỗi');
+    //   this.selectedSubMaterialId[index] = null;
+    //   return;
+    console.log('selectedValue:', selectedValue);
     this.totalUnitPrice = 0;
     this.selectedSubMaterialId[index] = Number((event.target as HTMLSelectElement).value);
-    const selectedSubMaterial = this.subMaterials[index].find(subMaterial => subMaterial.subMaterialId === this.selectedSubMaterialId[index]);
+    const selectedSubMaterial = this.subMaterials[index].find(subMaterial => subMaterial.input_id === selectedValue);
     this.unitPriceSubMaterial[index] = selectedSubMaterial ? selectedSubMaterial.unitPrice : '';
 
     //tinh lai totalUnitPrice(tong gia uoc tinh nguyen vat lieu)
@@ -962,17 +965,17 @@ export class ProductManagementComponent implements OnInit {
     const endIndex1 = startIndex1 + 9;
 
     // Check for duplicates within the specified range
-    for (let i = startIndex1; i <= endIndex1; i++) {
-      if (this.selectedSubMaterialId[i] && Object.values(this.selectedSubMaterialId[i]).includes(selectedValue)) {
-        this.toastr.warning('Nguyên vật liệu đã được chọn. Vui lòng chọn nguyên vật liệu khác', 'Lỗi');
-        this.selectedSubMaterialId[index] = null;
-        return;
-      }
-    }
+    // for (let i = startIndex1; i <= endIndex1; i++) {
+    //   if (this.selectedSubMaterialId[i] && Object.values(this.selectedSubMaterialId[i]).includes(selectedValue)) {
+    //     this.toastr.warning('Nguyên vật liệu đã được chọn. Vui lòng chọn nguyên vật liệu khác', 'Lỗi');
+    //     this.selectedSubMaterialId[index] = null;
+    //     return;
+    //   }
+    // }
 
     this.totalUnitPrice = 0;
     this.selectedSubMaterialId[index] = Number((event.target as HTMLSelectElement).value);
-    const selectedSubMaterial = this.subMaterials[index].find(subMaterial => subMaterial.subMaterialId === this.selectedSubMaterialId[index]);
+    const selectedSubMaterial = this.subMaterials[index].find(subMaterial => subMaterial.input_id === selectedValue);
     this.unitPriceSubMaterial[index] = selectedSubMaterial ? selectedSubMaterial.unitPrice : '';
 
     this.totalPriceSubmatePerProducRequest[indexOfItemRProduct] = 0;
@@ -1132,7 +1135,7 @@ export class ProductManagementComponent implements OnInit {
       if (productData.price) {
         productData.price = Number(productData.price.replace(/,/g, ''));
       }
-      // console.log('data goc:', this.materialForm.value);
+      console.log('data goc:', this.materialForm.value);
       var temp = this.materialForm.value;
 
       // tach lay quantity va subMaterialId
@@ -1154,7 +1157,7 @@ export class ProductManagementComponent implements OnInit {
             productId: response.result.productId,
             subMaterialQuantities: transformedObject
           };
-          return this.productListService.createExportMaterialProduct(transformedData);
+          return this.productListService.createExportMaterialProduct(transformedData,);
         }),
         catchError(error => {
           this.isLoadding = false;

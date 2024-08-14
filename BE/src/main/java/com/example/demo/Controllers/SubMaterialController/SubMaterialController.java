@@ -11,6 +11,7 @@ import com.example.demo.Dto.SubMaterialDTO.SubMaterialDTO;
 import com.example.demo.Dto.SubMaterialDTO.SubMaterialViewDTO;
 import com.example.demo.Dto.SubMaterialDTO.UpdateSubDTO;
 import com.example.demo.Entity.*;
+import com.example.demo.Repository.InputSubMaterialRepository;
 import com.example.demo.Response.ApiResponse;
 import com.example.demo.Service.JobService;
 import com.example.demo.Service.ProductService;
@@ -43,6 +44,8 @@ import java.util.stream.Collectors;
 @RequestMapping("/api/auth/submaterial/")
 @AllArgsConstructor
 public class SubMaterialController {
+    @Autowired
+    private InputSubMaterialRepository inputSubMaterialRepository;
     @Autowired
     private SubMaterialService subMaterialService;
     @Autowired
@@ -204,6 +207,27 @@ public class SubMaterialController {
     public ApiResponse<?> getProductSubMaterialByProductId(@RequestParam("id") int id,@RequestParam("mate_id") int mate_id) {
         ApiResponse<List> apiResponse = new ApiResponse<>();
         apiResponse.setResult(subMaterialService.getProductSubMaterialByProductId(id,mate_id));
+        return apiResponse;
+    }
+
+    @GetMapping("/findAllInputSubMaterialsOrderByCodeAndDate")
+    public ApiResponse<?> findAllInputSubMaterialsOrderByCodeAndDate() {
+        ApiResponse<List> apiResponse = new ApiResponse<>();
+        apiResponse.setResult(inputSubMaterialRepository.findAllInputSubMaterialsOrderByCodeAndDate());
+        return apiResponse;
+    }
+
+    @GetMapping("/findLatestSubMaterialInputSubMaterialBySubMaterialId")
+    public ApiResponse<?> findLatestSubMaterialInputSubMaterialBySubMaterialId(@RequestParam("subMaterialId") int subMaterialId) {
+        ApiResponse<InputSubMaterial> apiResponse = new ApiResponse<>();
+        apiResponse.setResult(inputSubMaterialRepository.findLatestSubMaterialInputSubMaterialBySubMaterialId(subMaterialId));
+        return apiResponse;
+    }
+
+    @GetMapping("/findLatestSubMaterialInputSubMaterialBySubMaterialIdGroupByCode")
+    public ApiResponse<?> findLatestSubMaterialInputSubMaterialBySubMaterialIdGroupByCode(@RequestParam("code_input") String code_input,@RequestParam("subMaterialId") int subMaterialId) {
+        ApiResponse<InputSubMaterial> apiResponse = new ApiResponse<>();
+        apiResponse.setResult(inputSubMaterialRepository.findLatestSubMaterialInputSubMaterialBySubMaterialIdGroupByCode(code_input,subMaterialId));
         return apiResponse;
     }
 

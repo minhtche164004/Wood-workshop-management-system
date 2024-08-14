@@ -215,20 +215,19 @@ public interface AdvancesalaryRepository extends JpaRepository<Advancesalary,Int
 
 
     //tổng số tiền nhập nguyên vật liệu
-    @Query("SELECT SUM(ism.total_quantity * ism.out_price) AS total FROM SubMaterials s" +
+    @Query("SELECT SUM(ism.quantity * ism.out_price) AS total FROM SubMaterials s" +
             " LEFT JOIN InputSubMaterial ism ON s.subMaterialId = ism.subMaterials.subMaterialId" +
             " LEFT JOIN s.material m " +
-            "WHERE (ism.date_input, ism.input_id) IN ( " +
-            "   SELECT MAX(ism2.date_input), MAX(ism2.input_id) " +
-            "   FROM InputSubMaterial ism2 " +
-            "   WHERE ism2.subMaterials.subMaterialId = s.subMaterialId " +
-            "   GROUP BY ism2.subMaterials.subMaterialId " +
-            ")")
+            "WHERE " +
+            "ism.input_id = ("  +
+            " SELECT MAX(ism2.input_id)" +
+            "FROM InputSubMaterial ism2" +
+            " WHERE ism2.code_input = ism.code_input)")
     BigDecimal totalAmountSubMaterial();
 
 
 
-    @Query("SELECT SUM(ism.total_quantity * ism.out_price) AS total " +
+    @Query("SELECT SUM(ism.quantity * ism.out_price) AS total " +
             "FROM InputSubMaterial ism " +
             "WHERE MONTH(ism.date_input) = :month " +
             "AND YEAR(ism.date_input) = :year")

@@ -44,16 +44,12 @@ public interface RequestProductsSubmaterialsRepository extends JpaRepository<Req
     List<String> GetSubNameByProductId(int query);
 
     @Query("SELECT new com.example.demo.Dto.SubMaterialDTO.SubMateProductRequestDTO( " +
-            "m.materialId ,sub.subMaterialId ,sub.subMaterialName, m.type, ism.out_price, j.quantity) " +
+            "m.materialId ,sub.subMaterialId ,sub.subMaterialName, m.type, ism.out_price, j.quantity,ism.code_input,ism.input_id) " +
             "FROM RequestProductsSubmaterials j " +
             "LEFT JOIN j.subMaterial sub " +
-            "LEFT JOIN InputSubMaterial ism ON sub.subMaterialId = ism.subMaterials.subMaterialId" +
+            "LEFT JOIN j.inputSubMaterial ism " +
             " LEFT JOIN sub.material m " + // Di chuyển điều kiện WHERE vào đây
-            "WHERE (ism.date_input, ism.input_id) IN ( " +
-            "   SELECT MAX(ism2.date_input), MAX(ism2.input_id) " +
-            "   FROM InputSubMaterial ism2 " +
-            "   WHERE ism2.subMaterials.subMaterialId = sub.subMaterialId " +
-            "   GROUP BY ism2.subMaterials.subMaterialId ) AND j.requestProduct.requestProductId = :requestProductId")
+            "WHERE j.requestProduct.requestProductId = :requestProductId")
     List<SubMateProductRequestDTO> getRequestProductSubMaterialByRequestProductIdDTO(int requestProductId);
 
 //    @Query("SELECT SUM(latestInput.total_quantity * latestInput.out_price) AS total FROM (" +

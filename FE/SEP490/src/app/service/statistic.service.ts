@@ -39,6 +39,7 @@ export class StatisticService {
 
   private apiFindTotalSalaryByMonthAndYear = `${environment.apiUrl}api/auth/statistic`
 
+  private apiTotalSalaryNotPayment = `${environment.apiUrl}api/auth/statistic/TotalSalaryNotPayment`
   constructor(private http: HttpClient) { }
   statisticFindTotalSalaryByMonthAndYear(month: number, year: number): Observable<any> {
     const params = new HttpParams()
@@ -115,6 +116,10 @@ export class StatisticService {
   }
   getCountRQProduct(): Observable<any> {
     return this.http.get<any>(this.apiCountRQProduct);
+  }
+
+  getTotalSalaryNotPayment(): Observable<any> {
+    return this.http.get<any>(this.apiTotalSalaryNotPayment);
   }
   countProductByMonthYear(status_id: number, month: number, year: number): Observable<any> {
     const params = new HttpParams()

@@ -53,8 +53,8 @@ public interface SubMaterialService {
 
 //    List<Employeematerials> filterEmployeematerialsByMaterialType(int materialId);
 
-    List<ProductSubMaterials> EditSubMaterialProduct(int product_id, Map<Integer, Double> subMaterialQuantities,int input_id);
-    List<RequestProductsSubmaterials> EditSubMaterialRequestProduct(int request_product_id, Map<Integer, Double> subMaterialQuantities,int input_id);
+    List<ProductSubMaterials> EditSubMaterialProduct(int product_id, Map<Integer, Double> subMaterialQuantities);
+    List<RequestProductsSubmaterials> EditSubMaterialRequestProduct(int request_product_id, Map<Integer, Double> subMaterialQuantities);
 
     List<InputSubMaterial> getAllInputSubMaterial();
 

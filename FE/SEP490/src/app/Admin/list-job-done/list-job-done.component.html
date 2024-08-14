@@ -29,7 +29,9 @@
                 </select>
                 <select [(ngModel)]="selectedJob">
                   <option value="" selected>Tất cả tiến độ sản xuất</option>
-                  <option *ngFor="let ps of job" [value]="ps.status_id" [hidden]="ps.status_id !== 13 && ps.status_id !== 16 && ps.status_id !== 15">{{ ps.status_name }}</option>
+                  <option *ngFor="let ps of job" [value]="ps.status_id"
+                    [hidden]="ps.status_id !== 13 && ps.status_id !== 16 && ps.status_id !== 15">{{ ps.status_name }}
+                  </option>
                 </select>
 
                 <input type="text" class="form-control" placeholder="Tìm kiếm theo tên nhân viên..."
@@ -42,6 +44,7 @@
               </div>
             </div>
           </div>
+
         </div>
         <div class="table-container">
           <div class="table-responsive">
@@ -49,7 +52,7 @@
               <thead>
                 <tr>
 
-                  <th>Mã việc làm</th>
+                  <th style="width: 15%;">Mã việc làm</th>
 
 
                   <th>Tên nhân viên</th>
@@ -62,6 +65,8 @@
                   <!-- <th>Lương(VNĐ)</th> -->
                 </tr>
               </thead>
+
+
               <tbody>
                 <tr
                   *ngFor="let job of job_admin | paginate: { itemsPerPage: 10, currentPage: currentPage }; let i = index">
@@ -69,6 +74,7 @@
                   <td>{{ job.code }}</td>
 
                   <!--   
+>>>>>>> babb0cdf36e2d3c5be5733f3bf3dab780c695af0
                     <td class="action-buttons">
                       <a href="#" class="settings" title="Chỉnh sửa" data-toggle="modal" data-target="#editAccountModal"
                         >
@@ -92,7 +98,7 @@
 
 
 
-                  <td style="min-width: 100px;">{{ job.request_name }} {{job.product_name}}</td>
+                  <td>{{ job.request_name }} {{job.product_name}}</td>
                   <td style="min-width: 20px; text-align: right;">{{ job.quantity }}</td>
 
                 </tr>

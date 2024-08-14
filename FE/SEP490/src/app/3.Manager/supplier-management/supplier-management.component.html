@@ -48,15 +48,16 @@
             </tr>
           </thead>
           <tbody>
-            <tr *ngFor="let supplier of suppliers | paginate: { itemsPerPage: 10, currentPage: currentPage }; let i = index">
+            <tr
+              *ngFor="let supplier of suppliers | paginate: { itemsPerPage: 10, currentPage: currentPage }; let i = index">
               <td>{{ i + 1 + (currentPage - 1) * 10 }}</td>
               <td class="action-buttons">
-                <a href="#" class="settings" title="Chỉnh sửa thông tin" data-toggle="modal" data-target="#editAccountModal"
-                  (click)="getDatasupplierMaterial(supplier.supplierMaterial)">
+                <a href="#" class="settings" title="Chỉnh sửa thông tin" data-toggle="modal"
+                  data-target="#editAccountModal" (click)="getDatasupplierMaterial(supplier.supplierMaterial)">
                   <i class="fa-solid fa-pen-to-square"></i>
                 </a>
-                <a href="#" class="delete" title="Xóa nhà cung cấp" data-toggle="modal" data-target="#confirmDeleteModal"
-                  (click)="setDeleteId(supplier.supplierMaterial)">
+                <a href="#" class="delete" title="Xóa nhà cung cấp" data-toggle="modal"
+                  data-target="#confirmDeleteModal" (click)="setDeleteId(supplier.supplierMaterial)">
                   <i class="fa-regular fa-trash-can"></i>
                 </a>
               </td>
@@ -66,35 +67,37 @@
             </tr>
           </tbody>
         </table>
-      
+
         <!-- Pagination controls -->
         <pagination-controls style="justify-content: right; display: flex;" (pageChange)="currentPage = $event"
           previousLabel="Trang trước" nextLabel="Trang sau" [maxSize]="3">
         </pagination-controls>
-      
+
         <!-- Display data information -->
         <div class="clearfix" style="justify-content: right; display: flex;">
           <div class="hint-text">Hiển thị <b>{{ (currentPage - 1) * 10 + 1 }}</b> tới <b>{{ currentPage * 10
-              > suppliers.length ? suppliers.length : currentPage * 10 }}</b> trong số <b>{{ suppliers.length }}</b> dữ liệu
+              > suppliers.length ? suppliers.length : currentPage * 10 }}</b> trong số <b>{{ suppliers.length }}</b> dữ
+            liệu
           </div>
         </div>
       </div>
-      
+
       <!-- Display no data message -->
       <div *ngIf="checkNotFound">
         <div style="background-color: white;">
           <div class="d-flex justify-content-center align-items-center" style="height: 200px;">
-            <img src="https://encrypted-tbn2.gstatic.com/images?q=tbn:ANd9GcSG53pYn6cpXaiwT_q6IM45P-rXg5dUw67XqRmr9-vtsbMoHnCG"
+            <img
+              src="https://encrypted-tbn2.gstatic.com/images?q=tbn:ANd9GcSG53pYn6cpXaiwT_q6IM45P-rXg5dUw67XqRmr9-vtsbMoHnCG"
               alt="Not Found" style="width: 150px; height: 150px; object-fit: cover;">
             <p class="text-center">Không tìm thấy!</p>
           </div>
         </div>
       </div>
-      
+
     </div>
   </div>
 
- 
+
   <!-- Modal for Add Product -->
   <div class="modal fade" id="addProductModal" tabindex="-1" role="dialog" aria-labelledby="addProductModalLabel"
     aria-hidden="true">
@@ -102,7 +105,7 @@
     <div class="modal-dialog" role="document">
       <div class="modal-content">
         <div class="modal-header">
-          <h2 class="modal-title text-center" (click)="loadMaterials()" id="addProductModalLabel">Thêm nhà cung cấp
+          <h2 class="modal-title text-center" (click)="loadMaterials()" id="addProductModalLabel">Thêm nhà cung cấp vật liệu
           </h2>
           <button type="button" class="close" data-dismiss="modal" aria-label="Close">
             <span aria-hidden="true">&times;</span>
@@ -111,24 +114,48 @@
         <div class="modal-body">
           <form (ngSubmit)="addSupplier()">
             <div class="form-group">
-              <label for="productName">Tên nhà cung cấp</label>
-              <input type="text" class="form-control" name="supplierName" id="supplierName"
-                placeholder="Nhập tên nhà cung cấp" [(ngModel)]="supplierName" required>
+              <div class="row">
+                <div class="col-md-4">
+                  <label for="productName">Tên nhà cung cấp</label>
+                </div>
+                <div class="col-md-8">
+                  <input type="text" class="form-control" name="supplierName" id="supplierName"
+                    placeholder="Nhập tên nhà cung cấp" [(ngModel)]="supplierName" required>
+                </div>
+              </div>
+
+
             </div>
             <div class="form-group">
-              <label for="productName" style="margin-right: 20px;">Kiểu vật liệu</label>
-              <select name="selectedMaterial" [(ngModel)]="selectedMaterial">
-                <option [ngValue]="null" disabled selected>Chọn danh mục</option>
-                <option *ngFor="let category of materials" [ngValue]="category.subMaterialId">{{
-                  category.subMaterialName }}
-                </option>
-              </select>
+              <div class="row">
+                <div class="col-md-4">
+                  <label for="productName" style="margin-right: 20px;">Kiểu vật liệu</label>
+                </div>
+                <div class="col-md-8">
+                  <select name="selectedMaterial" [(ngModel)]="selectedMaterial">
+                    <option [ngValue]="null" disabled selected>Chọn danh mục</option>
+                    <option *ngFor="let category of materials" [ngValue]="category.subMaterialId">{{
+                      category.subMaterialName }}
+                    </option>
+                  </select>
+                </div>
+              </div>
+
+
             </div>
 
             <div class="form-group">
-              <label for="productDescription">Số điện thoại</label>
-              <input type="text" class="form-control" name="phoneNumber" id="supplierPhone" rows="3"
-                placeholder="Số điện thoại nhà cung cấp" [(ngModel)]="phoneNumber">
+              <div class="row">
+                <div class="col-md-4">
+                  <label for="productDescription">Số điện thoại</label>
+                </div>
+                <div class="col-md-8">
+                  <input type="text" class="form-control" name="phoneNumber" id="supplierPhone" rows="3"
+                    placeholder="Số điện thoại nhà cung cấp" [(ngModel)]="phoneNumber">
+                </div>
+              </div>
+
+
             </div>
 
             <div class="modal-footer">
@@ -196,7 +223,7 @@
     <div class="modal-dialog" role="document">
       <div class="modal-content">
         <div class="modal-header ">
-          <h2 class="modal-title" id="confirmDeleteModalLabel">Xác nhận xóa</h2>
+          <h2 class="modal-title" id="confirmDeleteModalLabel">Xác nhận xóa nhà cung cấp</h2>
           <button type="button" class="close" data-dismiss="modal" aria-label="Close">
             <span aria-hidden="true">&times;</span>
           </button>
@@ -205,8 +232,8 @@
           Bạn có chắc chắn muốn xóa nhà cung cấp vật liệu?
         </div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-dismiss="modal">Hủy bỏ</button>
-          <button type="button" class="btn btn-primary" (click)="deleteSupplier()">Xóa</button>
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
+          <button type="button" class="btn btn-primary" (click)="deleteSupplier()">Xác nhận</button>
         </div>
       </div>
     </div>

@@ -42,11 +42,14 @@ public interface InputSubMaterialRepository extends JpaRepository<InputSubMateri
             ")")
     InputSubMaterial findLatestSubMaterialInputSubMaterialBySubMaterialId(@Param("subMaterialId") int subMaterialId);
 
-    @Query("SELECT ism, MAX(ism.date_input) AS latestDate,MAX(ism.input_id) AS lastId " +
+    @Query("SELECT ism " +
             "FROM InputSubMaterial ism " +
-            "WHERE ism.code_input = :code_input AND ism.subMaterials.subMaterialId = :subMaterialId " +
-            "GROUP BY ism.code_input " +
-            "ORDER BY latestDate DESC")
+            "LEFT JOIN ism.subMaterials s  " +
+            "WHERE " +
+            "ism.input_id = ("  +
+            " SELECT MAX(ism2.input_id)" +
+            "FROM InputSubMaterial ism2" +
+            " WHERE ism2.code_input = ism.code_input) AND ism.code_input = :code_input AND s.subMaterialId = :subMaterialId")
     InputSubMaterial findLatestSubMaterialInputSubMaterialBySubMaterialIdGroupByCode(@Param("code_input") String code_input,
             @Param("subMaterialId") int subMaterialId);
 
@@ -60,7 +63,8 @@ public interface InputSubMaterialRepository extends JpaRepository<InputSubMateri
 
     @Query("SELECT ism"+
            " FROM InputSubMaterial ism " +
-          " WHERE ism.input_id = ("  +
+          " WHERE " +
+            "ism.input_id = ("  +
           " SELECT MAX(ism2.input_id)" +
            "FROM InputSubMaterial ism2" +
            " WHERE ism2.code_input = ism.code_input)")

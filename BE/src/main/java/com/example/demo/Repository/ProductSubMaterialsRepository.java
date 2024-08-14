@@ -37,10 +37,11 @@ public interface ProductSubMaterialsRepository extends JpaRepository<ProductSubM
             "LEFT JOIN InputSubMaterial ism ON s.subMaterialId = ism.subMaterials.subMaterialId" +
             " LEFT JOIN s.material m " + // Di chuyển điều kiện WHERE vào đây
             "WHERE " +
-            "ism.input_id = ("  +
-            " SELECT MAX(ism2.input_id)" +
-            "FROM InputSubMaterial ism2" +
-            " WHERE ism2.code_input = ism.code_input) AND  p.product.productId = :query AND p.subMaterial.material.materialId IN (1, 4)")
+            "(ism.input_id, ism.date_input) IN (" +
+            "SELECT MAX(ism2.input_id), MAX(ism2.date_input) " +
+            "FROM InputSubMaterial ism2 " +
+            "GROUP BY ism2.code_input " +
+            ") AND  p.product.productId = :query AND p.subMaterial.material.materialId IN (1, 4)")
     List<SubMaterialViewDTO> GetSubMaterialByProductId(int query);
 
     @Query("SELECT p.product " +

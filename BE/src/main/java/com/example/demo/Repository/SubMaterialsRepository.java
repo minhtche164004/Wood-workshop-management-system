@@ -27,7 +27,7 @@ public interface SubMaterialsRepository extends JpaRepository<SubMaterials,Integ
     @Query("SELECT u FROM Action_Type u  WHERE u.action_type_id = :query")
     Action_Type findByIdAction(int query);
 
-    @Query("SELECT u FROM InputSubMaterial u ")
+    @Query("SELECT u FROM InputSubMaterial u ORDER BY u.date_input DESC, u.code_input DESC")
     List<InputSubMaterial> getAllInputSubMaterial();
 
     @Query("SELECT new com.example.demo.Dto.SubMaterialDTO.SubMaterialViewDTO(" +
@@ -80,11 +80,11 @@ public interface SubMaterialsRepository extends JpaRepository<SubMaterials,Integ
             "s.subMaterialId, COALESCE(s.subMaterialName, ''), m.materialId, COALESCE(s.description, '')," +
             " COALESCE(m.materialName, '')," +
             "ism.quantity, ism.out_price, ism.input_price, m.type,s.code,ism.input_id) " +
-
             "FROM SubMaterials s " +
             "LEFT JOIN InputSubMaterial ism ON s.subMaterialId = ism.subMaterials.subMaterialId" +
             " LEFT JOIN s.material m " + // Di chuyển LEFT JOIN s.material m đến đây
-            "WHERE ism.input_id = ("  +
+            "WHERE " +
+            " ism.input_id = ("  +
             " SELECT MAX(ism2.input_id)" +
             "FROM InputSubMaterial ism2" +
             " WHERE ism2.code_input = ism.code_input)")
@@ -124,18 +124,12 @@ public interface SubMaterialsRepository extends JpaRepository<SubMaterials,Integ
 
     @Query("SELECT new com.example.demo.Dto.SubMaterialDTO.SubMaterialViewDTO(" +
             "s.subMaterialId, COALESCE(s.subMaterialName, ''), m.materialId, COALESCE(s.description, ''), " +
-
             "COALESCE(m.materialName, ''), ism.quantity, ism.out_price, ism.input_price,m.type,s.code,ism.input_id) " + // Thêm dấu phẩy và loại bỏ COALESCE cho các ID
-
-            "FROM SubMaterials s " +
-            "LEFT JOIN InputSubMaterial ism ON s.subMaterialId = ism.subMaterials.subMaterialId" +
-            " LEFT JOIN s.material m " + // Di chuyển điều kiện WHERE vào đây
-            "WHERE " +
-            "ism.input_id = ("  +
-            " SELECT MAX(ism2.input_id)" +
-            "FROM InputSubMaterial ism2" +
-            " WHERE ism2.code_input = ism.code_input) AND s.subMaterialId = :subMaterialId")
-    SubMaterialViewDTO findSubMaterialsById(int subMaterialId);
+            "FROM InputSubMaterial ism " +
+            "LEFT JOIN ism.subMaterials s " +
+            " LEFT JOIN s.material m " +
+            "WHERE ism.input_id = :input_id ")
+    SubMaterialViewDTO findSubMaterialsById(int input_id);
 
 
 //    @Query("SELECT u FROM SubMaterials u WHERE u.material.materialId = :query")

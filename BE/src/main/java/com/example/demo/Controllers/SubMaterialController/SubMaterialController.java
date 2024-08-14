@@ -161,7 +161,7 @@ public class SubMaterialController {
         return apiResponse;
     }
     @PutMapping("/EditSubMaterialRequestProduct")
-    public ApiResponse<?> EditSubMaterialRequestProduct(@RequestBody CreateExportMaterialProductRequest request) {
+    public  ApiResponse<?> EditSubMaterialRequestProduct(@RequestBody CreateExportMaterialProductRequest request) {
         ApiResponse<List> apiResponse = new ApiResponse<>();
         jedis.del("all_sub_mate_re_product");
         apiResponse.setResult(subMaterialService.EditSubMaterialRequestProduct(request.getProductId(), request.getSubMaterialQuantities()));
@@ -228,6 +228,13 @@ public class SubMaterialController {
     public ApiResponse<?> findLatestSubMaterialInputSubMaterialBySubMaterialIdGroupByCode(@RequestParam("code_input") String code_input,@RequestParam("subMaterialId") int subMaterialId) {
         ApiResponse<InputSubMaterial> apiResponse = new ApiResponse<>();
         apiResponse.setResult(inputSubMaterialRepository.findLatestSubMaterialInputSubMaterialBySubMaterialIdGroupByCode(code_input,subMaterialId));
+        return apiResponse;
+    }
+
+    @GetMapping("/findLatestSubMaterialInputSubMaterialBySubMaterialIdGroupByCodeTest")
+    public ApiResponse<?> findLatestSubMaterialInputSubMaterialBySubMaterialIdGroupByCodeTest(@RequestParam("code_input") String code_input,@RequestParam("subMaterialId") int subMaterialId) {
+        ApiResponse<InputSubMaterial> apiResponse = new ApiResponse<>();
+        apiResponse.setResult(inputSubMaterialRepository.findLatestSubMaterialInputSubMaterialBySubMaterialIdGroupByCodeTest(code_input,subMaterialId));
         return apiResponse;
     }
 

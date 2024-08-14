@@ -128,9 +128,9 @@ public class StatisticController {
         return apiResponse;
     }
     @GetMapping("/totalAmountOrderHaveDone")
-    public ApiResponse<?> totalAmountOrderHaveDone() {
+    public ApiResponse<?> totalAmountOrderHaveDone(@RequestParam("year") int year) {
         ApiResponse<BigDecimal> apiResponse = new ApiResponse<>();
-        apiResponse.setResult(statisticService.totalAmountOrderHaveDone());
+        apiResponse.setResult(statisticService.totalAmountOrderHaveDone(year));
         return apiResponse;
     }
     @GetMapping("/totalAmountSubMaterial")

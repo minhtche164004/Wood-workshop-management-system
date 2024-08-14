@@ -129,9 +129,8 @@
                         {{ status.status_name }}
                       </option>
                     </select>
-                    <button #launchModalButton type="button" class="btn btn-primary d-none" data-toggle="modal"
-                      data-target="#myModal">
-                      Launch modal
+                    <button #launchModalButton type="button" class="btn btn-primary d-none" data-toggle="modal" data-target="#myModal2">
+                      Launch Modal 1
                     </button>
                   </div>
                 </td>
@@ -149,9 +148,8 @@
                         {{ status.status_name }}
                       </option>
                     </select>
-                    <button #launchModalButton type="button" class="btn btn-primary d-none" data-toggle="modal"
-                      data-target="#myModal1234">
-                      Launch modal
+                    <button #launchModalButton1 type="button" class="btn btn-primary d-none" data-toggle="modal" data-target="#myModal1">
+                      Launch Modal 2
                     </button>
                   </div>
                 </td>
@@ -463,12 +461,12 @@
   </div>
 </div>
 
-<div class="modal fade" id="myModal" tabindex="-1" aria-labelledby="myModalLabel" aria-hidden="true"
+<div class="modal fade" id="myModal1" tabindex="-1" aria-labelledby="myModalLabel" aria-hidden="true"
   data-backdrop="static" data-keyboard="false">
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
-        <h2 class="modal-title" id="myModal">Cập nhật trạng thái đơn hàng</h2>
+        <h2 class="modal-title" id="myModal1">Cập nhật trạng thái đơn hàng</h2>
         <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close"
           (click)="closeModal($event)"></button>
       </div>
@@ -563,7 +561,7 @@
         <div class="row mb-3" style="font-size: 13px;">
           <div class="col-md-6">
             <div class="form-group">
-              <label for="selectedReason">Chọn lý do hoàn tiền <span class="required-asterisk">*</span></label>
+              <label for="selectedReason">Kiểu hoàn tiền <span class="required-asterisk">*</span></label>
               <select class="form-control" id="selectedReason" [(ngModel)]="selectedReason">
                 <option value="" selected disabled>Chọn lý do</option>
                 <option *ngFor="let ps of getStatusRefund" [value]="ps.refundId">{{ ps.refundName }}</option>
@@ -579,7 +577,7 @@
           </div>
         </div>
         <div class="form-group" style="font-size: 13px;">
-          <label for="cancelReason">Nội dung hoàn tiền</label>
+          <label for="cancelReason">Lí do hoàn tiền</label>
           <span class="required-asterisk">*</span>
           <textarea class="form-control" id="cancelReason" [(ngModel)]="cancelReasonPrice" rows="4" required></textarea>
         </div>
@@ -637,12 +635,12 @@
 
 
 
-<div style="margin-left: 130px;" class="modal fade" id="myModal1234" tabindex="-1" role="dialog"
+<div style="margin-left: 130px;" class="modal fade" id="myModal2" tabindex="-1" role="dialog"
   aria-labelledby="productDetailModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
   <div class="modal-dialog modal-xl" role="document">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" style="font-size: 15px;" id="productDetailModalLabel">Xác nhận thanh toán tiền đơn hàng
+        <h5 class="modal-title" style="font-size: 15px;" id="myModal2">Xác nhận thanh toán tiền đơn hàng
         </h5>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close" (click)="closeModal($event)">
           <span aria-hidden="true">&times;</span>

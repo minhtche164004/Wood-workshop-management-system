@@ -22,9 +22,9 @@ interface ApiResponse {
   styleUrls: ['./order-management.component.scss']
 })
 export class OrderManagementComponent implements OnInit {
+  @ViewChild('launchModalButton') launchModalButton!: ElementRef;
+  @ViewChild('launchModalButton1') launchModalButton1!: ElementRef;
 
-  @ViewChild('launchModalButton')
-  launchModalButton!: ElementRef;
   user: any[] = [];
   userStatus: any[] = [];
   getStatusRefund: any[] = [];
@@ -194,13 +194,20 @@ export class OrderManagementComponent implements OnInit {
     this.selectedModalJob = orderId.toString();
     this.selectedModalId = statusId;
     this.indexStatus = index;
-
+  
     console.log('event:', event);
     console.log('Job ID:', this.selectedModalJob, 'Status ID:', statusId);
-
-    // Trigger the modal open action
-    this.launchModalButton.nativeElement.click();
+  
+    // Debugging output to ensure condition is correct
+    if (statusId === '8') { // Example condition
+      console.log('Opening Modal 1');
+      this.launchModalButton1.nativeElement.click();
+    } else {
+      console.log('Opening Modal 2');
+      this.launchModalButton.nativeElement.click();
+    }
   }
+  
 
   closeModal(event: Event): void {
     // const statusId = (event.target as HTMLSelectElement).value;

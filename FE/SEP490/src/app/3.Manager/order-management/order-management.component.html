@@ -209,7 +209,7 @@
     <div class="modal-dialog modal-xl" role="document">
       <div class="modal-content">
         <div class="modal-header">
-          <h5 class="modal-title" id="productDetailModalLabel">Xem chi tiết đơn hàng</h5>
+          <h5 class="modal-title" id="productDetailModalLabel"><h2>Xem chi tiết đơn hàng</h2></h5>
           <button type="button" class="close" data-dismiss="modal" aria-label="Close">
             <span aria-hidden="true">&times;</span>
           </button>
@@ -218,8 +218,8 @@
 
           <div class="row">
             <div class="col-md-6">
-              <h4>Khách hàng: <b>{{OrderdetailById.userInfor?.fullname}} -
-                  {{OrderdetailById.userInfor?.phoneNumber}} - {{emailCustomer}}</b></h4>
+              <h4><b>Khách hàng: </b>{{OrderdetailById.userInfor?.fullname}} -
+                  {{OrderdetailById.userInfor?.phoneNumber}} - {{emailCustomer}}</h4>
             </div>
 
             <div class="col-md-3">
@@ -250,7 +250,7 @@
           <div class="row">
             <div class="col-md-6">
 
-              Địa chỉ: <b> {{OrderdetailById.userInfor?.address}}</b>
+              <b>Địa chỉ: </b> {{OrderdetailById.userInfor?.address}}
             </div>
 
             <div class="col-md-3">
@@ -259,7 +259,7 @@
             </div>
             <div class="col-md-3" style="color: rgba(0, 102, 255, 0.945);">
 
-              {{ OrderdetailById.code}}
+             <b>Mã đơn: </b> {{ OrderdetailById.code}}
             </div>
           </div>
 
@@ -316,8 +316,8 @@
                 
                 <div class="col-md-6" *ngIf="OrderdetailById.description">
                   <p><strong>Mô tả đơn hàng:</strong></p>
-                  <textarea [(ngModel)]="OrderdetailById.description" rows="4"
-                    style="width: 100%; resize: none;overflow: hidden;" readonly></textarea>
+                  <textarea [(ngModel)]="OrderdetailById.description" rows="4" 
+                    style="width: 90%; resize: none;overflow: hidden; padding: 5px; " readonly></textarea>
   
                 </div>
               </div>
@@ -352,7 +352,7 @@
                   <th style="width: 35%;">Tên sản phẩm</th>
                   <th>Số lượng</th>
                   <th>Đơn giá</th>
-                  <th>Trạng thái</th>
+                  <th style="width: 10%;">Trạng thái</th>
                   
                 </tr>
               </thead>

@@ -735,7 +735,7 @@
                         <tr>
                             <th>STT</th>
                             <th>Nhân viên</th>
-                            <th style="width: 13%;">Sửa</th>
+                            <th style="width: 6%; text-align: center;">Sửa</th>
                             <th style="width: 10%;">Số SP lỗi</th>
                             <th>Mô tả lỗi</th>
                             <th>Giải pháp</th>
@@ -744,7 +744,7 @@
                     </thead>
                     <tbody>
                         <tr *ngFor="let error of jobErrors; let i = index">
-                            <td>{{ i + 1 }}</td> <!-- In số thứ tự, bắt đầu từ 1 -->
+                            <td style="text-align: right;">{{ i + 1 }}</td> <!-- In số thứ tự, bắt đầu từ 1 -->
                             <td>{{ error.employee_name }}</td>
                             <td style="text-align: center;">
                                 <a href="#" class="settings" title="Chỉnh sửa" data-toggle="modal"
@@ -752,7 +752,7 @@
                                     <i class="fa-solid fa-pen-to-square"></i>
                                 </a>
                             </td>
-                            <td>{{ error.quantity }}</td>
+                            <td style="text-align: right;">{{ error.quantity }}</td>
                             <td>{{ error.des }}</td>
                             <td>{{ error.solution }}</td>
                             <td>

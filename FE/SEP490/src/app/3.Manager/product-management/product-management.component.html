@@ -47,17 +47,15 @@
                 </select>
                 <!-- Chọn trạng thái -->
                 <select [(ngModel)]="selectedStatus" (change)="isProduct">
-                  <option [ngValue]="0" disabled selected>Chọn trạng thái</option>
+                  <option value="0" selected>Tất cả trạng thái</option>
                   <option *ngFor="let status of statuses" [ngValue]="status.status_id">{{ status.status_name }}</option>
-                  <option value="">Tất cả trạng thái</option>
                 </select>
 
                 <!-- Chọn danh mục sản phẩm -->
                 <select [(ngModel)]="selectedCategory" *ngIf="isProduct">
-                  <option [ngValue]="0" disabled selected>Chọn danh mục sản phẩm</option>
+                  <option value="0" selected>Tất cả danh mục</option>
                   <option *ngFor="let category of categories" [ngValue]="category.categoryId">{{ category.categoryName}}
                   </option>
-                  <option value="">Tất cả danh mục</option>
                 </select>
 
                 <!-- Tìm kiếm tên sản phẩm -->
@@ -395,11 +393,11 @@
                 </div>
                 <div class="form-group col-md-4">
                   <label for="orderDate">Ngày đặt hàng</label>
-                  <input type="date" class="form-control" formControlName="orderDate" placeholder="DD-MM-YYY" readonly>
+                  <input type="text" class="form-control" formControlName="orderDate" placeholder="DD-MM-YYY" readonly>
                 </div>
                 <div class="form-group col-md-4">
                   <label for="orderDate">Ngày dự kiến hoàn thành</label>
-                  <input type="date" class="form-control" formControlName="orderFinish" placeholder="DD-MM-YYY"
+                  <input type="text" class="form-control" formControlName="orderFinish" placeholder="DD-MM-YYY"
                     readonly>
                 </div>
               </div>
@@ -553,8 +551,7 @@
                           <select id="subMaterialId-{{i}}" class="form-control" *ngIf="subMaterials[i*10+j]"
                             formControlName="submateId" (change)="onSubMaterialChangeRProduct($event, i*10+j, i,j)">
                             <option disabled value="" selected>Chọn vật liệu</option>
-                            <option *ngFor="let subMaterial of subMaterials[i*10+j]"
-                              [value]="subMaterial?.input_id">{{
+                            <option *ngFor="let subMaterial of subMaterials[i*10+j]" [value]="subMaterial?.input_id">{{
                               subMaterial?.subMaterialName
                               }} - {{ subMaterial?.code }}</option>
                           </select>

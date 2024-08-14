@@ -57,6 +57,7 @@
               <thead>
                 <tr>
                   <th>Mã nguyên vật liệu</th>
+                  <th style="width: 150px;">Mã xuất nhập kho</th>
                   <th style="width: 100px;">Thao tác với kho</th>
                   <th>Tên nguyên vật liệu</th>
                   <th>Mô tả</th>
@@ -79,6 +80,7 @@
                 <tr
                   *ngFor="let job of list_submaterinput_manage | paginate: { itemsPerPage: 10, currentPage: currentPage }; let i = index">
                   <td style="min-width: 150px;">{{ job.subMaterials.code }}</td>
+                   <td style="text-align: right;min-width: 50px; ">{{ job.code_input }}</td>
                   <td style="min-width: 150px;">{{ job.actionType.action_name }}</td>
                   <td style="min-width: 150px;">{{ job.subMaterials.subMaterialName }}</td>
                   <td style="min-width: 100px;">{{ job.subMaterials.description}}</td>

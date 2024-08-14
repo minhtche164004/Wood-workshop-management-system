@@ -24,6 +24,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
@@ -68,6 +69,7 @@ public class SubMaterialServiceImpl implements SubMaterialService {
 
     LocalDate today = LocalDate.now();
     Date create = Date.from(today.atStartOfDay(ZoneId.systemDefault()).toInstant());
+//    LocalDateTime today_now =  LocalDateTime.now();
 
     @Override
     public InputSubMaterial getLastBySubMaterialId(int sub_id) {
@@ -320,8 +322,8 @@ public class SubMaterialServiceImpl implements SubMaterialService {
 //    }
 
     @Override
-    public SubMaterialViewDTO getSubMaterialById(int sub_material_id) {
-        SubMaterialViewDTO subMaterials = subMaterialsRepository.findSubMaterialsById(sub_material_id);
+    public SubMaterialViewDTO getSubMaterialById(int input_id) {
+        SubMaterialViewDTO subMaterials = subMaterialsRepository.findSubMaterialsById(input_id);
         if (subMaterials == null) {
             throw new AppException(ErrorCode.NOT_FOUND);
         }
@@ -383,17 +385,25 @@ public class SubMaterialServiceImpl implements SubMaterialService {
 
     @Override
     public SubMaterialViewDTO EditSubMaterial(int id, SubMaterialViewDTO subMaterialViewDTO) {
-        SubMaterials subMaterials = subMaterialsRepository.findById1(id);
         // Kiểm tra xem có thay đổi gì không
         boolean isPriceUpdated = false;
         boolean isQuantityUpdated=false;
-        InputSubMaterial input_sub_last = inputSubMaterialRepository.findLatestSubMaterialInputSubMaterialBySubMaterialId(id);
-        if(input_sub_last.getOut_price().compareTo(subMaterialViewDTO.getUnitPrice()) != 0){ //đây là cập nhật giá bán
+//        boolean isSubQuantity = false;
+        InputSubMaterial input_sub_last = inputSubMaterialRepository.findById(id);
+        //    SubMaterials subMaterials = subMaterialsRepository.findById1(id);
+        SubMaterials subMaterials = subMaterialsRepository.findById1(input_sub_last.getSubMaterials().getSubMaterialId());
+     //   InputSubMaterial input_sub_last = inputSubMaterialRepository.findLatestSubMaterialInputSubMaterialBySubMaterialId(id);
+        if(input_sub_last.getOut_price().compareTo(subMaterialViewDTO.getUnitPrice()) != 0 && subMaterialViewDTO.getQuantity() > 0){ //đây là cập nhật giá bán
             isPriceUpdated = true;
         }
+
         double epsilon = 0.00001; // Hoặc một giá trị epsilon phù hợp
-        if (Math.abs(input_sub_last.getQuantity() - subMaterialViewDTO.getQuantity()) > epsilon) {
+        if (Math.abs(input_sub_last.getQuantity() - subMaterialViewDTO.getQuantity()) > epsilon && subMaterialViewDTO.getQuantity() > 0) {
             isQuantityUpdated = true;
+        }
+        if(subMaterialViewDTO.getQuantity() < 0){
+            input_sub_last.setQuantity(input_sub_last.getQuantity() + subMaterialViewDTO.getQuantity());
+            inputSubMaterialRepository.save(input_sub_last);
         }
         if (isPriceUpdated == true || isQuantityUpdated == true) {
             // Chỉ lưu vào bảng InputSubMaterial khi có thay đổi
@@ -433,16 +443,16 @@ public class SubMaterialServiceImpl implements SubMaterialService {
         subMaterials.getMaterial().setMaterialId(subMaterialViewDTO.getMaterialId());
         subMaterials.setDescription(subMaterialViewDTO.getDescription());
         subMaterials.setSubMaterialName(subMaterialViewDTO.getSubMaterialName());
-        updatePriceAllProduct(id,subMaterialViewDTO.getUnitPrice());
+        updatePriceAllProduct(subMaterials.getSubMaterialId(), subMaterialViewDTO.getUnitPrice(),id);
         subMaterialsRepository.save(subMaterials);
 
         return subMaterialsRepository.findSubMaterialsById(id);
     }
 
     //@Override
-    private void updatePriceAllProduct(int subMaterialId,BigDecimal unit_price) {
+    private void updatePriceAllProduct(int subMaterialId,BigDecimal unit_price,int input_id) {
         List<Products> list_product = productSubMaterialsRepository.getProductIdsBySubMaterialId(subMaterialId);
-        BigDecimal current_unit_price = subMaterialsRepository.findSubMaterialsById(subMaterialId).getUnitPrice();
+        BigDecimal current_unit_price = subMaterialsRepository.findSubMaterialsById(input_id).getUnitPrice();
         BigDecimal new_unit_price = unit_price;
         for(Products p : list_product){
             double quantity = productSubMaterialsRepository.getQuantityInProductSubMaterialsByProductId(p.getProductId(),subMaterialId);

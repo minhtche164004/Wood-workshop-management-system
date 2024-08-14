@@ -682,7 +682,7 @@ public class SubMaterialServiceImpl implements SubMaterialService {
         }
     }
     @Override
-    public List<ProductSubMaterials> EditSubMaterialProduct(int product_id, Map<Integer, Double> subMaterialQuantities,int input_id) {
+    public List<ProductSubMaterials> EditSubMaterialProduct(int product_id, Map<Integer, Double> subMaterialQuantities) {
         Products products = productRepository.findById(product_id);
         List<ProductSubMaterials> list = productSubMaterialsRepository.findByProductID(product_id);
         List<ProductSubMaterials> productSubMaterialsList = new ArrayList<>();
@@ -702,10 +702,12 @@ public class SubMaterialServiceImpl implements SubMaterialService {
 
 //            productSubMaterialsRepository.deleteAll(list);
             for (Map.Entry<Integer, Double> entry : subMaterialQuantities.entrySet()) {
-                int subMaterialId = entry.getKey();
+              //  int subMaterialId = entry.getKey();
                 double quantity = entry.getValue();
-                SubMaterials subMaterial = subMaterialsRepository.findById1(subMaterialId);
+                int input_id= entry.getKey();
+              //  SubMaterials subMaterial = subMaterialsRepository.findById1(subMaterialId);
                 InputSubMaterial input=inputSubMaterialRepository.findById(input_id);
+                SubMaterials subMaterial = input.getSubMaterials();
             //    InputSubMaterial input=inputSubMaterialRepository.findLatestSubMaterialInputSubMaterialBySubMaterialId(subMaterialId);//lấy giá mới cập nhật
                 ProductSubMaterials productSubMaterial = new ProductSubMaterials(subMaterial, products, quantity,input);
                 productSubMaterialsList.add(productSubMaterial);
@@ -717,7 +719,7 @@ public class SubMaterialServiceImpl implements SubMaterialService {
 
 
     @Override
-    public List<RequestProductsSubmaterials> EditSubMaterialRequestProduct(int request_product_id, Map<Integer, Double> subMaterialQuantities,int input_id) {
+    public List<RequestProductsSubmaterials> EditSubMaterialRequestProduct(int request_product_id, Map<Integer, Double> subMaterialQuantities) {
         RequestProducts requestProducts = requestProductRepository.findById(request_product_id);
         List<RequestProductsSubmaterials> list = requestProductsSubmaterialsRepository.findByRequestProductID(request_product_id);
         List<RequestProductsSubmaterials> requestProductsSubmaterialsList = new ArrayList<>();
@@ -735,10 +737,12 @@ public class SubMaterialServiceImpl implements SubMaterialService {
                 requestProductsSubmaterialsRepository.deleteRequestProductSubMaterialsById(re.getRequestProductsSubmaterialsId()); // Xóa trước khi thêm mới
             }
             for (Map.Entry<Integer, Double> entry : subMaterialQuantities.entrySet()) {
-                int subMaterialId = entry.getKey();
+              //  int subMaterialId = entry.getKey();
                 double quantity = entry.getValue();
-                SubMaterials subMaterial = subMaterialsRepository.findById1(subMaterialId);
+                int input_id= entry.getKey();
+                //  SubMaterials subMaterial = subMaterialsRepository.findById1(subMaterialId);
                 InputSubMaterial input=inputSubMaterialRepository.findById(input_id);
+                SubMaterials subMaterial = input.getSubMaterials();
             //    InputSubMaterial input=inputSubMaterialRepository.findLatestSubMaterialInputSubMaterialBySubMaterialId(subMaterialId);//lấy giá mới cập nhật
                 RequestProductsSubmaterials requestProductsSubmaterials = new RequestProductsSubmaterials(subMaterial, requestProducts, quantity,input);
                 requestProductsSubmaterialsList.add(requestProductsSubmaterials);
@@ -747,10 +751,14 @@ public class SubMaterialServiceImpl implements SubMaterialService {
         }
         else{
             for (Map.Entry<Integer, Double> entry : subMaterialQuantities.entrySet()) {
-                int subMaterialId = entry.getKey();
-                double quantity = entry.getValue();
-                SubMaterials subMaterial = subMaterialsRepository.findById1(subMaterialId);
+             //   int subMaterialId = entry.getKey();
+                int input_id= entry.getKey();
+                //  SubMaterials subMaterial = subMaterialsRepository.findById1(subMaterialId);
                 InputSubMaterial input=inputSubMaterialRepository.findById(input_id);
+                SubMaterials subMaterial = input.getSubMaterials();
+                double quantity = entry.getValue();
+             //   SubMaterials subMaterial = subMaterialsRepository.findById1(subMaterialId);
+             //   InputSubMaterial input=inputSubMaterialRepository.findById(input_id);
             //    InputSubMaterial input=inputSubMaterialRepository.findLatestSubMaterialInputSubMaterialBySubMaterialId(subMaterialId);//lấy giá mới cập nhật
                 RequestProductsSubmaterials requestProductsSubmaterials = new RequestProductsSubmaterials(subMaterial, requestProducts, quantity,input);
                 requestProductsSubmaterialsList.add(requestProductsSubmaterials);

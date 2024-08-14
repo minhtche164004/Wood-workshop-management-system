@@ -154,17 +154,17 @@ public class SubMaterialController {
         return apiResponse;
     }
     @PutMapping("/EditSubMaterialProduct")
-    public ApiResponse<?> EditSubMaterialProduct(@RequestBody CreateExportMaterialProductRequest request,@RequestParam("input_id")int input_id) {
+    public ApiResponse<?> EditSubMaterialProduct(@RequestBody CreateExportMaterialProductRequest request) {
         ApiResponse<List> apiResponse = new ApiResponse<>();
         jedis.del("all_sub_mate_product");
-        apiResponse.setResult(subMaterialService.EditSubMaterialProduct(request.getProductId(), request.getSubMaterialQuantities(),input_id));
+        apiResponse.setResult(subMaterialService.EditSubMaterialProduct(request.getProductId(), request.getSubMaterialQuantities()));
         return apiResponse;
     }
     @PutMapping("/EditSubMaterialRequestProduct")
-    public ApiResponse<?> EditSubMaterialRequestProduct(@RequestBody CreateExportMaterialProductRequest request,@RequestParam("input_id")int input_id) {
+    public ApiResponse<?> EditSubMaterialRequestProduct(@RequestBody CreateExportMaterialProductRequest request) {
         ApiResponse<List> apiResponse = new ApiResponse<>();
         jedis.del("all_sub_mate_re_product");
-        apiResponse.setResult(subMaterialService.EditSubMaterialRequestProduct(request.getProductId(), request.getSubMaterialQuantities(),input_id));
+        apiResponse.setResult(subMaterialService.EditSubMaterialRequestProduct(request.getProductId(), request.getSubMaterialQuantities()));
         return apiResponse;
     }
 

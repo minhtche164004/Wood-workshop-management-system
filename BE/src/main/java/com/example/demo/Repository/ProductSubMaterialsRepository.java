@@ -29,19 +29,23 @@ public interface ProductSubMaterialsRepository extends JpaRepository<ProductSubM
 //    @Query("SELECT u.subMaterial FROM ProductSubMaterials u WHERE u.product.productId = :query AND u.subMaterial.material.materialId IN (1, 2)")
 //    List<SubMaterials> GetSubMaterialByProductId(int query);
 
+//    @Query("SELECT new com.example.demo.Dto.SubMaterialDTO.SubMaterialViewDTO(" +
+//            "s.subMaterialId, COALESCE(s.subMaterialName, ''), m.materialId, COALESCE(s.description, ''), " +
+//            "COALESCE(m.materialName, ''), ism.quantity, ism.out_price,ism.input_price,m.type,s.code,ism.input_id,ism.code_input) " + // Thêm dấu phẩy và loại bỏ COALESCE cho các ID
+//            "FROM ProductSubMaterials p " +
+//            "LEFT JOIN InputSubMaterial ism ON p.subMaterial = ism.subMaterials.subMaterialId" +
+//            " LEFT JOIN ism.subMaterials s"+
+//            " LEFT JOIN s.material m " + // Di chuyển điều kiện WHERE vào đây
+//            "WHERE  p.product.productId = :query AND s.material.materialId IN (1, 4)")
+//    List<SubMaterialViewDTO> GetSubMaterialByProductId(int query);
+
     @Query("SELECT new com.example.demo.Dto.SubMaterialDTO.SubMaterialViewDTO(" +
-            "s.subMaterialId, COALESCE(s.subMaterialName, ''), m.materialId, COALESCE(s.description, ''), " +
-            "COALESCE(m.materialName, ''), ism.quantity, ism.out_price,ism.input_price,m.type,s.code,ism.input_id,ism.code_input) " + // Thêm dấu phẩy và loại bỏ COALESCE cho các ID
+            "p.subMaterial, COALESCE(s.subMaterialName, ''), m.materialId, COALESCE(s.description, ''), " +
+            "COALESCE(m.materialName, ''), ism.quantity, ism.out_price, ism.input_price, m.type, s.code, ism.input_id, ism.code_input) " +
             "FROM ProductSubMaterials p " +
-            "LEFT JOIN InputSubMaterial ism ON p.subMaterial = ism.subMaterials.subMaterialId" +
-            " LEFT JOIN ism.subMaterials s"+
-            " LEFT JOIN s.material m " + // Di chuyển điều kiện WHERE vào đây
-            "WHERE " +
-            "(ism.input_id, ism.date_input) IN (" +
-            "SELECT MAX(ism2.input_id), MAX(ism2.date_input) " +
-            "FROM InputSubMaterial ism2 " +
-            "GROUP BY ism2.code_input " +
-            ") AND  p.product.productId = :query AND s.material.materialId IN (1, 4)")
+            "LEFT JOIN p.inputSubMaterial ism ON p.inputSubMaterial.input_id = ism.input_id " +
+            "LEFT JOIN ism.subMaterials s " +
+                    "LEFT JOIN s.material m where p.product.productId = :query AND  ism.subMaterials.material.materialId IN (1, 3)")
     List<SubMaterialViewDTO> GetSubMaterialByProductId(int query);
 
     @Query("SELECT p.product " +

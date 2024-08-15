@@ -1801,49 +1801,48 @@ export class ProductManagementComponent implements OnInit {
     }
 
     this.productListService.editProductRequest(updatedProductRequest, this.selectedImages, productData.product_id)
-      .pipe(
-        concatMap(response => {
-          console.log('Update successful', response);
-
-          const transformedData = {
-            productId: response.result.requestProductId,
-            subMaterialQuantities: transformedObject
-          };
-          console.log("data cua submaterial: 0", transformedData);
-          return this.productListService.EditSubMaterialRequestProduct(transformedData);
-        }),
-        catchError(error => {
-          this.isLoadding = false;
-          if (error.status === 400 && error.error.code === 1018) {
-            this.toastr.error(error.error.message, 'Lỗi');
-          }
-          return EMPTY;
-        })
-      )
-      .subscribe(
-        finalResponse => {
-          this.reloadProductRequest();
-          this.isLoadding = false;
-          console.log('Sub material update successful', finalResponse);
-          this.toastr.success('Cập nhật sản phẩm và vật liệu phụ thành công!', 'Thành công');
-          $('[data-dismiss="modal"]').click(); // Đóng modal
-        },
-        error => {
-          console.log('Error block executed', error); // Debugging log
-          if (error.status === 400 && error.error.code === 1038) {
-            this.toastr.warning(error.error.message, 'Lỗi');
-          }
-          else if (error.status === 400 && error.error.code === 1048) {
-            this.toastr.warning(error.error.message, 'Lỗi');
-          }
-          else {
-            this.toastr.error('Cập nhật sản phẩm bị lỗi!', 'Lỗi');
-          }
-          console.error('Update error', error);
-          this.isLoadding = false;
-          $('[data-dismiss="modal"]').click(); // Đóng modal
+    .pipe(
+      concatMap(response => {
+        console.log('Update successful', response);
+  
+        const transformedData = {
+          productId: response.result.requestProductId,
+          subMaterialQuantities: transformedObject
+        };
+        console.log("data cua submaterial: 0", transformedData);
+        return this.productListService.EditSubMaterialRequestProduct(transformedData);
+      })
+    )
+    .subscribe(
+      finalResponse => {
+        this.reloadProductRequest();
+        this.isLoadding = false;
+        console.log('Sub material update successful', finalResponse);
+        this.toastr.success('Cập nhật sản phẩm và vật liệu phụ thành công!', 'Thành công');
+        $('[data-dismiss="modal"]').click(); // Đóng modal
+      },
+      error => {
+        console.log('Error block executed', error); // Debugging log
+        this.isLoadding = false;
+        if (error.status === 400 && error.error.code === 1038) {
+          this.toastr.warning(error.error.message, 'Lỗi');
         }
-      );
+        else if (error.status === 400 && error.error.code === 1048) {
+          this.toastr.warning(error.error.message, 'Lỗi');
+        }
+        else if (error.status === 400 && error.error.code === 1018) {
+          this.toastr.error(error.error.message, 'Lỗi');
+        }
+        else if (error.status === 400 && error.error.code === 1050) {
+          this.toastr.error(error.error.message, 'Lỗi');
+        }
+        else {
+          this.toastr.error('Cập nhật sản phẩm bị lỗi!', 'Lỗi');
+        }
+        console.error('Update error', error);
+        $('[data-dismiss="modal"]').click(); // Đóng modal
+      }
+    );
 
   }
 

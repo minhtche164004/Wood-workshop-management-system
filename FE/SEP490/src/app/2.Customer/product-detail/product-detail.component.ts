@@ -88,7 +88,7 @@ export class ProductDetailComponent implements OnInit {
             if (submaterial.materialId == 1) {
               this.listWoodMaterial.push(submaterial.subMaterialName)
             }
-            if (submaterial.materialId == 4) {
+            if (submaterial.materialId == 3) {
               this.listPaintMaterial.push(submaterial.subMaterialName)
             }
           })

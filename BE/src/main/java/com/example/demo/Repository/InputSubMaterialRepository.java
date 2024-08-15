@@ -22,6 +22,12 @@ public interface InputSubMaterialRepository extends JpaRepository<InputSubMateri
     @Query("SELECT u FROM InputSubMaterial u WHERE u.input_id = :query")
     InputSubMaterial findById(int query);
 
+    @Query("SELECT u.code_input FROM InputSubMaterial u WHERE u.input_id = :query")
+    String findCodeInputById(int query);
+
+    @Query("SELECT s.material.materialId FROM InputSubMaterial u LEFT JOIN u.subMaterials s WHERE u.input_id = :query")
+    Integer findMaterialInputById(int query);
+
     @Query(value = "SELECT p.* FROM input_sub_material p WHERE p.code_input LIKE :prefix% ORDER BY p.code_input DESC LIMIT 1", nativeQuery = true)
     InputSubMaterial findInputSubMaterialTop(@Param("prefix") String prefix);
 
@@ -45,21 +51,48 @@ public interface InputSubMaterialRepository extends JpaRepository<InputSubMateri
     @Query("SELECT ism " +
             "FROM InputSubMaterial ism " +
             "LEFT JOIN ism.subMaterials s  " +
-            "WHERE " +
-            "ism.input_id = ("  +
+            " LEFT JOIN ism.actionType a"+
+            " WHERE " +
+            " ism.input_id = ("  +
             " SELECT MAX(ism2.input_id)" +
             "FROM InputSubMaterial ism2" +
-            " WHERE ism2.code_input = ism.code_input) AND ism.code_input = :code_input AND s.subMaterialId = :subMaterialId")
+            " WHERE ism2.code_input = ism.code_input) AND ism.code_input = :code_input AND s.subMaterialId = :subMaterialId ")
     InputSubMaterial findLatestSubMaterialInputSubMaterialBySubMaterialIdGroupByCode(@Param("code_input") String code_input,
             @Param("subMaterialId") int subMaterialId);
 
 
-    @Query("SELECT ism, MAX(ism.date_input) AS latestDate,MAX(ism.input_id) AS lastId " +
-            "FROM InputSubMaterial ism " +
-            "WHERE  ism.subMaterials.subMaterialId = :subMaterialId " +
-            "GROUP BY ism.code_input " +
-            "ORDER BY latestDate DESC")
-    List<InputSubMaterial> findLatestSubMaterialInputSubMaterial(@Param("subMaterialId") int subMaterialId);
+//    @Query("SELECT ism " +
+//            "FROM InputSubMaterial ism " +
+//            "LEFT JOIN SubMaterials s ON ism.subMaterials.subMaterialId = s.subMaterialId " +
+//            " JOIN Action_Type a ON ism.actionType.action_type_id = a.action_type_id " +
+//            "WHERE a.action_type_id = 1 " +
+//            "AND ism.input_id = ( " +
+//            "  SELECT MAX(ism2.date_input) " +
+//            "  FROM InputSubMaterial ism2 " +
+//            "  WHERE ism2.code_input = ism.code_input) " +
+//            "AND ism.code_input = :code_input " +
+//            "AND s.subMaterialId = :subMaterialId ")
+//    InputSubMaterial findLatestSubMaterialInputSubMaterialBySubMaterialIdGroupByCodeTest(@Param("code_input") String code_input,
+//                                                                                         @Param("subMaterialId") int subMaterialId);
+
+    @Query(value = "SELECT * FROM input_sub_material WHERE action_type_id = 1 AND code_input = :codeInput AND sub_material_id = :subMaterialId ORDER BY input_id DESC LIMIT 1", nativeQuery = true)
+    InputSubMaterial findLatestSubMaterialInputSubMaterialBySubMaterialIdGroupByCodeTest(@Param("codeInput") String codeInput, @Param("subMaterialId") Integer subMaterialId);
+
+//    @Query(value = "SELECT p.* FROM input_sub_material p WHERE p.code_input LIKE :prefix% AND p.action_type_id ORDER BY p.code_input DESC LIMIT 1", nativeQuery = true)
+//    InputSubMaterial findInputSubMaterialTop(@Param("prefix") String prefix);
+
+
+//    @Query("SELECT ism " +
+//            "FROM InputSubMaterial ism " +
+//            "WHERE ism.subMaterials.subMaterialId = :subMaterialId " +
+//            "AND (ism.date_input, ism.input_id) = (" +
+//            "  SELECT MAX(i.date_input), MAX(i.input_id) " +
+//            "  FROM InputSubMaterial i " +
+//            "  WHERE i.subMaterials.subMaterialId = ism.subMaterials.subMaterialId " +
+//            "  AND i.code_input = ism.code_input)")
+//    InputSubMaterial findLatestSubMaterialInputSubMaterial(@Param("code_input") String code_input, @Param("subMaterialId") int subMaterialId);
+
+
 
     @Query("SELECT ism"+
            " FROM InputSubMaterial ism " +

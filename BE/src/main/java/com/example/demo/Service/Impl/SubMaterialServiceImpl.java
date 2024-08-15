@@ -99,10 +99,10 @@ public class SubMaterialServiceImpl implements SubMaterialService {
         subMaterials.setSubMaterialName(subMaterialDTO.getSub_material_name());
         Materials materials = materialRepository.findByName(subMaterialDTO.getMaterial_name());
         subMaterials.setMaterial(materials);
-     //   subMaterials.setCreate_date(create);
-      //  subMaterials.setQuantity(subMaterialDTO.getQuantity());
-      //  subMaterials.setUnitPrice(subMaterialDTO.getUnit_price());//mới đầu nhập nguyên vật liệu thì giá bán là 0
-      //  subMaterials.setInputPrice(subMaterialDTO.getInput_price());
+        //   subMaterials.setCreate_date(create);
+        //  subMaterials.setQuantity(subMaterialDTO.getQuantity());
+        //  subMaterials.setUnitPrice(subMaterialDTO.getUnit_price());//mới đầu nhập nguyên vật liệu thì giá bán là 0
+        //  subMaterials.setInputPrice(subMaterialDTO.getInput_price());
 
         subMaterials.setDescription(subMaterialDTO.getDescription());
 
@@ -224,38 +224,38 @@ public class SubMaterialServiceImpl implements SubMaterialService {
 //                        existingSubMaterial.setQuantity(existingSubMaterial.getQuantity() + dto.getQuantity());
 //                        subMaterialsRepository.save(existingSubMaterial);
 //                    } else {
-                        // Nếu chưa tồn tại, tạo SubMaterial mới với đầy đủ thuộc tính
+                    // Nếu chưa tồn tại, tạo SubMaterial mới với đầy đủ thuộc tính
 
 
-                        SubMaterials subMaterials = new SubMaterials();
-                        subMaterials.setSubMaterialName(subMaterialName);
-                        // Lấy Material (nên kiểm tra null để tránh lỗi)
-                        Materials materials = materialRepository.findByName(materialName);
+                    SubMaterials subMaterials = new SubMaterials();
+                    subMaterials.setSubMaterialName(subMaterialName);
+                    // Lấy Material (nên kiểm tra null để tránh lỗi)
+                    Materials materials = materialRepository.findByName(materialName);
                     //    subMaterials.setCreate_date(create);
-                        subMaterials.setMaterial(materials);
+                    subMaterials.setMaterial(materials);
                     //    subMaterials.setQuantity(dto.getQuantity());
                     //    subMaterials.setUnitPrice(dto.getUnit_price());
                     //    subMaterials.setInputPrice(dto.getInput_price());
-                        subMaterials.setDescription(dto.getDescription());
-                        subMaterials.setCode(codeCount.get(i));
-                        subMaterialsList.add(subMaterials); // Thêm vào danh sách để save sau
+                    subMaterials.setDescription(dto.getDescription());
+                    subMaterials.setCode(codeCount.get(i));
+                    subMaterialsList.add(subMaterials); // Thêm vào danh sách để save sau
 
-                        InputSubMaterial input = new InputSubMaterial();
-                        Action_Type actionType = subMaterialsRepository.findByIdAction(2);//tức là kiểu nhập kho
-                        input.setActionType(actionType);
-                        input.setSubMaterials(subMaterials);
-                        input.setOut_price(dto.getUnit_price());
-                        input.setInput_price(dto.getInput_price()); //lưu vào lịch sử giá nhập , còn giá bán chưa có thì cho null
-                        input.setQuantity(dto.getQuantity());
-                        String code = generateCodeInputSubMaterial();
-                        input.setCode_input(code);
-                        input.setDate_input(create);//ngày nhập vào hệ thống
-                        input.setCreate_date(dto.getDate_ware_house());//ngày nhập kho
-                        inputSubMaterialRepository.save(input);
+                    InputSubMaterial input = new InputSubMaterial();
+                    Action_Type actionType = subMaterialsRepository.findByIdAction(2);//tức là kiểu nhập kho
+                    input.setActionType(actionType);
+                    input.setSubMaterials(subMaterials);
+                    input.setOut_price(dto.getUnit_price());
+                    input.setInput_price(dto.getInput_price()); //lưu vào lịch sử giá nhập , còn giá bán chưa có thì cho null
+                    input.setQuantity(dto.getQuantity());
+                    String code = generateCodeInputSubMaterial();
+                    input.setCode_input(code);
+                    input.setDate_input(create);//ngày nhập vào hệ thống
+                    input.setCreate_date(dto.getDate_ware_house());//ngày nhập kho
+                    inputSubMaterialRepository.save(input);
 
-                        i++;
-                    }
-             //   }
+                    i++;
+                }
+                //   }
 
                 subMaterialsRepository.saveAll(subMaterialsList);
             } catch (IOException e) {
@@ -383,6 +383,9 @@ public class SubMaterialServiceImpl implements SubMaterialService {
         return employeematerialsList;
     }
 
+    //lúc edit giá thì taọ 1 bản ghi mới trong bảng input , nhưng mã xuất nhập kho vẫn là của cái cũ
+
+
     @Override
     public SubMaterialViewDTO EditSubMaterial(int id, SubMaterialViewDTO subMaterialViewDTO) {
         // Kiểm tra xem có thay đổi gì không
@@ -392,7 +395,7 @@ public class SubMaterialServiceImpl implements SubMaterialService {
         InputSubMaterial input_sub_last = inputSubMaterialRepository.findById(id);
         //    SubMaterials subMaterials = subMaterialsRepository.findById1(id);
         SubMaterials subMaterials = subMaterialsRepository.findById1(input_sub_last.getSubMaterials().getSubMaterialId());
-     //   InputSubMaterial input_sub_last = inputSubMaterialRepository.findLatestSubMaterialInputSubMaterialBySubMaterialId(id);
+        //   InputSubMaterial input_sub_last = inputSubMaterialRepository.findLatestSubMaterialInputSubMaterialBySubMaterialId(id);
         if(input_sub_last.getOut_price().compareTo(subMaterialViewDTO.getUnitPrice()) != 0 && subMaterialViewDTO.getQuantity() > 0){ //đây là cập nhật giá bán
             isPriceUpdated = true;
         }
@@ -438,8 +441,8 @@ public class SubMaterialServiceImpl implements SubMaterialService {
             input.setCreate_date(input_sub_last.getCreate_date()); //ngày nhập kho
             inputSubMaterialRepository.save(input);
         }
-    //    subMaterials.setQuantity(subMaterialViewDTO.getQuantity());
-    //    subMaterials.setUnitPrice(subMaterialViewDTO.getUnitPrice());
+        //    subMaterials.setQuantity(subMaterialViewDTO.getQuantity());
+        //    subMaterials.setUnitPrice(subMaterialViewDTO.getUnitPrice());
         subMaterials.getMaterial().setMaterialId(subMaterialViewDTO.getMaterialId());
         subMaterials.setDescription(subMaterialViewDTO.getDescription());
         subMaterials.setSubMaterialName(subMaterialViewDTO.getSubMaterialName());
@@ -488,7 +491,7 @@ public class SubMaterialServiceImpl implements SubMaterialService {
         for (RequestProductsSubmaterials requestProductsSubmaterials : requestProductsSubmaterialsList) {
             //int quantity_product là số lượng product phải làm có trong 1 job --> quantity nhận được sẽ bằng quantity dự tính cảu 1 cái x quantity_product
             double quantity = quantityTotalDTO.getQuantity_product() * requestProductsSubmaterials.getQuantity();
-            SubMaterials subMaterial = requestProductsSubmaterials.getSubMaterial();
+            SubMaterials subMaterial = subMaterialsRepository.findById1(requestProductsSubmaterials.getSubMaterial());
             String code_input =   requestProductsSubmaterials.getInputSubMaterial().getCode_input();
             InputSubMaterial input_sub_last = inputSubMaterialRepository.findLatestSubMaterialInputSubMaterialBySubMaterialIdGroupByCode(code_input,subMaterial.getSubMaterialId());
             double currentQuantity = input_sub_last.getQuantity();
@@ -506,14 +509,15 @@ public class SubMaterialServiceImpl implements SubMaterialService {
         } else {
             // Vòng lặp thứ hai: Cập nhật số lượng nếu tất cả đều đủ
             for (RequestProductsSubmaterials requestProductsSubmaterials : requestProductsSubmaterialsList) {
+
                 double quantity = quantityTotalDTO.getQuantity_product() * requestProductsSubmaterials.getQuantity();
-                SubMaterials subMaterial = requestProductsSubmaterials.getSubMaterial();
+                SubMaterials subMaterial = subMaterialsRepository.findById1(requestProductsSubmaterials.getSubMaterial());
 
                 String code_input =   requestProductsSubmaterials.getInputSubMaterial().getCode_input();
                 InputSubMaterial input_sub_last = inputSubMaterialRepository.findLatestSubMaterialInputSubMaterialBySubMaterialIdGroupByCode(code_input,subMaterial.getSubMaterialId());
                 double currentQuantity = input_sub_last.getQuantity();
-            //    double currentQuantity = subMaterial.getQuantity();
-              //  input_sub_last.setQuantity(currentQuantity - quantity);
+                //    double currentQuantity = subMaterial.getQuantity();
+                //  input_sub_last.setQuantity(currentQuantity - quantity);
                 inputSubMaterialRepository.save(input_sub_last);
                 subMaterialsRepository.save(subMaterial);
 
@@ -535,8 +539,11 @@ public class SubMaterialServiceImpl implements SubMaterialService {
                 employeeMaterials.setTotal_material(quantity);
 
 
-
-
+                String code_input_sub = requestProductsSubmaterials.getInputSubMaterial().getCode_input();
+                int sub_mate_id = requestProductsSubmaterials.getSubMaterial();
+                InputSubMaterial input_last = inputSubMaterialRepository.findLatestSubMaterialInputSubMaterialBySubMaterialIdGroupByCode(code_input_sub,sub_mate_id);
+                requestProductsSubmaterials.setInputSubMaterial(input_last);
+                requestProductsSubmaterialsRepository.save(requestProductsSubmaterials);
                 // Lưu từng đối tượng và thêm vào danh sách kết quả
                 employeeMaterialsList.add(employeeMaterialRepository.save(employeeMaterials));
 
@@ -557,10 +564,10 @@ public class SubMaterialServiceImpl implements SubMaterialService {
             InputSubMaterial input=inputSubMaterialRepository.findById(input_id);
             SubMaterials subMaterial = input.getSubMaterials();
             double quantity = entry.getValue();
-          //  SubMaterials subMaterial = subMaterialsRepository.findById1(subMaterialId);
+            //  SubMaterials subMaterial = subMaterialsRepository.findById1(subMaterialId);
 
-        //    InputSubMaterial input = inputSubMaterialRepository.findLatestSubMaterialInputSubMaterialBySubMaterialId(subMaterialId);//lấy giá mới cập nhật
-            ProductSubMaterials productSubMaterial = new ProductSubMaterials(subMaterial, product, quantity, input);
+            //    InputSubMaterial input = inputSubMaterialRepository.findLatestSubMaterialInputSubMaterialBySubMaterialId(subMaterialId);//lấy giá mới cập nhật
+            ProductSubMaterials productSubMaterial = new ProductSubMaterials(subMaterial.getSubMaterialId(), product, quantity, input);
             productSubMaterialsList.add(productSubMaterial);
         }
         productSubMaterialsRepository.saveAll(productSubMaterialsList);
@@ -573,13 +580,13 @@ public class SubMaterialServiceImpl implements SubMaterialService {
         RequestProducts requestProducts = requestProductRepository.findById(productId);
         List<RequestProductsSubmaterials> reproductSubMaterialsList = new ArrayList<>();
         for (Map.Entry<Integer, Double> entry : subMaterialQuantities.entrySet()) {
-        //    int subMaterialId = entry.getKey();
+            //    int subMaterialId = entry.getKey();
             double quantity = entry.getValue();
             int input_id = entry.getKey();
             InputSubMaterial input=inputSubMaterialRepository.findById(input_id);
             SubMaterials subMaterial = input.getSubMaterials();
-        //    InputSubMaterial input = inputSubMaterialRepository.findLatestSubMaterialInputSubMaterialBySubMaterialId(subMaterialId);//lấy giá mới cập nhật
-            RequestProductsSubmaterials productSubMaterial = new RequestProductsSubmaterials(subMaterial, requestProducts, quantity, input);
+            //    InputSubMaterial input = inputSubMaterialRepository.findLatestSubMaterialInputSubMaterialBySubMaterialId(subMaterialId);//lấy giá mới cập nhật
+            RequestProductsSubmaterials productSubMaterial = new RequestProductsSubmaterials(subMaterial.getSubMaterialId(), requestProducts, quantity, input);
             reproductSubMaterialsList.add(productSubMaterial);
         }
         requestProductsSubmaterialsRepository.saveAll(reproductSubMaterialsList);
@@ -602,8 +609,8 @@ public class SubMaterialServiceImpl implements SubMaterialService {
                 SubMaterials subMaterial = input.getSubMaterials();
 //                SubMaterials subMaterial = subMaterialsRepository.findById1(subMaterialId);
 //                InputSubMaterial input=inputSubMaterialRepository.findById(input_id);
-            //    InputSubMaterial input = inputSubMaterialRepository.findLatestSubMaterialInputSubMaterialBySubMaterialId(subMaterialId);
-                RequestProductsSubmaterials requestProductsSubmaterials = new RequestProductsSubmaterials(subMaterial, requestProducts, quantity, input);
+                //    InputSubMaterial input = inputSubMaterialRepository.findLatestSubMaterialInputSubMaterialBySubMaterialId(subMaterialId);
+                RequestProductsSubmaterials requestProductsSubmaterials = new RequestProductsSubmaterials(subMaterial.getSubMaterialId(), requestProducts, quantity, input);
 
                 result.add(requestProductsSubmaterials);
             }
@@ -631,11 +638,12 @@ public class SubMaterialServiceImpl implements SubMaterialService {
         for (ProductSubMaterials productSubMaterials : productSubMaterialsList) {
             //int quantity_product là số lượng product phải làm có trong 1 job --> quantity nhận được sẽ bằng quantity dự tính cảu 1 cái x quantity_product
             double quantity = quantityTotalDTO.getQuantity_product() * productSubMaterials.getQuantity();
-            SubMaterials subMaterial = productSubMaterials.getSubMaterial();
-         String code_input =   productSubMaterials.getInputSubMaterial().getCode_input();
+
+            SubMaterials subMaterial =  subMaterialsRepository.findById1(productSubMaterials.getSubMaterial());
+            String code_input =   productSubMaterials.getInputSubMaterial().getCode_input();
             InputSubMaterial input_sub_last = inputSubMaterialRepository.findLatestSubMaterialInputSubMaterialBySubMaterialIdGroupByCode(code_input,subMaterial.getSubMaterialId());
             double currentQuantity = input_sub_last.getQuantity();
-        //    double currentQuantity = subMaterial.getQuantity();
+            //    double currentQuantity = subMaterial.getQuantity();
             if (quantity > currentQuantity) {
                 double a = quantity-currentQuantity;
                 String errorMessage = String.format("Không đủ số lượng, thiếu %.2f %s", a, subMaterial.getMaterial().getType());
@@ -651,14 +659,15 @@ public class SubMaterialServiceImpl implements SubMaterialService {
         } else {
             // Vòng lặp thứ hai: Cập nhật số lượng nếu tất cả đều đủ
             for (ProductSubMaterials productSubMaterials : productSubMaterialsList) {
+
                 double quantity = quantityTotalDTO.getQuantity_product() * productSubMaterials.getQuantity();
-                SubMaterials subMaterial = productSubMaterials.getSubMaterial();
+                SubMaterials subMaterial =  subMaterialsRepository.findById1(productSubMaterials.getSubMaterial());
 
                 String code_input =   productSubMaterials.getInputSubMaterial().getCode_input();
                 InputSubMaterial input_sub_last = inputSubMaterialRepository.findLatestSubMaterialInputSubMaterialBySubMaterialIdGroupByCode(code_input,subMaterial.getSubMaterialId());
                 double currentQuantity = input_sub_last.getQuantity();
-            //    double currentQuantity = subMaterial.getQuantity();
-            //    input_sub_last.setQuantity(currentQuantity - quantity);
+                //    double currentQuantity = subMaterial.getQuantity();
+                //    input_sub_last.setQuantity(currentQuantity - quantity);
 
                 inputSubMaterialRepository.save(input_sub_last);
                 subMaterialsRepository.save(subMaterial);
@@ -670,8 +679,9 @@ public class SubMaterialServiceImpl implements SubMaterialService {
                 input.setInput_price(input_sub_last.getInput_price());
                 input.setOut_price(input_sub_last.getOut_price());
                 input.setDate_input(create);
+                input.setCreate_date(input_sub_last.getCreate_date());
                 input.setQuantity(currentQuantity - quantity);
-              //  input.setChange_quantity(quantity);
+                //  input.setChange_quantity(quantity);
                 input.setCode_input(input_sub_last.getCode_input());
                 inputSubMaterialRepository.save(input);
 
@@ -682,7 +692,11 @@ public class SubMaterialServiceImpl implements SubMaterialService {
                 employeeMaterials.setProductSubMaterial(productSubMaterials);
                 employeeMaterials.setEmployee(user);
                 employeeMaterials.setTotal_material(quantity);
-
+                String code_input_sub = productSubMaterials.getInputSubMaterial().getCode_input();
+                int sub_mate_id = productSubMaterials.getSubMaterial();
+                InputSubMaterial input_last = inputSubMaterialRepository.findLatestSubMaterialInputSubMaterialBySubMaterialIdGroupByCode(code_input_sub,sub_mate_id);
+                productSubMaterials.setInputSubMaterial(input_last);
+                productSubMaterialsRepository.save(productSubMaterials);
                 // Lưu từng đối tượng và thêm vào danh sách kết quả
                 employeeMaterialsList.add(employeeMaterialRepository.save(employeeMaterials));
             }
@@ -691,36 +705,104 @@ public class SubMaterialServiceImpl implements SubMaterialService {
             return ResponseEntity.ok(apiResponse);
         }
     }
+    @Transactional
     @Override
     public List<ProductSubMaterials> EditSubMaterialProduct(int product_id, Map<Integer, Double> subMaterialQuantities) {
         Products products = productRepository.findById(product_id);
         List<ProductSubMaterials> list = productSubMaterialsRepository.findByProductID(product_id);
         List<ProductSubMaterials> productSubMaterialsList = new ArrayList<>();
-        List<Employeematerials> list_emp = employeeMaterialRepository.findEmployeematerialsByProductId(product_id);
-//        List<Employeematerials> list_emp =employeeMaterialRepository.findEmployeematerialsByProductId(product_id);
-//        if(!list_emp.isEmpty()){
-//            throw new AppException(ErrorCode.EMPLOYEE_MATERIAL_EXISTED);
-//        }
-        if(list_emp.size()!=0){
-            throw new AppException(ErrorCode.MATERIAL_EMPLOYEE_HAS_RELATIONSHIPS);
-        }
-        if(!list.isEmpty()){
 
-            for(ProductSubMaterials re :list){
-                productSubMaterialsRepository.deleteProductSubMaterialsById(re.getProductSubMaterialId()); // Xóa trước khi thêm mới
+        List<Employeematerials> list_emp = employeeMaterialRepository.findEmployeematerialsByProductId(product_id);
+        if (list.isEmpty() && list_emp.isEmpty()) { //nếu không có gì trước đó
+            for (Map.Entry<Integer, Double> entry : subMaterialQuantities.entrySet()) {
+                double quantity = entry.getValue();
+                int input_id = entry.getKey();
+                InputSubMaterial input = inputSubMaterialRepository.findById(input_id);
+                SubMaterials subMaterial = input.getSubMaterials();
+                ProductSubMaterials requestProductsSubmaterials = new ProductSubMaterials(subMaterial.getSubMaterialId(), products, quantity, input);
+                productSubMaterialsList.add(requestProductsSubmaterials);
+            }
+            productSubMaterialsRepository.saveAll(productSubMaterialsList);
+        }
+        if (!list.isEmpty() && list_emp.isEmpty()) { //nếu list ước lượng đã có trước đó nhưng chưa giao nguyên liệu cho nhân viên
+            List<Integer> list_id_request_sub = list.stream()
+                    .map(emp -> emp.getProductSubMaterialId())
+                    .collect(Collectors.toList());  // Sử dụng Collectors.toList() cho danh sách
+            for (int re_1 : list_id_request_sub) {
+                productSubMaterialsRepository.deleteProductSubMaterialsById(re_1); // Xóa trước khi thêm mới
+            }
+//            for (ProductSubMaterials re_1 : list) {
+//                productSubMaterialsRepository.deleteProductSubMaterialsById(re_1.getProductSubMaterialId()); // Xóa trước khi thêm mới
+//            }
+            for (Map.Entry<Integer, Double> entry : subMaterialQuantities.entrySet()) {
+                int input_id = entry.getKey();
+                InputSubMaterial input = inputSubMaterialRepository.findById(input_id);
+                SubMaterials subMaterial = input.getSubMaterials();
+                double quantity = entry.getValue();
+                ProductSubMaterials requestProductsSubmaterials = new ProductSubMaterials(subMaterial.getSubMaterialId(), products, quantity, input);
+                productSubMaterialsList.add(requestProductsSubmaterials);
+            }
+            productSubMaterialsRepository.saveAll(productSubMaterialsList);
+        }
+        if (!list.isEmpty() && !list_emp.isEmpty()) { //nếu list ước lượng đã tồn tại trước dó , đồng thời có 1 số nguyên vật liệu đã và đang giao cho khách
+            //kiếm những thằng nào chưa giao cho nhân viên thì xoá nó đi
+            // Tạo danh sách chứa các input_id trong list_emp
+            List<Integer> existingInputIdsInEmp = list_emp.stream()
+                    .map(emp -> emp.getProductSubMaterial().getProductSubMaterialId())
+                    .collect(Collectors.toList());  // Sử dụng Collectors.toList() cho danh sách
+
+            // Lọc ra các requets_product_ tronid list mà không có trong list_emp
+            List<Integer> inputIdsNotInEmp = list.stream()
+                    .map(re -> re.getProductSubMaterialId())
+                    .filter(inputId -> !existingInputIdsInEmp.contains(inputId))
+                    .collect(Collectors.toList());  // Sử dụng Collectors.toList() cho danh sách
+//            System.out.println("Các input_id không tồn tại trong list_emp: " + inputIdsNotInEmp);
+            List<Integer> existingInputIdsInEmp_input = list_emp.stream()
+                    .map(emp -> emp.getProductSubMaterial().getInputSubMaterial().getInput_id())
+                    .collect(Collectors.toList());  // Sử dụng Collectors.toList() cho danh sách
+
+
+            List<String> existingInputIdsInEmp_StringCode_Input = list_emp.stream()
+                    .map(emp -> emp.getProductSubMaterial().getInputSubMaterial().getCode_input())
+                    .collect(Collectors.toList());  // Sử dụng Collectors.toList() cho danh sách
+
+            List<Integer> existingMaterialIdInEmp_input = list_emp.stream()
+                    .map(emp -> emp.getProductSubMaterial().getInputSubMaterial().getSubMaterials().getMaterial().getMaterialId())
+                    .collect(Collectors.toList());  // Sử dụng Collectors.toList() cho danh sách
+
+            List<Integer> inputIdsFromMap = subMaterialQuantities.keySet().stream()
+                    .collect(Collectors.toList());
+            System.out.println(inputIdsFromMap);
+            List<String> code_input = new ArrayList<>();
+            for(int input_id : inputIdsFromMap){
+                String code =  inputSubMaterialRepository.findCodeInputById(input_id);
+                code_input.add(code);
+            }
+            if (!code_input.containsAll(existingInputIdsInEmp_StringCode_Input)) {
+                throw new AppException(ErrorCode.MATERIAL_EMPLOYEE_HAS_RELATIONSHIPS);
+            }
+            List<Integer> material_id = new ArrayList<>();
+            for(int input_id : inputIdsFromMap){
+                Integer code =  inputSubMaterialRepository.findMaterialInputById(input_id);
+                material_id.add(code);
+            }
+            if (material_id.containsAll(existingMaterialIdInEmp_input)) {
+                throw new AppException(ErrorCode.EXISTED_SUB_MATERIAL);
             }
 
-//            productSubMaterialsRepository.deleteAll(list);
+            for (int re_1 : inputIdsNotInEmp) {
+                productSubMaterialsRepository.deleteProductSubMaterialsById(re_1); // Xóa trước khi thêm mới
+            }
             for (Map.Entry<Integer, Double> entry : subMaterialQuantities.entrySet()) {
-              //  int subMaterialId = entry.getKey();
-                double quantity = entry.getValue();
-                int input_id= entry.getKey();
-              //  SubMaterials subMaterial = subMaterialsRepository.findById1(subMaterialId);
-                InputSubMaterial input=inputSubMaterialRepository.findById(input_id);
-                SubMaterials subMaterial = input.getSubMaterials();
-            //    InputSubMaterial input=inputSubMaterialRepository.findLatestSubMaterialInputSubMaterialBySubMaterialId(subMaterialId);//lấy giá mới cập nhật
-                ProductSubMaterials productSubMaterial = new ProductSubMaterials(subMaterial, products, quantity,input);
-                productSubMaterialsList.add(productSubMaterial);
+                int input_id = entry.getKey();
+                InputSubMaterial inputSubMaterial = inputSubMaterialRepository.findById(input_id);
+                if(!existingInputIdsInEmp_input.contains(input_id) && !existingInputIdsInEmp_StringCode_Input.contains(inputSubMaterial.getCode_input())) {
+                    InputSubMaterial input = inputSubMaterialRepository.findById(input_id);
+                    SubMaterials subMaterial = input.getSubMaterials();
+                    double quantity = entry.getValue();
+                    ProductSubMaterials requestProductsSubmaterials = new ProductSubMaterials(subMaterial.getSubMaterialId(), products, quantity, input);
+                    productSubMaterialsList.add(requestProductsSubmaterials);
+                }
             }
             productSubMaterialsRepository.saveAll(productSubMaterialsList);
         }
@@ -728,50 +810,102 @@ public class SubMaterialServiceImpl implements SubMaterialService {
     }
 
 
+    @Transactional
     @Override
-    public List<RequestProductsSubmaterials> EditSubMaterialRequestProduct(int request_product_id, Map<Integer, Double> subMaterialQuantities) {
+    public  List<RequestProductsSubmaterials> EditSubMaterialRequestProduct(int request_product_id, Map<Integer, Double> subMaterialQuantities) {
         RequestProducts requestProducts = requestProductRepository.findById(request_product_id);
         List<RequestProductsSubmaterials> list = requestProductsSubmaterialsRepository.findByRequestProductID(request_product_id);
         List<RequestProductsSubmaterials> requestProductsSubmaterialsList = new ArrayList<>();
         List<Employeematerials> list_emp = employeeMaterialRepository.findEmployeematerialsByRequestProductId(request_product_id);
-//        List<Employeematerials> list_emp = employeeMaterialRepository.findEmployeematerialsByRequestProductId(request_product_id);
-//        if (!list_emp.isEmpty()) {
-//            throw new AppException(ErrorCode.EMPLOYEE_MATERIAL_EXISTED);
-//        }
-        if(list_emp.size()!=0){
-            throw new AppException(ErrorCode.MATERIAL_EMPLOYEE_HAS_RELATIONSHIPS);
-        }
-        if (!list.isEmpty()) {
-
-            for(RequestProductsSubmaterials re :list){
-                requestProductsSubmaterialsRepository.deleteRequestProductSubMaterialsById(re.getRequestProductsSubmaterialsId()); // Xóa trước khi thêm mới
-            }
+        if (list.isEmpty() && list_emp.isEmpty()) { //nếu không có gì trước đó
             for (Map.Entry<Integer, Double> entry : subMaterialQuantities.entrySet()) {
-              //  int subMaterialId = entry.getKey();
                 double quantity = entry.getValue();
-                int input_id= entry.getKey();
-                //  SubMaterials subMaterial = subMaterialsRepository.findById1(subMaterialId);
-                InputSubMaterial input=inputSubMaterialRepository.findById(input_id);
+                int input_id = entry.getKey();
+                InputSubMaterial input = inputSubMaterialRepository.findById(input_id);
                 SubMaterials subMaterial = input.getSubMaterials();
-            //    InputSubMaterial input=inputSubMaterialRepository.findLatestSubMaterialInputSubMaterialBySubMaterialId(subMaterialId);//lấy giá mới cập nhật
-                RequestProductsSubmaterials requestProductsSubmaterials = new RequestProductsSubmaterials(subMaterial, requestProducts, quantity,input);
+                RequestProductsSubmaterials requestProductsSubmaterials = new RequestProductsSubmaterials(subMaterial.getSubMaterialId(), requestProducts, quantity, input);
                 requestProductsSubmaterialsList.add(requestProductsSubmaterials);
             }
             requestProductsSubmaterialsRepository.saveAll(requestProductsSubmaterialsList);
         }
-        else{
+        if (!list.isEmpty() && list_emp.isEmpty()) { //nếu list ước lượng đã có trước đó nhưng chưa giao nguyên liệu cho nhân viên
+            List<Integer> list_id_request_sub = list.stream()
+                    .map(emp -> emp.getRequestProductsSubmaterialsId())
+                    .collect(Collectors.toList());  // Sử dụng Collectors.toList() cho danh sách
+            for (int re_1 : list_id_request_sub) {
+                requestProductsSubmaterialsRepository.deleteRequestProductSubMaterialsById(re_1); // Xóa trước khi thêm mới
+            }
+
+//            for (RequestProductsSubmaterials re_1 : list) {
+//                requestProductsSubmaterialsRepository.deleteRequestProductSubMaterialsById(re_1.getRequestProductsSubmaterialsId()); // Xóa trước khi thêm mới
+//            }
             for (Map.Entry<Integer, Double> entry : subMaterialQuantities.entrySet()) {
-             //   int subMaterialId = entry.getKey();
-                int input_id= entry.getKey();
-                //  SubMaterials subMaterial = subMaterialsRepository.findById1(subMaterialId);
-                InputSubMaterial input=inputSubMaterialRepository.findById(input_id);
+                int input_id = entry.getKey();
+                InputSubMaterial input = inputSubMaterialRepository.findById(input_id);
                 SubMaterials subMaterial = input.getSubMaterials();
                 double quantity = entry.getValue();
-             //   SubMaterials subMaterial = subMaterialsRepository.findById1(subMaterialId);
-             //   InputSubMaterial input=inputSubMaterialRepository.findById(input_id);
-            //    InputSubMaterial input=inputSubMaterialRepository.findLatestSubMaterialInputSubMaterialBySubMaterialId(subMaterialId);//lấy giá mới cập nhật
-                RequestProductsSubmaterials requestProductsSubmaterials = new RequestProductsSubmaterials(subMaterial, requestProducts, quantity,input);
+                RequestProductsSubmaterials requestProductsSubmaterials = new RequestProductsSubmaterials(subMaterial.getSubMaterialId(), requestProducts, quantity, input);
                 requestProductsSubmaterialsList.add(requestProductsSubmaterials);
+            }
+            requestProductsSubmaterialsRepository.saveAll(requestProductsSubmaterialsList);
+        }
+        if (!list.isEmpty() && !list_emp.isEmpty()) { //nếu list ước lượng đã tồn tại trước dó , đồng thời có 1 số nguyên vật liệu đã và đang giao cho khách
+            //kiếm những thằng nào chưa giao cho nhân viên thì xoá nó đi
+            // Tạo danh sách chứa các input_id trong list_emp
+            List<Integer> existingInputIdsInEmp = list_emp.stream()
+                    .map(emp -> emp.getRequestProductsSubmaterials().getRequestProductsSubmaterialsId())
+                    .collect(Collectors.toList());  // Sử dụng Collectors.toList() cho danh sách
+            // Lọc ra các requets_product_ tronid list mà không có trong list_emp
+            List<Integer> inputIdsNotInEmp = list.stream()
+                    .map(re -> re.getRequestProductsSubmaterialsId())
+                    .filter(inputId -> !existingInputIdsInEmp.contains(inputId))
+                    .collect(Collectors.toList());  // Sử dụng Collectors.toList() cho danh sách
+//            System.out.println("Các input_id không tồn tại trong list_emp: " + inputIdsNotInEmp);
+            List<Integer> existingInputIdsInEmp_input = list_emp.stream()
+                    .map(emp -> emp.getRequestProductsSubmaterials().getInputSubMaterial().getInput_id())
+                    .collect(Collectors.toList());  // Sử dụng Collectors.toList() cho danh sách
+
+            List<String> existingInputIdsInEmp_StringCode_Input = list_emp.stream()
+                    .map(emp -> emp.getRequestProductsSubmaterials().getInputSubMaterial().getCode_input())
+                    .collect(Collectors.toList());  // Sử dụng Collectors.toList() cho danh sách
+            List<Integer> existingMaterialIdInEmp_input = list_emp.stream()
+                    .map(emp -> emp.getRequestProductsSubmaterials().getInputSubMaterial().getSubMaterials().getMaterial().getMaterialId())
+                    .collect(Collectors.toList());  // Sử dụng Collectors.toList() cho danh sách
+
+///
+            List<Integer> inputIdsFromMap = subMaterialQuantities.keySet().stream()
+                    .collect(Collectors.toList());
+            System.out.println(inputIdsFromMap);
+            List<String> code_input = new ArrayList<>();
+            for(int input_id : inputIdsFromMap){
+                String code =  inputSubMaterialRepository.findCodeInputById(input_id);
+                code_input.add(code);
+            }
+            if (!code_input.containsAll(existingInputIdsInEmp_StringCode_Input)) {
+                throw new AppException(ErrorCode.MATERIAL_EMPLOYEE_HAS_RELATIONSHIPS);
+            }
+            List<Integer> material_id = new ArrayList<>();
+            for(int input_id : inputIdsFromMap){
+                Integer code =  inputSubMaterialRepository.findMaterialInputById(input_id);
+                material_id.add(code);
+            }
+            if (material_id.containsAll(existingMaterialIdInEmp_input)) {
+                throw new AppException(ErrorCode.EXISTED_SUB_MATERIAL);
+            }
+
+            for (int re_1 : inputIdsNotInEmp) {
+                requestProductsSubmaterialsRepository.deleteRequestProductSubMaterialsById(re_1); // Xóa trước khi thêm mới
+            }
+            for (Map.Entry<Integer, Double> entry : subMaterialQuantities.entrySet()) {
+                int input_id = entry.getKey();
+                InputSubMaterial inputSubMaterial = inputSubMaterialRepository.findById(input_id);
+                if(!existingInputIdsInEmp_input.contains(input_id) && !existingInputIdsInEmp_StringCode_Input.contains(inputSubMaterial.getCode_input())) {
+                    InputSubMaterial input = inputSubMaterialRepository.findById(input_id);
+                    SubMaterials subMaterial = input.getSubMaterials();
+                    double quantity = entry.getValue();
+                    RequestProductsSubmaterials requestProductsSubmaterials = new RequestProductsSubmaterials(subMaterial.getSubMaterialId(), requestProducts, quantity, input);
+                    requestProductsSubmaterialsList.add(requestProductsSubmaterials);
+                }
             }
             requestProductsSubmaterialsRepository.saveAll(requestProductsSubmaterialsList);
         }

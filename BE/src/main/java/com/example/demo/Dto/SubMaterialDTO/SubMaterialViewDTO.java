@@ -31,9 +31,10 @@ import java.math.BigDecimal;
         private String type;
         private String code;
         private int input_id;
+        private String code_input;
 
         public SubMaterialViewDTO(int subMaterialId,String subMaterialName, Integer materialId, String description,
-                                  String materialName, Double quantity, BigDecimal unitPrice,BigDecimal inputPrice,String type,String code,int input_id) {
+                                  String materialName, Double quantity, BigDecimal unitPrice,BigDecimal inputPrice,String type,String code,int input_id,String code_input) {
             this.subMaterialId=subMaterialId;
             this.subMaterialName = subMaterialName;
             this.materialId = materialId;
@@ -45,6 +46,7 @@ import java.math.BigDecimal;
             this.type=type;
             this.code=code;
             this.input_id=input_id;
+            this.code_input=code_input;
         }
 
         public SubMaterialViewDTO(String subMaterialName, String description, Double quantity, BigDecimal unit_price, Integer materialId) {

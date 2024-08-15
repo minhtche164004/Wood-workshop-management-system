@@ -79,7 +79,7 @@ public enum ErrorCode {
     QUANTITY_JOB_EXCEPTION(1040,"Số lượng sản phẩm được phân vượt qúa số lượng yêu cầu",HttpStatus.BAD_REQUEST),
     COST_JOB_EXCEPTION(1041,"Số tiền công vượt quá số tiền lợi nhuận , vui lòng nhập lại ",HttpStatus.BAD_REQUEST),
     COST_DISCOUNT_ORDER_EXCEPTION(1042,"Số tiền giảm giá vượt quá số tiền lợi nhuận , vui lòng nhập lại",HttpStatus.BAD_REQUEST),
-    COST_DEPOSIT(1043,"Tiền đặt cọc nhỏ hơn giá trị tối thiểu(20% tổng giá trị đơn hàng) và nhỏ hơn tổng giá trị đơn hàng , vui lòng nhập lại!",HttpStatus.BAD_REQUEST),
+    COST_DEPOSIT(1043,"Tiền đặt cọc phải lớn hoặc bằng giá trị tối thiểu(20% tổng giá trị đơn hàng) và phải nhỏ hơn hoặc bằng tổng giá trị đơn hàng , vui lòng nhập lại!",HttpStatus.BAD_REQUEST),
     TIME_FINISH_INVALID(1044,"Thời gian hoàn thành công việc vượt quá thời gian dự kiến hoàn thành đã thống nhất trong đơn hàng, vui lòng nhập lại!",HttpStatus.BAD_REQUEST),
     TIME_START_INVALID(1045,"Thời gian bắt đầu công việc đang có trước thời gian mà đơn hàng được tạo, vui lòng nhập lại!",HttpStatus.BAD_REQUEST),
     TIME_START_JOB_INVALID(1046,"Thời gian bắt đầu giai đoạn công việc hiện tại đang có trước thời gian hoàn thành giai đoạn trước đó của cùng công việc này , vui lòng nhập lại!",HttpStatus.BAD_REQUEST),
@@ -87,6 +87,7 @@ public enum ErrorCode {
     MATERIAL_EMPLOYEE_HAS_RELATIONSHIPS(1048,"Không thể sửa vật liệu ước tính của sản phẩm này do lượng vật liệu ước tính trước đó đang được sử dụng cho các công việc !",HttpStatus.BAD_REQUEST),
     COST_REMAIN(1043,"Số tiền còn lại cần thanh toán không đúng với giá trị , vui lòng nhập lại!",HttpStatus.BAD_REQUEST),
     COST_REFUND_INVALID(1044,"Số tiền hoàn phải nhỏ hơn tổng giá trị đơn hàng và phải lớn hơn 0, vui lòng nhập lại!",HttpStatus.BAD_REQUEST),
+    EXISTED_SUB_MATERIAL(1050,"Giai đoạn đã hoàn thành , không được giao thêm nguyên vật liệu cho giai đoạn này , vui lòng xem lại!",HttpStatus.BAD_REQUEST),
 
 
 

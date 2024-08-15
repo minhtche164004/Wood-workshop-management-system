@@ -50,7 +50,7 @@ export class OrderRequiredComponent implements OnInit {
   selectedImages: File[] = [];
 
   isDisabled: boolean = false;
- 
+
   selectedPaymenet: number = 0;
   constructor(
     private toastr: ToastrService,
@@ -70,20 +70,20 @@ export class OrderRequiredComponent implements OnInit {
       phoneNumber: [''],
       fullname: [''],
       address: [''],
-      city_province:  [''],
-      district_province:  [''],
-      wards_province:  [''],
+      city_province: [''],
+      district_province: [''],
+      wards_province: [''],
       files: this.fb.array([]),
       payment_method: [''],
       email: ['']
     });
-    
+
   }
   ngOnInit() {
     this.loadData();
     this.updateControls1();
-  
-    
+
+
   }
   updateControls1() {
     // Disable/enable the form controls based on your logic
@@ -134,7 +134,7 @@ export class OrderRequiredComponent implements OnInit {
       this.districtControl.setValue(null, { emitEvent: false });
       this.wardControl.setValue(null, { emitEvent: false });
     });
-    
+
     this.districtControl.valueChanges.subscribe(districtName => {
       this.selectedDistrict = this.districts.find(district => district.name === districtName);
       this.wards = this.selectedDistrict?.wards || [];
@@ -166,30 +166,45 @@ export class OrderRequiredComponent implements OnInit {
   onImagesSelected(event: any): void {
     // Lấy danh sách các file đã chọn
     this.selectedImages = Array.from(event.target.files);
-  
+
     // Tạo một mảng các file
     const files: File[] = Array.from(event.target.files as FileList);
-  
+
     // Kiểm tra định dạng file
     const allowedExtensions = ['.jpg', '.jpeg', '.png'];
     const invalidFiles = files.filter(file => !allowedExtensions.some(ext => file.name.toLowerCase().endsWith(ext)));
-  
+
     if (invalidFiles.length > 0) {
       // Hiển thị thông báo lỗi
       this.toastr.warning(`Chỉ được phép chọn file ảnh với định dạng ${allowedExtensions.join(', ')}.`);
-  
+    
       // Lọc bỏ các file không hợp lệ
       this.selectedImages = this.selectedImages.filter(file => !invalidFiles.includes(file));
+      // Reset ô input sau khi lọc bỏ file không hợp lệ
+      this.resetInput();
+      this.onResetImage();
     }
-  
+
     // Xóa list preview cũ
-    this.imagesPreview = [];
-  
+
+
     // Tạo và lưu URL cho preview
     this.selectedImages.forEach((file: File) => {
       const url = URL.createObjectURL(file);
       this.imagesPreview.push(url);
     });
+  }
+
+  resetInput() {
+    const fileInput = document.getElementById('thumbnailImage') as HTMLInputElement; // Cast to HTMLInputElement
+
+    if (fileInput) {
+      // Clear the value of the file input element
+      fileInput.value = '';
+    } else {
+      // Handle the case where the element doesn't exist (optional)
+      console.error("Element with ID 'fileInput' not found.");
+    }
   }
   onFilesSelected(event: any): void {
     if (event.target.files.length > 0) {
@@ -217,8 +232,8 @@ export class OrderRequiredComponent implements OnInit {
       return false;
     }
 
-    
-   
+
+
 
     return true;
   }
@@ -231,17 +246,17 @@ export class OrderRequiredComponent implements OnInit {
     if (this.uploadForm.valid && this.selectedImages.length) {
       const productData = this.uploadForm.value;
       console.log('Form Data order:', productData);
-  
+
       console.log('Selected Images:', this.selectedImages);
-  
+
       this.authenListService.uploadProductRequired(productData, this.selectedImages)
         .subscribe(
           response => {
             this.isLoadding = false;
             this.toastr.success('Đặt hàng thành công!', 'Thành công');
-            timer(2000).subscribe(() => {
-              window.location.reload();
-            });
+
+            this.onCancel();
+            this.onResetImage();
           },
           error => {
             this.isLoadding = false;
@@ -251,20 +266,20 @@ export class OrderRequiredComponent implements OnInit {
         );
     }
   }
-  
+
 
   onCancel() {
     // Clear the FormArray for 'files'
     const filesArray = this.uploadForm.get('files') as FormArray;
     filesArray.clear();
-  
+
     // Reset the form values
     this.uploadForm.patchValue({
       payment_method: null,
       files: [],
       description: ''
     });
-  
+
     // Reset the imagesPreview array
     this.imagesPreview = [];
   }

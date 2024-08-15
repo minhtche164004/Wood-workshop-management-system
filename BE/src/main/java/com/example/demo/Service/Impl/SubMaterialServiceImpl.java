@@ -383,6 +383,9 @@ public class SubMaterialServiceImpl implements SubMaterialService {
         return employeematerialsList;
     }
 
+    //lúc edit giá thì taọ 1 bản ghi mới trong bảng input , nhưng mã xuất nhập kho vẫn là của cái cũ
+
+
     @Override
     public SubMaterialViewDTO EditSubMaterial(int id, SubMaterialViewDTO subMaterialViewDTO) {
         // Kiểm tra xem có thay đổi gì không
@@ -675,6 +678,7 @@ public class SubMaterialServiceImpl implements SubMaterialService {
                 input.setInput_price(input_sub_last.getInput_price());
                 input.setOut_price(input_sub_last.getOut_price());
                 input.setDate_input(create);
+                input.setCreate_date(input_sub_last.getCreate_date());
                 input.setQuantity(currentQuantity - quantity);
               //  input.setChange_quantity(quantity);
                 input.setCode_input(input_sub_last.getCode_input());
@@ -755,12 +759,32 @@ public class SubMaterialServiceImpl implements SubMaterialService {
                     .filter(inputId -> !existingInputIdsInEmp_input.contains(inputId))  // Giữ input_id không tồn tại trong existingInputIdsInEmp
                     .collect(Collectors.toList());
 
+            List<String> existingInputIdsInEmp_StringCode_Input = list_emp.stream()
+                    .map(emp -> emp.getRequestProductsSubmaterials().getInputSubMaterial().getCode_input())
+                    .collect(Collectors.toList());  // Sử dụng Collectors.toList() cho danh sách
+
+            List<Integer> existingMaterialIdInEmp_input = list_emp.stream()
+                    .map(emp -> emp.getProductSubMaterial().getInputSubMaterial().getSubMaterials().getMaterial().getMaterialId())
+                    .collect(Collectors.toList());  // Sử dụng Collectors.toList() cho danh sách
 
             List<Integer> inputIdsFromMap = subMaterialQuantities.keySet().stream()
                     .collect(Collectors.toList());
             System.out.println(inputIdsFromMap);
-            if (!inputIdsFromMap.containsAll(existingInputIdsInEmp_input)) {
+            List<String> code_input = new ArrayList<>();
+            for(int input_id : inputIdsFromMap){
+                String code =  inputSubMaterialRepository.findCodeInputById(input_id);
+                code_input.add(code);
+            }
+            if (!code_input.containsAll(existingInputIdsInEmp_StringCode_Input)) {
                 throw new AppException(ErrorCode.MATERIAL_EMPLOYEE_HAS_RELATIONSHIPS);
+            }
+            List<Integer> material_id = new ArrayList<>();
+            for(int input_id : inputIdsFromMap){
+                Integer code =  inputSubMaterialRepository.findMaterialInputById(input_id);
+                material_id.add(code);
+            }
+            if (material_id.containsAll(existingMaterialIdInEmp_input)) {
+                throw new AppException(ErrorCode.EXISTED_SUB_MATERIAL);
             }
 
             for (int re_1 : inputIdsNotInEmp) {
@@ -768,7 +792,8 @@ public class SubMaterialServiceImpl implements SubMaterialService {
             }
             for (Map.Entry<Integer, Double> entry : subMaterialQuantities.entrySet()) {
                 int input_id = entry.getKey();
-                if(!existingInputIdsInEmp_input.contains(input_id)) {
+                InputSubMaterial inputSubMaterial = inputSubMaterialRepository.findById(input_id);
+                if(!existingInputIdsInEmp_input.contains(input_id) && !existingInputIdsInEmp_StringCode_Input.contains(inputSubMaterial.getCode_input())) {
                     InputSubMaterial input = inputSubMaterialRepository.findById(input_id);
                     SubMaterials subMaterial = input.getSubMaterials();
                     double quantity = entry.getValue();
@@ -818,7 +843,6 @@ public class SubMaterialServiceImpl implements SubMaterialService {
             List<Integer> existingInputIdsInEmp = list_emp.stream()
                     .map(emp -> emp.getRequestProductsSubmaterials().getRequestProductsSubmaterialsId())
                     .collect(Collectors.toList());  // Sử dụng Collectors.toList() cho danh sách
-
             // Lọc ra các requets_product_ tronid list mà không có trong list_emp
             List<Integer> inputIdsNotInEmp = list.stream()
                     .map(re -> re.getRequestProductsSubmaterialsId())
@@ -829,19 +853,32 @@ public class SubMaterialServiceImpl implements SubMaterialService {
                     .map(emp -> emp.getRequestProductsSubmaterials().getInputSubMaterial().getInput_id())
                     .collect(Collectors.toList());  // Sử dụng Collectors.toList() cho danh sách
 
-
-// Lọc ra các input_id trong list mà *không* có trong list_emp
-            List<Integer> inputIdsNotInEmp_input = list.stream()
-                    .map(re -> re.getInputSubMaterial().getInput_id())  // Lấy trực tiếp input_id
-                    .filter(inputId -> !existingInputIdsInEmp_input.contains(inputId))  // Giữ input_id không tồn tại trong existingInputIdsInEmp
-                    .collect(Collectors.toList());
+            List<String> existingInputIdsInEmp_StringCode_Input = list_emp.stream()
+                    .map(emp -> emp.getRequestProductsSubmaterials().getInputSubMaterial().getCode_input())
+                    .collect(Collectors.toList());  // Sử dụng Collectors.toList() cho danh sách
+            List<Integer> existingMaterialIdInEmp_input = list_emp.stream()
+                    .map(emp -> emp.getRequestProductsSubmaterials().getInputSubMaterial().getSubMaterials().getMaterial().getMaterialId())
+                    .collect(Collectors.toList());  // Sử dụng Collectors.toList() cho danh sách
 
 
             List<Integer> inputIdsFromMap = subMaterialQuantities.keySet().stream()
                     .collect(Collectors.toList());
             System.out.println(inputIdsFromMap);
-            if (!inputIdsFromMap.containsAll(existingInputIdsInEmp_input)) {
+            List<String> code_input = new ArrayList<>();
+            for(int input_id : inputIdsFromMap){
+                String code =  inputSubMaterialRepository.findCodeInputById(input_id);
+                code_input.add(code);
+            }
+            if (!code_input.containsAll(existingInputIdsInEmp_StringCode_Input)) {
                 throw new AppException(ErrorCode.MATERIAL_EMPLOYEE_HAS_RELATIONSHIPS);
+            }
+            List<Integer> material_id = new ArrayList<>();
+            for(int input_id : inputIdsFromMap){
+                Integer code =  inputSubMaterialRepository.findMaterialInputById(input_id);
+                material_id.add(code);
+            }
+            if (material_id.containsAll(existingMaterialIdInEmp_input)) {
+                throw new AppException(ErrorCode.EXISTED_SUB_MATERIAL);
             }
 
             for (int re_1 : inputIdsNotInEmp) {
@@ -849,7 +886,8 @@ public class SubMaterialServiceImpl implements SubMaterialService {
             }
             for (Map.Entry<Integer, Double> entry : subMaterialQuantities.entrySet()) {
                 int input_id = entry.getKey();
-                if(!existingInputIdsInEmp_input.contains(input_id)) {
+                InputSubMaterial inputSubMaterial = inputSubMaterialRepository.findById(input_id);
+                if(!existingInputIdsInEmp_input.contains(input_id) && !existingInputIdsInEmp_StringCode_Input.contains(inputSubMaterial.getCode_input())) {
                     InputSubMaterial input = inputSubMaterialRepository.findById(input_id);
                     SubMaterials subMaterial = input.getSubMaterials();
                     double quantity = entry.getValue();

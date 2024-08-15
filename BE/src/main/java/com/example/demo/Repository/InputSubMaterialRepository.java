@@ -22,6 +22,12 @@ public interface InputSubMaterialRepository extends JpaRepository<InputSubMateri
     @Query("SELECT u FROM InputSubMaterial u WHERE u.input_id = :query")
     InputSubMaterial findById(int query);
 
+    @Query("SELECT u.code_input FROM InputSubMaterial u WHERE u.input_id = :query")
+    String findCodeInputById(int query);
+
+    @Query("SELECT s.material.materialId FROM InputSubMaterial u LEFT JOIN u.subMaterials s WHERE u.input_id = :query")
+    Integer findMaterialInputById(int query);
+
     @Query(value = "SELECT p.* FROM input_sub_material p WHERE p.code_input LIKE :prefix% ORDER BY p.code_input DESC LIMIT 1", nativeQuery = true)
     InputSubMaterial findInputSubMaterialTop(@Param("prefix") String prefix);
 

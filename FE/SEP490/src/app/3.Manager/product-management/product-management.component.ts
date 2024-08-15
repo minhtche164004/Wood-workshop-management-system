@@ -518,7 +518,8 @@ export class ProductManagementComponent implements OnInit {
       subMaterialName: [material.subMaterialName],
       materialType: [material.materialType],
       quantity: [material.quantity],
-      unitPrice: [material.unitPrice]
+      unitPrice: [material.unitPrice],
+      code: [material.code]
     });
     this.itemsEditArray.push(itemFormGroup);
   }
@@ -1383,9 +1384,30 @@ export class ProductManagementComponent implements OnInit {
           this.subMaterialData.forEach((materialItem: any, index: any) => {
             this.selectedMaterialId[index] = materialItem.materialId;
             this.selectedSubMaterialId[index] = materialItem.subMaterialId;
-            this.onMaterialChangeFirstEdit(Number(this.selectedMaterialId[index]), index);
+            // this.onMaterialChangeFirstEdit(Number(this.selectedMaterialId[index]), index);
+            // console.log('input_ideee:', materialItem.input_id);
+            // console.log('ttttt', this.subMaterials[index]);
+            this.productListService.getAllSubMaterialByMaterialIdProduct(Number(this.selectedMaterialId[index])).subscribe(
+              (data: any) => {
+                this.subMaterials[index] = data?.result;
+                console.log('Sub Materials:index'+ index, this.subMaterials[index]);
 
-            this.fillMaterialItemEdit(materialItem);
+                for (let i = 0; i < this.subMaterials[index].length; i++) {
+                  if (this.subMaterials[index][i].code === materialItem.code) {
+                    materialItem.input_id = this.subMaterials[index][i].input_id;
+                    console.log('input_id:213', materialItem.input_id);
+                    break;
+                  }
+                }
+
+                this.fillMaterialItemEdit(materialItem);
+
+              },
+              (error) => {
+                console.error('Error fetching sub materials:', error);
+              }
+            );
+            
             this.totalUnitPrice += materialItem.unitPrice * materialItem.quantity;
             this.quantityPerSubMaterial[index] = materialItem.quantity;
             this.unitPriceSubMaterial[index] = materialItem.unitPrice;

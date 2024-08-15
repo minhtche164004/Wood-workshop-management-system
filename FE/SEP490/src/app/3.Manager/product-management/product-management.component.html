@@ -30,15 +30,16 @@
           </table>
 
           <div class="row">
-            <div class="col-md-2"></div> <!-- Dummy column to push the search box to the right -->
-            <div class="col-md-10 text-end">
+            <div class="col-md-3">
+              <!-- Chọn product thường hay product request -->
+              <select [(ngModel)]="isProduct" (ngModelChange)="onIsProductChange($event)">
+                <option disabled selected>Chọn loại sản phẩm</option>
+                <option [ngValue]="true">Sản phẩm có sẵn</option>
+                <option [ngValue]="false">Sản phẩm theo yêu cầu</option>
+              </select>
+            </div>
+            <div class="col-md-9 text-end">
               <div class="input-group mb-3">
-                <!-- Chọn product thường hay product request -->
-                <select [(ngModel)]="isProduct" (ngModelChange)="onIsProductChange($event)">
-                  <option disabled selected>Chọn loại sản phẩm</option>
-                  <option [ngValue]="true">Sản phẩm có sẵn</option>
-                  <option [ngValue]="false">Sản phẩm theo yêu cầu</option>
-                </select>
                 <!-- Sắp xếp giá tiền -->
                 <select (change)="isProduct" [(ngModel)]="selectedSortByPrice">
                   <option value="0" disabled selected>Sắp xếp giá tiền</option>

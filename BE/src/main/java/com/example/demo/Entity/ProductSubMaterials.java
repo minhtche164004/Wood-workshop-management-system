@@ -20,7 +20,7 @@ public class ProductSubMaterials {
     @Column(name = "product_sub_material_id")
     private int productSubMaterialId;
 
-//    @ManyToOne()
+
     @JoinColumn(name = "sub_material_id", referencedColumnName = "sub_material_id") // Chỉ rõ tên cột liên kết ở cả 2 bảng
     private int subMaterial;
 

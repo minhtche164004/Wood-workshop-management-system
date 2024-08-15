@@ -474,18 +474,8 @@ export class ProductManagementComponent implements OnInit {
           while (this.itemsEditArray.length !== 0) {
             this.itemsEditArray.removeAt(0);
           }
-          // Populate the form with data
-          this.selectedMaterialId = [] as any;
-          this.subMaterialData.forEach((materialItem: any, index: any) => {
-            this.selectedMaterialId[index] = materialItem.materialId;
-            this.selectedSubMaterialId[index] = materialItem.subMaterialId;
-            this.onMaterialChangeFirstEdit(Number(this.selectedMaterialId[index]), index);
+          this.processSubMaterials();
 
-            this.fillMaterialItemEdit(materialItem); // Fill the form with the data
-            this.totalUnitPrice += materialItem.unitPrice * materialItem.quantity;
-            this.quantityPerSubMaterial[index] = materialItem.quantity;
-            this.unitPriceSubMaterial[index] = materialItem.unitPrice;
-          });
 
 
           // console.log(this.itemsEditArray.value);
@@ -1298,6 +1288,12 @@ export class ProductManagementComponent implements OnInit {
               this.toastr.warning(error.error.message, 'Lỗi');
             } else if (error.status === 400 && error.error.code === 1048) {
               this.toastr.warning(error.error.message, 'Lỗi');
+            }
+            else if (error.status === 400 && error.error.code === 1018) {
+              this.toastr.warning(error.error.message, 'Lỗi');
+            }
+            else if (error.status === 400 && error.error.code === 1050) {
+              this.toastr.warning(error.error.message, 'Lỗi');
             } else {
               this.toastr.error('Cập nhật ước tính nguyên vật liệu sản phẩm bị lỗi!', 'Lỗi');
             }
@@ -1396,19 +1392,19 @@ export class ProductManagementComponent implements OnInit {
 
   async processSubMaterials() {
     console.log('subMaterialData:', this.subMaterialData);
-  
+
     for (let index = 0; index < this.subMaterialData.length; index++) {
       const materialItem = this.subMaterialData[index];
       this.selectedMaterialId[index] = materialItem.materialId;
       this.selectedSubMaterialId[index] = materialItem.subMaterialId;
-  
+
       console.log('selectedMaterialId:', this.selectedMaterialId[index]);
-  
+
       try {
         const data: any = await this.productListService.getAllSubMaterialByMaterialIdProduct(Number(this.selectedMaterialId[index])).toPromise();
         this.subMaterials[index] = data?.result;
         console.log('Sub Materials:' + index, this.subMaterials[index]);
-  
+
         for (let i = 0; i < this.subMaterials[index].length; i++) {
           if (this.subMaterials[index][i].code === materialItem.code) {
             materialItem.input_id = this.subMaterials[index][i].input_id;
@@ -1416,17 +1412,17 @@ export class ProductManagementComponent implements OnInit {
             break;
           }
         }
-  
+
         this.fillMaterialItemEdit(materialItem);
       } catch (error) {
         console.error('Error fetching sub materials:', error);
       }
-  
+
       this.totalUnitPrice += materialItem.unitPrice * materialItem.quantity;
       this.quantityPerSubMaterial[index] = materialItem.quantity;
       this.unitPriceSubMaterial[index] = materialItem.unitPrice;
     }
-  
+
     console.log('All sub material data processed');
   }
 
@@ -1801,48 +1797,48 @@ export class ProductManagementComponent implements OnInit {
     }
 
     this.productListService.editProductRequest(updatedProductRequest, this.selectedImages, productData.product_id)
-    .pipe(
-      concatMap(response => {
-        console.log('Update successful', response);
-  
-        const transformedData = {
-          productId: response.result.requestProductId,
-          subMaterialQuantities: transformedObject
-        };
-        console.log("data cua submaterial: 0", transformedData);
-        return this.productListService.EditSubMaterialRequestProduct(transformedData);
-      })
-    )
-    .subscribe(
-      finalResponse => {
-        this.reloadProductRequest();
-        this.isLoadding = false;
-        console.log('Sub material update successful', finalResponse);
-        this.toastr.success('Cập nhật sản phẩm và vật liệu phụ thành công!', 'Thành công');
-        $('[data-dismiss="modal"]').click(); // Đóng modal
-      },
-      error => {
-        console.log('Error block executed', error); // Debugging log
-        this.isLoadding = false;
-        if (error.status === 400 && error.error.code === 1038) {
-          this.toastr.warning(error.error.message, 'Lỗi');
+      .pipe(
+        concatMap(response => {
+          console.log('Update successful', response);
+
+          const transformedData = {
+            productId: response.result.requestProductId,
+            subMaterialQuantities: transformedObject
+          };
+          console.log("data cua submaterial: 0", transformedData);
+          return this.productListService.EditSubMaterialRequestProduct(transformedData);
+        })
+      )
+      .subscribe(
+        finalResponse => {
+          this.reloadProductRequest();
+          this.isLoadding = false;
+          console.log('Sub material update successful', finalResponse);
+          this.toastr.success('Cập nhật sản phẩm và vật liệu phụ thành công!', 'Thành công');
+          $('[data-dismiss="modal"]').click(); // Đóng modal
+        },
+        error => {
+          console.log('Error block executed', error); // Debugging log
+          this.isLoadding = false;
+          if (error.status === 400 && error.error.code === 1038) {
+            this.toastr.warning(error.error.message, 'Lỗi');
+          }
+          else if (error.status === 400 && error.error.code === 1048) {
+            this.toastr.warning(error.error.message, 'Lỗi');
+          }
+          else if (error.status === 400 && error.error.code === 1018) {
+            this.toastr.warning(error.error.message, 'Lỗi');
+          }
+          else if (error.status === 400 && error.error.code === 1050) {
+            this.toastr.warning(error.error.message, 'Lỗi');
+          }
+          else {
+            this.toastr.error('Cập nhật sản phẩm bị lỗi!', 'Lỗi');
+          }
+          console.error('Update error', error);
+          $('[data-dismiss="modal"]').click(); // Đóng modal
         }
-        else if (error.status === 400 && error.error.code === 1048) {
-          this.toastr.warning(error.error.message, 'Lỗi');
-        }
-        else if (error.status === 400 && error.error.code === 1018) {
-          this.toastr.error(error.error.message, 'Lỗi');
-        }
-        else if (error.status === 400 && error.error.code === 1050) {
-          this.toastr.error(error.error.message, 'Lỗi');
-        }
-        else {
-          this.toastr.error('Cập nhật sản phẩm bị lỗi!', 'Lỗi');
-        }
-        console.error('Update error', error);
-        $('[data-dismiss="modal"]').click(); // Đóng modal
-      }
-    );
+      );
 
   }
 

@@ -860,7 +860,7 @@ public class SubMaterialServiceImpl implements SubMaterialService {
                     .map(emp -> emp.getRequestProductsSubmaterials().getInputSubMaterial().getSubMaterials().getMaterial().getMaterialId())
                     .collect(Collectors.toList());  // Sử dụng Collectors.toList() cho danh sách
 
-
+///
             List<Integer> inputIdsFromMap = subMaterialQuantities.keySet().stream()
                     .collect(Collectors.toList());
             System.out.println(inputIdsFromMap);

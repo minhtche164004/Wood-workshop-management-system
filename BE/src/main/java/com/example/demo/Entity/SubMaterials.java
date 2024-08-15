@@ -28,20 +28,10 @@ public class SubMaterials {
     @Column(name = "description")
     private String description;
 
-//    @Column(name = "quantity")
-//    private Double quantity;
-
-//    @Column(name = "unit_price")  //giá bán
-//    private BigDecimal unitPrice;
-//
-//    @Column(name = "input_price")  //giá nhập
-//    private BigDecimal inputPrice;
 
     @Column(name = "code")
     private String code;
 
-//    @Column(name = "create_date")
-//    private Date create_date;
 
     @OneToMany(mappedBy = "subMaterials")
     @JsonIgnore

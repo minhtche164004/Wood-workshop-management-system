@@ -20,9 +20,9 @@ public class ProductSubMaterials {
     @Column(name = "product_sub_material_id")
     private int productSubMaterialId;
 
-    @ManyToOne()
+//    @ManyToOne()
     @JoinColumn(name = "sub_material_id", referencedColumnName = "sub_material_id") // Chỉ rõ tên cột liên kết ở cả 2 bảng
-    private SubMaterials subMaterial;
+    private int subMaterial;
 
     @ManyToOne()
     @JoinColumn(name = "product_id", referencedColumnName = "product_id")
@@ -36,7 +36,7 @@ public class ProductSubMaterials {
     private InputSubMaterial inputSubMaterial; // Thêm trường để lưu InputSubMaterial
 
 
-    public ProductSubMaterials(SubMaterials subMaterial, Products product, Double quantity,InputSubMaterial inputSubMaterial) {
+    public ProductSubMaterials(int subMaterial, Products product, Double quantity,InputSubMaterial inputSubMaterial) {
         this.subMaterial = subMaterial;
         this.product = product;
         this.quantity = quantity;

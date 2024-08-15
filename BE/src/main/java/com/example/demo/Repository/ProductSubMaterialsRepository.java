@@ -23,7 +23,7 @@ import java.util.List;
 @EnableJpaRepositories
 public interface ProductSubMaterialsRepository extends JpaRepository<ProductSubMaterials,Integer> {
 
-    @Query("SELECT u.subMaterial.subMaterialName FROM ProductSubMaterials u WHERE u.product.productId = :query AND u.subMaterial.material.materialId IN (1, 2)")
+    @Query("SELECT sub.subMaterialName FROM ProductSubMaterials u LEFT JOIN u.inputSubMaterial.subMaterials sub WHERE u.product.productId = :query AND sub.material.materialId IN (1, 2)")
     List<String> GetSubNameByProductId(int query);
 
 //    @Query("SELECT u.subMaterial FROM ProductSubMaterials u WHERE u.product.productId = :query AND u.subMaterial.material.materialId IN (1, 2)")
@@ -31,29 +31,28 @@ public interface ProductSubMaterialsRepository extends JpaRepository<ProductSubM
 
     @Query("SELECT new com.example.demo.Dto.SubMaterialDTO.SubMaterialViewDTO(" +
             "s.subMaterialId, COALESCE(s.subMaterialName, ''), m.materialId, COALESCE(s.description, ''), " +
-            "COALESCE(m.materialName, ''), ism.quantity, ism.out_price,ism.input_price,m.type,s.code,ism.input_id) " + // Thêm dấu phẩy và loại bỏ COALESCE cho các ID
+            "COALESCE(m.materialName, ''), ism.quantity, ism.out_price,ism.input_price,m.type,s.code,ism.input_id,ism.code_input) " + // Thêm dấu phẩy và loại bỏ COALESCE cho các ID
             "FROM ProductSubMaterials p " +
-            "LEFT JOIN p.subMaterial s " +
-            "LEFT JOIN InputSubMaterial ism ON s.subMaterialId = ism.subMaterials.subMaterialId" +
+            "LEFT JOIN InputSubMaterial ism ON p.subMaterial = ism.subMaterials.subMaterialId" +
+            " LEFT JOIN ism.subMaterials s"+
             " LEFT JOIN s.material m " + // Di chuyển điều kiện WHERE vào đây
             "WHERE " +
             "(ism.input_id, ism.date_input) IN (" +
             "SELECT MAX(ism2.input_id), MAX(ism2.date_input) " +
             "FROM InputSubMaterial ism2 " +
             "GROUP BY ism2.code_input " +
-            ") AND  p.product.productId = :query AND p.subMaterial.material.materialId IN (1, 4)")
+            ") AND  p.product.productId = :query AND s.material.materialId IN (1, 4)")
     List<SubMaterialViewDTO> GetSubMaterialByProductId(int query);
 
     @Query("SELECT p.product " +
             "FROM ProductSubMaterials p " +
-            "JOIN p.subMaterial s " +
-            "WHERE s.subMaterialId = :query")
+            " WHERE p.subMaterial = :query")
     List<Products> getProductIdsBySubMaterialId(@Param("query") int subMaterialId);
 
     @Query("SELECT p.quantity " +
             "FROM ProductSubMaterials p " +
-            "LEFT JOIN p.product pr " +
-            "JOIN p.subMaterial s " +
+            " LEFT JOIN p.inputSubMaterial.subMaterials s"+
+            " LEFT JOIN p.product pr " +
             "WHERE pr.productId = :productId AND s.subMaterialId = :subMaterialId")
     Double getQuantityInProductSubMaterialsByProductId(@Param("productId") int productId,@Param("subMaterialId") int subMaterialId);
 
@@ -64,27 +63,27 @@ public interface ProductSubMaterialsRepository extends JpaRepository<ProductSubM
     @Query("DELETE FROM ProductSubMaterials u WHERE u.productSubMaterialId = :query")
     void deleteProductSubMaterialsById(@Param("query") int productSubMaterialId);
 
-    @Query("SELECT u FROM ProductSubMaterials u WHERE u.product.productId = :query AND u.subMaterial.material.materialId = :mate_id")
+    @Query("SELECT u FROM ProductSubMaterials u LEFT JOIN u.inputSubMaterial.subMaterials s WHERE u.product.productId = :query AND s.material.materialId = :mate_id")
     List<ProductSubMaterials> findByProductIDAndMate(int query,int mate_id);
 
     @Query("SELECT u FROM ProductSubMaterials u WHERE u.product.productId = :query")
     List<ProductSubMaterials> findByProductID(int query);
 
-    @Query("SELECT u FROM ProductSubMaterials u WHERE u.subMaterial.subMaterialId = :query")
+    @Query("SELECT u FROM ProductSubMaterials u WHERE u.subMaterial = :query")
     List<ProductSubMaterials> findBySubMaterialId(int query);
 
 
     @Query("SELECT new com.example.demo.Dto.SubMaterialDTO.Product_SubmaterialDTO(j.productSubMaterialId, sub.subMaterialName,sub.subMaterialId,j.quantity, m.type) " +
             "FROM ProductSubMaterials j " +
-            "LEFT JOIN j.subMaterial sub " +
-            "LEFT JOIN sub.material m WHERE j.product.productId= :productId AND j.subMaterial.material.materialId = :materialId")
+            " LEFT JOIN j.inputSubMaterial.subMaterials sub"+
+            " LEFT JOIN sub.material m WHERE j.product.productId= :productId AND sub.material.materialId = :materialId")
     List<Product_SubmaterialDTO> getProductSubMaterialByProductIdAndTypeMate(int productId,int materialId);
 
     @Query("SELECT new com.example.demo.Dto.SubMaterialDTO.SubMateProductDTO( " +
             "m.materialId ,sub.subMaterialId ,sub.subMaterialName, m.type, ism.out_price, j.quantity,ism.code_input,ism.input_id) " +
             "FROM ProductSubMaterials j " +
-            "LEFT JOIN j.subMaterial sub " +
-            "LEFT JOIN j.inputSubMaterial ism " +
+            " LEFT JOIN j.inputSubMaterial.subMaterials sub"+
+             " LEFT JOIN j.inputSubMaterial ism " +
             " LEFT JOIN sub.material m " + // Di chuyển điều kiện WHERE vào đây
             "WHERE j.product.productId = :productId")
     List<SubMateProductDTO> getProductSubMaterialByProductIdDTO(int productId);
@@ -96,8 +95,8 @@ public interface ProductSubMaterialsRepository extends JpaRepository<ProductSubM
             " FROM InputSubMaterial ism " +
             "ORDER BY ism.date_input DESC " +
             "LIMIT 1 " +
-            ") latestInput ON s.subMaterial.subMaterialId = latestInput.subMaterialId " +
-            " LEFT JOIN s.subMaterial sub WHERE s.product.productId = :productId")
+            ") latestInput ON s.inputSubMaterial.subMaterials.subMaterialId = latestInput.subMaterialId " +
+            "  LEFT JOIN s.inputSubMaterial.subMaterials sub WHERE s.product.productId = :productId")
     BigDecimal ToTalProductSubMaterialByProductId(int productId);
 
 //    @Query("SELECT new com.example.demo.Dto.SubMaterialDTO.SubMateProductDTO( " +

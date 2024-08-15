@@ -75,40 +75,44 @@ public interface Employee_Material_Repository extends JpaRepository<Employeemate
 
 
     @Query("SELECT DISTINCT new com.example.demo.Dto.JobDTO.Employee_MaterialDTO(" +
-            "e.empMaterialId, u.userId, u.userInfor.fullname, pos.position_name, ep.subMaterial.subMaterialId, ep.subMaterial.subMaterialName, ep.quantity, CAST(j.timeStart AS date), j.code) " +
+            "e.empMaterialId, u.userId, u.userInfor.fullname, pos.position_name, ep.subMaterial, s.subMaterialName, ep.quantity, CAST(j.timeStart AS date), j.code) " +
             "FROM Employeematerials e " +
             "LEFT JOIN e.employee u " +
             "LEFT JOIN u.position pos " +
             "LEFT JOIN e.productSubMaterial ep " +
+            "LEFT JOIN ep.inputSubMaterial.subMaterials s " +
             " JOIN Jobs j ON u.userId = j.user.userId " +
             "WHERE ep IS NOT NULL " +
             "UNION  " +
             "SELECT new com.example.demo.Dto.JobDTO.Employee_MaterialDTO(" +
-            "e.empMaterialId, u.userId, u.userInfor.fullname, pos.position_name, er.subMaterial.subMaterialId, er.subMaterial.subMaterialName, er.quantity, CAST(j.timeStart AS date), j.code) " +
+            "e.empMaterialId, u.userId, u.userInfor.fullname, pos.position_name, er.subMaterial, s.subMaterialName, er.quantity, CAST(j.timeStart AS date), j.code) " +
             "FROM Employeematerials e " +
             "LEFT JOIN e.employee u " +
             "LEFT JOIN u.position pos " +
             "LEFT JOIN e.requestProductsSubmaterials er " +
+            "LEFT JOIN er.inputSubMaterial.subMaterials s " +
             "LEFT JOIN Jobs j ON u.userId = j.user.userId " +
             "WHERE er IS NOT NULL")
     List<Employee_MaterialDTO> getAllEmployeeMate();
 
 
     @Query("SELECT DISTINCT new com.example.demo.Dto.JobDTO.Employee_MaterialDTO(" +
-            "e.empMaterialId, u.userId, u.userInfor.fullname, pos.position_name, ep.subMaterial.subMaterialId, ep.subMaterial.subMaterialName, ep.quantity, CAST(j.timeStart AS date), j.code) " +
+            "e.empMaterialId, u.userId, u.userInfor.fullname, pos.position_name, ep.subMaterial, s.subMaterialName, ep.quantity, CAST(j.timeStart AS date), j.code) " +
             "FROM Employeematerials e " +
             "LEFT JOIN e.employee u " +
             "LEFT JOIN u.position pos " +
             "LEFT JOIN e.productSubMaterial ep " +
+            "LEFT JOIN ep.inputSubMaterial.subMaterials s " +
             "LEFT JOIN Jobs j ON u.userId = j.user.userId " +
             "WHERE ep IS NOT NULL AND u.userInfor.fullname LIKE CONCAT('%', :keyword, '%') " +
             "UNION  " +
             "SELECT new com.example.demo.Dto.JobDTO.Employee_MaterialDTO(" +
-            "e.empMaterialId, u.userId, u.userInfor.fullname, pos.position_name, er.subMaterial.subMaterialId, er.subMaterial.subMaterialName, er.quantity, CAST(j.timeStart AS date), j.code) " +
+            "e.empMaterialId, u.userId, u.userInfor.fullname, pos.position_name, er.subMaterial, s.subMaterialName, er.quantity, CAST(j.timeStart AS date), j.code) " +
             "FROM Employeematerials e " +
             "LEFT JOIN e.employee u " +
             "LEFT JOIN u.position pos " +
             "LEFT JOIN e.requestProductsSubmaterials er " +
+            "LEFT JOIN er.inputSubMaterial.subMaterials s " +
             "LEFT JOIN Jobs j ON u.userId = j.user.userId " +
             "WHERE er IS NOT NULL AND u.userInfor.fullname LIKE CONCAT('%', :keyword, '%')")
     List<Employee_MaterialDTO> getAllEmployeeMateByNameEmployee(@Param("keyword") String keyword);

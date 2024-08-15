@@ -19,9 +19,9 @@ public class RequestProductsSubmaterials {
     private int requestProductsSubmaterialsId;
 
 
-    @ManyToOne(cascade = CascadeType.ALL)
+//    @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "sub_material_id")
-    private SubMaterials subMaterial;
+    private int subMaterial;
 
 
     @ManyToOne // Many-to-One relationship with RequestProducts
@@ -35,7 +35,7 @@ public class RequestProductsSubmaterials {
     @JoinColumn(name = "input_id", referencedColumnName = "input_id") // Liên kết với input_id của InputSubMaterial
     private InputSubMaterial inputSubMaterial; // Thêm trường để lưu InputSubMaterial
 
-    public RequestProductsSubmaterials(SubMaterials subMaterial, RequestProducts requestProduct, Double quantity,InputSubMaterial inputSubMaterial) {
+    public RequestProductsSubmaterials(int subMaterial, RequestProducts requestProduct, Double quantity,InputSubMaterial inputSubMaterial) {
         this.subMaterial = subMaterial;
         this.requestProduct = requestProduct;
         this.quantity = quantity;

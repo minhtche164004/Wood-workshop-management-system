@@ -739,7 +739,7 @@ public class SubMaterialServiceImpl implements SubMaterialService {
             //kiếm những thằng nào chưa giao cho nhân viên thì xoá nó đi
             // Tạo danh sách chứa các input_id trong list_emp
             List<Integer> existingInputIdsInEmp = list_emp.stream()
-                    .map(emp -> emp.getRequestProductsSubmaterials().getRequestProductsSubmaterialsId())
+                    .map(emp -> emp.getProductSubMaterial().getProductSubMaterialId())
                     .collect(Collectors.toList());  // Sử dụng Collectors.toList() cho danh sách
 
             // Lọc ra các requets_product_ tronid list mà không có trong list_emp
@@ -753,14 +753,8 @@ public class SubMaterialServiceImpl implements SubMaterialService {
                     .collect(Collectors.toList());  // Sử dụng Collectors.toList() cho danh sách
 
 
-// Lọc ra các input_id trong list mà *không* có trong list_emp
-            List<Integer> inputIdsNotInEmp_input = list.stream()
-                    .map(re -> re.getInputSubMaterial().getInput_id())  // Lấy trực tiếp input_id
-                    .filter(inputId -> !existingInputIdsInEmp_input.contains(inputId))  // Giữ input_id không tồn tại trong existingInputIdsInEmp
-                    .collect(Collectors.toList());
-
             List<String> existingInputIdsInEmp_StringCode_Input = list_emp.stream()
-                    .map(emp -> emp.getRequestProductsSubmaterials().getInputSubMaterial().getCode_input())
+                    .map(emp -> emp.getProductSubMaterial().getInputSubMaterial().getCode_input())
                     .collect(Collectors.toList());  // Sử dụng Collectors.toList() cho danh sách
 
             List<Integer> existingMaterialIdInEmp_input = list_emp.stream()
@@ -788,7 +782,7 @@ public class SubMaterialServiceImpl implements SubMaterialService {
             }
 
             for (int re_1 : inputIdsNotInEmp) {
-                requestProductsSubmaterialsRepository.deleteRequestProductSubMaterialsById(re_1); // Xóa trước khi thêm mới
+                productSubMaterialsRepository.deleteProductSubMaterialsById(re_1); // Xóa trước khi thêm mới
             }
             for (Map.Entry<Integer, Double> entry : subMaterialQuantities.entrySet()) {
                 int input_id = entry.getKey();

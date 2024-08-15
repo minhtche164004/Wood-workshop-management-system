@@ -13,4 +13,5 @@ public class ReProduct_SubmaterialDTO {
     private int sub_id;
     private double quantity;
     private String sub_type;
+    private String code_input;
 }

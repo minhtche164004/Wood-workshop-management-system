@@ -68,16 +68,17 @@ public interface OrderRepository extends JpaRepository<Orders,Integer> {
 
     @Query("SELECT new com.example.demo.Dto.OrderDTO.OderDTO(" +
             "COALESCE(o.code, ''), o.orderId, COALESCE(o.orderDate, '') , o.totalAmount,COALESCE(s.status_id, 0) " +
-            ",COALESCE(s.status_name, '') , COALESCE(o.paymentMethod, ''),COALESCE(o.deposite, 0) ,COALESCE(o.specialOrder, false), o.contractDate)" + // Sử dụng COALESCE
+            ",COALESCE(s.status_name, '') , COALESCE(o.paymentMethod, ''),COALESCE(o.deposite, 0) ,COALESCE(o.specialOrder, false), o.contractDate)" +
             " FROM Orders o" +
-            " LEFT JOIN o.status s ORDER BY o.orderDate DESC")
+            " LEFT JOIN o.status s ORDER BY o.orderId DESC ")
     List<OderDTO> getAllOrder();
+  //  o.orderDate DESC ,
 
     @Query("SELECT new com.example.demo.Dto.OrderDTO.OderDTO(" +
             "COALESCE(o.code, ''), o.orderId, COALESCE(o.orderDate, '') , o.totalAmount,COALESCE(s.status_id, 0) " +
             ",COALESCE(s.status_name, '') , COALESCE(o.paymentMethod, ''),COALESCE(o.deposite, 0) ,COALESCE(o.specialOrder, false), o.contractDate)" + // Sử dụng COALESCE
             " FROM Orders o" +
-            " LEFT JOIN o.status s WHERE o.specialOrder = TRUE ORDER BY o.orderDate DESC")
+            " LEFT JOIN o.status s WHERE o.specialOrder = TRUE ORDER BY o.orderId DESC")
     List<OderDTO> getAllOrderSpecial();
 
     @Query("SELECT new com.example.demo.Dto.OrderDTO.OderDTO(" +
@@ -91,7 +92,7 @@ public interface OrderRepository extends JpaRepository<Orders,Integer> {
             //     " (:specialOrder IS NULL OR o.specialOrder = :specialOrder) AND " + // Sửa đổi tại đây
             "(o.orderDate >= :startDate OR :startDate IS NULL) AND " +
             "(o.orderDate <= :endDate OR :endDate IS NULL) "+
-           " ORDER BY o.orderDate DESC")
+           "ORDER BY o.orderId DESC")
     List<OderDTO> MultiFilterOrder(@Param("search") String search,
                                    @Param("status_id") Integer status_id,
                                    @Param("paymentMethod") Integer paymentMethod,
@@ -107,7 +108,7 @@ public interface OrderRepository extends JpaRepository<Orders,Integer> {
             "(o.paymentMethod = :paymentMethod OR :paymentMethod IS NULL) AND " +
             //     " (:specialOrder IS NULL OR o.specialOrder = :specialOrder) AND " + // Sửa đổi tại đây
             "(o.orderDate >= :startDate OR :startDate IS NULL) AND " +
-            "(o.orderDate <= :endDate OR :endDate IS NULL) ORDER BY o.orderDate DESC")
+            "(o.orderDate <= :endDate OR :endDate IS NULL) ORDER BY o.orderId DESC")
     List<Orders> MultiFilterOrderForEmployee(int userId,
             @Param("search") String search,
                                    @Param("status_id") Integer status_id,
@@ -125,7 +126,7 @@ public interface OrderRepository extends JpaRepository<Orders,Integer> {
             "(o.paymentMethod = :paymentMethod OR :paymentMethod IS NULL) AND " +
             " (o.specialOrder = :specialOrder OR :specialOrder IS NULL) AND " + // Sửa đổi tại đây
             "(o.orderDate >= :startDate OR :startDate IS NULL) AND " +
-            "(o.orderDate <= :endDate OR :endDate IS NULL) ORDER BY o.orderDate DESC")
+            "(o.orderDate <= :endDate OR :endDate IS NULL) ORDER BY o.orderId DESC")
     List<Orders> MultiFilterOrderSpecialOrderForEmployee(int userId,@Param("search") String search,
                                                @Param("status_id") Integer status_id,
                                                @Param("paymentMethod") Integer paymentMethod,
@@ -141,7 +142,7 @@ public interface OrderRepository extends JpaRepository<Orders,Integer> {
             "(s.status_id = :status_id OR :status_id IS NULL) AND " +
             "(o.paymentMethod = :paymentMethod OR :paymentMethod IS NULL) AND " +
             "(o.orderDate >= :startDate OR :startDate IS NULL) AND " +
-            "(o.orderDate <= :endDate OR :endDate IS NULL) ORDER BY o.orderDate DESC")
+            "(o.orderDate <= :endDate OR :endDate IS NULL) ORDER BY o.orderId DESC")
     List<Orders> MultiFilterOrderWithoutOrderTypeForEmployee(int userId,@Param("search") String search,
                                                    @Param("status_id") Integer status_id,
                                                    @Param("paymentMethod") Integer paymentMethod,
@@ -157,7 +158,7 @@ public interface OrderRepository extends JpaRepository<Orders,Integer> {
             "(o.paymentMethod = :paymentMethod OR :paymentMethod IS NULL) AND " +
             " (o.specialOrder = :specialOrder OR :specialOrder IS NULL) AND " + // Sửa đổi tại đây
             "(o.orderDate >= :startDate OR :startDate IS NULL) AND " +
-            "(o.orderDate <= :endDate OR :endDate IS NULL) ORDER BY o.orderDate DESC")
+            "(o.orderDate <= :endDate OR :endDate IS NULL) ORDER BY o.orderId DESC")
     List<OderDTO> MultiFilterOrderSpecialOrder(@Param("search") String search,
                                                @Param("status_id") Integer status_id,
                                                @Param("paymentMethod") Integer paymentMethod,
@@ -173,7 +174,7 @@ public interface OrderRepository extends JpaRepository<Orders,Integer> {
             "(s.status_id = :status_id OR :status_id IS NULL) AND " +
             "(o.paymentMethod = :paymentMethod OR :paymentMethod IS NULL) AND " +
             "(o.orderDate >= :startDate OR :startDate IS NULL) AND " +
-            "(o.orderDate <= :endDate OR :endDate IS NULL) ORDER BY o.orderDate DESC")
+            "(o.orderDate <= :endDate OR :endDate IS NULL) ORDER BY o.orderId DESC")
     List<OderDTO> MultiFilterOrderWithoutOrderType(@Param("search") String search,
                                                @Param("status_id") Integer status_id,
                                                @Param("paymentMethod") Integer paymentMethod,

@@ -34,10 +34,12 @@ public interface RequestProductsSubmaterialsRepository extends JpaRepository<Req
     @Query("SELECT u FROM RequestProductsSubmaterials u WHERE u.requestProduct.requestProductId = :query  AND u.subMaterial.material.materialId = :mate_id")
     List<RequestProductsSubmaterials> findByRequestProductIDAndMate(int query,int mate_id);
 
-    @Query("SELECT new com.example.demo.Dto.SubMaterialDTO.ReProduct_SubmaterialDTO(j.requestProductsSubmaterialsId, sub.subMaterialName,sub.subMaterialId,j.quantity, m.type) " +
+    @Query("SELECT new com.example.demo.Dto.SubMaterialDTO.ReProduct_SubmaterialDTO(j.requestProductsSubmaterialsId, sub.subMaterialName,sub.subMaterialId" +
+            ",j.quantity, m.type,i.code_input) " +
             "FROM RequestProductsSubmaterials j " +
-            "LEFT JOIN j.subMaterial sub " +
-            "LEFT JOIN sub.material m WHERE j.requestProduct.requestProductId= :requestProductId AND j.subMaterial.material.materialId = :materialId")
+            "LEFT JOIN j.subMaterial sub" +
+            " LEFT JOIN j.inputSubMaterial i" +
+            " LEFT JOIN sub.material m WHERE j.requestProduct.requestProductId= :requestProductId AND j.subMaterial.material.materialId = :materialId")
     List<ReProduct_SubmaterialDTO> getRequestProductSubMaterialByProductIdAndTypeMate(int requestProductId,int materialId);
 
     @Query("SELECT u.subMaterial.subMaterialName FROM RequestProductsSubmaterials u WHERE u.requestProduct.requestProductId = :query AND u.subMaterial.material.materialId IN (1, 2)")

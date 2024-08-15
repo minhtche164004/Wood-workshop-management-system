@@ -704,6 +704,7 @@ public class SubMaterialServiceImpl implements SubMaterialService {
             return ResponseEntity.ok(apiResponse);
         }
     }
+    @Transactional
     @Override
     public List<ProductSubMaterials> EditSubMaterialProduct(int product_id, Map<Integer, Double> subMaterialQuantities) {
         Products products = productRepository.findById(product_id);
@@ -720,11 +721,18 @@ public class SubMaterialServiceImpl implements SubMaterialService {
                 ProductSubMaterials requestProductsSubmaterials = new ProductSubMaterials(subMaterial, products, quantity, input);
                 productSubMaterialsList.add(requestProductsSubmaterials);
             }
+            productSubMaterialsRepository.saveAll(productSubMaterialsList);
         }
         if (!list.isEmpty() && list_emp.isEmpty()) { //nếu list ước lượng đã có trước đó nhưng chưa giao nguyên liệu cho nhân viên
-            for (ProductSubMaterials re_1 : list) {
-                productSubMaterialsRepository.deleteProductSubMaterialsById(re_1.getProductSubMaterialId()); // Xóa trước khi thêm mới
+            List<Integer> list_id_request_sub = list.stream()
+                    .map(emp -> emp.getProductSubMaterialId())
+                    .collect(Collectors.toList());  // Sử dụng Collectors.toList() cho danh sách
+            for (int re_1 : list_id_request_sub) {
+                productSubMaterialsRepository.deleteProductSubMaterialsById(re_1); // Xóa trước khi thêm mới
             }
+//            for (ProductSubMaterials re_1 : list) {
+//                productSubMaterialsRepository.deleteProductSubMaterialsById(re_1.getProductSubMaterialId()); // Xóa trước khi thêm mới
+//            }
             for (Map.Entry<Integer, Double> entry : subMaterialQuantities.entrySet()) {
                 int input_id = entry.getKey();
                 InputSubMaterial input = inputSubMaterialRepository.findById(input_id);
@@ -801,6 +809,7 @@ public class SubMaterialServiceImpl implements SubMaterialService {
     }
 
 
+    @Transactional
     @Override
     public  List<RequestProductsSubmaterials> EditSubMaterialRequestProduct(int request_product_id, Map<Integer, Double> subMaterialQuantities) {
         RequestProducts requestProducts = requestProductRepository.findById(request_product_id);
@@ -816,11 +825,19 @@ public class SubMaterialServiceImpl implements SubMaterialService {
                 RequestProductsSubmaterials requestProductsSubmaterials = new RequestProductsSubmaterials(subMaterial, requestProducts, quantity, input);
                 requestProductsSubmaterialsList.add(requestProductsSubmaterials);
             }
+            requestProductsSubmaterialsRepository.saveAll(requestProductsSubmaterialsList);
         }
         if (!list.isEmpty() && list_emp.isEmpty()) { //nếu list ước lượng đã có trước đó nhưng chưa giao nguyên liệu cho nhân viên
-            for (RequestProductsSubmaterials re_1 : list) {
-                requestProductsSubmaterialsRepository.deleteRequestProductSubMaterialsById(re_1.getRequestProductsSubmaterialsId()); // Xóa trước khi thêm mới
+            List<Integer> list_id_request_sub = list.stream()
+                    .map(emp -> emp.getRequestProductsSubmaterialsId())
+                    .collect(Collectors.toList());  // Sử dụng Collectors.toList() cho danh sách
+            for (int re_1 : list_id_request_sub) {
+                requestProductsSubmaterialsRepository.deleteRequestProductSubMaterialsById(re_1); // Xóa trước khi thêm mới
             }
+
+//            for (RequestProductsSubmaterials re_1 : list) {
+//                requestProductsSubmaterialsRepository.deleteRequestProductSubMaterialsById(re_1.getRequestProductsSubmaterialsId()); // Xóa trước khi thêm mới
+//            }
             for (Map.Entry<Integer, Double> entry : subMaterialQuantities.entrySet()) {
                 int input_id = entry.getKey();
                 InputSubMaterial input = inputSubMaterialRepository.findById(input_id);

@@ -538,7 +538,7 @@ public class SubMaterialServiceImpl implements SubMaterialService {
 
                 String code_input_sub = requestProductsSubmaterials.getInputSubMaterial().getCode_input();
                 int sub_mate_id = requestProductsSubmaterials.getSubMaterial().getSubMaterialId();
-                InputSubMaterial input_last = inputSubMaterialRepository.findLatestSubMaterialInputSubMaterialBySubMaterialIdGroupByCodeTest(code_input_sub,sub_mate_id);
+                InputSubMaterial input_last = inputSubMaterialRepository.findLatestSubMaterialInputSubMaterialBySubMaterialIdGroupByCode(code_input_sub,sub_mate_id);
                 requestProductsSubmaterials.setInputSubMaterial(input_last);
                 requestProductsSubmaterialsRepository.save(requestProductsSubmaterials);
                 // Lưu từng đối tượng và thêm vào danh sách kết quả
@@ -689,7 +689,7 @@ public class SubMaterialServiceImpl implements SubMaterialService {
                 employeeMaterials.setTotal_material(quantity);
                 String code_input_sub = productSubMaterials.getInputSubMaterial().getCode_input();
                 int sub_mate_id = productSubMaterials.getSubMaterial().getSubMaterialId();
-                InputSubMaterial input_last = inputSubMaterialRepository.findLatestSubMaterialInputSubMaterialBySubMaterialIdGroupByCodeTest(code_input_sub,sub_mate_id);
+                InputSubMaterial input_last = inputSubMaterialRepository.findLatestSubMaterialInputSubMaterialBySubMaterialIdGroupByCode(code_input_sub,sub_mate_id);
                 productSubMaterials.setInputSubMaterial(input_last);
                 productSubMaterialsRepository.save(productSubMaterials);
                 // Lưu từng đối tượng và thêm vào danh sách kết quả

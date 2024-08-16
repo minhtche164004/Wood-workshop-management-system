@@ -50,8 +50,9 @@ public interface ProductSubMaterialsRepository extends JpaRepository<ProductSubM
 
     @Query("SELECT p.product " +
             "FROM ProductSubMaterials p " +
-            " WHERE p.subMaterial = :query")
-    List<Products> getProductIdsBySubMaterialId(@Param("query") int subMaterialId);
+            " LEFT JOIN  p.inputSubMaterial ism" +
+            " WHERE p.subMaterial = :subMaterial and ism.input_id = :input_id")
+    List<Products> getProductIdsBySubMaterialId(@Param("subMaterial") int subMaterialId,@Param("input_id") int input_id);
 
     @Query("SELECT p.quantity " +
             "FROM ProductSubMaterials p " +

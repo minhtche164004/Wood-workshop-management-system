@@ -180,84 +180,47 @@ public class SubMaterialServiceImpl implements SubMaterialService {
                     if (!checkConditionService.checkInputPrice(dto.getUnit_price())) {
                         errors.add(new ExcelError(rowIndex, 5, "Đơn giá không hợp lệ"));
                     }
+                    if (!checkConditionService.checkInputPrice(dto.getInput_price())) {
+                        errors.add(new ExcelError(rowIndex, 5, "Đơn giá không hợp lệ"));
+                    }
 
                     String subMaterialName = dto.getSub_material_name();
                     String materialName = dto.getMaterial_name(); // Lấy tên vật liệu từ DTO
                     BigDecimal unit_price = dto.getUnit_price();
 
-//                    SubMaterials existingSubMaterial = subMaterialsRepository.findBySubmaterialNameAndMaterialName(subMaterialName, materialName);
-//
-//                    if (existingSubMaterial != null) {
-//                        boolean isPriceUpdated = false;
-//                        boolean isQuantityUpdated=false;
-//                        if(existingSubMaterial.getUnitPrice().compareTo(unit_price) != 0){
-//                            isPriceUpdated = true;
-//                        }
-//                        double epsilon = 0.00001; // Hoặc một giá trị epsilon phù hợp
-//                        if (Math.abs(existingSubMaterial.getQuantity() - dto.getQuantity()) > epsilon) {
-//                            isQuantityUpdated = true;
-//                        }
-//
-//                        if (isPriceUpdated || isQuantityUpdated) {
-//                            // Có thay đổi, lưu vào InputSubMaterial
-//                            InputSubMaterial input = new InputSubMaterial();
-//                            input.setSubMaterials(existingSubMaterial);
-//                            input.setUnit_price(isPriceUpdated ? unit_price : existingSubMaterial.getUnitPrice()); // Nếu không thay đổi, giữ nguyên giá cũ
-//
-//                            input.setQuantity(isQuantityUpdated ? dto.getQuantity() : 0); // Lưu thay đổi số lượng hoặc 0 nếu không thay đổi (thay đổi số lượng ở đây chỉ có thể là tăng chứu ko có giảm)
-//                            input.setDate_input(create);
-//
-//                            if (isPriceUpdated && isQuantityUpdated) {
-//                                updatePriceAllProduct(existingSubMaterial.getSubMaterialId(),dto.getUnit_price());
-//                                input.setActionType(subMaterialsRepository.findByIdAction(5)); // Cập nhật cả giá và số lượng
-//                            } else if (isPriceUpdated) {
-//                                updatePriceAllProduct(existingSubMaterial.getSubMaterialId(),dto.getUnit_price());
-//                                input.setActionType(subMaterialsRepository.findByIdAction(4)); // Cập nhật giá
-//                            } else {
-//                                input.setActionType(subMaterialsRepository.findByIdAction(3)); // Cập nhật số lượng
-//                            }
-//
-//                            inputSubMaterialRepository.save(input);
-//                        }
-//
-//                        // Cập nhật số lượng trong SubMaterials (dù có thay đổi hay không)
-//                        existingSubMaterial.setQuantity(existingSubMaterial.getQuantity() + dto.getQuantity());
-//                        subMaterialsRepository.save(existingSubMaterial);
-//                    } else {
-                    // Nếu chưa tồn tại, tạo SubMaterial mới với đầy đủ thuộc tính
-
-
-                    SubMaterials subMaterials = new SubMaterials();
-                    subMaterials.setSubMaterialName(subMaterialName);
-                    // Lấy Material (nên kiểm tra null để tránh lỗi)
-                    Materials materials = materialRepository.findByName(materialName);
-                    //    subMaterials.setCreate_date(create);
-                    subMaterials.setMaterial(materials);
-                    //    subMaterials.setQuantity(dto.getQuantity());
-                    //    subMaterials.setUnitPrice(dto.getUnit_price());
-                    //    subMaterials.setInputPrice(dto.getInput_price());
-                    subMaterials.setDescription(dto.getDescription());
-                    subMaterials.setCode(codeCount.get(i));
-                    subMaterialsList.add(subMaterials); // Thêm vào danh sách để save sau
-
-                    InputSubMaterial input = new InputSubMaterial();
-                    Action_Type actionType = subMaterialsRepository.findByIdAction(2);//tức là kiểu nhập kho
-                    input.setActionType(actionType);
-                    input.setSubMaterials(subMaterials);
-                    input.setOut_price(dto.getUnit_price());
-                    input.setInput_price(dto.getInput_price()); //lưu vào lịch sử giá nhập , còn giá bán chưa có thì cho null
-                    input.setQuantity(dto.getQuantity());
-                    String code = generateCodeInputSubMaterial();
-                    input.setCode_input(code);
-                    input.setDate_input(create);//ngày nhập vào hệ thống
-                    input.setCreate_date(dto.getDate_ware_house());//ngày nhập kho
-                    inputSubMaterialRepository.save(input);
-
+                    if(errors.isEmpty()){
+                        SubMaterials subMaterials = new SubMaterials();
+                        subMaterials.setSubMaterialName(subMaterialName);
+                        // Lấy Material (nên kiểm tra null để tránh lỗi)
+                        Materials materials = materialRepository.findByName(materialName);
+                        //    subMaterials.setCreate_date(create);
+                        subMaterials.setMaterial(materials);
+                        //    subMaterials.setQuantity(dto.getQuantity());
+                        //    subMaterials.setUnitPrice(dto.getUnit_price());
+                        //    subMaterials.setInputPrice(dto.getInput_price());
+                        subMaterials.setDescription(dto.getDescription());
+                        subMaterials.setCode(codeCount.get(i));
+                        subMaterialsList.add(subMaterials); // Thêm vào danh sách để save sau
+                        subMaterialsRepository.save(subMaterials);
+                        InputSubMaterial input = new InputSubMaterial();
+                        Action_Type actionType = subMaterialsRepository.findByIdAction(2);//tức là kiểu nhập kho
+                        input.setActionType(actionType);
+                        input.setSubMaterials(subMaterials);
+                        input.setOut_price(dto.getUnit_price());
+                        input.setInput_price(dto.getInput_price()); //lưu vào lịch sử giá nhập , còn giá bán chưa có thì cho null
+                        input.setQuantity(dto.getQuantity());
+                        String code = generateCodeInputSubMaterial();
+                        input.setCode_input(code);
+                        input.setDate_input(create);//ngày nhập vào hệ thống
+                        input.setCreate_date(dto.getDate_ware_house());//ngày nhập kho
+                        inputSubMaterialRepository.save(input);
+                    }
                     i++;
                 }
+             //   subMaterialsRepository.saveAll(subMaterialsList);
                 //   }
 
-                subMaterialsRepository.saveAll(subMaterialsList);
+
             } catch (IOException e) {
                 throw new AppException(ErrorCode.FILE_EXCEL_INVALID);
             }
@@ -404,9 +367,26 @@ public class SubMaterialServiceImpl implements SubMaterialService {
         if (Math.abs(input_sub_last.getQuantity() - subMaterialViewDTO.getQuantity()) > epsilon && subMaterialViewDTO.getQuantity() > 0) {
             isQuantityUpdated = true;
         }
+        //quantity < 0 nghĩa là nếu lô hàng ấy có lỗi hay gì đấy thì trừ đi số lượng trong kho đấy
+
         if(subMaterialViewDTO.getQuantity() < 0){
-            input_sub_last.setQuantity(input_sub_last.getQuantity() + subMaterialViewDTO.getQuantity());
-            inputSubMaterialRepository.save(input_sub_last);
+            if(input_sub_last.getQuantity() < -1*subMaterialViewDTO.getQuantity()){
+                throw new AppException(ErrorCode.QUANTITY_INPUT_EXPORT);
+            }
+            InputSubMaterial input = new InputSubMaterial();
+            input.setCode_input(input_sub_last.getCode_input());
+            input.setQuantity(input_sub_last.getQuantity() + subMaterialViewDTO.getQuantity());
+            input.setSubMaterials(input_sub_last.getSubMaterials());
+            input.setInput_price(input_sub_last.getInput_price());
+            input.setOut_price(input_sub_last.getOut_price());
+            input.setCreate_date(input_sub_last.getCreate_date());
+            input.setDate_input(create);
+            input.setReason_export(subMaterialViewDTO.getReason_export());
+            input.setActionType(subMaterialsRepository.findByIdAction(1));//xuất kho
+            inputSubMaterialRepository.save(input);
+
+           // input_sub_last.setQuantity(input_sub_last.getQuantity() + subMaterialViewDTO.getQuantity());
+           // inputSubMaterialRepository.save(input_sub_last);
         }
         if (isPriceUpdated == true || isQuantityUpdated == true) {
             // Chỉ lưu vào bảng InputSubMaterial khi có thay đổi
@@ -531,6 +511,7 @@ public class SubMaterialServiceImpl implements SubMaterialService {
                 input.setCode_input(input_sub_last.getCode_input());
                 input.setCreate_date(input_sub_last.getCreate_date());//ngày nhập kho
                 input.setDate_input(create);//ngày tác động
+                input.setReason_export("Xuất kho cho công việc");//lí do xuất kho
                 inputSubMaterialRepository.save(input);
 
                 Employeematerials employeeMaterials = new Employeematerials();
@@ -681,6 +662,7 @@ public class SubMaterialServiceImpl implements SubMaterialService {
                 input.setDate_input(create);
                 input.setCreate_date(input_sub_last.getCreate_date());
                 input.setQuantity(currentQuantity - quantity);
+                input.setReason_export("Xuất kho cho công việc");//lí do xuất kho
                 //  input.setChange_quantity(quantity);
                 input.setCode_input(input_sub_last.getCode_input());
                 inputSubMaterialRepository.save(input);

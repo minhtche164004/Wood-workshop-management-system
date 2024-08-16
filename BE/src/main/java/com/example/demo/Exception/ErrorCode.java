@@ -88,6 +88,7 @@ public enum ErrorCode {
     COST_REMAIN(1043,"Số tiền còn lại cần thanh toán không đúng với giá trị , vui lòng nhập lại!",HttpStatus.BAD_REQUEST),
     COST_REFUND_INVALID(1044,"Số tiền hoàn phải nhỏ hơn tổng giá trị đơn hàng và phải lớn hơn 0, vui lòng nhập lại!",HttpStatus.BAD_REQUEST),
     EXISTED_SUB_MATERIAL(1050,"Giai đoạn đã hoàn thành , không được giao thêm nguyên vật liệu cho giai đoạn này , vui lòng xem lại!",HttpStatus.BAD_REQUEST),
+    QUANTITY_INPUT_EXPORT(1051,"Số lượng để xuất kho đang vượt quá số lượng có sẵn trong kho, vui lòng xem lại!",HttpStatus.BAD_REQUEST)
 
 
 

@@ -27,7 +27,7 @@ public interface SubMaterialsRepository extends JpaRepository<SubMaterials,Integ
     @Query("SELECT u FROM Action_Type u  WHERE u.action_type_id = :query")
     Action_Type findByIdAction(int query);
 
-    @Query("SELECT u FROM InputSubMaterial u ORDER BY u.date_input DESC, u.code_input DESC")
+    @Query("SELECT u FROM InputSubMaterial u ORDER BY u.input_id DESC, u.code_input DESC")
     List<InputSubMaterial> getAllInputSubMaterial();
 
     @Query("SELECT new com.example.demo.Dto.SubMaterialDTO.SubMaterialViewDTO(" +
@@ -50,13 +50,13 @@ public interface SubMaterialsRepository extends JpaRepository<SubMaterials,Integ
     @Query("SELECT i FROM InputSubMaterial i" +
             " LEFT JOIN i.subMaterials s  " +
             " LEFT JOIN i.actionType a  WHERE " +
-            "(s.subMaterialName LIKE %:search% OR :search IS NULL) AND " +
+            "(s.code LIKE %:search% OR :search IS NULL) AND " +
             "(s.material.materialId = :materialId OR :materialId IS NULL) AND " +
             "(a.action_type_id = :action_type_id OR :action_type_id IS NULL) AND " +
             "(i.date_input >= :startDate OR :startDate IS NULL) AND " +
             "(i.date_input <= :endDate OR :endDate IS NULL) AND " +
             "(i.out_price >= :minPrice OR :minPrice IS NULL) AND " +
-            "(i.out_price <= :maxPrice OR :maxPrice IS NULL)")
+            "(i.out_price <= :maxPrice OR :maxPrice IS NULL) ORDER BY i.date_input DESC")
     List<InputSubMaterial> MultiFilterInputSubMaterial(@Param("search") String search,
                                                @Param("materialId") Integer materialId, @Param("action_type_id") Integer action_type_id,
                                                @Param("startDate") Date startDate,

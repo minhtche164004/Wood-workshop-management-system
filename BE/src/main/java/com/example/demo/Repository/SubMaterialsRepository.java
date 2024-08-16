@@ -32,20 +32,33 @@ public interface SubMaterialsRepository extends JpaRepository<SubMaterials,Integ
 
     @Query("SELECT new com.example.demo.Dto.SubMaterialDTO.SubMaterialViewDTO(" +
             "s.subMaterialId, COALESCE(s.subMaterialName, ''), m.materialId, COALESCE(s.description, ''), COALESCE(m.materialName, '')," +
-            " latestInput.total_quantity, latestInput.out_price,latestInput.input_price,m.type,s.code,latestInput.input_id,latestInput.code_input,COALESCE(latestInput.reason_export,'')) " + // Thêm dấu phẩy và loại bỏ COALESCE cho các ID
+            " COALESCE(CAST(ism.quantity AS double), 0.0), ism.out_price,ism.input_price,m.type,s.code,ism.input_id,ism.code_input,COALESCE(ism.reason_export,'')) " + // Thêm dấu phẩy và loại bỏ COALESCE cho các ID
             "FROM SubMaterials s " +
-            "LEFT JOIN (" +
-
-            "SELECT ism.subMaterials.subMaterialId as subMaterialId, ism.quantity as total_quantity, ism.out_price as out_price, " +
-            "ism.input_price as input_price,ism.input_id as input_id,ism.code_input as code_input,ism.reason_export as reason_export" +
-          " FROM InputSubMaterial ism " +
-            "ORDER BY ism.date_input DESC " +
-            "LIMIT 1 " +
-            ") latestInput ON s.subMaterialId = latestInput.subMaterialId " +
-            "LEFT JOIN s.material m WHERE (s.subMaterialName LIKE %:search% OR :search IS NULL) AND " +
-            "(s.material.materialId = :materialId OR :materialId IS NULL)")
+            "LEFT JOIN InputSubMaterial ism ON s.subMaterialId = ism.subMaterials.subMaterialId" +
+            " LEFT JOIN s.material m " + // Di chuyển LEFT JOIN s.material m đến đây
+            "WHERE (s.subMaterialName LIKE %:search% OR :search IS NULL) AND " +
+            " (s.material.materialId = :materialId OR :materialId IS NULL) AND" +
+            " ism.input_id = ("  +
+            " SELECT MAX(ism2.input_id)" +
+            "FROM InputSubMaterial ism2" +
+            " WHERE ism2.code_input = ism.code_input)")
     List<SubMaterialViewDTO> MultiFilterSubmaterial(@Param("search") String search,
                                                     @Param("materialId") Integer materialId);
+
+
+    @Query("SELECT new com.example.demo.Dto.SubMaterialDTO.SubMaterialViewDTO(" +
+            "s.subMaterialId, COALESCE(s.subMaterialName, ''), m.materialId, COALESCE(s.description, '')," +
+            " COALESCE(m.materialName, '')," +
+            "COALESCE(CAST(ism.quantity AS double), 0.0), ism.out_price, ism.input_price, m.type,s.code,ism.input_id,ism.code_input,COALESCE(ism.reason_export,'')) " +
+            "FROM SubMaterials s " +
+            "LEFT JOIN InputSubMaterial ism ON s.subMaterialId = ism.subMaterials.subMaterialId" +
+            " LEFT JOIN s.material m " + // Di chuyển LEFT JOIN s.material m đến đây
+            "WHERE " +
+            " ism.input_id = ("  +
+            " SELECT MAX(ism2.input_id)" +
+            "FROM InputSubMaterial ism2" +
+            " WHERE ism2.code_input = ism.code_input)")
+    List<SubMaterialViewDTO> getAllSubmaterial();
 
     @Query("SELECT i FROM InputSubMaterial i" +
             " LEFT JOIN i.subMaterials s  " +
@@ -56,7 +69,7 @@ public interface SubMaterialsRepository extends JpaRepository<SubMaterials,Integ
             "(i.date_input >= :startDate OR :startDate IS NULL) AND " +
             "(i.date_input <= :endDate OR :endDate IS NULL) AND " +
             "(i.out_price >= :minPrice OR :minPrice IS NULL) AND " +
-            "(i.out_price <= :maxPrice OR :maxPrice IS NULL) ORDER BY i.date_input DESC")
+            "(i.out_price <= :maxPrice OR :maxPrice IS NULL)  ORDER BY i.code_input DESC")
     List<InputSubMaterial> MultiFilterInputSubMaterial(@Param("search") String search,
                                                @Param("materialId") Integer materialId, @Param("action_type_id") Integer action_type_id,
                                                @Param("startDate") Date startDate,
@@ -78,19 +91,7 @@ public interface SubMaterialsRepository extends JpaRepository<SubMaterials,Integ
             " WHERE s.subMaterialName = :query AND s.material.materialName = :materialName AND latestInput.out_price = :unitPrice")
     SubMaterials findBySubmaterialNameAndMaterialNameAndPrice(@Param("query") String subMaterialName, @Param("materialName") String materialName,@Param("unitPrice") BigDecimal unitPrice);
 
-    @Query("SELECT new com.example.demo.Dto.SubMaterialDTO.SubMaterialViewDTO(" +
-            "s.subMaterialId, COALESCE(s.subMaterialName, ''), m.materialId, COALESCE(s.description, '')," +
-            " COALESCE(m.materialName, '')," +
-            "ism.quantity, ism.out_price, ism.input_price, m.type,s.code,ism.input_id,ism.code_input,COALESCE(ism.reason_export,'')) " +
-            "FROM SubMaterials s " +
-            "LEFT JOIN InputSubMaterial ism ON s.subMaterialId = ism.subMaterials.subMaterialId" +
-            " LEFT JOIN s.material m " + // Di chuyển LEFT JOIN s.material m đến đây
-            "WHERE " +
-            " ism.input_id = ("  +
-            " SELECT MAX(ism2.input_id)" +
-            "FROM InputSubMaterial ism2" +
-            " WHERE ism2.code_input = ism.code_input)")
-    List<SubMaterialViewDTO> getAllSubmaterial();
+
 
 
     @Query("SELECT new com.example.demo.Dto.SubMaterialDTO.SubMaterialViewDTO(" +

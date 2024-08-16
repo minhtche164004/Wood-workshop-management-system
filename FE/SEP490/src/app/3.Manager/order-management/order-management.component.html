@@ -129,7 +129,8 @@
                         {{ status.status_name }}
                       </option>
                     </select>
-                    <button #launchModalButton type="button" class="btn btn-primary d-none" data-toggle="modal" data-target="#myModal2">
+                    <button #launchModalButton type="button" class="btn btn-primary d-none" data-toggle="modal"
+                      data-target="#myModal2">
                       Launch Modal 1
                     </button>
                   </div>
@@ -148,7 +149,8 @@
                         {{ status.status_name }}
                       </option>
                     </select>
-                    <button #launchModalButton1 type="button" class="btn btn-primary d-none" data-toggle="modal" data-target="#myModal1">
+                    <button #launchModalButton1 type="button" class="btn btn-primary d-none" data-toggle="modal"
+                      data-target="#myModal1">
                       Launch Modal 2
                     </button>
                   </div>
@@ -208,7 +210,9 @@
     <div class="modal-dialog modal-xl" role="document">
       <div class="modal-content">
         <div class="modal-header">
-          <h5 class="modal-title" id="productDetailModalLabel"><h2>Xem chi tiết đơn hàng</h2></h5>
+          <h5 class="modal-title" id="productDetailModalLabel">
+            <h2>Xem chi tiết đơn hàng</h2>
+          </h5>
           <button type="button" class="close" data-dismiss="modal" aria-label="Close">
             <span aria-hidden="true">&times;</span>
           </button>
@@ -217,7 +221,7 @@
           <div class="row">
             <div class="col-md-6">
               <h4><b>Khách hàng: </b>{{OrderdetailById.userInfor?.fullname}} -
-                  {{OrderdetailById.userInfor?.phoneNumber}} - {{emailCustomer}}</h4>
+                {{OrderdetailById.userInfor?.phoneNumber}} - {{emailCustomer}}</h4>
             </div>
             <div class="col-md-3">
               <b>Ngày tạo đơn:</b> {{OrderdetailById.orderDate | date:'dd/MM/yyyy'}}
@@ -247,10 +251,10 @@
             </div>
             <div class="col-md-3" style="color: rgba(0, 102, 255, 0.945);">
 
-             <b>Mã đơn: </b> {{ OrderdetailById.code}}
+              <b>Mã đơn: </b> {{ OrderdetailById.code}}
             </div>
           </div>
-    
+
           <div class="card" style="margin-top: 2%;">
             <div class="card-header text-center">
               Thông tin đơn hàng
@@ -260,43 +264,46 @@
               <!-- <h5 class="card-title">{{OrderdetailById.userInfor?.fullname}}</h5> -->
               <div class="row">
                 <div class="col-md-6">
-                  <div>
-
+                  <div class="row">
+                    <div class="col-md-6 text-right" style="margin-bottom: 2%;">
+                      <b>Tổng giá trị đơn hàng: </b>
+                    </div>
+                    <div class="col-md-6" style="margin-bottom: 2%;">
+                      {{ totalAmoutOrder != null ? (totalAmoutOrder | number: '1.0-3') + ' VNĐ' : 'Chưa thanh toán' }}
+                    </div>
                   </div>
-                  <div class="col-md-6 text-right" style="margin-bottom: 2%;">
-                    <b>Tổng giá trị đơn hàng: </b>
-                </div>
-                <div class="col-md-6" style="margin-bottom: 2%;">
-                    {{ OrderdetailById.status?.status_id !== 7 ? (totalAmoutOrder | number: '1.0-3') + ' VNĐ' : 'Chưa thanh toán' }}
-                </div>
-                
-                <div class="col-md-6 text-right" style="margin-bottom: 2%;">
-                    <b>Số tiền cọc: </b>
-                </div>
-                <div class="col-md-6" style="margin-bottom: 2%;">
-                    {{ OrderdetailById.status?.status_id !== 7 ? (OrderdetailById.deposite | number: '1.0-3') + ' VNĐ' : 'Chưa thanh toán' }}
-                </div>
-                
-                <div class="col-md-6 text-right" style="margin-bottom: 2%;">
-                    <b>Tổng tiền cần thanh toán: </b>
-                </div>  
-                <div class="col-md-6" style="margin-bottom: 2%;">
-                    {{ OrderdetailById.status?.status_id !== 7 ? ((totalAmoutOrder - OrderdetailById.deposite) | number: '1.0-3') + ' VNĐ' : 'Chưa thanh toán' }}
-                </div>
-                
-
-                  <div class="col-md-6 text-right">
-                    <p class="card-text"><b>Kiểu thanh toán:</b></p>
+                  
+                  <div class="row">
+                    <div class="col-md-6 text-right" style="margin-bottom: 2%;">
+                      <b>Số tiền cọc: </b>
+                    </div>
+                    <div class="col-md-6" style="margin-bottom: 2%;">
+                      {{ OrderdetailById.deposite != null ? (OrderdetailById.deposite | number: '1.0-3') + ' VNĐ' : 'Chưa thanh toán' }}
+                    </div>
                   </div>
-                  <div class="col-md-6">
-                    {{ OrderdetailById?.paymentMethod === 2 ? 'Chuyển khoản' : (OrderdetailById?.paymentMethod === 1 ?
-                    'Tiền mặt' : '') }}
+                  
+                  <div class="row">
+                    <div class="col-md-6 text-right" style="margin-bottom: 2%;">
+                      <b>Tổng tiền cần thanh toán: </b>
+                    </div>
+                    <div class="col-md-6" style="margin-bottom: 2%;">
+                      {{ (totalAmoutOrder != null && OrderdetailById.deposite != null) ? ((totalAmoutOrder - OrderdetailById.deposite) | number: '1.0-3') + ' VNĐ' : 'Chưa thanh toán' }}
+                    </div>
                   </div>
-
+                  
+                  <div class="row">
+                    <div class="col-md-6 text-right">
+                      <p class="card-text"><b>Kiểu thanh toán:</b></p>
+                    </div>
+                    <div class="col-md-6">
+                      {{ OrderdetailById?.paymentMethod === 2 ? 'Chuyển khoản' : (OrderdetailById?.paymentMethod === 1 ?
+                      'Tiền mặt' : '') }}
+                    </div>
+                  </div>
                 </div>
                 <div class="col-md-6" *ngIf="OrderdetailById.description">
                   <p><strong>Mô tả đơn hàng:</strong></p>
-                  <textarea [(ngModel)]="OrderdetailById.description" class="custom-textarea" readonly></textarea>
+                  <textarea [(ngModel)]="OrderdetailById.description" style="width: 100%" rows="4" readonly></textarea>
                 </div>
 
               </div>
@@ -310,49 +317,48 @@
             <div *ngIf="OrderdetailById.status?.status_id === 7">
               <h3 style="margin-left: 3%;"><b>Hình ảnh khách hàng yêu cầu</b></h3>
             </div>
-            <div class="product-list d-flex flex-row flex-nowrap overflow-auto"
-             style="margin-bottom: 10px;">
-            <ng-container *ngFor="let cate of OrderdetailById.requestImages; let i = index">
-              <div class="d-flex me-3">
-               
-                <a class="me-3" target="_blank" [href]="cate.fullPath">
-                  <div class="product-image-wrapper" style="cursor: pointer;">
-                    <img [src]="cate.fullPath" class="product-image img-md img-thumbnail" />
-                  </div>
-                </a>
-              </div>
-            </ng-container>
+            <div class="product-list d-flex flex-row flex-nowrap overflow-auto" style="margin-bottom: 10px;">
+              <ng-container *ngFor="let cate of OrderdetailById.requestImages; let i = index">
+                <div class="d-flex me-3">
+
+                  <a class="me-3" target="_blank" [href]="cate.fullPath">
+                    <div class="product-image-wrapper" style="cursor: pointer;">
+                      <img [src]="cate.fullPath" class="product-image img-md img-thumbnail" />
+                    </div>
+                  </a>
+                </div>
+              </ng-container>
+            </div>
+
+            <table class="table table-striped table-hover" *ngIf="OrderdetailById.status?.status_id !== 7">
+              <thead>
+                <tr>
+                  <th style="width: 3%;">STT</th>
+                  <th style="width: 35%;">Tên sản phẩm</th>
+                  <th style="width: 10%;">Số lượng</th>
+                  <th>Đơn giá(VND)</th>
+                  <th style="width: 20%;">Trạng thái</th>
+
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let product of productOfOrder; let i = index">
+                  <td style="text-align: end;">{{ i + 1 }}</td> <!-- In số thứ tự, bắt đầu từ 1 -->
+                  <td>{{product?.product_name}} {{product?.request_product_name}}</td>
+                  <td style="text-align: right;">{{product?.quantity}}</td>
+                  <td>{{product?.price | number:'1.0-3'}}</td>
+                  <td>{{product?.status_job_name}}</td>
+
+                </tr>
+              </tbody>
+
+            </table>
           </div>
-        
-          <table class="table table-striped table-hover" *ngIf="OrderdetailById.status?.status_id !== 7"  >
-            <thead>
-              <tr>
-                <th style="width: 3%;">STT</th>
-                <th style="width: 35%;">Tên sản phẩm</th>
-                <th style="width: 10%;">Số lượng</th>
-                <th>Đơn giá(VND)</th>
-                <th style="width: 20%;">Trạng thái</th>
-                
-              </tr>
-            </thead>
-            <tbody>
-              <tr *ngFor="let product of productOfOrder; let i = index">
-                <td style="text-align: end;">{{ i + 1 }}</td> <!-- In số thứ tự, bắt đầu từ 1 -->
-                <td>{{product?.product_name}} {{product?.request_product_name}}</td>
-                <td style="text-align: right;">{{product?.quantity}}</td>
-                <td>{{product?.price | number:'1.0-3'}}</td>
-                <td>{{product?.status_job_name}}</td>
-                
-              </tr>
-            </tbody>
-            
-          </table>
-          </div>
 
 
 
-         
-          
+
+
         </div>
 
         <div class="modal-footer">
@@ -418,7 +424,7 @@
             </div>
             <div class="col-md-6" style="text-align: right;">
               <p class="font-weight-bold"> <span class="text-danger">{{ OrderdetailById.totalAmount |
-                number : '1.0-3' }}</span> <span class="text-danger"> VNĐ</span></p>
+                  number : '1.0-3' }}</span> <span class="text-danger"> VNĐ</span></p>
             </div>
           </div>
           <div class="row" style="margin-bottom: 10px;">
@@ -427,24 +433,24 @@
             </div>
             <div class="col-md-6" style="text-align: right;">
               <p class="font-weight-bold"><span class="text-danger">
-                {{ OrderdetailById.deposite | number : '1.0-3' }}</span> <span class="text-danger"> VNĐ</span></p>
-            
+                  {{ OrderdetailById.deposite | number : '1.0-3' }}</span> <span class="text-danger"> VNĐ</span></p>
+
             </div>
           </div>
-       
-          <div class="row" >
-            <div class="col-md-6" >
+
+          <div class="row">
+            <div class="col-md-6">
               <label for="cancelReason">Nhập số tiền cọc cần thanh toán <span class="required-asterisk">*</span></label>
             </div>
             <div class="col-md-6" style="text-align: right;">
-              <input style="text-align: right;" min="0" type="text"  class="form-control" id="percentDepositPrice"
-              [(ngModel)]="depositeOrder">
-  
+              <input style="text-align: right;" min="0" type="text" class="form-control" id="percentDepositPrice"
+                [(ngModel)]="depositeOrder">
+
             </div>
           </div>
-      
 
-          
+
+
 
         </div>
 
@@ -700,7 +706,7 @@
           </div>
 
         </div>
-   
+
         <div class="card">
           <!-- <div class="card-header text-center bg-primary text-white" style="font-size: 15px;">
             Thông tin đơn hàng
@@ -744,7 +750,7 @@
               <div class="col-md-6" style="font-size: 15px;">
                 <div style="padding-bottom: 10px;" class="d-flex justify-content-between mb-2">
                   <b>Phương thức thanh toán:</b>
-                  <span  style="font-size: 15px;">
+                  <span style="font-size: 15px;">
                     {{ OrderdetailById?.paymentMethod === 2 ? 'Chuyển khoản' : (OrderdetailById?.paymentMethod === 1 ?
                     'Tiền mặt' : '') }}
                   </span>
@@ -766,8 +772,8 @@
 
                 <div class="d-flex justify-content-between mb-2" style="font-size: 15px;">
                   <label for="">Nhập số tiền còn lại để thanh toán đơn hàng</label>
-                  <input style="margin-bottom: 5px; width: 25%; text-align: right;" min="0" type="text" class="form-control"
-                    id="moneyFisinish" [(ngModel)]="remain_price">
+                  <input style="margin-bottom: 5px; width: 25%; text-align: right;" min="0" type="text"
+                    class="form-control" id="moneyFisinish" [(ngModel)]="remain_price">
                 </div>
 
 

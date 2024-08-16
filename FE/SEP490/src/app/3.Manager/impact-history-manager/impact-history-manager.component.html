@@ -68,6 +68,7 @@
                   <!-- <th style="width: 150px;">Biến động số lượng</th> -->
                   <th>Giá nhập</th>
                   <th>Giá bán</th>
+                  <th style="width: 100px;">Lý Do</th>
  
                 
                   
@@ -92,6 +93,7 @@
 
                   <td style="text-align: right;">{{ job.input_price | number: '1.0-3' }}</td>
                   <td style="text-align: right;">{{ job.out_price | number: '1.0-3' }}</td>
+                  <td style="min-width: 150px;">{{ job.reason_export}}</td>
 
 
          

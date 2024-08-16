@@ -404,9 +404,23 @@ public class SubMaterialServiceImpl implements SubMaterialService {
         if (Math.abs(input_sub_last.getQuantity() - subMaterialViewDTO.getQuantity()) > epsilon && subMaterialViewDTO.getQuantity() > 0) {
             isQuantityUpdated = true;
         }
+        //quantity < 0 nghĩa là nếu lô hàng ấy có lỗi hay gì đấy thì trừ đi số lượng trong kho đấy
+
         if(subMaterialViewDTO.getQuantity() < 0){
-            input_sub_last.setQuantity(input_sub_last.getQuantity() + subMaterialViewDTO.getQuantity());
-            inputSubMaterialRepository.save(input_sub_last);
+            InputSubMaterial input = new InputSubMaterial();
+            input.setCode_input(input_sub_last.getCode_input());
+            input.setQuantity(input_sub_last.getQuantity() + subMaterialViewDTO.getQuantity());
+            input.setSubMaterials(input_sub_last.getSubMaterials());
+            input.setInput_price(input_sub_last.getInput_price());
+            input.setOut_price(input_sub_last.getOut_price());
+            input.setCreate_date(input_sub_last.getCreate_date());
+            input.setDate_input(create);
+            input.setReason_export(subMaterialViewDTO.getReason_export());
+            input.setActionType(subMaterialsRepository.findByIdAction(1));//xuất kho
+            inputSubMaterialRepository.save(input);
+
+           // input_sub_last.setQuantity(input_sub_last.getQuantity() + subMaterialViewDTO.getQuantity());
+           // inputSubMaterialRepository.save(input_sub_last);
         }
         if (isPriceUpdated == true || isQuantityUpdated == true) {
             // Chỉ lưu vào bảng InputSubMaterial khi có thay đổi
@@ -531,6 +545,7 @@ public class SubMaterialServiceImpl implements SubMaterialService {
                 input.setCode_input(input_sub_last.getCode_input());
                 input.setCreate_date(input_sub_last.getCreate_date());//ngày nhập kho
                 input.setDate_input(create);//ngày tác động
+                input.setReason_export("Xuất kho cho công việc");//lí do xuất kho
                 inputSubMaterialRepository.save(input);
 
                 Employeematerials employeeMaterials = new Employeematerials();
@@ -681,6 +696,7 @@ public class SubMaterialServiceImpl implements SubMaterialService {
                 input.setDate_input(create);
                 input.setCreate_date(input_sub_last.getCreate_date());
                 input.setQuantity(currentQuantity - quantity);
+                input.setReason_export("Xuất kho cho công việc");//lí do xuất kho
                 //  input.setChange_quantity(quantity);
                 input.setCode_input(input_sub_last.getCode_input());
                 inputSubMaterialRepository.save(input);

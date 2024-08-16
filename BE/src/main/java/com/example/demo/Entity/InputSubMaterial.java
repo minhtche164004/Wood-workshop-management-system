@@ -42,9 +42,16 @@ public class InputSubMaterial {
     @Column(name = "code_input")
     private String code_input;
 
+    //thêm trường lí do xuất kho
+    @Column(name = "reason_export")
+    private String reason_export;
+
     @ManyToOne
     @JoinColumn(name = "action_type_id")
     private Action_Type actionType;
+
+
+
 
 
 }

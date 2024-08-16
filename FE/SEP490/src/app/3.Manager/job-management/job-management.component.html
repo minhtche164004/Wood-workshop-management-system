@@ -85,7 +85,7 @@
                                     <i class="fa-solid fa-circle-info"></i>
                                 </a>
                                 <ng-container
-                                    *ngIf="product.statusJob.status_id !== 6 && product.statusJob.status_id !== 9 && product.statusJob.status_id !== 12 && !listErrorJob.includes(product.job_id) && product.statusJob.status_id === 1">
+                                    *ngIf="product.statusJob.status_id !== 6 && product.statusJob.status_id !== 9 && product.statusJob.status_id !== 12 && !listErrorJob.includes(product.job_id) && product.statusJob.type !== 1">
                                     <a href="#" class="settings" title="Chỉnh sửa" data-toggle="modal"
                                         data-target="#editProductJobModal"
                                         (click)="editJobDetail(product, product.job_id)">

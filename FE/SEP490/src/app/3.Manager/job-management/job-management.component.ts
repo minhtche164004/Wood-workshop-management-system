@@ -813,7 +813,7 @@ export class JobManagementComponent implements OnInit {
         if (data.code === 1000) {
           this.selectedJob = data.result;
           console.log('selectedJob:', this.selectedJob);
-          console.log('selectedProduct:', this.selectedProduct);
+          console.log('selectedJob2:', this.selectedProduct);
           this.isLoadding = false;
         } else {
           console.error('Failed to fetch products:', data);

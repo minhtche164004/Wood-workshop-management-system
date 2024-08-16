@@ -34,7 +34,7 @@
                         <div class="col-md-9 text-end">
 
                             <div class="input-group mb-3">
-                                
+
                                 <select [(ngModel)]="selectedStatusJob">
                                     <option value="">Tất cả trạng thái sản xuất</option>
                                     <option *ngFor="let st of statusSearch" [ngValue]="st.status_id">{{ st.status_name
@@ -77,15 +77,15 @@
                     <tbody>
                         <tr *ngFor="let product of productRQs | paginate: { itemsPerPage: 10, currentPage: currentPage }; let i = index"
                             [ngClass]="{'bg-warning': listErrorJob.includes(product.job_id)}">
-                            <td  *ngIf="selectedCategory===1">{{ product?.job_code}}</td>
-                            <td  *ngIf="selectedCategory===0">{{ product?.code }}</td>
+                            <td *ngIf="selectedCategory===1">{{ product?.job_code}}</td>
+                            <td *ngIf="selectedCategory===0">{{ product?.code }}</td>
                             <td class="action-buttons">
                                 <a style="margin-right: 10px;" title="Chi tiết" data-toggle="modal"
                                     data-target="#detailJobModal" (click)="showJobDetail(product)">
                                     <i class="fa-solid fa-circle-info"></i>
                                 </a>
                                 <ng-container
-                                    *ngIf="product.statusJob.status_id !== 6 && product.statusJob.status_id !== 9 && product.statusJob.status_id !== 12 && !listErrorJob.includes(product.job_id)">
+                                    *ngIf="product.statusJob.status_id !== 6 && product.statusJob.status_id !== 9 && product.statusJob.status_id !== 12 && !listErrorJob.includes(product.job_id) && product.statusJob.status_id === 1">
                                     <a href="#" class="settings" title="Chỉnh sửa" data-toggle="modal"
                                         data-target="#editProductJobModal"
                                         (click)="editJobDetail(product, product.job_id)">
@@ -230,6 +230,14 @@
 
                                         <section class="customer-info mb-4">
 
+                                            <!-- <div class="row">
+                                                <div class="col-md-6">
+                                                    <strong>Đơn hàng cần hoàn thành trước ngày:</strong>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    {{ selectedProduct.order_contract_time | date:'dd / MM / yyyy' }}
+                                                </div>
+                                            </div> -->
 
                                             <div class="row">
                                                 <div class="col-md-6">
@@ -266,7 +274,7 @@
                                         </div>
                                         <div class="row">
                                             <div class="col-md-6">
-                                                <strong>Ngày dự tính hoàn thành đơn hàng:</strong>
+                                                <strong>Hoàn thành đơn hàng trước ngày:</strong>
                                             </div>
                                             <div class="col-md-6">
                                                 {{ selectedProduct.order_contract_time | date:'dd / MM / yyyy' }}
@@ -301,8 +309,8 @@
                                                         *</span></strong>
                                             </div>
                                             <div class="col-md-6">
-                                                <input type="number" style="width: 100%; box-sizing: border-box;" name="costJob" formControlName="cost"
-                                                    [(ngModel)]="costJob">
+                                                <input type="number" style="width: 100%; box-sizing: border-box;"
+                                                    name="costJob" formControlName="cost" [(ngModel)]="costJob">
                                             </div>
                                         </div>
 
@@ -312,8 +320,8 @@
                                                         *</span> </strong>
                                             </div>
                                             <div class="col-md-6">
-                                                <input type="date" style="width: 100%; box-sizing: border-box;" placeholder="dd/mm/YYYY" name="start"
-                                                    formControlName="start">
+                                                <input type="date" style="width: 100%; box-sizing: border-box;"
+                                                    placeholder="dd/mm/YYYY" name="start" formControlName="start">
                                             </div>
                                         </div>
                                         <div class="row">
@@ -322,7 +330,8 @@
                                                         *</span></strong>
                                             </div>
                                             <div class="col-md-6">
-                                                <input type="date" style="width: 100%; box-sizing: border-box;" formControlName="finish"
+                                                <input type="date" style="width: 100%; box-sizing: border-box;"
+                                                    formControlName="finish"
                                                     placeholder="Nhập ngày hoàn thành công việc ">
                                             </div>
                                         </div>
@@ -395,7 +404,7 @@
                                 <div class="row">
                                     <div class="col-md-6">
                                         <section class="customer-info mb-4">
-                                           
+
                                             <div class="row">
                                                 <div class="col-md-6">
                                                     <p>
@@ -424,7 +433,7 @@
                                                     <strong>Giá công khoán (VNĐ):</strong>
                                                 </div>
                                                 <div class="col-md-6">
-                                                    {{ selectedJob.cost | number: '1.0-3' }} 
+                                                    {{ selectedJob.cost | number: '1.0-3' }}
                                                 </div>
                                             </div>
 
@@ -436,7 +445,7 @@
 
                                     <div class="col-md-6">
                                         <section class="order-summary mb-4">
-                                           
+
                                             <div class="row">
                                                 <div class="col-md-6">
                                                     <strong>Mã sản xuất:</strong>
@@ -472,7 +481,7 @@
                                             <div class="row">
                                                 <div class="row">
                                                     <div class="col-md-6">
-                                                        <strong>Ngày nhận công việc: </strong>
+                                                        <strong>Ngày nhận sản xuất: </strong>
                                                     </div>
                                                     <div class="col-md-6">
                                                         <!-- <input type="date" style="width: 100%; box-sizing: border-box;" placeholder="dd / mm / YYYY" name="start"
@@ -584,7 +593,8 @@
                                     class="required-asterisk">*</span> </label>
                         </div>
                         <div class="col-md-2">
-                            <input type="number" style="width: 100%; box-sizing: border-box;" class="form-control" id="productPrice" formControlName="quantity">
+                            <input type="number" style="width: 100%; box-sizing: border-box;" class="form-control"
+                                id="productPrice" formControlName="quantity">
                         </div>
                     </div>
                     <div *ngIf="isChooseProduct" class="modal-footer d-flex justify-content-end">
@@ -697,35 +707,35 @@
                 <!-- <h3 style="text-align: center;">Thông tin sản xuất</h3> -->
                 <div class="row">
                     <div class="col-md-4">
-                       
-                            <div class="col-md-5 text-right">
-                                <label style="font-size: 16px;" for="code">Mã sản xuất:</label>
-                            </div>
-                            <div class="col-md-7">
-                                <p style="font-size: 16px;" for="code">{{ editForm.get('code')?.value }}</p>
-                            </div>
+
+                        <div class="col-md-5 text-right">
+                            <label style="font-size: 16px;" for="code">Mã sản xuất:</label>
                         </div>
-                        <div class="col-md-4">
-                            <div class="col-md-5 text-right">
-                                <label style="font-size: 16px;" for="code">Tên sản xuất:</label>
-                            </div>
-                            <div class="col-md-7">
-                                <p style="font-size: 16px;" for="code">{{ editForm.get('job_name')?.value }}</p>
-                            </div>
+                        <div class="col-md-7">
+                            <p style="font-size: 16px;" for="code">{{ editForm.get('code')?.value }}</p>
                         </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="col-md-5 text-right">
+                            <label style="font-size: 16px;" for="code">Tên sản xuất:</label>
+                        </div>
+                        <div class="col-md-7">
+                            <p style="font-size: 16px;" for="code">{{ editForm.get('job_name')?.value }}</p>
+                        </div>
+                    </div>
 
 
-                   
+
 
                     <div class="col-md-4">
-                       
-                            <div class="col-md-5 text-right">
-                                <label style="font-size: 16px;" for="code">Tên sản phẩm:</label>
-                            </div>
-                            <div class="col-md-7">
-                                <p style="font-size: 16px;" for="code">{{ errorDetailModal?.product_name}}</p>
-                            </div>
-                        
+
+                        <div class="col-md-5 text-right">
+                            <label style="font-size: 16px;" for="code">Tên sản phẩm:</label>
+                        </div>
+                        <div class="col-md-7">
+                            <p style="font-size: 16px;" for="code">{{ errorDetailModal?.product_name}}</p>
+                        </div>
+
                     </div>
 
                 </div>
@@ -749,8 +759,8 @@
                             <td style="text-align: right;">{{ i + 1 }}</td> <!-- In số thứ tự, bắt đầu từ 1 -->
                             <td>{{ error.employee_name }}</td>
                             <td style="text-align: center;">
-                                <a href="#" class="settings" title="Chỉnh sửa" data-toggle="modal"
-                                    data-target="#" *ngIf="!error.fix" (click)="editProduct2(error.id)">
+                                <a href="#" class="settings" title="Chỉnh sửa" data-toggle="modal" data-target="#"
+                                    *ngIf="!error.fix" (click)="editProduct2(error.id)">
                                     <i class="fa-solid fa-pen-to-square"></i>
                                 </a>
                             </td>
@@ -766,12 +776,12 @@
                     </tbody>
                 </table>
                 <hr>
-              <div *ngIf="openEditJobError === true">
-                <h2 class="text-center" style="margin-bottom: 2%;"> Cập nhật lỗi trong sản xuất</h2>
-                <form [formGroup]="errorForm">
-                    <div class="form-group">
-                        <div class="row">
-                            <!-- <div class="col-md-6">
+                <div *ngIf="openEditJobError === true">
+                    <h2 class="text-center" style="margin-bottom: 2%;"> Cập nhật lỗi trong sản xuất</h2>
+                    <form [formGroup]="errorForm">
+                        <div class="form-group">
+                            <div class="row">
+                                <!-- <div class="col-md-6">
                                 <div class="col-md-5">
                                     <label style="font-size: 16px;" for="code">Mã việc làm:</label>
                                 </div>
@@ -821,86 +831,89 @@
                                     </div>
                                 </div>
                             </div> -->
-                            <div class="col-md-1">
-                            </div>
-                            <div class="col-md-10">
-                              
-                            </div>
-                            <div class="col-md-6">
-                                <div class="col-md-5 text-end">
-                                    <label style="font-size: 16px; " for="employee_name">Tên nhân viên:</label>
-                                </div>
-                                <div class="col-md-7">
-                                   
-                                    <input type="text" class="form-control" id="employee_name"
-                                        formControlName="employee_name" name="employee_name" readonly>
-                                </div>
-                            </div>
-                            <div class="col-md-6" >
-                                <div class="col-md-5 text-end">
-                                    <label style="font-size: 16px; " for="productName">Tình trạng lỗi:<span
-                                        class="required-asterisk">*</span></label>
-                                </div>
-                                <div class="col-md-7">
-
-                                    <select formControlName="isFixed" [ngModel]="errorDetail?.isFixed"
-                                        class="custom-select">
-                                        <option [ngValue]="true" [selected]="errorDetail?.isFixed">Đã khắc phục</option>
-                                        <option [ngValue]="false" [selected]="!errorDetail?.isFixed">Chưa khắc phục
-                                        </option>
-                                    </select>
-
-
-                                </div>
-                            </div>
-                            <div class="col-md-1">
-                            </div>
-                            <div class="col-md-10">
-                               
-                            </div>
-                            <div class="row">
                                 <div class="col-md-1">
-                
                                 </div>
-                                <div class="col-md-2 text-right">
-                                  <label style="font-size: 16px;margin-top: 10% ;" for="productName">Mô tả lỗi:<span
-                                      class="required-asterisk">*</span></label>
+                                <div class="col-md-10">
+
                                 </div>
-                                <div class="col-md-8" style="margin-top:1%">
-                                  <textarea style="width: 100%; padding: 2%; font-size: 16px;" id="description"
-                                    formControlName="description" name="des">
+                                <div class="col-md-6">
+                                    <div class="col-md-5 text-end">
+                                        <label style="font-size: 16px; " for="employee_name">Tên nhân viên:</label>
+                                    </div>
+                                    <div class="col-md-7">
+
+                                        <input type="text" class="form-control" id="employee_name"
+                                            formControlName="employee_name" name="employee_name" readonly>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="col-md-5 text-end">
+                                        <label style="font-size: 16px; " for="productName">Tình trạng lỗi:<span
+                                                class="required-asterisk">*</span></label>
+                                    </div>
+                                    <div class="col-md-7">
+
+                                        <select formControlName="isFixed" [ngModel]="errorDetail?.isFixed"
+                                            class="custom-select">
+                                            <option [ngValue]="true" [selected]="errorDetail?.isFixed">Đã khắc phục
+                                            </option>
+                                            <option [ngValue]="false" [selected]="!errorDetail?.isFixed">Chưa khắc phục
+                                            </option>
+                                        </select>
+
+
+                                    </div>
+                                </div>
+                                <div class="col-md-1">
+                                </div>
+                                <div class="col-md-10">
+
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-1">
+
+                                    </div>
+                                    <div class="col-md-2 text-right">
+                                        <label style="font-size: 16px;margin-top: 10% ;" for="productName">Mô tả
+                                            lỗi:<span class="required-asterisk">*</span></label>
+                                    </div>
+                                    <div class="col-md-8" style="margin-top:1%">
+                                        <textarea style="width: 100%; padding: 2%; font-size: 16px;" id="description"
+                                            formControlName="description" name="des">
                                     </textarea>
+                                    </div>
                                 </div>
-                              </div>
-                              <div class="col-md-1">
-                              </div>
-                              <div class="row">
                                 <div class="col-md-1">
-                
                                 </div>
-                                <div class="col-md-2 text-right">
-                                  <label style="font-size: 16px;margin-top: 3% ;" for="productName">Giải pháp:<span
-                                      class="required-asterisk">*</span></label>
-                                </div>
-                                <div class="col-md-8" style="margin-top:1% ;">
-                                  <textarea style="width: 100%; font-size: 16px; padding: 2%; " id="solution" formControlName="solution"
-                                    name="solution">
-                
+                                <div class="row">
+                                    <div class="col-md-1">
+
+                                    </div>
+                                    <div class="col-md-2 text-right">
+                                        <label style="font-size: 16px;margin-top: 3% ;" for="productName">Giải
+                                            pháp:<span class="required-asterisk">*</span></label>
+                                    </div>
+                                    <div class="col-md-8" style="margin-top:1% ;">
+                                        <textarea style="width: 100%; font-size: 16px; padding: 2%; " id="solution"
+                                            formControlName="solution" name="solution">
+
                                   </textarea>
+                                    </div>
                                 </div>
-                              </div>
+                            </div>
                         </div>
-                    </div>
-                    <div class="text-end">
-                        <button type="button" class="btn btn-secondary" (click)="closeModalEditErrorJob()" style="margin-right: 1%;" >Hủy bỏ</button>
-                        <button type="button" class="btn btn-primary" (click)="saveChanges2()">Lưu thay đổi</button>
-                 
-                    </div>         
-                </form>     
-              </div>            
+                        <div class="text-end">
+                            <button type="button" class="btn btn-secondary" (click)="closeModalEditErrorJob()"
+                                style="margin-right: 1%;">Hủy bỏ</button>
+                            <button type="button" class="btn btn-primary" (click)="saveChanges2()">Lưu thay đổi</button>
+
+                        </div>
+                    </form>
+                </div>
             </div>
-            <div class="modal-footer">     
-                <button type="button" class="btn btn-secondary" (click)="closeModalEditErrorJob2()" data-dismiss="modal">Đóng</button>      
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" (click)="closeModalEditErrorJob2()"
+                    data-dismiss="modal">Đóng</button>
             </div>
         </div>
     </div>
@@ -989,7 +1002,8 @@
                                                             *</span></strong>
                                                 </div>
                                                 <div class="col-md-6">
-                                                    <input type="number" style="width: 100%; box-sizing: border-box;" name="costJob" formControlName="cost">
+                                                    <input type="number" style="width: 100%; box-sizing: border-box;"
+                                                        name="costJob" formControlName="cost">
                                                 </div>
                                             </div>
 
@@ -999,8 +1013,8 @@
                                                             *</span></strong>
                                                 </div>
                                                 <div class="col-md-6">
-                                                    <input type="date" style="width: 100%; box-sizing: border-box;" class="form-control" id="finish"
-                                                        formControlName="finish"
+                                                    <input type="date" style="width: 100%; box-sizing: border-box;"
+                                                        class="form-control" id="finish" formControlName="finish"
                                                         placeholder="Nhập ngày hoàn thành công việc ">
                                                 </div>
                                             </div>
@@ -1011,7 +1025,8 @@
                                                     </strong>
                                                 </div>
                                                 <div class="col-md-6">
-                                                    <input type="date" style="width: 100%; box-sizing: border-box;" class="form-control" id="start" name="start"
+                                                    <input type="date" style="width: 100%; box-sizing: border-box;"
+                                                        class="form-control" id="start" name="start"
                                                         formControlName="start">
                                                 </div>
                                             </div>
@@ -1080,11 +1095,13 @@
             </div>
             <div class="modal-body text-center">
 
-                <p style="  font-size: 16px;"> Đã hoàn thành <input type="number" style="width: 100%; box-sizing: border-box;" style=" width: 12%; font-size: 16px;"
+                <p style="  font-size: 16px;"> Đã hoàn thành <input type="number"
+                        style="width: 100%; box-sizing: border-box;" style=" width: 12%; font-size: 16px;"
                         [(ngModel)]="quantityProductDone"> sản phẩm </p>
 
 
-                <p style="  font-size: 16px;"> Nhân viên nhận được <input type="number" style="width: 100%; box-sizing: border-box;" style="font-size: 16px;"
+                <p style="  font-size: 16px;"> Nhân viên nhận được <input type="number"
+                        style="width: 100%; box-sizing: border-box;" style="font-size: 16px;"
                         [(ngModel)]="costEmplopyee"> vnđ </p>
             </div>
             <div class="modal-footer">
@@ -1152,7 +1169,7 @@
                                         </div>
                                         <div class="row">
                                             <div class="col-md-6">
-                                                <strong>Ngày dự tính hoàn thành đơn hàng:</strong>
+                                                <strong>Hoàn thành đơn hàng trước ngày:</strong>
                                             </div>
                                             <div class="col-md-6">
                                                 {{ selectedProduct.order_contract_time | date:'dd / MM / yyyy' }}
@@ -1202,7 +1219,8 @@
                                                             *</span> </strong>
                                                 </div>
                                                 <div class="col-md-6">
-                                                    <input type="date" style="width: 100%; box-sizing: border-box;" placeholder="dd / mm / YYYY" name="start"
+                                                    <input type="date" style="width: 100%; box-sizing: border-box;"
+                                                        placeholder="dd / mm / YYYY" name="start"
                                                         formControlName="start">
                                                 </div>
                                             </div>
@@ -1212,7 +1230,8 @@
                                                             *</span></strong>
                                                 </div>
                                                 <div class="col-md-6">
-                                                    <input type="date" style="width: 100%; box-sizing: border-box;" formControlName="finish"
+                                                    <input type="date" style="width: 100%; box-sizing: border-box;"
+                                                        formControlName="finish"
                                                         placeholder="Nhập ngày hoàn thành công việc ">
                                                 </div>
                                             </div>
@@ -1268,7 +1287,8 @@
     </div>
 </div>
 
-<div class="modal fade" id="editProductModal" tabindex="-1" role="dialog" style="margin-left: 5%;max-width: 80%;" aria-labelledby="editProductModalLabel" aria-hidden="true">
+<div class="modal fade" id="editProductModal" tabindex="-1" role="dialog" style="margin-left: 5%;max-width: 80%;"
+    aria-labelledby="editProductModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-wide" role="document">r
         <div class="modal-content">
             <div class="modal-header">
@@ -1303,7 +1323,7 @@
                             <div class="col-md-1">
                             </div>
                             <div class="col-md-10">
-                               
+
                             </div>
 
                             <div class="col-md-6">
@@ -1334,7 +1354,7 @@
                             <div class="col-md-1">
                             </div>
                             <div class="col-md-10">
-                              
+
                             </div>
                             <div class="col-md-6">
                                 <div class="col-md-5">
@@ -1346,7 +1366,7 @@
                                         formControlName="employee_name" name="employee_name" readonly>
                                 </div>
                             </div>
-                            <div class="col-md-6"  style="margin-top: 5px;">
+                            <div class="col-md-6" style="margin-top: 5px;">
                                 <div class="col-md-5">
                                     <label style="font-size: 16px; " for="productName">Tình trạng lỗi:</label>
                                 </div>
@@ -1365,39 +1385,39 @@
                             <div class="col-md-1">
                             </div>
                             <div class="col-md-10">
-                               
+
                             </div>
                             <div class="row">
                                 <div class="col-md-1">
-                
+
                                 </div>
                                 <div class="col-md-2 text-right">
-                                  <label style="font-size: 16px;margin-top: 10% ;" for="productName">Mô tả lỗi:<span
-                                      class="required-asterisk">*</span></label>
+                                    <label style="font-size: 16px;margin-top: 10% ;" for="productName">Mô tả lỗi:<span
+                                            class="required-asterisk">*</span></label>
                                 </div>
                                 <div class="col-md-8" style="margin-top:1%">
-                                  <textarea style="width: 100%; padding: 2%; font-size: 16px;" id="description"
-                                    formControlName="description" name="des">
+                                    <textarea style="width: 100%; padding: 2%; font-size: 16px;" id="description"
+                                        formControlName="description" name="des">
                                     </textarea>
                                 </div>
-                              </div>
-                              <div class="col-md-1">
-                              </div>
-                              <div class="row">
+                            </div>
+                            <div class="col-md-1">
+                            </div>
+                            <div class="row">
                                 <div class="col-md-1">
-                
+
                                 </div>
                                 <div class="col-md-2 text-right">
-                                  <label style="font-size: 16px;margin-top: 3% ;" for="productName">Giải pháp:<span
-                                      class="required-asterisk">*</span></label>
+                                    <label style="font-size: 16px;margin-top: 3% ;" for="productName">Giải pháp:<span
+                                            class="required-asterisk">*</span></label>
                                 </div>
                                 <div class="col-md-8" style="margin-top:1% ;">
-                                  <textarea style="width: 100%; font-size: 16px; padding: 2%; " id="solution" formControlName="solution"
-                                    name="solution">
-                
+                                    <textarea style="width: 100%; font-size: 16px; padding: 2%; " id="solution"
+                                        formControlName="solution" name="solution">
+
                                   </textarea>
                                 </div>
-                              </div>
+                            </div>
                         </div>
                     </div>
                 </form>

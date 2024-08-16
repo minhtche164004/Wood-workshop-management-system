@@ -407,6 +407,9 @@ public class SubMaterialServiceImpl implements SubMaterialService {
         //quantity < 0 nghĩa là nếu lô hàng ấy có lỗi hay gì đấy thì trừ đi số lượng trong kho đấy
 
         if(subMaterialViewDTO.getQuantity() < 0){
+            if(input_sub_last.getQuantity() < -1*subMaterialViewDTO.getQuantity()){
+                throw new AppException(ErrorCode.QUANTITY_INPUT_EXPORT);
+            }
             InputSubMaterial input = new InputSubMaterial();
             input.setCode_input(input_sub_last.getCode_input());
             input.setQuantity(input_sub_last.getQuantity() + subMaterialViewDTO.getQuantity());

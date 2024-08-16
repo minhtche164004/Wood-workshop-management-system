@@ -479,7 +479,17 @@ export class SubMaterialManagementComponent implements OnInit {
     const inputElement = event.target as HTMLInputElement;
     if (inputElement.files && inputElement.files.length > 0) {
       this.selectedFile = inputElement.files[0];
-
+  
+      // Kiểm tra kích thước file (25MB = 25 * 1024 * 1024 bytes)
+      const maxFileSize = 25 * 1024 * 1024;
+      if (this.selectedFile.size > maxFileSize) {
+        console.error('File size exceeds the 25MB limit.');
+        this.toastr.info('Kích thước file vượt quá giới hạn 25MB. Vui lòng chọn file nhỏ hơn.', 'Tải file không thành công!');
+        this.selectedFile = undefined;
+        this.isLoadding = false;
+        return;
+      }
+  
       // Kiểm tra loại file
       const fileExtension = this.selectedFile.name.split('.').pop()?.toLowerCase();
       const allowedExtensions = ['xls', 'xlsx'];
@@ -490,17 +500,17 @@ export class SubMaterialManagementComponent implements OnInit {
         this.isLoadding = false;
         return;
       }
-
+  
       // Kiểm tra kiểu MIME (optional)
       const allowedMimeTypes = ['application/vnd.ms-excel', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'];
       if (!allowedMimeTypes.includes(this.selectedFile.type)) {
         console.error('Invalid file type. Please upload an Excel file.');
-        this.selectedFile = undefined;
         this.toastr.info('Loại file không hợp lệ. Vui lòng tải lên file Excel.', 'Lỗi');
+        this.selectedFile = undefined;
         this.isLoadding = false;
         return;
       }
-
+  
       this.uploadFile(this.selectedFile, inputElement);
     } else {
       this.selectedFile = undefined;
@@ -508,6 +518,7 @@ export class SubMaterialManagementComponent implements OnInit {
       this.isLoadding = false;
     }
   }
+  
 
   uploadFile(file: File, inputElement: HTMLInputElement) {
     this.isLoadding = true;

@@ -76,14 +76,14 @@
                 <th>STT</th>
                 <th>Thao tác</th>
                 <th style="width: 13%;">Tên vật liệu</th>
-                <th style="">Mã lô hàng</th>
+                <th>Mã lô hàng</th>
                 <th style="width: 10%;">Kiểu vật liệu</th>
                 <th>Mô tả vật liệu</th>
                 <th style="width: 8% ;">Số lượng</th>
                 <th style="width: 8% ;">Đơn vị</th>
                 <th style="width: 10%;">Giá bán (vnđ)</th>
                 <th style="width: 10%;">Giá nhập (vnd)</th>
-                
+
               </tr>
             </thead>
 
@@ -92,9 +92,13 @@
                 *ngFor="let product of subMaterials | paginate: { itemsPerPage: 10, currentPage: currentPage }; let i = index">
                 <td>{{ i + 1 + (currentPage - 1) * 10 }}</td>
                 <td style="text-align: center;" class="action-buttons">
-                  <a href="#" class="settings" title="Edit" data-toggle="modal" data-target="#editSubMaterialModal"
-                    (click)="loadSubMaterialDetails(product.input_id)">
+                  <a href="#" class="settings" title="Chỉnh sửa nguyên vật liệu" data-toggle="modal"
+                    data-target="#editSubMaterialModal" (click)="loadSubMaterialDetails(product.input_id)">
                     <i class="fa-solid fa-pen-to-square"></i>
+                  </a>
+                  <a href="#" class="settings" title="Xuất nguyên vật liệu" data-toggle="modal"
+                    data-target="#exportSubMaterialModal" (click)="loadSubMaterialDetailsForExportSubmate(product.input_id)">
+                    <i class="fa-solid fa-file-export"></i>
                   </a>
                 </td>
                 <td>{{ product.subMaterialName }}</td>
@@ -162,9 +166,11 @@
               <div class="col-md-6">
                 <div class="form-group">
                   <label for="productCategory">Kiểu vật liệu</label>
-                  <select class="form-control" name="selectedMaterial" [(ngModel)]="selectedMaterial" id="productCategory">
+                  <select class="form-control" name="selectedMaterial" [(ngModel)]="selectedMaterial"
+                    id="productCategory">
                     <option [ngValue]="null" disabled selected>Chọn kiểu vật liệu</option>
-                    <option *ngFor="let category of categories" [ngValue]="category?.materialName">{{ category?.materialName
+                    <option *ngFor="let category of categories" [ngValue]="category?.materialName">{{
+                      category?.materialName
                       }}</option>
                   </select>
                 </div>
@@ -177,7 +183,7 @@
                 </div>
               </div>
             </div>
-           
+
             <div class="form-group">
               <label for="productQuantity">Mô tả</label>
               <input type="text" class="form-control" id="productQuantity" placeholder="Nhập mô tả nguyên vật liệu"
@@ -232,11 +238,11 @@
         <div class="modal-body">
           <form [formGroup]="editForm">
             <div class="form-group">
-              <label for="editProductName">Tên nguyên vật liệu</label>
+              <label for="editProductName">Tên nguyên vật liệu<span class="required-asterisk">*</span></label>
               <input type="text" class="form-control" id="editProductName" formControlName="subMaterialName">
             </div>
             <div class="form-group">
-              <label for="editProductDescription">Mô tả</label>
+              <label for="editProductDescription">Mô tả<span class="required-asterisk">*</span></label>
               <textarea class="form-control" id="editProductDescription" formControlName="description"></textarea>
             </div>
             <div>
@@ -251,7 +257,7 @@
               <div class="col-md-6">
 
                 <div class="form-group">
-                  <label for="editProductQuantity">Số lượng nhập thêm</label>
+                  <label for="editProductQuantity">Số lượng nhập thêm<span class="required-asterisk">*</span></label>
                   <input type="number" class="form-control" formControlName="quantity" id="editProductQuantity">
                 </div>
 
@@ -259,7 +265,7 @@
               <div class="col-md-6">
 
                 <div class="form-group">
-                  <label for="editProductPrice">Giá bán (vnđ)</label>
+                  <label for="editProductPrice">Giá bán (vnđ)<span class="required-asterisk">*</span></label>
                   <input type="number" class="form-control" formControlName="unitPrice" id="editProductPrice">
                 </div>
               </div>
@@ -271,6 +277,69 @@
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
           <button type="button" class="btn btn-primary" (click)="saveChanges()">Lưu thay đổi</button>
+        </div>
+
+      </div>
+    </div>
+  </div>
+  <!-- Modal for Export submate -->
+  <div class="modal fade" id="exportSubMaterialModal" tabindex="-1" role="dialog"
+    aria-labelledby="exportSubMaterialModal" aria-hidden="true" style="margin-top: 10%;">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h2 class="modal-title" id="exportSubMaterialModal">Xuất nguyên vật liệu</h2>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <form [formGroup]="editForm">
+            <div class="form-group">
+              <label for="editProductName">Tên nguyên vật liệu</label>
+              <input type="text" class="form-control" id="editProductName" formControlName="subMaterialName" readonly>
+            </div>
+            <!-- <div class="form-group">
+              <label for="editProductDescription">Mô tả</label>
+              <textarea class="form-control" id="editProductDescription" formControlName="description"></textarea>
+            </div> -->
+            <div>
+              <div class="form-group">
+                <label for="editProductCategory">Kiểu nguyên vật liệu</label>
+                <input type="text" class="form-control" formControlName="materialName" id="editProductCategory"
+                  readonly>
+
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-6">
+
+                <div class="form-group">
+                  <label for="editProductQuantity">Số lượng xuất<span class="required-asterisk">*</span></label>
+                  <input type="number" class="form-control" formControlName="quantity" id="editProductQuantity">
+                </div>
+
+              </div>
+              <div class="col-md-6">
+
+                <div class="form-group">
+                  <label for="editProductPrice">Giá bán (vnđ)</label>
+                  <input type="number" class="form-control" formControlName="unitPrice" id="editProductPrice" readonly>
+                </div>
+              </div>
+
+              <div class="form-group">
+              <label for="editProductDescription">Lý do xuất<span class="required-asterisk">*</span></label>
+              <textarea class="form-control" id="editProductDescription" formControlName="reason_export"></textarea>
+            </div>
+
+            </div>
+
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
+          <button type="button" class="btn btn-primary" (click)="saveChangesExportySubmate()">Lưu thay đổi</button>
         </div>
 
       </div>

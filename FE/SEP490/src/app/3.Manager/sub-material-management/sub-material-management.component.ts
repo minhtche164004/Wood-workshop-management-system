@@ -84,7 +84,8 @@ export class SubMaterialManagementComponent implements OnInit {
       quantity: [''],
       unitPrice: [''],
       input_price: [''],
-      input_id: ['']
+      input_id: [''],
+      reason_export: [''],
     });
     this.createJobs = this.fb.group({
       sub_material_id: [''],
@@ -327,6 +328,50 @@ export class SubMaterialManagementComponent implements OnInit {
     );
   }
 
+  saveChangesExportySubmate() {
+    this.isLoadding = true;
+
+    // Lấy giá trị từ form
+    const formData = this.editForm.value;
+    console.log('check',formData);
+
+    // Kiểm tra các điều kiện
+
+    if (formData.quantity <= 0) {
+      this.isLoadding = false;
+      this.toastr.warning('Số lượng phải lớn hơn 0!', 'Thông báo');
+      return;
+    }
+
+    if (formData.reason_export <= 0) {
+      this.isLoadding = false;
+      this.toastr.warning('Lý do xuất không được để trống', 'Thông báo');
+      return;
+    }
+
+    formData.quantity = -Math.abs(formData.quantity);
+    // Gửi dữ liệu đến API
+    this.subMaterialService.editSubMaterial(formData.input_id, formData).subscribe(
+      (data) => {
+        if (data.code === 1000) {
+          this.toastr.success('Xuất nguyên vật liệu thành công!', 'Thành công');
+          this.getAllSubMaterials();
+          $('[data-dismiss="modal"]').click();
+          this.isLoadding = false;
+        } else {
+          console.error('Failed to search sub-materials:', data);
+          this.toastr.warning('Không thể xuất nguyên vật liệu!', 'Thông báo');
+          this.isLoadding = false;
+        }
+      },
+      (error) => {
+        console.error('Error updating sub-materials:', error);
+        this.toastr.warning('Có lỗi xảy ra!', 'Lỗi');
+        this.isLoadding = false;
+      }
+    );
+  }
+
   loadSubMaterialDetails(subMaterialId: number) {
     this.isLoadding = true;
     this.subMaterialService.getSubMaterialById(subMaterialId)
@@ -354,6 +399,47 @@ export class SubMaterialManagementComponent implements OnInit {
             description: this.selectedSubMaterial.description,
             materialName: this.selectedSubMaterial.material_name,
             quantity: this.selectedSubMaterial.quantity,
+            unitPrice: this.selectedSubMaterial.unit_price,
+            input_price: this.selectedSubMaterial.input_price,
+            input_id:this.selectedSubMaterial.input_id
+          });
+
+          console.log('Form Values after patchValue:', this.editForm.value);
+          this.isLoadding = false;
+        } else {
+          console.error('Failed to load submaterial details.');
+          this.isLoadding = false;
+        }
+      });
+  }
+
+  loadSubMaterialDetailsForExportSubmate(subMaterialId: number) {
+    this.isLoadding = true;
+    this.subMaterialService.getSubMaterialById(subMaterialId)
+      .subscribe((response: any) => {
+        if (response.code === 1000 && response.result) {
+          const subMaterial = response.result;
+          console.log('Sub-Material details:', subMaterial);
+          this.selectedSubMaterial = {
+            sub_material_id: subMaterial.subMaterialId,
+            sub_material_name: subMaterial.subMaterialName,
+            material_id: subMaterial.materialId,
+            description: subMaterial.description,
+            material_name: subMaterial.materialName,
+            quantity: subMaterial.quantity,
+            unit_price: subMaterial.unitPrice,
+            input_price: subMaterial.input_price,
+            input_id:subMaterial.input_id
+          };
+          this.originalSubMaterial = { ...this.selectedSubMaterial };
+
+          this.editForm.patchValue({
+            subMaterialId: this.selectedSubMaterial.sub_material_id,
+            subMaterialName: this.selectedSubMaterial.sub_material_name,
+            materialId: this.selectedSubMaterial.material_id,
+            description: this.selectedSubMaterial.description,
+            materialName: this.selectedSubMaterial.material_name,
+            quantity: 0,
             unitPrice: this.selectedSubMaterial.unit_price,
             input_price: this.selectedSubMaterial.input_price,
             input_id:this.selectedSubMaterial.input_id

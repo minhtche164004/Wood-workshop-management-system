@@ -285,7 +285,7 @@ export class SubMaterialManagementComponent implements OnInit {
 
     // Lấy giá trị từ form
     const formData = this.editForm.value;
-    console.log('check',formData);
+    console.log('check', formData);
 
     // Kiểm tra các điều kiện
     if (!formData.subMaterialName || formData.subMaterialName.length < 3) {
@@ -333,7 +333,7 @@ export class SubMaterialManagementComponent implements OnInit {
 
     // Lấy giá trị từ form
     const formData = this.editForm.value;
-    console.log('check',formData);
+    console.log('check', formData);
 
     // Kiểm tra các điều kiện
 
@@ -365,8 +365,12 @@ export class SubMaterialManagementComponent implements OnInit {
         }
       },
       (error) => {
-        console.error('Error updating sub-materials:', error);
-        this.toastr.warning('Có lỗi xảy ra!', 'Lỗi');
+        if (error.status === 400 && error.error.code === 1051) {
+          this.toastr.error(error.error.message, 'Lỗi');
+        } else {
+          console.error('Error updating sub-materials:', error);
+          this.toastr.warning('Có lỗi xảy ra!', 'Lỗi');
+        }
         this.isLoadding = false;
       }
     );
@@ -388,7 +392,7 @@ export class SubMaterialManagementComponent implements OnInit {
             quantity: subMaterial.quantity,
             unit_price: subMaterial.unitPrice,
             input_price: subMaterial.input_price,
-            input_id:subMaterial.input_id
+            input_id: subMaterial.input_id
           };
           this.originalSubMaterial = { ...this.selectedSubMaterial };
 
@@ -401,7 +405,7 @@ export class SubMaterialManagementComponent implements OnInit {
             quantity: this.selectedSubMaterial.quantity,
             unitPrice: this.selectedSubMaterial.unit_price,
             input_price: this.selectedSubMaterial.input_price,
-            input_id:this.selectedSubMaterial.input_id
+            input_id: this.selectedSubMaterial.input_id
           });
 
           console.log('Form Values after patchValue:', this.editForm.value);
@@ -429,7 +433,7 @@ export class SubMaterialManagementComponent implements OnInit {
             quantity: subMaterial.quantity,
             unit_price: subMaterial.unitPrice,
             input_price: subMaterial.input_price,
-            input_id:subMaterial.input_id
+            input_id: subMaterial.input_id
           };
           this.originalSubMaterial = { ...this.selectedSubMaterial };
 
@@ -442,7 +446,8 @@ export class SubMaterialManagementComponent implements OnInit {
             quantity: 0,
             unitPrice: this.selectedSubMaterial.unit_price,
             input_price: this.selectedSubMaterial.input_price,
-            input_id:this.selectedSubMaterial.input_id
+            input_id: this.selectedSubMaterial.input_id,
+            reason_export: ''
           });
 
           console.log('Form Values after patchValue:', this.editForm.value);

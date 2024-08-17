@@ -13,12 +13,14 @@ public class Product_SubmaterialDTO {
     private int sub_id;
     private double quantity;
     private String sub_type;
+    private String code_input;
 
-    public Product_SubmaterialDTO(int id, String sub_name, int sub_id, double quantity, String sub_type) {
+    public Product_SubmaterialDTO(int id, String sub_name, int sub_id, double quantity, String sub_type,String code_input) {
         this.id = id;
         this.sub_name = sub_name;
         this.sub_id = sub_id;
         this.quantity = quantity;
         this.sub_type = sub_type;
+        this.code_input=code_input;
     }
 }

@@ -651,9 +651,20 @@ public class OrderServiceImpl implements OrderService {
             jobRepository.save(jobs);
             totalOrder = totalOrder.add(total); // Cộng dồn total của orderDetail vào totalOrder
         }
-
-        orders.setDeposite(totalOrder.multiply(BigDecimal.valueOf(0.2))); // 20% tiền cọc của tổng tiền đơn hàng
-        orders.setTotalAmount(totalOrder);
+        BigDecimal current_deposit= BigDecimal.ZERO;
+        if(orders.getDeposite() == null){
+             current_deposit=BigDecimal.ZERO;
+        }else{
+             current_deposit=orders.getDeposite();
+        }
+        BigDecimal current_total= BigDecimal.ZERO;
+        if(orders.getTotalAmount() == null){
+            current_total=BigDecimal.ZERO;
+        }else{
+            current_total=orders.getTotalAmount();
+        }
+        orders.setDeposite(current_deposit.add(totalOrder.multiply(BigDecimal.valueOf(0.2)))); // 20% tiền cọc của tổng tiền đơn hàng
+        orders.setTotalAmount(current_total.add(totalOrder));
         orders.setSpecialOrder(true);
         Date contract_date = orderRepository.findLatestCompletionTimeByOrderId(order_id);
         orders.setContractDate(contract_date);

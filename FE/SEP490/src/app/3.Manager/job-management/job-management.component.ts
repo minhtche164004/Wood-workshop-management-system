@@ -322,8 +322,8 @@ export class JobManagementComponent implements OnInit {
     this.orderContractTime = this.selectedProduct.order_contract_time;
     this.orderDate = this.selectedProduct.order_date;
 
-    console.log('Order Contract Time:', this.orderContractTime);
-    console.log('Order Date:', this.orderDate);
+    // console.log('Order Contract Time:', this.orderContractTime);
+    // console.log('Order Date:', this.orderDate);
     const user_id = this.selectedEmployee;
     const p_id = this.selectedProduct.product_id; // Thay đổi giá trị tùy theo sản phẩm
     let status_id = this.selectedProduct.statusJob?.status_id; // Thay đổi giá trị tùy theo trạng thái
@@ -345,8 +345,10 @@ export class JobManagementComponent implements OnInit {
     const start = this.createJobs.get('start')?.value;
     const finish = this.createJobs.get('finish')?.value;
     const description = this.createJobs.get('description')?.value;
-    const today = new Date();
-  
+    const  formattedDate = new Date();
+    const  today= formattedDate.toISOString().split('T')[0];
+    console.log('Today:', today);
+    console.log('Start:', start);
     if (!user_id) {
       this.toastr.warning('Vui lòng chọn nhân viên', 'Thông báo');
       this.isLoadding = false;
@@ -371,6 +373,7 @@ export class JobManagementComponent implements OnInit {
     }
     if (start < today) {
       this.toastr.warning('Ngày nhận việc phải chọn sau hôm nay.', 'Thông báo'); this.isLoadding = false;
+      console.log('Start < today');
       return;
     }
 
@@ -439,7 +442,7 @@ export class JobManagementComponent implements OnInit {
                   this.isLoadding = false;
                   //       console.log("consolo lod flase: ", this.isLoadding)
                   this.loadProduct();
-                  $('[data-dismiss="modal"]').click();
+                 // $('[data-dismiss="modal"]').click();
                 }
 
                 this.isLoadding = false;
@@ -467,15 +470,15 @@ export class JobManagementComponent implements OnInit {
           if (error && error.error && error.error.errors) {
             Object.entries(error.error.errors).forEach(([key, value]) => {
               this.toastr.warning(`${key}: ${value}`, 'Thông báo');
-              $('[data-dismiss="modal"]').click(); this.isLoadding = false;
+            //  $('[data-dismiss="modal"]').click(); this.isLoadding = false;
             });
 
           } else if (error && error.message) {
             this.toastr.warning(`Có lỗi xảy ra: ${error.message}`, 'Thông báo'); this.isLoadding = false;
-            $('[data-dismiss="modal"]').click();
+          //  $('[data-dismiss="modal"]').click();
           } else {
             this.toastr.warning(`Có lỗi xảy ra, vui lòng thử lại.`, 'Thông báo'); this.isLoadding = false;
-            $('[data-dismiss="modal"]').click();
+         //   $('[data-dismiss="modal"]').click();
           }
         }
       );
@@ -1872,14 +1875,15 @@ export class JobManagementComponent implements OnInit {
               (error) => {
                 console.error('Error fetching products:', error);
                 this.toastr.warning(error.error.message, 'Thông báo'); this.isLoadding = false;
-                $('[data-dismiss="modal"]').click();
+            //    $('[data-dismiss="modal"]').click();
 
               }
             );
           } else if (data.code === 1015) {
             console.error('Failed to fetch products:', data);
             this.toastr.warning('Số lượng nguyên vật liệu trong kho không đủ', 'Thông báo');
-            $('[data-dismiss="modal"]').click(); this.isLoadding = false;
+           // $('[data-dismiss="modal"]').click();
+             this.isLoadding = false;
 
           }
         },
@@ -1888,15 +1892,15 @@ export class JobManagementComponent implements OnInit {
           if (error && error.error && error.error.errors) {
             Object.entries(error.error.errors).forEach(([key, value]) => {
               this.toastr.warning(`${key}: ${value}`, 'Thông báo');
-              $('[data-dismiss="modal"]').click(); this.isLoadding = false;
+            //  $('[data-dismiss="modal"]').click(); this.isLoadding = false;
             });
 
           } else if (error && error.message) {
             this.toastr.warning(`Có lỗi xảy ra: ${error.message}`, 'Thông báo'); this.isLoadding = false;
-            $('[data-dismiss="modal"]').click();
+          //  $('[data-dismiss="modal"]').click();
           } else {
             this.toastr.error(`Có lỗi xảy ra, vui lòng thử lại.`, 'Thông báo'); this.isLoadding = false;
-            $('[data-dismiss="modal"]').click();
+           // $('[data-dismiss="modal"]').click();
           }
         }
       );
@@ -1941,15 +1945,15 @@ export class JobManagementComponent implements OnInit {
           if (error && error.error && error.error.errors) {
             Object.entries(error.error.errors).forEach(([key, value]) => {
               this.toastr.warning(`${key}: ${value}`, 'Thông báo');
-              $('[data-dismiss="modal"]').click(); this.isLoadding = false;
+             // $('[data-dismiss="modal"]').click(); this.isLoadding = false;
             });
 
           } else if (error && error.message) {
             this.toastr.warning(`Có lỗi xảy ra: ${error.message}`, 'Thông báo'); this.isLoadding = false;
-            $('[data-dismiss="modal"]').click();
+          //  $('[data-dismiss="modal"]').click();
           } else {
             this.toastr.error(`Có lỗi xảy ra, vui lòng thử lại.`, 'Thông báo'); this.isLoadding = false;
-            $('[data-dismiss="modal"]').click();
+           // $('[data-dismiss="modal"]').click();
           }
         }
       );

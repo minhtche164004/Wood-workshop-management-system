@@ -264,7 +264,7 @@
 
 
                                         </section>
-                                        <div class="row">
+                                        <div class="row" *ngIf="this.selectedProduct.order_date !== null">
                                             <div class="col-md-6">
                                                 <strong>Ngày nhận đơn:</strong>
                                             </div>
@@ -272,7 +272,7 @@
                                                 {{ selectedProduct.order_date | date:'dd / MM / yyyy' }}
                                             </div>
                                         </div>
-                                        <div class="row">
+                                        <div class="row"  *ngIf="this.selectedProduct.order_date !== null">
                                             <div class="col-md-6">
                                                 <strong>Hoàn thành đơn hàng trước ngày:</strong>
                                             </div>

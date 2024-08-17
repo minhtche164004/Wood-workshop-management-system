@@ -470,7 +470,7 @@ export class JobManagementComponent implements OnInit {
           if (error && error.error && error.error.errors) {
             Object.entries(error.error.errors).forEach(([key, value]) => {
               this.toastr.warning(`${key}: ${value}`, 'Thông báo');
-            //  $('[data-dismiss="modal"]').click(); this.isLoadding = false;
+             $('[data-dismiss="modal"]').click(); this.isLoadding = false;
             });
 
           } else if (error && error.message) {

@@ -434,7 +434,7 @@ public class SubMaterialServiceImpl implements SubMaterialService {
 
     //@Override
     private void updatePriceAllProduct(int subMaterialId,BigDecimal unit_price,int input_id) {
-        List<Products> list_product = productSubMaterialsRepository.getProductIdsBySubMaterialId(subMaterialId);
+        List<Products> list_product = productSubMaterialsRepository.getProductIdsBySubMaterialId(subMaterialId,input_id);
         BigDecimal current_unit_price = subMaterialsRepository.findSubMaterialsById(input_id).getUnitPrice();
         BigDecimal new_unit_price = unit_price;
         for(Products p : list_product){

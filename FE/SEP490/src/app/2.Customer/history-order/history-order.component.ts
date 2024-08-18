@@ -148,6 +148,31 @@ export class HistoryOrderComponent {
       this.isLoadding = false;
     }
   }
+  realoadgetHistoryOrder(): void {
+    this.loginToken = localStorage.getItem('loginToken');
+    this.isLoadding = true;
+    if (this.loginToken) {
+      console.log('Retrieved loginToken:', this.loginToken);
+      this.authenListService.getHistoryOrderCustomer().subscribe(
+        (data: ApiResponse) => {
+          if (data.code === 1000) {
+            this.history_order = data.result;
+            this.isLoadding = false;
+          } else {
+            console.error('Failed to fetch products:', data);
+            this.isLoadding = false;
+          }
+        },
+        (error) => {
+          console.error('Error fetching products:', error);
+          this.isLoadding = false;
+        }
+      );
+    } else {
+      console.error('No loginToken found in localStorage.');
+      this.isLoadding = false;
+    }
+  }
   onResetImage() {
     this.selectedImages = [];
     this.imagesPreview = [];
@@ -304,5 +329,35 @@ export class HistoryOrderComponent {
           }
         );
     
+  }
+
+  cancelReason: string = '';
+  selectedSpecialOrder: boolean | null = null;
+  setOrderForCancellation(orderId: number , specialOrder: boolean | null) {
+    this.selectedOrderId = orderId;
+    this.selectedSpecialOrder = specialOrder;
+  }
+  confirmCancel() {
+    this.isLoadding = true;
+    if (this.selectedOrderId !== null && this.selectedSpecialOrder !== null) {
+      this.authenListService.cancelOrder(this.selectedOrderId, this.selectedSpecialOrder, this.cancelReason).subscribe({
+        next: (response) => {
+
+          this.toastr.success('Hủy đơn hàng thành công');
+          this.isLoadding = false;
+          const closeModalButton = document.querySelector('.close') as HTMLElement;
+          if (closeModalButton) {
+            closeModalButton.click();
+          }
+          $('[data-dismiss="modal"]').click();
+        },
+        error: (error: HttpErrorResponse) => {
+          this.isLoadding = false;
+          this.toastr.success('Hủy đơn hàng thành công');
+          this.realoadgetHistoryOrder();
+          $('[data-dismiss="modal"]').click();
+        }
+      });
+    }
   }
 }

@@ -66,14 +66,20 @@
                   *ngFor="let hs of history_order | paginate: { itemsPerPage: 10, currentPage: currentPage }; let i = index">
                   <td>{{ hs?.code }}</td>
                   <td>
-                    <a style="padding-right: 5px;" href="#" class="info" title="Xem chi tiết" data-toggle="modal" data-target="#productDetailModal"
-                      (click)="getOrDetailById(hs, hs.orderId)">
+                    <a style="padding-right: 5px;" href="#" class="info" title="Xem chi tiết" data-toggle="modal"
+                      data-target="#productDetailModal" (click)="getOrDetailById(hs, hs.orderId)">
                       <i class="fa-solid fa-circle-info"></i>
                     </a>
-                    <a *ngIf="hs?.status.status_id== 7" href="#"  title="Chỉnh sửa" data-toggle="modal" data-target="#editProductModal"
-                    (click)="getDataRequest(hs.orderId)" (click)="setOrderForPayment(hs.orderId)">
-                    <i class="fa-solid fa-pen-to-square"></i>
-                  </a>
+                    <a *ngIf="hs?.status.status_id== 7" href="#" title="Chỉnh sửa" data-toggle="modal"
+                      data-target="#editProductModal" (click)="getDataRequest(hs.orderId)"
+                      (click)="setOrderForPayment(hs.orderId)">
+                      <i class="fa-solid fa-pen-to-square"></i>
+                    </a>
+                    <a href="#" data-toggle="modal" title="Hủy đơn hàng" data-target="#confirmDeleteModal"
+                      (click)="setOrderForCancellation(hs?.orderId, hs?.specialOrder)" *ngIf="hs?.status.status_id === 7 
+                    || hs?.status.status_id === 1|| hs?.status.status_id === 8">
+                      <i class="fa-solid fa-times-circle"></i>
+                    </a>
                   </td>
                   <td>{{ hs?.specialOrder ? 'Đơn hàng theo yêu cầu' : 'Đơn hàng có sẵn' }}</td>
                   <td>{{ hs?.orderDate | date:'dd/MM/yyyy' }}</td>
@@ -133,7 +139,7 @@
           <div class="row">
             <div class="col-md-4">
               <!-- <b>Đơn hàng:</b> -->
-              <label >
+              <label>
                 <!-- Other parts of your form -->
 
                 <div *ngIf="selectedOrderDetail.specialOrder; else regularOrder">
@@ -190,7 +196,8 @@
                   </p>
                   <p class="card-text">
                     <b>Tổng tiền cần thanh toán: </b>
-                    <span style="float: right;">{{ totalAmoutOrder - OrderdetailById.deposite | number : '1.0-3' }} &nbsp; VNĐ</span>
+                    <span style="float: right;">{{ totalAmoutOrder - OrderdetailById.deposite | number : '1.0-3' }}
+                      &nbsp; VNĐ</span>
                   </p>
                   <p class="card-text">
                     <b>Tổng giá trị đơn hàng: </b>
@@ -206,9 +213,9 @@
 
             <div class="col-md-8">
               <h2 class="text-center">Thông tin đơn hàng</h2>
-              <h2 >Ảnh mẫu sản phẩm</h2>
-              
-              <div class="product-list d-flex flex-row flex-nowrap overflow-auto"  style="margin-bottom: 10px;">
+              <h2>Ảnh mẫu sản phẩm</h2>
+
+              <div class="product-list d-flex flex-row flex-nowrap overflow-auto" style="margin-bottom: 10px;">
                 <ng-container *ngFor="let cate of OrderdetailById.requestImages; let i = index">
                   <div class="d-flex me-3">
                     <a class="me-3" target="_blank" [href]="cate.fullPath">
@@ -225,7 +232,7 @@
                   <tr>
                     <th style="width: 40%;">Tên sản phẩm</th>
                     <th>Đơn giá</th>
-                 
+
                     <th>Số lượng</th>
                   </tr>
                 </thead>
@@ -233,13 +240,13 @@
                   <tr *ngFor="let product of productOfOrder">
                     <td>{{product?.product_name}} {{product?.request_product_name}}</td>
                     <td>{{product?.price | number:'1.0-3'}}</td>
-            
+
                     <td style="text-align: right;">{{product?.quantity}}</td>
                   </tr>
                 </tbody>
               </table>
-        
-           
+
+
             </div>
           </div>
         </div>
@@ -271,16 +278,16 @@
             <label style="font-size: 16px;" for="editProductDescription">Mô tả</label>
             <span style="font-size: 16px;" class="required-asterisk">*</span>
             <textarea class="form-control" id="editProductDescription" rows="3" name="editProductDescription"
-              formControlName="description" ></textarea>
+              formControlName="description"></textarea>
           </div>
-          
- 
+
+
           <div class="form-row">
             <div class="form-group col-md-10">
               <label style="font-size: 16px;" for="editProductImages">Ảnh minh họa (Chọn nhiều)</label>
               <span style="font-size: 16px;" class="required-asterisk">*</span>
               <input type="file" class="form-control-file" id="editProductImages" name="editProductImages" multiple
-                (change)="onImagesSelected($event)"> 
+                (change)="onImagesSelected($event)">
             </div>
             <div class="form-group col-md-2 d-flex align-items-end">
               <button type="button" (click)="onResetImage()" class="btn"
@@ -297,10 +304,10 @@
           </div>
 
           <div class="modal-footer d-flex justify-content-end">
-          
+
             <button type="button" class="btn btn-secondary" (click)="resetForm()" data-dismiss="modal">Hủy Bỏ</button>
             <button type="submit" class="btn btn-primary">Lưu thay đổi</button>
-           
+
           </div>
 
         </form>
@@ -308,6 +315,35 @@
     </div>
   </div>
 </div>
+
+
+<div class="modal fade" id="confirmDeleteModal" tabindex="-1" role="dialog" aria-labelledby="confirmDeleteModalLabel"
+  aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="confirmDeleteModalLabel">Xác nhận muốn hủy đơn hàng</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="form-group">
+          <label for="cancelReason">Lý do hủy đơn hàng:</label>
+          <textarea class="form-control" id="cancelReason" [(ngModel)]="cancelReason" rows="4" required></textarea>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Hủy</button>
+        <button type="button" class="btn btn-primary" (click)="confirmCancel()">Xác nhận</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+
 <div *ngIf="isLoadding" class="loading-overlay">
   <div class="spinner"></div>
 </div>

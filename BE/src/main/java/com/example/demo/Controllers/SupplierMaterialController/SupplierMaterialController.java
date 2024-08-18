@@ -56,7 +56,8 @@ public class SupplierMaterialController {
     @GetMapping("/SearchByName")
     public ApiResponse<?> searchByName(@RequestParam("key") String key){
         ApiResponse<List> apiResponse = new ApiResponse<>();
-        apiResponse.setResult(supplierMaterialService.SearchSupplierByName(key));
+        String searchTerm = key == null ? "" : key.trim();
+        apiResponse.setResult(supplierMaterialService.SearchSupplierByName(searchTerm));
         return apiResponse;
     }
 

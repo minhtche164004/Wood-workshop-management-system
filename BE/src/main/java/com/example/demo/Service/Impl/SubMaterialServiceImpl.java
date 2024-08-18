@@ -96,15 +96,15 @@ public class SubMaterialServiceImpl implements SubMaterialService {
 
 
         SubMaterials subMaterials = new SubMaterials();
-        subMaterials.setSubMaterialName(subMaterialDTO.getSub_material_name());
-        Materials materials = materialRepository.findByName(subMaterialDTO.getMaterial_name());
+        subMaterials.setSubMaterialName(subMaterialDTO.getSub_material_name().trim());
+        Materials materials = materialRepository.findByName(subMaterialDTO.getMaterial_name().trim());
         subMaterials.setMaterial(materials);
         //   subMaterials.setCreate_date(create);
         //  subMaterials.setQuantity(subMaterialDTO.getQuantity());
         //  subMaterials.setUnitPrice(subMaterialDTO.getUnit_price());//mới đầu nhập nguyên vật liệu thì giá bán là 0
         //  subMaterials.setInputPrice(subMaterialDTO.getInput_price());
 
-        subMaterials.setDescription(subMaterialDTO.getDescription());
+        subMaterials.setDescription(subMaterialDTO.getDescription().trim());
 
 //        if (!checkConditionService.checkInputName(subMaterialDTO.getSub_material_name())) {
 //            throw new AppException(ErrorCode.INVALID_FORMAT_NAME);
@@ -184,8 +184,8 @@ public class SubMaterialServiceImpl implements SubMaterialService {
                         errors.add(new ExcelError(rowIndex, 5, "Đơn giá không hợp lệ"));
                     }
 
-                    String subMaterialName = dto.getSub_material_name();
-                    String materialName = dto.getMaterial_name(); // Lấy tên vật liệu từ DTO
+                    String subMaterialName = dto.getSub_material_name().trim();
+                    String materialName = dto.getMaterial_name().trim(); // Lấy tên vật liệu từ DTO
                     BigDecimal unit_price = dto.getUnit_price();
 
                     if(errors.isEmpty()){
@@ -198,7 +198,7 @@ public class SubMaterialServiceImpl implements SubMaterialService {
                         //    subMaterials.setQuantity(dto.getQuantity());
                         //    subMaterials.setUnitPrice(dto.getUnit_price());
                         //    subMaterials.setInputPrice(dto.getInput_price());
-                        subMaterials.setDescription(dto.getDescription());
+                        subMaterials.setDescription(dto.getDescription().trim());
                         subMaterials.setCode(codeCount.get(i));
                         subMaterialsList.add(subMaterials); // Thêm vào danh sách để save sau
                         subMaterialsRepository.save(subMaterials);
@@ -424,8 +424,8 @@ public class SubMaterialServiceImpl implements SubMaterialService {
         //    subMaterials.setQuantity(subMaterialViewDTO.getQuantity());
         //    subMaterials.setUnitPrice(subMaterialViewDTO.getUnitPrice());
         subMaterials.getMaterial().setMaterialId(subMaterialViewDTO.getMaterialId());
-        subMaterials.setDescription(subMaterialViewDTO.getDescription());
-        subMaterials.setSubMaterialName(subMaterialViewDTO.getSubMaterialName());
+        subMaterials.setDescription(subMaterialViewDTO.getDescription().trim());
+        subMaterials.setSubMaterialName(subMaterialViewDTO.getSubMaterialName().trim());
         updatePriceAllProduct(subMaterials.getSubMaterialId(), subMaterialViewDTO.getUnitPrice(),id);
         subMaterialsRepository.save(subMaterials);
 

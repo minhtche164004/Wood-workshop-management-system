@@ -230,7 +230,8 @@ public class OrderController {
             @RequestBody(required = false) DateDTO dto
     ) {
         ApiResponse<List<OderDTO>> apiResponse = new ApiResponse<>(); // Chỉ định rõ kiểu List<OderDTO>
-        apiResponse.setResult(orderService.MultiFilterOrder(search, statusId, paymentMethod,specialOrder, dto.getStartDate(), dto.getEndDate()));
+        String searchTerm = search == null ? "" : search.trim();
+        apiResponse.setResult(orderService.MultiFilterOrder(searchTerm, statusId, paymentMethod,specialOrder, dto.getStartDate(), dto.getEndDate()));
         return apiResponse;
     }
 
@@ -243,7 +244,8 @@ public class OrderController {
             @RequestBody(required = false) DateDTO dto
     ) {
         ApiResponse<List<Orders>> apiResponse = new ApiResponse<>(); // Chỉ định rõ kiểu List<OderDTO>
-        apiResponse.setResult(orderService.MultiFilterOrderForEmployee(search, statusId, paymentMethod,specialOrder, dto.getStartDate(), dto.getEndDate()));
+        String searchTerm = search == null ? "" : search.trim();
+        apiResponse.setResult(orderService.MultiFilterOrderForEmployee(searchTerm, statusId, paymentMethod,specialOrder, dto.getStartDate(), dto.getEndDate()));
         return apiResponse;
     }
 

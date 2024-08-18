@@ -449,7 +449,9 @@ public class ProductController {
             @RequestParam(required = false) BigDecimal maxPrice,
             @RequestParam(required = false) String sortDirection){
         ApiResponse<List> apiResponse = new ApiResponse<>();
-        apiResponse.setResult(productService.filterProductForCustomer(search, categoryId, minPrice, maxPrice, sortDirection));
+        String searchTerm = search == null ? "" : search.trim();
+
+        apiResponse.setResult(productService.filterProductForCustomer(searchTerm, categoryId, minPrice, maxPrice, sortDirection));
         return apiResponse;
     }
 
@@ -466,7 +468,9 @@ public class ProductController {
         jedis.del("all_sub_mate_product");
         jedis.del("all_sub_mate_re_product");
         jedis.del("all_products_admin");
-        apiResponse.setResult(productService.filterProductsForAdmin(search, categoryId, statusId, minPrice, maxPrice, sortDirection));
+        String searchTerm = search == null ? "" : search.trim();
+
+        apiResponse.setResult(productService.filterProductsForAdmin(searchTerm, categoryId, statusId, minPrice, maxPrice, sortDirection));
         return apiResponse;
 
     }
@@ -483,7 +487,9 @@ public class ProductController {
         jedis.del("all_sub_mate_product");
         jedis.del("all_sub_mate_re_product");
         jedis.del("all_products_admin");
-        apiResponse.setResult(orderService.filterRequestProductsForAdmin(search, statusId, minPrice, maxPrice, sortDirection));
+        String searchTerm = search == null ? "" : search.trim();
+
+        apiResponse.setResult(orderService.filterRequestProductsForAdmin(searchTerm, statusId, minPrice, maxPrice, sortDirection));
         return apiResponse;
     }
 

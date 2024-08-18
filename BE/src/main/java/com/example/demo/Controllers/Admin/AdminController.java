@@ -114,7 +114,9 @@ public class AdminController {
             @RequestParam(required = false) Integer roleId,
             @RequestParam(required = false) Integer position_id){
         ApiResponse<List> apiResponse = new ApiResponse<>();
-        apiResponse.setResult(userService.MultiFilterUser(search, roleId, position_id));
+        String searchTerm = search == null ? "" : search.trim();
+
+        apiResponse.setResult(userService.MultiFilterUser(searchTerm, roleId, position_id));
         return apiResponse;
 
     }

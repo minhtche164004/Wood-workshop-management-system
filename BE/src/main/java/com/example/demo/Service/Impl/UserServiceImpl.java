@@ -75,8 +75,8 @@ public class UserServiceImpl implements UserService {
         Status_User status = statusRepository.findById(2); //Default la KICHHOAT
         Position position = positionRepository.findById(4);//Default la Không đảm nhận vị trí
         UserInfor userInfor = new UserInfor(
-                userDTO.getPhoneNumber(),
-                userDTO.getFullname(),
+                userDTO.getPhoneNumber().trim(),
+                userDTO.getFullname().trim(),
                 userDTO.getAddress(),
                 "",
                 "",
@@ -88,9 +88,9 @@ public class UserServiceImpl implements UserService {
         informationUserRepository.save(userInfor);
         User user = new User(
                 0,
-                userDTO.getUsername(),
+                userDTO.getUsername().trim(),
                 pass,
-                userDTO.getEmail(),
+                userDTO.getEmail().trim(),
                 status,
                 position,
                 hireDate,
@@ -142,8 +142,8 @@ public class UserServiceImpl implements UserService {
         Status_User status = statusRepository.findById(2);
         Position position = positionRepository.findById(userDTO.getPosition());
         UserInfor userInfor = new UserInfor(
-                userDTO.getPhoneNumber(),
-                userDTO.getFullname(),
+                userDTO.getPhoneNumber().trim(),
+                userDTO.getFullname().trim(),
                 userDTO.getAddress(),
                 userDTO.getBank_name(),
                 userDTO.getBank_number(),
@@ -160,9 +160,9 @@ public class UserServiceImpl implements UserService {
         informationUserRepository.save(userInfor);
         User user = new User(
                 0,
-                userDTO.getUsername(),
+                userDTO.getUsername().trim(),
                 pass,
-                userDTO.getEmail(),
+                userDTO.getEmail().trim(),
                 status,
                 position,
                 hireDate,
@@ -204,7 +204,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public void changePass(ChangePassDTO changePassDTO) {
         UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        String username = userDetails.getUsername();
+        String username = userDetails.getUsername().trim();
         User user = userRepository.getUserByUsername(username);
         if (!passwordEncoder.matches(changePassDTO.getOld_pass(),user.getPassword())) {
             throw new AppException(ErrorCode.WRONG_PASS);
@@ -212,7 +212,7 @@ public class UserServiceImpl implements UserService {
         if (!changePassDTO.getCheck_pass().equals(changePassDTO.getNew_pass())){
             throw new AppException(ErrorCode.NOT_MATCH_PASS);
         }
-        String pass = passwordEncoder.encode(changePassDTO.getNew_pass());
+        String pass = passwordEncoder.encode(changePassDTO.getNew_pass().trim());
         userRepository.updatePassword(user.getEmail(),pass);
     }
 
@@ -222,22 +222,22 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void checkConditions(RegisterDTO userDTO) { //check các điều kiện cho form Register
-        if (!checkConditionService.checkPhone(userDTO.getPhoneNumber())) {
+        if (!checkConditionService.checkPhone(userDTO.getPhoneNumber().trim())) {
             throw new AppException(ErrorCode.PHONE_EXISTED);
         }
-        if (!checkConditionService.checkEmail(userDTO.getEmail())) {
+        if (!checkConditionService.checkEmail(userDTO.getEmail().trim())) {
             throw new AppException(ErrorCode.WRONG_FORMAT_EMAIL);
         }
-        if (!checkConditionService.checkName(userDTO.getUsername())) {
+        if (!checkConditionService.checkName(userDTO.getUsername().trim())) {
             throw new AppException(ErrorCode.INVALID_NAME_FORMAT);
         }
-        if (!userDTO.getPassword().equals(userDTO.getCheckPass())) {
+        if (!userDTO.getPassword().equals(userDTO.getCheckPass().trim())) {
             throw new AppException(ErrorCode.NOT_MATCH_PASS);
         }
-        if (!checkConditionService.checkUserbyEmail(userDTO.getEmail())) {
+        if (!checkConditionService.checkUserbyEmail(userDTO.getEmail().trim())) {
             throw new AppException(ErrorCode.GMAIL_EXISTED);
         }
-        if (!checkConditionService.checkUserbyUsername(userDTO.getUsername())) {
+        if (!checkConditionService.checkUserbyUsername(userDTO.getUsername().trim())) {
             throw new AppException(ErrorCode.USERNAME_EXISTED);
         }
 //        if (!checkConditionService.checkEmail(userDTO.getFullname())) {
@@ -248,19 +248,19 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void checkConditionsForAdmin(User_Admin_DTO userDTO) {
-        if (!checkConditionService.checkEmail(userDTO.getEmail())) {
+        if (!checkConditionService.checkEmail(userDTO.getEmail().trim())) {
             throw new AppException(ErrorCode.WRONG_FORMAT_EMAIL);
         }
-        if (!checkConditionService.checkName(userDTO.getUsername())) {
+        if (!checkConditionService.checkName(userDTO.getUsername().trim())) {
             throw new AppException(ErrorCode.INVALID_NAME_FORMAT);
         }
-        if (!userDTO.getPassword().equals(userDTO.getCheckPass())) {
+        if (!userDTO.getPassword().equals(userDTO.getCheckPass().trim())) {
             throw new AppException(ErrorCode.NOT_MATCH_PASS);
         }
-        if (!checkConditionService.checkUserbyEmail(userDTO.getEmail())) {
+        if (!checkConditionService.checkUserbyEmail(userDTO.getEmail().trim())) {
             throw new AppException(ErrorCode.GMAIL_EXISTED);
         }
-        if (!checkConditionService.checkUserbyUsername(userDTO.getUsername())) {
+        if (!checkConditionService.checkUserbyUsername(userDTO.getUsername().trim())) {
             throw new AppException(ErrorCode.USERNAME_EXISTED);
         }
 //        if (!checkConditionService.checkEmail(userDTO.getFullname())) {
@@ -326,35 +326,35 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserDTO UpdateProfile(UpdateProfileDTO updateProfileDTO){
         UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        String username = userDetails.getUsername();
+        String username = userDetails.getUsername().trim();
         Optional<User> userOptional = userRepository.findByUsername(username);
         User user = userOptional.orElseThrow(() -> new AppException(ErrorCode.NOT_FOUND));
 //        if (!checkConditionService.checkAddress(updateProfileDTO.getAddress())) {
 //            throw new AppException(ErrorCode.INVALID_FORMAT_ADDRESS);
 //        }
-        if (!checkConditionService.checkPhoneNumber(updateProfileDTO.getPhoneNumber())) {
+        if (!checkConditionService.checkPhoneNumber(updateProfileDTO.getPhoneNumber().trim())) {
             throw new AppException(ErrorCode.INVALID_FORMAT_PHONE_NUMBER);
         }
-        if (!checkConditionService.checkFullName(updateProfileDTO.getFullname())) {
+        if (!checkConditionService.checkFullName(updateProfileDTO.getFullname().trim())) {
             throw new AppException(ErrorCode.INVALID_FORMAT_NAME);
         }
-        if (!updateProfileDTO.getEmail().equals(user.getEmail()) &&
-                userRepository.findByEmail(updateProfileDTO.getEmail()).isPresent()) {
+        if (!updateProfileDTO.getEmail().trim().equals(user.getEmail().trim()) &&
+                userRepository.findByEmail(updateProfileDTO.getEmail().trim()).isPresent()) {
             throw new AppException(ErrorCode.GMAIL_EXISTED);
         }
-        if (!updateProfileDTO.getUsername().equals(user.getUsername()) &&
-                userRepository.findByUsername(updateProfileDTO.getUsername()).isPresent()) {
+        if (!updateProfileDTO.getUsername().trim().equals(user.getUsername().trim()) &&
+                userRepository.findByUsername(updateProfileDTO.getUsername().trim()).isPresent()) {
             throw new AppException(ErrorCode.USERNAME_EXISTED);
         }
 //        if (!checkConditionService.checkEmail(updateProfileDTO.getFullname())) {
 //            throw new AppException(ErrorCode.INVALID_FULL_NAME);
 //        }
 
-        user.setUsername(updateProfileDTO.getUsername());
-              user.getUserInfor().setFullname(updateProfileDTO.getFullname());
-        user.setEmail(updateProfileDTO.getEmail());
+        user.setUsername(updateProfileDTO.getUsername().trim());
+              user.getUserInfor().setFullname(updateProfileDTO.getFullname().trim());
+        user.setEmail(updateProfileDTO.getEmail().trim());
         user.getUserInfor().setAddress(updateProfileDTO.getAddress());
-        user.getUserInfor().setPhoneNumber(updateProfileDTO.getPhoneNumber());
+        user.getUserInfor().setPhoneNumber(updateProfileDTO.getPhoneNumber().trim());
         user.getUserInfor().setBank_name(updateProfileDTO.getBank_name());
         user.getUserInfor().setBank_number(updateProfileDTO.getBank_number());
         user.getUserInfor().setCity_province(updateProfileDTO.getCity());
@@ -370,27 +370,27 @@ userRepository.save(user);
     public UserDTO EditUser(int id, EditUserDTO userDTO) {
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new AppException(ErrorCode.NOT_FOUND));
-        if (!checkConditionService.checkPhoneNumber(userDTO.getPhoneNumber())) {
+        if (!checkConditionService.checkPhoneNumber(userDTO.getPhoneNumber().trim())) {
             throw new AppException(ErrorCode.INVALID_FORMAT_PHONE_NUMBER);
         }
-        if (!checkConditionService.checkFullName(userDTO.getFullname())) {
+        if (!checkConditionService.checkFullName(userDTO.getFullname().trim())) {
             throw new AppException(ErrorCode.INVALID_FORMAT_NAME);
         }
 
-        if (!userDTO.getEmail().equals(user.getEmail()) &&
-                userRepository.findByEmail(userDTO.getEmail()).isPresent()) {
+        if (!userDTO.getEmail().trim().equals(user.getEmail().trim()) &&
+                userRepository.findByEmail(userDTO.getEmail().trim()).isPresent()) {
             throw new AppException(ErrorCode.GMAIL_EXISTED);
         }
-        if (!userDTO.getPhoneNumber().equals(user.getUserInfor().getPhoneNumber()) &&
-                userRepository.findByPhone(userDTO.getPhoneNumber()).isPresent()) {
+        if (!userDTO.getPhoneNumber().trim().equals(user.getUserInfor().getPhoneNumber()) &&
+                userRepository.findByPhone(userDTO.getPhoneNumber().trim()).isPresent()) {
             throw new AppException(ErrorCode.PHONE_EXISTED);
         }
 
-        if (!userDTO.getUsername().equals(user.getUsername()) &&
-                userRepository.findByUsername(userDTO.getUsername()).isPresent()) {
+        if (!userDTO.getUsername().trim().equals(user.getUsername().trim()) &&
+                userRepository.findByUsername(userDTO.getUsername().trim()).isPresent()) {
             throw new AppException(ErrorCode.USERNAME_EXISTED);
         }
-        if (!checkConditionService.checkEmail(userDTO.getEmail())) {
+        if (!checkConditionService.checkEmail(userDTO.getEmail().trim())) {
             throw new AppException(ErrorCode.WRONG_FORMAT_EMAIL);
         }
 //        if(user.getRole().getRoleId()==4 && jobRepository.countJobsByUserId(id) >= 1) { //nếu sửa thằng employee thì nó phải chưa nhận job nào thì mới có quyền sửa role cho nó
@@ -401,11 +401,11 @@ userRepository.save(user);
         entityManager.refresh(user); // Làm mới thực thể user trước khi sửa đổi
         // Thực hiện xác thực (như trong mã hiện tại của bạn)
         // Cập nhật trực tiếp các thuộc tính của user
-        user.setUsername(userDTO.getUsername());
-        user.setEmail(userDTO.getEmail());
+        user.setUsername(userDTO.getUsername().trim());
+        user.setEmail(userDTO.getEmail().trim());
 
         // Cập nhật trực tiếp các thuộc tính của userInfor
-        userInfor.setPhoneNumber(userDTO.getPhoneNumber());
+        userInfor.setPhoneNumber(userDTO.getPhoneNumber().trim());
         userInfor.setAddress(userDTO.getAddress());
         userInfor.setFullname(userDTO.getFullname());
         userInfor.setBank_number(userDTO.getBank_number());

@@ -74,7 +74,8 @@ public class SubMaterialController {
             @RequestParam(required = false) Integer materialId
     ){
         ApiResponse<List> apiResponse = new ApiResponse<>();
-        apiResponse.setResult(subMaterialService.MultiFilterSubmaterial(search, materialId));
+        String searchTerm = search == null ? "" : search.trim();
+        apiResponse.setResult(subMaterialService.MultiFilterSubmaterial(searchTerm, materialId));
         return apiResponse;
 
     }
@@ -89,7 +90,8 @@ public class SubMaterialController {
             @RequestParam(required = false) String sortDirection
     ){
         ApiResponse<List> apiResponse = new ApiResponse<>();
-        apiResponse.setResult(subMaterialService.MultiFilterInputSubMaterial(search, materialId,action_type_id, dto.getStartDate(),dto.getEndDate(), minPrice, maxPrice, sortDirection));
+        String searchTerm = search == null ? "" : search.trim();
+        apiResponse.setResult(subMaterialService.MultiFilterInputSubMaterial(searchTerm, materialId,action_type_id, dto.getStartDate(),dto.getEndDate(), minPrice, maxPrice, sortDirection));
         return apiResponse;
 
     }

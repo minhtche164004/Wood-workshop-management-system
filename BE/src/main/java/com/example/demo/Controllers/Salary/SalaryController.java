@@ -38,7 +38,8 @@ public class SalaryController {
             @RequestBody(required = false) DateDTO dto
     ) {
         ApiResponse<List<Advancesalary>> apiResponse = new ApiResponse<>(); // Chỉ định rõ kiểu List<OderDTO>
-        apiResponse.setResult(jobService.MultiFilterOrderSpecialOrder(search,isAdvanceSuccess, dto.getStartDate(), dto.getEndDate()));
+        String searchTerm = search == null ? "" : search.trim();
+        apiResponse.setResult(jobService.MultiFilterOrderSpecialOrder(searchTerm,isAdvanceSuccess, dto.getStartDate(), dto.getEndDate()));
         return apiResponse;
     }
 
@@ -64,7 +65,9 @@ public class SalaryController {
             @RequestParam(required = false) String sortDirection
     ){
         ApiResponse<List> apiResponse = new ApiResponse<>();
-        apiResponse.setResult(jobService.multi_filter_salary(dto.getStartDate(), dto.getEndDate(), isAdvanceSuccess,position_id, username,sortDirection));
+        String searchTerm = username == null ? "" : username.trim();
+
+        apiResponse.setResult(jobService.multi_filter_salary(dto.getStartDate(), dto.getEndDate(), isAdvanceSuccess,position_id, searchTerm,sortDirection));
         return apiResponse;
     }
 }

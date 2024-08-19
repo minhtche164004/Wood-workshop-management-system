@@ -86,9 +86,11 @@ export class StatisticService {
 
     return this.http.get(`${this.apiCountTotalSpecOrderByMonthAndYear}`, { params });
   }
-  getTotalAmountOrderHaveDone(): Observable<any> {
-    return this.http.get<any>(this.apiTotalAmountOrderHaveDone);
+  getTotalAmountOrderHaveDone(year: number): Observable<any> {
+    const params = new HttpParams().set('year', year.toString());
+    return this.http.get<any>(this.apiTotalAmountOrderHaveDone, { params });
   }
+  
 
   getTotalAmountSubMaterial(): Observable<any> {
     return this.http.get<any>(this.apiTotalAmountSubMaterial);

@@ -165,7 +165,7 @@ export class ChartComponent implements OnInit {
   }
   async getTotalAmountHaveDone(): Promise<void> {
     try {
-      const data = await this.statistic.getTotalAmountOrderHaveDone().toPromise();
+      const data = await this.statistic.getTotalAmountOrderHaveDone(this.year).toPromise();
       this.totalAmouneOrderHaveDone = data.result;
       console.log('Doanh thu:', this.totalAmouneOrderHaveDone);
     } catch (err) {

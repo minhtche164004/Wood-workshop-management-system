@@ -239,7 +239,8 @@ public class ProductController {
 //            jedis.hset(cacheKey, key, jsonData);
 //            jedis.expire(cacheKey, 1800);
 //        }
-        apiResponse.setResult(productService.findProductByNameCode(key));
+        String searchTerm = key == null ? "" : key.trim();
+        apiResponse.setResult(productService.findProductByNameCode(searchTerm));
 //        apiResponse.setResult(productService.findProductByNameCode(key));
         return apiResponse;
 

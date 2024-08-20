@@ -503,7 +503,7 @@ public class OrderServiceImpl implements OrderService {
         requests.setUserInfor(user.getUserInfor());
         Status_Order statusRequest = statusOrderRepository.findById(7);//nghĩa là request đang chờ phê duyệt
         requests.setOrderDate(requestDate); //lấy time hiện tại
-        requests.setDescription(requestDTO.getDescription());
+        requests.setDescription(requestDTO.getDescription().trim());
         requests.setStatus(statusRequest);
         requests.setAddress(requestDTO.getAddress()); //thông tin người đặt sẽ bắt theo infor_id, còn thông tin người nhận với đơn hàng đẳc biệt sẽ cho người đặt nhập
         requests.setFullname(requestDTO.getFullname());
@@ -550,7 +550,7 @@ public class OrderServiceImpl implements OrderService {
             uploadImageService.uploadFileRequest(multipartFiles, requests.getOrderId());
         }
         orderRepository.updateRequest(request_id,
-                requestEditDTO.getDescription()
+                requestEditDTO.getDescription().trim()
         );
       //  entityManager.refresh(requests); // Làm mới đối tượng products
         return requests;
@@ -590,15 +590,15 @@ public class OrderServiceImpl implements OrderService {
         for (RequestProductWithFiles r : requestProductsWithFiles) {
             RequestProductDTO requestProductDTO = r.getRequestProductDTO();
             RequestProducts requestProducts = new RequestProducts();
-            requestProducts.setRequestProductName(requestProductDTO.getRequestProductName());
-            requestProducts.setDescription(requestProductDTO.getDescription());
+            requestProducts.setRequestProductName(requestProductDTO.getRequestProductName().trim());
+            requestProducts.setDescription(requestProductDTO.getDescription().trim());
             requestProducts.setPrice(requestProductDTO.getPrice());
             Status_Product status = statusProductRepository.findById(2);//tuc la kich hoạt
             requestProducts.setStatus(status);
             requestProducts.setQuantity(requestProductDTO.getQuantity());
             requestProducts.setCompletionTime(requestProductDTO.getCompletionTime());
             requestProducts.setOrders(orders);
-            if (!checkConditionService.checkInputName(requestProductDTO.getRequestProductName())) {
+            if (!checkConditionService.checkInputName(requestProductDTO.getRequestProductName().trim())) {
                 throw new AppException(ErrorCode.INVALID_FORMAT_NAME);
             }
             if (!checkConditionService.checkInputQuantityInt(requestProductDTO.getQuantity())) {

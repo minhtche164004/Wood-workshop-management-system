@@ -83,8 +83,8 @@ public class ProductServiceImpl implements ProductService {
         java.sql.Date sqlEndDateWarranty = java.sql.Date.valueOf(endDateWarranty);
         products.setEnddateWarranty(sqlEndDateWarranty);
 
-        products.setProductName(productAddDTO.getProduct_name());
-        products.setDescription(productAddDTO.getDescription());
+        products.setProductName(productAddDTO.getProduct_name().trim());
+        products.setDescription(productAddDTO.getDescription().trim());
         products.setPrice(productAddDTO.getPrice());
 
 
@@ -158,8 +158,8 @@ public class ProductServiceImpl implements ProductService {
         //ko đc chỉnh sửa quantity
         validateProductEditDTO(productEditDTO);
         productRepository.updateProduct(id,
-                productEditDTO.getProduct_name(),
-                productEditDTO.getDescription(),
+                productEditDTO.getProduct_name().trim(),
+                productEditDTO.getDescription().trim(),
                 productEditDTO.getPrice(),
                 productEditDTO.getStatus_id(),
                 productEditDTO.getCategory_id(),
@@ -187,8 +187,8 @@ public class ProductServiceImpl implements ProductService {
         //ko đc chỉnh sửa quantity
       //  validateProductEditDTO(productEditDTO);
         requestProductRepository.updateRequestProduct(id,
-                requestProductEditDTO.getRequestProductName(),
-                requestProductEditDTO.getDescription(),
+                requestProductEditDTO.getRequestProductName().trim(),
+                requestProductEditDTO.getDescription().trim(),
                 requestProductEditDTO.getPrice(),
                 requestProductEditDTO.getStatus_id(),
                 requestProductEditDTO.getQuantity(),
@@ -335,8 +335,10 @@ public class ProductServiceImpl implements ProductService {
     List<Products> productList = new ArrayList<>();
 
     if (search != null || categoryId != null || minPrice != null || maxPrice != null) {
-        productList = productRepository.filterProductsForCus(search, categoryId, minPrice, maxPrice);
+        String searchTerm = search == null ? "" : search.trim();
+        productList = productRepository.filterProductsForCus(searchTerm, categoryId, minPrice, maxPrice);
     } else {
+
         productList = productRepository.ViewProductLandingPage();
     }
 
@@ -365,7 +367,8 @@ public class ProductServiceImpl implements ProductService {
         List<Products> productList = new ArrayList<>();
 
         if (search != null || categoryId != null || statusId != null || minPrice != null || maxPrice != null) {
-            productList = productRepository.filterProductsForAdmin(search, categoryId, statusId, minPrice, maxPrice);
+            String searchTerm = search == null ? "" : search.trim();
+            productList = productRepository.filterProductsForAdmin(searchTerm, categoryId, statusId, minPrice, maxPrice);
         } else {
             productList = productRepository.findAll();
         }
@@ -432,7 +435,7 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public List<Products> findProductByNameCode(String key) {
-        List<Products> productsList = productRepository.findProductByNameCode(key);
+        List<Products> productsList = productRepository.findProductByNameCode(key.trim());
         if (productsList.size() == 0) {
             throw new AppException(ErrorCode.NOT_FOUND);
         }
@@ -448,7 +451,7 @@ public class ProductServiceImpl implements ProductService {
 
     // Hàm kiểm tra điều kiện đầu vào
     private void validateProductDTO(ProductDTO productDTO) {
-        if (!checkConditionService.checkInputName(productDTO.getProduct_name())) {
+        if (!checkConditionService.checkInputName(productDTO.getProduct_name().trim())) {
             throw new AppException(ErrorCode.INVALID_FORMAT_NAME);
         }
         if (!checkConditionService.checkInputQuantityInt(productDTO.getQuantity())) {

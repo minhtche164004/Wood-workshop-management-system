@@ -48,9 +48,9 @@ private ModelMapper modelMapper;
     @Override
     public Suppliermaterial AddNewSupplier(SupplierMaterialDTO supplierMaterialDTO) {
         Suppliermaterial suppliermaterial = new Suppliermaterial();
-        suppliermaterial.setSupplierName(supplierMaterialDTO.getSupplierName());
-        suppliermaterial.setPhoneNumber(supplierMaterialDTO.getPhoneNumber());
-        if (!checkConditionService.checkInputName(supplierMaterialDTO.getSupplierName())) {
+        suppliermaterial.setSupplierName(supplierMaterialDTO.getSupplierName().trim());
+        suppliermaterial.setPhoneNumber(supplierMaterialDTO.getPhoneNumber().trim());
+        if (!checkConditionService.checkInputName(supplierMaterialDTO.getSupplierName().trim())) {
             throw new AppException(ErrorCode.INVALID_FORMAT_NAME);
         }
         if (suppliermaterialRepository.countSuppliermaterialBySupplierName(supplierMaterialDTO.getSupplierName())>0) {
@@ -72,15 +72,15 @@ suppliermaterialRepository.save(suppliermaterial);
     @Override
     public Suppliermaterial EditSupplier(int id, SupplierMaterialDTO supplierMaterialDTO){
         Suppliermaterial suppliermaterial = suppliermaterialRepository.findById(id);
-        if(!checkConditionService.checkInputName(supplierMaterialDTO.getSupplierName())){
+        if(!checkConditionService.checkInputName(supplierMaterialDTO.getSupplierName().trim())){
             throw new AppException(ErrorCode.INVALID_FORMAT_NAME);
         }
-        if (!supplierMaterialDTO.getSupplierName().equals(suppliermaterial.getSupplierName()) &&
-                suppliermaterialRepository.findByName(supplierMaterialDTO.getSupplierName()) != null) {
+        if (!supplierMaterialDTO.getSupplierName().trim().equals(suppliermaterial.getSupplierName().trim()) &&
+                suppliermaterialRepository.findByName(supplierMaterialDTO.getSupplierName().trim()) != null) {
             throw new AppException(ErrorCode.NAME_EXIST);
         }
-        suppliermaterial.setSupplierName(supplierMaterialDTO.getSupplierName());
-        suppliermaterial.setPhoneNumber(supplierMaterialDTO.getPhoneNumber());
+        suppliermaterial.setSupplierName(supplierMaterialDTO.getSupplierName().trim());
+        suppliermaterial.setPhoneNumber(supplierMaterialDTO.getPhoneNumber().trim());
         SubMaterials subMaterials = subMaterialsRepository.findById1(supplierMaterialDTO.getSub_material_id());
         suppliermaterial.setSubMaterial(subMaterials);
         suppliermaterialRepository.save(suppliermaterial);
@@ -89,7 +89,8 @@ suppliermaterialRepository.save(suppliermaterial);
 
     @Override
     public List<Suppliermaterial> SearchSupplierByName(String key){
-        List<Suppliermaterial> suppliermaterialList = suppliermaterialRepository.SearchSupplierByName(key);
+
+        List<Suppliermaterial> suppliermaterialList = suppliermaterialRepository.SearchSupplierByName(key.trim());
         if(suppliermaterialList.size() == 0){
             throw  new AppException(ErrorCode.NOT_FOUND);
         }

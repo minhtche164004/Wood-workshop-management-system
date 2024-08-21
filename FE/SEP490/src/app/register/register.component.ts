@@ -212,9 +212,9 @@ export class RegisterComponent implements OnInit {
 
 
   registerUser(): void {
-    // if (!this.validateRegistration()) {
-    //   return;
-    // }
+    if (!this.validateRegistration()) {
+      return;
+    }
     this.isLoading = true; // Start loading
 
     const registrationRequest: RegistrationRequest = {
@@ -239,9 +239,12 @@ export class RegisterComponent implements OnInit {
           this.router.navigate(['/otp']);
         },
         (error: any) => {
-          console.error('Registration failed', error);
-          this.errorMessage = 'Đăng ký thất bại. Vui lòng thử lại.';
-          this.toastr.error('Đăng ký thất bại. Vui lòng thử lại.', 'Lỗi');
+          if (error.code === 1022) {
+            // Hiển thị thông báo lỗi cụ thể
+            this.toastr.error(error.message || 'Vui lòng điền đầy đủ thông tin.');
+          } else {
+            // ... xử lý các lỗi khác
+          }
         }
       )
       .add(() => {

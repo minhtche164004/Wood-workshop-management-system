@@ -66,6 +66,8 @@ public class ProductServiceImpl implements ProductService {
     private RequestProductsSubmaterialsRepository requestProductsSubmaterialsRepository;
     @Autowired
     private Product_RequestimagesRepository productRequestimagesRepository;
+    @Autowired
+    private OrderRepository orderRepository;
 
 
 
@@ -517,7 +519,7 @@ public class ProductServiceImpl implements ProductService {
         // productImageRepository.findImageByProductId(product_id).isEmpty()
         // productSubMaterialsRepository.findByProductID(product_id).isEmpty()
         if (
-                jobRepository.getJobByRequestProductId(re_product_id).isEmpty() &&
+                jobRepository.getJobByRequestProductIdCheck(re_product_id).isEmpty() &&
                 processproducterrorRepository.getProcessproducterrorByRequestProductId(re_product_id).isEmpty()
         ) {
             List<Jobs> list_job = jobRepository.getJobByRequestProductId(re_product_id);
@@ -540,6 +542,17 @@ public class ProductServiceImpl implements ProductService {
 //            productImageRepository.deleteAll(productImageRepository.findImageByProductId(product_id));
 //            productSubMaterialsRepository.deleteAll(productSubMaterialsRepository.findByProductID(product_id));
             requestProductRepository.deleteByRequestProductId(re_product_id);
+            BigDecimal total = BigDecimal.ZERO;
+            Orders order = product.getOrders();
+            List<Orderdetails> list_new = orderDetailRepository.getOrderDetailByOrderId(order.getOrderId());
+            for(Orderdetails o :list_new){
+                BigDecimal itemPrice = o.getUnitPrice();
+                BigDecimal itemQuantity = BigDecimal.valueOf(o.getQuantity());
+                total = total.add(itemPrice.multiply(itemQuantity)); // Cộng dồn vào total
+            }
+            order.setDeposite(total.multiply(BigDecimal.valueOf(0.2))); // 20% tiền cọc của tổng tiền đơn hàng
+            order.setTotalAmount(total);
+            orderRepository.save(order);
 
         } else {
             // Có ràng buộc, không thể xóa sản phẩm

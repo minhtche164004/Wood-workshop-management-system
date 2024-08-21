@@ -97,7 +97,10 @@ public interface    JobRepository extends JpaRepository<Jobs,Integer> {
     @Query("SELECT u FROM Jobs u WHERE u.product.productId = :query")
     List<Jobs> getJobByProductId(int query);
 
-    @Query("SELECT u FROM Jobs u WHERE u.requestProducts.requestProductId = :query AND u.status.status_id != 14") //nếu job có trạng thái là khác chờ đtawj cọc thì ko đc xoá các job ấy nữa
+    @Query("SELECT u FROM Jobs u WHERE u.requestProducts.requestProductId = :query AND u.status.status_id != 14 AND u.status.status_id != 3") //nếu job có trạng thái là khác chờ đtawj cọc thì ko đc xoá các job ấy nữa
+    List<Jobs> getJobByRequestProductIdCheck(int query);
+
+    @Query("SELECT u FROM Jobs u WHERE u.requestProducts.requestProductId = :query") //nếu job có trạng thái là khác chờ đtawj cọc thì ko đc xoá các job ấy nữa
     List<Jobs> getJobByRequestProductId(int query);
 
     @Query("SELECT u FROM Jobs u WHERE u.job_log IS TRUE")

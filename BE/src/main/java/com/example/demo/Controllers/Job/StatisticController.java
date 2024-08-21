@@ -58,9 +58,15 @@ public class StatisticController {
     }
 
     @GetMapping("/TotalSalaryNotPayment")
-    public ApiResponse<?> TotalSalaryNotPayment() {
+    public ApiResponse<?> TotalSalaryNotPayment(@RequestParam("year") int year) {
         ApiResponse<BigDecimal> apiResponse = new ApiResponse<>();
-        apiResponse.setResult(statisticService.TotalSalaryNotPayment());
+        apiResponse.setResult(statisticService.TotalSalaryNotPayment(year));
+        return apiResponse;
+    }
+    @GetMapping("/TotalSalaryAllPayment")
+    public ApiResponse<?> TotalSalaryAllPayment(@RequestParam("year") int year) {
+        ApiResponse<BigDecimal> apiResponse = new ApiResponse<>();
+        apiResponse.setResult(statisticService.TotalSalaryAllPayment(year));
         return apiResponse;
     }
     @GetMapping("/countTotalOrder")

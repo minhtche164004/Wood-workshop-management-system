@@ -30,8 +30,14 @@ public class StatisticServiceImpl implements StatisticService {
     }
 
     @Override
-    public BigDecimal TotalSalaryNotPayment() {
-        BigDecimal result = advancesalaryRepository.TotalSalaryNotPayment();
+    public BigDecimal TotalSalaryNotPayment(int year) {
+        BigDecimal result = advancesalaryRepository.TotalSalaryNotPayment(year);
+        return result;
+    }
+
+    @Override
+    public BigDecimal TotalSalaryAllPayment(int year) {
+        BigDecimal result = advancesalaryRepository.TotalSalaryAllPayment(year);
         return result;
     }
 

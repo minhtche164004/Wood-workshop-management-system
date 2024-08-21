@@ -181,8 +181,12 @@ public interface AdvancesalaryRepository extends JpaRepository<Advancesalary,Int
 
 
     //tổng lương chưa thanh toán
-    @Query("SELECT SUM(a.amount) FROM Advancesalary a WHERE a.isAdvanceSuccess = false")
-    BigDecimal TotalSalaryNotPayment();
+    @Query("SELECT SUM(a.amount) FROM Advancesalary a WHERE a.isAdvanceSuccess = false AND YEAR(a.date) = :year")
+    BigDecimal TotalSalaryNotPayment(@Param("year") int year);
+
+    //tổng lương chưa thanh toán
+    @Query("SELECT SUM(a.amount) FROM Advancesalary a WHERE a.isAdvanceSuccess = true AND YEAR(a.date) = :year")
+    BigDecimal TotalSalaryAllPayment(@Param("year") int year);
 
 
     //số lượng sản phẩm có sẵn

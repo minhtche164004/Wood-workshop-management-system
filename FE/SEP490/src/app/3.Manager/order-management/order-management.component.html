@@ -105,8 +105,8 @@
                   </a>
 
                   <a href="#" data-toggle="modal" title="Hủy đơn hàng" data-target="#confirmDeleteModal"
-                    (click)="setOrderForCancellation(us?.orderId, us?.specialOrder)" *ngIf="us?.status_id === 7 
-                    || us?.status_id === 1|| us?.status_id === 8">
+                    (click)="setOrderForCancellation(us?.orderId, us?.specialOrder)" *ngIf="us?.status_id === 1 
+                    || us?.status_id === 3|| us?.status_id === 4 || us?.status_id === 6|| us?.status_id === 7 || us?.status_id === 8">
                     <i class="fa-solid fa-times-circle"></i>
                   </a>
                 </td>
@@ -163,10 +163,10 @@
                   {{ us?.paymentMethod === 2 ? 'Chuyển khoản' : (us?.paymentMethod === 1 ? 'Tiền mặt' : '') }}
                 </td>
 
-                <td
-                  style="text-align: right; min-width: 100px; max-width: 150px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
-                  {{ us?.deposite | number : '1.0-3' }}
-                </td>
+                <td 
+                style="text-align: right; min-width: 100px; max-width: 150px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
+                {{ us?.deposite === 0 ? '' : us?.deposite | number : '1.0-3' }}
+              </td>
                 <!-- <td
                   style="text-align: right; min-width: 100px; max-width: 150px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
                   {{ (us?.totalAmount - us?.deposite) | number : '1.0-3' }}

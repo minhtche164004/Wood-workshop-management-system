@@ -84,6 +84,8 @@ public interface JobService {
 
     Jobs EmployeeSick(int user_id, int job_id,BigDecimal cost_employee,int quantity_product);
 
+    BigDecimal getToTalCostOfSubMateInJob(int job_id);
+
 
 
 

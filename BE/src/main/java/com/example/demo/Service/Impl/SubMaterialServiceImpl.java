@@ -768,9 +768,9 @@ public class SubMaterialServiceImpl implements SubMaterialService {
                 Integer code =  inputSubMaterialRepository.findMaterialInputById(input_id);
                 material_id.add(code);
             }
-            if (material_id.containsAll(existingMaterialIdInEmp_input)) {
-                throw new AppException(ErrorCode.EXISTED_SUB_MATERIAL);
-            }
+//            if (material_id.containsAll(existingMaterialIdInEmp_input)) {
+//                throw new AppException(ErrorCode.EXISTED_SUB_MATERIAL);
+//            }
 
             for (int re_1 : inputIdsNotInEmp) {
                 productSubMaterialsRepository.deleteProductSubMaterialsById(re_1); // Xóa trước khi thêm mới
@@ -871,9 +871,9 @@ public class SubMaterialServiceImpl implements SubMaterialService {
                 Integer code =  inputSubMaterialRepository.findMaterialInputById(input_id);
                 material_id.add(code);
             }
-            if (material_id.containsAll(existingMaterialIdInEmp_input)) {
-                throw new AppException(ErrorCode.EXISTED_SUB_MATERIAL);
-            }
+//            if (material_id.containsAll(existingMaterialIdInEmp_input)) {
+//                throw new AppException(ErrorCode.EXISTED_SUB_MATERIAL);
+//            }
 
             for (int re_1 : inputIdsNotInEmp) {
                 requestProductsSubmaterialsRepository.deleteRequestProductSubMaterialsById(re_1); // Xóa trước khi thêm mới

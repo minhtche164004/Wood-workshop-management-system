@@ -441,4 +441,13 @@ public class JobController {
         return apiResponse;
 
     }
+
+    @GetMapping("/getToTalCostOfSubMateInJob")
+    public ApiResponse<?>  getToTalCostOfSubMateInJob(
+            @RequestParam("job_id") int job_id){
+        ApiResponse<BigDecimal> apiResponse = new ApiResponse<>();
+        apiResponse.setResult(jobService.getToTalCostOfSubMateInJob(job_id));
+        return apiResponse;
+
+    }
 }

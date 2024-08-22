@@ -249,7 +249,7 @@ public interface    JobRepository extends JpaRepository<Jobs,Integer> {
             " JOIN j.status s" +
             " LEFT JOIN j.product pr" +
             " LEFT JOIN j.requestProducts rp" +
-            " WHERE  u.userId = :userId AND j.status.status_id != 10 AND j.status.status_id != 15")
+            " WHERE  u.userId = :userId AND j.job_log = true AND j.status.status_id != 10")
     //j.job_log = true AND
     List<JobDoneDTO> findAllJobForDoneByEmployeeID(int userId);
 

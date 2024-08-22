@@ -27,6 +27,10 @@ public interface RequestProductsSubmaterialsRepository extends JpaRepository<Req
     @Query("SELECT u FROM RequestProductsSubmaterials u WHERE u.requestProduct.requestProductId = :query")
     List<RequestProductsSubmaterials> findByRequestProductID(int query);
 
+//    @Query("SELECT u FROM RequestProductsSubmaterials u LEFT JOIN u.inputSubMaterial.subMaterials.material m WHERE u.requestProduct.requestProductId = :query" +
+//            " AND m.materialId = :materialId")
+//    List<RequestProductsSubmaterials> findBySubMateRequestProductID(int query,int materialId);
+
 //    @Query(value = "SELECT * FROM request_products_submaterials u " +
 //            "LEFT JOIN request_products r ON u.request_product_id = r.request_product_id " +
 //            "LEFT JOIN input_sub_material i ON u.input_id = i.input_id " +

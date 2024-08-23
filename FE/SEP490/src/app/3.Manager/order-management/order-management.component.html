@@ -82,7 +82,9 @@
                   </a>
                   <a (click)="setOrderForCancellation(us?.orderId, us?.specialOrder)"
                     (click)="getOrDetailById(us, us?.orderId)" *ngIf="us?.status_id === 3  ||
-      
+                 
+             
+                    us?.status_id === 6  ||
                   us?.status_id === 10 
                     " class="info" title="Hoàn tiền" data-toggle="modal" data-target="#refundProductModal">
                     <i style="cursor: pointer;" class="fa-solid fa-money-bill-transfer"></i>
@@ -105,7 +107,8 @@
                   </a>
 
                   <a href="#" data-toggle="modal" title="Hủy đơn hàng" data-target="#confirmDeleteModal"
-                    (click)="setOrderForCancellation(us?.orderId, us?.specialOrder)" *ngIf="us?.status_id === 1 
+                    (click)="setOrderForCancellation(us?.orderId, us?.specialOrder)"
+                    *ngIf="us?.status_id === 1 
                     || us?.status_id === 3|| us?.status_id === 4 || us?.status_id === 6|| us?.status_id === 7 || us?.status_id === 8">
                     <i class="fa-solid fa-times-circle"></i>
                   </a>
@@ -119,42 +122,40 @@
                 <!-- [disabled]="us?.status.status_id === 6 || us?.status.status_id === 5
               || us?.status.status_id === 1
               || us?.status.status_id === 3"  -->
-                <td *ngIf="us?.totalAmount === null">
-                  <div class="select-wrapper">
-                    <select id="mySelect{{i}}" [disabled]="us?.status_id !== 4 && us?.status_id !== 7"
-                      class="custom-select" (change)="openModal(us.orderId, $event, i)">
-                      <option *ngFor="let status of status_order" [value]="status.status_id"
-                        [selected]="status.status_id === us?.status_id" [disabled]="status.status_id !== 8"
-                        [hidden]="status.status_id !== 7 && status.status_id !== 8">
-                        {{ status.status_name }}
-                      </option>
-                    </select>
-                    <button #launchModalButton type="button" class="btn btn-primary d-none" data-toggle="modal"
-                      data-target="#myModal2">
-                      Launch Modal 1
-                    </button>
-                  </div>
-                </td>
-
-
-
-                <td style="min-width: 200px;" *ngIf="us?.totalAmount !== null">
-                  <div class="select-wrapper">
-                    <select (click)="getOrDetailById(us, us?.orderId)" id="mySelect{{i}}"
-                      [disabled]="us?.status_id !== 4" class="custom-select"
-                      (change)="openModal(us.orderId, $event, i)">
-                      <option *ngFor="let status of status_order" [value]="status.status_id"
-                        [selected]="status.status_id === us?.status_id" [disabled]="status.status_id !== 5"
-                        [hidden]="status.status_id !== 4 && status.status_id !== 5">
-                        {{ status.status_name }}
-                      </option>
-                    </select>
-                    <button #launchModalButton1 type="button" class="btn btn-primary d-none" data-toggle="modal"
-                      data-target="#myModal1">
-                      Launch Modal 2
-                    </button>
-                  </div>
-                </td>
+              <td *ngIf="us?.totalAmount === null">
+                <div class="select-wrapper">
+                  <select (click)="getOrDetailById(us, us?.orderId)" id="mySelect{{i}}" [disabled]="us?.status_id !== 4 && us?.status_id !== 7"
+                    class="custom-select" (change)="openModal(us.orderId, $event, i)">
+                    <option *ngFor="let status of status_order" [value]="status.status_id"
+                      [selected]="status.status_id === us?.status_id" [disabled]="status.status_id !== 8"
+                      [hidden]="status.status_id !== 7 && status.status_id !== 8">
+                      {{ status.status_name }}
+                    </option>
+                  </select>
+                  <button #launchModalButton1 type="button" class="btn btn-primary d-none" data-toggle="modal"
+                    data-target="#myModal2">
+                    Launch Modal 1
+                  </button>
+                </div>
+              </td>
+              
+              <td style="min-width: 200px;" *ngIf="us?.totalAmount !== null">
+                <div class="select-wrapper">
+                  <select (click)="getOrDetailById(us, us?.orderId)" id="mySelect{{i}}"
+                    [disabled]="us?.status_id !== 4" class="custom-select"
+                    (change)="openModal(us.orderId, $event, i)">
+                    <option *ngFor="let status of status_order" [value]="status.status_id"
+                      [selected]="status.status_id === us?.status_id" [disabled]="status.status_id !== 5"
+                      [hidden]="status.status_id !== 4 && status.status_id !== 5">
+                      {{ status.status_name }}
+                    </option>
+                  </select>
+                  <button #launchModalButton type="button" class="btn btn-primary d-none" data-toggle="modal"
+                    data-target="#myModal1">
+                    Launch Modal 2
+                  </button>
+                </div>
+              </td>
 
 
 
@@ -163,10 +164,10 @@
                   {{ us?.paymentMethod === 2 ? 'Chuyển khoản' : (us?.paymentMethod === 1 ? 'Tiền mặt' : '') }}
                 </td>
 
-                <td 
-                style="text-align: right; min-width: 100px; max-width: 150px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
-                {{ us?.deposite === 0 ? '' : us?.deposite | number : '1.0-3' }}
-              </td>
+                <td
+                  style="text-align: right; min-width: 100px; max-width: 150px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
+                  {{ us?.deposite === 0 ? '' : us?.deposite | number : '1.0-3' }}
+                </td>
                 <!-- <td
                   style="text-align: right; min-width: 100px; max-width: 150px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
                   {{ (us?.totalAmount - us?.deposite) | number : '1.0-3' }}
@@ -242,8 +243,9 @@
           </div>
           <div class="row">
             <div class="col-md-6">
-
-              <b>Địa chỉ: </b> {{OrderdetailById.userInfor?.address}}
+              <h4><b> Địa chỉ giao hàng: </b>{{OrderdetailById.userInfor?.address}}</h4>
+              <h4> {{OrderdetailById.userInfor?.wards}} - {{OrderdetailById.userInfor?.district}} -
+                  {{OrderdetailById.userInfor?.city_province}}</h4>
             </div>
             <div class="col-md-3">
               <b>
@@ -265,34 +267,36 @@
               <div class="row">
                 <div class="col-md-6">
                   <div class="row">
-                    <div class="col-md-6 text-right" style="margin-bottom: 2%;">
+                    <div class="col-md-6 " style="margin-bottom: 2%;">
                       <b>Tổng giá trị đơn hàng: </b>
                     </div>
                     <div class="col-md-6" style="margin-bottom: 2%;">
                       {{ totalAmoutOrder != null ? (totalAmoutOrder | number: '1.0-3') + ' VNĐ' : 'Chưa thanh toán' }}
                     </div>
                   </div>
-                  
+
                   <div class="row">
-                    <div class="col-md-6 text-right" style="margin-bottom: 2%;">
+                    <div class="col-md-6 " style="margin-bottom: 2%;">
                       <b>Số tiền cọc: </b>
                     </div>
                     <div class="col-md-6" style="margin-bottom: 2%;">
-                      {{ OrderdetailById.deposite != null ? (OrderdetailById.deposite | number: '1.0-3') + ' VNĐ' : 'Chưa thanh toán' }}
+                      {{ OrderdetailById.deposite != null ? (OrderdetailById.deposite | number: '1.0-3') + ' VNĐ' :
+                      'Chưa thanh toán' }}
                     </div>
                   </div>
-                  
+
                   <div class="row">
-                    <div class="col-md-6 text-right" style="margin-bottom: 2%;">
+                    <div class="col-md-6 " style="margin-bottom: 2%;">
                       <b>Tổng tiền cần thanh toán: </b>
                     </div>
                     <div class="col-md-6" style="margin-bottom: 2%;">
-                      {{ (totalAmoutOrder != null && OrderdetailById.deposite != null) ? ((totalAmoutOrder - OrderdetailById.deposite) | number: '1.0-3') + ' VNĐ' : 'Chưa thanh toán' }}
+                      {{ (totalAmoutOrder != null && OrderdetailById.deposite != null) ? ((totalAmoutOrder -
+                      OrderdetailById.deposite) | number: '1.0-3') + ' VNĐ' : 'Chưa thanh toán' }}
                     </div>
                   </div>
-                  
+
                   <div class="row">
-                    <div class="col-md-6 text-right">
+                    <div class="col-md-6 ">
                       <p class="card-text"><b>Kiểu thanh toán:</b></p>
                     </div>
                     <div class="col-md-6">
@@ -314,21 +318,36 @@
 
 
             </div>
-            <div *ngIf="OrderdetailById.status?.status_id === 7">
-              <h3 style="margin-left: 3%;"><b>Hình ảnh khách hàng yêu cầu</b></h3>
-            </div>
-            <div class="product-list d-flex flex-row flex-nowrap overflow-auto" style="margin-bottom: 10px;">
-              <ng-container *ngFor="let cate of OrderdetailById.requestImages; let i = index">
-                <div class="d-flex me-3">
-
-                  <a class="me-3" target="_blank" [href]="cate.fullPath">
-                    <div class="product-image-wrapper" style="cursor: pointer;">
-                      <img [src]="cate.fullPath" class="product-image img-md img-thumbnail" />
-                    </div>
-                  </a>
+            <div class="row">
+              <div class="col-md-6">
+                <div>
+                  <h3><b>Hình ảnh khách hàng yêu cầu</b></h3>
                 </div>
-              </ng-container>
+                <div class="product-list d-flex flex-row flex-nowrap overflow-auto" style="margin-bottom: 10px;">
+                  <ng-container *ngFor="let cate of OrderdetailById.requestImages; let i = index">
+                    <div class="d-flex me-3">
+    
+                      <a class="me-3" target="_blank" [href]="cate.fullPath">
+                        <div class="product-image-wrapper" style="cursor: pointer;">
+                          <img [src]="cate.fullPath" class="product-image img-md img-thumbnail" />
+                        </div>
+                      </a>
+                    </div>
+                  </ng-container>
+                </div>
+              </div>
+              <div class="col-md-6" *ngIf="OrderdetailById.status?.status_id === 9">
+                <div>
+                  <h3><b>Lí do hoàn tiền</b></h3>
+                </div>
+            
+                  {{OrderdetailById?.refundStatus?.refundName}} 
+               
+             
+              </div>
             </div>
+         
+       
 
             <table class="table table-striped table-hover" *ngIf="OrderdetailById.status?.status_id !== 7">
               <thead>
@@ -364,8 +383,9 @@
         <div class="modal-footer">
 
           <button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
-          <button *ngIf="OrderdetailById?.status?.status_id === 10" (click)="contactUser(OrderdetailById.phoneNumber)"
-            type="button" class="btn btn-primary">Liên hệ</button>
+          <button *ngIf="OrderdetailById?.status?.status_id === 10"
+            (click)="contactUser(OrderdetailById.userInfor?.phoneNumber)" type="button" class="btn btn-primary">Liên
+            hệ</button>
 
 
           <button type="button" class="btn btn-primary" *ngIf="OrderdetailById.status?.status_id === 1 
@@ -680,6 +700,8 @@
         <div class="row mb-3">
           <div class="col-md-6">
             <h4>Địa chỉ giao hàng: <b>{{OrderdetailById.userInfor?.address}}</b></h4>
+            <h4> <b>{{OrderdetailById.userInfor?.wards}} - {{OrderdetailById.userInfor?.district}} -
+                {{OrderdetailById.userInfor?.city_province}}</b></h4>
           </div>
 
           <div class="col-md-3">

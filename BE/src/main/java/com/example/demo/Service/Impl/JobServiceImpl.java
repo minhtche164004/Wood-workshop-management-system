@@ -193,8 +193,15 @@ public class JobServiceImpl implements JobService {
         Jobs current = jobRepository.getJobById(job_id);
         int quantity_product = current.getOriginalQuantityProduct();
         BigDecimal cost_sub = BigDecimal.ZERO;
+        BigDecimal job_cost_total=BigDecimal.ZERO;
         BigDecimal profit = BigDecimal.ZERO;
         if(current.getRequestProducts() != null){
+            int order_detail_id = current.getOrderdetails().getOrderDetailId();
+            List<Jobs> list_jobs = jobRepository.getJobByOrderDetailId(order_detail_id);
+            for(Jobs j : list_jobs){
+                BigDecimal cost = j.getCost();
+                job_cost_total = job_cost_total.add(cost);
+            }
             int p_id = current.getRequestProducts().getRequestProductId();
             List<RequestProductsSubmaterials> list_sub = requestProductsSubmaterialsRepository.findByRequestProductID(p_id);
             for(RequestProductsSubmaterials re : list_sub){
@@ -203,9 +210,14 @@ public class JobServiceImpl implements JobService {
                 cost_sub = cost_sub.add(cost_one);//tổng tiền nguyên vật liệu của đơn hàng đấy
             }
             BigDecimal total_order_detail = current.getOrderdetails().getUnitPrice().multiply(new BigDecimal(current.getOrderdetails().getQuantity()));
-            profit = total_order_detail.subtract(cost_sub);
+            profit = total_order_detail.subtract(cost_sub).subtract(job_cost_total);
         }else{
             int p_id = current.getProduct().getProductId();
+            List<Jobs> list_jobs = jobRepository.getJobByJobCode(current.getCode());
+            for(Jobs j : list_jobs){
+                BigDecimal cost = j.getCost();
+                job_cost_total = job_cost_total.add(cost);
+            }
             List<ProductSubMaterials> list_sub = productSubMaterialsRepository.findByProductID(p_id);
             for(ProductSubMaterials re : list_sub){
                 double quantity_product_sub = re.getQuantity();
@@ -214,7 +226,7 @@ public class JobServiceImpl implements JobService {
             }
             Products p = productRepository.findById(p_id);
             BigDecimal total_order_detail = p.getPrice().multiply(new BigDecimal(quantity_product));
-            profit = total_order_detail.subtract(cost_sub);
+            profit = total_order_detail.subtract(cost_sub).subtract(job_cost_total);
         }
         return profit;
     }

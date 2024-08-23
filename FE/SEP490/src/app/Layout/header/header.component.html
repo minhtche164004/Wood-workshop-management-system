@@ -5,9 +5,9 @@
                 <div class="header-icon">
                     <ul class="d-flex">
                         <li class="contact">
-                            <label class="header_link" style="color: white; margin-top: 3%;" *ngIf="fullname">
+                            <a [routerLink]="['/', role]" class="header-link" *ngIf="fullname" style="color: white; margin-top: 3%;">
                                 Xin chào, {{fullname}}
-                            </label>
+                              </a>
                         </li>
                     </ul>
                 </div>

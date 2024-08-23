@@ -23,6 +23,7 @@ export class HeaderComponent implements OnInit {
   @ViewChild(HeaderComponent, { static: true }) headerComponent: HeaderComponent | undefined;
 
   fullname: string | null = null;
+  role: string | null = null;
   constructor(private route: ActivatedRoute, private dataService: DataService, private sanitizer: DomSanitizer, private toastr: ToastrService, private router: Router, private http: HttpClient, private authService: AuthenListService, private productListService: ProductListService) { }
   ngOnInit(): void {
     this.route.queryParams.subscribe(params => {
@@ -31,6 +32,7 @@ export class HeaderComponent implements OnInit {
     this.wishlistcount()
     this.authService.getUserProfile().subscribe((data) => {
       this.fullname = data.result.fullname; // Assuming 'result' contains the profile data
+      this.role = data.result.role_name.toLowerCase();
     });
     this.productListService.getAllProductCustomer().subscribe(
       (data: any) => {

@@ -217,7 +217,7 @@ export class RegisterComponent implements OnInit {
       this.isLoading = false;
       return;
     }
-  
+
 
     const registrationRequest: RegistrationRequest = {
       username: this.username,
@@ -241,12 +241,21 @@ export class RegisterComponent implements OnInit {
           this.router.navigate(['/otp']);
         },
         (error: any) => {
-          if (error.code === 1022) {
-            // Hiển thị thông báo lỗi cụ thể
-            this.toastr.error(error.message || 'Vui lòng điền đầy đủ thông tin.');
-          } else {
-            // ... xử lý các lỗi khác
+          this.isLoading = false;
+          console.error('Lỗi khi đăng nhập', error);
+          if (error.error.code === 1019) {
+            this.isLoading = false;
+            this.toastr.error('Tên đăng nhập đã tồn tại',);
           }
+          else if (error.error.code === 1031) {
+            this.isLoading = false;
+            this.toastr.error('Số điện thoại đã tồn tại',);
+          }
+          else if (error.error.code === 1001) {
+            this.isLoading = false;
+            this.toastr.error('Email đã tồn tại',);
+          }
+
         }
       )
       .add(() => {

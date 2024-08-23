@@ -709,6 +709,10 @@ export class UserManagementComponent implements OnInit {
           this.isLoadding = false;
           this.toastr.error('Tên đăng nhập đã tồn tại',);
         }
+        else if (error.error.code === 1031) {
+          this.isLoadding = false;
+          this.toastr.error('Số điện thoại đã tồn tại',);
+        }
         else if (error.error.code === 1001) {
           this.isLoadding = false;
           this.toastr.error('Email đã tồn tại',);

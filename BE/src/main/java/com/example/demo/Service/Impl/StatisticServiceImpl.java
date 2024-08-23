@@ -123,10 +123,24 @@ public class StatisticServiceImpl implements StatisticService {
 
     @Override
     public BigDecimal totalAmountOrderHaveDone(int year) {
-        BigDecimal totalAmountOrderHaveDone =  advancesalaryRepository.totalAmountOrderHaveDone(year);
-        BigDecimal totalAmountOrderRefund =  advancesalaryRepository.totalAmountOrderRefund(year);
-        BigDecimal totalAmountOrderCancel =  advancesalaryRepository.totalAmountOrderCancel(year);
-        return totalAmountOrderHaveDone.subtract(totalAmountOrderRefund).subtract(totalAmountOrderCancel);
+        BigDecimal totalAmountOrderHaveDone = advancesalaryRepository.totalAmountOrderHaveDone(year);
+        BigDecimal totalAmountOrderRefund = advancesalaryRepository.totalAmountOrderRefund(year);
+        BigDecimal totalAmountOrderCancel = advancesalaryRepository.totalAmountOrderCancel(year);
+
+        BigDecimal a = null;
+        if (totalAmountOrderHaveDone != null) {
+            a = totalAmountOrderHaveDone;
+        }
+
+        if (totalAmountOrderRefund != null && a != null) {
+            a = a.subtract(totalAmountOrderRefund);
+        }
+
+        if (totalAmountOrderCancel != null && a != null) {
+            a = a.subtract(totalAmountOrderCancel);
+        }
+
+        return a;
     }
 
     @Override
@@ -134,8 +148,8 @@ public class StatisticServiceImpl implements StatisticService {
         return advancesalaryRepository.totalAmountSubMaterial();
     }
     @Override
-    public BigDecimal findTotalSubMaterialByMonthAndYear(int year, int month) {
-          return advancesalaryRepository.findTotalSubMaterialByMonthAndYear(year, month);
+    public BigDecimal findTotalSubMaterialByMonthAndYear(int month, int year) {
+          return advancesalaryRepository.findTotalSubMaterialByMonthAndYear(month, year);
 
     }
 

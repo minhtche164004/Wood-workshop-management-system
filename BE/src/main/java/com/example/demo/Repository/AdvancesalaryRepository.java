@@ -218,11 +218,11 @@ public interface AdvancesalaryRepository extends JpaRepository<Advancesalary,Int
     BigDecimal totalAmountOrderHaveDone(@Param("year") int year);
 
     //tổng tiền của đơn hoàn tiền (deposit-refund)
-    @Query("SELECT SUM(o.deposite - COALESCE(o.refund, 0)) AS totalAmount FROM Orders o WHERE o.status.status_id = 9 AND YEAR(o.orderFinish) = :year")
+    @Query("SELECT SUM(COALESCE(o.deposite,0) - COALESCE(o.refund, 0)) AS totalAmount FROM Orders o WHERE o.status.status_id = 9 AND YEAR(COALESCE(o.orderDate, 0)) = :year")
     BigDecimal totalAmountOrderRefund(@Param("year") int year);
 
     //tổng tiền cọc của các đơn hàng bị huỷ
-    @Query("SELECT SUM(o.deposite) AS totalAmount FROM Orders o WHERE o.status.status_id = 9 AND YEAR(o.orderFinish) = :year")
+    @Query("SELECT SUM(COALESCE(o.deposite,0)) AS totalAmount FROM Orders o WHERE o.status.status_id = 6 AND YEAR(COALESCE(o.orderDate, 0)) = :year")
     BigDecimal totalAmountOrderCancel(@Param("year") int year);
 
     //tổng số tiền nhập nguyên vật liệu

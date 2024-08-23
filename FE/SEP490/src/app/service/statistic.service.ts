@@ -40,7 +40,19 @@ export class StatisticService {
   private apiFindTotalSalaryByMonthAndYear = `${environment.apiUrl}api/auth/statistic`
 
   private apiTotalSalaryNotPayment = `${environment.apiUrl}api/auth/statistic/TotalSalaryNotPayment`
+
+  private apiGetTotalSalaryNotPayment = `${environment.apiUrl}api/auth/statistic/TotalSalaryNotPayment`;
+
+  private apiGetTotalSalaryAllPayment = `${environment.apiUrl}api/auth/statistic/TotalSalaryAllPayment`;
+
   constructor(private http: HttpClient) { }
+
+  getTotalSalaryAllPayment(year: number): Observable<any> {
+    const url = `${this.apiGetTotalSalaryAllPayment}?year=${year}`;
+    console.log('URL:', url);
+    return this.http.get<any>(url);
+  }
+  
   statisticFindTotalSalaryByMonthAndYear(month: number, year: number): Observable<any> {
     const params = new HttpParams()
       .set('month', month.toString())

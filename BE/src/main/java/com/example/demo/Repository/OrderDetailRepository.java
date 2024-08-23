@@ -5,6 +5,7 @@ import com.example.demo.Dto.OrderDTO.JobProductDTO;
 import com.example.demo.Dto.OrderDTO.OrderDetailDTO;
 import com.example.demo.Dto.OrderDTO.OrderDetailWithJobStatusDTO;
 import com.example.demo.Entity.Orderdetails;
+import com.example.demo.Entity.Orders;
 import com.example.demo.Entity.User;
 import jakarta.transaction.Transactional;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -20,6 +21,14 @@ public interface OrderDetailRepository extends JpaRepository<Orderdetails, Integ
 
     @Query("SELECT u FROM Orderdetails u WHERE u.order.orderId = :query")
     List<Orderdetails> getOrderDetailByOrderId(int query);
+
+
+    @Query("SELECT o.order FROM Orderdetails o LEFT JOIN o.order ord " +
+            " WHERE o.orderDetailId = :orderDetailId ")
+    Orders getOrderByOrderDetail(int orderDetailId);
+
+    @Query("SELECT u FROM Orderdetails u WHERE u.requestProduct.requestProductId = :query")
+    Orderdetails getOrderDetailByRequestProductIdDelete(int query);
 
     @Query("SELECT u FROM Orderdetails u WHERE u.product.productId = :query")
     List<Orderdetails> getOrderDetailByProductId(int query);

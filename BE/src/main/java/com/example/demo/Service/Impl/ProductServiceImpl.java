@@ -66,6 +66,8 @@ public class ProductServiceImpl implements ProductService {
     private RequestProductsSubmaterialsRepository requestProductsSubmaterialsRepository;
     @Autowired
     private Product_RequestimagesRepository productRequestimagesRepository;
+    @Autowired
+    private OrderRepository orderRepository;
 
 
 
@@ -83,8 +85,8 @@ public class ProductServiceImpl implements ProductService {
         java.sql.Date sqlEndDateWarranty = java.sql.Date.valueOf(endDateWarranty);
         products.setEnddateWarranty(sqlEndDateWarranty);
 
-        products.setProductName(productAddDTO.getProduct_name());
-        products.setDescription(productAddDTO.getDescription());
+        products.setProductName(productAddDTO.getProduct_name().trim());
+        products.setDescription(productAddDTO.getDescription().trim());
         products.setPrice(productAddDTO.getPrice());
 
 
@@ -158,8 +160,8 @@ public class ProductServiceImpl implements ProductService {
         //ko đc chỉnh sửa quantity
         validateProductEditDTO(productEditDTO);
         productRepository.updateProduct(id,
-                productEditDTO.getProduct_name(),
-                productEditDTO.getDescription(),
+                productEditDTO.getProduct_name().trim(),
+                productEditDTO.getDescription().trim(),
                 productEditDTO.getPrice(),
                 productEditDTO.getStatus_id(),
                 productEditDTO.getCategory_id(),
@@ -187,8 +189,8 @@ public class ProductServiceImpl implements ProductService {
         //ko đc chỉnh sửa quantity
       //  validateProductEditDTO(productEditDTO);
         requestProductRepository.updateRequestProduct(id,
-                requestProductEditDTO.getRequestProductName(),
-                requestProductEditDTO.getDescription(),
+                requestProductEditDTO.getRequestProductName().trim(),
+                requestProductEditDTO.getDescription().trim(),
                 requestProductEditDTO.getPrice(),
                 requestProductEditDTO.getStatus_id(),
                 requestProductEditDTO.getQuantity(),
@@ -335,8 +337,10 @@ public class ProductServiceImpl implements ProductService {
     List<Products> productList = new ArrayList<>();
 
     if (search != null || categoryId != null || minPrice != null || maxPrice != null) {
-        productList = productRepository.filterProductsForCus(search, categoryId, minPrice, maxPrice);
+        String searchTerm = search == null ? "" : search.trim();
+        productList = productRepository.filterProductsForCus(searchTerm, categoryId, minPrice, maxPrice);
     } else {
+
         productList = productRepository.ViewProductLandingPage();
     }
 
@@ -365,7 +369,8 @@ public class ProductServiceImpl implements ProductService {
         List<Products> productList = new ArrayList<>();
 
         if (search != null || categoryId != null || statusId != null || minPrice != null || maxPrice != null) {
-            productList = productRepository.filterProductsForAdmin(search, categoryId, statusId, minPrice, maxPrice);
+            String searchTerm = search == null ? "" : search.trim();
+            productList = productRepository.filterProductsForAdmin(searchTerm, categoryId, statusId, minPrice, maxPrice);
         } else {
             productList = productRepository.findAll();
         }
@@ -432,7 +437,7 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public List<Products> findProductByNameCode(String key) {
-        List<Products> productsList = productRepository.findProductByNameCode(key);
+        List<Products> productsList = productRepository.findProductByNameCode(key.trim());
         if (productsList.size() == 0) {
             throw new AppException(ErrorCode.NOT_FOUND);
         }
@@ -448,7 +453,7 @@ public class ProductServiceImpl implements ProductService {
 
     // Hàm kiểm tra điều kiện đầu vào
     private void validateProductDTO(ProductDTO productDTO) {
-        if (!checkConditionService.checkInputName(productDTO.getProduct_name())) {
+        if (!checkConditionService.checkInputName(productDTO.getProduct_name().trim())) {
             throw new AppException(ErrorCode.INVALID_FORMAT_NAME);
         }
         if (!checkConditionService.checkInputQuantityInt(productDTO.getQuantity())) {
@@ -514,7 +519,7 @@ public class ProductServiceImpl implements ProductService {
         // productImageRepository.findImageByProductId(product_id).isEmpty()
         // productSubMaterialsRepository.findByProductID(product_id).isEmpty()
         if (
-                jobRepository.getJobByRequestProductId(re_product_id).isEmpty() &&
+                jobRepository.getJobByRequestProductIdCheck(re_product_id).isEmpty() &&
                 processproducterrorRepository.getProcessproducterrorByRequestProductId(re_product_id).isEmpty()
         ) {
             List<Jobs> list_job = jobRepository.getJobByRequestProductId(re_product_id);
@@ -537,6 +542,17 @@ public class ProductServiceImpl implements ProductService {
 //            productImageRepository.deleteAll(productImageRepository.findImageByProductId(product_id));
 //            productSubMaterialsRepository.deleteAll(productSubMaterialsRepository.findByProductID(product_id));
             requestProductRepository.deleteByRequestProductId(re_product_id);
+            BigDecimal total = BigDecimal.ZERO;
+            Orders order = product.getOrders();
+            List<Orderdetails> list_new = orderDetailRepository.getOrderDetailByOrderId(order.getOrderId());
+            for(Orderdetails o :list_new){
+                BigDecimal itemPrice = o.getUnitPrice();
+                BigDecimal itemQuantity = BigDecimal.valueOf(o.getQuantity());
+                total = total.add(itemPrice.multiply(itemQuantity)); // Cộng dồn vào total
+            }
+            order.setDeposite(total.multiply(BigDecimal.valueOf(0.2))); // 20% tiền cọc của tổng tiền đơn hàng
+            order.setTotalAmount(total);
+            orderRepository.save(order);
 
         } else {
             // Có ràng buộc, không thể xóa sản phẩm

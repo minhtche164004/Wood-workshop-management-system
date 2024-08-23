@@ -188,6 +188,37 @@ public class JobServiceImpl implements JobService {
         return job_Employee_Sick;
     }
 
+    @Override
+    public BigDecimal getToTalCostOfSubMateInJob(int job_id) {
+        Jobs current = jobRepository.getJobById(job_id);
+        int quantity_product = current.getOriginalQuantityProduct();
+        BigDecimal cost_sub = BigDecimal.ZERO;
+        BigDecimal profit = BigDecimal.ZERO;
+        if(current.getRequestProducts() != null){
+            int p_id = current.getRequestProducts().getRequestProductId();
+            List<RequestProductsSubmaterials> list_sub = requestProductsSubmaterialsRepository.findByRequestProductID(p_id);
+            for(RequestProductsSubmaterials re : list_sub){
+                double quantity_request_sub = re.getQuantity();
+                BigDecimal cost_one = re.getInputSubMaterial().getOut_price().multiply(new BigDecimal(quantity_product).multiply(new BigDecimal(quantity_request_sub)));
+                cost_sub = cost_sub.add(cost_one);//tổng tiền nguyên vật liệu của đơn hàng đấy
+            }
+            BigDecimal total_order_detail = current.getOrderdetails().getUnitPrice().multiply(new BigDecimal(current.getOrderdetails().getQuantity()));
+            profit = total_order_detail.subtract(cost_sub);
+        }else{
+            int p_id = current.getProduct().getProductId();
+            List<ProductSubMaterials> list_sub = productSubMaterialsRepository.findByProductID(p_id);
+            for(ProductSubMaterials re : list_sub){
+                double quantity_product_sub = re.getQuantity();
+                BigDecimal cost_one = re.getInputSubMaterial().getOut_price().multiply(new BigDecimal(quantity_product)).multiply(new BigDecimal(quantity_product_sub));
+                cost_sub = cost_sub.add(cost_one);
+            }
+            Products p = productRepository.findById(p_id);
+            BigDecimal total_order_detail = p.getPrice().multiply(new BigDecimal(quantity_product));
+            profit = total_order_detail.subtract(cost_sub);
+        }
+        return profit;
+    }
+
     //nếu check màn bên kia status đang là chưa giao việc , thì lúc giao việc , status tự động là giao làm mộc
     //nếu màn bên kia là đang là Đã nghiệm thu làm mộc thì lúc giao việc , status tự động màn bên cạnh là đang làm nhám
     //nếu màn bên kia là đang là Đã nghiệm thu làm nhám thì lúc giao việc , status tự động màn bên cạnh là đang làm sơn
@@ -200,54 +231,41 @@ public class JobServiceImpl implements JobService {
         User user = userRepository.findByIdJob(user_id);
         jobs.setUser(user);
         Jobs current = jobRepository.getJobById(job_id);
-        Date now = new Date();
+//        Date now = new Date();
+//        BigDecimal cost_sub = BigDecimal.ZERO;
+//        BigDecimal profit = BigDecimal.ZERO;
+//        int quantity_product = current.getOriginalQuantityProduct();
         if (type_job == 0) { //tức là đang phân job cho requets product
+//            List<RequestProductsSubmaterials> list_sub = requestProductsSubmaterialsRepository.findByRequestProductID(p_id);
+//            for(RequestProductsSubmaterials re : list_sub){
+//                BigDecimal cost_one = re.getInputSubMaterial().getOut_price().multiply(new BigDecimal(quantity_product));
+//                cost_sub = cost_sub.add(cost_one);//tổng tiền nguyên vật liệu của đơn hàng đấy
+//            }
+//            BigDecimal total_order_detail = current.getOrderdetails().getUnitPrice().multiply(new BigDecimal(current.getOrderdetails().getQuantity()));
+//            profit = total_order_detail.subtract(cost_sub);
+//            if(jobDTO.getCost().compareTo(profit)>0){
+//                throw new AppException(ErrorCode.COST_EMPLOYEE_INVALID);
+//            }
             RequestProducts requestProducts = requestProductRepository.findById(p_id);
             jobs.setRequestProducts(requestProducts);
             jobs.setProduct(null);
-//            Date contract_finish = current.getOrderdetails().getOrder().getContractDate();
-//            Date start_order=current.getOrderdetails().getOrder().getOrderDate();
-//
-//            if(jobDTO.getFinish().after(contract_finish)){
-//                throw new AppException(ErrorCode.TIME_FINISH_INVALID);
-//            }
-//            if(jobDTO.getStart().before(start_order)){
-//                throw new AppException(ErrorCode.TIME_START_INVALID);
-//            }
-//            if(jobDTO.getStart().before(now)){
-//                throw new AppException(ErrorCode.TIME_START_JOB_INVALID);
-//            }
-//            Date job_finish;
-//            if (current.getTimeFinish() != null) {
-//                job_finish = current.getTimeFinish();
-//            } else {
-//                job_finish = current.getOrderdetails().getOrder().getOrderDate();
-//            }
-//            if(jobDTO.getStart().before(job_finish)){
-//                throw new AppException(ErrorCode.TIME_START_JOB_INVALID);
-//            }
         } else {////tức là đang phân job cho  product có sẵn
+//            List<ProductSubMaterials> list_sub = productSubMaterialsRepository.findByProductID(p_id);
+//            for(ProductSubMaterials re : list_sub){
+//                BigDecimal cost_one = re.getInputSubMaterial().getOut_price().multiply(new BigDecimal(quantity_product));
+//                cost_sub = cost_sub.add(cost_one);
+//            }
+//            Products p = productRepository.findById(p_id);
+//            BigDecimal total_order_detail = p.getPrice().multiply(new BigDecimal(quantity_product));
+//            profit = total_order_detail.subtract(cost_sub);
+//            if(jobDTO.getCost().compareTo(profit)>0){
+//                throw new AppException(ErrorCode.COST_EMPLOYEE_INVALID);
+//            }
             Products products = productRepository.findById(p_id);
             jobs.setProduct(products);
             jobs.setRequestProducts(null);
-//            if(jobDTO.getStart().before(now)){
-//                throw new AppException(ErrorCode.TIME_START_JOB_INVALID);
-//            }
-//            Date job_finish;
-//            if (current.getTimeFinish() != null) {
-//                job_finish = current.getTimeFinish();
-//            } else {
-//                job_finish = new Date();
-//            }
-//            if(jobDTO.getStart().before(job_finish)){
-//                throw new AppException(ErrorCode.TIME_START_JOB_INVALID);
-//            }
         }
         jobs.setDescription(jobDTO.getDescription());
-
-
-
-
         int originalQuantityProduct = current.getOriginalQuantityProduct();// Lấy số lượng ban đầu
         int totalQuantityProduct = 0;
         if(current.getUser() != null){
@@ -263,7 +281,6 @@ public class JobServiceImpl implements JobService {
         } else {
             jobs.setQuantityProduct(current.getOriginalQuantityProduct()); // Giữ nguyên số lượng ban đầu nếu job chưa được giao lại
         }
-
         jobs.setOriginalQuantityProduct(current.getOriginalQuantityProduct());
         jobs.setCost(jobDTO.getCost());
         jobs.setJob_name(jobDTO.getJob_name());
@@ -277,7 +294,6 @@ public class JobServiceImpl implements JobService {
         jobs.setCode(jobs_order_detail.getCode());
         jobs.setJob_log(false);
         jobRepository.save(jobs);
-
         List<Employeematerials> employeeMaterialsList =  new ArrayList<>();
         if (jobRepository.isProductJob(job_id) == true) {
             employeeMaterialsList = sharedData.getEmployeeMaterialsList(); // Lấy từ shared bean
@@ -302,14 +318,7 @@ public class JobServiceImpl implements JobService {
             p.setJobs(jobs);
             employeeMaterialRepository.save(p);
         }
-//        Advancesalary advan = advancesalaryRepository.findByJobId(job_id);
-//        advan.setJobs(jobs);
-//        advancesalaryRepository.save(advan);
         jobRepository.delete(jobs_order_detail);
-//        if(jobs_order_detail.getUser() == null){
-//            jobRepository.delete(jobs_order_detail);
-//        }
-
         return jobs;
     }
 

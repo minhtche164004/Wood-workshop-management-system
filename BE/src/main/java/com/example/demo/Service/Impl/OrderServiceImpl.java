@@ -180,53 +180,6 @@ public class OrderServiceImpl implements OrderService {
             orders.setTotalAmount(total);
             orders.setSpecialOrder(false);
         }
-
-
-//        if (requestOrder.getSpecial_order() == 1) {//là hàng ko có sẵn
-//
-//            BigDecimal total = BigDecimal.ZERO; // Khởi tạo total là 0
-//            List<ProductItem> requestProductItems = requestOrder.getOrderDetail().getProductItems();
-//
-//            // Kiểm tra nếu danh sách sản phẩm không rỗng
-//            if (requestProductItems != null && !requestProductItems.isEmpty()) {
-//                for (ProductItem item : requestProductItems) { // Duyệt qua từng sản phẩm
-//                    RequestProducts requestProducts = requestProductRepository.findById(item.getId());
-//                    Orderdetails orderdetail = new Orderdetails();
-//                    orderdetail.setOrder(orders);
-//                    orderdetail.setRequestProduct(requestProductRepository.findById(item.getId()));
-//                    orderdetail.setQuantity(item.getQuantity()); //set quantity
-//                    orderdetail.setUnitPrice(item.getPrice()); //set unit price
-////                        if(orderdetail.getRequestProduct().getQuantity() < item.getQuantity()){
-////                            throw new AppException(ErrorCode.OUT_OF_STOCK);
-////                        }
-//                    requestProducts.setQuantity(requestProducts.getQuantity() - item.getQuantity());
-//                    requestProductRepository.save(requestProducts);
-//                    orderdetail.setProduct(null); //set product null
-//                    BigDecimal itemPrice = item.getPrice();
-//                    BigDecimal itemQuantity = BigDecimal.valueOf(item.getQuantity());
-//                    total = total.add(itemPrice.multiply(itemQuantity)); // Cộng dồn vào total
-//                    orderDetailRepository.save(orderdetail);
-//
-//                    Jobs jobs = new Jobs();
-//                    jobs.setRequestProducts(requestProducts);
-//                    jobs.setQuantityProduct(orderdetail.getQuantity());
-//                    Jobs lastJob = jobRepository.findJobsTop(dateString + "JB");
-//                    int count1 = lastJob != null ? Integer.parseInt(lastJob.getCode().substring(8)) + 1 : 1;
-//                    String code1 = dateString + "JB" + String.format("%03d", count1);
-//                    jobs.setCode(code1);
-//                    jobs.setJob_name("");
-//                    jobs.setOrderdetails(orderdetail);
-//                    jobs.setJob_log(false);
-//                    jobs.setStatus(statusJobRepository.findById(14));
-//                    jobRepository.save(jobs);
-//
-//                }
-//            }
-//            orders.setDeposite(total.multiply(BigDecimal.valueOf(0.2))); // 20% tiền cọc của tổng tiền đơn hàng
-//            orders.setTotalAmount(total);
-//            orders.setSpecialOrder(true);
-//        }
-
         orderRepository.save(orders);
         apiResponse.setResult(Collections.singletonList("Xuất đơn nguyên vật liệu cho đơn hàng thành công"));
         return ResponseEntity.ok(apiResponse);
@@ -503,7 +456,7 @@ public class OrderServiceImpl implements OrderService {
         requests.setUserInfor(user.getUserInfor());
         Status_Order statusRequest = statusOrderRepository.findById(7);//nghĩa là request đang chờ phê duyệt
         requests.setOrderDate(requestDate); //lấy time hiện tại
-        requests.setDescription(requestDTO.getDescription());
+        requests.setDescription(requestDTO.getDescription().trim());
         requests.setStatus(statusRequest);
         requests.setAddress(requestDTO.getAddress()); //thông tin người đặt sẽ bắt theo infor_id, còn thông tin người nhận với đơn hàng đẳc biệt sẽ cho người đặt nhập
         requests.setFullname(requestDTO.getFullname());
@@ -550,7 +503,7 @@ public class OrderServiceImpl implements OrderService {
             uploadImageService.uploadFileRequest(multipartFiles, requests.getOrderId());
         }
         orderRepository.updateRequest(request_id,
-                requestEditDTO.getDescription()
+                requestEditDTO.getDescription().trim()
         );
       //  entityManager.refresh(requests); // Làm mới đối tượng products
         return requests;
@@ -590,15 +543,15 @@ public class OrderServiceImpl implements OrderService {
         for (RequestProductWithFiles r : requestProductsWithFiles) {
             RequestProductDTO requestProductDTO = r.getRequestProductDTO();
             RequestProducts requestProducts = new RequestProducts();
-            requestProducts.setRequestProductName(requestProductDTO.getRequestProductName());
-            requestProducts.setDescription(requestProductDTO.getDescription());
+            requestProducts.setRequestProductName(requestProductDTO.getRequestProductName().trim());
+            requestProducts.setDescription(requestProductDTO.getDescription().trim());
             requestProducts.setPrice(requestProductDTO.getPrice());
             Status_Product status = statusProductRepository.findById(2);//tuc la kich hoạt
             requestProducts.setStatus(status);
             requestProducts.setQuantity(requestProductDTO.getQuantity());
             requestProducts.setCompletionTime(requestProductDTO.getCompletionTime());
             requestProducts.setOrders(orders);
-            if (!checkConditionService.checkInputName(requestProductDTO.getRequestProductName())) {
+            if (!checkConditionService.checkInputName(requestProductDTO.getRequestProductName().trim())) {
                 throw new AppException(ErrorCode.INVALID_FORMAT_NAME);
             }
             if (!checkConditionService.checkInputQuantityInt(requestProductDTO.getQuantity())) {
@@ -671,83 +624,6 @@ public class OrderServiceImpl implements OrderService {
         orderRepository.save(orders);
         return addedProducts;
     }
-
-
-//    @Override
-//    public List<Requests> GetAllRequests() {
-//        List<Requests> request_list = requestRepository.findAllRequest();
-//        if (request_list.isEmpty()) {
-//            throw new AppException(ErrorCode.NOT_FOUND);
-//        }
-//        return request_list;
-//    }
-//
-//    @Override
-//    public List<Requests> GetAllRequestsAccept() {
-//        List<Requests> request_list = requestRepository.findAllRequestAccept();
-//        if (request_list.isEmpty()) {
-//            throw new AppException(ErrorCode.NOT_FOUND);
-//        }
-//        return request_list;
-//    }
-
-//    @Override
-//    public RequestProductAllDTO GetProductRequestById(int id) {
-//        List<Product_Requestimages> productRequestimagesList = productRequestimagesRepository.findById(id);
-//        RequestProducts requestProducts = requestProductRepository.findById(id);
-//        if (requestProducts == null) {
-//            throw new AppException(ErrorCode.NOT_FOUND);
-//        }
-//        RequestProductAllDTO requestProductAllDTO = new RequestProductAllDTO();
-//        requestProductAllDTO.setId(requestProducts.getRequestProductId());
-//        requestProductAllDTO.setRequest_id(requestProducts.getRequestProductId());
-//        requestProductAllDTO.setQuantity(requestProducts.getQuantity());
-//        requestProductAllDTO.setPrice(requestProducts.getPrice());
-//        requestProductAllDTO.setCompletionTime(requestProducts.getCompletionTime());
-//        requestProductAllDTO.setDescription(requestProducts.getDescription());
-//        List<Product_Requestimages> processedImages = new ArrayList<>(); // Danh sách mới
-//        for (Product_Requestimages productRequestimages : productRequestimagesList) {
-//            productRequestimages.setFullPath(productRequestimages.getFullPath());
-//            processedImages.add(productRequestimages); // Thêm vào danh sách mới
-//        }
-//        requestProductAllDTO.setImagesList(processedImages); // Gán danh sách mới vào DTO
-//
-//        return requestProductAllDTO;
-//    }
-
-//    @Override
-//    public RequestAllDTO GetRequestById(int id) {
-//        List<Requestimages> requestimagesList = requestimagesRepository.findById(id);
-//        Requests requests = requestRepository.findById(id);
-//        if (requests == null) {
-//            throw new AppException(ErrorCode.NOT_FOUND);
-//        }
-//        RequestAllDTO requestAllDTO = new RequestAllDTO();
-//        requestAllDTO.setRequest_id(requests.getRequestId());
-//
-//        requestAllDTO.setUser_id(requests.getUser().getUserId());
-//        requestAllDTO.setRequestDate(requests.getRequestDate());
-//        requestAllDTO.setResponse(requests.getResponse());
-//        requestAllDTO.setPhoneNumber(requests.getPhoneNumber());
-//        requestAllDTO.setFullname(requests.getFullname());
-//        requestAllDTO.setEmail(requests.getEmail());
-//        requestAllDTO.setAddress(requests.getAddress());
-//        requestAllDTO.setCity_province(requests.getCity_province());
-//        requestAllDTO.setStatus_id(requests.getStatus().getStatus_id());
-//        requestAllDTO.setStatus_name(requests.getStatus().getStatus_name());
-//        requestAllDTO.setDistrict(requests.getDistrict());
-//        requestAllDTO.setWards(requests.getWards());
-//        requestAllDTO.setDescription(requests.getDescription());
-//        List<Requestimages> processedImages = new ArrayList<>(); // Danh sách mới
-//        for (Requestimages requestimages : requestimagesList) {
-//            requestimages.setFullPath(requestimages.getFullPath());
-//            processedImages.add(requestimages); // Thêm vào danh sách mới
-//        }
-//        requestAllDTO.setImagesList(processedImages); // Gán danh sách mới vào DTO
-//
-//        return requestAllDTO;
-//    }
-
     @Override
     public List<OderDTO> GetAllOrder() {
         CheckOrderAfterDeadline();
@@ -893,18 +769,6 @@ public class OrderServiceImpl implements OrderService {
         return list;
     }
 
-
-//    private String getAddressLocalComputer(String imagePath) {
-//        int assetsIndex = imagePath.indexOf("/assets/");
-//        if (assetsIndex != -1) {
-//            imagePath = imagePath.substring(assetsIndex); // Cắt từ "/assets/"
-//            if (imagePath.startsWith("/")) { // Kiểm tra xem có dấu "/" ở đầu không
-//                imagePath = imagePath.substring(1); // Loại bỏ dấu "/" đầu tiên
-//            }
-//        }
-//        return imagePath;
-//    }// Trả về đường dẫn tương đối hoặc đường dẫn ban đầu nếu không tìm thấy "/assets/"
-
     @Override
     public List<OrderDetailWithJobStatusDTO> getOrderDetailByOrderId(int order_id) {
         List<OrderDetailWithJobStatusDTO> results = orderDetailRepository.getAllOrderDetailByOrderId(order_id);
@@ -922,14 +786,6 @@ public class OrderServiceImpl implements OrderService {
         }
         return results;
     }
-
-
-//    @Override
-//    public Requests CustomerEditRequest(int request_id, Requests requests) {
-//        Requests requests1 = requestRepository.findById(request_id);
-//        requests1.
-//    }
-
     @Override
     public OrderDetailDTO getOrderDetailById(int id) {
         OrderDetailDTO orderDetailDTO = orderDetailRepository.getOrderDetailById(id);
@@ -938,11 +794,6 @@ public class OrderServiceImpl implements OrderService {
         }
         return orderDetailDTO;
     }
-
-//    @Override
-//    public RequestEditCusDTO getRequestEditCusDTOById(int id) {
-//        return requestRepository.getRequestEditCusDTOById(id);
-//    }
 
     @Override
     public void deleteRequestById(int requestId) {

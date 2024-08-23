@@ -24,6 +24,9 @@ interface ApiResponse {
 export class OrderManagementComponent implements OnInit {
   @ViewChild('launchModalButton') launchModalButton!: ElementRef;
   @ViewChild('launchModalButton1') launchModalButton1!: ElementRef;
+  
+  
+  
 
   user: any[] = [];
   userStatus: any[] = [];
@@ -190,25 +193,35 @@ export class OrderManagementComponent implements OnInit {
     this.depositeOrder = 0;
   }
   openModal(orderId: number, event: Event, index: number): void {
-    const statusId = (event.target as HTMLSelectElement).value;
-    this.selectedModalJob = orderId.toString();
-    this.selectedModalId = statusId;
-    this.indexStatus = index;
+    try {
+      const statusId = (event.target as HTMLSelectElement).value;
+      this.selectedModalJob = orderId.toString();
+      this.selectedModalId = statusId;
+      this.indexStatus = index;
   
-    console.log('event:', event);
-    console.log('Job ID:', this.selectedModalJob, 'Status ID:', statusId);
+      console.log('event:', event);
+      console.log('Job ID:', this.selectedModalJob, 'Status ID:', statusId);
   
-    // Debugging output to ensure condition is correct
-    if (statusId === '8') { // Example condition
-      console.log('Opening Modal 1');
-      this.launchModalButton1.nativeElement.click();
-    } else {
-      console.log('Opening Modal 2');
-      this.launchModalButton.nativeElement.click();
+      if (statusId === '5') {
+        console.log('Opening Modal 1');
+        if (this.launchModalButton1) {
+          this.launchModalButton1.nativeElement.click();
+        } else {
+          console.error('launchModalButton1 is undefined');
+        }
+      } else {
+        console.log('Opening Modal 2');
+        if (this.launchModalButton) {
+          this.launchModalButton.nativeElement.click();
+        } else {
+          console.error('launchModalButton is undefined');
+        }
+      }
+    } catch (error) {
+      console.error('Error in openModal:', error);
     }
   }
   
-
   closeModal(event: Event): void {
     // const statusId = (event.target as HTMLSelectElement).value;
     // const selectedStatusOption = this.status_order.find(status => status.status_id == parseInt(statusId));
@@ -495,6 +508,11 @@ export class OrderManagementComponent implements OnInit {
         return { 'color': 'black' };
     }
   }
+  ngAfterViewInit(): void {
+    console.log('launchModalButton:', this.launchModalButton);
+    console.log('launchModalButton1:', this.launchModalButton1);
+  }
+  
   filterStatus(): void {
     console.log(this.selectedCategory);
 
@@ -527,7 +545,7 @@ export class OrderManagementComponent implements OnInit {
             this.user = data.result;
             console.log(this.user);
             this.isLoadding = false;
-
+            
           } else if (data.code === 1015) {
             this.user = [];
             this.isLoadding = false;
@@ -838,12 +856,9 @@ export class OrderManagementComponent implements OnInit {
       return percentageRegex.test(priceDiscount) && parseFloat(priceDiscount) >= 0;
     };
 
-    const percentDepositPriceTrimmed = this.percentDepositPrice !== null ? this.percentDepositPrice.toString().trim() : '';
+    // const percentDepositPriceTrimmed = this.percentDepositPrice !== null ? this.percentDepositPrice.toString().trim() : '';
 
-    if (percentDepositPriceTrimmed === '') {
-      this.toastr.error('Các trường không được để trống');
-      return;
-    }
+ 
 
     if (!isValidPercentage(this.priceDiscount)) {
       this.toastr.error('Phần trăm phải nằm trong khoảng 0-100% và không được là số âm');

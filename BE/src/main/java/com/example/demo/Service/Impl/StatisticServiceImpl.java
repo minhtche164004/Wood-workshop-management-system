@@ -123,7 +123,10 @@ public class StatisticServiceImpl implements StatisticService {
 
     @Override
     public BigDecimal totalAmountOrderHaveDone(int year) {
-        return advancesalaryRepository.totalAmountOrderHaveDone(year);
+        BigDecimal totalAmountOrderHaveDone =  advancesalaryRepository.totalAmountOrderHaveDone(year);
+        BigDecimal totalAmountOrderRefund =  advancesalaryRepository.totalAmountOrderRefund(year);
+        BigDecimal totalAmountOrderCancel =  advancesalaryRepository.totalAmountOrderCancel(year);
+        return totalAmountOrderHaveDone.subtract(totalAmountOrderRefund).subtract(totalAmountOrderCancel);
     }
 
     @Override

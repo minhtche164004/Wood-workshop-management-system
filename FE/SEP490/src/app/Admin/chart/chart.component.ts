@@ -395,7 +395,8 @@ export class ChartComponent implements OnInit {
         this.percentOrder = Math.round(100 - this.percentSpecialOrder);
       //  console.log('Phần trăm đơn hàng đặc biệt:', this.percentSpecialOrder.toFixed(2) + '%');
       //  console.log('Phần trăm đơn hàng có sẵn:', this.percentOrder.toFixed(2) + '%');
-
+        console.log('Tổng đơn hàng đặc biệt:', this.totalSpecialOrder);
+        console.log('Tổng đơn hàng có sẵn:', this.totalNormalOrder);
       }
     } catch (err) {
       console.error(err);

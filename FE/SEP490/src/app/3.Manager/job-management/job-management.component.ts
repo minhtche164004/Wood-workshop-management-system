@@ -1387,6 +1387,7 @@ export class JobManagementComponent implements OnInit {
   }
   showError: boolean = false;
   onSearch(selectedCategory: number, searchKey: string): void {
+    this.searchKey.trim();
     this.checkNotFound = false;
     // console.log('checkNotFound:', this.checkNotFound);
     //  console.log("Selected cate: ", this.selectedStatusJob)

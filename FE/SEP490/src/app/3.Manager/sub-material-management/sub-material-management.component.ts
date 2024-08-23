@@ -217,11 +217,11 @@ export class SubMaterialManagementComponent implements OnInit {
     console.log('SubMaterial request:', subMaterial);
     if (Object.values(subMaterial).includes(null)) {
       this.isLoadding = false;
-      this.toastr.info('Vui lòng điền đầy đủ thông tin, không được để trống!', 'Thông báo');
+      this.toastr.warning('Vui lòng điền đầy đủ thông tin, không được để trống!', 'Thông báo');
       return;
     } if (!subMaterial.sub_material_name || subMaterial.sub_material_name.length < 3) {
       this.isLoadding = false;
-      this.toastr.info('Tên vật liệu phụ phải lớn hơn 3 ký tự!', 'Thông báo');
+      this.toastr.warning('Tên vật liệu phụ phải lớn hơn 3 ký tự!', 'Thông báo');
       return;
     }
 
@@ -229,34 +229,34 @@ export class SubMaterialManagementComponent implements OnInit {
 
     if (subMaterial.date_ware_house > today) {
       this.isLoadding = false;
-      this.toastr.info('Ngày nhập phải nhỏ hơn hoặc bằng ngày hiện tại!', 'Lỗi');
+      this.toastr.warning('Ngày nhập phải nhỏ hơn hoặc bằng ngày hiện tại!', 'Lỗi');
       return;
     }
     if (subMaterial.description === null || subMaterial.description === '') {
       this.isLoadding = false;
-      this.toastr.info('Không được để trống mô tả sản phẩm', 'Thông báo');
+      this.toastr.warning('Không được để trống mô tả sản phẩm', 'Thông báo');
       return;
     }
     if (subMaterial.quantity <= 0) {
       this.isLoadding = false;
-      this.toastr.info('Số lượng phải lớn hơn 0!', 'Thông báo');
+      this.toastr.warning('Số lượng phải lớn hơn 0!', 'Thông báo');
       return;
     }
 
     if (subMaterial.unit_price <= 0) {
       this.isLoadding = false;
-      this.toastr.info('Giá bán phải lớn hơn 0!', 'Thông báo');
+      this.toastr.warning('Giá bán phải lớn hơn 0!', 'Thông báo');
       return;
     }
 
     if (subMaterial.input_price <= 0) {
       this.isLoadding = false;
-      this.toastr.info('Giá nhập phải lớn hơn 0!', 'Thông báo');
+      this.toastr.warning('Giá nhập phải lớn hơn 0!', 'Thông báo');
       return;
     }
     if (subMaterial.input_price > subMaterial.unit_price) {
       this.isLoadding = false;
-      this.toastr.info('Giá nhập phải nhỏ hơn giá bán!', 'Lỗi');
+      this.toastr.warning('Giá nhập phải nhỏ hơn giá bán!', 'Lỗi');
       return;
     }
 
@@ -484,7 +484,7 @@ export class SubMaterialManagementComponent implements OnInit {
       const maxFileSize = 25 * 1024 * 1024;
       if (this.selectedFile.size > maxFileSize) {
         console.error('File size exceeds the 25MB limit.');
-        this.toastr.info('Kích thước file vượt quá giới hạn 25MB. Vui lòng chọn file nhỏ hơn.', 'Tải file không thành công!');
+        this.toastr.warning('Kích thước file vượt quá giới hạn 25MB. Vui lòng chọn file nhỏ hơn.', 'Tải file không thành công!');
         this.selectedFile = undefined;
         this.isLoadding = false;
         return;
@@ -495,7 +495,7 @@ export class SubMaterialManagementComponent implements OnInit {
       const allowedExtensions = ['xls', 'xlsx'];
       if (!fileExtension || !allowedExtensions.includes(fileExtension)) {
         console.error('Invalid file type. Please upload an Excel file.');
-        this.toastr.info('Loại file không hợp lệ. Vui lòng tải lên file Excel.', 'Tải file không thành công!');
+        this.toastr.warning('Loại file không hợp lệ. Vui lòng tải lên file Excel.', 'Tải file không thành công!');
         this.selectedFile = undefined;
         this.isLoadding = false;
         return;
@@ -505,7 +505,7 @@ export class SubMaterialManagementComponent implements OnInit {
       const allowedMimeTypes = ['application/vnd.ms-excel', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'];
       if (!allowedMimeTypes.includes(this.selectedFile.type)) {
         console.error('Invalid file type. Please upload an Excel file.');
-        this.toastr.info('Loại file không hợp lệ. Vui lòng tải lên file Excel.', 'Lỗi');
+        this.toastr.warning('Loại file không hợp lệ. Vui lòng tải lên file Excel.', 'Lỗi');
         this.selectedFile = undefined;
         this.isLoadding = false;
         return;

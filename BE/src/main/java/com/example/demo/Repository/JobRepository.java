@@ -87,6 +87,11 @@ public interface    JobRepository extends JpaRepository<Jobs,Integer> {
     @Query("DELETE FROM Jobs p WHERE p.jobId = :jobId")
     void deleteJobById(@Param("jobId") int jobId);
 
+    @Query("SELECT u FROM Jobs u WHERE u.code = :code AND u.status.status_id = 15")
+    List<Jobs> getJobByJobCode(String code);
+
+    @Query("SELECT u FROM Jobs u WHERE u.orderdetails.orderDetailId = :orderDetailId AND u.status.status_id = 15")
+    List<Jobs> getJobByOrderDetailId(int orderDetailId);
 
     @Query("SELECT u FROM Jobs u WHERE u.orderdetails.order.code = :query")
     List<Jobs> getJobByOrderDetailByOrderCode(String query);
@@ -249,8 +254,8 @@ public interface    JobRepository extends JpaRepository<Jobs,Integer> {
             " JOIN j.status s" +
             " LEFT JOIN j.product pr" +
             " LEFT JOIN j.requestProducts rp" +
-            " WHERE  u.userId = :userId AND j.job_log = true AND j.status.status_id != 10")
-    //j.job_log = true AND
+            " WHERE (u.userId = :userId AND j.status.status_id IN (4, 7, 10) AND j.job_log = false) OR (u.userId = :userId AND j.status.status_id  = 15 AND j.job_log=true) OR " +
+            " (u.userId = :userId AND j.status.status_id  = 13 AND j.job_log=true) ")
     List<JobDoneDTO> findAllJobForDoneByEmployeeID(int userId);
 
     @Query("SELECT new com.example.demo.Dto.JobDTO.JobDoneDTO(" +

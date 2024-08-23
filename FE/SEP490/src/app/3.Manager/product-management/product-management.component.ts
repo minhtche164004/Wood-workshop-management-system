@@ -1294,6 +1294,9 @@ export class ProductManagementComponent implements OnInit {
             }
             else if (error.status === 400 && error.error.code === 1050) {
               this.toastr.warning(error.error.message, 'Lỗi');
+            }
+            else if (error.status === 400 && error.error.message && error.error.code !== 1004) {
+              this.toastr.error(error.error.message, 'Lỗi');
             } else {
               this.toastr.error('Cập nhật ước tính nguyên vật liệu sản phẩm bị lỗi!', 'Lỗi');
             }
@@ -1638,8 +1641,12 @@ export class ProductManagementComponent implements OnInit {
             },
             error => {
               this.isLoadding = false;
-              this.toastr.error('Tạo sản phẩm bị lỗi!', 'Lỗi');
-
+              if (error.status === 400 && error.error.message && error.error.code !== 1004) {
+                this.toastr.error(error.error.message, 'Lỗi');
+              }
+              else {
+                this.toastr.error('Tạo sản phẩm bị lỗi!', 'Lỗi');
+              }
             }
           );
       });
@@ -1832,6 +1839,9 @@ export class ProductManagementComponent implements OnInit {
           else if (error.status === 400 && error.error.code === 1050) {
             this.toastr.warning(error.error.message, 'Lỗi');
           }
+          else if (error.status === 400 && error.error.message && error.error.code !== 1004) {
+            this.toastr.error(error.error.message, 'Lỗi');
+          }
           else {
             this.toastr.error('Cập nhật sản phẩm bị lỗi!', 'Lỗi');
           }
@@ -1861,6 +1871,9 @@ export class ProductManagementComponent implements OnInit {
         (error) => {
           if (error.status === 400 && error.error.code === 1030) {
             this.toastr.warning(error.error.message, 'Lỗi');
+          }
+          else if (error.status === 400 && error.error.message && error.error.code !== 1004) {
+            this.toastr.error(error.error.message, 'Lỗi');
           } else {
             this.toastr.error("Không thể xóa sản phẩm", 'Lỗi');
           }

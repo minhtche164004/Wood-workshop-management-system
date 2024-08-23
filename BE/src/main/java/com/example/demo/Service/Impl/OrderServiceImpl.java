@@ -204,6 +204,9 @@ public class OrderServiceImpl implements OrderService {
 
         Orders orders = orderRepository.findById(order_id);
         if (special_order_id == false) {//là hàng có sẵn
+            if(orders.getStatus().getStatus_id() == 1){ //nếu đơn hàng chờ đặt cọc mà huỷ thì deposit = 0 (để tính vào doanh thu)
+                orders.setDeposite(BigDecimal.ZERO);
+            }
             List<Orderdetails> list = orderDetailRepository.getOrderDetailByOrderId(order_id);
             for (Orderdetails orderdetails : list) {
                 int product_id = orderdetails.getProduct().getProductId();
@@ -220,6 +223,9 @@ public class OrderServiceImpl implements OrderService {
 
         }
         if (special_order_id == true) {//là hàng ko có sẵn (nếu jb đang làm dở thì cho làm cho xong , còn nếu job chưa giao việc thì xoá nó đi )
+            if(orders.getStatus().getStatus_id() == 1){ //nếu đơn hàng chờ đặt cọc mà huỷ thì deposit = 0 (để tính vào doanh thu)
+                orders.setDeposite(BigDecimal.ZERO);
+            }
             List<Orderdetails> list = orderDetailRepository.getOrderDetailByOrderId(order_id);
             for (Orderdetails orderdetails : list) {
 //                int request_product_id =  orderdetails.getRequestProduct().getRequestProductId();

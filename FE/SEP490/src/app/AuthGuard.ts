@@ -36,19 +36,24 @@ export class AuthGuard implements CanActivate {
       return true;  
     }
 
+    const token = localStorage.getItem('loginToken');
+
     return this.authenListService.getUserProfile().pipe(
       map(data => {
         const userRole = data.result?.role_name;
         this.loadingService.setLoading(false);
         if (expectedRoles.includes(userRole)) {
+          this.loadingService.setLoading(false);
           return true;
         } 
-        else if (userRole == null && !expectedRoles.includes(userRole)) { 
+        else if (userRole == null && !expectedRoles.includes(userRole) && token) { 
+          this.loadingService.setLoading(false);
           this.router.navigate(['/login']); // co token nhung token het han
           return false;
         }
         else {
           this.router.navigate(['/homepage']);
+          this.loadingService.setLoading(false);
           // this.toastr.error('Vai trò của bạn không hợp lệ');
           return false;
         }

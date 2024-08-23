@@ -139,7 +139,8 @@ export class ChartComponent implements OnInit {
         this.getAllPostionEmp(),
         this.getAllDataForYear(),
         this.getTotalAmountHaveDone(),
-        this.getTotalSalaryNotPayment()
+        this.getTotalSalaryNotPayment(),
+        this.getAllSalaryYear(this.year)
       ]);
       await this.updateEmployeePositions();
       this.initializeCharts();
@@ -395,7 +396,8 @@ export class ChartComponent implements OnInit {
         this.percentOrder = Math.round(100 - this.percentSpecialOrder);
       //  console.log('Phần trăm đơn hàng đặc biệt:', this.percentSpecialOrder.toFixed(2) + '%');
       //  console.log('Phần trăm đơn hàng có sẵn:', this.percentOrder.toFixed(2) + '%');
-
+        console.log('Tổng đơn hàng đặc biệt:', this.totalSpecialOrder);
+        console.log('Tổng đơn hàng có sẵn:', this.totalNormalOrder);
       }
     } catch (err) {
       console.error(err);
@@ -527,6 +529,27 @@ export class ChartComponent implements OnInit {
   );
 
   }
+  salaryYear: number = 0;
+  async getAllSalaryYear( year: number): Promise<void> {
+    return new Promise<void>((resolve, reject) => {
+      this.statistic.getTotalSalaryAllPayment(year).subscribe((data) => {
+        if (data.result === null || data.result === undefined) {
+          data.result = 0;
+        }
+      console.log(`getTotalSalaryAllPayment result for ${year}: `, data.result);
+      this.salaryYear = data.result;
+        this.productCounts.push(data.result);
+        resolve();
+      }, err => {
+       
+        reject(err);
+      });
+     
+    }
+   
+  );
+
+  }
   async getAllDataForYear() {
   
     const promises = [];
@@ -537,6 +560,7 @@ export class ChartComponent implements OnInit {
       promises.push(this.countTotalSpecOrder(month, this.year));
       promises.push(this.findTotalInputSmt(month, this.year));
       promises.push(this.findTotalSalary(month, this.year));
+     
     }
     Promise.all(promises).then(() => {
      // console.log('Tổng tiền luowng theo tháng:', this.totalSalary);

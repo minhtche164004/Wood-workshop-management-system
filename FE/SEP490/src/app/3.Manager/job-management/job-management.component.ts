@@ -363,6 +363,10 @@ export class JobManagementComponent implements OnInit {
       this.toastr.warning('Giá công khoán phải lớn hơn 0.', 'Thông báo'); this.isLoadding = false;
       return;
     }
+    if(cost > this.totalCost){
+      this.toastr.warning('Giá công khoán được trả vượt quá lợi nhuận tối thiểu , vui lòng xem lại!', 'Thông báo'); this.isLoadding = false;
+      return;
+    }
     if (!start) {
       this.toastr.warning('Không được để trống ngày yêu cầu nhận công việc.', 'Thông báo'); this.isLoadding = false;
       return;
@@ -825,7 +829,7 @@ export class JobManagementComponent implements OnInit {
       }
     );
   }
-
+  totalCost: number = 0;
   manageJob(product: any): void {
     this.employeeSelect.nativeElement.value = '';
 
@@ -856,7 +860,20 @@ export class JobManagementComponent implements OnInit {
     //console.log("employee:", this.selectedProduct.user_name);
 
     this.loadPosition3(product);
-
+    this.jobService.getTotalCostOfSubMateInJob(this.jobId).subscribe(
+      (data) => {
+        if (data.code === 1000) {
+          this.totalCost = data.result;
+           console.log('Total cost:', this.totalCost);
+        } else {
+          console.error('Failed to fetch products:', data);
+          this.toastr.warning('Không thể lấy danh sách sản phẩm!', 'Thông báo');
+        }
+      },
+      (error) => {
+        console.error('Error fetching data:', error);
+      }
+    );
     // Sử dụng regex để thay thế chữ "Thợ" bằng chữ "Làm"
     let modifiedPositionName = '';
     if (this.selectedProduct.position_id === 0) {
@@ -1387,6 +1404,7 @@ export class JobManagementComponent implements OnInit {
   }
   showError: boolean = false;
   onSearch(selectedCategory: number, searchKey: string): void {
+    this.searchKey.trim();
     this.checkNotFound = false;
     // console.log('checkNotFound:', this.checkNotFound);
     //  console.log("Selected cate: ", this.selectedStatusJob)
@@ -1792,6 +1810,10 @@ export class JobManagementComponent implements OnInit {
       this.toastr.warning('Giá công khoán phải lớn hơn 0.', 'Thông báo'); this.isLoadding = false;
       return;
     }
+    if(cost > this.totalCost){
+      this.toastr.warning('Giá công khoán không thể lớn hơn giá trị tổng công khoán', 'Thông báo'); this.isLoadding = false;
+      return;
+    }
     if (!start) {
       this.toastr.warning('Không được để trống ngày yêu cầu nhận công việc.', 'Thông báo'); this.isLoadding = false;
       return;
@@ -1974,6 +1996,20 @@ export class JobManagementComponent implements OnInit {
         if (data.code === 1000) {
           this.selectedJob = data.result;
           //console.log('Form detailJob2 value:', this.selectedJob);
+          this.isLoadding = false;
+        } else {
+          console.error('Failed to fetch products:', data);
+          this.toastr.warning('Không thể lấy danh sách sản phẩm!', 'Lỗi');
+          this.isLoadding = false;
+        }
+      },
+    );
+    this.jobService.getJobDetailById(this.jobId).subscribe(
+      (data) => {
+        if (data.code === 1000) {
+          this.selectedJob = data.result;
+          console.log('selectedJob:', this.selectedJob);
+          console.log('selectedJob2:', this.selectedProduct);
           this.isLoadding = false;
         } else {
           console.error('Failed to fetch products:', data);

@@ -1,5 +1,5 @@
 
-import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { ToastrService } from 'ngx-toastr';
 import { timer } from 'rxjs';
 import { AuthenListService } from 'src/app/service/authen.service';
@@ -66,28 +66,47 @@ export class OrderManagementComponent implements OnInit {
 
 
 
-  constructor(private http: HttpClient, private productListService: ProductListService, private orderService: OrderService,
+  constructor(private cdr: ChangeDetectorRef,private http: HttpClient, private productListService: ProductListService, private orderService: OrderService,
     private authenListService: AuthenListService, private toastr: ToastrService, private orderRequestService: OrderRequestService
   ) {
     this.updateFormattedDepositeOrder();
   }
-  
-  onInput(event: Event) {
-    const input = event.target as HTMLInputElement;
-    let value = input.value;
+  formatPercentDepositPrice() {
+    if (this.percentDepositPrice) {
+      // Remove existing commas
+      const valueWithoutCommas = this.percentDepositPrice.replace(/,/g, '');
 
-    // Xóa dấu phân cách hàng nghìn để tính toán số
-    value = value.replace(/,/g, '');
-
-    // Cập nhật giá trị kiểu số
-    const numericValue = parseFloat(value);
-    if (!isNaN(numericValue)) {
-      this.depositeOrder = numericValue;
+      // Format the number with commas
+      this.percentDepositPrice = parseFloat(valueWithoutCommas).toLocaleString('en-US');
     }
-
-    // Cập nhật giá trị định dạng để hiển thị
-    this.updateFormattedDepositeOrder();
   }
+
+  
+  formatDepositOrder() {
+    if (this.depositeOrder) {
+      // Remove existing commas
+      const valueWithoutCommas = this.depositeOrder.replace(/,/g, '');
+
+      // Format the number with commas
+      this.depositeOrder = parseFloat(valueWithoutCommas).toLocaleString('en-US');
+    }
+  }
+  // onInput(event: Event) {
+  //   const input = event.target as HTMLInputElement;
+  //   let value = input.value;
+
+  //   // Xóa dấu phân cách hàng nghìn để tính toán số
+  //   value = value.replace(/,/g, '');
+
+  //   // Cập nhật giá trị kiểu số
+  //   const numericValue = parseFloat(value);
+  //   if (!isNaN(numericValue)) {
+  //     this.depositeOrder = numericValue;
+  //   }
+
+  //   // Cập nhật giá trị định dạng để hiển thị
+  //   this.updateFormattedDepositeOrder();
+  // }
 
   onBlur(event: Event) {
     // Định dạng giá trị khi mất focus
@@ -190,7 +209,29 @@ export class OrderManagementComponent implements OnInit {
     this.remain_price = '';
   }
   cancelChangeStatusJob1() {
-    this.depositeOrder = 0;
+    this.depositeOrder = '';
+  }
+  getModalTarget(statusId: number): string {
+    console.log(statusId);
+    if (statusId === 5) {
+   
+      return '#myModal1';
+    } else if (statusId === 8) {
+      return '#myModal2';
+    } else {
+      return '';
+    }
+  }
+  openModalForNullTotalAmount(orderId: number, event: Event, index: number) {
+    // Handle logic specific to when totalAmount is null
+    const statusId = (event.target as HTMLSelectElement).value;
+    this.selectedModalJob = orderId.toString();
+    this.selectedModalId = statusId;
+    this.indexStatus = index;
+    const selectedValue = (event.target as HTMLSelectElement).value;
+    if (selectedValue === '8') {
+      this.launchModalButton1.nativeElement.click();
+    }
   }
   openModal(orderId: number, event: Event, index: number): void {
     try {
@@ -221,6 +262,20 @@ export class OrderManagementComponent implements OnInit {
       console.error('Error in openModal:', error);
     }
   }
+  
+  openModalForNonNullTotalAmount(orderId: number, event: Event, index: number) {
+    // Handle logic specific to when totalAmount is not null
+    const statusId = (event.target as HTMLSelectElement).value;
+    this.selectedModalJob = orderId.toString();
+    this.selectedModalId = statusId;
+    this.indexStatus = index;
+    const selectedValue = (event.target as HTMLSelectElement).value;
+    if (selectedValue === '5') {
+      this.launchModalButton.nativeElement.click();
+    }
+  }
+  
+
   
   closeModal(event: Event): void {
     // const statusId = (event.target as HTMLSelectElement).value;
@@ -351,7 +406,7 @@ export class OrderManagementComponent implements OnInit {
   selectedOrderDetail: any = {};
   emailCustomer: string = '';
   getOrDetailById(us: any, order_detail_id: string): void {
-    this.isLoadding = true;
+  
     console.log('Order_detail_id:', order_detail_id);
     console.log("order detail: ", us);
     console.log("order detail type: ", us.specialOrder);
@@ -440,32 +495,47 @@ export class OrderManagementComponent implements OnInit {
       }
     );
   }
+  formatRemainPrice() {
+    if (this.remain_price) {
+      // Remove any non-numeric characters (except for the decimal point)
+      const valueWithoutCommas = this.remain_price.replace(/,/g, '');
+  
+      // Format the number with commas
+      const formattedValue = parseFloat(valueWithoutCommas).toLocaleString('en-US');
+  
+      // Update the remain_price only if the formatted value is different
+      if (this.remain_price !== formattedValue) {
+        this.remain_price = formattedValue;
+      }
+    }
+  }
+  
+
 
   changeStatusFinish(orderId: string, statusId: string): void {
 
-    // Convert remain_price to a string and trim any whitespace
-    const trimmedRemainPrice = this.remain_price.toString().trim();
-    
-    // Check if the trimmed string is empty
-    if (trimmedRemainPrice === '') {
+    // Remove commas from remain_price and convert to a number
+    const numericRemainPrice = parseFloat(this.remain_price.replace(/,/g, '').trim());
+  
+    // Check if remain_price is empty
+    if (!this.remain_price.trim()) {
       this.toastr.error('Số tiền còn lại cần thanh toán không được để trống.');
       return;
     }
-    
-    // Convert the trimmed string to a number
-    const numericRemainPrice = parseFloat(trimmedRemainPrice);
-    
-    // Check if the trimmed string is a valid number
+  
+    // Check if remain_price is a valid number
     if (isNaN(numericRemainPrice)) {
       this.toastr.error('Vui lòng chỉ được nhập số.');
       return;
     }
-    
+  
+    // Convert numericRemainPrice back to a string before sending it to the backend
+    const remainPriceAsString = numericRemainPrice.toString();
+  
     // The remain_price is valid, you can proceed with the rest of the logic
-
     this.isLoadding = true;
-
-    this.authenListService.changeStatusOrderFinish(orderId, statusId, this.remain_price).subscribe(
+  
+    this.authenListService.changeStatusOrderFinish(orderId, statusId, remainPriceAsString).subscribe(
       response => {
         if (response.code === 1000) {
           this.realoadgetAllUser();
@@ -479,7 +549,7 @@ export class OrderManagementComponent implements OnInit {
         } else {
           this.isLoadding = false;
           console.error('Error changing order status', response);
-          this.toastr.error('Số tiền còn lại cần thanh toán không đúng với giá trị , vui lòng nhập lại!');
+          this.toastr.error('Số tiền còn lại cần thanh toán không đúng với giá trị, vui lòng nhập lại!');
         }
       },
       (error: HttpErrorResponse) => {
@@ -489,11 +559,12 @@ export class OrderManagementComponent implements OnInit {
         } else {
           this.isLoadding = false;
           console.error('Error changing order status', error);
-          this.toastr.error('Số tiền còn lại cần thanh toán không đúng với giá trị , vui lòng nhập lại!');
+          this.toastr.error('Số tiền còn lại cần thanh toán không đúng với giá trị, vui lòng nhập lại!');
         }
       }
     );
   }
+  
   getStatusColor(statusId: number): { [key: string]: string } {
     switch (statusId) {
       case 1:
@@ -545,11 +616,12 @@ export class OrderManagementComponent implements OnInit {
             this.user = data.result;
             console.log(this.user);
             this.isLoadding = false;
-            
+            this.cdr.detectChanges(); // Ensure view updates before any modal triggers
           } else if (data.code === 1015) {
             this.user = [];
             this.isLoadding = false;
             // this.toastr.warning(data.message);
+            this.cdr.detectChanges(); // Ensure view updates before any modal triggers
           }
         },
         (error: HttpErrorResponse) => {
@@ -657,8 +729,8 @@ export class OrderManagementComponent implements OnInit {
       cancelReasonPrice: this.cancelReasonPrice,
     });
 
-  
-    const numericValue = Number(this.percentDepositPrice);
+    // Remove commas from percentDepositPrice before sending to the backend
+    const numericValue = Number(this.percentDepositPrice.replace(/,/g, ''));
 
     // Check if the conversion resulted in NaN or if the value is empty
     if (this.percentDepositPrice.trim() === '' ) {
@@ -672,7 +744,6 @@ export class OrderManagementComponent implements OnInit {
       return;
     }
     
-  
     if (!this.selectedReason) {
       this.toastr.error('Vui lòng chọn lý do.');
       this.isLoadding = false;
@@ -689,20 +760,16 @@ export class OrderManagementComponent implements OnInit {
       this.authenListService.RefundcancelOrder(
         this.selectedOrderId,
         this.selectedSpecialOrder,
-        this.percentDepositPrice,
+        numericValue.toString(), // Send the numeric value without commas
         this.selectedReason,
         this.cancelReasonPrice
       ).subscribe({
         next: (response: any) => {
-
-
           console.log('Raw Response:', response); // Log the raw response
           this.toastr.success("Hoàn tiền đơn hàng thành công");
           this.cancelRefundModal();
           closeModal();
-
           this.isLoadding = false;
-          
         },
         error: (error: any) => {
           if (error.status === 400) {
@@ -728,51 +795,39 @@ export class OrderManagementComponent implements OnInit {
       this.isLoadding = false;
     }
   }
-  depositeOrder: number = 0;
+  depositeOrder: string = "";
   depositeOrderDisplay: string = "";
   formattedDepositeOrder: string = '';
 
 
-  formatInputValue(value: string) {
-    const numericValue = parseFloat(value);
-    if (!isNaN(numericValue)) {
-      this.depositeOrder = numericValue;
-      // Định dạng giá trị và cập nhật formattedDepositeOrder
-      this.formattedDepositeOrder = this.depositeOrder.toLocaleString('en-US');
-    } else {
-      this.depositeOrder = 0;
-      this.formattedDepositeOrder = '';
-    }
+  // formatInputValue(value: string) {
+  //   const numericValue = parseFloat(value);
+  //   if (!isNaN(numericValue)) {
+  //     this.depositeOrder = numericValue;
+  //     // Định dạng giá trị và cập nhật formattedDepositeOrder
+  //     this.formattedDepositeOrder = this.depositeOrder.toLocaleString('en-US');
+  //   } else {
+  //     this.depositeOrder = 0;
+  //     this.formattedDepositeOrder = '';
+  //   }
 
-  }
+  // }
 
   confirmPayment() {
     this.isLoadding = true;
-    
-    // Convert depositeOrder to a number
-   
-    
-    // Convert number to string and trim any whitespace
-    const trimmedDepositOrder = this.depositeOrder.toString().trim();
-    if (trimmedDepositOrder === '' ) {
-      this.toastr.error('Vui lòng không được để trống.');
-      this.isLoadding = false;
-      return;
-    }
   
-    // Convert the trimmed string to a number
-    const numericDepositOrder = parseFloat(trimmedDepositOrder);
-    
-    // Check if the trimmed string is empty or not a valid number
-    if ( isNaN(numericDepositOrder)) {
+    // Remove commas and convert depositeOrder to a number
+    const numericDepositOrder = parseFloat(this.depositeOrder.replace(/,/g, ''));
+  
+    // Ensure depositeOrder is a valid number
+    if (isNaN(numericDepositOrder)) {
       this.toastr.error('Vui lòng chỉ nhập số.');
       this.isLoadding = false;
       return;
     }
-   
   
-    // Format the number to two decimal places
-    const formattedDepositOrder = numericDepositOrder.toFixed(2); // e.g., '4000000.00'
+    // Format the number to two decimal places for backend
+    const formattedDepositOrder = numericDepositOrder.toFixed(2);
   
     if (this.selectedOrderId !== null) {
       console.log(this.selectedOrderId, formattedDepositOrder);
@@ -805,6 +860,8 @@ export class OrderManagementComponent implements OnInit {
       this.toastr.error('Order ID is not selected.');
     }
   }
+  
+  
   
 
   sendMail(orderId: number) {

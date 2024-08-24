@@ -97,7 +97,7 @@ public class SubMaterialServiceImpl implements SubMaterialService {
 
         SubMaterials subMaterials = new SubMaterials();
         subMaterials.setSubMaterialName(subMaterialDTO.getSub_material_name().trim());
-        Materials materials = materialRepository.findByName(subMaterialDTO.getMaterial_name().trim());
+        Materials materials = materialRepository.findByName(subMaterialDTO.getMaterial_name());
         subMaterials.setMaterial(materials);
         //   subMaterials.setCreate_date(create);
         //  subMaterials.setQuantity(subMaterialDTO.getQuantity());

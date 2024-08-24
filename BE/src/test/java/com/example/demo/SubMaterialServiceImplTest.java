@@ -5,6 +5,7 @@ import com.example.demo.Dto.SubMaterialDTO.SubMaterialDTO;
 import com.example.demo.Dto.SubMaterialDTO.SubMaterialViewDTO;
 import com.example.demo.Entity.InputSubMaterial;
 import com.example.demo.Entity.Materials;
+import com.example.demo.Entity.Products;
 import com.example.demo.Entity.SubMaterials;
 import com.example.demo.Exception.AppException;
 import com.example.demo.Exception.ErrorCode;
@@ -150,7 +151,12 @@ public class SubMaterialServiceImplTest {
 
     @Test
     void testAddNew_InvalidQuantity() {
+
         SubMaterialDTO dto = new SubMaterialDTO();
+        dto.setSub_material_name("aaaa");
+        dto.setDescription("aa");
+        dto.setUnit_price(BigDecimal.valueOf(100));
+        dto.setInput_price(BigDecimal.valueOf(50));
         dto.setQuantity(-10.0); // Use Double
 
         when(checkConditionService.checkInputQuantity(any(Double.class))).thenReturn(false);

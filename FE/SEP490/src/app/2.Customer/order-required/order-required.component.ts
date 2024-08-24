@@ -228,7 +228,7 @@ export class OrderRequiredComponent implements OnInit {
     }
     const description = this.uploadForm.controls['description'].value.trim();;
     if (description == '') {
-      this.toastr.error('Không được bỏ trống trường Mô tả sản phẩm');
+      this.toastr.error('Không được bỏ trống trường Mô tả đơn hàng');
       return false;
     }
 

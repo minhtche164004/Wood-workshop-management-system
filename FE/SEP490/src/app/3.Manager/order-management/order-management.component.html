@@ -138,7 +138,7 @@
                   </button>
                 </div>
               </td>
-              
+              <!-- goi den button cua code cu nen khong hien thi modal -->
               <td style="min-width: 200px;" *ngIf="us?.totalAmount !== null">
                 <div class="select-wrapper">
                   <select (click)="getOrDetailById(us, us?.orderId)" id="mySelect{{i}}"
@@ -150,8 +150,8 @@
                       {{ status.status_name }}
                     </option>
                   </select>
-                  <button #launchModalButton type="button" class="btn btn-primary d-none" data-toggle="modal"
-                    data-target="#myModal1">
+                  <button #launchModalButton1 type="button" class="btn btn-primary d-none" data-toggle="modal"
+                    data-target="#myModal2">
                     Launch Modal 2
                   </button>
                 </div>

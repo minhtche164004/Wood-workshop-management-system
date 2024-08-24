@@ -139,7 +139,6 @@
                     </button>
                   </div>
                 </td>
-
                 <td style="min-width: 200px;" *ngIf="us?.totalAmount !== null">
                   <div class="select-wrapper">
                     <select (click)="getOrDetailById(us, us?.orderId)" id="mySelect{{i}}"
@@ -157,7 +156,6 @@
                     </button>
                   </div>
                 </td>
-
 
 
 
@@ -258,7 +256,19 @@
               <b>Mã đơn: </b> {{ OrderdetailById.code}}
             </div>
           </div>
-
+          <div class="row">
+            <div class="col-md-6">
+             
+            </div>
+            <div class="col-md-6">
+             
+              <div *ngIf="OrderdetailById?.status_id === 9">
+                <b> Kiểu hoàn tiền:</b> {{ OrderdetailById.refundStatus?.refundName }}
+              </div>
+              
+              <b> Lý do: </b>{{ OrderdetailById.response}}
+            </div>
+          </div>
           <div class="card" style="margin-top: 2%;">
             <div class="card-header text-center">
               Thông tin đơn hàng

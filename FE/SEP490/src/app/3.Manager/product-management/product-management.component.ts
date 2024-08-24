@@ -240,7 +240,7 @@ export class ProductManagementComponent implements OnInit {
     this.items.push(item);
   }
 
-  removeItem(index: number) {
+  async removeItem(index: number) {
     // const items = this.materialForm.get('items') as FormArray;
     // items.removeAt(index);
 
@@ -253,13 +253,14 @@ export class ProductManagementComponent implements OnInit {
     if (this.items && this.items.length > index) {
 
       this.onRemoveMaterial(index); // cap nhat gia tien` uoc tinh
-
+      
       // Shift the elements to the left 
       if (index < this.items.length - 1) {
         for (let i = index, j = 0; i < this.items.length - 1; i++, j++) {
           this.items.at(i).setValue(this.items.at(i + 1).value);
           this.selectedMaterialId[i] = this.selectedMaterialId[i + 1];
-          this.onMaterialChangeFirstEdit(Number(this.selectedMaterialId[i]), i);
+          await this.onMaterialChangeFirstEdit(Number(this.items.at(i).value.materialId), i);
+          await this.delay(1000); 
           this.selectedSubMaterialId[i] = this.selectedMaterialId[i + 1];
           this.unitPriceSubMaterial[i] = this.unitPriceSubMaterial[i + 1];
           this.quantityPerSubMaterial[i] = this.quantityPerSubMaterial[i + 1];
@@ -446,6 +447,7 @@ export class ProductManagementComponent implements OnInit {
         delete this.pricePerProduct[keys.length - 1];
         delete this.pricePerProductAndQuantity[keys.length - 1];
       }
+      
 
       console.log('pricePerProductAndQuantity:', this.pricePerProductAndQuantity);
     }
@@ -493,7 +495,7 @@ export class ProductManagementComponent implements OnInit {
 
   }
 
-  onMaterialChangeFirstEdit(materialId: number, index: number) {
+  async onMaterialChangeFirstEdit(materialId: number, index: number) {
     this.loadSubMaterials(materialId, index);
   }
 
@@ -524,38 +526,42 @@ export class ProductManagementComponent implements OnInit {
     this.itemsEditArray.push(item);
   }
 
+  delay(ms: number) {
+    return new Promise(resolve => setTimeout(resolve, ms));
+  }
   subMaterialDataArray: any[] = [];
-  removeItemEdit(index: number) {
+  async removeItemEdit(index: number) {
     this.subMaterialDataArray = []; // reset lai mang subMaterialDataArray
     if (this.itemsEditArray.length === 1) {
       this.toastr.error('Không thể xóa hết nguyên liệu!', 'Lỗi');
       return;
     }
-
+  
     if (this.itemsEditArray && this.itemsEditArray.length > index) {
-
-      this.onRemoveMaterial(index); // cap nhat gia tien` uoc tinh
-
+      await this.onRemoveMaterial(index); // cap nhat gia tien` uoc tinh
+  
       // Shift the elements to the left 
       if (index < this.itemsEditArray.length - 1) {
         for (let i = index, j = 0; i < this.itemsEditArray.length - 1; i++, j++) {
           this.itemsEditArray.at(i).setValue(this.itemsEditArray.at(i + 1).value);
           this.selectedMaterialId[i] = this.selectedMaterialId[i + 1];
-          this.onMaterialChangeFirstEdit(Number(this.selectedMaterialId[i]), i);
+          await this.onMaterialChangeFirstEdit(Number(this.itemsEditArray.at(i).value.materialId), i);
+          await this.delay(1000); 
           this.selectedSubMaterialId[i] = this.selectedMaterialId[i + 1];
           this.unitPriceSubMaterial[i] = this.unitPriceSubMaterial[i + 1];
           this.quantityPerSubMaterial[i] = this.quantityPerSubMaterial[i + 1];
           this.subMaterialDataArray[j] = this.itemsEditArray.at(i).value;
         }
       }
-
-
+  
       // Remove the last element
       while (this.itemsEditArray.length > index && this.itemsEditArray.length > 0) {
         this.itemsEditArray.removeAt(this.itemsEditArray.length - 1);
         this.selectedMaterialId[this.itemsEditArray.length] = '';
       }
-
+  
+      console.log('subMaterialDataArray:', this.subMaterialDataArray);
+  
       for (let i = 0; i < this.subMaterialDataArray.length; i++) {
         const subMaterialData = this.subMaterialDataArray[i];
         if (subMaterialData) {
@@ -565,16 +571,15 @@ export class ProductManagementComponent implements OnInit {
             subMaterialName: [subMaterialData.subMaterialName],
             materialType: [subMaterialData.materialType],
             quantity: [subMaterialData.quantity],
-            unitPrice: [subMaterialData.unitPrice]
+            unitPrice: [subMaterialData.unitPrice],
+            code: [subMaterialData?.code]
           });
           this.itemsEditArray.push(itemFormGroup);
-          // console.log('subMaterialDataArray:', this.subMaterialDataArray);
         } else {
           console.error(`subMaterialDataArray[${i}] is undefined`);
         }
       }
     }
-
   }
   //
   buttonClickModalFlag: boolean = true;
@@ -1027,7 +1032,7 @@ export class ProductManagementComponent implements OnInit {
 
   }
 
-  onRemoveMaterial(index: number) {
+  async onRemoveMaterial(index: number) {
     if (this.unitPriceSubMaterial[index] && this.quantityPerSubMaterial[index]) {
       this.totalUnitPrice = this.totalUnitPrice - (Number(this.unitPriceSubMaterial[index]) * Number(this.quantityPerSubMaterial[index]));
     }

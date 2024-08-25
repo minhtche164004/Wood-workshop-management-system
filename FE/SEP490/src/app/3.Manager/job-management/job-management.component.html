@@ -499,7 +499,7 @@
                                                 </div>
                                                 <div class="row">
                                                     <div class="col-md-6">
-                                                        <strong>Hoàn thành trước ngày:</strong>
+                                                        <strong>Hoàn thành trước ngày</strong>
                                                     </div>
                                                     <div class="col-md-6">
                                                         {{ selectedJob.timeFinish | date:'dd / MM / yyyy' }}
@@ -1103,14 +1103,14 @@
                 <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body text-center">
-                <p style="color: red;">Thao tác này là không thể hoàn tác</p>
+                <h3 style="color: red;">Thao tác này là không thể hoàn tác</h3>
                 <p style="  font-size: 16px;"> Đã hoàn thành <input type="number"
                         style="width: 100%; box-sizing: border-box;" style=" width: 12%; font-size: 16px;"
                         [(ngModel)]="quantityProductDone"> sản phẩm </p>
 
 
                 <p style="  font-size: 16px;"> Nhân viên nhận được <input type="text" 
-                    style="width: 100%; box-sizing: border-box; font-size: 16px;" 
+                    style="box-sizing: border-box; font-size: 16px;" 
                     [(ngModel)]="costEmployee" 
                     (ngModelChange)="formatCostEmployee()" 
                     (keypress)="isNumberKey($event)">

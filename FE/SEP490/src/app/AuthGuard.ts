@@ -46,7 +46,7 @@ export class AuthGuard implements CanActivate {
           this.loadingService.setLoading(false);
           return true;
         } 
-        else if (userRole == null && !expectedRoles.includes(userRole) && token) { 
+        else if (userRole == null && token) { 
           this.loadingService.setLoading(false);
           this.router.navigate(['/login']); // co token nhung token het han
           return false;

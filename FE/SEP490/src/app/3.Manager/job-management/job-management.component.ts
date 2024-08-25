@@ -772,7 +772,7 @@ export class JobManagementComponent implements OnInit {
 
   // Hàm để thực hiện in dữ liệu ra màn hình sau khi kiểm tra lỗi hoàn tất
   displayProducts() {
-    console.log('Jobs with errors:', this.listErrorJob);
+    //console.log('Jobs with errors:', this.listErrorJob);
     // Thực hiện các hành động cần thiết để in dữ liệu ra màn hình
   }
 
@@ -844,8 +844,8 @@ export class JobManagementComponent implements OnInit {
       (data) => {
         if (data.code === 1000) {
           this.selectedJob = data.result;
-          console.log('selectedJob:', this.selectedJob);
-          console.log('selectedJob2:', this.selectedProduct);
+         // console.log('selectedJob:', this.selectedJob);
+          //console.log('selectedJob2:', this.selectedProduct);
           this.isLoadding = false;
         } else {
           console.error('Failed to fetch products:', data);

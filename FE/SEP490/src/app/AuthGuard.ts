@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
 import { CanActivate, ActivatedRouteSnapshot, RouterStateSnapshot, Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
-import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { Observable, of } from 'rxjs';
+import { catchError, map } from 'rxjs/operators';
 import { AuthenListService } from 'src/app/service/authen.service';
 import { LoadingService } from './LoadingService';
 
@@ -46,17 +46,21 @@ export class AuthGuard implements CanActivate {
           this.loadingService.setLoading(false);
           return true;
         } 
-        else if (userRole == null && token) { 
-          this.loadingService.setLoading(false);
-          this.router.navigate(['/login']); // co token nhung token het han
-          return false;
-        }
         else {
           this.router.navigate(['/homepage']);
           this.loadingService.setLoading(false);
           // this.toastr.error('Vai trò của bạn không hợp lệ');
           return false;
         }
+      }),
+      catchError(error => {
+        this.loadingService.setLoading(false);
+        if (error.status === 401 && error.error?.code === 1004) {
+          this.router.navigate(['/login']); // co token nhung token het han
+        } else {
+          this.router.navigate(['/homepage']);
+        }
+        return of(false);
       })
     );
   }

@@ -90,6 +90,7 @@ public class OrderServiceImpl implements OrderService {
     private VNPayService vnPayService;
 
 
+    @Transactional
     @Override
     public ResponseEntity<ApiResponse<List<String>>> AddOrder(RequestOrder requestOrder) {
         Map<String, String> errors = new HashMap<>(); //hashmap cho error

@@ -126,7 +126,7 @@ public class StatisticServiceImpl implements StatisticService {
         }
 
         if (totalAmountOrderCancel != null && a != null) {
-            a = a.subtract(totalAmountOrderCancel);
+            a = a.add(totalAmountOrderCancel);
         }
 
         return a;

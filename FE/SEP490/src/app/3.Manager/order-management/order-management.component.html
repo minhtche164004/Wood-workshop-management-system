@@ -126,7 +126,7 @@
                   <div class="select-wrapper">
                     <select (click)="getOrDetailById(us, us?.orderId)" id="mySelect{{i}}"
                       [disabled]="us?.status_id !== 4 && us?.status_id !== 7" class="custom-select"
-                      (change)="openModal(us.orderId, $event, i)">
+                      (change)="openModalForNullTotalAmount(us.orderId, $event, i)">
                       <option *ngFor="let status of status_order" [value]="status.status_id"
                         [selected]="status.status_id === us?.status_id" [disabled]="status.status_id !== 8"
                         [hidden]="status.status_id !== 7 && status.status_id !== 8">
@@ -134,24 +134,23 @@
                       </option>
                     </select>
                     <button #launchModalButton1 type="button" class="btn btn-primary d-none" data-toggle="modal"
-                      data-target="#myModal2">
+                      data-target="#myModal1">
                       Launch Modal 1
                     </button>
                   </div>
                 </td>
-                <!-- goi den button cua code cu nen khong hien thi modal -->
                 <td style="min-width: 200px;" *ngIf="us?.totalAmount !== null">
                   <div class="select-wrapper">
                     <select (click)="getOrDetailById(us, us?.orderId)" id="mySelect{{i}}"
                       [disabled]="us?.status_id !== 4" class="custom-select"
-                      (change)="openModal(us.orderId, $event, i)">
+                      (change)="openModalForNonNullTotalAmount(us.orderId, $event, i)">
                       <option *ngFor="let status of status_order" [value]="status.status_id"
                         [selected]="status.status_id === us?.status_id" [disabled]="status.status_id !== 5"
                         [hidden]="status.status_id !== 4 && status.status_id !== 5">
                         {{ status.status_name }}
                       </option>
                     </select>
-                    <button #launchModalButton1 type="button" class="btn btn-primary d-none" data-toggle="modal"
+                    <button #launchModalButton type="button" class="btn btn-primary d-none" data-toggle="modal"
                       data-target="#myModal2">
                       Launch Modal 2
                     </button>
@@ -349,7 +348,15 @@
                   </ng-container>
                 </div>
               </div>
+              <div class="col-md-6" *ngIf="OrderdetailById.status?.status_id === 9">
+                <div>
+                  <h3><b>Lí do hoàn tiền</b></h3>
+                </div>
 
+                {{OrderdetailById?.refundStatus?.refundName}}
+
+
+              </div>
             </div>
 
 
@@ -469,9 +476,9 @@
             </div>
             <div class="col-md-6" style="text-align: right;">
               <input style="text-align: right;" min="0" type="text" class="form-control" id="percentDepositPrice"
-                [(ngModel)]="depositeOrder">
-
+                [(ngModel)]="depositeOrder" (ngModelChange)="formatDepositOrder()" required>
             </div>
+
           </div>
 
 
@@ -529,7 +536,8 @@
         <div class="row">
           <div class="col md-6">
             <label for="cancelReason">Nhập số tiền còn lại cần thanh toán</label>
-            <input min="0" type="text" class="form-control" id="moneyFisinish" [(ngModel)]="remain_price">
+            <input style="margin-bottom: 5px; width: 25%; text-align: right;" min="0" type="text" class="form-control"
+              id="moneyFisinish" [(ngModel)]="remain_price" (ngModelChange)="formatRemainPrice()" required>
           </div>
           <div class="col md-6">
             <label for="cancelReason">Số tiền cần thanh toán còn lại:</label>
@@ -578,7 +586,8 @@
               <label for="percentDepositPrice">Nhập số tiền hoàn đơn hàng</label>
               <span class="required-asterisk">*</span>
               <input type="text" class="form-control" id="percentDepositPrice" [(ngModel)]="percentDepositPrice"
-                required>
+                (ngModelChange)="formatPercentDepositPrice()" required>
+
             </div>
           </div>
 
@@ -800,7 +809,8 @@
                 <div class="d-flex justify-content-between mb-2" style="font-size: 15px;">
                   <label for="">Nhập số tiền còn lại để thanh toán đơn hàng</label>
                   <input style="margin-bottom: 5px; width: 25%; text-align: right;" min="0" type="text"
-                    class="form-control" id="moneyFisinish" [(ngModel)]="remain_price">
+                    class="form-control" id="moneyFisinish" [(ngModel)]="remain_price"
+                    (ngModelChange)="formatRemainPrice()" required>
                 </div>
 
 

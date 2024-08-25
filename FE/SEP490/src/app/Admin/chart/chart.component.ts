@@ -302,24 +302,33 @@ export class ChartComponent implements OnInit {
       }
     });
   
-    this.chart4 = new Chart('canvas4', {
-      type: 'bar',
-      data: {
-        labels: this.months,
-        datasets: [
-          {
-            label: 'Sản phẩm có sẵn',
-            data: this.productCounts,
-            backgroundColor: 'rgb(54, 162, 235)',
-          },
-          {
-            label: 'Sản phẩm theo yêu cầu',
-            data: this.productRequestCounts,
-            backgroundColor: 'rgb(255, 99, 132)',
-          },
-        ]
+this.chart4 = new Chart('canvas4', {
+  type: 'bar',
+  data: {
+    labels: this.months,
+    datasets: [
+      {
+        label: 'Sản phẩm có sẵn',
+        data: this.productCounts,
+        backgroundColor: 'rgb(54, 162, 235)',
       },
-    });
+      {
+        label: 'Sản phẩm theo yêu cầu',
+        data: this.productRequestCounts,
+        backgroundColor: 'rgb(255, 99, 132)',
+      },
+    ]
+  },
+  options: {
+    scales: {
+      y: {
+        ticks: {
+          stepSize: 5, // Thiết lập bước nhảy là 5 đơn vị
+        },
+      },
+    },
+  },
+});
 
     this.chart5 = new Chart('canvas5', {
       type: 'bar',

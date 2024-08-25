@@ -194,14 +194,15 @@
                 <div class="form-group">
                   <label for="productPrice">Số lượng</label>
                   <input type="number" class="form-control" id="productPrice" placeholder="Nhập số lượng "
-                    [(ngModel)]="quantity" name="quantity">
+                    [(ngModel)]="quantity"name="quantity">
                 </div>
               </div>
               <div class="col-md-4">
                 <div class="form-group">
                   <label for="productImage">Giá nhập</label>
                   <input type="number" class="form-control" id="productPrice" placeholder="Nhập giá nhập"
-                    [(ngModel)]="input_price" name="input_price">
+       [(ngModel)]="input_price" name="input_price">
+
                 </div>
               </div>
               <div class="col-md-4">
@@ -217,7 +218,7 @@
           </form>
         </div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
+          <button type="button" class="btn btn-secondary" (click)="cancelAddSubmaterial()" data-dismiss="modal">Đóng</button>
 
           <button type="submit" (click)="addSubMaterial()" class="btn btn-primary">Lưu thay đổi</button>
         </div>

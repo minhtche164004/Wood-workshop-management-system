@@ -174,6 +174,7 @@ export class ChartComponent implements OnInit {
     }
   }
   initializeCharts() {
+    console.log('sAn pham thuong theo thang:', this.productCounts);
     const value1= this.totalEmpPos1;
     const value2= this.totalEmpPos2;
     const value3= this.totalEmpPos3;
@@ -405,8 +406,8 @@ this.chart4 = new Chart('canvas4', {
         this.percentOrder = Math.round(100 - this.percentSpecialOrder);
       //  console.log('Phần trăm đơn hàng đặc biệt:', this.percentSpecialOrder.toFixed(2) + '%');
       //  console.log('Phần trăm đơn hàng có sẵn:', this.percentOrder.toFixed(2) + '%');
-        console.log('Tổng đơn hàng đặc biệt:', this.totalSpecialOrder);
-        console.log('Tổng đơn hàng có sẵn:', this.totalNormalOrder);
+    //    console.log('Tổng đơn hàng đặc biệt:', this.totalSpecialOrder);
+      //  console.log('Tổng đơn hàng có sẵn:', this.totalNormalOrder);
       }
     } catch (err) {
       console.error(err);
@@ -515,22 +516,22 @@ this.chart4 = new Chart('canvas4', {
         if (data.result === null || data.result === undefined) {
           data.result = 0;
         }
-      console.log(`getProductByMonthAndYear result for ${month}/${year}: `, data.result);
+      console.log(`getProductByMonthAndYear ${month}/${year}: `, data.result);
         this.productCounts.push(data.result);
         resolve();
       }, err => {
-        console.error(`getProductByMonthAndYear error for ${month}/${year}: `, err);
+      //  console.error(`getProductByMonthAndYear error for ${month}/${year}: `, err);
         reject(err);
       });
       this.statistic.countCompletedRequestProductOnOrderByMonthAndYear(month, year).subscribe((data) => {
         if (data.result === null || data.result === undefined) {
           data.result = 0;
         }
-     console.log(`getProductByMonthAndYear result for ${month}/${year}: `, data.result);
-        this.productRequestCounts.push(data.result);
+   //  console.log(`getProductByMonthAndYear result for ${month}/${year}: `, data.result);
+       this.productRequestCounts.push(data.result);
         resolve();
       }, err => {
-        console.error(`getProductByMonthAndYear error for ${month}/${year}: `, err);
+      //  console.error(`getProductByMonthAndYear error for ${month}/${year}: `, err);
         reject(err);
       });
     }
@@ -547,7 +548,7 @@ this.chart4 = new Chart('canvas4', {
         }
       console.log(`getTotalSalaryAllPayment result for ${year}: `, data.result);
       this.salaryYear = data.result;
-        this.productCounts.push(data.result);
+       // this.productCounts.push(data.result);
         resolve();
       }, err => {
        

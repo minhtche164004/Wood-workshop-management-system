@@ -316,8 +316,9 @@
                                                         *</span></strong>
                                             </div>
                                             <div class="col-md-6">
-                                                <input type="number" style="width: 100%; box-sizing: border-box;"
-                                                    name="costJob" formControlName="cost" [(ngModel)]="costJob">
+                                                <input type="number" style="width: 100%; box-sizing: border-box;" 
+       name="costJob" formControlName="cost" [(ngModel)]="costJob" 
+       (ngModelChange)="formatCostJob()" (keypress)="isNumberKey($event)">
                                             </div>
                                         </div>
 

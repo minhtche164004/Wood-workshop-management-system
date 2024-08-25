@@ -2101,6 +2101,13 @@ export class JobManagementComponent implements OnInit {
       // Format the number with commas
       this.costEmployee = numberValue.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
     }
+    if (this.costEmployee) {
+      // Remove any non-numeric characters
+      let numberValue = this.costEmployee.replace(/[^0-9]/g, '');
+      
+      // Format the number with commas
+      this.costEmployee = numberValue.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+    }
   }
 
   // Method to allow only numbers in the input field
@@ -2115,5 +2122,23 @@ export class JobManagementComponent implements OnInit {
   getCostEmployeeAsNumber(): number {
     // Remove commas and convert to a number
     return Number(this.costEmployee.replace(/,/g, ''));
+  }
+  costJob1: string = '';
+
+  // Method to format the cost with commas
+  formatCostJob(): void {
+    if (this.costJob1) {
+      // Remove any non-numeric characters
+      let numberValue = this.costJob1.replace(/[^0-9]/g, '');
+      
+      // Format the number with commas
+      this.costJob1 = numberValue.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+    }
+  }
+
+
+  // Convert the formatted string to a number
+  getCostJobAsNumber(): number {
+    return Number(this.costJob1.replace(/,/g, ''));
   }
 }

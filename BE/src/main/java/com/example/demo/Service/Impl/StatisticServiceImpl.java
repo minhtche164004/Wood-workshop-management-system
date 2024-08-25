@@ -41,18 +41,7 @@ public class StatisticServiceImpl implements StatisticService {
         return result;
     }
 
-    @Override
-    public BigDecimal findTotalInputSubMaterialByMonthAndYear(int month, int year) { // đây là số tiền nhập nguyên liệu + số tiền nhập kho lúc thay đổi số lượng + số tiền nhập kho lúc thay đổi số lượng và giá
-        BigDecimal input = inputSubMaterialRepository.findTotalInputSubMaterialByMonthAndYear(month, year);
-        BigDecimal editQuantity = inputSubMaterialRepository.findTotalEditQuantitySubMaterialByMonthAndYear(month, year);
-        BigDecimal editQuantityPrice = inputSubMaterialRepository.findTotalEditQuantityAndPriceSubMaterialByMonthAndYear(month, year);
-        input = (input != null) ? input : BigDecimal.ZERO;
-        editQuantity = (editQuantity != null) ? editQuantity : BigDecimal.ZERO;
-        editQuantityPrice = (editQuantityPrice != null) ? editQuantityPrice : BigDecimal.ZERO;
 
-        BigDecimal total = input.add(editQuantity).add(editQuantityPrice);
-        return total;
-    }
 
     @Override
     public Long countCompletedJobsByMonthAndYear(int status_id, int month, int year) {
@@ -149,9 +138,12 @@ public class StatisticServiceImpl implements StatisticService {
     }
     @Override
     public BigDecimal findTotalSubMaterialByMonthAndYear(int month, int year) {
-          return advancesalaryRepository.findTotalSubMaterialByMonthAndYear(month, year);
+        return advancesalaryRepository.findTotalSubMaterialByMonthAndYear(month, year);
 
     }
-
+    @Override
+    public BigDecimal findTotalInputSubMaterialByMonthAndYear(int month, int year) { // đây là số tiền nhập nguyên liệu + số tiền nhập kho lúc thay đổi số lượng + số tiền nhập kho lúc thay đổi số lượng và giá
+        return advancesalaryRepository.findTotalSubMaterialByMonthAndYear(month, year);
+    }
 
 }

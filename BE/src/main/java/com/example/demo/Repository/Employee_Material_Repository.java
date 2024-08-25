@@ -75,7 +75,7 @@ public interface Employee_Material_Repository extends JpaRepository<Employeemate
 
 
     @Query("SELECT DISTINCT new com.example.demo.Dto.JobDTO.Employee_MaterialDTO(" +
-            "e.empMaterialId, u.userId, u.userInfor.fullname, pos.position_name, ep.subMaterial, s.subMaterialName, ep.quantity, CAST(j.timeStart AS date), j.code) " +
+            "e.empMaterialId, u.userId, u.userInfor.fullname, pos.position_name, ep.subMaterial, s.subMaterialName, e.total_material, CAST(j.timeStart AS date), j.code) " +
             "FROM Employeematerials e " +
             "LEFT JOIN e.employee u " +
             "LEFT JOIN u.position pos " +
@@ -85,7 +85,7 @@ public interface Employee_Material_Repository extends JpaRepository<Employeemate
             "WHERE ep IS NOT NULL " +
             "UNION  " +
             "SELECT new com.example.demo.Dto.JobDTO.Employee_MaterialDTO(" +
-            "e.empMaterialId, u.userId, u.userInfor.fullname, pos.position_name, er.subMaterial, s.subMaterialName, er.quantity, CAST(j.timeStart AS date), j.code) " +
+            "e.empMaterialId, u.userId, u.userInfor.fullname, pos.position_name, er.subMaterial, s.subMaterialName, e.total_material, CAST(j.timeStart AS date), j.code) " +
             "FROM Employeematerials e " +
             "LEFT JOIN e.employee u " +
             "LEFT JOIN u.position pos " +
@@ -97,7 +97,7 @@ public interface Employee_Material_Repository extends JpaRepository<Employeemate
 
 
     @Query("SELECT DISTINCT new com.example.demo.Dto.JobDTO.Employee_MaterialDTO(" +
-            "e.empMaterialId, u.userId, u.userInfor.fullname, pos.position_name, ep.subMaterial, s.subMaterialName, ep.quantity, CAST(j.timeStart AS date), j.code) " +
+            "e.empMaterialId, u.userId, u.userInfor.fullname, pos.position_name, ep.subMaterial, s.subMaterialName, e.total_material, CAST(j.timeStart AS date), j.code) " +
             "FROM Employeematerials e " +
             "LEFT JOIN e.employee u " +
             "LEFT JOIN u.position pos " +
@@ -107,7 +107,7 @@ public interface Employee_Material_Repository extends JpaRepository<Employeemate
             "WHERE ep IS NOT NULL AND u.userInfor.fullname LIKE CONCAT('%', :keyword, '%') " +
             "UNION  " +
             "SELECT new com.example.demo.Dto.JobDTO.Employee_MaterialDTO(" +
-            "e.empMaterialId, u.userId, u.userInfor.fullname, pos.position_name, er.subMaterial, s.subMaterialName, er.quantity, CAST(j.timeStart AS date), j.code) " +
+            "e.empMaterialId, u.userId, u.userInfor.fullname, pos.position_name, er.subMaterial, s.subMaterialName, e.total_material, CAST(j.timeStart AS date), j.code) " +
             "FROM Employeematerials e " +
             "LEFT JOIN e.employee u " +
             "LEFT JOIN u.position pos " +

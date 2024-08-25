@@ -435,7 +435,7 @@ export class JobManagementComponent implements OnInit {
         (data) => {
           if (data.code === 1000) {
             console.log('Xuất nguyên liệu thành công 1');
-            this.jobService.addJob(user_id, p_id, status_id, job_id, type_id, this.createJobs.value).subscribe(
+            this.jobService.addJob(user_id, p_id, status_id, job_id, type_id, jobData).subscribe(
               (data) => {
                 if (data.code === 1000) {
                   this.toastr.success('Giao việc thành công', 'Thành công');
@@ -446,7 +446,7 @@ export class JobManagementComponent implements OnInit {
                   this.isLoadding = false;
                   //       console.log("consolo lod flase: ", this.isLoadding)
                   this.loadProduct();
-                 // $('[data-dismiss="modal"]').click();
+                  $('[data-dismiss="modal"]').click();
                 }
 
                 this.isLoadding = false;
@@ -501,13 +501,14 @@ export class JobManagementComponent implements OnInit {
                   this.pForJob = data.result;
 
                   $('[data-dismiss="modal"]').click(); this.isLoadding = false;
-
+                  this.toastr.success('Giao việc thành công', 'Thành công');
                   this.loadProductRQForJob();
                 }
               },
               (error) => {
                 // console.error('Error fetching products:', error);
                 this.toastr.warning(error.error.message, 'Thông báo');
+                
                 this.isLoadding = false;
                 $('[data-dismiss="modal"]').click();
                 // console.log('error: ', error)
@@ -1125,7 +1126,10 @@ export class JobManagementComponent implements OnInit {
   }
   quantityProductDone: any;
   costEmplopyee: any;
+  
   changeEmployeeAbsent(): void {
+    this.costEmplopyee = this.getCostEmployeeAsNumber();
+    console.log("costEmplopyee: ",  this.costEmplopyee, typeof  this.costEmplopyee);
     this.isLoadding = true;
     // console.log("employeeAbsentId: ", this.employeeAbsentId);
     // console.log("employeeAbsentCost: ", this.employeeAbsentCost);
@@ -1157,7 +1161,7 @@ export class JobManagementComponent implements OnInit {
       this.isLoadding = false;
       return;
     }
-
+    console.log("cost: ", this.costEmplopyee, typeof this.costEmplopyee);
     if (this.quantityProductDone >= this.quantityProduct) {
       this.toastr.warning('Số lượng sản phẩm nhân viên đã hoàn thành không thể lớn hơn số lượng sản phẩm cần làm!', 'Lỗi');
       this.isLoadding = false;
@@ -2086,5 +2090,55 @@ export class JobManagementComponent implements OnInit {
         console.error('Error fetching positions 2:', error);
       }
     );
+  }
+  costEmployee: string = '';
+
+  formatCostEmployee(): void {
+    if (this.costEmployee) {
+      // Remove any non-numeric characters
+      let numberValue = this.costEmployee.replace(/[^0-9]/g, '');
+      
+      // Format the number with commas
+      this.costEmployee = numberValue.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+    }
+    if (this.costEmployee) {
+      // Remove any non-numeric characters
+      let numberValue = this.costEmployee.replace(/[^0-9]/g, '');
+      
+      // Format the number with commas
+      this.costEmployee = numberValue.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+    }
+  }
+
+  // Method to allow only numbers in the input field
+  isNumberKey(evt: KeyboardEvent): boolean {
+    const charCode = (evt.which) ? evt.which : evt.keyCode;
+    if (charCode > 31 && (charCode < 48 || charCode > 57)) {
+      evt.preventDefault();
+      return false;
+    }
+    return true;
+  }
+  getCostEmployeeAsNumber(): number {
+    // Remove commas and convert to a number
+    return Number(this.costEmployee.replace(/,/g, ''));
+  }
+  costJob1: string = '';
+
+  // Method to format the cost with commas
+  formatCostJob(): void {
+    if (this.costJob1) {
+      // Remove any non-numeric characters
+      let numberValue = this.costJob1.replace(/[^0-9]/g, '');
+      
+      // Format the number with commas
+      this.costJob1 = numberValue.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+    }
+  }
+
+
+  // Convert the formatted string to a number
+  getCostJobAsNumber(): number {
+    return Number(this.costJob1.replace(/,/g, ''));
   }
 }

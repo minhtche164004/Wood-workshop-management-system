@@ -316,8 +316,9 @@
                                                         *</span></strong>
                                             </div>
                                             <div class="col-md-6">
-                                                <input type="number" style="width: 100%; box-sizing: border-box;"
-                                                    name="costJob" formControlName="cost" [(ngModel)]="costJob">
+                                                <input type="number" style="width: 100%; box-sizing: border-box;" 
+       name="costJob" formControlName="cost" [(ngModel)]="costJob" 
+       (ngModelChange)="formatCostJob()" (keypress)="isNumberKey($event)">
                                             </div>
                                         </div>
 
@@ -498,7 +499,7 @@
                                                 </div>
                                                 <div class="row">
                                                     <div class="col-md-6">
-                                                        <strong>Hoàn thành trước ngày:</strong>
+                                                        <strong>Hoàn thành trước ngày</strong>
                                                     </div>
                                                     <div class="col-md-6">
                                                         {{ selectedJob.timeFinish | date:'dd / MM / yyyy' }}
@@ -1095,21 +1096,25 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h2 class="modal-title" id="confirmChangeEmployee">
-                    <p style="font-size: 20px;">Thay đổi nhân viên sản xuất <span
-                            style="color: red;">{{user_name}}</span> </p>
+                    <span style="font-size: 20px;">Thay đổi nhân viên sản xuất <span
+                            style="color: red;">{{user_name}}</span> </span>
+                            
                 </h2>
                 <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body text-center">
-
+                <h3 style="color: red;">Thao tác này là không thể hoàn tác</h3>
                 <p style="  font-size: 16px;"> Đã hoàn thành <input type="number"
                         style="width: 100%; box-sizing: border-box;" style=" width: 12%; font-size: 16px;"
                         [(ngModel)]="quantityProductDone"> sản phẩm </p>
 
 
-                <p style="  font-size: 16px;"> Nhân viên nhận được <input type="number"
-                        style="width: 100%; box-sizing: border-box;" style="font-size: 16px;"
-                        [(ngModel)]="costEmplopyee"> vnđ </p>
+                <p style="  font-size: 16px;"> Nhân viên nhận được <input type="text" 
+                    style="box-sizing: border-box; font-size: 16px;" 
+                    [(ngModel)]="costEmployee" 
+                    (ngModelChange)="formatCostEmployee()" 
+                    (keypress)="isNumberKey($event)">
+              vnđ </p>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" (click)="cancelAssign(true)"

@@ -243,7 +243,7 @@
           </div>
           <div class="row">
             <div class="col-md-6">
-              <h4><b> Địa chỉ giao hàng: </b>{{OrderdetailById.userInfor?.address}}</h4>
+              <h4><b> Địa chỉ cụ thể: </b>{{OrderdetailById.userInfor?.address}}</h4>
               <h4> {{OrderdetailById.userInfor?.wards}} - {{OrderdetailById.userInfor?.district}} -
                 {{OrderdetailById.userInfor?.city_province}}</h4>
             </div>
@@ -260,7 +260,7 @@
             <div class="col-md-6">
              
             </div>
-            <div class="col-md-6">
+            <div class="col-md-6" *ngIf="OrderdetailById?.status_id === 9">
              
               <div *ngIf="OrderdetailById?.status_id === 9">
                 <b> Kiểu hoàn tiền:</b> {{ OrderdetailById.refundStatus?.refundName }}
@@ -713,7 +713,7 @@
         </div>
         <div class="row mb-3">
           <div class="col-md-6">
-            <h4>Địa chỉ giao hàng: <b>{{OrderdetailById.userInfor?.address}}</b></h4>
+            <h4>Địa chỉ cụ thể: <b>{{OrderdetailById.userInfor?.address}}</b></h4>
             <h4> <b>{{OrderdetailById.userInfor?.wards}} - {{OrderdetailById.userInfor?.district}} -
                 {{OrderdetailById.userInfor?.city_province}}</b></h4>
           </div>

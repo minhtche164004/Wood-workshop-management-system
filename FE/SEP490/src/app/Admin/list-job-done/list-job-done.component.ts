@@ -42,32 +42,38 @@ export class ListJobDoneComponent implements OnInit {
 
   }
   loadPosition(): void {
+    this.isLoadding = true;
     this.productListService.getAllPosition().subscribe(
       (data: any) => {
         if (data.code === 1000) {
           this.position = data.result;
-
+          this.isLoadding = false;
         } else {
           console.error('Invalid data returned:', data);
+          this.isLoadding = false; 
         }
       },
       (error) => {
         console.error('Error fetching positions:', error);
+        this.isLoadding = false;
       }
     );
   }
   loadAllStatusJob(): void {
+    this.isLoadding = true;
     this.productListService.getAllStatusJob().subscribe(
       (data: any) => {
         if (data.code === 1000) {
           this.job = data.result;
-
+          this.isLoadding = false;
         } else {
           console.error('Invalid data returned:', data);
+          this.isLoadding = false;
         }
       },
       (error) => {
         console.error('Error fetching positions:', error);
+        this.isLoadding = false;
       }
     );
   }
@@ -100,7 +106,7 @@ export class ListJobDoneComponent implements OnInit {
   }
   MultifiterJobAdmin(): void {
 
- 
+    this.isLoadding = true;
     this.authenListService.getFilterJobWasDone(
       this.searchKey.trim(),
      

@@ -200,34 +200,29 @@ public class ProductServiceImpl implements ProductService {
         );
         Orders orders = products.getOrders();
         if (orders.getStatus().getStatus_id() == 1) {
-            // Lấy tất cả các chi tiết đơn hàng liên quan
+            BigDecimal total = BigDecimal.ZERO;
+            BigDecimal totalOrder= BigDecimal.ZERO;
+            List<Orderdetails> list = orderDetailRepository.getOrderDetailByRequestProductIdAndOrderIdTest(orders.getOrderId());
             List<Orderdetails> orderDetailsList = orderDetailRepository.getOrderDetailByRequestProductIdAndOrderId(products.getRequestProductId(), orders.getOrderId());
-
+            list.removeAll(orderDetailsList);
+            for (Orderdetails orderDetail : list) {
+                BigDecimal itemPrice = orderDetail.getUnitPrice();
+                BigDecimal itemQuantity = BigDecimal.valueOf(orderDetail.getQuantity());
+                total = total.add(itemPrice.multiply(itemQuantity)); // Cộng dồn vào total
+                totalOrder = totalOrder.add(total); // Cộng dồn total của orderDetail vào totalOrder
+            }
             BigDecimal totalCost = BigDecimal.ZERO;
             BigDecimal currentCost = BigDecimal.ZERO;
+            BigDecimal totalOrder1= BigDecimal.ZERO;
             // Tính tổng tiền của tất cả các chi tiết đơn hàng
             for (Orderdetails orderDetail : orderDetailsList) {
-                totalCost = totalCost.add(orderDetail.getUnitPrice().multiply(BigDecimal.valueOf(orderDetail.getQuantity())));
                 currentCost =currentCost.add(requestProductEditDTO.getPrice().multiply(BigDecimal.valueOf(orderDetail.getQuantity())));
+                totalOrder1 = totalOrder1.add(currentCost); // Cộng dồn total của orderDetail vào totalOrder
                 orderDetail.setUnitPrice(requestProductEditDTO.getPrice());
                 orderDetailRepository.save(orderDetail);
             }
-            BigDecimal sub = totalCost.subtract(currentCost);
-
-            BigDecimal current_deposit= BigDecimal.ZERO;
-            if(orders.getDeposite() == null){
-                current_deposit=BigDecimal.ZERO;
-            }else{
-                current_deposit=orders.getDeposite();
-            }
-            BigDecimal current_total= BigDecimal.ZERO;
-            if(orders.getTotalAmount() == null){
-                current_total=BigDecimal.ZERO;
-            }else{
-                current_total=orders.getTotalAmount();
-            }
-            orders.setDeposite(current_deposit.add(sub.multiply(BigDecimal.valueOf(0.2)))); // 20% tiền cọc của tổng tiền đơn hàng
-            orders.setTotalAmount(current_total.add(sub));
+            orders.setDeposite((totalOrder.add(totalOrder1)).multiply(BigDecimal.valueOf(0.2))); // 20% tiền cọc của tổng tiền đơn hàng
+            orders.setTotalAmount(totalOrder.add(totalOrder1));
             orderRepository.save(orders);
         }
 

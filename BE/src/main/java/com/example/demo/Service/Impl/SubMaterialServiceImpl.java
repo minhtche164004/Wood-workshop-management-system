@@ -368,7 +368,9 @@ public class SubMaterialServiceImpl implements SubMaterialService {
         resultList.addAll(resultList1);
         resultList.addAll(resultList2);
         List<Employee_MaterialDTO> dtos = new ArrayList<>();
-
+        if(resultList.isEmpty()){
+                throw new AppException(ErrorCode.NOT_FOUND);
+        }
         if (resultList != null && !resultList.isEmpty()) {
             for (Object[] row : resultList) {
                 // Cast each element in the row to its corresponding type
@@ -387,8 +389,6 @@ public class SubMaterialServiceImpl implements SubMaterialService {
                         empMaterialId, userId, fullname, positionName, subMaterialId, subMaterialName, quantity, timeStart, code);
                 dtos.add(dto);
             }
-        }else {
-            throw new AppException(ErrorCode.NOT_FOUND);
         }
 
         return dtos;

@@ -184,7 +184,7 @@ export class UserManagementComponent implements OnInit {
     this.userData = {
       username: '',
       email: '',
-      phoneNumber: '',
+      phoneNumber: '',  
       address: '',
       fullname: '',
       status_name: '',
@@ -475,8 +475,8 @@ export class UserManagementComponent implements OnInit {
     return emailRegex.test(email);
   }
 
-  validatePhoneNumber(phoneNumber: string): boolean {
-    const phoneNumberRegex = /^[0-9]{10,12}$/;
+   validatePhoneNumber(phoneNumber: string): boolean {
+    const phoneNumberRegex = /^0?[0-9]{9,11}$/;
     return phoneNumberRegex.test(phoneNumber);
   }
 
@@ -501,10 +501,10 @@ export class UserManagementComponent implements OnInit {
       return false;
     }
 
-    if (this.addAccountForm.controls['phoneNumber'].value.trim() === "") {
-      this.toastr.error('Không được bỏ trống trường Số điện thoại');
-      return false;
-    }
+    // if (this.addAccountForm.controls['phoneNumber'].value.trim() === "") {
+    //   this.toastr.error('Không được bỏ trống trường Số điện thoại');
+    //   return false;
+    // }
 
     if (this.addAccountForm.controls['address'].value.trim() === "") {
       this.toastr.error('Không được bỏ trống trường Địa chỉ cụ thể');
@@ -691,7 +691,7 @@ export class UserManagementComponent implements OnInit {
       return;
     }
     const addNewAccountRequest: AddNewAccount = this.addAccountForm.value;
-    // console.log('Request Data:', addNewAccountRequest);
+    console.log('Request Data:', addNewAccountRequest);
 
     this.authenListService.AddNewAccountForAdmin(addNewAccountRequest).subscribe(
       () => {

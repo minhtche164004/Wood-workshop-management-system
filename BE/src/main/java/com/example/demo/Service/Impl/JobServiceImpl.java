@@ -194,6 +194,7 @@ public class JobServiceImpl implements JobService {
         int quantity_product = current.getOriginalQuantityProduct();
         BigDecimal cost_sub = BigDecimal.ZERO;
         BigDecimal job_cost_total=BigDecimal.ZERO;
+        BigDecimal job_cost_total_sick=BigDecimal.ZERO;
         BigDecimal profit = BigDecimal.ZERO;
         if(current.getRequestProducts() != null){
             int order_detail_id = current.getOrderdetails().getOrderDetailId();
@@ -201,6 +202,11 @@ public class JobServiceImpl implements JobService {
             for(Jobs j : list_jobs){
                 BigDecimal cost = j.getCost();
                 job_cost_total = job_cost_total.add(cost);
+            }
+            List<Jobs> list_jobs_sick = jobRepository.getJobByOrderDetailIdEmployeeSick(order_detail_id);
+            for(Jobs j : list_jobs){
+                BigDecimal cost = j.getCost();
+                job_cost_total_sick = job_cost_total_sick.add(cost);
             }
             int p_id = current.getRequestProducts().getRequestProductId();
             List<RequestProductsSubmaterials> list_sub = requestProductsSubmaterialsRepository.findByRequestProductID(p_id);
@@ -210,7 +216,7 @@ public class JobServiceImpl implements JobService {
                 cost_sub = cost_sub.add(cost_one);//tổng tiền nguyên vật liệu của đơn hàng đấy
             }
             BigDecimal total_order_detail = current.getOrderdetails().getUnitPrice().multiply(new BigDecimal(current.getOrderdetails().getQuantity()));
-            profit = total_order_detail.subtract(cost_sub).subtract(job_cost_total);
+            profit = total_order_detail.subtract(cost_sub).subtract(job_cost_total).subtract(job_cost_total_sick);
         }else{
             int p_id = current.getProduct().getProductId();
             List<Jobs> list_jobs = jobRepository.getJobByJobCode(current.getCode());

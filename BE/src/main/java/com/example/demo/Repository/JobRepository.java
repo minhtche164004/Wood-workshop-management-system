@@ -93,6 +93,9 @@ public interface    JobRepository extends JpaRepository<Jobs,Integer> {
     @Query("SELECT u FROM Jobs u WHERE u.orderdetails.orderDetailId = :orderDetailId AND u.status.status_id = 15")
     List<Jobs> getJobByOrderDetailId(int orderDetailId);
 
+    @Query("SELECT u FROM Jobs u WHERE u.orderdetails.orderDetailId = :orderDetailId AND u.status.status_id = 16")
+    List<Jobs> getJobByOrderDetailIdEmployeeSick(int orderDetailId);
+
     @Query("SELECT u FROM Jobs u WHERE u.orderdetails.order.code = :query")
     List<Jobs> getJobByOrderDetailByOrderCode(String query);
 

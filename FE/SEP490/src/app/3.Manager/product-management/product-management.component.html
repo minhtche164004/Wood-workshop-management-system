@@ -236,7 +236,7 @@
               <label style="font-size: 13px;" for="selectedStatus">Tình trạng<span
                   class="required-asterisk">*</span></label>
               <select class="form-control" id="selectedStatus">
-                <option disabled selected>Chọn trạng thái</option>
+                <option [ngValue]="null" disabled selected>Chọn trạng thái</option>
                 <option *ngFor="let status of statuses" [ngValue]="status.status_id">{{ status.status_name }}</option>
               </select>
             </div>

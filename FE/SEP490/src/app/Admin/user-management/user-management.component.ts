@@ -501,10 +501,10 @@ export class UserManagementComponent implements OnInit {
       return false;
     }
 
-    // if (this.addAccountForm.controls['phoneNumber'].value.trim() === "") {
-    //   this.toastr.error('Không được bỏ trống trường Số điện thoại');
-    //   return false;
-    // }
+    if (this.addAccountForm.controls['phoneNumber'].value.trim() === "") {
+      this.toastr.error('Không được bỏ trống trường Số điện thoại');
+      return false;
+    }
 
     if (this.addAccountForm.controls['address'].value.trim() === "") {
       this.toastr.error('Không được bỏ trống trường Địa chỉ cụ thể');

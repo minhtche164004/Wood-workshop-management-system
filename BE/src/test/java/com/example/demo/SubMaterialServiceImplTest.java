@@ -228,16 +228,19 @@ public class SubMaterialServiceImplTest {
 
     @Test
     void testFindEmployeematerialsByName_NotFound() {
-        when(employeeMaterialRepository.getAllEmployeeMateByNameEmployee(anyString())).thenReturn(null);
+        when(employeeMaterialRepository.getAllEmployeeMate1Search(anyString())).thenReturn(Collections.emptyList());
+        when(employeeMaterialRepository.getAllEmployeeMate2Search(anyString())).thenReturn(Collections.emptyList());
 
         Exception exception = assertThrows(AppException.class, () -> {
             subMaterialServiceImpl.findEmployeematerialsByName("name");
         });
 
         assertEquals(ErrorCode.NOT_FOUND, ((AppException) exception).getErrorCode());
-        verify(employeeMaterialRepository).getAllEmployeeMateByNameEmployee(anyString());
-    }
 
+        // Verify individual repository calls
+        verify(employeeMaterialRepository).getAllEmployeeMate1Search(anyString());
+        verify(employeeMaterialRepository).getAllEmployeeMate2Search(anyString());
+    }
 //    @Test
 //    void testUpdateSub() {
 //        UpdateSubDTO updateSubDTO = new UpdateSubDTO();

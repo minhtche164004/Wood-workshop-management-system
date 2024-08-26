@@ -137,17 +137,27 @@ export class EmployeeSubmaterialManagementComponent implements OnInit {
     
     this.empService.searchEmployeeByName(this.searchKey.fullname as string || this.searchKey as string).subscribe(
       (data) => {
-        this.currentPage = 1;
-        this.subMaterialList = data.result;
-        console.log('Search result:', data.result);
-        this.checkNotFound = false;
-        this.isLoadding = false;
+        if(data.code === 1000) {
+          this.currentPage = 1;
+          this.subMaterialList = data.result;
+  
+          console.log('Search result:', data.result);
+          console.log('Search cpde:', data.code);
+          this.checkNotFound = false;
+          this.isLoadding = false;
+        } else if(data.code ===1015){
+          this.checkNotFound = true;
+          this.isLoadding = false;
+          this.subMaterialList = '';
+        }
+
+       
       },
       (error) => {
-        console.log('Error:', error);
-        this.checkNotFound = true;
-        this.isLoadding = false;
+        console.error('Error fetching categories:', error);
+        this.checkNotFound = false;this.isLoadding = false;
       }
+ 
     );
   }
 

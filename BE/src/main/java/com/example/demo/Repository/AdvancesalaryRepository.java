@@ -239,24 +239,39 @@ public interface AdvancesalaryRepository extends JpaRepository<Advancesalary,Int
 
     @Query("SELECT SUM(ism.quantity * ism.input_price) AS total " +
             "FROM InputSubMaterial ism " +
-            "WHERE " +
-            "ism.input_id = (" +
-            " SELECT MAX(ism2.input_id)" +
-            "FROM InputSubMaterial ism2" +
-            " WHERE ism2.code_input = ism.code_input)" +
-            " AND YEAR(ism.create_date) = 2024 AND ism.actionType.action_type_id = 2")
+            "WHERE ism.input_id = ( " +
+            "  SELECT MIN(ism2.input_id) " +
+            "  FROM InputSubMaterial ism2 " +
+            "  WHERE ism2.code_input = ism.code_input " +
+            ") " +
+            "AND YEAR(ism.create_date) = 2024 " +
+            "AND ism.actionType.action_type_id = 2")
     BigDecimal totalAmountSubMaterial();
 
 
+//    @Query("SELECT SUM(ism.quantity * ism.input_price) AS total " +
+//            "FROM InputSubMaterial ism " +
+//            " WHERE" +
+//           " ism.input_id = (" +
+//            " SELECT MAX(ism2.input_id)" +
+//           "FROM InputSubMaterial ism2" +
+//           " WHERE ism2.code_input = ism.code_input) AND MONTH(ism.create_date) = :month " +
+//            "AND YEAR(ism.create_date) = :year  AND ism.actionType.action_type_id = 2")
+//    BigDecimal findTotalSubMaterialByMonthAndYear(@Param("month") int month, @Param("year") int year);
+
     @Query("SELECT SUM(ism.quantity * ism.input_price) AS total " +
             "FROM InputSubMaterial ism " +
-            " WHERE" +
-           " ism.input_id = (" +
-            " SELECT MAX(ism2.input_id)" +
-           "FROM InputSubMaterial ism2" +
-           " WHERE ism2.code_input = ism.code_input) AND MONTH(ism.create_date) = :month " +
-            "AND YEAR(ism.create_date) = :year  AND ism.actionType.action_type_id = 2")
+            "WHERE ism.input_id = ( " +
+            "  SELECT MIN(ism2.input_id) " +
+            "  FROM InputSubMaterial ism2 " +
+            "  WHERE ism2.code_input = ism.code_input " +
+            ") " +
+            "AND MONTH(ism.create_date) = :month " +
+            "AND YEAR(ism.create_date) = :year " +
+            "AND ism.actionType.action_type_id = 2")
     BigDecimal findTotalSubMaterialByMonthAndYear(@Param("month") int month, @Param("year") int year);
+
+
 
     //tính số lượng tiền nhập nguyên liệu theo tháng và năm
 //    @Query("SELECT SUM(latestInput.total_quantity*latestInput.out_price) FROM SubMaterials s " +

@@ -1082,7 +1082,7 @@
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Hủy</button>
                         <button *ngIf="user_name" type="button" class="btn btn-success" data-toggle="modal"
-                            data-target="#confirmChangeEmployee">Thay đổi nhân viên</button>
+                            data-target="#confirmChangeEmployee" (click)="resetConfirmForm()">Thay đổi nhân viên</button>
                         <button type="submit" class="btn btn-primary">Lưu thay đổi</button>
 
                     </div>

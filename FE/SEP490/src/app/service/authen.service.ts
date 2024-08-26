@@ -95,7 +95,7 @@ export class AuthenListService {
 
     console.log('Authorization header:', headers.get('Authorization'));
 
-    return this.http.post<any>(this.apiUrl_AddNewAccount, addNewAccountRequest, { headers }).pipe(
+    return this.http.put<any>(this.apiUrl_AddNewAccount, addNewAccountRequest, { headers }).pipe(
       catchError(this.handleError)
     );
   }

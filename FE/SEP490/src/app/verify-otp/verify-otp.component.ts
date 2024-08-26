@@ -44,8 +44,17 @@ export class VerifyOtpComponent {
       
       },
       (error) => {
-        console.error('OTP verification failed', error);
-        this.toastr.error('Xác nhận OTP thất bại. Vui lòng thử lại.', 'Lỗi');
+        console.log(error);
+        if (error.error.code === 1010) {
+          
+          this.isLoading = false;
+          this.toastr.error('Sai OTP, vui lòng nhập lại',);
+        }
+        else if (error.error.code === 1027) {
+          
+          this.isLoading = false;
+          this.toastr.error('Nhập sai OTP quá 3 lần , vui lòng check lại OTP mới trong mail',);
+        }
         
       }
     )

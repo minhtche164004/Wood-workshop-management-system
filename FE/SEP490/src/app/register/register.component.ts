@@ -249,7 +249,7 @@ export class RegisterComponent implements OnInit {
           }
           else if (error.error.code === 1031) {
             this.isLoading = false;
-            this.toastr.error('Số điện thoại đã tồn tại',);
+            this.toastr.error('Số điện thoại đã tồn tại',); 
           }
           else if (error.error.code === 1001) {
             this.isLoading = false;

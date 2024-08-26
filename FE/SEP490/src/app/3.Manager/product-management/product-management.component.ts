@@ -1509,20 +1509,7 @@ export class ProductManagementComponent implements OnInit {
 
     for (let i = 0; i < this.itemsRProduct.length; i++) {
 
-      //validate san pham uoc tinh can du 3 loai nguyen vat lieu
-      var allMaterialIds: string[] = [];
-      for (let j = i * 10; j <= i * 10 + 9; j++) {
-        if (this.selectedMaterialId[j]) {
-          allMaterialIds.push(this.selectedMaterialId[j]);
-        }
-      }
-      const requiredIds = [1, 2, 3];
-      const hasAllRequiredIds = requiredIds.every(id => allMaterialIds.includes(id.toString()));
-      if (!hasAllRequiredIds) {
-        this.toastr.warning('Sản phẩm ước tính của sản phẩm ' + (i + 1) + ' cần đủ 3 nguyên vật liệu Gỗ, Giấy Nhám, Sơn', 'Lỗi');
-        return;
-      }
-      console.log('allMaterialIds:', allMaterialIds);
+      
 
 
       //validate ngay` uoc tinh hoan thanh`
@@ -1534,7 +1521,20 @@ export class ProductManagementComponent implements OnInit {
         return;
       }
 
-
+//validate san pham uoc tinh can du 3 loai nguyen vat lieu
+var allMaterialIds: string[] = [];
+for (let j = i * 10; j <= i * 10 + 9; j++) {
+  if (this.selectedMaterialId[j]) {
+    allMaterialIds.push(this.selectedMaterialId[j]);
+  }
+}
+const requiredIds = [1, 2, 3];
+const hasAllRequiredIds = requiredIds.every(id => allMaterialIds.includes(id.toString()));
+if (!hasAllRequiredIds) {
+  this.toastr.warning('Sản phẩm ước tính của sản phẩm ' + (i + 1) + ' cần đủ 3 nguyên vật liệu Gỗ, Giấy Nhám, Sơn', 'Lỗi');
+  return;
+}
+console.log('allMaterialIds:', allMaterialIds);
       const materialFormRequests = this.getMaterialFormRequests(i);
       // console.log("do dai cua j:" ,materialFormRequests.length)
       // console.log("do dai cua i: ", i)

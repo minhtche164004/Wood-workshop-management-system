@@ -173,6 +173,8 @@ public class ProductServiceImpl implements ProductService {
         return products;
     }
 
+    @Transactional
+    @Override
     public RequestProducts EditRequestProduct(int id, RequestProductEditDTO requestProductEditDTO, MultipartFile[] multipartFiles) throws IOException {
         RequestProducts products = requestProductRepository.findById(id);
         if (multipartFiles != null &&
@@ -196,7 +198,39 @@ public class ProductServiceImpl implements ProductService {
                 requestProductEditDTO.getQuantity(),
                 requestProductEditDTO.getCompletionTime()
         );
-//        entityManager.refresh(products); // Làm mới đối tượng products
+        Orders orders = products.getOrders();
+        if (orders.getStatus().getStatus_id() == 1) {
+            // Lấy tất cả các chi tiết đơn hàng liên quan
+            List<Orderdetails> orderDetailsList = orderDetailRepository.getOrderDetailByRequestProductIdAndOrderId(products.getRequestProductId(), orders.getOrderId());
+
+            BigDecimal totalCost = BigDecimal.ZERO;
+            BigDecimal currentCost = BigDecimal.ZERO;
+            // Tính tổng tiền của tất cả các chi tiết đơn hàng
+            for (Orderdetails orderDetail : orderDetailsList) {
+                totalCost = totalCost.add(orderDetail.getUnitPrice().multiply(BigDecimal.valueOf(orderDetail.getQuantity())));
+                currentCost =currentCost.add(requestProductEditDTO.getPrice().multiply(BigDecimal.valueOf(orderDetail.getQuantity())));
+                orderDetail.setUnitPrice(requestProductEditDTO.getPrice());
+                orderDetailRepository.save(orderDetail);
+            }
+            BigDecimal sub = totalCost.subtract(currentCost);
+
+            BigDecimal current_deposit= BigDecimal.ZERO;
+            if(orders.getDeposite() == null){
+                current_deposit=BigDecimal.ZERO;
+            }else{
+                current_deposit=orders.getDeposite();
+            }
+            BigDecimal current_total= BigDecimal.ZERO;
+            if(orders.getTotalAmount() == null){
+                current_total=BigDecimal.ZERO;
+            }else{
+                current_total=orders.getTotalAmount();
+            }
+            orders.setDeposite(current_deposit.add(sub.multiply(BigDecimal.valueOf(0.2)))); // 20% tiền cọc của tổng tiền đơn hàng
+            orders.setTotalAmount(current_total.add(sub));
+            orderRepository.save(orders);
+        }
+
         return products;
     }
 

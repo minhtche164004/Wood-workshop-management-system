@@ -35,6 +35,9 @@ public interface OrderDetailRepository extends JpaRepository<Orderdetails, Integ
     @Query("SELECT u FROM Orderdetails u WHERE u.requestProduct.requestProductId = :query")
     List<Orderdetails> getOrderDetailByRequestProductId(int query);
 
+    @Query("SELECT u FROM Orderdetails u WHERE u.requestProduct.requestProductId = :requestProductId AND u.order.orderId = :orderId")
+    List<Orderdetails> getOrderDetailByRequestProductIdAndOrderId(int requestProductId,int orderId);
+
     @Transactional
     @Modifying
     @Query("DELETE FROM Orderdetails p WHERE p.orderDetailId = :orderDetailId")

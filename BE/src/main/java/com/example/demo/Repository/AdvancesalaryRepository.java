@@ -225,23 +225,37 @@ public interface AdvancesalaryRepository extends JpaRepository<Advancesalary,Int
     @Query("SELECT SUM(COALESCE(o.deposite,0)) AS totalAmount FROM Orders o WHERE o.status.status_id = 6 AND YEAR(COALESCE(o.orderDate, 0)) = :year")
     BigDecimal totalAmountOrderCancel(@Param("year") int year);
 
-    //tổng số tiền nhập nguyên vật liệu
-    @Query("SELECT SUM(ism.quantity * ism.out_price) AS total FROM SubMaterials s" +
-            " LEFT JOIN InputSubMaterial ism ON s.subMaterialId = ism.subMaterials.subMaterialId" +
-            " LEFT JOIN s.material m " +
+//    //tổng số tiền nhập nguyên vật liệu
+//    @Query("SELECT SUM(ism.quantity * ism.out_price) AS total FROM SubMaterials s" +
+//            " LEFT JOIN InputSubMaterial ism ON s.subMaterialId = ism.subMaterials.subMaterialId" +
+//            " LEFT JOIN s.material m " +
+//            "WHERE " +
+//            "ism.input_id = ("  +
+//            " SELECT MAX(ism2.input_id)" +
+//            "FROM InputSubMaterial ism2" +
+//            " WHERE ism2.code_input = ism.code_input)")
+//    BigDecimal totalAmountSubMaterial();
+
+
+    @Query("SELECT SUM(ism.quantity * ism.input_price) AS total " +
+            "FROM InputSubMaterial ism " +
             "WHERE " +
-            "ism.input_id = ("  +
+            "ism.input_id = (" +
             " SELECT MAX(ism2.input_id)" +
             "FROM InputSubMaterial ism2" +
-            " WHERE ism2.code_input = ism.code_input)")
+            " WHERE ism2.code_input = ism.code_input)" +
+            " AND YEAR(ism.create_date) = 2024 AND ism.actionType.action_type_id = 2")
     BigDecimal totalAmountSubMaterial();
 
 
-
-    @Query("SELECT SUM(ism.quantity * ism.out_price) AS total " +
+    @Query("SELECT SUM(ism.quantity * ism.input_price) AS total " +
             "FROM InputSubMaterial ism " +
-            "WHERE MONTH(ism.create_date) = :month " +
-            "AND YEAR(ism.create_date) = :year")
+            " WHERE" +
+           " ism.input_id = (" +
+            " SELECT MAX(ism2.input_id)" +
+           "FROM InputSubMaterial ism2" +
+           " WHERE ism2.code_input = ism.code_input) AND MONTH(ism.create_date) = :month " +
+            "AND YEAR(ism.create_date) = :year  AND ism.actionType.action_type_id = 2")
     BigDecimal findTotalSubMaterialByMonthAndYear(@Param("month") int month, @Param("year") int year);
 
     //tính số lượng tiền nhập nguyên liệu theo tháng và năm

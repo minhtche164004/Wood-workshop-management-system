@@ -227,7 +227,7 @@ public class JobServiceImpl implements JobService {
             List<Jobs> list_jobs_sick = jobRepository.getJobByJobCodeSick(current.getCode());
             for(Jobs j : list_jobs_sick){
                 BigDecimal cost = j.getCost();
-                job_cost_total = job_cost_total.add(cost);
+                job_cost_total_sick = job_cost_total_sick.add(cost);
             }
             List<ProductSubMaterials> list_sub = productSubMaterialsRepository.findByProductID(p_id);
             for(ProductSubMaterials re : list_sub){

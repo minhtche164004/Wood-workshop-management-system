@@ -87,8 +87,13 @@
                 Sản phẩm không có sơn
               </label>
             </dd>
-            <dt class="col-3">Trạng thái</dt>
+            <dt class="col-3">Trạng thái:</dt>
             <dd class="col-9"><label for="">{{productDetails.quantity?"Còn hàng":"Hết hàng"}}</label></dd>
+            <dt class="col-3">Chính sách:</dt>
+            <dd class="col-9"><p style="font-size: 16px;" for="">1. Bảo hành 2 năm kể từ ngày bán (Lỗi cong vanh,...)
+              <br>2. Hỗ trợ lắp đặt miễn phí tận nhà
+            </p></dd>
+           
           </div>
 
 
@@ -131,7 +136,7 @@
          <table class="table table-custom">
            <tr>
              <td>
-               <textarea readonly class="form-control" rows="8" style="resize: none;">{{ productDetails.description }}</textarea>
+               <textarea readonly class="form-control" rows="8" style="resize: none; font-size: 16px;">{{ productDetails.description }}</textarea>
              </td>
            </tr>
          </table>

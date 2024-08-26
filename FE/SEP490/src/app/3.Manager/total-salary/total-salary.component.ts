@@ -204,7 +204,10 @@ export class TotalSalaryComponent implements OnInit {
     if (this.toDate) {
       endDate = this.toDate.replace(/(\d{2})\/(\d{2})\/(\d{4})/, "$3/$2/$1");
     }
-
+    if(this.fromDate > this.toDate) {
+      this.toastr.warning('Từ ngày không được sau ngày kết thúc', 'Thông báo');
+      this.isLoadding = false;
+    }
     this.salaryService.multSearchSalary(this.searchKey, startDate, endDate, '', this.selectedPosition, this.selectedStatusBanking).subscribe(
       (data) => {
         if (data.code === 1000) {

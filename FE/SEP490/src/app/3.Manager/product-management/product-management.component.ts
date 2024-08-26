@@ -253,14 +253,14 @@ export class ProductManagementComponent implements OnInit {
     if (this.items && this.items.length > index) {
 
       this.onRemoveMaterial(index); // cap nhat gia tien` uoc tinh
-      
+
       // Shift the elements to the left 
       if (index < this.items.length - 1) {
         for (let i = index, j = 0; i < this.items.length - 1; i++, j++) {
           this.items.at(i).setValue(this.items.at(i + 1).value);
           this.selectedMaterialId[i] = this.selectedMaterialId[i + 1];
           await this.onMaterialChangeFirstEdit(Number(this.items.at(i).value.materialId), i);
-          await this.delay(1000); 
+          await this.delay(1000);
           this.selectedSubMaterialId[i] = this.selectedMaterialId[i + 1];
           this.unitPriceSubMaterial[i] = this.unitPriceSubMaterial[i + 1];
           this.quantityPerSubMaterial[i] = this.quantityPerSubMaterial[i + 1];
@@ -447,7 +447,7 @@ export class ProductManagementComponent implements OnInit {
         delete this.pricePerProduct[keys.length - 1];
         delete this.pricePerProductAndQuantity[keys.length - 1];
       }
-      
+
 
       console.log('pricePerProductAndQuantity:', this.pricePerProductAndQuantity);
     }
@@ -536,32 +536,32 @@ export class ProductManagementComponent implements OnInit {
       this.toastr.error('Không thể xóa hết nguyên liệu!', 'Lỗi');
       return;
     }
-  
+
     if (this.itemsEditArray && this.itemsEditArray.length > index) {
       await this.onRemoveMaterial(index); // cap nhat gia tien` uoc tinh
-  
+
       // Shift the elements to the left 
       if (index < this.itemsEditArray.length - 1) {
         for (let i = index, j = 0; i < this.itemsEditArray.length - 1; i++, j++) {
           this.itemsEditArray.at(i).setValue(this.itemsEditArray.at(i + 1).value);
           this.selectedMaterialId[i] = this.selectedMaterialId[i + 1];
           await this.onMaterialChangeFirstEdit(Number(this.itemsEditArray.at(i).value.materialId), i);
-          await this.delay(1000); 
+          await this.delay(1000);
           this.selectedSubMaterialId[i] = this.selectedMaterialId[i + 1];
           this.unitPriceSubMaterial[i] = this.unitPriceSubMaterial[i + 1];
           this.quantityPerSubMaterial[i] = this.quantityPerSubMaterial[i + 1];
           this.subMaterialDataArray[j] = this.itemsEditArray.at(i).value;
         }
       }
-  
+
       // Remove the last element
       while (this.itemsEditArray.length > index && this.itemsEditArray.length > 0) {
         this.itemsEditArray.removeAt(this.itemsEditArray.length - 1);
         this.selectedMaterialId[this.itemsEditArray.length] = '';
       }
-  
+
       console.log('subMaterialDataArray:', this.subMaterialDataArray);
-  
+
       for (let i = 0; i < this.subMaterialDataArray.length; i++) {
         const subMaterialData = this.subMaterialDataArray[i];
         if (subMaterialData) {
@@ -1091,6 +1091,10 @@ export class ProductManagementComponent implements OnInit {
   onResetThumbnail() {
     this.selectedThumbnail = null;
     this.thumbnailPreview = '';
+    const fileInput = document.getElementById('thumbnailImage') as HTMLInputElement;
+    if (fileInput) {
+      fileInput.value = '';
+    }
   }
 
   onResetImage() {
@@ -1098,6 +1102,10 @@ export class ProductManagementComponent implements OnInit {
     this.imagesPreview = [];
     this.selectedImagesRProduct = [];
     this.imagesPreviewRProduct = [];
+    const fileInput1 = document.getElementById('productImages') as HTMLInputElement;
+    if (fileInput1) {
+      fileInput1.value = '';
+    }
   }
   //
 
@@ -1153,14 +1161,6 @@ export class ProductManagementComponent implements OnInit {
             subMaterialQuantities: transformedObject
           };
           return this.productListService.createExportMaterialProduct(transformedData,);
-        }),
-        catchError(error => {
-          this.isLoadding = false;
-          if (error.status === 400 && error.error.code === 1018) {
-            this.toastr.error(error.error.message, 'Lỗi');
-          }
-          // Return an observable to continue the stream
-          return EMPTY;
         })
       ).subscribe(
         response => {
@@ -1168,10 +1168,17 @@ export class ProductManagementComponent implements OnInit {
           this.isLoadding = false;
           this.toastr.success('Tạo sản phẩm thành công!', 'Thành công');
           $('[data-dismiss="modal"]').click();
+          this.uploadForm.reset();
+          this.onResetThumbnail();
+          this.onResetImage();
         },
         error => {
           this.isLoadding = false;
-          this.toastr.error('Tạo sản phẩm bị lỗi!', 'Lỗi');
+          if (error.error.status === 400 && error.error.code !== 1004 && error.error.message) {
+            this.toastr.error(error.error.message, 'Lỗi');
+          } else {
+            this.toastr.error('Tạo sản phẩm bị lỗi!', 'Lỗi');
+          }
         }
       );
     } else {

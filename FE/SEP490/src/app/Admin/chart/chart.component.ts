@@ -227,7 +227,7 @@ export class ChartComponent implements OnInit {
         datasets: [
           {
             label: 'Đơn hàng',
-            data: [this.totalOrder, this.totalSpecialOrder],
+            data: [this.totalNormalOrder, this.totalSpecialOrder],
             backgroundColor: [
               'rgb(255, 99, 132)',
               'rgb(54, 162, 235)',

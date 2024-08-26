@@ -1,4 +1,9 @@
-
+server:
+  servlet:
+    session:
+      cookie:
+        secure: true
+        same-site: None
 spring:
   jackson:
     time-zone: Asia/Ho_Chi_Minh

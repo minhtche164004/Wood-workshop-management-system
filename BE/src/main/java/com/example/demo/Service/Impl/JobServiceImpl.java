@@ -224,6 +224,11 @@ public class JobServiceImpl implements JobService {
                 BigDecimal cost = j.getCost();
                 job_cost_total = job_cost_total.add(cost);
             }
+            List<Jobs> list_jobs_sick = jobRepository.getJobByJobCodeSick(current.getCode());
+            for(Jobs j : list_jobs_sick){
+                BigDecimal cost = j.getCost();
+                job_cost_total = job_cost_total.add(cost);
+            }
             List<ProductSubMaterials> list_sub = productSubMaterialsRepository.findByProductID(p_id);
             for(ProductSubMaterials re : list_sub){
                 double quantity_product_sub = re.getQuantity();
@@ -232,7 +237,7 @@ public class JobServiceImpl implements JobService {
             }
             Products p = productRepository.findById(p_id);
             BigDecimal total_order_detail = p.getPrice().multiply(new BigDecimal(quantity_product));
-            profit = total_order_detail.subtract(cost_sub).subtract(job_cost_total);
+            profit = total_order_detail.subtract(cost_sub).subtract(job_cost_total).subtract(job_cost_total_sick);
         }
         return profit;
     }

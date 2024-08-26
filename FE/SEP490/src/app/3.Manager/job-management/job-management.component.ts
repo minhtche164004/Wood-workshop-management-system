@@ -318,7 +318,7 @@ export class JobManagementComponent implements OnInit {
 
 
     //console.log('Selected Employee:', this.selectedEmployee);
-    console.log('Selected Product:', this.selectedProduct);
+    console.log('Selected job2 :', this.selectedProduct);
     this.orderContractTime = this.selectedProduct.order_contract_time;
     this.orderDate = this.selectedProduct.order_date;
 
@@ -425,7 +425,7 @@ export class JobManagementComponent implements OnInit {
       //    this.isLoadding = true
       //  console.log("consolo lod: ", this.isLoadding)
       // console.log("create job  form:", createJobs);
-      //  console.log('API parameters:', user_id, p_id, status_id, job_id, type_id, createJobs);
+        console.log('API parameters:', user_id, p_id, status_id, job_id, type_id, createJobs);
 
 
 
@@ -616,9 +616,9 @@ export class JobManagementComponent implements OnInit {
   empId2: number = 0;
   onChangeSelectedEmployee2(event: any) {
     this.selectedEmployee2 = event.target.value;
-    //  console.log('Selected employee joy 2:', this.selectedEmployee2);
+     console.log('Selected employee joy 2:', this.selectedEmployee2);
     this.empId2 = event.target.value;
-    this.getPositionNameById(this.empId2 + 1);
+    this.getPositionNameById(this.empId2);
   }
   huyTaoSanPhamCoSan(): void {
     this.productForm.reset();
@@ -1489,7 +1489,7 @@ export class JobManagementComponent implements OnInit {
     this.jobService.GetPosition3(positon).subscribe(
       (data) => {
         this.positionEmployees = data.result;
-        //   console.log('manageJob employeeList load position 3:', this.positionEmployees);
+          console.log('manageJob employeeList load position 3:', this.positionEmployees);
 
       },
       (error) => {
@@ -1510,7 +1510,7 @@ export class JobManagementComponent implements OnInit {
     this.jobService.GetPosition3(positon).subscribe(
       (data) => {
         this.positionEmployees = data.result;
-        //       console.log('manageJob2 employeeList:', this.positionEmployees);
+              console.log('manageJob2 employeeList:', this.positionEmployees);
 
       },
       (error) => {
@@ -1859,8 +1859,8 @@ export class JobManagementComponent implements OnInit {
       status_id = 10;
     }
 
-    // console.log('emp_id:', user_id);
-    // console.log('mate_id:', position_id);
+    console.log('emp_id:', user_id);
+    console.log('mate_id:', this.selectedProduct.statusJob.type);
 
 
 
@@ -1877,9 +1877,9 @@ export class JobManagementComponent implements OnInit {
     if (this.selectedProduct.code == null) {
       //    this.isLoadding = true
       //  console.log("consolo lod: ", this.isLoadding)
-      // console.log("create form:", createJobs);
-      // console.log('API parameters:', user_id, p_id, status_id, job_id, type_id, createJobs);
-      this.jobService.createExportMaterialProductTotalJob(p_id, position_id, user_id, createJobs).subscribe(
+       console.log("create form:", createJobs);
+       console.log('API parameters:', user_id, p_id, status_id, job_id, type_id, createJobs);
+      this.jobService.createExportMaterialProductTotalJob(p_id, this.selectedProduct.statusJob.type-1, user_id, createJobs).subscribe(
         (data) => {
           if (data.code === 1000) {
             console.log('Xuất nguyên liệu thành công');
@@ -1902,7 +1902,7 @@ export class JobManagementComponent implements OnInit {
                 console.error('Error fetching products:', error);
                 this.toastr.warning(error.error.message, 'Thông báo'); this.isLoadding = false;
             //    $('[data-dismiss="modal"]').click();
-
+              this.isLoadding = false;
               }
             );
           } else if (data.code === 1015) {
@@ -1918,7 +1918,8 @@ export class JobManagementComponent implements OnInit {
           if (error && error.error && error.error.errors) {
             Object.entries(error.error.errors).forEach(([key, value]) => {
               this.toastr.warning(`${key}: ${value}`, 'Thông báo');
-            //  $('[data-dismiss="modal"]').click(); this.isLoadding = false;
+            //  $('[data-dismiss="modal"]').click(); 
+            this.isLoadding = false;
             });
 
           } else if (error && error.message) {
@@ -1935,7 +1936,7 @@ export class JobManagementComponent implements OnInit {
       this.isLoadding = true
       //  console.log("consolo lod: ", this.isLoadding)
       //  console.log("exort submaterial product request");
-      this.jobService.createExportMaterialRequestTotalJob(p_id, position_id, user_id, createJobs).subscribe(
+      this.jobService.createExportMaterialRequestTotalJob(p_id,  this.selectedProduct.statusJob.type-1, user_id, createJobs).subscribe(
         (data) => {
           if (data.code === 1000) {
             console.log('Xuất nguyên liệu thành công');
@@ -1971,7 +1972,8 @@ export class JobManagementComponent implements OnInit {
           if (error && error.error && error.error.errors) {
             Object.entries(error.error.errors).forEach(([key, value]) => {
               this.toastr.warning(`${key}: ${value}`, 'Thông báo');
-             // $('[data-dismiss="modal"]').click(); this.isLoadding = false;
+             // $('[data-dismiss="modal"]').click(); 
+             this.isLoadding = false;
             });
 
           } else if (error && error.message) {
@@ -2096,7 +2098,7 @@ export class JobManagementComponent implements OnInit {
       (data) => {
         if (data.code === 1000) {
           this.positionEmployees = data.result;
-          // console.log('Position employee absent 2:', this.positionEmployees);
+          console.log('Position employee absent 2:', this.positionEmployees);
           this.positionEmpLength = this.positionEmployees.length;
         } else {
           console.error('Failed to fetch positions 2:', data);
@@ -2156,5 +2158,9 @@ export class JobManagementComponent implements OnInit {
   // Convert the formatted string to a number
   getCostJobAsNumber(): number {
     return Number(this.costJob1.replace(/,/g, ''));
+  }
+  resetConfirmForm(): void {
+    this.quantityProductDone = '';
+    this.costEmployee = '';
   }
 }

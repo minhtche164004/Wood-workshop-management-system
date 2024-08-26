@@ -21,7 +21,7 @@ import java.util.Random;
 
 @RestController
 @RequestMapping("/api/auth/")
-//@CrossOrigin(origins="http://localhost:5173")
+@CrossOrigin(origins="http://localhost:5173")
 @AllArgsConstructor
 public class RegisterController {
 

@@ -141,7 +141,7 @@ public class AdminControllerTest {
                 "Wards" // wards
         );
 
-        mockMvc.perform(post("/api/auth/admin/AddNewAccount")
+        mockMvc.perform(put("/api/auth/admin/AddNewAccount")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(gson.toJson(userAdminDTO)))
                 .andExpect(status().isOk());

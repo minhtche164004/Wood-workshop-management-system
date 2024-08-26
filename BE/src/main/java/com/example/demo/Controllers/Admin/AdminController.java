@@ -238,13 +238,32 @@ public class AdminController {
         return apiResponse;
     }
 
-    @PostMapping("AddNewAccount")
-    public ApiResponse<?> AddNewAccount(@RequestBody User_Admin_DTO registerDTO) {
+//    @PostMapping("AddNewAccount")
+//    public ApiResponse<?> AddNewAccount(@RequestBody User_Admin_DTO registerDTO) {
+//        ApiResponse<User> apiResponse = new ApiResponse<>();
+//        userService.checkConditionsForAdmin(registerDTO);
+//        apiResponse.setResult(userService.CreateAccountForAdmin(registerDTO));
+//        jedis.del("all_users");
+//        jedis.del("search_User_By_Name_Or_Address");
+//        return apiResponse;
+//    }
+//    @PostMapping("AddNewAccount1")
+//    public ApiResponse<?> AddNewAccount1(@RequestBody AdminDTO registerDTO) {
+//        ApiResponse<User> apiResponse = new ApiResponse<>();
+//        userService.checkConditionsForAdmin(registerDTO);
+//        apiResponse.setResult(userService.CreateAccountForAdmin(registerDTO));
+//        jedis.del("all_users");
+//        jedis.del("search_User_By_Name_Or_Address");
+//        return apiResponse;
+//    }
+
+    @PutMapping("AddNewAccount")
+    public ApiResponse<?> AddNewAccount(@RequestBody User_Admin_DTO userDTO) {
         ApiResponse<User> apiResponse = new ApiResponse<>();
-        userService.checkConditionsForAdmin(registerDTO);
-        apiResponse.setResult(userService.CreateAccountForAdmin(registerDTO));
+        userService.checkConditionsForAdmin(userDTO);
+        apiResponse.setResult(userService.CreateAccountForAdmin(userDTO));
         jedis.del("all_users");
-        jedis.del("search_User_By_Name_Or_Address");
+    //    jedis.del("search_User_By_Name_Or_Address");
         return apiResponse;
     }
 

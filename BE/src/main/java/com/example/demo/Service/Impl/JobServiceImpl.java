@@ -724,7 +724,7 @@ public class JobServiceImpl implements JobService {
         processproducterror.setDescription(productErrorDTO.getDescription());
         processproducterror.setIsFixed(productErrorDTO.getIsFixed());
         processproducterror.setSolution(productErrorDTO.getSolution());
-        processproducterror.setQuantity(productErrorDTO.getQuantity());
+      //  processproducterror.setQuantity(productErrorDTO.getQuantity());
         processproducterrorRepository.save(processproducterror);
         return modelMapper.map(processproducterror, ProductErrorAllDTO.class);
     }

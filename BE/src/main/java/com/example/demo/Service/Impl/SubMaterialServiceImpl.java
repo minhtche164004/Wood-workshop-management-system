@@ -97,7 +97,7 @@ public class SubMaterialServiceImpl implements SubMaterialService {
 
         SubMaterials subMaterials = new SubMaterials();
         subMaterials.setSubMaterialName(subMaterialDTO.getSub_material_name().trim());
-        Materials materials = materialRepository.findByName(subMaterialDTO.getMaterial_name().trim());
+        Materials materials = materialRepository.findByName(subMaterialDTO.getMaterial_name());
         subMaterials.setMaterial(materials);
         //   subMaterials.setCreate_date(create);
         //  subMaterials.setQuantity(subMaterialDTO.getQuantity());
@@ -330,21 +330,78 @@ public class SubMaterialServiceImpl implements SubMaterialService {
 
     @Override
     public List<Employee_MaterialDTO> getAllEmpMate() {
-        List<Employee_MaterialDTO> employeematerialsList = employeeMaterialRepository.getAllEmployeeMate();
-        if (employeematerialsList == null) {
-            throw new AppException(ErrorCode.NOT_FOUND);
+        List<Object[]> resultList =new ArrayList<>();
+        List<Object[]> resultList1 = employeeMaterialRepository.getAllEmployeeMate1();
+        List<Object[]> resultList2 = employeeMaterialRepository.getAllEmployeeMate2();
+        resultList.addAll(resultList1);
+        resultList.addAll(resultList2);
+        List<Employee_MaterialDTO> dtos = new ArrayList<>();
+
+        if (resultList != null && !resultList.isEmpty()) {
+            for (Object[] row : resultList) {
+                // Cast each element in the row to its corresponding type
+                int empMaterialId = (int) row[0];
+                Integer userId = (Integer) row[1];
+                String fullname = (String) row[2];
+                String positionName = (String) row[3];
+                int subMaterialId = (int) row[4];
+                String subMaterialName = (String) row[5];
+                double quantity = (double) row[6]; // Assuming quantity is a double
+                Date timeStart = (Date) row[7];
+                String code = (String) row[8];
+
+                // Create a new DTO object and add it to the list
+                Employee_MaterialDTO dto = new Employee_MaterialDTO(
+                        empMaterialId, userId, fullname, positionName, subMaterialId, subMaterialName, quantity, timeStart, code);
+                dtos.add(dto);
+            }
         }
-        return employeematerialsList;
+
+        return dtos;
     }
 
     @Override
     public List<Employee_MaterialDTO> findEmployeematerialsByName(String key) {
-        List<Employee_MaterialDTO> employeematerialsList = employeeMaterialRepository.getAllEmployeeMateByNameEmployee(key);
-        if (employeematerialsList == null) {
-            throw new AppException(ErrorCode.NOT_FOUND);
+        List<Object[]> resultList =new ArrayList<>();
+        List<Object[]> resultList1 = employeeMaterialRepository.getAllEmployeeMate1Search(key);
+        List<Object[]> resultList2 = employeeMaterialRepository.getAllEmployeeMate2Search(key);
+        resultList.addAll(resultList1);
+        resultList.addAll(resultList2);
+        List<Employee_MaterialDTO> dtos = new ArrayList<>();
+        if(resultList.isEmpty()){
+                throw new AppException(ErrorCode.NOT_FOUND);
         }
-        return employeematerialsList;
+        if (resultList != null && !resultList.isEmpty()) {
+            for (Object[] row : resultList) {
+                // Cast each element in the row to its corresponding type
+                int empMaterialId = (int) row[0];
+                Integer userId = (Integer) row[1];
+                String fullname = (String) row[2];
+                String positionName = (String) row[3];
+                int subMaterialId = (int) row[4];
+                String subMaterialName = (String) row[5];
+                double quantity = (double) row[6]; // Assuming quantity is a double
+                Date timeStart = (Date) row[7];
+                String code = (String) row[8];
+
+                // Create a new DTO object and add it to the list
+                Employee_MaterialDTO dto = new Employee_MaterialDTO(
+                        empMaterialId, userId, fullname, positionName, subMaterialId, subMaterialName, quantity, timeStart, code);
+                dtos.add(dto);
+            }
+        }
+
+        return dtos;
     }
+
+//    @Override
+//    public List<Employee_MaterialDTO> findEmployeematerialsByName(String key) {
+//        List<Employee_MaterialDTO> employeematerialsList = employeeMaterialRepository.getAllEmployeeMateByNameEmployee(key);
+//        if (employeematerialsList == null) {
+//            throw new AppException(ErrorCode.NOT_FOUND);
+//        }
+//        return employeematerialsList;
+//    }
 
     //lúc edit giá thì taọ 1 bản ghi mới trong bảng input , nhưng mã xuất nhập kho vẫn là của cái cũ
 

@@ -72,7 +72,8 @@
 
 
 
-                  <td style="min-width: 50px;">{{ job.request_name }}</td>
+                  <td *ngIf="job.product_id === 0" style="min-width: 50px;">{{ job.request_name }}</td>
+                  <td *ngIf="job.request_id === 0" style="min-width: 50px;">{{ job.product_name }}</td>
                   <td style="min-width: 100px; text-align: right;">{{ job.quantity }}</td>
                   <td style="min-width: 140px; text-align: right;">{{ job.cost | number : '1.0-3'}} </td>
 

@@ -240,8 +240,8 @@ public interface AdvancesalaryRepository extends JpaRepository<Advancesalary,Int
 
     @Query("SELECT SUM(ism.quantity * ism.out_price) AS total " +
             "FROM InputSubMaterial ism " +
-            "WHERE MONTH(ism.date_input) = :month " +
-            "AND YEAR(ism.date_input) = :year")
+            "WHERE MONTH(ism.create_date) = :month " +
+            "AND YEAR(ism.create_date) = :year")
     BigDecimal findTotalSubMaterialByMonthAndYear(@Param("month") int month, @Param("year") int year);
 
     //tính số lượng tiền nhập nguyên liệu theo tháng và năm

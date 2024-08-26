@@ -293,7 +293,8 @@ public class SubMaterialController {
     @GetMapping("/findEmployeematerialsByNameEmployee")
     public ApiResponse<?> findEmployeematerialsByName(@RequestParam("key") String key) {
         ApiResponse<List> apiResponse = new ApiResponse<>();
-        apiResponse.setResult(subMaterialService.findEmployeematerialsByName(key));
+        String searchTerm = key == null ? "" : key.trim();
+        apiResponse.setResult(subMaterialService.findEmployeematerialsByName(searchTerm));
         return apiResponse;
     }
 

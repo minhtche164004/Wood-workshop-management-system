@@ -90,6 +90,7 @@ public class OrderServiceImpl implements OrderService {
     private VNPayService vnPayService;
 
 
+    @Transactional
     @Override
     public ResponseEntity<ApiResponse<List<String>>> AddOrder(RequestOrder requestOrder) {
         Map<String, String> errors = new HashMap<>(); //hashmap cho error
@@ -136,7 +137,7 @@ public class OrderServiceImpl implements OrderService {
         String code = dateString + "OD" + String.format("%03d", count);
         orders.setCode(code);
 
-        orderRepository.save(orders);
+
 
 
         if (requestOrder.getSpecial_order() == 0) { // là hàng có sẵn

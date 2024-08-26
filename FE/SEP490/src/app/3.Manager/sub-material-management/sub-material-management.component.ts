@@ -200,6 +200,15 @@ export class SubMaterialManagementComponent implements OnInit {
       }
     );
   }
+  cancelAddSubmaterial(): void{
+    this.sub_material_name = '';
+    this.selectedMaterial = null;
+    this.description = '';
+    this.quantity = 0;
+    this.unit_price = 0;
+    this.input_price =0;
+    this.dateInput = null;
+  }
   addSubMaterial(): void {
     this.isLoadding = true;
     console.log("Bắt đầu chạy thêm vật liệu")
@@ -642,4 +651,5 @@ export class SubMaterialManagementComponent implements OnInit {
     );
 
   }
+  
 }

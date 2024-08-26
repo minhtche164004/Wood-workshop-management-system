@@ -174,6 +174,7 @@ export class ChartComponent implements OnInit {
     }
   }
   initializeCharts() {
+    console.log('sAn pham thuong theo thang:', this.productCounts);
     const value1= this.totalEmpPos1;
     const value2= this.totalEmpPos2;
     const value3= this.totalEmpPos3;
@@ -226,7 +227,7 @@ export class ChartComponent implements OnInit {
         datasets: [
           {
             label: 'Đơn hàng',
-            data: [this.totalOrder, this.totalSpecialOrder],
+            data: [this.totalNormalOrder, this.totalSpecialOrder],
             backgroundColor: [
               'rgb(255, 99, 132)',
               'rgb(54, 162, 235)',
@@ -302,24 +303,33 @@ export class ChartComponent implements OnInit {
       }
     });
   
-    this.chart4 = new Chart('canvas4', {
-      type: 'bar',
-      data: {
-        labels: this.months,
-        datasets: [
-          {
-            label: 'Sản phẩm có sẵn',
-            data: this.productCounts,
-            backgroundColor: 'rgb(54, 162, 235)',
-          },
-          {
-            label: 'Sản phẩm theo yêu cầu',
-            data: this.productRequestCounts,
-            backgroundColor: 'rgb(255, 99, 132)',
-          },
-        ]
+this.chart4 = new Chart('canvas4', {
+  type: 'bar',
+  data: {
+    labels: this.months,
+    datasets: [
+      {
+        label: 'Sản phẩm có sẵn',
+        data: this.productCounts,
+        backgroundColor: 'rgb(54, 162, 235)',
       },
-    });
+      {
+        label: 'Sản phẩm theo yêu cầu',
+        data: this.productRequestCounts,
+        backgroundColor: 'rgb(255, 99, 132)',
+      },
+    ]
+  },
+  options: {
+    scales: {
+      y: {
+        ticks: {
+          stepSize: 5, // Thiết lập bước nhảy là 5 đơn vị
+        },
+      },
+    },
+  },
+});
 
     this.chart5 = new Chart('canvas5', {
       type: 'bar',
@@ -396,8 +406,8 @@ export class ChartComponent implements OnInit {
         this.percentOrder = Math.round(100 - this.percentSpecialOrder);
       //  console.log('Phần trăm đơn hàng đặc biệt:', this.percentSpecialOrder.toFixed(2) + '%');
       //  console.log('Phần trăm đơn hàng có sẵn:', this.percentOrder.toFixed(2) + '%');
-        console.log('Tổng đơn hàng đặc biệt:', this.totalSpecialOrder);
-        console.log('Tổng đơn hàng có sẵn:', this.totalNormalOrder);
+    //    console.log('Tổng đơn hàng đặc biệt:', this.totalSpecialOrder);
+      //  console.log('Tổng đơn hàng có sẵn:', this.totalNormalOrder);
       }
     } catch (err) {
       console.error(err);
@@ -506,22 +516,22 @@ export class ChartComponent implements OnInit {
         if (data.result === null || data.result === undefined) {
           data.result = 0;
         }
-      console.log(`getProductByMonthAndYear result for ${month}/${year}: `, data.result);
+      console.log(`getProductByMonthAndYear ${month}/${year}: `, data.result);
         this.productCounts.push(data.result);
         resolve();
       }, err => {
-        console.error(`getProductByMonthAndYear error for ${month}/${year}: `, err);
+      //  console.error(`getProductByMonthAndYear error for ${month}/${year}: `, err);
         reject(err);
       });
       this.statistic.countCompletedRequestProductOnOrderByMonthAndYear(month, year).subscribe((data) => {
         if (data.result === null || data.result === undefined) {
           data.result = 0;
         }
-     console.log(`getProductByMonthAndYear result for ${month}/${year}: `, data.result);
-        this.productRequestCounts.push(data.result);
+   //  console.log(`getProductByMonthAndYear result for ${month}/${year}: `, data.result);
+       this.productRequestCounts.push(data.result);
         resolve();
       }, err => {
-        console.error(`getProductByMonthAndYear error for ${month}/${year}: `, err);
+      //  console.error(`getProductByMonthAndYear error for ${month}/${year}: `, err);
         reject(err);
       });
     }
@@ -538,7 +548,7 @@ export class ChartComponent implements OnInit {
         }
       console.log(`getTotalSalaryAllPayment result for ${year}: `, data.result);
       this.salaryYear = data.result;
-        this.productCounts.push(data.result);
+       // this.productCounts.push(data.result);
         resolve();
       }, err => {
        

@@ -59,7 +59,8 @@
                   *ngFor="let job of product_error | paginate: { itemsPerPage: 10, currentPage: currentPage }; let i = index">
 
                   <td style="min-width: 190px;"> {{ job.code }}</td>
-                  <td style="min-width: 100px;">{{ job.product_name }}</td>
+                  <td *ngIf="job.request_product_id === 0" style="min-width: 100px;">{{ job.product_name }}</td>
+                  <td *ngIf="job.product_id === 0" style="min-width: 100px;">{{ job.request_product_name}}</td>
                   <td style="min-width: 150px;">{{ job.solution }}</td>
                   <td style="min-width: 50px;">{{ job.fix ? 'Đã sửa sản phẩm' : 'Chưa sửa sản phẩm'}}</td>
                   <td style="min-width: 100px; ">{{ job.des }}</td>

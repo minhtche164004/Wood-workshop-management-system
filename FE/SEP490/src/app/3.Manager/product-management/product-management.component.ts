@@ -1111,6 +1111,13 @@ export class ProductManagementComponent implements OnInit {
 
   onSubmit() {
 
+
+
+    if (parseFloat(this.uploadForm.get('price')?.value.replace(/,/g, '')) < this.uploadForm.get('quantity')?.value * this.totalUnitPrice) {
+      this.toastr.error('Giá sản phẩm phải lớn hơn giá vật liệu !', 'Lỗi');
+      return;
+    }
+
     //validate san pham uoc tinh can du 3 loai nguyen vat lieu
     var allMaterialIds: string[] = [];
     for (let j = 0; j <= 9; j++) {
@@ -1122,12 +1129,6 @@ export class ProductManagementComponent implements OnInit {
     const hasAllRequiredIds = requiredIds.every(id => allMaterialIds.includes(id.toString()));
     if (!hasAllRequiredIds) {
       this.toastr.warning('Sản phẩm ước tính của sản phẩm cần đủ 3 nguyên vật liệu Gỗ, Giấy Nhám, Sơn', 'Lỗi');
-      return;
-    }
-    console.log('allMaterialIds:', allMaterialIds);
-
-    if (parseFloat(this.uploadForm.get('price')?.value.replace(/,/g, '')) < this.uploadForm.get('quantity')?.value * this.totalUnitPrice) {
-      this.toastr.error('Giá sản phẩm phải lớn hơn giá vật liệu !', 'Lỗi');
       return;
     }
 

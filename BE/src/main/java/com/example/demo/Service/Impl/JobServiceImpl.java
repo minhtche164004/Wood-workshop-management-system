@@ -67,6 +67,8 @@ public class JobServiceImpl implements JobService {
     private SharedData sharedData;
     @Autowired
     private ShareDataRequest sharedDataRequest;
+    @Autowired
+    private InputSubMaterialRepository inputSubMaterialRepository;
 
 
     @Override
@@ -116,6 +118,7 @@ public class JobServiceImpl implements JobService {
 //
 //    }
 
+    @Transactional
     @Override
     public Jobs EmployeeSick(int user_id, int job_id, BigDecimal cost_employee,int quantity_product) {
         LocalDate today = LocalDate.now();
@@ -126,12 +129,24 @@ public class JobServiceImpl implements JobService {
         List<Employeematerials> list = employeeMaterialRepository.findEmployeematerialsByJobIdAndUserId(job_id,user_id);
         for(Employeematerials e : list){
             if(jobs.getRequestProducts() == null){
+                if(quantity_product == 0){
+                    //tính nguyên vật liệu cộng trả lại vào kho:
+                    InputSubMaterial p = e.getProductSubMaterial().getInputSubMaterial();
+                    p.setQuantity(p.getQuantity()+e.getTotal_material());
+                    inputSubMaterialRepository.save(p);
+                }
                 e.setTotal_material(quantity_product*employeeMaterialRepository.findByProductSubMaterialByEmployeeMaterialsId(e.getEmpMaterialId()));
                 Products products = productRepository.findById(jobs.getProduct().getProductId());
                 products.setQuantity(products.getQuantity() + quantity_product);
                 productRepository.save(products);
 
             }else{
+                if(quantity_product == 0){
+                    //tính nguyên vật liệu cộng trả lại vào kho:
+                    InputSubMaterial p = e.getRequestProductsSubmaterials().getInputSubMaterial();
+                    p.setQuantity(p.getQuantity()+e.getTotal_material());
+                    inputSubMaterialRepository.save(p);
+                }
                 e.setTotal_material(quantity_product*employeeMaterialRepository.findByRequestSubMaterialByEmployeeMaterialsId(e.getEmpMaterialId()));
                 RequestProducts requestProducts = requestProductRepository.findById(jobs.getRequestProducts().getRequestProductId());
                 requestProducts.setQuantity(requestProducts.getQuantity() + quantity_product);
@@ -254,36 +269,14 @@ public class JobServiceImpl implements JobService {
         User user = userRepository.findByIdJob(user_id);
         jobs.setUser(user);
         Jobs current = jobRepository.getJobById(job_id);
-//        Date now = new Date();
-//        BigDecimal cost_sub = BigDecimal.ZERO;
-//        BigDecimal profit = BigDecimal.ZERO;
-//        int quantity_product = current.getOriginalQuantityProduct();
+
         if (type_job == 0) { //tức là đang phân job cho requets product
-//            List<RequestProductsSubmaterials> list_sub = requestProductsSubmaterialsRepository.findByRequestProductID(p_id);
-//            for(RequestProductsSubmaterials re : list_sub){
-//                BigDecimal cost_one = re.getInputSubMaterial().getOut_price().multiply(new BigDecimal(quantity_product));
-//                cost_sub = cost_sub.add(cost_one);//tổng tiền nguyên vật liệu của đơn hàng đấy
-//            }
-//            BigDecimal total_order_detail = current.getOrderdetails().getUnitPrice().multiply(new BigDecimal(current.getOrderdetails().getQuantity()));
-//            profit = total_order_detail.subtract(cost_sub);
-//            if(jobDTO.getCost().compareTo(profit)>0){
-//                throw new AppException(ErrorCode.COST_EMPLOYEE_INVALID);
-//            }
+
             RequestProducts requestProducts = requestProductRepository.findById(p_id);
             jobs.setRequestProducts(requestProducts);
             jobs.setProduct(null);
-        } else {////tức là đang phân job cho  product có sẵn
-//            List<ProductSubMaterials> list_sub = productSubMaterialsRepository.findByProductID(p_id);
-//            for(ProductSubMaterials re : list_sub){
-//                BigDecimal cost_one = re.getInputSubMaterial().getOut_price().multiply(new BigDecimal(quantity_product));
-//                cost_sub = cost_sub.add(cost_one);
-//            }
-//            Products p = productRepository.findById(p_id);
-//            BigDecimal total_order_detail = p.getPrice().multiply(new BigDecimal(quantity_product));
-//            profit = total_order_detail.subtract(cost_sub);
-//            if(jobDTO.getCost().compareTo(profit)>0){
-//                throw new AppException(ErrorCode.COST_EMPLOYEE_INVALID);
-//            }
+        } else {
+
             Products products = productRepository.findById(p_id);
             jobs.setProduct(products);
             jobs.setRequestProducts(null);

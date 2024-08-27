@@ -992,7 +992,7 @@ export class JobManagementComponent implements OnInit {
     console.log('Product ID:', job.product_id);
     // console.log('productName:', job.product_name);
     this.selected_productName = job.product_name;
-    // this.isLoadding = true;  
+     this.isLoadding = true;  
     console.log('category: ', this.selectedCategory)
     if (this.selectedCategory == 1) {
       this.jobService.getSubMTRProduct(job.product_id, mate_id).subscribe(  //thay bang api goi job product submaterial
@@ -1072,9 +1072,11 @@ export class JobManagementComponent implements OnInit {
     const day = ('0' + d.getDate()).slice(-2);
     return `${year}-${month}-${day}`;
   }
+  phancongID: number = 0;
+
   editJobDetail(job: any, job_id: number): void {
     console.log('Job:', job); this.selectedProduct = { ...job };
-
+    this.phancongID = this.selectedProduct.job_id;
     let mate_id = this.selectedProduct.statusJob.type;
   //  mate_id = 1;
    if (this.selectedProduct.statusJob.type == 4) { //thợ sơn
@@ -1086,12 +1088,12 @@ export class JobManagementComponent implements OnInit {
    } else {
      mate_id = 1;
    }
-
+   console.log('Ma code: ', this.selectedProduct.job_code)
    console.log('Mate ID:', mate_id);
    console.log('Product ID:', job.product_id);
    // console.log('productName:', job.product_name);
    this.selected_productName = job.product_name;
-   // this.isLoadding = true;  
+    this.isLoadding = true;  
    console.log('category: ', this.selectedCategory)
    if (this.selectedCategory == 1) {
      this.jobService.getSubMTRProduct(job.product_id, mate_id).subscribe(  //thay bang api goi job product submaterial
@@ -1183,7 +1185,7 @@ export class JobManagementComponent implements OnInit {
     this.isLoadding = true;
     // console.log("employeeAbsentId: ", this.employeeAbsentId);
     // console.log("employeeAbsentCost: ", this.employeeAbsentCost);
-    // console.log("jobID: ", this.JOBID);
+    console.log("jobID: ", this.phancongID);
     // console.log("quantityProductDone: ", this.quantityProductDone);
     // console.log("costEmplopyee: ", this.costEmplopyee);
     if (this.quantityProductDone == null) {
@@ -1217,7 +1219,7 @@ export class JobManagementComponent implements OnInit {
       this.isLoadding = false;
       return;
     }
-    this.jobService.getEmployeeSick(this.employeeAbsentId, this.JOBID, this.costEmplopyee, this.quantityProductDone).subscribe(
+    this.jobService.getEmployeeSick(this.employeeAbsentId, this.phancongID, this.costEmplopyee, this.quantityProductDone).subscribe(
       (data) => {
         if (data.code === 1000) {
           //   console.log('Change employee absent success:', data.result);

@@ -976,17 +976,18 @@ export class JobManagementComponent implements OnInit {
   showJobDetail(job: any) {
     this.selectedProduct = { ...job };
 
-    // let mate_id = this.selectedProduct.statusJob.type;
-    let mate_id = 1;
-    if (this.selectedProduct.position_id == 3) { //thợ sơn
+     let mate_id = this.selectedProduct.statusJob.type;
+   //  mate_id = 1;
+    if (this.selectedProduct.statusJob.type == 4) { //thợ sơn
       mate_id = 3;
-    } else if (this.selectedProduct.position_id == 2) { //thợ nhám
+    } else if (this.selectedProduct.statusJob.type  == 3) { //thợ nhám
       mate_id = 2;
-    } else if (this.selectedProduct.position_id == 1) { //thợ mộc
+    } else if (this.selectedProduct.statusJob.type  == 2) { //thợ mộc
       mate_id = 1;
     } else {
       mate_id = 1;
     }
+ 
     console.log('Mate ID:', mate_id);
     console.log('Product ID:', job.product_id);
     // console.log('productName:', job.product_name);
@@ -1072,13 +1073,62 @@ export class JobManagementComponent implements OnInit {
     return `${year}-${month}-${day}`;
   }
   editJobDetail(job: any, job_id: number): void {
-    console.log('Job:', job);
-    this.employeeAbsentCode = job.code;
-    this.JOBID = job_id;
-    this.isLoadding = true;
-    this.user_name = job.user_name;
-    this.quantityProduct = job.quantity;
-    console.log('quantityProduct chua cap nhat:', this.quantityProduct);
+    console.log('Job:', job); this.selectedProduct = { ...job };
+
+    let mate_id = this.selectedProduct.statusJob.type;
+  //  mate_id = 1;
+   if (this.selectedProduct.statusJob.type == 4) { //thợ sơn
+     mate_id = 3;
+   } else if (this.selectedProduct.statusJob.type  == 3) { //thợ nhám
+     mate_id = 2;
+   } else if (this.selectedProduct.statusJob.type  == 2) { //thợ mộc
+     mate_id = 1;
+   } else {
+     mate_id = 1;
+   }
+
+   console.log('Mate ID:', mate_id);
+   console.log('Product ID:', job.product_id);
+   // console.log('productName:', job.product_name);
+   this.selected_productName = job.product_name;
+   // this.isLoadding = true;  
+   console.log('category: ', this.selectedCategory)
+   if (this.selectedCategory == 1) {
+     this.jobService.getSubMTRProduct(job.product_id, mate_id).subscribe(  //thay bang api goi job product submaterial
+       (data) => {
+         if (data.code === 1000) {
+           this.subMaterialProduct = data.result;
+         //  console.log('Sub-material product data:', this.subMaterialProduct);
+         } else {
+           console.error('Failed to fetch products:', data);
+           this.toastr.warning('Không thể lấy danh sách vật liệu sản phẩm!', 'Lỗi');
+         }
+         this.isLoadding = false;
+       },
+       (error) => {
+         console.error('Error fetching sub-material data:', error);
+         this.isLoadding = false;
+       }
+     )
+   } else if (this.selectedCategory == 0) {
+     this.jobService.getSubMTRProductRQ(job.product_id, mate_id).subscribe(  //thay bang api goi job product submaterial
+       (data) => {
+         if (data.code === 1000) {
+           this.subMaterialProduct = data.result;
+           console.log('Sub-material product data:', this.subMaterialProduct);
+         } else {
+           console.error('Failed to fetch products:', data);
+           this.toastr.warning('Không thể lấy danh sách vật liệu sản phẩm!', 'Lỗi');
+         }
+         this.isLoadding = false;
+       },
+       (error) => {
+         console.error('Error fetching sub-material data:', error);
+         this.isLoadding = false;
+       }
+     )
+   }
+
     this.jobService.getJobDetailById(job_id).subscribe(
       (data) => {
         console.log('Job detail api:', data.result);
